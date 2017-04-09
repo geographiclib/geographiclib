@@ -42,18 +42,18 @@ The public attributes for this class are
 # This is a rather literal translation of the GeographicLib::GeodesicLine class
 # to python.  See the documentation for the C++ class for more information at
 #
-#    http://geographiclib.sourceforge.net/html/annotated.html
+#    https://geographiclib.sourceforge.io/html/annotated.html
 #
 # The algorithms are derived in
 #
 #    Charles F. F. Karney,
 #    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
 #    https://doi.org/10.1007/s00190-012-0578-z
-#    Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+#    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
 # Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 ######################################################################
 
 import math
@@ -293,7 +293,6 @@ class GeodesicLine(object):
       lat2 = Math.atan2d(sbet2, self._f1 * cbet2)
 
     if outmask & Geodesic.AZIMUTH:
-      # minus signs give range [-180, 180). 0- converts -0 to +0.
       azi2 = Math.atan2d(salp2, calp2)
 
     if outmask & (Geodesic.REDUCEDLENGTH | Geodesic.GEODESICSCALE):

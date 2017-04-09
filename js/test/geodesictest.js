@@ -215,7 +215,7 @@ describe("GeographicLib", function() {
       assert.approx(dir.lat2, 90, 0.5e-5);
       if (dir.lon2 < 0) {
         assert.approx(dir.lon2, -150, 0.5e-5);
-        assert.approx(dir.azi2, -180, 0.5e-5);
+        assert.approx(Math.abs(dir.azi2), 180, 0.5e-5);
       } else {
         assert.approx(dir.lon2, 30, 0.5e-5);
         assert.approx(dir.azi2, 0, 0.5e-5);
@@ -294,13 +294,13 @@ describe("GeographicLib", function() {
     it("GeodSolve17", function() {
       // Check fix for LONG_UNROLL bug found on 2015-05-07
       var geod = g.WGS84,
-          dir = geod.Direct(40, -75, -10, 2e7, g.STANDARD | g.LONG_UNROLL),
+          dir = geod.Direct(40, -75, -10, 2e7, g.LONG_UNROLL),
           line;
       assert.approx(dir.lat2, -39, 1);
       assert.approx(dir.lon2, -254, 1);
       assert.approx(dir.azi2, -170, 1);
       line = geod.Line(40, -75, -10);
-      dir = line.Position(2e7, g.STANDARD | g.LONG_UNROLL);
+      dir = line.Position(2e7, g.LONG_UNROLL);
       assert.approx(dir.lat2, -39, 1);
       assert.approx(dir.lon2, -254, 1);
       assert.approx(dir.azi2, -170, 1);
@@ -336,7 +336,7 @@ describe("GeographicLib", function() {
       assert.approx(dir.lon1, 179, 1e-10);
       assert.approx(dir.lon2, -179, 1e-10);
       assert.approx(dir.s12, 222639, 0.5);
-      dir = geod.Inverse(0, 539, 0, 181, g.STANDARD | g.LONG_UNROLL);
+      dir = geod.Inverse(0, 539, 0, 181, g.LONG_UNROLL);
       assert.approx(dir.lon1, 539, 1e-10);
       assert.approx(dir.lon2, 541, 1e-10);
       assert.approx(dir.s12, 222639, 0.5);
@@ -357,11 +357,11 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12, 19980862, 0.5);
       inv = geod.Inverse(0, 0, 0, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 20003931, 0.5);
       inv = geod.Inverse(0, 0, 1, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 19893357, 0.5);
       geod = new g.Geodesic(6.4e6, 0);
       inv = geod.Inverse(0, 0, 0, 179);
@@ -370,11 +370,11 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12, 19994492, 0.5);
       inv = geod.Inverse(0, 0, 0, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 20106193, 0.5);
       inv = geod.Inverse(0, 0, 1, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 19994492, 0.5);
       geod = new g.Geodesic(6.4e6, -1/300.0);
       inv = geod.Inverse(0, 0, 0, 179);
@@ -391,7 +391,7 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12, 20082617, 0.5);
       inv = geod.Inverse(0, 0, 1, 180);
       assert.approx(inv.azi1, 0.00000, 0.5e-5);
-      assert.approx(inv.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(inv.azi2), 180.00000, 0.5e-5);
       assert.approx(inv.s12, 20027270, 0.5);
     });
 
@@ -422,16 +422,16 @@ describe("GeographicLib", function() {
       // Make sure small negative azimuths are west-going
       var geod = g.WGS84,
           dir = geod.Direct(45, 0, -0.000000000000000003, 1e7,
-                            g.STANDARD | g.LONG_UNROLL),
+                            g.LONG_UNROLL),
           line;
       assert.approx(dir.lat2, 45.30632, 0.5e-5);
       assert.approx(dir.lon2, -180, 0.5e-5);
-      assert.approx(dir.azi2, -180, 0.5e-5);
+      assert.approx(Math.abs(dir.azi2), 180, 0.5e-5);
       line = geod.InverseLine(45, 0, 80, -0.000000000000000003);
-      dir = line.Position(1e7);
+      dir = line.Position(1e7, g.LONG_UNROLL);
       assert.approx(dir.lat2, 45.30632, 0.5e-5);
       assert.approx(dir.lon2, -180, 0.5e-5);
-      assert.approx(dir.azi2, -180, 0.5e-5);
+      assert.approx(Math.abs(dir.azi2), 180, 0.5e-5);
     });
 
     it("GeodSolve65", function() {
@@ -444,10 +444,10 @@ describe("GeographicLib", function() {
           dir = line.Position(1e7, g.ALL | g.LONG_UNROLL);
       assert.approx(dir.lat1, 30.00000  , 0.5e-5);
       assert.approx(dir.lon1, -0.00000  , 0.5e-5);
-      assert.approx(dir.azi1, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(dir.azi1), 180.00000, 0.5e-5);
       assert.approx(dir.lat2, -60.23169 , 0.5e-5);
       assert.approx(dir.lon2, -0.00000  , 0.5e-5);
-      assert.approx(dir.azi2, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(dir.azi2), 180.00000, 0.5e-5);
       assert.approx(dir.s12 , 10000000  , 0.5);
       assert.approx(dir.a12 , 90.06544  , 0.5e-5);
       assert.approx(dir.m12 , 6363636   , 0.5);
@@ -457,7 +457,7 @@ describe("GeographicLib", function() {
       dir = line.Position(2e7, g.ALL | g.LONG_UNROLL);
       assert.approx(dir.lat1, 30.00000  , 0.5e-5);
       assert.approx(dir.lon1, -0.00000  , 0.5e-5);
-      assert.approx(dir.azi1, -180.00000, 0.5e-5);
+      assert.approx(Math.abs(dir.azi1), 180.00000, 0.5e-5);
       assert.approx(dir.lat2, -30.03547 , 0.5e-5);
       assert.approx(dir.lon2, -180.00000, 0.5e-5);
       assert.approx(dir.azi2, -0.00000  , 0.5e-5);

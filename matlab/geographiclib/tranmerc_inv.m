@@ -27,7 +27,7 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 %
 %     C. F. F. Karney, Transverse Mercator with an accuracy of a few
 %     nanometers, J. Geodesy 85(8), 475-485 (Aug. 2011);
-%     Addenda: http://geographiclib.sourceforge.net/tm-addenda.html
+%     Addenda: https://geographiclib.sourceforge.io/tm-addenda.html
 %
 %   This extends the series given by Krueger (1912) to sixth order in the
 %   flattening.  This is a substantially better series than that used by

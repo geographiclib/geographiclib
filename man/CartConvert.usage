@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    CartConvert --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/CartConvert.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/CartConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -128,7 +128,7 @@ int usage(int retval, bool brief) {
 "\n"
 "HISTORY\n"
 "       CartConvert was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in 2009-02.  Prior to 2009-03\n"
+"       <https://geographiclib.sourceforge.io>, in 2009-02.  Prior to 2009-03\n"
 "       it was called ECEFConvert.\n"
 ;
   return retval;

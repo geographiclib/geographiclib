@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    ConicProj --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/ConicProj.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/ConicProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -143,7 +143,7 @@ int usage(int retval, bool brief) {
 "\n"
 "HISTORY\n"
 "       ConicProj was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in version 1.9.\n"
+"       <https://geographiclib.sourceforge.io>, in version 1.9.\n"
 ;
   return retval;
 }

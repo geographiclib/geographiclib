@@ -27,7 +27,7 @@ function [lat, lon, azi, rk] = eqdazim_inv(lat0, lon0, x, y, ellipsoid)
 %
 %     C. F. F. Karney, Geodesics on an ellipsoid of revolution (2011),
 %     https://arxiv.org/abs/1102.1215
-%     Errata: http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata
+%     Errata: https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata
 %
 %   describes how to use this projection in the determination of maritime
 %   boundaries (finding the median line).

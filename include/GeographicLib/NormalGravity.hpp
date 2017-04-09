@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_NORMALGRAVITY_HPP)
@@ -100,8 +100,8 @@ namespace GeographicLib {
     static real atan7series(real x);
     static real atan5series(real x);
     static real Qf(real x, bool alt);
-    static real Gf(real x, bool alt);
-    static real QG3f(real x, bool alt);
+    static real Hf(real x, bool alt);
+    static real QH3f(real x, bool alt);
     real Jn(int n) const;
     void Initialize(real a, real GM, real omega, real f_J2, bool geometricp);
   public:

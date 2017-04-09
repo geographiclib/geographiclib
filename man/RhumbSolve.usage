@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    RhumbSolve --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/RhumbSolve.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/RhumbSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -201,7 +201,7 @@ int usage(int retval, bool brief) {
 "       GeoConvert(1), GeodSolve(1), TransverseMercatorProj(1).\n"
 "\n"
 "       An online version of this utility is availbable at\n"
-"       <http://geographiclib.sourceforge.net/cgi-bin/RhumbSolve>.\n"
+"       <https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.\n"
 "\n"
 "       The Wikipedia page, Rhumb line,\n"
 "       <https://en.wikipedia.org/wiki/Rhumb_line>.\n"
@@ -211,7 +211,7 @@ int usage(int retval, bool brief) {
 "\n"
 "HISTORY\n"
 "       RhumbSolve was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in version 1.37.\n"
+"       <https://geographiclib.sourceforge.io>, in version 1.37.\n"
 ;
   return retval;
 }

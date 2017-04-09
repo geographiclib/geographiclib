@@ -8,7 +8,7 @@
 
   <groupId>net.sf.geographiclib</groupId>
   <artifactId>GeographicLib-Java</artifactId>
-  <version>1.47</version>
+  <version>1.48</version>
 
   <packaging>jar</packaging>
 
@@ -26,7 +26,7 @@
     easy to do geodesic computations for an ellipsoid of revolution in
     a Java program. It requires Java version 1.1 or later.
   </description>
-  <url>http://geographiclib.sourceforge.net</url>
+  <url>https://geographiclib.sourceforge.io</url>
 
   <developers>
     <developer>
@@ -34,7 +34,7 @@
       <email>charles@karney.com</email>
       <organization></organization>
       <organizationUrl>
-        http://sourceforge.net/u/karney/profile/
+        https://sourceforge.net/u/karney/profile/
       </organizationUrl>
     </developer>
   </developers>
@@ -160,10 +160,10 @@
       scm:git://git.code.sourceforge.net/p/geographiclib/code
     </connection>
     <developerConnection>
-      scm:git:http://git.code.sourceforge.net/p/geographiclib/code
+      scm:git:https://git.code.sourceforge.net/p/geographiclib/code
     </developerConnection>
     <url>
-      http://sourceforge.net/p/geographiclib/code/ci/master/tree/
+      https://sourceforge.net/p/geographiclib/code/ci/master/tree/
     </url>
   </scm>
 

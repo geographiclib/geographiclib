@@ -27,7 +27,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
 %     https://doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   This function duplicates some of the functionality of the distance
 %   function in the MATLAB mapping toolbox.  Differences are
@@ -39,8 +39,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %     * The algorithm converges for all pairs of input points.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODRECKON, GEODAREA, GEODESICINVERSE,
-%     DEFAULTELLIPSOID.
+%   See also GEODDOC, GEODRECKON, GEODAREA, DEFAULTELLIPSOID.
 
 % Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 %

@@ -129,7 +129,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOCONVERT 1"
-.TH GEOCONVERT 1 "2017-02-15" "GeographicLib 1.47" "GeographicLib Utilities"
+.TH GEOCONVERT 1 "2017-04-09" "GeographicLib 1.48" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -333,8 +333,8 @@ east of 39N 70W is
 .Ve
 .PP
 \&\fB\s-1WARNING:\s0\fR \*(L"Exponential\*(R" notation is not recognized for geographic
-coordinates; instead 7.0E+1 is parsed as (7.0E) + (+1), yielding the
-same result as 8.0E.
+coordinates.  Thus 7.0E1 is illegal, while 7.0E+1 is parsed
+as (7.0E) + (+1), yielding the same result as 8.0E.
 .PP
 Various unicode characters (encoded with \s-1UTF\-8\s0) may also be used to
 denote degrees, minutes, and seconds, e.g., the degree, prime, and
@@ -508,7 +508,7 @@ World Geodetic System 1984,
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
 An online version of this utility is availbable at
-<http://geographiclib.sourceforge.net/cgi\-bin/GeoConvert>.
+<https://geographiclib.sourceforge.io/cgi\-bin/GeoConvert>.
 .PP
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, \fITransverse Mercator with an accuracy of a few
@@ -521,4 +521,4 @@ nanometers\fR, J. Geodesy \fB85\fR(8), 475\-485 (Aug. 2011); \s-1DOI\s0
 .SH "HISTORY"
 .IX Header "HISTORY"
 \&\fBGeoConvert\fR was added to GeographicLib,
-<http://geographiclib.sourceforge.net>, in 2009\-01.
+<https://geographiclib.sourceforge.io>, in 2009\-01.

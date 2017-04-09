@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Gravity --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/Gravity.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/Gravity.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -159,7 +159,7 @@ int usage(int retval, bool brief) {
 "\n"
 "       Instructions for downloading and installing gravity models are\n"
 "       available at\n"
-"       <http://geographiclib.sourceforge.net/html/gravity.html#gravityinst>.\n"
+"       <https://geographiclib.sourceforge.io/html/gravity.html#gravityinst>.\n"
 "\n"
 "ENVIRONMENT\n"
 "       GEOGRAPHICLIB_GRAVITY_NAME\n"
@@ -201,7 +201,7 @@ int usage(int retval, bool brief) {
 "\n"
 "HISTORY\n"
 "       Gravity was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in version 1.16.\n"
+"       <https://geographiclib.sourceforge.io>, in version 1.16.\n"
 ;
   return retval;
 }

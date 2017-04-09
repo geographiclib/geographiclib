@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 // Constants.hpp includes Math.hpp.  Place this include outside Math.hpp's
@@ -445,6 +445,8 @@ namespace GeographicLib {
       // Before version 14 (2015), Visual Studio had problems dealing
       // with -0.0.  Specifically
       //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+      // sincosd has a similar fix.
+      // python 2.7 on Windows 32-bit machines has the same problem.
       if (x == 0) y = x;
 #endif
       return y <= -180 ? y + 360 : (y <= 180 ? y : y - 360);
@@ -580,6 +582,8 @@ namespace GeographicLib {
       // with -0.0.  Specifically
       //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
       //   VC 12       and 64-bit compile:  sin(-0.0)        -> +0.0
+      // AngNormalize has a similar fix.
+      // python 2.7 on Windows 32-bit machines has the same problem.
       if (x == 0) s = x;
 #endif
       switch (unsigned(q) & 3U) {
@@ -747,7 +751,7 @@ namespace GeographicLib {
 #else
       using std::abs;
       // NaN counts as positive
-      return abs(x) * (y < 0 || (y == 0 && 1/y < 0)  ? -1 : 1);
+      return abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
 #endif
     }
 

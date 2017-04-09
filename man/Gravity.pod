@@ -183,7 +183,7 @@ name.  Use the B<-v> option to ascertain the full path name of the data
 file.
 
 Instructions for downloading and installing gravity models are available
-at L<http://geographiclib.sourceforge.net/html/gravity.html#gravityinst>.
+at L<https://geographiclib.sourceforge.io/html/gravity.html#gravityinst>.
 
 =head1 ENVIRONMENT
 
@@ -237,5 +237,5 @@ B<Gravity> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<Gravity> was added to GeographicLib, L<http://geographiclib.sourceforge.net>,
+B<Gravity> was added to GeographicLib, L<https://geographiclib.sourceforge.io>,
 in version 1.16.

@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Planimeter --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/Planimeter.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/Planimeter.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -179,19 +179,19 @@ int usage(int retval, bool brief) {
 "       GeoConvert(1), GeodSolve(1).\n"
 "\n"
 "       An online version of this utility is availbable at\n"
-"       <http://geographiclib.sourceforge.net/cgi-bin/Planimeter>.\n"
+"       <https://geographiclib.sourceforge.io/cgi-bin/Planimeter>.\n"
 "\n"
 "       The algorithm for the area of geodesic polygon is given in Section 6 of\n"
 "       C. F. F. Karney, Algorithms for geodesics, J. Geodesy 87, 43-55 (2013);\n"
 "       DOI <https://doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
-"       <http://geographiclib.sourceforge.net/geod-addenda.html>.\n"
+"       <https://geographiclib.sourceforge.io/geod-addenda.html>.\n"
 "\n"
 "AUTHOR\n"
 "       Planimeter was written by Charles Karney.\n"
 "\n"
 "HISTORY\n"
 "       Planimeter was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in version 1.4.\n"
+"       <https://geographiclib.sourceforge.io>, in version 1.4.\n"
 ;
   return retval;
 }

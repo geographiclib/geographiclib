@@ -39,7 +39,7 @@ if (DOXYGEN_FOUND)
     ../examples/[A-Za-z]*.hpp)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
     tmseries30.html geodseries30.html ../LICENSE.txt)
-  file (GLOB FIGURES *.png)
+  file (GLOB FIGURES *.png *.svg *.gif)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
   add_custom_target (cxxdoc ALL
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)

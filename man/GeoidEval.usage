@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoidEval --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/GeoidEval.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/GeoidEval.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -151,7 +151,7 @@ int usage(int retval, bool brief) {
 "       -v option to ascertain the full path name of the data file.\n"
 "\n"
 "       Instructions for downloading and installing geoid data are available at\n"
-"       <http://geographiclib.sourceforge.net/html/geoid.html#geoidinst>.\n"
+"       <https://geographiclib.sourceforge.io/html/geoid.html#geoidinst>.\n"
 "\n"
 "       NOTE: all the geoids above apply to the WGS84 ellipsoid (a = 6378137 m,\n"
 "       f = 1/298.257223563) only.\n"
@@ -257,14 +257,14 @@ int usage(int retval, bool brief) {
 "       GeoConvert(1), Gravity(1), geographiclib-get-geoids(8).\n"
 "\n"
 "       An online version of this utility is availbable at\n"
-"       <http://geographiclib.sourceforge.net/cgi-bin/GeoidEval>.\n"
+"       <https://geographiclib.sourceforge.io/cgi-bin/GeoidEval>.\n"
 "\n"
 "AUTHOR\n"
 "       GeoidEval was written by Charles Karney.\n"
 "\n"
 "HISTORY\n"
 "       GeoidEval was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in 2009-09.\n"
+"       <https://geographiclib.sourceforge.io>, in 2009-09.\n"
 ;
   return retval;
 }

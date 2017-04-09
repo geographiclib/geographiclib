@@ -63,18 +63,18 @@ The public attributes for this class are
 # This is a rather literal translation of the GeographicLib::Geodesic class to
 # python.  See the documentation for the C++ class for more information at
 #
-#    http://geographiclib.sourceforge.net/html/annotated.html
+#    https://geographiclib.sourceforge.io/html/annotated.html
 #
 # The algorithms are derived in
 #
 #    Charles F. F. Karney,
 #    Algorithms for geodesics, J. Geodesy 87, 43-55 (2013),
 #    https://doi.org/10.1007/s00190-012-0578-z
-#    Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+#    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
 # Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
-# http://geographiclib.sourceforge.net/
+# https://geographiclib.sourceforge.io/
 ######################################################################
 
 import math
@@ -907,7 +907,7 @@ class Geodesic(object):
               # instead of sqrt(epsilon).
               tripn = abs(v) <= 16 * Geodesic.tol0_
               continue
-          # Either dv was not postive or updated value was outside legal range.
+          # Either dv was not positive or updated value was outside legal range.
           # Use the midpoint of the bracket as the next estimate.  This
           # mechanism is not needed for the WGS84 ellipsoid, but it does catch
           # problems with more eccentric ellipsoids.  Its efficacy is such for
@@ -1284,7 +1284,7 @@ class Geodesic(object):
   """All of the above."""
   LONG_UNROLL   = GeodesicCapability.LONG_UNROLL
   """Unroll longitudes, rather than reducing them to the reducing them to
-  the range [-180d,180d)."""
+  the range [-180d,180d]."""
 
 Geodesic.WGS84 = Geodesic(Constants.WGS84_a, Constants.WGS84_f)
 """Instantiation for the WGS84 ellipsoid"""

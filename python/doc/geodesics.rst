@@ -32,7 +32,7 @@ points.  In this figure, we have λ\ :sub:`12` =
     .. raw:: html
 
        <center>
-         <img src="http://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg"
+         <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Geodesic_problem_on_an_ellipsoid.svg"
               alt="Figure from wikipedia"
               width="250">
        </center>
@@ -190,15 +190,15 @@ References
   `Algorithms for geodesics
   <https://doi.org/10.1007/s00190-012-0578-z>`_,
   J. Geodesy **87**\ (1) 43–55 (2013);
-  `addenda <http://geographiclib.sourceforge.net/geod-addenda.html>`_.
+  `addenda <https://geographiclib.sourceforge.io/geod-addenda.html>`_.
 * C. F. F. Karney,
   `Geodesics on an ellipsoid of revolution
   <https://arxiv.org/abs/1102.1215v1>`_,
   Feb. 2011;
   `errata
-  <http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata>`_.
+  <https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata>`_.
 * `A geodesic bibliography
-  <http://geographiclib.sourceforge.net/geodesic-papers/biblio.html>`_.
+  <https://geographiclib.sourceforge.io/geodesic-papers/biblio.html>`_.
 * The wikipedia page,
   `Geodesics on an ellipsoid
   <https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>`_.

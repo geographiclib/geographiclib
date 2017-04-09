@@ -28,7 +28,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %     C. F. F. Karney, Algorithms for geodesics,
 %     J. Geodesy 87, 43-55 (2013);
 %     https://doi.org/10.1007/s00190-012-0578-z
-%     Addenda: http://geographiclib.sourceforge.net/geod-addenda.html
+%     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
 %     DEFAULTELLIPSOID.
@@ -104,8 +104,8 @@ function cross = transit(lon1, lon2)
   lon2 = AngNormalize(lon2);
   lon12 = AngDiff(lon1, lon2);
   cross = zeros(length(lon1), 1);
-  cross(lon1 < 0 & lon2 >= 0 & lon12 > 0) = 1;
-  cross(lon2 < 0 & lon1 >= 0 & lon12 < 0) = -1;
+  cross(lon1 <= 0 & lon2 > 0 & lon12 > 0) =  1;
+  cross(lon2 <= 0 & lon1 > 0 & lon12 < 0) = -1;
 
 end
 

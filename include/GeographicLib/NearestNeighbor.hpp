@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2016) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_NEARESTNEIGHBOR_HPP)
@@ -43,76 +43,73 @@ namespace GeographicLib {
   /**
    * \brief Nearest-neighbor calculations
    *
-   * This class implements nearest-neighbor calculations using the
-   * vantage-point tree described by
-   * - J. K. Uhlmann,
-   *   <a href="doi:10.1016/0020-0190(91)90074-r">
-   *   Satisfying general proximity/similarity queries with metric trees</a>,
-   *   Information Processing Letters 40 175&ndash;179 (1991).
-   * - P. N. Yianilos,
-   *   <a href="http://pnylab.com/pny/papers/vptree/vptree/">
-   *   Data structures and algorithms for nearest neighbor search in general
-   *   metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
-   *   (SIAM, 1993). pp. 311&ndash;321.
-   *
-   * Given a set of points in some space and a distance function \e d
-   * satisfying the metric conditions:
-   * \f[
-   * \begin{align}
-   *  d(x,y) &\ge 0,\\
-   *  d(x,y) &= 0, \ \text{iff $x = y$},\\
-   *  d(x,y) &= d(y,x),\\
-   *  d(x,z) &\ge d(x,y) + d(y,z),
-   * \end{align}
-   * \f]
-   * the vantage-point (VP) tree provides an efficient way of determining
-   * nearest neighbors.  Typically the cost of constructing a VP tree of \e N
-   * points is \e N log \e N, while the cost of a query is log \e N.  Thus a VP
-   * tree should be used in situations where \e N is large and at least log \e
-   * N queries are to be made.  The condition, \e N is large, means that
-   * \f$ N \gg 2^D \f$, where \e D is the dimensionality of the space.
-   *
-   * - This implementation includes Yianilos' upper and lower bounds for the
-   *   inside and outside sets.  This helps limit the number of searches
-   *   (compared to just using the median distance).
-   * - Rather than do a depth-first or breath-first search on the tree, the
-   *   nodes to be processed are put on a priority queue with the nodes most
-   *   likely to contain close points processed first.  Frequently, this allows
-   *   nodes lower down on the priority queue to be skipped.
-   * - This technique also allows non-exhaustive searchs to be performed (to
-   *   answer questions such as "are there any points within 1km of the query
-   *   point?).
-   * - When building the tree, the points furthest from the parent vantage
-   *   point in both the inside and outside sets are selected as the children's
-   *   vantage points.  This information is already available from the
-   *   computation of the upper and lower bounds of the children.  This choice
-   *   seems to lead to a reasonably optimized tree.
-   * - The leaf nodes can contain a bucket of points (instead of just a vantage
-   *   point).
+   * This class solves the nearest-neighbor problm using a vantage-point tree
+   * as described in \ref nearest.
    *
    * This class is templated so that it can handle arbitrary metric spaces as
    * follows:
    *
-   * @tparam real the type used for measuring distances; it can be a real or
-   *   signed integer type.
-   * @tparam position the type for specifying points.
-   * @tparam distance the type for a function object which takes takes two
-   *   positions as arguments and returns the distance (of type \e real).
+   * @tparam dist_t the type used for measuring distances; it can be a real or
+   *   signed integer type; in typical geodetic applications, \e dist_t might be
+   *   <code>double</code>.
+   * @tparam pos_t the type for specifying the positions of points; geodetic
+   *   application might bundled the latitude and longitude into a
+   *   <code>std::pair<dist_t, dist_t></code>.
+   * @tparam distfun_t the type of a function object which takes takes two
+   *   positions (of type \e pos_t) and returns the distance (of type \e
+   *   dist_t); in geodetic applications, this might be a class which is
+   *   constructed with a Geodesic object and which implements a member
+   *   function with a signature <code>dist_t operator() (const pos_t&, const
+   *   pos_t&) const</code>, which returns the geodesic distance between two
+   *   points.
    *
-   * The \e real type must support numeric_limits queries (specifically:
+   * \note The distance measure must satisfy the triangle inequality, \f$
+   * d(a,c) \le d(a,b) + d(b,c) \f$ for all points \e a, \e b, \e c.  The
+   * geodesic distance (given by Geodesic::Inverse) does, while the great
+   * ellipse distance and the rhumb line distance <i>do not</i>.  If you use
+   * the ordinary Euclidean distance, i.e., \f$ \sqrt{(x_a-x_b)^2 +
+   * (y_a-y_b)^2} \f$ for two dimensions, don't be tempted to leave out the
+   * square root in the interests of "efficiency"; the squared distance does
+   * not satisfy the triangle inequality!
+   *
+   * This is a "header-only" implementation and, as such, depends in a minimal
+   * way on the rest of GeographicLib (the only dependency is through the use
+   * of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr for
+   * handling run-time and compile-time exceptions).  Therefore, it is easy to
+   * extract this class from the rest of GeographicLib and use it as a
+   * stand-alone facility.
+   *
+   * The \e dist_t type must support numeric_limits queries (specifically:
    * is_signed, is_integer, max(), digits, and digits10).
+   *
+   * The NearestNeighbor object is constructed with a vector of points (type \e
+   * pos_t) and a distance function (type \e distfun_t).  However the object
+   * does \e not store the points.  When querying the object with Search(),
+   * it's necessary to supply the same vector of points and the same distance
+   * function.
+   *
+   * There's no capability in this implementation to add or remove points from
+   * the set.  Instead Initialize() should be called to re-initialize the
+   * object with the modified vector of points.
+   *
+   * Because of the overhead in constructing a NearestNeighbor object for a
+   * large set of points, functions Save() and Load() are provided to save the
+   * object to an external file.  operator<<(), operator>>() and <a
+   * href="http://www.boost.org/libs/serialization/doc"> Boost
+   * serialization</a> can also be used to save and restore a NearestNeighbor
+   * object.  This is illustrated in the example.
    *
    * Example of use:
    * \include example-NearestNeighbor.cpp
    **********************************************************************/
-  template <typename real, typename position, class distance>
+  template <typename dist_t, typename pos_t, class distfun_t>
   class NearestNeighbor {
     // For tracking changes to the I/O format
     static const int version = 1;
-    // This is what we get "free"; but if sizeof(real) = 1 (unlikely), allow 4
+    // This is what we get "free"; but if sizeof(dist_t) = 1 (unlikely), allow 4
     // slots (and this accommodates the default value bucket = 4).
-    static const int maxbucket = (2 + ((4 * sizeof(real)) / sizeof(int) >= 2 ?
-                                       (4 * sizeof(real)) / sizeof(int) : 2));
+    static const int maxbucket = (2 + ((4 * sizeof(dist_t)) / sizeof(int) >= 2 ?
+                                       (4 * sizeof(dist_t)) / sizeof(int) : 2));
   public:
 
     /**
@@ -120,7 +117,7 @@ namespace GeographicLib {
      *
      * This is equivalent to specifying an empty set of points.
      **********************************************************************/
-    NearestNeighbor() : _numpoints(0) {}
+    NearestNeighbor() : _numpoints(0), _bucket(0), _cost(0) {}
 
     /**
      * Constructor for NearestNeighbor.
@@ -128,7 +125,7 @@ namespace GeographicLib {
      * @param[in] pts a vector of points to include in the set.
      * @param[in] dist the distance function object.
      * @param[in] bucket the size of the buckets at the leaf nodes; this must
-     *   lie in [0, 2 + 4*sizeof(real)/sizeof(int)] (default 4).
+     *   lie in [0, 2 + 4*sizeof(dist_t)/sizeof(int)] (default 4).
      * @exception GeographicErr if the value of \e bucket is out of bounds or
      *   the size of \e pts is too big for an int.
      * @exception std::bad_alloc if memory for the tree can't be allocated.
@@ -142,7 +139,7 @@ namespace GeographicLib {
      * vanishes); these are treated as distinct.
      *
      * The choice of \e bucket is a tradeoff between space and efficiency.  A
-     * larger \e bucket decreases the size of the NearestNeigbor object which
+     * larger \e bucket decreases the size of the NearestNeighbor object which
      * scales as pts.size() / max(1, bucket) and reduces the number of distance
      * calculations to construct the object by log2(bucket) * pts.size().
      * However each search then requires about bucket additional distance
@@ -151,7 +148,7 @@ namespace GeographicLib {
      * \warning The same arguments \e pts and \e dist must be provided
      * to the Search() function.
      **********************************************************************/
-    NearestNeighbor(const std::vector<position>& pts, const distance& dist,
+    NearestNeighbor(const std::vector<pos_t>& pts, const distfun_t& dist,
                     int bucket = 4) {
       Initialize(pts, dist, bucket);
     }
@@ -162,7 +159,7 @@ namespace GeographicLib {
      * @param[in] pts a vector of points to include in the tree.
      * @param[in] dist the distance function object.
      * @param[in] bucket the size of the buckets at the leaf nodes; this must
-     *   lie in [0, 2 + 4*sizeof(real)/sizeof(int)] (default 4).
+     *   lie in [0, 2 + 4*sizeof(dist_t)/sizeof(int)] (default 4).
      * @exception GeographicErr if the value of \e bucket is out of bounds or
      *   the size of \e pts is too big for an int.
      * @exception std::bad_alloc if memory for the tree can't be allocated.
@@ -172,19 +169,19 @@ namespace GeographicLib {
      * If an exception is thrown, the state of the NearestNeighbor is
      * unchanged.
      **********************************************************************/
-    void Initialize(const std::vector<position>& pts, const distance& dist,
+    void Initialize(const std::vector<pos_t>& pts, const distfun_t& dist,
                     int bucket = 4) {
-      GEOGRAPHICLIB_STATIC_ASSERT(std::numeric_limits<real>::is_signed,
-                                  "real must be a signed type");
+      GEOGRAPHICLIB_STATIC_ASSERT(std::numeric_limits<dist_t>::is_signed,
+                                  "dist_t must be a signed type");
       if (!( 0 <= bucket && bucket <= maxbucket ))
         throw GeographicLib::GeographicErr
-          ("bucket must lie in [0, 2 + 4*sizeof(real)/sizeof(int)]");
+          ("bucket must lie in [0, 2 + 4*sizeof(dist_t)/sizeof(int)]");
       if (pts.size() > size_t(std::numeric_limits<int>::max()))
         throw GeographicLib::GeographicErr("pts array too big");
       // the pair contains distance+id
       std::vector<item> ids(pts.size());
       for (int k = int(ids.size()); k--;)
-        ids[k] = std::make_pair(real(0), k);
+        ids[k] = std::make_pair(dist_t(0), k);
       int cost = 0;
       std::vector<Node> tree;
       init(pts, dist, bucket, tree, ids, cost,
@@ -206,7 +203,7 @@ namespace GeographicLib {
      * @param[out] ind a vector of indices to the closest points found.
      * @param[in] k the number of points to search for (default = 1).
      * @param[in] maxdist only return points with distances of \e maxdist or
-     *   less from \e query (default is the maximum \e real).
+     *   less from \e query (default is the maximum \e dist_t).
      * @param[in] mindist only return points with distances of more than
      *   \e mindist from \e query (default = &minus;1).
      * @param[in] exhaustive whether to do an exhaustive search (default true).
@@ -216,6 +213,13 @@ namespace GeographicLib {
      *
      * The indices returned in \e ind are sorted by distance from \e query
      * (closest first).
+     *
+     * The simplest invocation is with just the 4 non-optional arguments.  This
+     * returns the closest distance and the index to the closest point in
+     * <i>ind</i><sub>0</sub>.  If there are several points equally close, then
+     * <i>ind</i><sub>0</sub> gives the index of an arbirary one of them.  If
+     * there's no closest point (because the set of points is empty), then \e
+     * ind is empty and &minus;1 is returned.
      *
      * With \e exhaustive = true and \e tol = 0 (their default values), this
      * finds the indices of \e k closest neighbors to \e query whose distances
@@ -239,39 +243,43 @@ namespace GeographicLib {
      * point (relative to the average spacing of the data).  If \e mindist is
      * large, the efficiency of the search deteriorates.
      *
+     * \note Only the shortest distance is returned (as as the function value).
+     * The distances to other points (indexed by <i>ind</i><sub><i>j</i></sub>
+     * for \e j > 0) can be found by invoking \e dist again.
+     *
      * \warning The arguments \e pts and \e dist must be identical to
      * those used to initialize the NearestNeighbor; if not, the behavior of
      * this function is undefined (however, if the size of \e pts is wrong,
      * this function exits with no results returned).
      **********************************************************************/
-    real Search(const std::vector<position>& pts, const distance& dist,
-                const position& query,
+    dist_t Search(const std::vector<pos_t>& pts, const distfun_t& dist,
+                const pos_t& query,
                 std::vector<int>& ind,
                 int k = 1,
-                real maxdist = std::numeric_limits<real>::max(),
-                real mindist = -1,
+                dist_t maxdist = std::numeric_limits<dist_t>::max(),
+                dist_t mindist = -1,
                 bool exhaustive = true,
-                real tol = 0) const {
+                dist_t tol = 0) const {
       std::priority_queue<item> results;
       if (_numpoints > 0 && _numpoints == int(pts.size()) &&
           k > 0 && maxdist > mindist) {
         // distance to the kth closest point so far
-        real tau = maxdist;
+        dist_t tau = maxdist;
         // first is negative of how far query is outside boundary of node
         // +1 if on boundary or inside
         // second is node index
         std::priority_queue<item> todo;
-        todo.push(std::make_pair(real(1), int(_tree.size()) - 1));
+        todo.push(std::make_pair(dist_t(1), int(_tree.size()) - 1));
         int c = 0;
         while (!todo.empty()) {
           int n = todo.top().second;
-          real d = -todo.top().first;
+          dist_t d = -todo.top().first;
           todo.pop();
-          real tau1 = tau - tol;
+          dist_t tau1 = tau - tol;
           // compare tau and d again since tau may have become smaller.
           if (!( n >= 0 && tau1 >= d )) continue;
           const Node& current = _tree[n];
-          real dst = 0;     // to suppress warning about uninitialized variable
+          dist_t dst = 0;   // to suppress warning about uninitialized variable
           bool exitflag = false, leaf = current.index < 0;
           for (int i = 0; i < (leaf ? _bucket : 1); ++i) {
             int index = leaf ? current.leaves[i] : current.index;
@@ -312,7 +320,7 @@ namespace GeographicLib {
                 if (tau1 >= d)
                   todo.push(std::make_pair(-d, current.data.child[l]));
               } else
-                todo.push(std::make_pair(real(1), current.data.child[l]));
+                todo.push(std::make_pair(dist_t(1), current.data.child[l]));
             }
           }
         }
@@ -325,7 +333,7 @@ namespace GeographicLib {
         if (c < _cmin) _cmin = c;
       }
 
-      real d = -1;
+      dist_t d = -1;
       ind.resize(results.size());
 
       for (int i = int(ind.size()); i--;) {
@@ -360,8 +368,8 @@ namespace GeographicLib {
      * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.
      **********************************************************************/
     void Save(std::ostream& os, bool bin = true) const {
-      int realspec = std::numeric_limits<real>::digits *
-        (std::numeric_limits<real>::is_integer ? -1 : 1);
+      int realspec = std::numeric_limits<dist_t>::digits *
+        (std::numeric_limits<dist_t>::is_integer ? -1 : 1);
       if (bin) {
         char id[] = "NearestNeighbor_";
         os.write(id, 16);
@@ -378,9 +386,9 @@ namespace GeographicLib {
           os.write(reinterpret_cast<const char *>(&node.index), sizeof(int));
           if (node.index >= 0) {
             os.write(reinterpret_cast<const char *>(node.data.lower),
-                     2 * sizeof(real));
+                     2 * sizeof(dist_t));
             os.write(reinterpret_cast<const char *>(node.data.upper),
-                     2 * sizeof(real));
+                     2 * sizeof(dist_t));
             os.write(reinterpret_cast<const char *>(node.data.child),
                      2 * sizeof(int));
           } else {
@@ -390,10 +398,10 @@ namespace GeographicLib {
         }
       } else {
         std::stringstream ostring;
-          // Ensure enough precision for type real.  If real is actually a
-          // signed integer type, full precision is used anyway.  With C++11,
-          // max_digits10 can be used instead.
-        ostring.precision(std::numeric_limits<real>::digits10 + 2);
+          // Ensure enough precision for type dist_t.  With C++11, max_digits10
+          // can be used instead.
+        if (!std::numeric_limits<dist_t>::is_integer)
+          ostring.precision(std::numeric_limits<dist_t>::digits10 + 2);
         ostring << version << " " << realspec << " " << _bucket << " "
                 << _numpoints << " " << _tree.size() << " " << _cost;
         for (int i = 0; i < int(_tree.size()); ++i) {
@@ -418,6 +426,7 @@ namespace GeographicLib {
      * @param[in,out] is the stream to read from
      * @param[in] bin if true (the default) load in binary mode.
      * @exception GeographicErr if the state read from \e is is illegal.
+     * @exception std::bad_alloc if memory for the tree can't be allocated.
      *
      * The counters tracking the statistics of searches are reset by this
      * operation.  Binary data must have been saved on a machine with the same
@@ -453,9 +462,9 @@ namespace GeographicLib {
       }
       if (!( version1 == version ))
         throw GeographicLib::GeographicErr("Incompatible version");
-      if (!( realspec == std::numeric_limits<real>::digits *
-             (std::numeric_limits<real>::is_integer ? -1 : 1) ))
-        throw GeographicLib::GeographicErr("Different real types");
+      if (!( realspec == std::numeric_limits<dist_t>::digits *
+             (std::numeric_limits<dist_t>::is_integer ? -1 : 1) ))
+        throw GeographicLib::GeographicErr("Different dist_t types");
       if (!( 0 <= bucket && bucket <= maxbucket ))
         throw GeographicLib::GeographicErr("Bad bucket size");
       if (!( 0 <= treesize && treesize <= numpoints ))
@@ -468,9 +477,9 @@ namespace GeographicLib {
           is.read(reinterpret_cast<char *>(&node.index), sizeof(int));
           if (node.index >= 0) {
             is.read(reinterpret_cast<char *>(node.data.lower),
-                    2 * sizeof(real));
+                    2 * sizeof(dist_t));
             is.read(reinterpret_cast<char *>(node.data.upper),
-                    2 * sizeof(real));
+                    2 * sizeof(dist_t));
             is.read(reinterpret_cast<char *>(node.data.child),
                     2 * sizeof(int));
           } else {
@@ -511,6 +520,46 @@ namespace GeographicLib {
     }
 
     /**
+     * Write the object to stream \e os as text.
+     *
+     * @param[in,out] os the output stream.
+     * @param[in] t the NearestNeighbor object to be saved.
+     * @exception std::bad_alloc if memory for the string representation of the
+     *   object can't be allocated.
+     **********************************************************************/
+    friend std::ostream& operator<<(std::ostream& os, const NearestNeighbor& t)
+    { t.Save(os, false); return os; }
+
+    /**
+     * Read the object from stream \e is as text.
+     *
+     * @param[in,out] is the input stream.
+     * @param[out] t the NearestNeighbor object to be loaded.
+     * @exception GeographicErr if the state read from \e is is illegal.
+     * @exception std::bad_alloc if memory for the tree can't be allocated.
+     **********************************************************************/
+    friend std::istream& operator>>(std::istream& is, NearestNeighbor& t)
+    { t.Load(is, false); return is; }
+
+    /**
+     * Swap with another NearestNeighbor object.
+     *
+     * @param[in,out] t the NearestNeighbor object to swap with.
+     **********************************************************************/
+    void swap(NearestNeighbor& t) {
+      std::swap(_numpoints, t._numpoints);
+      std::swap(_bucket, t._bucket);
+      std::swap(_cost, t._cost);
+      _tree.swap(t._tree);
+      std::swap(_mc, t._mc);
+      std::swap(_sc, t._sc);
+      std::swap(_c1, t._c1);
+      std::swap(_k, t._k);
+      std::swap(_cmin, t._cmin);
+      std::swap(_cmax, t._cmax);
+    }
+
+    /**
      * The accumulated statistics on the searches so far.
      *
      * @param[out] setupcost the cost of initializing the NearestNeighbor.
@@ -543,13 +592,14 @@ namespace GeographicLib {
     }
 
   private:
-    // Package up a real and an int.  We will want to sort on the real so put
-    // it first.
-    typedef std::pair<real, int> item;
+    // Package up a dist_t and an int.  We will want to sort on the dist_t so
+    // put it first.
+    typedef std::pair<dist_t, int> item;
+    // \cond SKIP
     class Node {
     public:
       struct bounds {
-        real lower[2], upper[2]; // bounds on inner/outer distances
+        dist_t lower[2], upper[2]; // bounds on inner/outer distances
         int child[2];
       };
       union {
@@ -569,7 +619,7 @@ namespace GeographicLib {
 
       // Sanity check on a Node
       void Check(int numpoints, int treesize, int bucket) const {
-        if (!( -1 <= index && index << numpoints ))
+        if (!( -1 <= index && index < numpoints ))
           throw GeographicLib::GeographicErr("Bad index");
         if (index >= 0) {
           if (!( -1 <= data.child[0] && data.child[0] < treesize &&
@@ -622,11 +672,12 @@ namespace GeographicLib {
       { boost::serialization::split_member(ar, *this, file_version); }
 #endif
     };
+    // \endcond
 #if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
     friend class boost::serialization::access;
     template<class Archive> void save(Archive& ar, const unsigned) const {
-      int realspec = std::numeric_limits<real>::digits *
-        (std::numeric_limits<real>::is_integer ? -1 : 1);
+      int realspec = std::numeric_limits<dist_t>::digits *
+        (std::numeric_limits<dist_t>::is_integer ? -1 : 1);
       // Need to use version1, otherwise load error in debug mode on Linux:
       // undefined reference to GeographicLib::NearestNeighbor<...>::version.
       int version1 = version;
@@ -644,9 +695,9 @@ namespace GeographicLib {
         throw GeographicLib::GeographicErr("Incompatible version");
       std::vector<Node> tree;
       ar & boost::serialization::make_nvp("realspec", realspec);
-      if (!( realspec == std::numeric_limits<real>::digits *
-             (std::numeric_limits<real>::is_integer ? -1 : 1) ))
-        throw GeographicLib::GeographicErr("Different real types");
+      if (!( realspec == std::numeric_limits<dist_t>::digits *
+             (std::numeric_limits<dist_t>::is_integer ? -1 : 1) ))
+        throw GeographicLib::GeographicErr("Different dist_t types");
       ar & boost::serialization::make_nvp("bucket", bucket);
       if (!( 0 <= bucket && bucket <= maxbucket ))
         throw GeographicLib::GeographicErr("Bad bucket size");
@@ -675,7 +726,7 @@ namespace GeographicLib {
     mutable double _mc, _sc;
     mutable int _c1, _k, _cmin, _cmax;
 
-    int init(const std::vector<position>& pts, const distance& dist, int bucket,
+    int init(const std::vector<pos_t>& pts, const distfun_t& dist, int bucket,
              std::vector<Node>& tree, std::vector<item>& ids, int& cost,
              int l, int u, int vp) {
 
@@ -695,7 +746,7 @@ namespace GeographicLib {
           ids[k].first = dist(pts[ids[l].second], pts[ids[k].second]);
           ++cost;
         }
-        // partitian around the median distance
+        // partition around the median distance
         std::nth_element(ids.begin() + l + 1, ids.begin() + m, ids.begin() + u);
         node.index = ids[l].second;
         if (m > l + 1) {        // node.child[0] is possibly empty
@@ -740,6 +791,26 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+namespace std {
+
+  /**
+   * Swap two GeographicLib::NearestNeighbor objects.
+   *
+   * @tparam dist_t the type used for measuring distances.
+   * @tparam pos_t the type for specifying the positions of points.
+   * @tparam distfun_t the type for a function object which calculates distances
+   *   between points.
+   * @param[in,out] a the first GeographicLib::NearestNeighbor to swap.
+   * @param[in,out] b the second GeographicLib::NearestNeighbor to swap.
+   **********************************************************************/
+  template <typename dist_t, typename pos_t, class distfun_t>
+  void swap(GeographicLib::NearestNeighbor<dist_t, pos_t, distfun_t>& a,
+            GeographicLib::NearestNeighbor<dist_t, pos_t, distfun_t>& b) {
+    a.swap(b);
+  }
+
+} // namespace std
 
 #if defined(_MSC_VER)
 #  pragma warning (pop)

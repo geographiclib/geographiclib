@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodesicProj --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/GeodesicProj.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/GeodesicProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -133,14 +133,14 @@ int usage(int retval, bool brief) {
 "       The ellipsoidal gnomonic projection is derived in Section 8 of C. F. F.\n"
 "       Karney, Algorithms for geodesics, J. Geodesy 87, 43-55 (2013); DOI\n"
 "       <https://doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
-"       <http://geographiclib.sourceforge.net/geod-addenda.html>.\n"
+"       <https://geographiclib.sourceforge.io/geod-addenda.html>.\n"
 "\n"
 "AUTHOR\n"
 "       GeodesicProj was written by Charles Karney.\n"
 "\n"
 "HISTORY\n"
 "       GeodesicProj was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in 2009-08.  Prior to version\n"
+"       <https://geographiclib.sourceforge.io>, in 2009-08.  Prior to version\n"
 "       1.9 it was called EquidistantTest.\n"
 ;
   return retval;

@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    MagneticField --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/MagneticField.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/MagneticField.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -175,7 +175,7 @@ int usage(int retval, bool brief) {
 "\n"
 "       Instructions for downloading and installing magnetic models are\n"
 "       available at\n"
-"       <http://geographiclib.sourceforge.net/html/magnetic.html#magneticinst>.\n"
+"       <https://geographiclib.sourceforge.io/html/magnetic.html#magneticinst>.\n"
 "\n"
 "ENVIRONMENT\n"
 "       GEOGRAPHICLIB_MAGNETIC_NAME\n"
@@ -224,7 +224,7 @@ int usage(int retval, bool brief) {
 "\n"
 "HISTORY\n"
 "       MagneticField was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in version 1.15.\n"
+"       <https://geographiclib.sourceforge.io>, in version 1.15.\n"
 ;
   return retval;
 }

@@ -376,12 +376,12 @@ Equally spaced waypoints on the route:
 GeoConvert(1).
 
 An online version of this utility is availbable at
-L<http://geographiclib.sourceforge.net/cgi-bin/GeodSolve>.
+L<https://geographiclib.sourceforge.io/cgi-bin/GeodSolve>.
 
 The algorithms are described in C. F. F. Karney,
 I<Algorithms for geodesics>, J. Geodesy 87, 43-55 (2013); DOI:
 L<https://doi.org/10.1007/s00190-012-0578-z>;
-addenda: L<http://geographiclib.sourceforge.net/geod-addenda.html>.
+addenda: L<https://geographiclib.sourceforge.io/geod-addenda.html>.
 
 The Wikipedia page, Geodesics on an ellipsoid,
 L<https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.
@@ -393,6 +393,6 @@ B<GeodSolve> was written by Charles Karney.
 =head1 HISTORY
 
 B<GeodSolve> was added to GeographicLib,
-L<http://geographiclib.sourceforge.net>, in 2009-03.  Prior to version
+L<https://geographiclib.sourceforge.io>, in 2009-03.  Prior to version
 1.30, it was called B<Geod>.  (The name was changed to avoid a conflict
 with the B<geod> utility in I<proj.4>.)

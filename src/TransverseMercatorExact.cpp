@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  *
  * The relevant section of Lee's paper is part V, pp 67--101,
  * <a href="https://doi.org/10.3138/X687-1574-4325-WM62">Conformal

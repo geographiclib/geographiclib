@@ -86,8 +86,8 @@ int main() {
       boost::archive::xml_oarchive oa(f);
       oa << BOOST_SERIALIZATION_NVP(posset);
 #else
-      ofstream ofs("vptree.bin", ios::binary);
-      posset.Save(ofs, true);
+      ofstream ofs("vptree.txt");
+      ofs << posset << "\n";
 #endif
     }
     // Construct an empty GeodesicNeighbor
@@ -99,8 +99,8 @@ int main() {
       boost::archive::xml_iarchive ia(f);
       ia >> BOOST_SERIALIZATION_NVP(posset);
 #else
-      ifstream ifs("vptree.bin", ios::binary);
-      posset.Load(ifs, true);
+      ifstream ifs("vptree.txt");
+      ifs >> posset;
 #endif
     }
     // Now use it

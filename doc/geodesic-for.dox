@@ -5,22 +5,22 @@
  *
  * Written by Charles Karney <charles@karney.com> and licensed under the
  * MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.47
+\version 1.48
 
 The documentation for other versions is available at
-<tt>http://geographiclib.sourceforge.net/m.nn/Fortran</tt> for versions numbers
+<tt>https://geographiclib.sourceforge.io/m.nn/Fortran</tt> for versions numbers
 <tt>m.nn</tt> &ge; 1.28.
 
 \section abstract-for Abstract
 
 This is a Fortran implementation of the geodesic algorithms from <a
-href="http://geographiclib.sourceforge.net">GeographicLib</a>.  This is a
+href="https://geographiclib.sourceforge.io">GeographicLib</a>.  This is a
 self-contained library which makes it easy to do geodesic computations
 for an ellipsoid of revolution in a Fortran program.  It is written in
 Fortran 77 (avoiding features which are now deprecated) and should
@@ -29,10 +29,10 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.tar.gz">
-  GeographicLib-1.47.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.47.zip">
-  GeographicLib-1.47.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.tar.gz">
+  GeographicLib-1.48.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.zip">
+  GeographicLib-1.48.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in the directory
@@ -41,7 +41,7 @@ geodesic.for.  The Fortran-90 interface is defined in geodesic.inc.
 
 Licensed under the
 <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
-<a href="http://geographiclib.sourceforge.net/html/LICENSE.txt">LICENSE.txt</a>.
+<a href="https://geographiclib.sourceforge.io/html/LICENSE.txt">LICENSE.txt</a>.
 
 \section doc-for Library documentation
 
@@ -112,22 +112,22 @@ and are therefore in the public domain.
   <a href="https://doi.org/10.1007/s00190-012-0578-z">
   Algorithms for geodesics</a>,
   J. Geodesy <b>87</b>, 43--55 (2013)
-  (<a href="http://geographiclib.sourceforge.net/geod-addenda.html"> addenda</a>).
+  (<a href="https://geographiclib.sourceforge.io/geod-addenda.html"> addenda</a>).
 - A longer paper on geodesics: C. F. F. Karney,
    <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
    on an ellipsoid of revolution</a>,
    Feb. 2011
-   (<a href="http://geographiclib.sourceforge.net/geod-addenda.html#geod-errata">
+   (<a href="https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata">
    errata</a>).
 - <a href="https://sourceforge.net/projects/geographiclib/">
   Main project page</a>
-- <a href="http://geographiclib.sourceforge.net/">
+- <a href="https://geographiclib.sourceforge.io/">
   GeographicLib web site</a>
   - Documentation on the C++ classes: GeographicLib::Geodesic,
     GeographicLib::GeodesicLine, GeographicLib::PolygonAreaT.
   - The section in the %GeographicLib documentation on geodesics: \ref
     geodesic.
-- <a href="http://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+- <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
   git repository</a>
 - Implementations in various languages
   - C++ (complete library):
@@ -166,7 +166,7 @@ and are therefore in the public domain.
   - C# (.NET wrapper for complete C++ library):
     <a href="../NET/index.html">
       documentation</a>.
-- <a href="http://geographiclib.sourceforge.net/geodesic-papers/biblio.html">
+- <a href="https://geographiclib.sourceforge.io/geodesic-papers/biblio.html">
   A geodesic bibliography</a>.
 - The wikipedia page,
   <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
@@ -174,17 +174,23 @@ and are therefore in the public domain.
 
 \section changes-for Change log
 
- - <a href="http://geographiclib.sourceforge.net/1.47/Fortran">Version 1.47</a>
+ - <a href="https://geographiclib.sourceforge.io/1.48/Fortran">Version 1.48</a>
+   (released 2017-04-09)
+   - Change default range for longitude and azimuth to
+     (&minus;180&deg;, 180&deg;] (instead of
+     [&minus;180&deg;, 180&deg;)).
+
+ - <a href="https://geographiclib.sourceforge.io/1.47/Fortran">Version 1.47</a>
    (released 2017-02-15)
    - Improve accuracy of area calculation (fixing a flaw introduced in
      version 1.46).
 
- - <a href="http://geographiclib.sourceforge.net/1.46/Fortran">Version 1.46</a>
+ - <a href="https://geographiclib.sourceforge.io/1.46/Fortran">Version 1.46</a>
    (released 2016-02-15)
    - More accurate inverse solution when longitude difference is close
      to 180&deg;.
 
- - <a href="http://geographiclib.sourceforge.net/1.45/Fortran">Version 1.45</a>
+ - <a href="https://geographiclib.sourceforge.io/1.45/Fortran">Version 1.45</a>
    (released 2015-09-30)
    - The solution of the inverse problem now correctly returns NaNs if
      one of the latitudes is a NaN.
@@ -194,7 +200,7 @@ and are therefore in the public domain.
      90&deg;] as NaNs; so the sample programs no longer check for legal
      values of latitude.
 
- - <a href="http://geographiclib.sourceforge.net/1.44/Fortran">Version 1.44</a>
+ - <a href="https://geographiclib.sourceforge.io/1.44/Fortran">Version 1.44</a>
    (released 2015-08-14)
    - Improve accuracy of calculations by evaluating trigonometric
      functions more carefully and replacing the series for the reduced

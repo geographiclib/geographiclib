@@ -5,10 +5,9 @@
 if (GEOGRAPHICLIB_PRECISION EQUAL 2)
   # These examples all assume real = double
   file (GLOB EXAMPLE_SOURCES example-*.cpp)
-  find_package (Boost COMPONENTS serialization)
-  if (Boost_FOUND)
+  if (USE_BOOST_FOR_EXAMPLES AND Boost_FOUND)
     add_definitions (-DGEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION=1)
-    include_directories (${Boost_INCLUDE_DIRS})
+    include_directories ("${Boost_INCLUDE_DIRS}")
   endif ()
 else ()
   set (EXAMPLE_SOURCES)

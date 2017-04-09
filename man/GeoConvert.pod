@@ -228,8 +228,8 @@ east of 39N 70W is
     39N 70W+0:0:15E
 
 B<WARNING:> "Exponential" notation is not recognized for geographic
-coordinates; instead 7.0E+1 is parsed as (7.0E) + (+1), yielding the
-same result as 8.0E.
+coordinates.  Thus 7.0E1 is illegal, while 7.0E+1 is parsed
+as (7.0E) + (+1), yielding the same result as 8.0E.
 
 Various unicode characters (encoded with UTF-8) may also be used to
 denote degrees, minutes, and seconds, e.g., the degree, prime, and
@@ -402,7 +402,7 @@ L<https://en.wikipedia.org/wiki/WGS84>.
 =head1 SEE ALSO
 
 An online version of this utility is availbable at
-L<http://geographiclib.sourceforge.net/cgi-bin/GeoConvert>.
+L<https://geographiclib.sourceforge.io/cgi-bin/GeoConvert>.
 
 The algorithms for the transverse Mercator projection are described in
 C. F. F. Karney, I<Transverse Mercator with an accuracy of a few
@@ -417,4 +417,4 @@ B<GeoConvert> was written by Charles Karney.
 =head1 HISTORY
 
 B<GeoConvert> was added to GeographicLib,
-L<http://geographiclib.sourceforge.net>, in 2009-01.
+L<https://geographiclib.sourceforge.io>, in 2009-01.

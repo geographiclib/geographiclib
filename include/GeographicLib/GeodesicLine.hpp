@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2009-2016) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #if !defined(GEOGRAPHICLIB_GEODESICLINE_HPP)
@@ -55,7 +55,8 @@ namespace GeographicLib {
    *   J. Geodesy <b>87</b>, 43--55 (2013);
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="http://geographiclib.sourceforge.net/geod-addenda.html">
+   *   addenda:
+   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.

@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    TransverseMercatorProj --help\n"
 "or visit:\n"
-"    http://geographiclib.sourceforge.net/1.47/TransverseMercatorProj.1.html\n";
+"    https://geographiclib.sourceforge.io/1.48/TransverseMercatorProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -143,7 +143,7 @@ int usage(int retval, bool brief) {
 "\n"
 "HISTORY\n"
 "       TransverseMercatorProj was added to GeographicLib,\n"
-"       <http://geographiclib.sourceforge.net>, in 2009-01.  Prior to version\n"
+"       <https://geographiclib.sourceforge.io>, in 2009-01.  Prior to version\n"
 "       1.9 it was called TransverseMercatorTest (and its interface was\n"
 "       slightly different).\n"
 ;

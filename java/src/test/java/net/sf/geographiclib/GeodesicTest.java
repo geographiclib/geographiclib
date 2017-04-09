@@ -225,7 +225,7 @@ public class GeodesicTest {
     assertEquals(dir.lat2, 90, 0.5e-5);
     if (dir.lon2 < 0) {
       assertEquals(dir.lon2, -150, 0.5e-5);
-      assertEquals(dir.azi2, -180, 0.5e-5);
+      assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
     } else {
       assertEquals(dir.lon2, 30, 0.5e-5);
       assertEquals(dir.azi2, 0, 0.5e-5);
@@ -378,11 +378,11 @@ public class GeodesicTest {
     assertEquals(inv.s12, 19980862, 0.5);
     inv = Geodesic.WGS84.Inverse(0, 0, 0, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 20003931, 0.5);
     inv = Geodesic.WGS84.Inverse(0, 0, 1, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 19893357, 0.5);
     Geodesic geod = new Geodesic(6.4e6, 0);
     inv = geod.Inverse(0, 0, 0, 179);
@@ -391,11 +391,11 @@ public class GeodesicTest {
     assertEquals(inv.s12, 19994492, 0.5);
     inv = geod.Inverse(0, 0, 0, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 20106193, 0.5);
     inv = geod.Inverse(0, 0, 1, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 19994492, 0.5);
     geod = new Geodesic(6.4e6, -1/300.0);
     inv = geod.Inverse(0, 0, 0, 179);
@@ -412,7 +412,7 @@ public class GeodesicTest {
     assertEquals(inv.s12, 20082617, 0.5);
     inv = geod.Inverse(0, 0, 1, 180);
     assertEquals(inv.azi1, 0.00000, 0.5e-5);
-    assertEquals(inv.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(inv.azi2), 180.00000, 0.5e-5);
     assertEquals(inv.s12, 20027270, 0.5);
   }
 
@@ -447,13 +447,13 @@ public class GeodesicTest {
                             GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
     assertEquals(dir.lat2, 45.30632, 0.5e-5);
     assertEquals(dir.lon2, -180, 0.5e-5);
-    assertEquals(dir.azi2, -180, 0.5e-5);
+    assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
     GeodesicLine line = Geodesic.WGS84.InverseLine(45, 0, 80,
                                                    -0.000000000000000003);
-    dir = line.Position(1e7);
+    dir = line.Position(1e7, GeodesicMask.STANDARD | GeodesicMask.LONG_UNROLL);
     assertEquals(dir.lat2, 45.30632, 0.5e-5);
     assertEquals(dir.lon2, -180, 0.5e-5);
-    assertEquals(dir.azi2, -180, 0.5e-5);
+    assertEquals(Math.abs(dir.azi2), 180, 0.5e-5);
   }
 
   @Test
@@ -467,10 +467,10 @@ public class GeodesicTest {
       line.Position(1e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
     assertEquals(dir.lat1, 30.00000  , 0.5e-5);
     assertEquals(dir.lon1, -0.00000  , 0.5e-5);
-    assertEquals(dir.azi1, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(dir.azi1), 180.00000, 0.5e-5);
     assertEquals(dir.lat2, -60.23169 , 0.5e-5);
     assertEquals(dir.lon2, -0.00000  , 0.5e-5);
-    assertEquals(dir.azi2, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(dir.azi2), 180.00000, 0.5e-5);
     assertEquals(dir.s12 , 10000000  , 0.5);
     assertEquals(dir.a12 , 90.06544  , 0.5e-5);
     assertEquals(dir.m12 , 6363636   , 0.5);
@@ -480,7 +480,7 @@ public class GeodesicTest {
     dir = line.Position(2e7, GeodesicMask.ALL | GeodesicMask.LONG_UNROLL);
     assertEquals(dir.lat1, 30.00000  , 0.5e-5);
     assertEquals(dir.lon1, -0.00000  , 0.5e-5);
-    assertEquals(dir.azi1, -180.00000, 0.5e-5);
+    assertEquals(Math.abs(dir.azi1), 180.00000, 0.5e-5);
     assertEquals(dir.lat2, -30.03547 , 0.5e-5);
     assertEquals(dir.lon2, -180.00000, 0.5e-5);
     assertEquals(dir.azi2, -0.00000  , 0.5e-5);

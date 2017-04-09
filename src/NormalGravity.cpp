@@ -4,7 +4,7 @@
  *
  * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
- * http://geographiclib.sourceforge.net/
+ * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/NormalGravity.hpp>
@@ -44,7 +44,7 @@ namespace GeographicLib {
     _E = _a * sqrt(abs(_e2));   // H+M, Eq 2-54
     // H+M, Eq 2-61
     _U0 = _GM * atanzz(ex2, _f < 0) / _b + _aomega2 / 3;
-    real P = Gf(ex2, _f < 0) / (6 * _Q0);
+    real P = Hf(ex2, _f < 0) / (6 * _Q0);
     // H+M, Eq 2-73
     _gammae = _GM / (_a * _b) - (1 + P) * _a * _omega2;
     // H+M, Eq 2-74
@@ -137,10 +137,10 @@ namespace GeographicLib {
       (3 * (3 + y) * atan5series(y) - 1) / 6;
   }
 
-  Math::real NormalGravity::Gf(real x, bool alt) {
+  Math::real NormalGravity::Hf(real x, bool alt) {
     // z = sqrt(x)
     // Compute
-    //   G(z) = (3*Q(z)+z*diff(Q(z),z))*(1+z^2)
+    //   H(z) = (3*Q(z)+z*diff(Q(z),z))*(1+z^2)
     //        = (3 * (1 + 1/z^2) * (1 - atan(z)/z) - 1) / z^2
     //        = q'(z)/z^2, with q'(z) defined by H+M, Eq 2-67, with z = E/u
     real y = alt ? -x / (1 + x) : x;
@@ -149,9 +149,9 @@ namespace GeographicLib {
       1 - 3 * (1 + y) * atan5series(y);
   }
 
-  Math::real NormalGravity::QG3f(real x, bool alt) {
+  Math::real NormalGravity::QH3f(real x, bool alt) {
     // z = sqrt(x)
-    // (Q(z) - G(z)/3) / z^2
+    // (Q(z) - H(z)/3) / z^2
     //   = - (1+z^2)/(3*z) * d(Q(z))/dz - Q(z)
     //   = ((15+9*z^2)*atan(z)-4*z^3-15*z)/(6*z^7)
     //   = ((25+15*z^2)*atan7+3)/10
@@ -217,7 +217,7 @@ namespace GeographicLib {
       // Qf(z2->inf, false) = pi/(4*z^3)
       q = ((u != 0 || _f < 0 ? Qf(z2, _f < 0) : Math::pi() / 4) / _Q0) *
         bu * Math::sq(bu),
-      qp = _b * Math::sq(bu) * (u != 0 || _f < 0 ? Gf(z2, _f < 0) : 2) / _Q0,
+      qp = _b * Math::sq(bu) * (u != 0 || _f < 0 ? Hf(z2, _f < 0) : 2) / _Q0,
       ang = (Math::sq(sbet) - 1/real(3)) / 2,
       // H+M, Eqs 2-62 + 6-9, but omitting last (rotational) term.
       Vres = _GM * (u != 0 || _f < 0 ?
@@ -296,7 +296,7 @@ namespace GeographicLib {
         f1 = sqrt(f2),          // (1 - f)
         Q0 = Qf(e2 < 0 ? -e2 : ep2, e2 < 0),
         h = e2 - f1 * f2 * K / Q0 - 3 * J2,
-        dh = 1 - 3 * f1 * K * QG3f(e2 < 0 ? -e2 : ep2, e2 < 0) /
+        dh = 1 - 3 * f1 * K * QH3f(e2 < 0 ? -e2 : ep2, e2 < 0) /
                      (2 * Math::sq(Q0));
       e2 = min(e2a - h / dh, maxe_);
       ep2 = max(e2 / (1 - e2), -maxe_);
