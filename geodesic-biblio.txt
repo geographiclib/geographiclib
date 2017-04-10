@@ -1260,6 +1260,23 @@
    Service, 1962), Vol. 3, 2nd half, Chaps. 1--5.[[BR]]
    https://www.worldcat.org/oclc/34429043 [[BR]]
    https://doi.org/10.5281/zenodo.35316
+ * C. H. Kummell,[[BR]]
+   ''Solution of Problem 155'',
+   Tha Analyst '''4'''(4), 117--120 (1877).[[BR]]
+   https://books.google.com/books?id=eKYEAAAAQAAJ&pg=RA1-PA117
+   (PDF analyst-V3-4.pdf)
+ * C. H. Kummell,[[BR]]
+   ''Alignment of curves on any surface, with special application
+   to the ellipsoid'',
+   Bull. Phil. Soc. Washington '''6''', 123--132 (1883).[[BR]]
+   https://books.google.com/books?id=z6kWAAAAQAAJ&pg=RA2-PA123
+   (PDF philsocwash-V4-6.pdf)
+ * C. H. Kummell,[[BR]]
+   ''On the determination of the shortest distance
+   between two points on a spheroid'',
+   Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
+   http://adsabs.harvard.edu/abs/1885AN....112...97K [[BR]]
+   https://doi.org/10.1002/asna.18851120702
  * S. Lie,[[BR]]
    ''Untersuchungen über geodätischen Curben
    [On geodesic curves]'',
@@ -1285,23 +1302,6 @@
    Royal Prussian Geodetic Institute, New Series 52, 172 pp. (1912),
    Secs. 24--40.[[BR]]
    https://doi.org/10.2312/GFZ.b103-krueger28
- * C. H. Kummell,[[BR]]
-   ''Solution of Problem 155'',
-   Tha Analyst '''4'''(4), 117--120 (1877).[[BR]]
-   https://books.google.com/books?id=eKYEAAAAQAAJ&pg=RA1-PA117
-   (PDF analyst-V3-4.pdf)
- * C. H. Kummell,[[BR]]
-   ''Alignment of curves on any surface, with special application
-   to the ellipsoid'',
-   Bull. Phil. Soc. Washington '''6''', 123--132 (1883).[[BR]]
-   https://books.google.com/books?id=z6kWAAAAQAAJ&pg=RA2-PA123
-   (PDF philsocwash-V4-6.pdf)
- * C. H. Kummell,[[BR]]
-   ''On the determination of the shortest distance
-   between two points on a spheroid'',
-   Astron. Nachr. '''112'''(2671), 97--108 (1885).[[BR]]
-   http://adsabs.harvard.edu/abs/1885AN....112...97K [[BR]]
-   https://doi.org/10.1002/asna.18851120702
  * C. Haupt,[[BR]]
    ''Die Ausgleichung grosser geodätischer Dreiecke [The adjustment of
    large geodesic triangles]'',
@@ -1377,6 +1377,20 @@
    http://mi.mathnet.ru/msb7284 [[BR]]
    https://books.google.com/books?id=34_xAAAAMAAJ&pg=PA575
    (PDF matsbornik-V17.pdf)
+ * G. N. Shebuev,[[BR]]
+   ''Geometricheskiye osnovaniya geodezii na trekhosnom ellipsoide,
+   ves'ma malo otlichayushchemsya ot sferoida [Geometric bases of geodesy
+   on a triaxial ellipsoid, very little different from a spheroid]'',
+   Trudy Topografo-geodezicheskoy komissii '''5''', 70--97 (1896).[[BR]]
+   https://geographiclib.sourceforge.io/geodesic-papers/shebuev96.pdf
+ * G. N. Shebuev,[[BR]]
+   ''Rasstoyaniya, azimuty i treugolniki na trekhosnom ellipsoide, malo
+   otlichayushchemsya ot sfery Geometricheskiye osnovaniya geodezii na
+   trekhosnom ellipsoide, ves'ma malo otlichayushchemsya ot sferoida
+   [Distances, azimuths, and triangles on a triaxial ellipsoid, little
+   different from a sphere]'',
+   Trudy Topografo-geodezicheskoy komissii '''8''', 1--72 (1898).[[BR]]
+   https://geographiclib.sourceforge.io/geodesic-papers/shebuev98.pdf
  * A. R. Forsyth,[[BR]]
    ''Geodesics on quadrics, not of revolution'',
    Proc. London Math. Soc. '''27''', 250--280 (1896).[[BR]]
@@ -1439,6 +1453,31 @@
    by M. Lukat,
    (Teubner, Leipzig 1899), Chap. 6.[[BR]]
    https://books.google.com/books?id=Xa4LAAAAYAAJ&pg=PA146 (PDF bianchi99.pdf)
+ * F. N. Krasovsky,[[BR]]
+   ''Opredeleniye razmerov zemnogo trekhosnogo ellipsoida iz rezultatov
+   russkikh gradusnykh izmereniy [Determination of the size of the Earth
+   triaxial ellipsoid from the results of the Russian arc
+   measurements]'',
+   Memorial Book of the Konstantinovsky Mezhevoy Institute for 1900--1901
+   (Russian Association of Printing and Publishing, Moscow, 1902),
+   pp. 19--54,
+   in ''Selected Works'', Vol 1 (Geodezizdat, Moscow, 1953),
+   pp. 23--49.[[BR]]
+   https://geographiclib.sourceforge.io/geodesic-papers/krasovsky02.pdf [[BR]]
+   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
+ * F. N. Krasovsky,[[BR]]
+   ''Obzor i rezultaty sovremennykh gradusnykh izmereniy [Review and
+   results of modern arc measurements]'',
+   Geodezist, No. 6-12 (1936),
+   in ''Selected Works'', Vol 1 (Geodezizdat, Moscow, 1953),
+   pp. 82--178.[[BR]]
+   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
+ * F. N. Krasovsky,[[BR]]
+   ''Rukovodstvo po Vysshei Geodezii [Guide to Higher Geodesy]'',
+   Part 2 (Geodezizdat, Moscow, 1942), 560 pp.,
+   in ''Selected Works'', Vol 4 (Geodezizdat, Moscow, 1955),
+   pp. 4--549.[[BR]]
+   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-ivmgeodezizdat1955.pdf
  * J. H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
@@ -1474,6 +1513,13 @@
    ''Spheroidal geodesics, reference systems, and local geometry'',
    SP-138 (US Naval Oceanographic Office, 1970).[[BR]]
    http://www.dtic.mil/docs/citations/AD0703541
+ * M. S. Molodensky,[[BR]]
+   ''Novyy metod resheniya geodezicheskikh zadach [A new method for
+   solving geodetic problems]'',
+   Trudy TsNIIGAiK '''103''', 3--21 (1954),
+   in ''Selected Works, Gravitational Field'' (Nauka, Moscow, 2001),
+   pp. 250--268.[[BR]]
+   http://publ.lib.ru/ARCHIVES/M/MOLODENSKIY_Mihail_Sergeevich/_Molodenskiy_M.S..html
  * T. Harada,[[BR]]
    ''Formula for calculating latitude of a point when meridian length
    from equator to it is given'' (in Japanese),
@@ -1516,6 +1562,12 @@
    https://doi.org/10.5281/zenodo.32854 [[BR]]
    http://www.dtic.mil/docs/citations/AD0689507 [[BR]]
    https://www.worldcat.org/oclc/493553
+ * Y. G. Ostromukhov and I. I. Radimov,[[BR]]
+   ''Printsipy Resheniya Pryamoy i Obratnoy Geodezicheskikh Zadach pri
+   pomoshchi Tsifrovykh Vychislitelnykh Mashin [Principles of Solving
+   Direct and Inverse Geodetic Problems using Digital Computers]'',
+   (Sudostroenie, Leningrad, 1973), 85 pp.[[BR]]
+   http://doi.org/10.5281/zenodo.495727
  * E. J. Krakiwsky and D. B. Thomson,[[BR]]
    ''Geodetic position computations'',
    Dept. of Geodesy and Geomatics Engineering, Lecture Notes 39,
@@ -1533,6 +1585,15 @@
    ''Geodetic inverse solution between antipodal points'',
    unpublished report, DMAAC (Aug. 28, 1975).[[BR]]
    https://doi.org/10.5281/zenodo.32999
+ * V. P. Morozov,[[BR]]
+   ''Kurs Sferoidicheskoy Geodezii [A Course in Spheroidal Geodesy]''
+   (2nd edition, Nedra, Moscow, 1979) 296 pp.[[BR]]
+   http://www.geokniga.org/bookfiles/geokniga-morozov-vpkurs-sferoidicheskoy-geodeziimnedra1979.pdf
+ * N. A. Bespalov,[[BR]]
+   ''Metody Resheniya Zadach Sferoidicheskoy Geodezii [Methods for
+   Solving Problems of Spheroidal Geodesy]''
+   (Nedra, Moscow, 1980), 287 pp.[[BR]]
+   http://doi.org/10.5281/zenodo.495726
  * R. Bourbon,[[BR]]
    ''Geodesic line on the surface of a spheroid'',
    J.  Navigation '''43'''(1), 132--135 (1990).[[BR]]
@@ -1584,7 +1645,7 @@
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]
    http://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
    [[BR]] https://doi.org/10.1179/003962609X451663
- * Y.-C. Lee,[[BR]]
+ * Y. C. Lee,[[BR]]
    ''The accuracy analysis of methods to solve the geodetic inverse
    problem'' (in Korean),
    J. Korean Soc. Surveying, Geodesy, Photogrammetry and Cartography
