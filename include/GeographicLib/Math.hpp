@@ -423,6 +423,9 @@ namespace GeographicLib {
      * if \e x is infinite or a nan).  The evaluation uses Horner's method.
      **********************************************************************/
     template<typename T> static inline T polyval(int N, const T p[], T x)
+    // This used to employ Math::fma; but that's too slow and it seemed not to
+    // improve the accuracy noticeably.  This might change when there's direct
+    // hardware support for fma.
     { T y = N < 0 ? 0 : *p++; while (--N >= 0) y = y * x + *p++; return y; }
 
     /**

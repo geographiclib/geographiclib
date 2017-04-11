@@ -30,6 +30,14 @@ Instructions:
      dispall()$
      closefile()$
 
+Timings:
+maxpow time(s)
+   6     13
+   8     41
+  10    114
+  12    293
+  14    708
+  16   1629
 */
 
 /*
@@ -51,10 +59,13 @@ reverta(expr,var1,var2,eps,pow):=block([tauacc:1,sigacc:0,dsig],
   var2+sigacc)$
 
 /* beta in terms of phi */
-beta_phi:taylor(atan((1-n)/(1+n)*tan(phi)),n,0,maxpow)$
-beta_phi:subst([atan(tan(phi))=phi,tan(phi)=sin(phi)/cos(phi)],
-  ratdisrep(beta_phi))$
-beta_phi:trigreduce(ratsimp(beta_phi))$
+beta_phi:phi+sum((-n)^j/j*sin(2*j*phi),j,1,maxpow)$
+/* Alt:
+  beta_phi:taylor(atan((1-n)/(1+n)*tan(phi)),n,0,maxpow)$
+  beta_phi:subst([atan(tan(phi))=phi,tan(phi)=sin(phi)/cos(phi)],
+    ratdisrep(beta_phi))$
+  beta_phi:trigreduce(ratsimp(beta_phi))$
+*/
 /* phi in terms of beta */
 phi_beta:subst([n=-n,phi=beta],beta_phi)$
 /* Alt:
