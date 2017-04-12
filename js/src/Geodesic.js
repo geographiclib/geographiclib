@@ -927,7 +927,7 @@ GeographicLib.PolygonArea = {};
       s12x = nvals.s12b;
       m12x = nvals.m12b;
       // Ignore m0
-      if ((outmask & g.GEODESICSCALE) !== 0) {
+      if (outmask & g.GEODESICSCALE) {
         vals.M12 = nvals.M12;
         vals.M21 = nvals.M21;
       }
@@ -1074,7 +1074,7 @@ GeographicLib.PolygonArea = {};
         s12x = nvals.s12b;
         m12x = nvals.m12b;
         // Ignore m0
-        if ((outmask & g.GEODESICSCALE) !== 0) {
+        if (outmask & g.GEODESICSCALE) {
           vals.M12 = nvals.M12;
           vals.M21 = nvals.M21;
         }

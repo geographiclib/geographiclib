@@ -102,9 +102,9 @@ GeographicLib.DMS = {};
       pb = Math.min(mi, pi);
       vals = internalDecode(dmsa.substr(p, pb - p));
       v += vals.val; ind2 = vals.ind;
-      if (ind1 == d.NONE)
+      if (ind1 === d.NONE)
         ind1 = ind2;
-      else if (!(ind2 == d.NONE || ind1 == ind2))
+      else if (!(ind2 === d.NONE || ind1 === ind2))
         throw new Error("Incompatible hemisphere specifies in " +
                         dmsa.substr(0, pb));
     }
@@ -424,7 +424,7 @@ GeographicLib.DMS = {};
     fdegree = (angle - idegree) * scale + 0.5;
     f = Math.floor(fdegree);
     // Implement the "round ties to even" rule
-    fdegree = (f == fdegree && (f & 1)) ? f - 1 : f;
+    fdegree = (f === fdegree && (f & 1) === 1) ? f - 1 : f;
     fdegree /= scale;
 
     fdegree = Math.floor((angle - idegree) * scale + 0.5) / scale;
