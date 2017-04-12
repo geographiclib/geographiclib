@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -95,8 +95,8 @@ namespace GeographicLib {
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
-      t1 = (d1 ? snu * dnv / d1 : (snu < 0 ? -overflow : overflow)),
-      t2 = (d2 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
+      t1 = (d1 != 0 ? snu * dnv / d1 : (snu < 0 ? -overflow : overflow)),
+      t2 = (d2 != 0 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
             (snu < 0 ? -overflow : overflow));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)

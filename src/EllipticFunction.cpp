@@ -2,7 +2,7 @@
  * \file EllipticFunction.cpp
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -257,31 +257,32 @@ namespace GeographicLib {
     // Pi(alpha2, 1) = inf
     // H(1, k) = K(k)
     // G(alpha2, 1) = H(alpha2, 1) = RC(1, alphap2)
-    if (_k2) {
+    if (_k2 != 0) {
       // Complete elliptic integral K(k), Carlson eq. 4.1
       // http://dlmf.nist.gov/19.25.E1
-      _Kc = _kp2 ? RF(_kp2, 1) : Math::infinity();
+      _Kc = _kp2 != 0 ? RF(_kp2, 1) : Math::infinity();
       // Complete elliptic integral E(k), Carlson eq. 4.2
       // http://dlmf.nist.gov/19.25.E1
-      _Ec = _kp2 ? 2 * RG(_kp2, 1) : 1;
+      _Ec = _kp2 != 0 ? 2 * RG(_kp2, 1) : 1;
       // D(k) = (K(k) - E(k))/k^2, Carlson eq.4.3
       // http://dlmf.nist.gov/19.25.E1
-      _Dc = _kp2 ? RD(0, _kp2, 1) / 3 : Math::infinity();
+      _Dc = _kp2 != 0 ? RD(0, _kp2, 1) / 3 : Math::infinity();
     } else {
       _Kc = _Ec = Math::pi()/2; _Dc = _Kc/2;
     }
-    if (_alpha2) {
+    if (_alpha2 != 0) {
       // http://dlmf.nist.gov/19.25.E2
       real rj = (_kp2 != 0 && _alphap2 != 0) ? RJ(0, _kp2, 1, _alphap2) :
         Math::infinity(),
         // Only use rc if _kp2 = 0.
-        rc = _kp2 ? 0 : (_alphap2 ? RC(1, _alphap2) : Math::infinity());
+        rc = _kp2 != 0 ? 0 :
+        (_alphap2 != 0 ? RC(1, _alphap2) : Math::infinity());
       // Pi(alpha^2, k)
       _Pic = _kp2 != 0 ? _Kc + _alpha2 * rj / 3 : Math::infinity();
       // G(alpha^2, k)
-      _Gc = _kp2 ? _Kc + (_alpha2 - _k2) * rj / 3 :  rc;
+      _Gc = _kp2 != 0 ? _Kc + (_alpha2 - _k2) * rj / 3 :  rc;
       // H(alpha^2, k)
-      _Hc = _kp2 ? _Kc - (_alphap2 ? _alphap2 * rj : 0) / 3 : rc;
+      _Hc = _kp2 != 0 ? _Kc - (_alphap2 != 0 ? _alphap2 * rj : 0) / 3 : rc;
     } else {
       _Pic = _Kc; _Gc = _Ec;
       // Hc = Kc - Dc but this involves large cancellations if k2 is close to
@@ -297,7 +298,7 @@ namespace GeographicLib {
       //   RF(x, 1) - RD(0, x, 1)/3 = x * RD(0, 1, x)/3 for x > 0
       // For k2 = 1 and alpha2 = 0, we have
       //   Hc = int(cos(phi),...) = 1
-      _Hc = _kp2 ? _kp2 * RD(0, 1, _kp2) / 3 : 1;
+      _Hc = _kp2 != 0 ? _kp2 * RD(0, 1, _kp2) / 3 : 1;
     }
   }
 
@@ -368,7 +369,7 @@ namespace GeographicLib {
     // Carlson, eq. 4.5 and
     // http://dlmf.nist.gov/19.25.E5
     real cn2 = cn*cn, dn2 = dn*dn,
-      fi = cn2 ? abs(sn) * RF(cn2, dn2, 1) : K();
+      fi = cn2 != 0 ? abs(sn) * RF(cn2, dn2, 1) : K();
     // Enforce usual trig-like symmetries
     if (cn < 0)
       fi = 2 * K() - fi;
@@ -378,18 +379,19 @@ namespace GeographicLib {
   Math::real EllipticFunction::E(real sn, real cn, real dn) const {
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      ei = cn2 ? abs(sn) *( _k2 <= 0 ?
-                            // Carlson, eq. 4.6 and
-                            // http://dlmf.nist.gov/19.25.E9
-                            RF(cn2, dn2, 1) - _k2 * sn2 * RD(cn2, dn2, 1) / 3 :
-                            ( _kp2 >= 0 ?
-                              // http://dlmf.nist.gov/19.25.E10
-                              _kp2 * RF(cn2, dn2, 1) +
-                              _k2 * _kp2 * sn2 * RD(cn2, 1, dn2) / 3 +
-                              _k2 * abs(cn) / dn :
-                              // http://dlmf.nist.gov/19.25.E11
-                              - _kp2 * sn2 * RD(dn2, 1, cn2) / 3 +
-                              dn / abs(cn) ) ) :
+      ei = cn2 != 0 ?
+      abs(sn) * ( _k2 <= 0 ?
+                  // Carlson, eq. 4.6 and
+                  // http://dlmf.nist.gov/19.25.E9
+                  RF(cn2, dn2, 1) - _k2 * sn2 * RD(cn2, dn2, 1) / 3 :
+                  ( _kp2 >= 0 ?
+                    // http://dlmf.nist.gov/19.25.E10
+                    _kp2 * RF(cn2, dn2, 1) +
+                    _k2 * _kp2 * sn2 * RD(cn2, 1, dn2) / 3 +
+                    _k2 * abs(cn) / dn :
+                    // http://dlmf.nist.gov/19.25.E11
+                    - _kp2 * sn2 * RD(dn2, 1, cn2) / 3 +
+                    dn / abs(cn) ) ) :
       E();
     // Enforce usual trig-like symmetries
     if (cn < 0)
@@ -402,7 +404,7 @@ namespace GeographicLib {
     // http://dlmf.nist.gov/19.25.E13
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      di = cn2 ? abs(sn) * sn2 * RD(cn2, dn2, 1) / 3 : D();
+      di = cn2 != 0 ? abs(sn) * sn2 * RD(cn2, dn2, 1) / 3 : D();
     // Enforce usual trig-like symmetries
     if (cn < 0)
       di = 2 * D() - di;
@@ -414,9 +416,9 @@ namespace GeographicLib {
     // http://dlmf.nist.gov/19.25.E14
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      pii = cn2 ? abs(sn) * (RF(cn2, dn2, 1) +
-                             _alpha2 * sn2 *
-                             RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
+      pii = cn2 != 0 ? abs(sn) * (RF(cn2, dn2, 1) +
+                                  _alpha2 * sn2 *
+                                  RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
       Pi();
     // Enforce usual trig-like symmetries
     if (cn < 0)
@@ -427,9 +429,9 @@ namespace GeographicLib {
   Math::real EllipticFunction::G(real sn, real cn, real dn) const {
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      gi = cn2 ? abs(sn) * (RF(cn2, dn2, 1) +
-                            (_alpha2 - _k2) * sn2 *
-                            RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
+      gi = cn2 != 0 ? abs(sn) * (RF(cn2, dn2, 1) +
+                                 (_alpha2 - _k2) * sn2 *
+                                 RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
       G();
     // Enforce usual trig-like symmetries
     if (cn < 0)
@@ -441,9 +443,9 @@ namespace GeographicLib {
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       // WARNING: large cancellation if k2 = 1, alpha2 = 0, and phi near pi/2
-      hi = cn2 ? abs(sn) * (RF(cn2, dn2, 1) -
-                            _alphap2 * sn2 *
-                            RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
+      hi = cn2 != 0 ? abs(sn) * (RF(cn2, dn2, 1) -
+                                 _alphap2 * sn2 *
+                                 RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
       H();
     // Enforce usual trig-like symmetries
     if (cn < 0)

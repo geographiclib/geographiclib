@@ -283,7 +283,7 @@ GeographicLib.Accumulator = {};
       case 2:  sinx = -s; cosx = -c; break;
       default: sinx = -c; cosx =  s; break; // case 3
     }
-    if (x) { sinx += 0; cosx += 0; }
+    if (x !== 0) { sinx += 0; cosx += 0; }
     return {s: sinx, c: cosx};
   };
 

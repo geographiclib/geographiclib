@@ -258,8 +258,8 @@ namespace GeographicLib {
       P = Math::hypot(X, Y),
       R = Math::hypot(P, Z),
       // psi is geocentric latitude
-      cpsi = R ? P / R : M[7],
-      spsi = R ? Z / R : M[8];
+      cpsi = R != 0 ? P / R : M[7],
+      spsi = R != 0 ? Z / R : M[8];
     // Rotate cartesian into spherical coordinates
     real MC[Geocentric::dim2_];
     Geocentric::Rotation(spsi, cpsi, slam, clam, MC);

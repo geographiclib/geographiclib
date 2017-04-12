@@ -2,7 +2,7 @@
  * \file AlbersEqualArea.hpp
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -108,7 +108,7 @@ namespace GeographicLib {
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
     inline real Datanhee(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
-      return t ? atanhee(t / d) / t : 1 / d;
+      return t != 0 ? atanhee(t / d) / t : 1 / d;
     }
     // DDatanhee(x,y) = (Datanhee(1,y) - Datanhee(1,x))/(y-x)
     real DDatanhee(real x, real y) const;

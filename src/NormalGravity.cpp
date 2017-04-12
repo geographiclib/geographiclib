@@ -185,8 +185,8 @@ namespace GeographicLib {
     // See H+M, Sec 6-2
     real
       p = Math::hypot(X, Y),
-      clam = p ? X/p : 1,
-      slam = p ? Y/p : 0,
+      clam = p != 0 ? X/p : 1,
+      slam = p != 0 ? Y/p : 0,
       r = Math::hypot(p, Z);
     if (_f < 0) swap(p, Z);
     real
@@ -198,11 +198,11 @@ namespace GeographicLib {
       u = sqrt((Q >= 0 ? (Q + disc) : t2 / (disc - Q)) / 2),
       uE = Math::hypot(u, _E),
       // H+M, Eq 6-8b
-      sbet = u ? Z * uE : Math::copysign(sqrt(-Q), Z),
-      cbet = u ? p * u : p,
+      sbet = u != 0 ? Z * uE : Math::copysign(sqrt(-Q), Z),
+      cbet = u != 0 ? p * u : p,
       s = Math::hypot(cbet, sbet);
-    sbet = s ? sbet/s : 1;
-    cbet = s ? cbet/s : 0;
+    sbet = s != 0 ? sbet/s : 1;
+    cbet = s != 0 ? cbet/s : 0;
     real
       z = _E/u,
       z2 = Math::sq(z),

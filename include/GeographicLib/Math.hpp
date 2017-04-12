@@ -596,7 +596,7 @@ namespace GeographicLib {
       default: sinx = -c; cosx =  s; break; // case 3U
       }
       // Set sign of 0 results.  -0 only produced for sin(-0)
-      if (x) { sinx += T(0); cosx += T(0); }
+      if (x != 0) { sinx += T(0); cosx += T(0); }
     }
 
     /**
@@ -625,7 +625,7 @@ namespace GeographicLib {
       unsigned p = unsigned(q);
       r = p & 1U ? cos(r) : sin(r);
       if (p & 2U) r = -r;
-      if (x) r += T(0);
+      if (x != 0) r += T(0);
       return r;
     }
 
@@ -672,7 +672,7 @@ namespace GeographicLib {
       static const T overflow = 1 / sq(std::numeric_limits<T>::epsilon());
       T s, c;
       sincosd(x, s, c);
-      return c ? s / c : (s < 0 ? -overflow : overflow);
+      return c != 0 ? s / c : (s < 0 ? -overflow : overflow);
     }
 
     /**

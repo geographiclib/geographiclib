@@ -2,7 +2,7 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -91,12 +91,12 @@ namespace GeographicLib {
 
     static inline real Dlog(real x, real y) {
       real t = x - y;
-      return t ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
+      return t != 0 ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
     }
     // N.B., x and y are in degrees
     static inline real Dtan(real x, real y) {
       real d = x - y, tx = Math::tand(x), ty = Math::tand(y), txy = tx * ty;
-      return d ?
+      return d != 0 ?
         (2 * txy > -1 ? (1 + txy) * Math::tand(d) : tx - ty) /
         (d * Math::degree()) :
         1 + txy;
@@ -104,29 +104,30 @@ namespace GeographicLib {
     static inline real Datan(real x, real y) {
       using std::atan;
       real d = x - y, xy = x * y;
-      return d ? (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(x) - atan(y)) / d :
+      return d != 0 ?
+        (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(x) - atan(y)) / d :
         1 / (1 + xy);
     }
     static inline real Dsin(real x, real y) {
       using std::sin; using std::cos;
       real d = (x - y) / 2;
-      return cos((x + y)/2) * (d ? sin(d) / d : 1);
+      return cos((x + y)/2) * (d != 0 ? sin(d) / d : 1);
     }
     static inline real Dsinh(real x, real y) {
       using std::sinh; using std::cosh;
       real d = (x - y) / 2;
-      return cosh((x + y) / 2) * (d ? sinh(d) / d : 1);
+      return cosh((x + y) / 2) * (d != 0 ? sinh(d) / d : 1);
     }
     static inline real Dcosh(real x, real y) {
       using std::sinh;
       real d = (x - y) / 2;
-      return sinh((x + y) / 2) * (d ? sinh(d) / d : 1);
+      return sinh((x + y) / 2) * (d != 0 ? sinh(d) / d : 1);
     }
     static inline real Dasinh(real x, real y) {
       real d = x - y,
         hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
-      return d ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
-                             x*hy - y*hx) / d :
+      return d != 0 ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
+                                  x*hy - y*hx) / d :
         1 / hx;
     }
     static inline real Dgd(real x, real y) {
@@ -140,7 +141,7 @@ namespace GeographicLib {
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     inline real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _ell._e2 * x * y;
-      return t ? Math::eatanhe(t / d, _ell._es) / t : _ell._e2 / d;
+      return t != 0 ? Math::eatanhe(t / d, _ell._es) / t : _ell._e2 / d;
     }
     // (E(x) - E(y)) / (x - y) -- E = incomplete elliptic integral of 2nd kind
     real DE(real x, real y) const;

@@ -7583,6 +7583,11 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
+ - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
+   (released 2017-mm-dd)
+   - Fix potential warnings about implicit conversions of doubles to
+     bools in C++, C, ahd JavaScript packages.
+
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-04-09)
    - The "official" URL for GeographicLib is now

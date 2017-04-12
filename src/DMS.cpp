@@ -2,7 +2,7 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -236,8 +236,10 @@ namespace GeographicLib {
       // Assume check on range of result is made by calling routine (which
       // might be able to offer a better diagnostic).
       return real(sign) *
-        ( fpieces[2] ? (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
-          ( fpieces[1] ? (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
+        ( fpieces[2] != 0 ?
+          (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
+          ( fpieces[1] != 0 ?
+            (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
     } while (false);
     real val = Utility::nummatch<real>(dmsa);
     if (val == 0)

@@ -2,7 +2,7 @@
  * \file PolarStereographic.cpp
  * \brief Implementation for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -83,12 +83,13 @@ namespace GeographicLib {
     const {
     real
       rho = Math::hypot(x, y),
-      t = rho ? rho / (2 * _k0 * _a / _c) :
+      t = rho != 0 ? rho / (2 * _k0 * _a / _c) :
       Math::sq(numeric_limits<real>::epsilon()),
       taup = (1 / t - t) / 2,
       tau = Math::tauf(taup, _es),
       secphi = Math::hypot(real(1), tau);
-    k = rho ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) : _k0;
+    k = rho != 0 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :
+      _k0;
     lat = (northp ? 1 : -1) * Math::atand(tau);
     lon = Math::atan2d(x, northp ? -y : y );
     gamma = Math::AngNormalize(northp ? lon : -lon);
