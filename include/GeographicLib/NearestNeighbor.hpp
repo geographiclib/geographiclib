@@ -2,8 +2,8 @@
  * \file NearestNeighbor.hpp
  * \brief Header for GeographicLib::NearestNeighbor class
  *
- * Copyright (c) Charles Karney (2016) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2016-2017) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -130,11 +130,6 @@ namespace GeographicLib {
      *   the size of \e pts is too big for an int.
      * @exception std::bad_alloc if memory for the tree can't be allocated.
      *
-     * The distances computed by \e dist must satisfy the standard metric
-     * conditions.  If not, the results are undefined.  Neither the data in \e
-     * pts nor the query points should contain NaNs or infinities because such
-     * data violates the metric conditions.
-     *
      * \e pts may contain coincident points (i.e., the distance between them
      * vanishes); these are treated as distinct.
      *
@@ -144,6 +139,11 @@ namespace GeographicLib {
      * calculations to construct the object by log2(bucket) * pts.size().
      * However each search then requires about bucket additional distance
      * calculations.
+     *
+     * \warning The distances computed by \e dist must satisfy the standard
+     * metric conditions.  If not, the results are undefined.  Neither the data
+     * in \e pts nor the query points should contain NaNs or infinities because
+     * such data violates the metric conditions.
      *
      * \warning The same arguments \e pts and \e dist must be provided
      * to the Search() function.
@@ -251,6 +251,9 @@ namespace GeographicLib {
      * those used to initialize the NearestNeighbor; if not, the behavior of
      * this function is undefined (however, if the size of \e pts is wrong,
      * this function exits with no results returned).
+     *
+     * \warning The query point cannot be a NaN or infinite because then the
+     * metric conditions are violated.
      **********************************************************************/
     dist_t Search(const std::vector<pos_t>& pts, const distfun_t& dist,
                 const pos_t& query,
