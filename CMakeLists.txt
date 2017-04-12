@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 48)
+set (PROJECT_VERSION_MINOR 49)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 17)
-set (LIBVERSION_BUILD 17.1.1)
+set (LIBVERSION_BUILD 17.1.2)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -218,7 +218,9 @@ else ()
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
   # g++ 6.0 defaults to -std=gnu++14
   if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
-        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0))
+        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0) OR
+      # but Boost 1.60 quadmath needs c++14 and not gnu++14
+      GEOGRAPHICLIB_PRECISION EQUAL 4)
     # check for C++11 support.  This flag is *not* propagated to clients
     # that use GeographicLib.  However, this is of no consequence.  When
     # the client code is being compiled (and the GeographicLib headers

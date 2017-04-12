@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.48
+\version 1.49
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/C</tt> for versions numbers
@@ -32,10 +32,10 @@ compile correctly with just about any C compiler.
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.tar.gz">
-  GeographicLib-1.48.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.zip">
-  GeographicLib-1.48.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.tar.gz">
+  GeographicLib-1.49.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.zip">
+  GeographicLib-1.49.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the C library can be found in the directory <tt>legacy/C</tt>.
@@ -189,6 +189,10 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   Geodesics on an ellipsoid</a>.
 
 \section changes-c Change log
+
+ - <a href="https://geographiclib.sourceforge.io/1.49/C">Version 1.49</a>
+   (released 2017-mm-dd)
+   - Fix more warning messages from some compilers.
 
  - <a href="https://geographiclib.sourceforge.io/1.48/C">Version 1.48</a>
    (released 2017-04-09)

@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2017-04-09
+\date 2017-mm-dd
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -7587,6 +7587,7 @@ git repository for GeographicLib</a>.
    (released 2017-mm-dd)
    - Fix potential warnings about implicit conversions of doubles to
      bools in C++, C, ahd JavaScript packages.
+   - Fix for compiler flags for GEOGRAPHICLIB_PRECISION = 4.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-04-09)
