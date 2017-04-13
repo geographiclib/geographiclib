@@ -436,39 +436,51 @@ namespace GeographicLib {
     // which is used in Reverse.
     //
     // Evaluate sums via Clenshaw method.  See
-    //    http://mathworld.wolfram.com/ClenshawRecurrenceFormula.html
+    //    https://en.wikipedia.org/wiki/Clenshaw_algorithm
     //
     // Let
     //
-    //    S = sum(c[k] * F[k](x), k = 0..N)
-    //    F[n+1](x) = alpha(n,x) * F[n](x) + beta(n,x) * F[n-1](x)
+    //    S = sum(a[k] * phi[k](x), k = 0..n)
+    //    phi[k+1](x) = alpha[k](x) * phi[k](x) + beta[k](x) * phi[k-1](x)
     //
     // Evaluate S with
     //
-    //    y[N+2] = y[N+1] = 0
-    //    y[k] = alpha(k,x) * y[k+1] + beta(k+1,x) * y[k+2] + c[k]
-    //    S = c[0] * F[0](x) + y[1] * F[1](x) + beta(1,x) * F[0](x) * y[2]
+    //    b[n+2] = b[n+1] = 0
+    //    b[k] = alpha[k](x) * b[k+1] + beta[k+1](x) * b[k+2] + a[k]
+    //    S = (a[0] + beta[1](x) * b[2]) * phi[0](x) + b[1] * phi[1](x)
     //
     // Here we have
     //
     //    x = 2 * zeta'
-    //    F[n](x) = sin(n * x)
-    //    a(n, x) = 2 * cos(x)
-    //    b(n, x) = -1
-    //    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = n*x, B = x ]
-    //    N = maxpow_
-    //    c[k] = _alp[k]
-    //    S = y[1] * sin(x)
+    //    phi[k](x) = sin(k * x)
+    //    alpha[k](x) = 2 * cos(x)
+    //    beta[k](x) = -1
+    //    [ sin(A+B) - 2*cos(B)*sin(A) + sin(A-B) = 0, A = k*x, B = x ]
+    //    n = maxpow_
+    //    a[k] = _alp[k]
+    //    S = b[1] * sin(x)
     //
     // For the derivative we have
     //
     //    x = 2 * zeta'
-    //    F[n](x) = cos(n * x)
-    //    a(n, x) = 2 * cos(x)
-    //    b(n, x) = -1
-    //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = n*x, B = x ]
-    //    c[0] = 1; c[k] = 2*k*_alp[k]
-    //    S = (c[0] - y[2]) + y[1] * cos(x)
+    //    phi[k](x) = cos(k * x)
+    //    alpha[k](x) = 2 * cos(x)
+    //    beta[k](x) = -1
+    //    [ cos(A+B) - 2*cos(B)*cos(A) + cos(A-B) = 0, A = k*x, B = x ]
+    //    a[0] = 1; a[k] = 2*k*_alp[k]
+    //    S = (a[0] - b[2]) + b[1] * cos(x)
+    //
+    // Matrix formulation (not used here):
+    //    phi[k](x) = [sin(k * x); k * cos(k * x)]
+    //    alpha[k](x) = 2 * [cos(x), 0; -sin(x), cos(x)]
+    //    beta[k](x) = -1 * [1, 0; 0, 1]
+    //    a[k] = _alp[k] * [1, 0; 0, 1]
+    //    b[n+2] = b[n+1] = [0, 0; 0, 0]
+    //    b[k] = alpha[k](x) * b[k+1] + beta[k+1](x) * b[k+2] + a[k]
+    //    N.B., for all k: b[k](1,2) = 0; b[k](1,1) = b[k](2,2)
+    //    S = (a[0] + beta[1](x) * b[2]) * phi[0](x) + b[1] * phi[1](x)
+    //    phi[0](x) = [0; 0]
+    //    phi[1](x) = [sin(x); cos(x)]
     real
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap),
