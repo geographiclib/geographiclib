@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -39,6 +39,8 @@
  *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
  **********************************************************************/
 
+#include <iostream>
+#include <complex>
 #include <GeographicLib/TransverseMercator.hpp>
 
 namespace GeographicLib {
@@ -357,8 +359,8 @@ namespace GeographicLib {
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
-      latsign = lat < 0 ? -1 : 1,
-      lonsign = lon < 0 ? -1 : 1;
+      latsign = (lat < 0) ? -1 : 1,
+      lonsign = (lon < 0) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     bool backside = lon > 90;
@@ -483,38 +485,30 @@ namespace GeographicLib {
     //    phi[1](x) = [sin(x); cos(x)]
     real
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
-      s0 = sin(2 * xip), sh0 = sinh(2 * etap),
-      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta')
+      s0 = sin(2 * xip), sh0 = sinh(2 * etap);
+    complex<real> a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta')
     int n = maxpow_;
-    real
-      xi0 = (n & 1 ? _alp[n] : 0), eta0 = 0,
-      xi1 = 0, eta1 = 0;
-    real                        // Accumulators for dzeta/dzeta'
-      yr0 = (n & 1 ? 2 * maxpow_ * _alp[n--] : 0), yi0 = 0,
-      yr1 = 0, yi1 = 0;
+    complex<real>
+      y0(n & 1 ?       _alp[n] : 0), y1, // default initializer is 0+i0
+      z0(n & 1 ? 2*n * _alp[n] : 0), z1;
+    if (n & 1) --n;
     while (n) {
-      xi1  = ar * xi0 - ai * eta0 - xi1 + _alp[n];
-      eta1 = ai * xi0 + ar * eta0 - eta1;
-      yr1 = ar * yr0 - ai * yi0 - yr1 + 2 * n * _alp[n];
-      yi1 = ai * yr0 + ar * yi0 - yi1;
+      y1 = a * y0 - y1 +       _alp[n];
+      z1 = a * z0 - z1 + 2*n * _alp[n];
       --n;
-      xi0  = ar * xi1 - ai * eta1 - xi0 + _alp[n];
-      eta0 = ai * xi1 + ar * eta1 - eta0;
-      yr0 = ar * yr1 - ai * yi1 - yr0 + 2 * n * _alp[n];
-      yi0 = ai * yr1 + ar * yi1 - yi0;
+      y0 = a * y1 - y0 +       _alp[n];
+      z0 = a * z1 - z0 + 2*n * _alp[n];
       --n;
     }
-    ar /= 2; ai /= 2;           // cos(2*zeta')
-    yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
-    yi1 =   - yi1 + ai * yr0 + ar * yi0;
-    ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta')
-    real
-      xi  = xip  + ar * xi0 - ai * eta0,
-      eta = etap + ai * xi0 + ar * eta0;
+    a /= real(2);               // cos(2*zeta')
+    z1 = real(1) - z1 + a * z0;
+    a = complex<real>(s0 * ch0, c0 * sh0); // sin(2*zeta')
+    y1 = complex<real>(xip, etap) + a * y0;
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
-    gamma -= Math::atan2d(yi1, yr1);
-    k *= _b1 * Math::hypot(yr1, yi1);
+    gamma -= Math::atan2d(z1.imag(), z1.real());
+    k *= _b1 * abs(z1);
+    real xi = y1.real(), eta = y1.imag();
     y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
@@ -535,8 +529,8 @@ namespace GeographicLib {
       eta = x / (_a1 * _k0);
     // Explicitly enforce the parity
     int
-      xisign = xi < 0 ? -1 : 1,
-      etasign = eta < 0 ? -1 : 1;
+      xisign = (xi < 0) ? -1 : 1,
+      etasign = (eta < 0) ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
     bool backside = xi > Math::pi()/2;
@@ -544,43 +538,35 @@ namespace GeographicLib {
       xi = Math::pi() - xi;
     real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
-      s0 = sin(2 * xi), sh0 = sinh(2 * eta),
-      ar = 2 * c0 * ch0, ai = -2 * s0 * sh0; // 2 * cos(2*zeta)
+      s0 = sin(2 * xi), sh0 = sinh(2 * eta);
+    complex<real> a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta)
     int n = maxpow_;
-    real                        // Accumulators for zeta'
-      xip0 = (n & 1 ? -_bet[n] : 0), etap0 = 0,
-      xip1 = 0, etap1 = 0;
-    real                        // Accumulators for dzeta'/dzeta
-      yr0 = (n & 1 ? - 2 * maxpow_ * _bet[n--] : 0), yi0 = 0,
-      yr1 = 0, yi1 = 0;
+    complex<real>
+      y0(n & 1 ?       -_bet[n] : 0), y1, // default initializer is 0+i0
+      z0(n & 1 ? -2*n * _bet[n] : 0), z1;
+    if (n & 1) --n;
     while (n) {
-      xip1  = ar * xip0 - ai * etap0 - xip1 - _bet[n];
-      etap1 = ai * xip0 + ar * etap0 - etap1;
-      yr1 = ar * yr0 - ai * yi0 - yr1 - 2 * n * _bet[n];
-      yi1 = ai * yr0 + ar * yi0 - yi1;
+      y1 = a * y0 - y1 -       _bet[n];
+      z1 = a * z0 - z1 - 2*n * _bet[n];
       --n;
-      xip0  = ar * xip1 - ai * etap1 - xip0 - _bet[n];
-      etap0 = ai * xip1 + ar * etap1 - etap0;
-      yr0 = ar * yr1 - ai * yi1 - yr0 - 2 * n * _bet[n];
-      yi0 = ai * yr1 + ar * yi1 - yi0;
+      y0 = a * y1 - y0 -       _bet[n];
+      z0 = a * z1 - z0 - 2*n * _bet[n];
       --n;
     }
-    ar /= 2; ai /= 2;           // cos(2*zeta')
-    yr1 = 1 - yr1 + ar * yr0 - ai * yi0;
-    yi1 =   - yi1 + ai * yr0 + ar * yi0;
-    ar = s0 * ch0; ai = c0 * sh0; // sin(2*zeta)
-    real
-      xip  = xi  + ar * xip0 - ai * etap0,
-      etap = eta + ai * xip0 + ar * etap0;
+    a /= real(2);               // cos(2*zeta)
+    z1 = real(1) - z1 + a * z0;
+    a = complex<real>(s0 * ch0, c0 * sh0); // sin(2*zeta)
+    y1 = complex<real>(xi, eta) + a * y0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
-    gamma = Math::atan2d(yi1, yr1);
-    k = _b1 / Math::hypot(yr1, yi1);
+    gamma = Math::atan2d(z1.imag(), z1.real());
+    k = _b1 / abs(z1);
     // JHS 154 has
     //
     //   phi' = asin(sin(xi') / cosh(eta')) (Krueger p 17 (25))
     //   lam = asin(tanh(eta') / cos(phi')
     //   psi = asinh(tan(phi'))
     real
+      xip = y1.real(), etap = y1.imag(),
       s = sinh(etap),
       c = max(real(0), cos(xip)), // cos(pi/2) might be negative
       r = Math::hypot(s, c);

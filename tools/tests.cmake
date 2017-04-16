@@ -513,17 +513,39 @@ set_tests_properties (CartConvert1 PROPERTIES PASS_REGULAR_EXPRESSION
 # TransverseMercatorExact found 2013-06-26
 add_test (NAME TransverseMercatorProj0 COMMAND TransverseMercatorProj
   -k 1 --input-string "90 75")
-set_tests_properties (TransverseMercatorProj0 PROPERTIES PASS_REGULAR_EXPRESSION
+add_test (NAME TransverseMercatorProj1 COMMAND TransverseMercatorProj
+  -k 1 --input-string "90 75" -s)
+set_tests_properties (TransverseMercatorProj0 TransverseMercatorProj1
+  PROPERTIES PASS_REGULAR_EXPRESSION
   "^0\\.0+ 10001965\\.7293[0-9]+ 75\\.0+ 1\\.0+")
 # Test fix to bad scale at pole with TransverseMercatorExact
 # found 2013-06-30 (quarter meridian = 10001965.7293127228128889202m)
-add_test (NAME TransverseMercatorProj1 COMMAND TransverseMercatorProj
+add_test (NAME TransverseMercatorProj2 COMMAND TransverseMercatorProj
   -k 1 -r --input-string "0 10001965.7293127228")
-set_tests_properties (TransverseMercatorProj1 PROPERTIES PASS_REGULAR_EXPRESSION
+add_test (NAME TransverseMercatorProj3 COMMAND TransverseMercatorProj
+  -k 1 -r --input-string "0 10001965.7293127228" -s)
+set_tests_properties (TransverseMercatorProj2 TransverseMercatorProj3
+  PROPERTIES PASS_REGULAR_EXPRESSION
   "(90\\.0+ 0\\.0+ 0\\.0+|(90\\.0+|89\\.99999999999[0-9]+) -?180\\.0+ -?180\\.0+) (1\\.0000+|0\\.9999+)")
+# Generic tests for transverse Mercator added 2017-04-15 to check use of
+# complex arithmetic to do Clenshaw sum.
+add_test (NAME TransverseMercatorProj4 COMMAND TransverseMercatorProj
+  -e 6.4e6 1/150 --input-string "20 30")
+add_test (NAME TransverseMercatorProj5 COMMAND TransverseMercatorProj
+  -e 6.4e6 1/150 --input-string "20 30" -s)
+set_tests_properties (TransverseMercatorProj4 TransverseMercatorProj5
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "3266035\\.453860 2518371\\.552676 11\\.207356502141 1\\.134138960741")
+add_test (NAME TransverseMercatorProj6 COMMAND TransverseMercatorProj
+  -e 6.4e6 1/150 --input-string "3.3e6 2.5e6" -r)
+add_test (NAME TransverseMercatorProj7 COMMAND TransverseMercatorProj
+  -e 6.4e6 1/150 --input-string "3.3e6 2.5e6" -r -s)
+set_tests_properties (TransverseMercatorProj6 TransverseMercatorProj7
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "19\\.80370996793 30\\.24919702282 11\\.214378172893 1\\.137025775759")
 
 # Test fix to bad handling of pole by RhumbSolve -i
-# Reported  2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>
+# Reported 2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>
 add_test (NAME RhumbSolve0 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0")
 add_test (NAME RhumbSolve1 COMMAND RhumbSolve

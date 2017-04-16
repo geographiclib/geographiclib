@@ -39,7 +39,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   See also PROJDOC, TRANMERC_INV, UTMUPS_FWD, UTMUPS_INV,
 %     DEFAULTELLIPSOID.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end
@@ -92,34 +92,28 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
   end
   c0 = cos(2 * xip); ch0 = cosh(2 * etap);
   s0 = sin(2 * xip); sh0 = sinh(2 * etap);
-  ar = 2 * c0 .* ch0; ai = -2 * s0 .* sh0;
+  a = 2 * complex(c0 .* ch0, -s0 .* sh0);
   j = maxpow;
-  xi0 = Z; yr0 = Z;
+  y0 = complex(Z); y1 = y0;
+  z0 = y0; z1 = y0;
   if mod(j, 2)
-    xi0 = xi0 + alp(j);
-    yr0 = yr0 + 2 * maxpow * alp(j);
+    y0 = y0 + alp(j);
+    z0 = z0 + 2*j * alp(j);
     j = j - 1;
   end
-  xi1 = Z; eta0 = Z; eta1 = Z;
-  yi0 = Z; yr1 = Z; yi1 = Z;
   for j = j : -2 : 1
-    xi1  = ar .* xi0 - ai .* eta0 - xi1 + alp(j);
-    eta1 = ai .* xi0 + ar .* eta0 - eta1;
-    yr1 = ar .* yr0 - ai .* yi0 - yr1 + 2 * j * alp(j);
-    yi1 = ai .* yr0 + ar .* yi0 - yi1;
-    xi0  = ar .* xi1 - ai .* eta1 - xi0 + alp(j-1);
-    eta0 = ai .* xi1 + ar .* eta1 - eta0;
-    yr0 = ar .* yr1 - ai .* yi1 - yr0 + 2 * (j-1) * alp(j-1);
-    yi0 = ai .* yr1 + ar .* yi1 - yi0;
+    y1 = a .* y0 - y1 +       alp(j);
+    z1 = a .* z0 - z1 + 2*j * alp(j);
+    y0 = a .* y1 - y0 +           alp(j-1);
+    z0 = a .* z1 - z0 + 2*(j-1) * alp(j-1);
   end
-  ar = ar/2; ai = ai/2;
-  yr1 = 1 - yr1 + ar .* yr0 - ai .* yi0;
-  yi1 =   - yi1 + ai .* yr0 + ar .* yi0;
-  ar = s0 .* ch0; ai = c0 .* sh0;
-  xi  = xip  + ar .* xi0 - ai .* eta0;
-  eta = etap + ai .* xi0 + ar .* eta0;
-  gam = gam - atan2dx(yi1, yr1);
-  k = k .* (b1 * hypot(yr1, yi1));
+  a = a/2;
+  z1 = 1 - z1 + z0 .* a;
+  a = complex(s0 .* ch0, c0 .* sh0);
+  y1 = complex(xip, etap) + y0 .* a;
+  gam = gam - atan2dx(imag(z1), real(z1));
+  k = k .* (b1 * abs(z1));
+  xi = real(y1); eta = imag(y1);
   xi(backside) = pi - xi(backside);
   y = a1 * xi .* latsign;
   x = a1 * eta .* lonsign;
