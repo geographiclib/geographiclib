@@ -272,7 +272,7 @@ int main(int argc, char* argv[]) {
       consist = min(m, Math::pi()/2 * g.MajorRadius()) /
         (Math::pi()/2);
     }
-    unsigned seed = time(0);
+    unsigned seed = random_device()(); // Set seed from random_device
     rand_num<real> U(seed);
     cout << norm << " " << consist << " "
          << f << " " << sig << " " << seed << endl;

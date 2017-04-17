@@ -13,9 +13,17 @@ if (MSVC)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 else ()
   set (CMAKE_C_FLAGS
-    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-array-bounds -pedantic")
+    "${CMAKE_C_FLAGS} -Wall -Wextra -Wfloat-conversion -Wno-array-bounds -pedantic")
   if (NOT "${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi")
+  endif ()
+endif ()
+
+if (WARNINGS_ARE_ERRORS)
+  if (MSVC)
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")
+  else ()
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror")
   endif ()
 endif ()
 

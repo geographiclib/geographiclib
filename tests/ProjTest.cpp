@@ -128,7 +128,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat0, GeographicLib::Math::real lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
-  using std::cos;
+  using std::cos; using std::sin; using std::sqrt;
   typedef Math::real real;
   real
     phi = lat0 * Math::degree(),

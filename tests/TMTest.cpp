@@ -28,14 +28,14 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
-  using std::cos; using std::sqrt;
+  using std::cos; using std::sin; using std::sqrt;
   typedef Math::real real;
   real
     phi = real(lat0) * Math::degree(),
     e2 = f * (2 - f),
     sinphi = sin(phi),
     n = 1/sqrt(1 - e2 * sinphi * sinphi),
-      // See Wikipedia article on latitude
+    // See Wikipedia article on latitude
     hlon = cos(phi) * n,
     hlat = (1 - e2) * n * n * n;
   Math::extended dlon = Math::extended(lon1) - lon0;

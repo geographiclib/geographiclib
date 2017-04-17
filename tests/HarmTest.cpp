@@ -177,7 +177,7 @@ int main() {
     //      cout << i << " " << C[i] << " " << S[i] << "\n";
     real lat, lon;
     cout << setprecision(17);
-    real a(0.9L), r(1.2L);
+    real a = real(0.9L), r = real(1.2L);
     SphericalHarmonic harm(C, S, N, a, SphericalHarmonic::FULL);
     vector<real> Z;
     while (cin >> lat >> lon) {
@@ -188,7 +188,7 @@ int main() {
         y = r * (abs(lat) == 90 ? 0 : cos(phi)) * sin(lam),
         z = r * sin(phi);
       real
-        d = 1e-7L,
+        d = real(1e-7L),
         dx1 = (harm(x+d, y, z) - harm(x-d, y, z))/(2*d),
         dy1 = (harm(x, y+d, z) - harm(x, y-d, z))/(2*d),
         dz1 = (harm(x, y, z+d) - harm(x, y, z-d))/(2*d),

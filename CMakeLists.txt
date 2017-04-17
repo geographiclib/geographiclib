@@ -179,6 +179,12 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   set (CMAKE_DEBUG_POSTFIX _d)
 endif ()
 
+if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+  set (DEVELOPER ON)
+else ()
+  set (DEVELOPER OFF)
+endif ()
+
 if (NOT MSVC)
   # Set the run time path for shared libraries for non-Windows machines.
   # (1) include link path for external packages (not needed with
@@ -215,7 +221,12 @@ if (MSVC)
   # Turn on parallel builds for Visual Studio
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
 else ()
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wfloat-conversion")
+  if (NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    # Clang compiler complains about seemingly innocuous float to bool
+    # conversions; need to catch these.
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+  endif ()
   # g++ 6.0 defaults to -std=gnu++14
   if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
         NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0) OR
@@ -242,6 +253,13 @@ else ()
     if (CXX11_FLAG)
       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
     endif ()
+  endif ()
+endif ()
+if (DEVELOPER OR WARNINGS_ARE_ERRORS)
+  if (MSVC)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+  else ()
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif ()
 endif ()
 
@@ -481,7 +499,7 @@ if (MSVC AND BUILD_NETGEOGRAPHICLIB)
   endif ()
 endif ()
 add_subdirectory (cmake)
-if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+if (DEVELOPER)
   add_subdirectory (tests)
 endif ()
 

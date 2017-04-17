@@ -531,6 +531,7 @@ namespace GeographicLib {
      * the equator in a northward direction.
      **********************************************************************/
     real EquatorialAzimuth() const {
+      using std::atan2;
       return Init() ?
         atan2(_salp0, _calp0) / Math::degree<real>() : Math::NaN<real>();
     }
@@ -540,6 +541,7 @@ namespace GeographicLib {
      * crossing and point 1.
      **********************************************************************/
     real EquatorialArc() const {
+      using std::atan2;
       return Init() ?
         atan2(_ssig1, _csig1) / Math::degree<real>() : Math::NaN<real>();
     }
