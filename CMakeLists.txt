@@ -220,12 +220,19 @@ include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
 # Make the compiler more picky.
+include (CheckCXXCompilerFlag)
 if (MSVC)
   string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   # Turn on parallel builds for Visual Studio
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
 else ()
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wfloat-conversion")
+  set (FLOAT_CONVERSION_FLAG "-Wfloat-conversion")
+  check_cxx_compiler_flag (${FLOAT_CONVERSION_FLAG} FLOAT_CONVERSION)
+  if (NOT FLOAT_CONVERSION)
+    set (FLOAT_CONVERSION_FLAG)
+  endif ()
+  set (CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
   if (NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     # Clang compiler complains about seemingly innocuous float to bool
     # conversions; need to catch these.
@@ -240,7 +247,6 @@ else ()
     # that use GeographicLib.  However, this is of no consequence.  When
     # the client code is being compiled (and the GeographicLib headers
     # being included), work-alike substitutions are used.
-    include (CheckCXXCompilerFlag)
     # The only "deprecated" flag included here is "0x" to activate C++11
     # with old versions of g++.  We'll add "17" when it's available.
     # Note: C++11 (actually gnu++14) support is turned on by default in
