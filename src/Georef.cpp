@@ -37,8 +37,8 @@ namespace GeographicLib {
                                 "long long not wide enough to store 21600e9");
     const long long m = 60000000000LL;
     long long
-      x = (long long)(floor(lon * m)) - lonorig_ * m,
-      y = (long long)(floor(lat * m)) - latorig_ * m;
+      x = (long long)(floor(lon * real(m))) - lonorig_ * m,
+      y = (long long)(floor(lat * real(m))) - latorig_ * m;
     int ilon = int(x / m); int ilat = int(y / m);
     char georef1[maxlen_];
     georef1[0] = lontile_[ilon / tile_];

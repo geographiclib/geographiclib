@@ -125,7 +125,7 @@ namespace GeographicLib {
         using std::pow;
         // Treat prec = 1 as 2.
         prec = (std::max)(2, (std::min)(int(maxprec_), prec));
-        return 1/(60 * pow(real(base_), prec - 2));
+        return 1/(60 * real(pow(real(base_), prec - 2)));
       }
     }
 

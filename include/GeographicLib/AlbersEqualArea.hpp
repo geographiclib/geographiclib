@@ -77,7 +77,7 @@ namespace GeographicLib {
         // only negative for very prolate ellipsoids (_b/_a >= sqrt(2)) and we
         // still need to return a positive result in this case; hence the need
         // for the call to atan2.
-        (_f < 0 ? (atan2(_e * abs(x), x < 0 ? -1 : 1)/_e) : x);
+        (_f < 0 ? (atan2(_e * abs(x), real(x < 0 ? -1 : 1))/_e) : x);
     }
     // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x
     static real atanhxm1(real x);

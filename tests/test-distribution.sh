@@ -175,7 +175,7 @@ for ver in 10 11 12 14 15; do
 	    echo 'mkdir -p v:/data/scratch/$b'
 	    echo 'cd v:/data/scratch/$b'
 	    echo 'unset GEOGRAPHICLIB_DATA'
-	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D WARNINGS_ARE_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	    echo cmake --build . --config Debug   --target ALL_BUILD
 	    echo cmake --build . --config Debug   --target RUN_TESTS
 	    echo cmake --build . --config Debug   --target INSTALL
@@ -228,7 +228,7 @@ find . -type f | sort -u > ../files.b
 cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D WARNINGS_ARE_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
 make test
 make -j$NUMCPUS exampleprograms
@@ -240,7 +240,7 @@ make install
 
 mkdir ../BUILD-system
 cd ../BUILD-system
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D WARNINGS_ARE_ERRORS=ON ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
 make -j$NUMCPUS all
 make test
 cd ..
@@ -269,7 +269,7 @@ for l in C Fortran; do
     (
 	mkdir $TEMP/legacy/$l/BUILD
 	cd $TEMP/legacy/$l/BUILD
-	cmake -D WARNINGS_ARE_ERRORS=ON ..
+	cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
 	make -j$NUMCPUS all
 	make test
     )
@@ -285,11 +285,12 @@ for p in 1 3 4 5; do
     mkdir BUILD-$p
     (
 	cd BUILD-$p
-	cmake -D GEOGRAPHICLIB_PRECISION=$p ..
-	make -j$NUMCPUS all testprograms
-	if test $p != 1; then
+	cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p ..
+	make -j$NUMCPUS all
+	if test $p -ne 1; then
 	    make test
 	fi
+	make -j$NUMCPUS testprograms
     )
 done
 

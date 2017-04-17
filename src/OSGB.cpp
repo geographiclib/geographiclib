@@ -55,7 +55,7 @@ namespace GeographicLib {
                         * tilegrid_ + (xh / tilegrid_)];
     grid[z++] = letters_[(tilegrid_ - (yh % tilegrid_) - 1)
                         * tilegrid_ + (xh % tilegrid_)];
-    real mult = pow(real(base_), max(tilelevel_ - prec, 0));
+    real mult = real(pow(real(base_), max(tilelevel_ - prec, 0)));
     int
       ix = int(floor(xf / mult)),
       iy = int(floor(yf / mult));
@@ -68,7 +68,7 @@ namespace GeographicLib {
     if (prec > tilelevel_) {
       xf -= floor(xf / mult);
       yf -= floor(yf / mult);
-      mult = pow(real(base_), prec - tilelevel_);
+      mult = real(pow(real(base_), prec - tilelevel_));
       ix = int(floor(xf * mult));
       iy = int(floor(yf * mult));
       for (int c = prec - tilelevel_; c--;) {

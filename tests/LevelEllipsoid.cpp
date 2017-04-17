@@ -123,7 +123,7 @@ public:
     case  0: d[0] =  gX; d[1] =  gZ; break; // parallel to g
     case  1: d[0] = -gZ; d[1] =  gX; break; // counterclockwise 90d from g
     case  2: d[0] = -gX; d[1] = -gZ; break; // antiparallel to g
-    case  3: 
+    case  3:
     default: d[0] =  gZ; d[1] = -gX; break; // clockwise 90d from g
     }
   }
@@ -134,11 +134,10 @@ public:
   static void follow(const GravityInt& sys, const point& p0, real t0, real ds,
                      std::vector<point>& points, const PointTest& box) {
     ode::result_of::make_dense_output
-      < ode::runge_kutta_dopri5
-        < point > >::type integrator = 
-      ode::make_dense_output(1.0e-8, 0*1.0e-8,
-                             ode::runge_kutta_dopri5< point >() );
-    integrator.initialize(p0, t0, 1e-2);
+      < ode::runge_kutta_dopri5< point, real > >::type integrator =
+      ode::make_dense_output(real(1.0e-8), real(0*1.0e-8),
+                             ode::runge_kutta_dopri5< point, real >() );
+    integrator.initialize(p0, t0, real(1e-2));
     integrator.do_step(sys);
     int n = 1, i = 1;
     point out;
@@ -182,7 +181,7 @@ private:
 public:
   Interpolator()
     : _maxit(20), _eps(sqrt(std::numeric_limits<real>::epsilon())) {}
-  real operator() (const GravityEval& gravfun, 
+  real operator() (const GravityEval& gravfun,
                    real x0, real x1, real val) {
     using std::abs;
     real y0 = gravfun(x0) - val, y1;
@@ -209,7 +208,7 @@ int main() {
   using std::sqrt;
   real a = 1, GM = 1, omega = 3/Math::real(10), f = 2/Math::real(10);
   real gX, gY, gZ, b = (1 - f) * a, E = a * sqrt(f * (2 - f));
-  real thresh = 0.5e-3;
+  real thresh = real(0.5e-3);
   NormalGravity grav(a, GM, omega, f, true);
   real xmax = 3, ymax = 2;
   PointTest box(0, xmax, 0, ymax);
@@ -258,7 +257,7 @@ int main() {
     points.clear();
     p0[0] = Xnull; p0[1] = 0;
     points.push_back(p0);
-    p0[0] = Xnull; p0[1] = 0.001;
+    p0[0] = Xnull; p0[1] = real(0.001);
     points.push_back(p0);
     GravityInt sys(grav, 2u);
     GravityFollow::follow(sys, p0, real(0), 1/real(100), points, box);
@@ -270,10 +269,10 @@ int main() {
   for (int i = 1; i <= 5; ++i) {
     points.clear();
     p0[0] = xmax;
-    p0[1] = i == 1 ? 0.45 :
-      (i == 2 ? 0.9 :
-       (i == 3 ? 1.25 :
-        (i == 4 ? 1.6 : 1.9)));
+    p0[1] = real(i == 1 ? 0.45 :
+                 (i == 2 ? 0.9 :
+                  (i == 3 ? 1.25 :
+                   (i == 4 ? 1.6 : 1.9))));
     points.push_back(p0);
     if (!box(p0)) break;
     GravityInt sys(grav, 2u);
@@ -282,7 +281,7 @@ int main() {
     std::cout << "q{" << ++k << "}=[\n";
     dump(points);
     std::cout << "];\n";
-  } 
+  }
   k = 0;
   for (int i = 0; i <= 90; i += 10) {
     points.clear();
@@ -351,12 +350,12 @@ int main() {
     }
   }
   {
-    real dy = 0.02;
+    real dy = real(0.02);
     GravityEval eval(grav, false, false, dy);
     points.clear();
     p0[0] = Xnull; p0[1] = 0;
     points.push_back(p0);
-    p0[0] = intpol(eval, Xnull - 0.1, Xnull, Unull); p0[1] = dy;
+    p0[0] = intpol(eval, Xnull - real(0.1), Xnull, Unull); p0[1] = dy;
     points.push_back(p0);
     GravityInt sysa(grav, 3u);
     GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);
@@ -366,12 +365,12 @@ int main() {
     std::cout << "];\n";
   }
   {
-    real dy = 0.02;
+    real dy = real(0.02);
     GravityEval eval(grav, false, false, dy);
     points.clear();
     p0[0] = Xnull; p0[1] = 0;
     points.push_back(p0);
-    p0[0] = intpol(eval, Xnull + 0.1, Xnull, Unull); p0[1] = dy;
+    p0[0] = intpol(eval, Xnull + real(0.1), Xnull, Unull); p0[1] = dy;
     points.push_back(p0);
     GravityInt sysa(grav, 1u);
     GravityFollow::follow(sysa, p0, real(0), 1/real(100), points, box);

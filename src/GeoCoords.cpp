@@ -108,7 +108,7 @@ namespace GeographicLib {
                                bool abbrev, std::string& utm) {
     ostringstream os;
     prec = max(-5, min(9 + Math::extra_digits(), prec));
-    real scale = prec < 0 ? pow(real(10), -prec) : real(1);
+    real scale = prec < 0 ? real(pow(real(10), -prec)) : real(1);
     os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
     if (Math::isfinite(easting)) {
       os << " " << Utility::str(easting / scale, max(0, prec));

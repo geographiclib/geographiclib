@@ -74,7 +74,7 @@ namespace GeographicLib {
       // sig12 = etol2.  Here 0.1 is a safety factor (error decreased by 100)
       // and max(0.001, abs(f)) stops etol2 getting too large in the nearly
       // spherical case.
-    , _etol2(0.1 * tol2_ /
+    , _etol2(real(0.1) * tol2_ /
              sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
   {
     if (!(Math::isfinite(_a) && _a > 0))

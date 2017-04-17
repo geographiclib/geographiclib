@@ -109,13 +109,13 @@ int main() {
          << " E " << e.E()
          << " KE " << e.KE() << "\n";
     sn = cn = dn = 0;
-    e.sncndn(0.1, sn, cn, dn);
+    e.sncndn(Math::real(0.1), sn, cn, dn);
     cout << " sncndn " << sn << " " << cn << " " << dn
-         << " E(phi) " << e.E(0.1)
+         << " E(phi) " << e.E(Math::real(0.1))
          << " E(sncndn) " << e.E(sn, cn, dn) << "\n";
   }
   {
-    EllipticFunction e(0.1);
+    EllipticFunction e(Math::real(0.1));
     Math::real sn, cn, dn;
     sn = cn = dn = 0;
     e.sncndn(Math::NaN<Math::real>(), sn, cn, dn);

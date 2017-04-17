@@ -19,7 +19,7 @@ else ()
   endif ()
 endif ()
 
-if (WARNINGS_ARE_ERRORS)
+if (CONVERT_WARNINGS_TO_ERRORS)
   if (MSVC)
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /WX")
   else ()

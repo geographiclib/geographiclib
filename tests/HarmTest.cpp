@@ -80,7 +80,9 @@ int main() {
     {
       cout << fixed;
       Geoid egm("egm2008-1");
-      real lat0 = 89.234412, lon0 = -179.234257, dl = 180/1123, h = 0;
+      real
+        lat0 = real(89.234412), lon0 = real(-179.234257),
+        dl = 180/real(1123), h = 0;
       for (int j = 0; j < 2000; ++j) {
         real lat = lat0 - j*dl/2;
         for (int i = 0; i < 4000; ++i) {
@@ -98,7 +100,7 @@ int main() {
     {
       cout << fixed;
       GravityModel egm("egm2008","/home/ckarney/geographiclib/gravity");
-      real lat = 33, lon0 = 44, dlon = 0.001;
+      real lat = 33, lon0 = 44, dlon = real(0.001);
       GravityCircle c = egm.Circle(lat, 0.0);
       for (int i = 0; i < 100000; ++i) {
         real lon = lon0 + i * dlon;
@@ -214,14 +216,14 @@ int main() {
     p = r * cos(phi);
     sum = 0;
     for (int i = 0; i < 100; ++i) {
-      lam = (44 + 0.01*i) * Math::degree();
+      lam = (44 + real(0.01)*i) * Math::degree();
       sum += harm(p * cos(lam), p * sin(lam), z, dx, dy, dz);
     }
     cout << "sum a " << sum << endl;
     CircularEngine circ(harm.Circle(p, z, true));
     sum = 0;
     for (int i = 0; i < 100000; ++i) {
-      lon = (44 + 0.01*i);
+      lon = (44 + real(0.01)*i);
       sum += circ(lon, dx, dy, dz);
     }
     cout << "sum b " << sum << endl;

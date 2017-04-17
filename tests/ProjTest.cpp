@@ -179,7 +179,7 @@ int main(int argc, char* argv[]) {
       f = 0;
     } else if (geo.datum() == "Test_SRMmax") {
       a = 6400000;
-      f = 1/150.0;
+      f = 1/real(150);
     } else
       throw std::out_of_range("Unsupported datum " + geo.datum());
     if (proj.datum() != geo.datum())
@@ -247,7 +247,7 @@ int main(int argc, char* argv[]) {
     LambertConformalConic tx(a, f, lat1, lat2, k1);
     PolarStereographic txa(a, f, k1);
     TransverseMercator txb(a, f, k1);
-    TransverseMercatorExact txc(a, f == 0 ? 0.1/eps : f, k1);
+    TransverseMercatorExact txc(a, f == 0 ? real(0.1)/eps : f, k1);
     std::cout << a << " 1/" << 1/f << " " << k1 << " " << type << "\n";
     real x0, y0, gam, k;
     if (type == lcc)

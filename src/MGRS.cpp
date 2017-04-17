@@ -40,7 +40,7 @@ namespace GeographicLib {
                      int prec, std::string& mgrs) {
     // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
     // 7 = ceil(log_2(90))
-    static const real angeps = pow(real(0.5), Math::digits() - 7);
+    static const real angeps = real(pow(real(0.5), Math::digits() - 7));
     if (zone == UTMUPS::INVALID ||
         Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {
       mgrs = "INVALID";
@@ -124,7 +124,7 @@ namespace GeographicLib {
       // the actual latitude.
       ys /= tile_;
       if (abs(ys) < 1)
-        lat = 0.9 * ys;         // accurate enough estimate near equator
+        lat = real(0.9) * ys;         // accurate enough estimate near equator
       else {
         real
           // The poleward bound is a fit from above of lat(x,y)
@@ -282,7 +282,7 @@ namespace GeographicLib {
     // The smallest length s.t., 1.0e7 - eps() < 1.0e7 (approx 1.9 nm)
     // 25 = ceil(log_2(2e7)) -- use half circumference here because
     // northing 195e5 is a legal in the "southern" hemisphere.
-    static const real eps = pow(real(0.5), Math::digits() - 25);
+    static const real eps = real(pow(real(0.5), Math::digits() - 25));
     int
       ix = int(floor(x / tile_)),
       iy = int(floor(y / tile_)),

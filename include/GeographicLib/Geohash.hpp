@@ -99,7 +99,7 @@ namespace GeographicLib {
     static Math::real LatitudeResolution(int len) {
       using std::pow;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 180 * pow(real(0.5), 5 * len / 2);
+      return 180 * real(pow(real(0.5), 5 * len / 2));
     }
 
     /**
@@ -113,7 +113,7 @@ namespace GeographicLib {
     static Math::real LongitudeResolution(int len) {
       using std::pow;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 360 * pow(real(0.5), 5 * len - 5 * len / 2);
+      return 360 * real(pow(real(0.5), 5 * len - 5 * len / 2));
     }
 
     /**

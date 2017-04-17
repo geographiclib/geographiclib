@@ -172,6 +172,10 @@ option (USE_BOOST_FOR_EXAMPLES
 option (APPLE_MULTIPLE_ARCHITECTURES
   "Build multiple architectures for Apple systems" OFF)
 
+# (11) Convert warnings into errors?  Default is OFF.  If the tests
+# directory is present you get this behavior regardless.
+option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+
 set (LIBNAME Geographic)
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of
@@ -255,9 +259,12 @@ else ()
     endif ()
   endif ()
 endif ()
-if (DEVELOPER OR WARNINGS_ARE_ERRORS)
+if (DEVELOPER OR CONVERT_WARNINGS_TO_ERRORS)
   if (MSVC)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+    set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
+    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /WX")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /WX")
   else ()
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif ()

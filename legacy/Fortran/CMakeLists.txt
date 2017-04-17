@@ -10,7 +10,7 @@ endif ()
 
 set (TOOLS geoddirect geodinverse planimeter geodtest)
 
-if (WARNINGS_ARE_ERRORS)
+if (CONVERT_WARNINGS_TO_ERRORS)
   if (MSVC)
     set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /WX")
   else ()

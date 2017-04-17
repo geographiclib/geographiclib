@@ -272,7 +272,7 @@ int main(int argc, char* argv[]) {
       break;
     case 1:
       // Time Line ang
-      dl = 180.0/1000;
+      dl = Math::real(180)/1000;
       for (int i = 0; i <= 90; ++i) {
         Math::real lat1 = i;
         for (int j = 0; j <= 180; ++j) {
@@ -310,11 +310,11 @@ int main(int argc, char* argv[]) {
     case 3:
       // Time Inverse
       for (int i = 0; i <= 179; ++i) {
-        Math::real lat1 = i * 0.5;
+        Math::real lat1 = i * Math::real(0.5);
         for (int j = -179; j <= 179; ++j) {
-          Math::real lat2 = j * 0.5;
+          Math::real lat2 = j * Math::real(0.5);
           for (int k = 0; k <= 359; ++k) {
-            Math::real lon2 = k * 0.5;
+            Math::real lon2 = k * Math::real(0.5);
             Math::real s12;
             geod.Inverse(lat1, 0.0, lat2, lon2, s12);
             ++cnt;

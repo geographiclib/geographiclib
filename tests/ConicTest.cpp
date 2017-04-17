@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
   try {
     if (checkstdlats) {         // stdin contains lat1 lat2 lat0 k0
       cout << setprecision(17);
-      real quant = 1e12L;
+      real quant = real(1e12);
       while (true) {
         real lat1, lat2, lat0, k0;
         if (!(cin >> lat1 >> lat2 >> lat0 >> k0))
@@ -180,7 +180,7 @@ int main(int argc, char* argv[]) {
           break;
         int
           sign0 = lat0 < 0 ? -1 : 1;
-        real quant = 1e12L;
+        real quant = real(1e12);
         real
           lat00 = real(floor(sign0 * lat0 * quant + 0.5L)),
           colat00 = (90 * quant - lat00) / quant;

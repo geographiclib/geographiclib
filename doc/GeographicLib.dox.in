@@ -376,6 +376,8 @@ Here are the steps to compile and install GeographicLib:
   - <code>APPLE_MULTIPLE_ARCHITECTURES</code> (default: OFF).  If set to
     ON, build for i386 and x86_64 and Mac OS X systems.  Otherwise,
     build for the default architecture.
+  - <code>CONVERT_WARNINGS_TO_ERRORS</code> (default: OFF).  If set to
+    ON, then compiler warnings are treated as errors.
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and utilities
@@ -7587,9 +7589,12 @@ git repository for GeographicLib</a>.
    (released 2017-mm-dd)
    - Fix warnings about implicit conversions of doubles to bools in C++,
      C, and JavaScript packages.
-   - Fix for compiler flags for GEOGRAPHICLIB_PRECISION = 4.
    - Use complex arithmetic for Clenshaw sums in TransverseMercator and
      tranmerc_{fwd,inv}.m
+   - Changes in cmake support:
+     - fix compiler flags for GEOGRAPHICLIB_PRECISION = 4;
+     - add CONVERT_WARNINGS_TO_ERRORS option (default OFF), if ON then
+       compiler warnings are treated as errors.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-04-09)
