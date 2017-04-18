@@ -226,11 +226,11 @@ namespace GeographicLib {
       // H+M, Eq 6-10
       gamu = - (_GM + (_aomega2 * qp * ang)) * invw / Math::sq(uE),
       gamb = _aomega2 * q * sbet * cbet * invw / uE,
-      t = u * invw / uE;
+      t = u * invw / uE,
+      gamp = t * cbet * gamu - invw * sbet * gamb;
     // H+M, Eq 6-12
-    GammaX = t * cbet * gamu - invw * sbet * gamb;
-    GammaY = GammaX * slam;
-    GammaX *= clam;
+    GammaX = gamp * clam;
+    GammaY = gamp * slam;
     GammaZ = invw * sbet * gamu + t * cbet * gamb;
     return Vres;
   }

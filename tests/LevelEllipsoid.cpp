@@ -49,10 +49,10 @@ inline LineDistance::LineDistance(const point& a, const point& b)
 inline real LineDistance::Distance(const point& p) const {
   using std::abs;
   real x = p[0] - _a[0], y = p[1] - _a[1];
-  if (_l) {
+  if (_l != 0) {
     real X = x * _nx + y * _ny, Y = abs(x * _ny - y * _nx);
     X = X < 0 ? -X : (X > _l ? X - _l : 0);
-    return X ? Math::hypot(X, Y) : Y;
+    return X != 0 ? Math::hypot(X, Y) : Y;
   } else
     return Math::hypot(x, y);
 }
