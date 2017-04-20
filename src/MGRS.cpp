@@ -40,6 +40,7 @@ namespace GeographicLib {
                      int prec, std::string& mgrs) {
     // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
     // 7 = ceil(log_2(90))
+    // Need extra real because, since C++11, pow(float, int) returns double
     static const real angeps = real(pow(real(0.5), Math::digits() - 7));
     if (zone == UTMUPS::INVALID ||
         Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {

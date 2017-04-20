@@ -55,6 +55,7 @@ namespace GeographicLib {
                         * tilegrid_ + (xh / tilegrid_)];
     grid[z++] = letters_[(tilegrid_ - (yh % tilegrid_) - 1)
                         * tilegrid_ + (xh % tilegrid_)];
+    // Need extra real because, since C++11, pow(float, int) returns double
     real mult = real(pow(real(base_), max(tilelevel_ - prec, 0)));
     int
       ix = int(floor(xf / mult)),

@@ -7589,6 +7589,8 @@ git repository for GeographicLib</a>.
    (released 2017-mm-dd)
    - Fix warnings about implicit conversions of doubles to bools in C++,
      C, and JavaScript packages.
+   - NearestNeighbor::Search throws an error if \e pts is the wrong size
+     (instead of merely returning no results).
    - Use complex arithmetic for Clenshaw sums in TransverseMercator and
      tranmerc_{fwd,inv}.m
    - Changes in cmake support:

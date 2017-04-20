@@ -22,10 +22,8 @@
 // Only for GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr
 #include <GeographicLib/Constants.hpp>
 
-#if !defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION)
-#define GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION 0
-#endif
-#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+#if defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION) && \
+  GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/split_member.hpp>
 #include <boost/serialization/array.hpp>
@@ -80,7 +78,7 @@ namespace GeographicLib {
    * stand-alone facility.
    *
    * The \e dist_t type must support numeric_limits queries (specifically:
-   * is_signed, is_integer, max(), digits, and digits10).
+   * is_signed, is_integer, max(), digits).
    *
    * The NearestNeighbor object is constructed with a vector of points (type \e
    * pos_t) and a distance function (type \e distfun_t).  However the object
@@ -210,6 +208,8 @@ namespace GeographicLib {
      * @param[in] tol the tolerance on the results (default 0).
      * @return the distance to the closest point found (&minus;1 if no points
      *   are found).
+     * @exception GeographicErr if \e pts has a different size from that used
+     *   to construct the object.
      *
      * The indices returned in \e ind are sorted by distance from \e query
      * (closest first).
@@ -250,22 +250,23 @@ namespace GeographicLib {
      * \warning The arguments \e pts and \e dist must be identical to
      * those used to initialize the NearestNeighbor; if not, the behavior of
      * this function is undefined (however, if the size of \e pts is wrong,
-     * this function exits with no results returned).
+     * this function throw an exception).
      *
      * \warning The query point cannot be a NaN or infinite because then the
      * metric conditions are violated.
      **********************************************************************/
     dist_t Search(const std::vector<pos_t>& pts, const distfun_t& dist,
-                const pos_t& query,
-                std::vector<int>& ind,
-                int k = 1,
-                dist_t maxdist = std::numeric_limits<dist_t>::max(),
-                dist_t mindist = -1,
-                bool exhaustive = true,
-                dist_t tol = 0) const {
+                  const pos_t& query,
+                  std::vector<int>& ind,
+                  int k = 1,
+                  dist_t maxdist = std::numeric_limits<dist_t>::max(),
+                  dist_t mindist = -1,
+                  bool exhaustive = true,
+                  dist_t tol = 0) const {
+      if (_numpoints != int(pts.size()))
+          throw GeographicLib::GeographicErr("pts array has wrong size");
       std::priority_queue<item> results;
-      if (_numpoints > 0 && _numpoints == int(pts.size()) &&
-          k > 0 && maxdist > mindist) {
+      if (_numpoints > 0 && k > 0 && maxdist > mindist) {
         // distance to the kth closest point so far
         dist_t tau = maxdist;
         // first is negative of how far query is outside boundary of node
@@ -403,8 +404,12 @@ namespace GeographicLib {
         std::stringstream ostring;
           // Ensure enough precision for type dist_t.  With C++11, max_digits10
           // can be used instead.
-        if (!std::numeric_limits<dist_t>::is_integer)
-          ostring.precision(std::numeric_limits<dist_t>::digits10 + 2);
+        if (!std::numeric_limits<dist_t>::is_integer) {
+          static const int prec
+            = int(std::ceil(std::numeric_limits<dist_t>::digits *
+                            std::log10(2.0) + 1));
+          ostring.precision(prec);
+        }
         ostring << version << " " << realspec << " " << _bucket << " "
                 << _numpoints << " " << _tree.size() << " " << _cost;
         for (int i = 0; i < int(_tree.size()); ++i) {
@@ -472,6 +477,8 @@ namespace GeographicLib {
         throw GeographicLib::GeographicErr("Bad bucket size");
       if (!( 0 <= treesize && treesize <= numpoints ))
         throw GeographicLib::GeographicErr("Bad number of points or tree size");
+      if (!( 0 <= cost ))
+        throw GeographicLib::GeographicErr("Bad value for cost");
       std::vector<Node> tree;
       tree.reserve(treesize);
       for (int i = 0; i < treesize; ++i) {
@@ -650,7 +657,8 @@ namespace GeographicLib {
         }
       }
 
-#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+#if defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION) && \
+  GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
       friend class boost::serialization::access;
       template<class Archive> void save(Archive& ar, const unsigned int) const {
         ar & boost::serialization::make_nvp("index", index);
@@ -676,7 +684,8 @@ namespace GeographicLib {
 #endif
     };
     // \endcond
-#if GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
+#if defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION) && \
+  GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
     friend class boost::serialization::access;
     template<class Archive> void save(Archive& ar, const unsigned) const {
       int realspec = std::numeric_limits<dist_t>::digits *
