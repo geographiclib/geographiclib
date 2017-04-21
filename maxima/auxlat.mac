@@ -1,8 +1,8 @@
 /*
 Compute series expansions for the auxiliary latitudes.
 
-Copyright (c) Charles Karney (2014) <charles@karney.com> and licensed
-under the MIT/X11 License.  For more information, see
+Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and
+licensed under the MIT/X11 License.  For more information, see
 https://geographiclib.sourceforge.io/
 
 This maxima program compute the coefficients for trigonometric series

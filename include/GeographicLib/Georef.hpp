@@ -2,8 +2,8 @@
  * \file Georef.hpp
  * \brief Header for GeographicLib::Georef class
  *
- * Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -125,6 +125,7 @@ namespace GeographicLib {
         using std::pow;
         // Treat prec = 1 as 2.
         prec = (std::max)(2, (std::min)(int(maxprec_), prec));
+        // Need extra real because, since C++11, pow(float, int) returns double
         return 1/(60 * real(pow(real(base_), prec - 2)));
       }
     }

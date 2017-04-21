@@ -2,7 +2,7 @@
  * \file SphericalEngine.hpp
  * \brief Header for GeographicLib::SphericalEngine class
  *
- * Copyright (c) Charles Karney (2011-2012) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -47,9 +47,13 @@ namespace GeographicLib {
     // intermediate calculations.
     static real scale() {
       using std::pow;
-      return pow(real(std::numeric_limits<real>::radix),
-                 -3 * (std::numeric_limits<real>::max_exponent < (1<<14) ?
-                       std::numeric_limits<real>::max_exponent : (1<<14)) / 5);
+      static const real
+        // Need extra real because, since C++11, pow(float, int) returns double
+        s = real(pow(real(std::numeric_limits<real>::radix),
+                     -3 * (std::numeric_limits<real>::max_exponent < (1<<14) ?
+                           std::numeric_limits<real>::max_exponent : (1<<14))
+                     / 5));
+      return s;
     }
     // Move latitudes near the pole off the axis by this amount.
     static real eps() {

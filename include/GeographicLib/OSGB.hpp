@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/

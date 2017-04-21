@@ -2,7 +2,7 @@
  * \file Geohash.hpp
  * \brief Header for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -99,6 +99,7 @@ namespace GeographicLib {
     static Math::real LatitudeResolution(int len) {
       using std::pow;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
+      // Need extra real because, since C++11, pow(float, int) returns double
       return 180 * real(pow(real(0.5), 5 * len / 2));
     }
 
