@@ -97,10 +97,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LatitudeResolution(int len) {
-      using std::pow;
+      using std::ldexp;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      // Need extra real because, since C++11, pow(float, int) returns double
-      return 180 * real(pow(real(0.5), 5 * len / 2));
+      return ldexp(real(180), -(5 * len / 2));
     }
 
     /**
@@ -112,9 +111,9 @@ namespace GeographicLib {
      * Internally, \e len is first put in the range [0, 18].
      **********************************************************************/
     static Math::real LongitudeResolution(int len) {
-      using std::pow;
+      using std::ldexp;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return 360 * real(pow(real(0.5), 5 * len - 5 * len / 2));
+      return ldexp(real(360), -(5 * len - 5 * len / 2));
     }
 
     /**
