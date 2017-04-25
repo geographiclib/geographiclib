@@ -907,10 +907,11 @@ class Geodesic(object):
               # instead of sqrt(epsilon).
               tripn = abs(v) <= 16 * Geodesic.tol0_
               continue
-          # Either dv was not positive or updated value was outside legal range.
-          # Use the midpoint of the bracket as the next estimate.  This
-          # mechanism is not needed for the WGS84 ellipsoid, but it does catch
-          # problems with more eccentric ellipsoids.  Its efficacy is such for
+          # Either dv was not positive or updated value was outside
+          # legal range.  Use the midpoint of the bracket as the next
+          # estimate.  This mechanism is not needed for the WGS84
+          # ellipsoid, but it does catch problems with more eccentric
+          # ellipsoids.  Its efficacy is such for
           # the WGS84 test set with the starting guess set to alp1 = 90deg:
           # the WGS84 test set: mean = 5.21, sd = 3.93, max = 24
           # WGS84 and random input: mean = 4.74, sd = 0.99
@@ -1139,7 +1140,8 @@ class Geodesic(object):
     return result
 
   def Line(self, lat1, lon1, azi1,
-           caps = GeodesicCapability.STANDARD | GeodesicCapability.DISTANCE_IN):
+           caps = GeodesicCapability.STANDARD |
+           GeodesicCapability.DISTANCE_IN):
     """Return a GeodesicLine object
 
     :param lat1: latitude of the first point in degrees

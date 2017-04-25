@@ -200,7 +200,8 @@ GeographicLib-@PROJECT_VERSION@.zip</a> (or
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
 GeographicLib-@PROJECT_VERSION@-win32.exe</a> or
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win64.exe">
-GeographicLib-@PROJECT_VERSION@-win64.exe</a> for binary installation under Windows).
+GeographicLib-@PROJECT_VERSION@-win64.exe</a>
+for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have

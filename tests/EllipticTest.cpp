@@ -49,7 +49,8 @@ int main() {
         omg = atan(salp0 * tan(sigma)),
         ups = atan(sqrt((1+ep2)/(1+k2*Math::sq(sin(sigma)))) * tan(omg)),
         // psi = atan(sqrt((1+k2*Math::sq(sin(sigma)))/(1+ep2)) * tan(omg)),
-        psi = atan(sqrt((1-e2)/(1+k2*Math::sq(cos(theta)))) * salp0*tan(theta));
+        psi = atan(sqrt((1-e2)/(1+k2*Math::sq(cos(theta)))) *
+                   salp0*tan(theta));
       EllipticFunction ella1(-k2, Math::sq(calp0));
       EllipticFunction ella2(-k2, -ep2);
       EllipticFunction ellb1(kp2, kap2);

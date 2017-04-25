@@ -151,11 +151,11 @@ computeI2(maxpow):=block([sintegrand,sintegrandexp,s,sigma,tau1,k2,eps],
 
 Express
 
-    I3 = integrate( (2-f)/(1+(1-f)*sqrt(1+k2*sin(sigma1)^2)), sigma1, 0, sigma )
+   I3 = integrate( (2-f)/(1+(1-f)*sqrt(1+k2*sin(sigma1)^2)), sigma1, 0, sigma )
 
 as a series
 
-    A3 * ( sigma + sum(C3[l] * sin(2*l*sigma), l, 1, maxpow-1) )
+   A3 * ( sigma + sum(C3[l] * sin(2*l*sigma), l, 1, maxpow-1) )
 
 valid for f and k2 small.  It is convenient to write k2 = 4 * eps / (1 -
 eps)^2 and f = 2*n/(1+n) and expand in eps and n.  This procedure leads

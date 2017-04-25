@@ -18,8 +18,8 @@ namespace GeographicLib {
       , _earth(earth) {}
 
   void AzimuthalEquidistant::Forward(real lat0, real lon0, real lat, real lon,
-                                     real& x, real& y, real& azi, real& rk)
-    const {
+                                     real& x, real& y,
+                                     real& azi, real& rk) const {
     real sig, s, azi0, m;
     sig = _earth.Inverse(lat0, lon0, lat, lon, s, azi0, azi, m);
     Math::sincosd(azi0, x, y);
@@ -28,8 +28,8 @@ namespace GeographicLib {
   }
 
   void AzimuthalEquidistant::Reverse(real lat0, real lon0, real x, real y,
-                                     real& lat, real& lon, real& azi, real& rk)
-    const {
+                                     real& lat, real& lon,
+                                     real& azi, real& rk) const {
     real
       azi0 = Math::atan2d(x, y),
       s = Math::hypot(x, y);

@@ -356,7 +356,8 @@ GeographicLib.DMS = {};
     var vals = d.Decode(angstr),
         ang = vals.val, ind = vals.ind;
     if (ind !== d.NONE)
-      throw new Error("Arc angle " + angstr + " includes a hemisphere N/E/W/S");
+      throw new Error("Arc angle " + angstr +
+                      " includes a hemisphere N/E/W/S");
     return ang;
   };
 

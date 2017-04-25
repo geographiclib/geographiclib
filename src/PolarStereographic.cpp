@@ -59,8 +59,8 @@ namespace GeographicLib {
   //   secphip = taup = exp(-e * atanh(e)) * tau = exp(-e * atanh(e)) * secphi
 
   void PolarStereographic::Forward(bool northp, real lat, real lon,
-                                   real& x, real& y, real& gamma, real& k)
-    const {
+                                   real& x, real& y,
+                                   real& gamma, real& k) const {
     lat = Math::LatFix(lat);
     lat *= northp ? 1 : -1;
     real
@@ -79,8 +79,8 @@ namespace GeographicLib {
   }
 
   void PolarStereographic::Reverse(bool northp, real x, real y,
-                                   real& lat, real& lon, real& gamma, real& k)
-    const {
+                                   real& lat, real& lon,
+                                   real& gamma, real& k) const {
     real
       rho = Math::hypot(x, y),
       t = rho != 0 ? rho / (2 * _k0 * _a / _c) :

@@ -1015,7 +1015,8 @@ Changes between 1.21 (released 2012-04-25) and 1.20 versions:
 
   * cmake tweaks:
     + simplify the configuration of doxygen;
-    + allow the Matlab compiler to be specified with the MATLAB_COMPILER option.
+    + allow the Matlab compiler to be specified with the MATLAB_COMPILER
+      option.
 
 Changes between 1.20 (released 2012-03-23) and 1.19 versions:
 

@@ -538,7 +538,9 @@ real geod_genposition(const struct geod_geodesicline* l,
   salp2 = l->salp0; calp2 = l->calp0 * csig2; /* No need to normalize */
 
   if (outmask & GEOD_DISTANCE)
-    s12 = flags & GEOD_ARCMODE ? l->b * ((1 + l->A1m1) * sig12 + AB1) : s12_a12;
+    s12 = flags & GEOD_ARCMODE ?
+      l->b * ((1 + l->A1m1) * sig12 + AB1) :
+      s12_a12;
 
   if (outmask & GEOD_LONGITUDE) {
     real E = copysignx(1, l->salp0); /* east or west going? */
@@ -576,7 +578,8 @@ real geod_genposition(const struct geod_geodesicline* l,
       m12 = l->b * ((dn2 * (l->csig1 * ssig2) - l->dn1 * (l->ssig1 * csig2))
                     - l->csig1 * csig2 * J12);
     if (outmask & GEOD_GEODESICSCALE) {
-      real t = l->k2 * (ssig2 - l->ssig1) * (ssig2 + l->ssig1) / (l->dn1 + dn2);
+      real t = l->k2 * (ssig2 - l->ssig1) * (ssig2 + l->ssig1) /
+        (l->dn1 + dn2);
       M12 = csig12 + (t *  ssig2 -  csig2 * J12) * l->ssig1 / l->dn1;
       M21 = csig12 - (t * l->ssig1 - l->csig1 * J12) *  ssig2 /  dn2;
     }
@@ -639,7 +642,9 @@ static void geod_setarc(struct geod_geodesicline* l, real a13) {
 
 void geod_gensetdistance(struct geod_geodesicline* l,
  unsigned flags, real s13_a13) {
-  flags & GEOD_ARCMODE ? geod_setarc(l, s13_a13) : geod_setdistance(l, s13_a13);
+  flags & GEOD_ARCMODE ?
+    geod_setarc(l, s13_a13) :
+    geod_setdistance(l, s13_a13);
 }
 
 void geod_position(const struct geod_geodesicline* l, real s12,

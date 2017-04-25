@@ -62,7 +62,8 @@ namespace GeographicLib {
       _alt_k = _k;
       _alt_zone = _zone;
     }
-    static void UTMUPSString(int zone, bool northp, real easting, real northing,
+    static void UTMUPSString(int zone, bool northp,
+                             real easting, real northing,
                              int prec, bool abbrev, std::string& utm);
     void FixHemisphere();
   public:
@@ -499,7 +500,8 @@ namespace GeographicLib {
      * @return UTM/UPS string representation: zone designator, easting, and
      *   northing.
      **********************************************************************/
-    std::string AltUTMUPSRepresentation(int prec = 0, bool abbrev = true) const;
+    std::string AltUTMUPSRepresentation(int prec = 0, bool abbrev = true)
+      const;
 
     /**
      * UTM/UPS string for the alternate zone, with hemisphere override.

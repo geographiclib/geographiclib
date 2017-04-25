@@ -165,8 +165,8 @@ namespace GeographicLib {
      * - \e caps |= GeodesicLineExact::LATITUDE for the latitude \e lat2; this
      *   is added automatically;
      * - \e caps |= GeodesicLineExact::LONGITUDE for the latitude \e lon2;
-     * - \e caps |= GeodesicLineExact::AZIMUTH for the latitude \e azi2; this is
-     *   added automatically;
+     * - \e caps |= GeodesicLineExact::AZIMUTH for the latitude \e azi2; this
+     *   is added automatically;
      * - \e caps |= GeodesicLineExact::DISTANCE for the distance \e s12;
      * - \e caps |= GeodesicLineExact::REDUCEDLENGTH for the reduced length \e
          m12;

@@ -3,7 +3,7 @@
 # GeodSolve.cgi
 # cgi script for geodesic calculations
 #
-# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -46,6 +46,7 @@ COMMAND="GeodSolve -E -f"
 VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 F='<font color="blue">'
 G='</font>'
+S='     '
 test $TYPE = I && COMMAND="$COMMAND -i"
 COMMANDX="$COMMAND -p 1"
 test $FORMAT = d && COMMAND="$COMMAND -$FORMAT"
@@ -65,31 +66,31 @@ if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -e "$RADIUS" "$FLATTENING" 2>&1 |
             head -1`
     if test $? -eq 0; then
-	STATUS=OK
-	OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX -e "$RADIUS" "$FLATTENING" |
+        STATUS=OK
+        OUTPUTG=`echo $INPUT | $EXECDIR/$COMMANDX -e "$RADIUS" "$FLATTENING" |
                  head -1`
-	POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
-	POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
-	POSG1="`echo $OUTPUTG | cut -f1-2 -d' '`"
-	POSG2="`echo $OUTPUTG | cut -f4-5 -d' '`"
-	AZI1="`echo $OUTPUT | cut -f3 -d' '`"
-	AZI2="`echo $OUTPUT | cut -f6 -d' '`"
-	DIST12="`echo $OUTPUT | cut -f7 -d' '`"
-	a12="`echo $OUTPUT | cut -f8 -d' '`"
-	m12="`echo $OUTPUT | cut -f9 -d' '`"
-	M1221="`echo $OUTPUT | cut -f10-11 -d' '`"
-	S12="`echo $OUTPUT | cut -f12 -d' '`"
-	if test "$TYPE" = D; then
-	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $(convertdeg "$AZI1")
-	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)\ $(convertdeg "$AZI2")$G
-	    DIST12=$(encodevalue "$DIST12")
-	else
-	    POSITION1=$(geohack $POSG1 $POS1 Black)\ $F$(convertdeg "$AZI1")$G
-	    POSITION2=$(geohack $POSG2 $POS2 Black)\ $F$(convertdeg "$AZI2")$G
-	    DIST12=$F$(encodevalue "$DIST12")$G
-	fi
+        POS1="`echo $OUTPUT | cut -f1-2 -d' '`"
+        POS2="`echo $OUTPUT | cut -f4-5 -d' '`"
+        POSG1="`echo $OUTPUTG | cut -f1-2 -d' '`"
+        POSG2="`echo $OUTPUTG | cut -f4-5 -d' '`"
+        AZI1="`echo $OUTPUT | cut -f3 -d' '`"
+        AZI2="`echo $OUTPUT | cut -f6 -d' '`"
+        DIST12="`echo $OUTPUT | cut -f7 -d' '`"
+        a12="`echo $OUTPUT | cut -f8 -d' '`"
+        m12="`echo $OUTPUT | cut -f9 -d' '`"
+        M1221="`echo $OUTPUT | cut -f10-11 -d' '`"
+        S12="`echo $OUTPUT | cut -f12 -d' '`"
+        if test "$TYPE" = D; then
+            POSITION1=$(geohack $POSG1 $POS1 Black)\ $(convertdeg "$AZI1")
+            POSITION2=$F$(geohack $POSG2 $POS2 Blue)\ $(convertdeg "$AZI2")$G
+            DIST12=$(encodevalue "$DIST12")
+        else
+            POSITION1=$(geohack $POSG1 $POS1 Black)\ $F$(convertdeg "$AZI1")$G
+            POSITION2=$(geohack $POSG2 $POS2 Black)\ $F$(convertdeg "$AZI2")$G
+            DIST12=$F$(encodevalue "$DIST12")$G
+        fi
     else
-	STATUS="$OUTPUT"
+        STATUS="$OUTPUT"
     fi
     # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
@@ -105,26 +106,26 @@ cat <<EOF
     <meta name="description" content="Online geodesic calculator" />
     <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
-	  content="geodesics,
-		   geodesic distance,
-		   geographic distance,
-		   shortest path,
-		   direct geodesic problem,
-		   inverse geodesic problem,
-		   distance and azimuth,
-		   distance and heading,
-		   range and bearing,
-		   spheroidal triangle,
-		   latitude and longitude,
-		   online calculator,
-		   WGS84 ellipsoid,
-		   GeographicLib" />
+          content="geodesics,
+                   geodesic distance,
+                   geographic distance,
+                   shortest path,
+                   direct geodesic problem,
+                   inverse geodesic problem,
+                   distance and azimuth,
+                   distance and heading,
+                   range and bearing,
+                   spheroidal triangle,
+                   latitude and longitude,
+                   online calculator,
+                   WGS84 ellipsoid,
+                   GeographicLib" />
   </head>
   <body>
     <h3>
       Online geodesic calculations using the
       <a href="https://geographiclib.sourceforge.io/html/GeodSolve.1.html">
-	 GeodSolve</a> utility
+         GeodSolve</a> utility
     </h3>
     <form action="/cgi-bin/GeodSolve" method="get">
       <p>
@@ -133,11 +134,11 @@ cat <<EOF
           <tr>
             <td valign='baseline'>
               &nbsp;&nbsp;&nbsp;
-	      <label for='I'>
-		<input type="radio" name="type" value="I" id='I'
+              <label for='I'>
+                <input type="radio" name="type" value="I" id='I'
                        `test "$TYPE" = I && echo CHECKED`>
-		&nbsp;Inverse:&nbsp;
-	      </label>
+                &nbsp;Inverse:&nbsp;
+              </label>
             </td>
             <td valign='baseline'>
               <em>lat1 lon1 lat2 lon2</em>
@@ -149,11 +150,11 @@ cat <<EOF
           <tr>
             <td valign='baseline'>
               &nbsp;&nbsp;&nbsp;
-	      <label for='D'>
-		<input type="radio" name="type" value="D" id='D'
+              <label for='D'>
+                <input type="radio" name="type" value="D" id='D'
                        `test "$TYPE" = D && echo CHECKED`>
-		&nbsp;Direct:&nbsp;
-	      </label>
+                &nbsp;Direct:&nbsp;
+              </label>
             </td>
             <td valign='baseline'>
               <em>lat1 lon1 azi1 s12</em>
@@ -166,10 +167,10 @@ cat <<EOF
       </p>
       <p>
         Input (ex. &laquo;<tt>40.6 -73.8 49&deg;01'N 2&deg;33'E</tt>&raquo;
-	[inverse],
-	&laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo;
-	[direct]):
-	<br>
+        [inverse],
+        &laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo;
+        [direct]):
+        <br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=72 value="$INPUTENC">
       </p>
@@ -253,19 +254,19 @@ cat <<EOF
               </select>
             </td>
           </tr>
-	  <tr>
-	    <td>Equatorial radius:</td>
-	    <td>
-	      <input type=text name="radius" size=20 value="$RADIUS">
+          <tr>
+            <td>Equatorial radius:</td>
+            <td>
+              <input type=text name="radius" size=20 value="$RADIUS">
             </td>
-	    <td>meters</td>
-	  </tr>
-	  <tr>
-	    <td>Flattening:</td>
-	    <td>
-	      <input type=text name="flattening" size=20 value="$FLATTENING">
+            <td>meters</td>
+          </tr>
+          <tr>
+            <td>Flattening:</td>
+            <td>
+              <input type=text name="flattening" size=20 value="$FLATTENING">
             </td>
-	  </tr>
+          </tr>
         </table>
       </p>
       <p>
@@ -277,8 +278,8 @@ cat <<EOF
       <p>
         Geodesic (input in black, output in ${F}blue${G}):<br>
         <font size="4"><pre>
-    ellipsoid (a f)     = `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
-    status              = `encodevalue "$STATUS"`
+    ellipsoid (a f)$S= `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
+    status         $S= `encodevalue "$STATUS"`
 
     lat1 lon1 fazi1 (&deg;) = $POSITION1
     lat2 lon2 $AZIX (&deg;) = $POSITION2
@@ -320,11 +321,11 @@ cat <<EOF
     <p>
       The additional quantities computed are:
       <ul>
-	<li> <em>a12</em>, the arc length on the auxiliary sphere (&deg;),
-	<li> <em>m12</em>, the reduced length (m),
-	<li> <em>M12</em> and <em>M21</em>, the geodesic scales,
-	<li> <em>S12</em>, the area between the geodesic
-	  and the equator (m<sup>2</sup>).
+        <li> <em>a12</em>, the arc length on the auxiliary sphere (&deg;),
+        <li> <em>m12</em>, the reduced length (m),
+        <li> <em>M12</em> and <em>M21</em>, the geodesic scales,
+        <li> <em>S12</em>, the area between the geodesic
+          and the equator (m<sup>2</sup>).
       </ul>
     </p>
     <p>
@@ -356,9 +357,9 @@ cat <<EOF
         GeographicLib</a>.
       Geodesics can also be computed using JavaScript; see the
       <a href="../scripts/geod-calc.html">JavaScript geodesic
-	calculator</a> and
+        calculator</a> and
       <a href="../scripts/geod-google.html">geodesics on Google
-	maps</a>.  If you wish to use GeodSolve directly,
+        maps</a>.  If you wish to use GeodSolve directly,
       <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
       and compile GeographicLib.  The algorithms are described
@@ -367,11 +368,12 @@ cat <<EOF
       geodesics</i></a>,
       J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
       <a href="https://doi.org/10.1007/s00190-012-0578-z">
-	10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
-	geod-addenda.html</a>.  See also the Wikipedia page,
+        10.1007/s00190-012-0578-z</a>;
+      addenda:
+      <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+        geod-addenda.html</a>.  See also the Wikipedia page,
       <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
-	Geodesics on an ellipsoid</a>.
+        Geodesics on an ellipsoid</a>.
     </p>
     <hr>
     <address>Charles Karney

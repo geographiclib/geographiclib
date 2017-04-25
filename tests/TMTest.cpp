@@ -140,7 +140,8 @@ int main(int argc, char* argv[]) {
     std::vector<real> errv(nbins, 0);
     std::vector<real> errvg(nbins, 0);
     std::vector<real> errvk(nbins, 0);
-    real esterr = real(sizeof(real) == sizeof(double) ? (series ? 3e-9 : 8e-9) :
+    real esterr = real(sizeof(real) == sizeof(double) ?
+                       (series ? 3e-9 : 8e-9) :
                        (series ? 4e-12 : 4e-12));
     for (unsigned i = 0; i < nbins; ++i)
       d[i] = real(100e3 * i);

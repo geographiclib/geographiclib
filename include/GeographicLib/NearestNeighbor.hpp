@@ -48,8 +48,8 @@ namespace GeographicLib {
    * follows:
    *
    * @tparam dist_t the type used for measuring distances; it can be a real or
-   *   signed integer type; in typical geodetic applications, \e dist_t might be
-   *   <code>double</code>.
+   *   signed integer type; in typical geodetic applications, \e dist_t might
+   *   be <code>double</code>.
    * @tparam pos_t the type for specifying the positions of points; geodetic
    *   application might bundled the latitude and longitude into a
    *   <code>std::pair<dist_t, dist_t></code>.
@@ -104,10 +104,11 @@ namespace GeographicLib {
   class NearestNeighbor {
     // For tracking changes to the I/O format
     static const int version = 1;
-    // This is what we get "free"; but if sizeof(dist_t) = 1 (unlikely), allow 4
-    // slots (and this accommodates the default value bucket = 4).
-    static const int maxbucket = (2 + ((4 * sizeof(dist_t)) / sizeof(int) >= 2 ?
-                                       (4 * sizeof(dist_t)) / sizeof(int) : 2));
+    // This is what we get "free"; but if sizeof(dist_t) = 1 (unlikely), allow
+    // 4 slots (and this accommodates the default value bucket = 4).
+    static const int maxbucket =
+      (2 + ((4 * sizeof(dist_t)) / sizeof(int) >= 2 ?
+            (4 * sizeof(dist_t)) / sizeof(int) : 2));
   public:
 
     /**
@@ -247,9 +248,9 @@ namespace GeographicLib {
      * The distances to other points (indexed by <i>ind</i><sub><i>j</i></sub>
      * for \e j > 0) can be found by invoking \e dist again.
      *
-     * \warning The arguments \e pts and \e dist must be identical to
-     * those used to initialize the NearestNeighbor; if not, the behavior of
-     * this function is undefined (however, if the size of \e pts is wrong,
+     * \warning The arguments \e pts and \e dist must be identical to those
+     * used to initialize the NearestNeighbor; if not, this function will
+     * return some meaningless result (however, if the size of \e pts is wrong,
      * this function throw an exception).
      *
      * \warning The query point cannot be a NaN or infinite because then the
@@ -476,7 +477,8 @@ namespace GeographicLib {
       if (!( 0 <= bucket && bucket <= maxbucket ))
         throw GeographicLib::GeographicErr("Bad bucket size");
       if (!( 0 <= treesize && treesize <= numpoints ))
-        throw GeographicLib::GeographicErr("Bad number of points or tree size");
+        throw
+          GeographicLib::GeographicErr("Bad number of points or tree size");
       if (!( 0 <= cost ))
         throw GeographicLib::GeographicErr("Bad value for cost");
       std::vector<Node> tree;
@@ -660,7 +662,8 @@ namespace GeographicLib {
 #if defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION) && \
   GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION
       friend class boost::serialization::access;
-      template<class Archive> void save(Archive& ar, const unsigned int) const {
+      template<class Archive>
+      void save(Archive& ar, const unsigned int) const {
         ar & boost::serialization::make_nvp("index", index);
         if (index < 0)
           ar & boost::serialization::make_nvp("leaves", leaves);
@@ -669,7 +672,8 @@ namespace GeographicLib {
             & boost::serialization::make_nvp("upper", data.upper)
             & boost::serialization::make_nvp("child", data.child);
       }
-      template<class Archive> void load(Archive& ar, const unsigned int) {
+      template<class Archive>
+      void load(Archive& ar, const unsigned int) {
         ar & boost::serialization::make_nvp("index", index);
         if (index < 0)
           ar & boost::serialization::make_nvp("leaves", leaves);
@@ -717,7 +721,8 @@ namespace GeographicLib {
         & boost::serialization::make_nvp("cost", cost)
         & boost::serialization::make_nvp("tree", tree);
       if (!( 0 <= int(tree.size()) && int(tree.size()) <= numpoints ))
-        throw GeographicLib::GeographicErr("Bad number of points or tree size");
+        throw
+          GeographicLib::GeographicErr("Bad number of points or tree size");
       for (int i = 0; i < int(tree.size()); ++i)
         tree[i].Check(numpoints, int(tree.size()), bucket);
       _tree.swap(tree);
@@ -759,7 +764,9 @@ namespace GeographicLib {
           ++cost;
         }
         // partition around the median distance
-        std::nth_element(ids.begin() + l + 1, ids.begin() + m, ids.begin() + u);
+        std::nth_element(ids.begin() + l + 1,
+                         ids.begin() + m,
+                         ids.begin() + u);
         node.index = ids[l].second;
         if (m > l + 1) {        // node.child[0] is possibly empty
           typename std::vector<item>::iterator
@@ -811,8 +818,8 @@ namespace std {
    *
    * @tparam dist_t the type used for measuring distances.
    * @tparam pos_t the type for specifying the positions of points.
-   * @tparam distfun_t the type for a function object which calculates distances
-   *   between points.
+   * @tparam distfun_t the type for a function object which calculates
+   *   distances between points.
    * @param[in,out] a the first GeographicLib::NearestNeighbor to swap.
    * @param[in,out] b the second GeographicLib::NearestNeighbor to swap.
    **********************************************************************/

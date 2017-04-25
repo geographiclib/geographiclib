@@ -101,13 +101,13 @@
 *!   &rarr; [\e azi1, \e azi2] + [\e d, \e d], for arbitrary \e d.
 *!
 *! These routines are a simple transcription of the corresponding C++
-*! classes in <a href="https://geographiclib.sourceforge.io"> GeographicLib</a>.
-*! Because of the limitations of Fortran 77, the classes have been
-*! replaced by simple subroutines with no attempt to save "state" across
-*! subroutine calls.  Most of the internal comments have been retained.
-*! However, in the process of transcription some documentation has been
-*! lost and the documentation for the C++ classes,
-*! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+*! classes in <a href="https://geographiclib.sourceforge.io">
+*! GeographicLib</a>.  Because of the limitations of Fortran 77, the
+*! classes have been replaced by simple subroutines with no attempt to
+*! save "state" across subroutine calls.  Most of the internal comments
+*! have been retained.  However, in the process of transcription some
+*! documentation has been lost and the documentation for the C++
+*! classes, GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
 *! GeographicLib::PolygonAreaT, should be consulted.  The C++ code
 *! remains the "reference implementation".  Think twice about
 *! restructuring the internals of the Fortran code since this may make
@@ -118,7 +118,7 @@
 *! https://geographiclib.sourceforge.io/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.48.
+*! <a href="../index.html">GeographicLib</a> 1.49.
 
 *> Solve the direct geodesic problem
 *!
@@ -1037,7 +1037,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 48
+      minor = 49
       patch = 0
 
       return

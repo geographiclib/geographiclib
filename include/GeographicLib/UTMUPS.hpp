@@ -337,7 +337,8 @@ namespace GeographicLib {
      * south, 3north are legal.  0n, 001s, +3n, 61n, 38P are illegal.  INV is a
      * special value for which the returned value of \e is UTMUPS::INVALID.
      **********************************************************************/
-    static void DecodeZone(const std::string& zonestr, int& zone, bool& northp);
+    static void DecodeZone(const std::string& zonestr,
+                           int& zone, bool& northp);
 
     /**
      * Encode a UTM/UPS zone string.

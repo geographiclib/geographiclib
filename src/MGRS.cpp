@@ -94,7 +94,8 @@ namespace GeographicLib {
       int iband = (northp ? 2 : 0) + (eastp ? 1 : 0);
       mgrs1[z++] = upsband_[iband];
       mgrs1[z++] = upscols_[iband][xh - (eastp ? upseasting_ :
-                                         (northp ? minupsNind_ : minupsSind_))];
+                                         (northp ? minupsNind_ :
+                                          minupsSind_))];
       mgrs1[z++] = upsrows_[northp][yh - (northp ? minupsNind_ : minupsSind_)];
     }
     if (prec > 0) {
@@ -418,7 +419,8 @@ namespace GeographicLib {
       throw GeographicErr("MGRS::Check: Svalbard exception creates a gap");
     UTMUPS::Reverse(0, true , 20*t, 13*t, lat, lon);
     if (!( lat <  84 ))
-      throw GeographicErr("MGRS::Check: North UPS doesn't reach latitude = 84");
+      throw
+        GeographicErr("MGRS::Check: North UPS doesn't reach latitude = 84");
     UTMUPS::Reverse(0, false, 20*t,  8*t, lat, lon);
     if (!( lat > -80 ))
       throw

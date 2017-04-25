@@ -40,17 +40,17 @@ AREA=
 if test "$INPUT"; then
     STATUS=`echo "$INPUT" | head -1 | $EXECDIR/GeoConvert`
     if test $? -eq 0; then
-	STATUS=OK
-	OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $LINEFLAG $RHUMBFLAG |
-	    head -1`
-	NUM="`echo $OUTPUT | cut -f1 -d' '`"
-	LEN="`echo $OUTPUT | cut -f2 -d' '`"
-	AREA="`echo $OUTPUT | cut -f3 -d' '`"
-	if test "$NORM"; then
-	    TRANSFORMEDINPUT=`echo "$INPUT" | $EXECDIR/GeoConvert -p 20 |
-	    sed '/^ERROR/,$d'`
-	    INPUTENC=`encodevalue "$TRANSFORMEDINPUT"`
-	fi
+        STATUS=OK
+        OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $LINEFLAG $RHUMBFLAG |
+            head -1`
+        NUM="`echo $OUTPUT | cut -f1 -d' '`"
+        LEN="`echo $OUTPUT | cut -f2 -d' '`"
+        AREA="`echo $OUTPUT | cut -f3 -d' '`"
+        if test "$NORM"; then
+            TRANSFORMEDINPUT=`echo "$INPUT" | $EXECDIR/GeoConvert -p 20 |
+            sed '/^ERROR/,$d'`
+            INPUTENC=`encodevalue "$TRANSFORMEDINPUT"`
+        fi
     fi
     # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
@@ -66,71 +66,71 @@ cat <<EOF
     <meta name="description" content="Online geodesic planimeter" />
     <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
-	  content="geodesics,
-		   geodesic distance,
-		   geodesic area,
-		   geographic distance,
-		   geographic area,
-		   geodesic polygon,
-		   shortest path,
-		   spheroidal triangle,
-		   latitude and longitude,
-		   rhumb lines,
-		   online calculator,
-		   WGS84 ellipsoid,
-		   GeographicLib" />
+          content="geodesics,
+                   geodesic distance,
+                   geodesic area,
+                   geographic distance,
+                   geographic area,
+                   geodesic polygon,
+                   shortest path,
+                   spheroidal triangle,
+                   latitude and longitude,
+                   rhumb lines,
+                   online calculator,
+                   WGS84 ellipsoid,
+                   GeographicLib" />
   </head>
   <body>
     <h3>
       Online geodesic polygon calculations using the
       <a href="https://geographiclib.sourceforge.io/html/Planimeter.1.html">
-	 Planimeter</a> utility
+         Planimeter</a> utility
     </h3>
     <form action="/cgi-bin/Planimeter" method="get">
       <p>
-	<table>
-	  <tr>
-	    <td>
-	      Closed/open:
-	    </td>
-	    <td>&nbsp;<label for="c">
-		<input type="radio" name="type" value="polygon" id="c"
-		       `test "$LINEFLAG" || echo CHECKED`>
-		Polygon</label>
-	    </td>
-	    <td>&nbsp;<label for="o">
-		<input type="radio" name="type" value="polyline" id="o"
-		       `test "$LINEFLAG" && echo CHECKED`>
-		Polyline</label>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	      Edge type:
-	    </td>
-	    <td>&nbsp;<label for="g">
-		<input type="radio" name="rhumb" value="geodesic" id="g"
-		       `test "$RHUMBFLAG" || echo CHECKED`>
-		Geodesic</label>
-	    </td>
-	    <td>&nbsp;<label for="r">
-		<input type="radio" name="rhumb" value="rhumb" id="r"
-		       `test "$RHUMBFLAG" && echo CHECKED`>
-		Rhumb line</label>
-	    </td>
-	  </tr>
-	</table>
+        <table>
+          <tr>
+            <td>
+              Closed/open:
+            </td>
+            <td>&nbsp;<label for="c">
+                <input type="radio" name="type" value="polygon" id="c"
+                       `test "$LINEFLAG" || echo CHECKED`>
+                Polygon</label>
+            </td>
+            <td>&nbsp;<label for="o">
+                <input type="radio" name="type" value="polyline" id="o"
+                       `test "$LINEFLAG" && echo CHECKED`>
+                Polyline</label>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Edge type:
+            </td>
+            <td>&nbsp;<label for="g">
+                <input type="radio" name="rhumb" value="geodesic" id="g"
+                       `test "$RHUMBFLAG" || echo CHECKED`>
+                Geodesic</label>
+            </td>
+            <td>&nbsp;<label for="r">
+                <input type="radio" name="rhumb" value="rhumb" id="r"
+                       `test "$RHUMBFLAG" && echo CHECKED`>
+                Rhumb line</label>
+            </td>
+          </tr>
+        </table>
       </p>
       <p>
         Enter the vertices as latitude longitude pairs, one per line:
-	<br>
+        <br>
         &nbsp;&nbsp;&nbsp;
         <textarea cols=45 rows=15 name="input">$INPUTENC</textarea>
       </p>
       <p>
-	<input type="checkbox" name="norm" value="decdegrees"
-	       `test "$NORM" && echo CHECKED` />
-	Convert vertices to decimal degrees
+        <input type="checkbox" name="norm" value="decdegrees"
+               `test "$NORM" && echo CHECKED` />
+        Convert vertices to decimal degrees
       </p>
       <p>
         Select action:<br>
@@ -174,7 +174,7 @@ cat <<EOF
       The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
       the documentation on the
       <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
-	GeoConvert</a>
+        GeoConvert</a>
       utility).  A blank line or a coordinate which cannot be understood
       causes the reading of vertices to be stopped.
     </p>
@@ -194,7 +194,7 @@ cat <<EOF
         GeographicLib</a>.
       Geodesic areas can also be computed using JavaScript; see the
       <a href="../scripts/geod-calc.html">JavaScript geodesic
-	calculator</a>.
+        calculator</a>.
       If you wish to use Planimeter directly,
       <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
         download</a>
@@ -204,9 +204,10 @@ cat <<EOF
       geodesics</i></a>,
       J. Geodesy <b>87</b>, 43&ndash;55 (2013); DOI:
       <a href="https://doi.org/10.1007/s00190-012-0578-z">
-	10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
-	geod-addenda.html</a>.
+        10.1007/s00190-012-0578-z</a>;
+      addenda:
+      <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+        geod-addenda.html</a>.
     </p>
     <hr>
     <address>Charles Karney

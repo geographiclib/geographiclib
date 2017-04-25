@@ -14,8 +14,8 @@ namespace GeographicLib {
   using namespace std;
 
   Math::real CircularEngine::Value(bool gradp, real sl, real cl,
-                                   real& gradx, real& grady, real& gradz)
-    const {
+                                   real& gradx, real& grady, real& gradz) const
+  {
     gradp = _gradp && gradp;
     const vector<real>& root_( SphericalEngine::root_ );
 

@@ -61,7 +61,8 @@ cmake_minimum_required (VERSION 2.8.4) # This version was released 2011-02-16
 # CMAKE_INSTALL_PREFIX being used when it's ON.
 
 if (WIN32)
-  option (COMMON_INSTALL_PATH "Use a common installation path for packages" OFF)
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages"
+    OFF)
 else ()
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
@@ -486,8 +487,8 @@ endif ()
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
   GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj)
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
-set (SCRIPTS
-  geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
+set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
+  geographiclib-get-magnetic)
 
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 

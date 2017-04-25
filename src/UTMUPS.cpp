@@ -36,7 +36,8 @@ namespace GeographicLib {
       * MGRS::tile_ };
   const int UTMUPS::maxnorthing_[4] =
     { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
-      (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
+      (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) *
+      MGRS::tile_,
       MGRS::maxutmNrow_ * MGRS::tile_ };
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
@@ -107,7 +108,8 @@ namespace GeographicLib {
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + ", longitude " + Utility::str(lon)
                           + " out of legal range for "
-                          + (utmp ? "UTM zone " + Utility::str(zone1) : "UPS"));
+                          + (utmp ? "UTM zone " + Utility::str(zone1) :
+                             "UPS"));
     zone = zone1;
     northp = northp1;
     x = x1;
@@ -203,7 +205,8 @@ namespace GeographicLib {
     return;
   }
 
-  void UTMUPS::DecodeZone(const std::string& zonestr, int& zone, bool& northp) {
+  void UTMUPS::DecodeZone(const std::string& zonestr, int& zone, bool& northp)
+  {
     unsigned zlen = unsigned(zonestr.size());
     if (zlen == 0)
       throw GeographicErr("Empty zone specification");

@@ -317,5 +317,5 @@ B<GeoidEval> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<GeoidEval> was added to GeographicLib, L<https://geographiclib.sourceforge.io>,
-in 2009-09.
+B<GeoidEval> was added to GeographicLib,
+L<https://geographiclib.sourceforge.io>, in 2009-09.

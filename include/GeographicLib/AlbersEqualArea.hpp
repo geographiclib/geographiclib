@@ -66,11 +66,11 @@ namespace GeographicLib {
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
     static const int numit_ = 5;   // Newton iterations in Reverse
     static const int numit0_ = 20; // Newton iterations in Init
-    static inline real hyp(real x) { return Math::hypot(real(1), x); }
+    static real hyp(real x) { return Math::hypot(real(1), x); }
     // atanh(      e   * x)/      e   if f > 0
     // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
     // x                              if f = 0
-    inline real atanhee(real x) const {
+    real atanhee(real x) const {
       using std::atan2; using std::abs;
       return _f > 0 ? Math::atanh(_e * x)/_e :
         // We only invoke atanhee in txif for positive latitude.  Then x is
@@ -99,14 +99,14 @@ namespace GeographicLib {
     //                = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))
-    static inline real Dsn(real x, real y, real sx, real sy) {
+    static real Dsn(real x, real y, real sx, real sy) {
       // sx = x/hyp(x)
       real t = x * y;
       return t > 0 ? (x + y) * Math::sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Datanhee(x,y) = atanhee((x-y)/(1-e^2*x*y))/(x-y)
-    inline real Datanhee(real x, real y) const {
+    real Datanhee(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
       return t != 0 ? atanhee(t / d) / t : 1 / d;
     }

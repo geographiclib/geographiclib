@@ -169,8 +169,8 @@ namespace GeographicLib {
         //   = log(tchi2 + scchi2) - log(tchi1 + scchi1)
         //
         // then den * (1 - n) =
-        // (log((tchi2 + scchi2)/(2*scbet2)) - log((tchi1 + scchi1)/(2*scbet1)))
-        // / (tphi2 - tphi1)
+        // (log((tchi2 + scchi2)/(2*scbet2)) -
+        //  log((tchi1 + scchi1)/(2*scbet1))) / (tphi2 - tphi1)
         // = Dlog1p(a2, a1) * (tchi2+scchi2 + tchi1+scchi1)/(4*scbet1*scbet2)
         //   * fm * Q
         //
@@ -329,8 +329,8 @@ namespace GeographicLib {
   }
 
   void LambertConformalConic::Forward(real lon0, real lat, real lon,
-                                      real& x, real& y, real& gamma, real& k)
-    const {
+                                      real& x, real& y,
+                                      real& gamma, real& k) const {
     lon = Math::AngDiff(lon0, lon);
     // From Snyder, we have
     //
@@ -372,8 +372,7 @@ namespace GeographicLib {
 
   void LambertConformalConic::Reverse(real lon0, real x, real y,
                                       real& lat, real& lon,
-                                      real& gamma, real& k)
-    const {
+                                      real& gamma, real& k) const {
     // From Snyder, we have
     //
     //        x = rho * sin(theta)

@@ -145,7 +145,7 @@ the *outmask* parameter, see {@tutorial 2-interface}, "The *outmask* and
 var r = geod.Inverse(40.6, -73.8, 51.6, -0.5, Geodesic.AREA);
 console.log("The area is " + r.S12.toFixed(1) + " m^2");
 ```
-&rarr; `The area is 40041368848742.5 m^2`
+&rarr;`The area is 40041368848742.5 m^2`
 
 ### <a name="waypoints"></a>Computing waypoints
 
@@ -251,7 +251,7 @@ console.log("Perimeter/area of Antarctica are " +
             p.perimeter.toFixed(3) + " m / " +
             p.area.toFixed(1) + " m^2.");
 ```
-&rarr; `Perimeter/area of Antarctica are 16831067.893 m / 13662703680020.1 m^2.`
+&rarr;`Perimeter/area of Antarctica are 16831067.893 m / 13662703680020.1 m^2.`
 
 If the points of the polygon are being selected interactively, then
 {@link module:GeographicLib/PolygonArea.PolygonArea#TestPoint
@@ -273,4 +273,4 @@ console.log("Start = (" +
             "), azimuth = " +
             DMS.Encode(r.azi1, DMS.MINUTE, 1, DMS.AZIMUTH));
 ```
-&rarr; `Start = (40°36'N, 073°48'W), azimuth = 053°28.2'`
+&rarr;`Start = (40°36'N, 073°48'W), azimuth = 053°28.2'`

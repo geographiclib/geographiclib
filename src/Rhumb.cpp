@@ -140,7 +140,8 @@ namespace GeographicLib {
   }
 
   const Rhumb& Rhumb::WGS84() {
-    static const Rhumb wgs84(Constants::WGS84_a(), Constants::WGS84_f(), false);
+    static const Rhumb
+      wgs84(Constants::WGS84_a(), Constants::WGS84_f(), false);
     return wgs84;
   }
 

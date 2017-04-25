@@ -183,7 +183,8 @@ namespace GeographicLib {
      * Compute a spherical harmonic sum with two correction terms.
      *
      * @param[in] tau1 multiplier for correction coefficients \e C' and \e S'.
-     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e S''.
+     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e
+     *   S''.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -215,7 +216,8 @@ namespace GeographicLib {
      * gradient.
      *
      * @param[in] tau1 multiplier for correction coefficients \e C' and \e S'.
-     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e S''.
+     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e
+     *   S''.
      * @param[in] x cartesian coordinate.
      * @param[in] y cartesian coordinate.
      * @param[in] z cartesian coordinate.
@@ -251,7 +253,8 @@ namespace GeographicLib {
      * points on a circle of latitude at fixed values of \e tau1 and \e tau2.
      *
      * @param[in] tau1 multiplier for correction coefficients \e C' and \e S'.
-     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e S''.
+     * @param[in] tau2 multiplier for correction coefficients \e C'' and \e
+     *   S''.
      * @param[in] p the radius of the circle.
      * @param[in] z the height of the circle above the equatorial plane.
      * @param[in] gradp if true the returned object will be able to compute the

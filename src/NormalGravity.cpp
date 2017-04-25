@@ -51,7 +51,8 @@ namespace GeographicLib {
     _gammap = _GM / (_a * _a) + 2 * P * _b * _omega2;
     // k = gammae * (b * gammap / (a * gammae) - 1)
     //   = (b * gammap - a * gammae) / a
-    _k = -_e2 * _GM / (_a * _b) + _omega2 * (P * (_a + 2 * _b * (1 - _f)) + _a);
+    _k = -_e2 * _GM / (_a * _b) +
+      _omega2 * (P * (_a + 2 * _b * (1 - _f)) + _a);
     // f* = (gammap - gammae) / gammae
     _fstar = (-_f * _GM / (_a * _b) + _omega2 * (P * (_a + 2 * _b) + _a)) /
       _gammae;
@@ -180,8 +181,8 @@ namespace GeographicLib {
   }
 
   Math::real NormalGravity::V0(real X, real Y, real Z,
-                               real& GammaX, real& GammaY, real& GammaZ)
-    const {
+                               real& GammaX, real& GammaY, real& GammaZ) const
+  {
     // See H+M, Sec 6-2
     real
       p = Math::hypot(X, Y),
@@ -235,8 +236,7 @@ namespace GeographicLib {
     return Vres;
   }
 
-  Math::real NormalGravity::Phi(real X, real Y, real& fX, real& fY)
-    const {
+  Math::real NormalGravity::Phi(real X, real Y, real& fX, real& fY) const {
     fX = _omega2 * X;
     fY = _omega2 * Y;
     // N.B. fZ = 0;
@@ -244,8 +244,7 @@ namespace GeographicLib {
   }
 
   Math::real NormalGravity::U(real X, real Y, real Z,
-                              real& gammaX, real& gammaY, real& gammaZ)
-    const {
+                              real& gammaX, real& gammaY, real& gammaZ) const {
     real fX, fY;
     real Ures = V0(X, Y, Z, gammaX, gammaY, gammaZ) + Phi(X, Y, fX, fY);
     gammaX += fX;
@@ -254,8 +253,7 @@ namespace GeographicLib {
   }
 
   Math::real NormalGravity::Gravity(real lat, real h,
-                                    real& gammay, real& gammaz)
-    const {
+                                    real& gammay, real& gammaz) const {
     real X, Y, Z;
     real M[Geocentric::dim2_];
     _earth.IntForward(lat, 0, h, X, Y, Z, M);

@@ -180,9 +180,10 @@ namespace GeographicLib {
     int k[L];
     for (int m = M; m >= 0; --m) {   // m = M .. 0
       // Initialize inner sum
-      real wc  = 0, wc2  = 0, ws  = 0, ws2  = 0; // w [N - m + 1], w [N - m + 2]
-      real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
-      real wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
+      real
+        wc  = 0, wc2  = 0, ws  = 0, ws2  = 0, // w [N - m + 1], w [N - m + 2]
+        wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0, // wr[N - m + 1], wr[N - m + 2]
+        wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
       for (int l = 0; l < L; ++l)
         k[l] = c[l].index(N, m) + 1;
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0
@@ -311,9 +312,10 @@ namespace GeographicLib {
     int k[L];
     for (int m = M; m >= 0; --m) {   // m = M .. 0
       // Initialize inner sum
-      real wc  = 0, wc2  = 0, ws  = 0, ws2  = 0; // w [N - m + 1], w [N - m + 2]
-      real wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0; // wr[N - m + 1], wr[N - m + 2]
-      real wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
+      real
+        wc  = 0, wc2  = 0, ws  = 0, ws2  = 0, // w [N - m + 1], w [N - m + 2]
+        wrc = 0, wrc2 = 0, wrs = 0, wrs2 = 0, // wr[N - m + 1], wr[N - m + 2]
+        wtc = 0, wtc2 = 0, wts = 0, wts2 = 0; // wt[N - m + 1], wt[N - m + 2]
       for (int l = 0; l < L; ++l)
         k[l] = c[l].index(N, m) + 1;
       for (int n = N; n >= m; --n) {             // n = N .. m; l = N - m .. 0

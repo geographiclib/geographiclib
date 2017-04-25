@@ -119,8 +119,8 @@ namespace GeographicLib {
   }
 
   // Starting point for zetainv
-  bool TransverseMercatorExact::zetainv0(real psi, real lam, real& u, real& v)
-    const {
+  bool TransverseMercatorExact::zetainv0(real psi, real lam,
+                                         real& u, real& v) const {
     bool retval = false;
     if (psi < -_e * Math::pi()/4 &&
         lam > (1 - 2 * _e) * Math::pi()/2 &&
@@ -184,8 +184,8 @@ namespace GeographicLib {
   }
 
   // Invert zeta using Newton's method
-  void TransverseMercatorExact::zetainv(real taup, real lam, real& u, real& v)
-    const  {
+  void TransverseMercatorExact::zetainv(real taup, real lam,
+                                        real& u, real& v) const  {
     real
       psi = Math::asinh(taup),
       scal = 1/Math::hypot(real(1), taup);
@@ -242,8 +242,8 @@ namespace GeographicLib {
   }
 
   // Starting point for sigmainv
-  bool TransverseMercatorExact::sigmainv0(real xi, real eta, real& u, real& v)
-    const {
+  bool TransverseMercatorExact::sigmainv0(real xi, real eta,
+                                          real& u, real& v) const {
     bool retval = false;
     if (eta > real(1.25) * _Ev.KE() ||
         (xi < -real(0.25) * _Eu.E() && xi < eta - _Ev.KE())) {
@@ -292,8 +292,8 @@ namespace GeographicLib {
   }
 
   // Invert sigma using Newton's method
-  void TransverseMercatorExact::sigmainv(real xi, real eta, real& u, real& v)
-    const {
+  void TransverseMercatorExact::sigmainv(real xi, real eta,
+                                         real& u, real& v) const {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
@@ -346,8 +346,8 @@ namespace GeographicLib {
   }
 
   void TransverseMercatorExact::Forward(real lon0, real lat, real lon,
-                                        real& x, real& y, real& gamma, real& k)
-    const {
+                                        real& x, real& y,
+                                        real& gamma, real& k) const {
     lat = Math::LatFix(lat);
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
@@ -407,8 +407,7 @@ namespace GeographicLib {
 
   void TransverseMercatorExact::Reverse(real lon0, real x, real y,
                                         real& lat, real& lon,
-                                        real& gamma, real& k)
-    const {
+                                        real& gamma, real& k) const {
     // This undoes the steps in Forward.
     real
       xi = y / (_a * _k0),

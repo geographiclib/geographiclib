@@ -142,26 +142,29 @@ add_test (NAME GeodSolve9 COMMAND GeodSolve -i --input-string
 set_tests_properties (GeodSolve9 PROPERTIES PASS_REGULAR_EXPRESSION
   ".* .* 19993558.287")
 
-# Check fix for adjust tol1_ bug found 2011-06-25 (Visual Studio 10 rel + debug)
+# Check fix for adjust tol1_ bug found 2011-06-25 (Visual Studio 10 rel
+# + debug)
 add_test (NAME GeodSolve10 COMMAND GeodSolve -i --input-string
   "52.784459512564 0 -52.784459512563990912 179.634407464943777557")
 set_tests_properties (GeodSolve10 PROPERTIES PASS_REGULAR_EXPRESSION
   ".* .* 19991596.095")
 
-# Check fix for bet2 = -bet1 bug found 2011-06-25 (Visual Studio 10 rel + debug)
+# Check fix for bet2 = -bet1 bug found 2011-06-25 (Visual Studio 10 rel
+# + debug)
 add_test (NAME GeodSolve11 COMMAND GeodSolve -i --input-string
   "48.522876735459 0 -48.52287673545898293 179.599720456223079643")
 set_tests_properties (GeodSolve11 PROPERTIES PASS_REGULAR_EXPRESSION
   ".* .* 19989144.774")
 
 # Check fix for inverse geodesics on extreme prolate/oblate ellipsoids
-# Reported 2012-08-29 Stefan Guenther <stefan.gunther@embl.de>; fixed 2012-10-07
+# Reported 2012-08-29 Stefan Guenther <stefan.gunther@embl.de>; fixed
+# 2012-10-07
 add_test (NAME GeodSolve12 COMMAND GeodSolve
   -i -e 89.8 -1.83 -p 1 --input-string "0 0 -10 160")
 add_test (NAME GeodSolve13 COMMAND GeodSolve
   -i -e 89.8 -1.83 -p 1 --input-string "0 0 -10 160" -E)
-set_tests_properties (GeodSolve12 GeodSolve13 PROPERTIES PASS_REGULAR_EXPRESSION
-  "120\\.27.* 105\\.15.* 266\\.7")
+set_tests_properties (GeodSolve12 GeodSolve13
+  PROPERTIES PASS_REGULAR_EXPRESSION "120\\.27.* 105\\.15.* 266\\.7")
 
 if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 AND Boost_VERSION LESS 106000))
   # mpfr (nan == 0 is true) and boost-quadmath (nan > 0 is true) have
@@ -182,7 +185,8 @@ add_test (NAME GeodSolve15 COMMAND GeodSolve
   -e 6.4e6 -1/150 -f --input-string "1 2 3 4")
 add_test (NAME GeodSolve16 COMMAND GeodSolve
   -e 6.4e6 -1/150 -f --input-string "1 2 3 4" -E)
-set_tests_properties (GeodSolve15 GeodSolve16 PROPERTIES PASS_REGULAR_EXPRESSION
+set_tests_properties (GeodSolve15 GeodSolve16
+  PROPERTIES PASS_REGULAR_EXPRESSION
   "1\\..* 2\\..* 3\\..* 1\\..* 2\\..* 3\\..* 4\\..* 0\\..* 4\\..* 1\\..* 1\\..* 23700")
 
 # Check fix for LONG_UNROLL bug found on 2015-05-07
@@ -195,7 +199,8 @@ add_test (NAME GeodSolve19 COMMAND GeodSolve
 add_test (NAME GeodSolve20 COMMAND GeodSolve
   -u -L 40 -75 -10 --input-string "2e7" -E)
 set_tests_properties (GeodSolve17 GeodSolve18 GeodSolve19 GeodSolve20
-  PROPERTIES PASS_REGULAR_EXPRESSION "-39\\.[0-9]* -254\\.[0-9]* -170\\.[0-9]*")
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "-39\\.[0-9]* -254\\.[0-9]* -170\\.[0-9]*")
 add_test (NAME GeodSolve21 COMMAND GeodSolve
   --input-string "40 -75 -10 2e7")
 add_test (NAME GeodSolve22 COMMAND GeodSolve
@@ -234,13 +239,15 @@ add_test (NAME GeodSolve29 COMMAND GeodSolve
   -i -f -p 0 --input-string "0 539 0 181")
 add_test (NAME GeodSolve30 COMMAND GeodSolve
   -i -f -p 0 --input-string "0 539 0 181" -E)
-set_tests_properties (GeodSolve29 GeodSolve30 PROPERTIES PASS_REGULAR_EXPRESSION
+set_tests_properties (GeodSolve29 GeodSolve30
+  PROPERTIES PASS_REGULAR_EXPRESSION
   "0\\..* 179\\..* 90\\..* 0\\..* -179\\..* 90\\..* 222639 ")
 add_test (NAME GeodSolve31 COMMAND GeodSolve
   -i -f -p 0 --input-string "0 539 0 181" -u)
 add_test (NAME GeodSolve32 COMMAND GeodSolve
   -i -f -p 0 --input-string "0 539 0 181" -u -E)
-set_tests_properties (GeodSolve31 GeodSolve32 PROPERTIES PASS_REGULAR_EXPRESSION
+set_tests_properties (GeodSolve31 GeodSolve32
+  PROPERTIES PASS_REGULAR_EXPRESSION
   "0\\..* 539\\..* 90\\..* 0\\..* 541\\..* 90\\..* 222639 ")
 
 # Check max(-0.0,+0.0) issues 2015-08-22 (triggered by bugs in Octave --
@@ -415,7 +422,8 @@ add_test (NAME Planimeter2 COMMAND Planimeter
 add_test (NAME Planimeter3 COMMAND Planimeter --input-string "90 0; 0 0; 0 90")
 add_test (NAME Planimeter4 COMMAND Planimeter
   -l --input-string "90 0; 0 0; 0 90")
-set_tests_properties (Planimeter0 Planimeter1 PROPERTIES PASS_REGULAR_EXPRESSION
+set_tests_properties (Planimeter0 Planimeter1
+  PROPERTIES PASS_REGULAR_EXPRESSION
   "4 631819\\.8745[0-9]+ 2495230567[78]\\.[0-9]+")
 set_tests_properties (Planimeter2 PROPERTIES PASS_REGULAR_EXPRESSION
   "4 627598\\.2731[0-9]+ 24619419146.[0-9]+")
@@ -489,14 +497,16 @@ add_test (NAME ConicProj5 COMMAND ConicProj
   -r -c 45 45 --input-string "0 -1e100")
 set_tests_properties (ConicProj5 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (NAME ConicProj6 COMMAND ConicProj -r -c 45 45 --input-string "0 -inf")
+add_test (NAME ConicProj6 COMMAND ConicProj
+  -r -c 45 45 --input-string "0 -inf")
 set_tests_properties (ConicProj6 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-90\\.0+ -?0\\.00[0-9]+ ")
 add_test (NAME ConicProj7 COMMAND ConicProj
   -r -c 90 90 --input-string "0 -1e150")
 set_tests_properties (ConicProj7 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-90\\.0+ -?0\\.00[0-9]+ ")
-add_test (NAME ConicProj8 COMMAND ConicProj -r -c 90 90 --input-string "0 -inf")
+add_test (NAME ConicProj8 COMMAND ConicProj
+  -r -c 90 90 --input-string "0 -inf")
 set_tests_properties (ConicProj8 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-90\\.0+ -?0\\.00[0-9]+ ")
 
@@ -550,8 +560,8 @@ add_test (NAME RhumbSolve0 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0")
 add_test (NAME RhumbSolve1 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0" -s)
-set_tests_properties (RhumbSolve0 RhumbSolve1 PROPERTIES PASS_REGULAR_EXPRESSION
-  "^0\\.0+ 10001965\\.729 ")
+set_tests_properties (RhumbSolve0 RhumbSolve1
+  PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 ")
 
 # Test fix to CassiniSoldner::Forward bug found 2015-06-20
 add_test (NAME GeodesicProj0 COMMAND GeodesicProj

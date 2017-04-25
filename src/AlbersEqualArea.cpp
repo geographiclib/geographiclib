@@ -194,7 +194,8 @@ namespace GeographicLib {
                Math::sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
           (1 + _e2 * (sphi1 + sphi2 + sphi1 * sphi2)) /
           (1 +       (sphi1 + sphi2 + sphi1 * sphi2)) +
-          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : Math::sq(cphi2) / ( 1 + sphi2)) +
+          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 :
+                      Math::sq(cphi2) / ( 1 + sphi2)) +
            scbet12 * (sphi1 <= 0 ? 1 - sphi1 : Math::sq(cphi1) / ( 1 + sphi1)))
           * (_e2 * (1 + sphi1 + sphi2 + _e2 * sphi1 * sphi2)/(es1 * es2)
           +_e2m * DDatanhee(sphi1, sphi2) ) / _qZ ) / den;
@@ -208,7 +209,8 @@ namespace GeographicLib {
         // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qZ + scbet0^2 * sphi0 * sxi0)
         //          = 0
         // Alt:
-        // (scbet0^2 * sphi0) / (1/qZ - scbet0^2 * sphi0 * (1-sxi0)) = s / (1-s)
+        // (scbet0^2 * sphi0) / (1/qZ - scbet0^2 * sphi0 * (1-sxi0))
+        //          = s / (1-s)
         // w(tphi0) = (1-s) * (scbet0^2 * sphi0)
         //             - s  * (1/qZ - scbet0^2 * sphi0 * (1-sxi0))
         //          = (1-s) * (scbet0^2 * sphi0)
@@ -382,8 +384,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::Forward(real lon0, real lat, real lon,
-                                real& x, real& y, real& gamma, real& k)
-    const {
+                                real& x, real& y, real& gamma, real& k) const {
     lon = Math::AngDiff(lon0, lon);
     lat *= _sign;
     real sphi, cphi;
@@ -409,8 +410,7 @@ namespace GeographicLib {
 
   void AlbersEqualArea::Reverse(real lon0, real x, real y,
                                 real& lat, real& lon,
-                                real& gamma, real& k)
-    const {
+                                real& gamma, real& k) const {
     y *= _sign;
     real
       nx = _k0 * _n0 * x, ny = _k0 * _n0 * y, y1 =  _nrho0 - ny,

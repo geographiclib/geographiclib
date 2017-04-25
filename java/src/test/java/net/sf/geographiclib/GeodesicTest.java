@@ -243,8 +243,8 @@ public class GeodesicTest {
     inv = Geodesic.WGS84.Inverse(89.262080389218, 0,
                                  -89.262080389218, 179.992207982775375662);
     assertEquals(inv.s12, 20003925.854, 0.5e-3);
-    inv = Geodesic.WGS84.Inverse(89.333123580033, 0,
-                                 -89.333123580032997687, 179.99295812360148422);
+    inv = Geodesic.WGS84.Inverse(89.333123580033, 0, -89.333123580032997687,
+                                 179.99295812360148422);
     assertEquals(inv.s12, 20003926.881, 0.5e-3);
   }
 

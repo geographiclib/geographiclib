@@ -34,6 +34,7 @@ endif ()
 
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (GeographicLib DEFAULT_MSG
-  GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES GeographicLib_INCLUDE_DIRS)
+  GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES
+  GeographicLib_INCLUDE_DIRS)
 mark_as_advanced (GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES
   GeographicLib_INCLUDE_DIRS)

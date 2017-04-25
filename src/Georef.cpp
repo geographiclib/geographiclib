@@ -109,7 +109,8 @@ namespace GeographicLib {
                               + georef.substr(baselen_));
         if (prec1 > maxprec_)
           throw GeographicErr("More than " + Utility::str(2*maxprec_)
-                              + " digits in georef " + georef.substr(baselen_));
+                              + " digits in georef "
+                              + georef.substr(baselen_));
         for (int i = 0; i < prec1; ++i) {
           int m = i ? base_ : 6;
           unit *= m;

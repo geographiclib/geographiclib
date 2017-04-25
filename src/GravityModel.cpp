@@ -247,8 +247,7 @@ namespace GeographicLib {
   }
 
   void GravityModel::SphericalAnomaly(real lat, real lon, real h,
-                                      real& Dg01, real& xi, real& eta)
-    const {
+                                      real& Dg01, real& xi, real& eta) const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real
@@ -296,8 +295,8 @@ namespace GeographicLib {
     return Wres;
   }
   Math::real GravityModel::Disturbance(real lat, real lon, real h,
-                                       real& deltax, real& deltay, real& deltaz)
-    const {
+                                       real& deltax, real& deltay,
+                                       real& deltaz) const {
     real X, Y, Z, M[Geocentric::dim2_];
     _earth.Earth().IntForward(lat, lon, h, X, Y, Z, M);
     real Tres = InternalT(X, Y, Z, deltax, deltay, deltaz, true, true);
@@ -332,7 +331,7 @@ namespace GeographicLib {
                          CircularEngine(),
                          // N.B. If CAP_DELTA is set then CAP_T should be too.
                          caps & CAP_T ?
-                         _disturbing.Circle(-1, X, Z, (caps & CAP_DELTA) != 0) :
+                         _disturbing.Circle(-1, X, Z, (caps&CAP_DELTA) != 0) :
                          CircularEngine(),
                          caps & CAP_C ?
                          _correction.Circle(invR * X, invR * Z, false) :

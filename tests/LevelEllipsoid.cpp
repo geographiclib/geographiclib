@@ -143,7 +143,9 @@ public:
     point out;
     while (true) {
       real tout = i * ds;
-      while (integrator.current_time() < tout) { integrator.do_step(sys); ++n; }
+      while (integrator.current_time() < tout) {
+        integrator.do_step(sys); ++n;
+      }
       integrator.calc_state(tout, out);
       points.push_back(out);
       if (!box(out)) break;

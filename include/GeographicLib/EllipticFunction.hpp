@@ -62,7 +62,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT EllipticFunction {
   private:
     typedef Math::real real;
-    enum { num_ = 13 }; // Max depth required for sncndn.  Probably 5 is enough.
+
+    enum { num_ = 13 }; // Max depth required for sncndn; probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
     real _Kc, _Ec, _Dc, _Pic, _Gc, _Hc;
   public:
@@ -207,7 +208,8 @@ namespace GeographicLib {
      *
      * \e D(\e k) is defined in http://dlmf.nist.gov/19.2.E6
      * \f[
-     *   D(k) = \int_0^{\pi/2} \frac{\sin^2\phi}{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
+     *   D(k) =
+     *   \int_0^{\pi/2} \frac{\sin^2\phi}{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
      * \f]
      **********************************************************************/
     Math::real D() const { return _Dc; }
@@ -378,7 +380,8 @@ namespace GeographicLib {
      *   \frac1{\alpha^2} F(\phi, k) +
      *        \biggl(1 - \frac1{\alpha^2}\biggr) \Pi(\phi, \alpha^2, k) \\
      *   &= \int_0^\phi
-     *     \frac{\cos^2\theta}{(1-\alpha^2\sin^2\theta)\sqrt{1-k^2\sin^2\theta}}
+     *     \frac{\cos^2\theta}
+     *          {(1-\alpha^2\sin^2\theta)\sqrt{1-k^2\sin^2\theta}}
      *     \,d\theta.
      *   \end{align}
      * \f]
@@ -669,7 +672,8 @@ namespace GeographicLib {
      *
      * <i>R</i><sub><i>J</i></sub> is defined in http://dlmf.nist.gov/19.16.E2
      * \f[ R_J(x, y, z, p) = \frac32
-     *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt \f]
+     *       \int_0^\infty
+     *       [(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt \f]
      **********************************************************************/
     static real RJ(real x, real y, real z, real p);
 

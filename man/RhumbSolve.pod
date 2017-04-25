@@ -249,5 +249,5 @@ B<RhumbSolve> was written by Charles Karney.
 
 =head1 HISTORY
 
-B<RhumbSolve> was added to GeographicLib, L<https://geographiclib.sourceforge.io>,
-in version 1.37.
+B<RhumbSolve> was added to GeographicLib,
+L<https://geographiclib.sourceforge.io>, in version 1.37.

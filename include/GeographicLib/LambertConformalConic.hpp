@@ -62,7 +62,7 @@ namespace GeographicLib {
     real _sign, _n, _nc, _t0nm1, _scale, _lat0, _k0;
     real _scbet0, _tchi0, _scchi0, _psi0, _nrho0, _drhomax;
     static const int numit_ = 5;
-    static inline real hyp(real x) { return Math::hypot(real(1), x); }
+    static real hyp(real x) { return Math::hypot(real(1), x); }
     // Divided differences
     // Definition: Df(x,y) = (f(x)-f(y))/(x-y)
     // See:
@@ -80,23 +80,23 @@ namespace GeographicLib {
     //                = Df(x,y)*(g(x)+g(y))/2 + Dg(x,y)*(f(x)+f(y))/2
     //
     // hyp(x) = sqrt(1+x^2): Dhyp(x,y) = (x+y)/(hyp(x)+hyp(y))
-    static inline real Dhyp(real x, real y, real hx, real hy)
+    static real Dhyp(real x, real y, real hx, real hy)
     // hx = hyp(x)
     { return (x + y) / (hx + hy); }
     // sn(x) = x/sqrt(1+x^2): Dsn(x,y) = (x+y)/((sn(x)+sn(y))*(1+x^2)*(1+y^2))
-    static inline real Dsn(real x, real y, real sx, real sy) {
+    static real Dsn(real x, real y, real sx, real sy) {
       // sx = x/hyp(x)
       real t = x * y;
       return t > 0 ? (x + y) * Math::sq( (sx * sy)/t ) / (sx + sy) :
         (x - y != 0 ? (sx - sy) / (x - y) : 1);
     }
     // Dlog1p(x,y) = log1p((x-y)/(1+y))/(x-y)
-    static inline real Dlog1p(real x, real y) {
+    static real Dlog1p(real x, real y) {
       real t = x - y; if (t < 0) { t = -t; y = x; }
       return t != 0 ? Math::log1p(t / (1 + y)) / t : 1 / (1 + x);
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
-    static inline real Dexp(real x, real y) {
+    static real Dexp(real x, real y) {
       using std::sinh; using std::exp;
       real t = (x - y)/2;
       return (t != 0 ? sinh(t)/t : 1) * exp((x + y)/2);
@@ -105,7 +105,7 @@ namespace GeographicLib {
     //   cosh((x+y)/2) = (c+sinh(x)*sinh(y)/c)/2
     //   c=sqrt((1+cosh(x))*(1+cosh(y)))
     //   cosh((x+y)/2) = sqrt( (sinh(x)*sinh(y) + cosh(x)*cosh(y) + 1)/2 )
-    static inline real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
+    static real Dsinh(real x, real y, real sx, real sy, real cx, real cy)
     // sx = sinh(x), cx = cosh(x)
     {
       // real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));
@@ -116,7 +116,7 @@ namespace GeographicLib {
     }
     // Dasinh(x,y) = asinh((x-y)*(x+y)/(x*sqrt(1+y^2)+y*sqrt(1+x^2)))/(x-y)
     //             = asinh((x*sqrt(1+y^2)-y*sqrt(1+x^2)))/(x-y)
-    static inline real Dasinh(real x, real y, real hx, real hy) {
+    static real Dasinh(real x, real y, real hx, real hy) {
       // hx = hyp(x)
       real t = x - y;
       return t != 0 ?
@@ -124,7 +124,7 @@ namespace GeographicLib {
         1/hx;
     }
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
-    inline real Deatanhe(real x, real y) const {
+    real Deatanhe(real x, real y) const {
       real t = x - y, d = 1 - _e2 * x * y;
       return t != 0 ? Math::eatanhe(t / d, _es) / t : _e2 / d;
     }

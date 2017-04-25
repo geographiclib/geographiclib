@@ -522,8 +522,7 @@ namespace GeographicLib {
                                        unsigned outmask,
                                        real& s12, real& azi1, real& azi2,
                                        real& m12, real& M12, real& M21,
-                                       real& S12)
-    const {
+                                       real& S12) const {
     outmask &= OUT_MASK;
     real salp1, calp1, salp2, calp2,
       a12 =  GenInverse(lat1, lon1, lat2, lon2,
@@ -655,8 +654,7 @@ namespace GeographicLib {
                                          // Only updated if return val >= 0
                                          real& salp2, real& calp2,
                                          // Only updated for short lines
-                                         real& dnm)
-    const {
+                                         real& dnm) const {
     // Return a starting point for Newton's method in salp1 and calp1 (function
     // value is -1).  If Newton's method doesn't need to be used, return also
     // salp2 and calp2 and function value is sig12.

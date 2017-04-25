@@ -33,10 +33,6 @@
  * to an integer between 4 and 8, then this specifies the order of the series
  * used for the forward and reverse transformations.  The default value is 6.
  * (The series accurate to 12th order is given in \ref tmseries.)
- *
- * Other equivalent implementations are given in
- *  - http://www.ign.fr/DISPLAY/000/526/702/5267021/NTG_76.pdf
- *  - http://www.lantmateriet.se/upload/filer/kartor/geodesi_gps_och_detaljmatning/geodesi/Formelsamling/Gauss_Conformal_Projection.pdf
  **********************************************************************/
 
 #include <iostream>
@@ -353,8 +349,8 @@ namespace GeographicLib {
   // tan(phi), taup = sinh(psi)
 
   void TransverseMercator::Forward(real lon0, real lat, real lon,
-                                   real& x, real& y, real& gamma, real& k)
-    const {
+                                   real& x, real& y,
+                                   real& gamma, real& k) const {
     lat = Math::LatFix(lat);
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
@@ -519,8 +515,8 @@ namespace GeographicLib {
   }
 
   void TransverseMercator::Reverse(real lon0, real x, real y,
-                                   real& lat, real& lon, real& gamma, real& k)
-    const {
+                                   real& lat, real& lon,
+                                   real& gamma, real& k) const {
     // This undoes the steps in Forward.  The wrinkles are: (1) Use of the
     // reverted series to express zeta' in terms of zeta. (2) Newton's method
     // to solve for phi in terms of tan(phi).

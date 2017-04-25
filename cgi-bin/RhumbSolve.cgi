@@ -56,42 +56,43 @@ if test "$INPUT"; then
     OUTPUT=`echo $INPUT | $EXECDIR/$COMMAND -e "$RADIUS" "$FLATTENING" 2>&1 |
             head -1`
     if test $? -eq 0; then
-	STATUS=OK
-	GOUTPUT=`echo $INPUT | $EXECDIR/$GCOMMAND -e "$RADIUS" "$FLATTENING" |
+        STATUS=OK
+        GOUTPUT=`echo $INPUT | $EXECDIR/$GCOMMAND -e "$RADIUS" "$FLATTENING" |
             head -1`
-	OUTPUTF=`echo $INPUT | $EXECDIR/$COMMANDX -e "$RADIUS" "$FLATTENING" |
-                 head -1`
-	GOUTPUTF=`echo $INPUT | $EXECDIR/$GCOMMANDX -e "$RADIUS" "$FLATTENING" |
-                 head -1`
-	if test "$TYPE" = D; then
-	    POS1="`echo $GOUTPUT | cut -f1-2 -d' '`"
-	    POSG1="`echo $GOUTPUTF | cut -f1-2 -d' '`"
-	    AZI12="`echo $GOUTPUT | cut -f3 -d' '`"
-	    DIST12="`echo $GOUTPUT | cut -f7 -d' '`"
-	    POS2="`echo $OUTPUT | cut -f1-2 -d' '`"
-	    POSG2="`echo $OUTPUTF | cut -f1-2 -d' '`"
-	    S12="`echo $OUTPUT | cut -f3 -d' '`"
-	    POSITION1=$(geohack $POSG1 $POS1 Black)
-	    POSITION2=$F$(geohack $POSG2 $POS2 Blue)$G
-	    echo $POS2 | grep nan > /dev/null &&
-	    POSITION2=$F$(convertdeg "$POS2")$G
-	    AZIMUTH=$(convertdeg "$AZI12")
-	    DIST12=$(encodevalue "$DIST12")
-	else
-	    POS1="`echo $GOUTPUT | cut -f1-2 -d' '`"
-	    POSG1="`echo $GOUTPUTF | cut -f1-2 -d' '`"
-	    POS2="`echo $GOUTPUT | cut -f4-5 -d' '`"
-	    POSG2="`echo $GOUTPUTF | cut -f4-5 -d' '`"
-	    AZI12="`echo $OUTPUT | cut -f1 -d' '`"
-	    DIST12="`echo $OUTPUT | cut -f2 -d' '`"
-	    S12="`echo $OUTPUT | cut -f3 -d' '`"
-	    POSITION1=$(geohack $POSG1 $POS1 Black)
-	    POSITION2=$(geohack $POSG2 $POS2 Black)
-	    AZIMUTH=$F$(convertdeg "$AZI12")$G
-	    DIST12=$F$(encodevalue "$DIST12")$G
-	fi
+        OUTPUTF=`echo $INPUT | $EXECDIR/$COMMANDX -e "$RADIUS" "$FLATTENING" |
+            head -1`
+        GOUTPUTF=`echo $INPUT |
+            $EXECDIR/$GCOMMANDX -e "$RADIUS" "$FLATTENING" |
+            head -1`
+        if test "$TYPE" = D; then
+            POS1="`echo $GOUTPUT | cut -f1-2 -d' '`"
+            POSG1="`echo $GOUTPUTF | cut -f1-2 -d' '`"
+            AZI12="`echo $GOUTPUT | cut -f3 -d' '`"
+            DIST12="`echo $GOUTPUT | cut -f7 -d' '`"
+            POS2="`echo $OUTPUT | cut -f1-2 -d' '`"
+            POSG2="`echo $OUTPUTF | cut -f1-2 -d' '`"
+            S12="`echo $OUTPUT | cut -f3 -d' '`"
+            POSITION1=$(geohack $POSG1 $POS1 Black)
+            POSITION2=$F$(geohack $POSG2 $POS2 Blue)$G
+            echo $POS2 | grep nan > /dev/null &&
+            POSITION2=$F$(convertdeg "$POS2")$G
+            AZIMUTH=$(convertdeg "$AZI12")
+            DIST12=$(encodevalue "$DIST12")
+        else
+            POS1="`echo $GOUTPUT | cut -f1-2 -d' '`"
+            POSG1="`echo $GOUTPUTF | cut -f1-2 -d' '`"
+            POS2="`echo $GOUTPUT | cut -f4-5 -d' '`"
+            POSG2="`echo $GOUTPUTF | cut -f4-5 -d' '`"
+            AZI12="`echo $OUTPUT | cut -f1 -d' '`"
+            DIST12="`echo $OUTPUT | cut -f2 -d' '`"
+            S12="`echo $OUTPUT | cut -f3 -d' '`"
+            POSITION1=$(geohack $POSG1 $POS1 Black)
+            POSITION2=$(geohack $POSG2 $POS2 Black)
+            AZIMUTH=$F$(convertdeg "$AZI12")$G
+            DIST12=$F$(encodevalue "$DIST12")$G
+        fi
     else
-	STATUS="$OUTPUT"
+        STATUS="$OUTPUT"
     fi
     # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
@@ -107,24 +108,24 @@ cat <<EOF
     <meta name="description" content="Online rhumb line calculator" />
     <meta name="author" content="Charles F. F. Karney" />
     <meta name="keywords"
-	  content="rhumb line, loxodrome,
-		   rhumb line distance,
-		   geographic distance,
-		   direct rhumb line problem,
-		   inverse rhumb line problem,
-		   distance and azimuth,
-		   distance and heading,
-		   range and bearing,
-		   latitude and longitude,
-		   online calculator,
-		   WGS84 ellipsoid,
-		   GeographicLib" />
+          content="rhumb line, loxodrome,
+                   rhumb line distance,
+                   geographic distance,
+                   direct rhumb line problem,
+                   inverse rhumb line problem,
+                   distance and azimuth,
+                   distance and heading,
+                   range and bearing,
+                   latitude and longitude,
+                   online calculator,
+                   WGS84 ellipsoid,
+                   GeographicLib" />
   </head>
   <body>
     <h3>
       Online rhumb line calculations using the
       <a href="https://geographiclib.sourceforge.io/html/RhumbSolve.1.html">
-	 RhumbSolve</a> utility
+         RhumbSolve</a> utility
     </h3>
     <form action="/cgi-bin/RhumbSolve" method="get">
       <p>
@@ -133,11 +134,11 @@ cat <<EOF
           <tr>
             <td valign='baseline'>
               &nbsp;&nbsp;&nbsp;
-	      <label for='I'>
-		<input type="radio" name="type" value="I" id='I'
+              <label for='I'>
+                <input type="radio" name="type" value="I" id='I'
                        `test "$TYPE" = I && echo CHECKED`>
-		&nbsp;Inverse:&nbsp;
-	      </label>
+                &nbsp;Inverse:&nbsp;
+              </label>
             </td>
             <td valign='baseline'>
               <em>lat1 lon1 lat2 lon2</em>
@@ -149,11 +150,11 @@ cat <<EOF
           <tr>
             <td valign='baseline'>
               &nbsp;&nbsp;&nbsp;
-	      <label for='D'>
-		<input type="radio" name="type" value="D" id='D'
+              <label for='D'>
+                <input type="radio" name="type" value="D" id='D'
                        `test "$TYPE" = D && echo CHECKED`>
-		&nbsp;Direct:&nbsp;
-	      </label>
+                &nbsp;Direct:&nbsp;
+              </label>
             </td>
             <td valign='baseline'>
               <em>lat1 lon1 azi12 s12</em>
@@ -166,10 +167,10 @@ cat <<EOF
       </p>
       <p>
         Input (ex. &laquo;<tt>40.6 -73.8 49&deg;01'N 2&deg;33'E</tt>&raquo;
-	[inverse],
-	&laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo;
-	[direct]):
-	<br>
+        [inverse],
+        &laquo;<tt>40d38'23"N 073d46'44"W 53d30' 5850e3</tt>&raquo;
+        [direct]):
+        <br>
         &nbsp;&nbsp;&nbsp;
         <input type=text name="input" size=72 value="$INPUTENC">
       </p>
@@ -220,19 +221,19 @@ cat <<EOF
               </select>
             </td>
           </tr>
-	  <tr>
-	    <td>Equatorial radius:</td>
-	    <td>
-	      <input type=text name="radius" size=20 value="$RADIUS">
+          <tr>
+            <td>Equatorial radius:</td>
+            <td>
+              <input type=text name="radius" size=20 value="$RADIUS">
             </td>
-	    <td>meters</td>
-	  </tr>
-	  <tr>
-	    <td>Flattening:</td>
-	    <td>
-	      <input type=text name="flattening" size=20 value="$FLATTENING">
+            <td>meters</td>
+          </tr>
+          <tr>
+            <td>Flattening:</td>
+            <td>
+              <input type=text name="flattening" size=20 value="$FLATTENING">
             </td>
-	  </tr>
+          </tr>
         </table>
       </p>
       <p>
@@ -269,7 +270,7 @@ cat <<EOF
       path between two points; that is the geodesic and it is calculated
       by
       <a href="https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">
-	GeodSolve</a>.
+        GeodSolve</a>.
     </p>
     <p>
       There are two standard rhumb line problems:
@@ -292,8 +293,8 @@ cat <<EOF
     <p>
       The additional quantity computed is:
       <ul>
-	<li> <em>S12</em>, the area between the rhumb line
-	  and the equator (m<sup>2</sup>).
+        <li> <em>S12</em>, the area between the rhumb line
+          and the equator (m<sup>2</sup>).
       </ul>
     </p>
     <p>
@@ -325,9 +326,9 @@ cat <<EOF
       GeographicLib</a>.  See also the section of the GeographicLib
       documentation on
       <a href="https://geographiclib.sourceforge.io/html/rhumb.html">
-	Rhumb lines</a> and the Wikipedia page,
+        Rhumb lines</a> and the Wikipedia page,
       <a href="https://en.wikipedia.org/wiki/Rhumb_line">
-	Rhumb line</a>.
+        Rhumb line</a>.
     </P>
     <hr>
     <address>Charles Karney

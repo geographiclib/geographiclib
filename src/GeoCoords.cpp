@@ -132,8 +132,8 @@ namespace GeographicLib {
     return utm;
   }
 
-  string GeoCoords::UTMUPSRepresentation(bool northp, int prec, bool abbrev)
-    const {
+  string GeoCoords::UTMUPSRepresentation(bool northp, int prec,
+                                         bool abbrev) const {
     real e, n;
     int z;
     UTMUPS::Transfer(_zone, _northp, _easting, _northing,
@@ -150,8 +150,8 @@ namespace GeographicLib {
     return utm;
   }
 
-  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec, bool abbrev)
-    const {
+  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec,
+                                            bool abbrev) const {
     real e, n;
     int z;
     UTMUPS::Transfer(_alt_zone, _northp, _alt_easting, _alt_northing,

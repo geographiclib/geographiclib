@@ -575,7 +575,8 @@ public class Geodesic {
    * <i>lat1</i> should be in the range [&minus;90&deg;, 90&deg;].
    **********************************************************************/
   public GeodesicLine GenDirectLine(double lat1, double lon1, double azi1,
-                                    boolean arcmode, double s12_a12, int caps) {
+                                    boolean arcmode, double s12_a12, int caps)
+  {
     azi1 = GeoMath.AngNormalize(azi1);
     double salp1, calp1;
     // Guard against underflow in salp0.  Also -0 is converted to +0.
@@ -682,13 +683,15 @@ public class Geodesic {
     double sbet1, cbet1, sbet2, cbet2, s12x, m12x;
     s12x = m12x = Double.NaN;
 
-    { Pair p = GeoMath.sincosd(lat1); sbet1 = _f1 * p.first; cbet1 = p.second; }
+    { Pair p = GeoMath.sincosd(lat1);
+      sbet1 = _f1 * p.first; cbet1 = p.second; }
     // Ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12
     // will be <= 2*tiny for two points at the same pole.
     { Pair p = GeoMath.norm(sbet1, cbet1); sbet1 = p.first; cbet1 = p.second; }
     cbet1 = Math.max(tiny_, cbet1);
 
-    { Pair p = GeoMath.sincosd(lat2); sbet2 = _f1 * p.first; cbet2 = p.second; }
+    { Pair p = GeoMath.sincosd(lat2);
+      sbet2 = _f1 * p.first; cbet2 = p.second; }
     // Ensure cbet2 = +epsilon at poles
     { Pair p = GeoMath.norm(sbet2, cbet2); sbet2 = p.first; cbet2 = p.second; }
     cbet2 = Math.max(tiny_, cbet2);
@@ -740,7 +743,8 @@ public class Geodesic {
                                        csig1 * csig2 + ssig1 * ssig2);
       {
         LengthsV v =
-          Lengths(_n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+          Lengths(_n, sig12, ssig1, csig1, dn1,
+                  ssig2, csig2, dn2, cbet1, cbet2,
                   outmask | GeodesicMask.DISTANCE | GeodesicMask.REDUCEDLENGTH,
                   C1a, C2a);
         s12x = v.s12b; m12x = v.m12b;
@@ -1382,7 +1386,8 @@ public class Geodesic {
 
   private InverseStartV InverseStart(double sbet1, double cbet1, double dn1,
                                      double sbet2, double cbet2, double dn2,
-                                     double lam12, double slam12, double clam12,
+                                     double lam12,
+                                     double slam12, double clam12,
                                      // Scratch areas of the right size
                                      double C1a[], double C2a[]) {
     // Return a starting point for Newton's method in salp1 and calp1 (function

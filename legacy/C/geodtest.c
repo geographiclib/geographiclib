@@ -618,8 +618,9 @@ static int GeodSolve73() {
   return result;
 }
 
-static void planimeter(const struct geod_geodesic* g, double points[][2], int N,
-                double* perimeter, double* area) {
+static void planimeter(const struct geod_geodesic* g,
+                       double points[][2], int N,
+                       double* perimeter, double* area) {
   struct geod_polygon p;
   int i;
   geod_polygon_init(&p, 0);
@@ -628,8 +629,9 @@ static void planimeter(const struct geod_geodesic* g, double points[][2], int N,
   geod_polygon_compute(g, &p, 0, 1, area, perimeter);
 }
 
-static void polylength(const struct geod_geodesic* g, double points[][2], int N,
-                double* perimeter) {
+static void polylength(const struct geod_geodesic* g,
+                       double points[][2], int N,
+                       double* perimeter) {
   struct geod_polygon p;
   int i;
   geod_polygon_init(&p, 1);
