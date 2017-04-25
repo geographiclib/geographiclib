@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <string>
 
 #if !defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION)
 #define GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION 0
@@ -21,6 +22,7 @@
 
 #include <GeographicLib/NearestNeighbor.hpp>
 #include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/DMS.hpp>
 
 using namespace std;
 using namespace GeographicLib;
@@ -51,13 +53,16 @@ int main() {
   try {
     // Read in locations
     vector<pos> locs;
+    double lat, lon;
+    string sa, sb;
     {
-      double lat, lon;
       ifstream is("locations.txt");
       if (!is.good())
         throw GeographicErr("locations.txt not readable");
-      while (is >> lat >> lon)
+      while (is >> sa >> sb) {
+        DMS::DecodeLatLon(sa, sb, lat, lon);
         locs.push_back(pos(lat, lon));
+      }
       if (locs.size() == 0)
         throw GeographicErr("need at least one location");
     }
@@ -102,13 +107,13 @@ int main() {
     }
 
     ifstream is("queries.txt");
-    double lat, lon, d;
+    double d;
     int count = 0;
     vector<int> k;
-    while (is >> lat >> lon) {
+    while (is >> sa >> sb) {
       ++count;
-      pos event(lat, lon);
-      d = pointset.Search(locs, distance, event, k);
+      DMS::DecodeLatLon(sa, sb, lat, lon);
+      d = pointset.Search(locs, distance, pos(lat, lon), k);
       if (k.size() != 1)
           throw GeographicErr("unexpected number of results");
       cout << k[0] << " " << d << "\n";
