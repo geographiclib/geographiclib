@@ -6,6 +6,7 @@
 // at the end.
 
 #include <iostream>
+#include <exception>
 #include <vector>
 #include <fstream>
 #include <string>

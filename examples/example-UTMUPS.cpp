@@ -1,9 +1,9 @@
 // Example of using the GeographicLib::UTMUPS class
 
 #include <iostream>
+#include <iomanip>
 #include <exception>
 #include <string>
-#include <iomanip>
 #include <GeographicLib/UTMUPS.hpp>
 
 using namespace std;
