@@ -29,7 +29,7 @@ section of GeoConvert(1).  For each set of geodetic coordinates, the
 corresponding projected easting, I<x>, and northing, I<y>, (meters) are
 printed on standard output together with the meridian convergence
 I<gamma> (degrees) and scale I<k>.  The meridian convergence is the
-bearing of the I<y> axis measured clockwise from true north.
+bearing of grid north (the I<y> axis) measured clockwise from true north.
 
 =head1 OPTIONS
 

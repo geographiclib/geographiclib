@@ -440,6 +440,7 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 # python release
 cd $TEMP/gita/geographiclib/python
 python setup.py sdist --formats gztar upload
+sudo pip install --upgrade geographiclib
 
 # java release
 cd $TEMP/gita/geographiclib/java

@@ -6,8 +6,7 @@
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
- * This implementation follows closely
- * <a href="http://www.jhs-suositukset.fi/suomi/jhs154"> JHS 154, ETRS89 -
+ * This implementation follows closely JHS 154, ETRS89 -
  * j&auml;rjestelm&auml;&auml;n liittyv&auml;t karttaprojektiot,
  * tasokoordinaatistot ja karttalehtijako</a> (Map projections, plane
  * coordinates, and map sheet index for ETRS89), published by JUHTA, Finnish

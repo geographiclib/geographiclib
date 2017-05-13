@@ -1667,11 +1667,11 @@
    '''29'''(4), 329--341 (2011).[[BR]]
    https://doi.org/10.7848/ksgpc.2011.29.4.329
  * A. S. Lenart,[[BR]]
-   ''Solutions of Direct Geodetic Problem in Navigational Applications'',
+   ''Solutions of direct geodetic problem in navigational applications'',
    TransNav '''5'''(4), 527--532 (2011).[[BR]]
    http://www.transnav.eu/Article_Solutions_of_Direct_Geodetic_Lenart,20,324.html
  * A. S. Lenart,[[BR]]
-   ''Solutions of Inverse Geodetic Problem in Navigational Applications'',
+   ''Solutions of inverse geodetic problem in navigational applications'',
    TransNav '''7'''(2), 253--257 (2013).[[BR]]
    https://doi.org/10.12716/1001.07.02.13
  * L. E. Sjöberg and M. Shirazian,[[BR]]
@@ -1698,8 +1698,9 @@
    https://doi.org/10.2478/jogs-2013-0028
  * G. Panou and R. Korakitis,[[BR]]
    ''Geodesic equations and their numerical solutions in geodetic and
-   Cartesian coordinates on an oblate spheroid''
-   (Nov. 2016).[[BR]]
+   Cartesian coordinates on an oblate spheroid'',
+   J. Geodetic Science '''7'''(1), 31--42 (2017).[[BR]]
+   https://doi.org/10.1515/jogs-2017-0004 [[BR]]
    https://arxiv.org/abs/1612.01357
  * W.-K. Tseng,[[BR]]
    ''An algorithm for the inverse solution of geodesic sailing without

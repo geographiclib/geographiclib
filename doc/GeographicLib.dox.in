@@ -8436,10 +8436,9 @@ git repository for GeographicLib</a>.
      - restart Newton's method in Geodesic::Inverse when it goes awry;
      - back up Newton's method with the bisection method;
      - Geodesic::Inverse now converges for any value of \e f;
-     - add GeodesicExact and
-       GeodesicLineExact which are formulated in terms
-       of elliptic integrals and thus yield accurate results even for
-       very eccentric ellipsoids.
+     - add GeodesicExact and GeodesicLineExact which are formulated in
+       terms of elliptic integrals and thus yield accurate results even
+       for very eccentric ellipsoids;
      - the -E option to <a href="GeodSolve.1.html">Geod</a> invokes these
        exact classes.
    - Add functionality to EllipticFunction:

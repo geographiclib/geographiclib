@@ -28,7 +28,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RF(real x, real y, real z) {
     // Carlson, eqs 2.2 - 2.7
-    real tolRF =
+    static const real tolRF =
       pow(3 * numeric_limits<real>::epsilon() * real(0.01), 1/real(8));
     real
       A0 = (x + y + z)/3,
@@ -65,7 +65,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RF(real x, real y) {
     // Carlson, eqs 2.36 - 2.38
-    real tolRG0 =
+    static const real tolRG0 =
       real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     real xn = sqrt(x), yn = sqrt(y);
     if (xn < yn) swap(xn, yn);
@@ -103,7 +103,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::RG(real x, real y) {
     // Carlson, eqs 2.36 - 2.39
-    real tolRG0 =
+    static const real tolRG0 =
       real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     real
       x0 = sqrt(max(x, y)),
@@ -314,7 +314,8 @@ namespace GeographicLib {
 
   void EllipticFunction::sncndn(real x, real& sn, real& cn, real& dn) const {
     // Bulirsch's sncndn routine, p 89.
-    real tolJAC = sqrt(numeric_limits<real>::epsilon() * real(0.01));
+    static const real tolJAC =
+      sqrt(numeric_limits<real>::epsilon() * real(0.01));
     if (_kp2 != 0) {
       real mc = _kp2, d = 0;
       if (_kp2 < 0) {
@@ -535,7 +536,8 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::Einv(real x) const {
-    real tolJAC = sqrt(numeric_limits<real>::epsilon() * real(0.01));
+    static const real tolJAC =
+      sqrt(numeric_limits<real>::epsilon() * real(0.01));
     real n = floor(x / (2 * _Ec) + real(0.5));
     x -= 2 * _Ec * n;           // x now in [-ec, ec)
     // Linear approximation

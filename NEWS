@@ -909,7 +909,7 @@ Changes between 1.25 (released 2012-10-16) and 1.24 versions:
     + Geodesic::Inverse now converges for any value of f;
     + add GeodesicExact and GeodesicLineExact which are formulated in
       terms of elliptic integrals and thus yield accurate results
-      even for very eccentric ellipsoids.
+      even for very eccentric ellipsoids;
     + the -E option to Geod invokes these exact classes.
 
   * Add functionality to EllipticFunction:

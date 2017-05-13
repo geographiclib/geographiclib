@@ -55,9 +55,9 @@ namespace GeographicLib {
         ilon += 360;
       int zone = (ilon + 186)/6;
       int band = MGRS::LatitudeBand(lat);
-      if (band == 7 && zone == 31 && ilon >= 3)
+      if (band == 7 && zone == 31 && ilon >= 3) // The Norway exception
         zone = 32;
-      else if (band == 9 && ilon >= 0 && ilon < 42)
+      else if (band == 9 && ilon >= 0 && ilon < 42) // The Svalbard exception
         zone = 2 * ((ilon + 183)/12) + 1;
       return zone;
     } else
