@@ -150,7 +150,7 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
 unset GEOGRAPHICLIB_DATA
-for v in 2015 2013 2012 2010; do
+for v in 2017 2015 2013 2012 2010; do
   for a in 64 32; do
     rm -rf v:/data/scratch/geog-mvn-$v-$a
     mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \

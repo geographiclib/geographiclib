@@ -20,7 +20,11 @@ formatnum(x):=block([n,neg:is(x<0),s1,s2,ll],x:abs(x),n:h(x),
   if slength(s2) < slength(s1) then s2 else s1)$
 formatnumx(x):=if simplenum then
 concat(string(x),if abs(x) < 2^31 then "" else "LL") else
-if abs(x)<2^63 then (if abs(x)/2^h(abs(x)) < 2^24 then formatnum(x)
+if abs(x)<2^63 then (if abs(x) < 2^24
+  /* test used to be: abs(x)/2^h(abs(x)) < 2^24; but Visual Studio
+  complains about truncation of __int64 to real even if trailing bits
+  are zero */
+  then formatnum(x)
   else concat(s:if x<0 then "-" else "","real(",formatnum(abs(x)),")"))
 else
 block([s:if x<0 then "-" else ""], x:abs(x),
