@@ -40,10 +40,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT SphericalEngine {
   private:
     typedef Math::real real;
-    // A table of the square roots of integers
-    static std::vector<real> root_;
-    // CircularEngine needs access to root_, scale_
+    // CircularEngine needs access to sqrttable, scale
     friend class CircularEngine;
+    // Return the table of the square roots of integers
+    static std::vector<real>& sqrttable();
     // An internal scaling of the coefficients to avoid overflow in
     // intermediate calculations.
     static real scale() {
@@ -363,12 +363,14 @@ namespace GeographicLib {
      * Clear the static table of square roots and release the memory.  Call
      * this only when you are sure you no longer will be using SphericalEngine.
      * Your program will crash if you call SphericalEngine after calling this
-     * routine.  <b>It's safest not to call this routine at all.</b> (The space
-     * used by the table is modest.)
+     * routine.
+     *
+     * \warning It's safest not to call this routine at all.  (The space used
+     * by the table is modest.)
      **********************************************************************/
     static void ClearRootTable() {
       std::vector<real> temp(0);
-      root_.swap(temp);
+      sqrttable().swap(temp);
     }
   };
 
