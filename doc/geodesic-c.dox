@@ -19,15 +19,16 @@ The documentation for other versions is available at
 
 \section abstract-c Abstract
 
-This is a C implementation of the geodesic algorithms from <a
-href="https://geographiclib.sourceforge.io">GeographicLib</a>.  This is a
-self-contained library (requiring only the standard C math library)
+This is a C implementation of the geodesic algorithms from
+<a href="https://geographiclib.sourceforge.io">GeographicLib</a>.  This
+is a self-contained library (requiring only the standard C math library)
 which makes it easy to do geodesic computations for an ellipsoid of
-revolution in a C program.  It is included with version 4.9.0
+revolution in a C program.  It is included with version 4.9.0 of
 <a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> and later.
 It uses ANSI C as described in B. W. Kernigan and D. M. Ritchie, The C
 Programming Language, 2nd Ed. (Prentice Hall, 1988), and so should
-compile correctly with just about any C compiler.
+compile correctly with just about any C compiler.  However, the C99 math
+functions are used if they are available.
 
 \section download-c Downloading the source
 

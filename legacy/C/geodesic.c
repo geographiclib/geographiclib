@@ -26,6 +26,10 @@
 #include "geodesic.h"
 #include <math.h>
 
+#if !defined(HAVE_C99_MATH)
+#define HAVE_C99_MATH 0
+#endif
+
 #define GEOGRAPHICLIB_GEODESIC_ORDER 6
 #define nA1   GEOGRAPHICLIB_GEODESIC_ORDER
 #define nC1   GEOGRAPHICLIB_GEODESIC_ORDER
@@ -105,6 +109,12 @@ enum captype {
 };
 
 static real sq(real x) { return x * x; }
+#if HAVE_C99_MATH
+#define atanhx atanh
+#define copysignx copysign
+#define hypotx hypot
+#define cbrtx cbrt
+#else
 static real log1px(real x) {
   volatile real
     y = 1 + x,
@@ -133,6 +143,7 @@ static real cbrtx(real x) {
   real y = pow(fabs(x), 1/(real)(3)); /* Return the real cube root */
   return x < 0 ? -y : y;
 }
+#endif
 
 static real sumx(real u, real v, real* t) {
   volatile real s = u + v;
@@ -170,8 +181,13 @@ static void norm2(real* sinx, real* cosx) {
 }
 
 static real AngNormalize(real x) {
+#if HAVE_C99_MATH
+  x = remainder(x, (real)(360));
+  return x != -180 ? x : 180;
+#else
   x = fmod(x, (real)(360));
   return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
+#endif
 }
 
 static real LatFix(real x)
@@ -202,9 +218,15 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   /* In order to minimize round-off errors, this function exactly reduces
    * the argument to the range [-45, 45] before converting it to radians. */
   real r, s, c; int q;
+#if HAVE_C99_MATH && !defined(__GNUC__)
+  /* Disable for gcc because of bug in glibc version < 2.22, see
+   * https://sourceware.org/bugzilla/show_bug.cgi?id=17569 */
+  r = remquo(x, (real)(90), &q);
+#else
   r = fmod(x, (real)(360));
   q = (int)(floor(r / 90 + (real)(0.5)));
   r -= 90 * q;
+#endif
   /* now abs(r) <= 45 */
   r *= degree;
   /* Possibly could call the gnu extension sincos */
@@ -1763,10 +1785,17 @@ int transit(real lon1, real lon2) {
 }
 
 int transitdirect(real lon1, real lon2) {
+#if HAVE_C99_MATH
+  lon1 = remainder(lon1, (real)(720));
+  lon2 = remainder(lon2, (real)(720));
+  return ( (lon2 >= 0 && lon2 < 360 ? 0 : 1) -
+           (lon1 >= 0 && lon1 < 360 ? 0 : 1) );
+#else
   lon1 = fmod(lon1, (real)(720));
   lon2 = fmod(lon2, (real)(720));
   return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
            ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+#endif
 }
 
 void accini(real s[]) {
