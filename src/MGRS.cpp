@@ -14,25 +14,25 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string MGRS::hemispheres_ = "SN";
-  const string MGRS::utmcols_[3] = { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
-  const string MGRS::utmrow_ = "ABCDEFGHJKLMNPQRSTUV";
-  const string MGRS::upscols_[4] =
+  const char* const MGRS::hemispheres_ = "SN";
+  const char* const MGRS::utmcols_[] = { "ABCDEFGH", "JKLMNPQR", "STUVWXYZ" };
+  const char* const MGRS::utmrow_ = "ABCDEFGHJKLMNPQRSTUV";
+  const char* const MGRS::upscols_[] =
     { "JKLPQRSTUXYZ", "ABCFGHJKLPQR", "RSTUXYZ", "ABCFGHJ" };
-  const string MGRS::upsrows_[2] =
+  const char* const MGRS::upsrows_[] =
     { "ABCDEFGHJKLMNPQRSTUVWXYZ", "ABCDEFGHJKLMNP" };
-  const string MGRS::latband_ = "CDEFGHJKLMNPQRSTUVWX";
-  const string MGRS::upsband_ = "ABYZ";
-  const string MGRS::digits_ = "0123456789";
+  const char* const MGRS::latband_ = "CDEFGHJKLMNPQRSTUVWX";
+  const char* const MGRS::upsband_ = "ABYZ";
+  const char* const MGRS::digits_ = "0123456789";
 
-  const int MGRS::mineasting_[4] =
+  const int MGRS::mineasting_[] =
     { minupsSind_, minupsNind_, minutmcol_, minutmcol_ };
-  const int MGRS::maxeasting_[4] =
+  const int MGRS::maxeasting_[] =
     { maxupsSind_, maxupsNind_, maxutmcol_, maxutmcol_ };
-  const int MGRS::minnorthing_[4] =
+  const int MGRS::minnorthing_[] =
     { minupsSind_, minupsNind_,
       minutmSrow_, minutmSrow_ - (maxutmSrow_ - minutmNrow_) };
-  const int MGRS::maxnorthing_[4] =
+  const int MGRS::maxnorthing_[] =
     { maxupsSind_, maxupsNind_,
       maxutmNrow_ + (maxutmSrow_ - minutmNrow_), maxutmNrow_ };
 
@@ -179,7 +179,7 @@ namespace GeographicLib {
       throw GeographicErr("MGRS string too short " + mgrs);
     bool utmp = zone1 != UTMUPS::UPS;
     int zonem1 = zone1 - 1;
-    const string& band = utmp ? latband_ : upsband_;
+    const char* band = utmp ? latband_ : upsband_;
     int iband = Utility::lookup(band, mgrs[p++]);
     if (iband < 0)
       throw GeographicErr("Band letter " + Utility::str(mgrs[p-1]) + " not in "
@@ -207,8 +207,8 @@ namespace GeographicLib {
       return;
     } else if (len - p < 2)
       throw GeographicErr("Missing row letter in " + mgrs);
-    const string& col = utmp ? utmcols_[zonem1 % 3] : upscols_[iband];
-    const string& row = utmp ? utmrow_ : upsrows_[northp1];
+    const char* col = utmp ? utmcols_[zonem1 % 3] : upscols_[iband];
+    const char* row = utmp ? utmrow_ : upsrows_[northp1];
     int icol = Utility::lookup(col, mgrs[p++]);
     if (icol < 0)
       throw GeographicErr("Column letter " + Utility::str(mgrs[p-1])

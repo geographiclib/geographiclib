@@ -14,8 +14,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string OSGB::letters_ = "ABCDEFGHJKLMNOPQRSTUVWXYZ";
-  const string OSGB::digits_ = "0123456789";
+  const char* const OSGB::letters_ = "ABCDEFGHJKLMNOPQRSTUVWXYZ";
+  const char* const OSGB::digits_ = "0123456789";
 
   const TransverseMercator& OSGB::OSGBTM() {
     static const TransverseMercator osgbtm(MajorRadius(), Flattening(),

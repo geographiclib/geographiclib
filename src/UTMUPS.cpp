@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -17,24 +17,24 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const int UTMUPS::falseeasting_[4] =
+  const int UTMUPS::falseeasting_[] =
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::utmeasting_ * MGRS::tile_, MGRS::utmeasting_ * MGRS::tile_ };
-  const int UTMUPS::falsenorthing_[4] =
+  const int UTMUPS::falsenorthing_[] =
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
-  const int UTMUPS::mineasting_[4] =
+  const int UTMUPS::mineasting_[] =
     { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmcol_ * MGRS::tile_, MGRS::minutmcol_ * MGRS::tile_ };
-  const int UTMUPS::maxeasting_[4] =
+  const int UTMUPS::maxeasting_[] =
     { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
       MGRS::maxutmcol_ * MGRS::tile_, MGRS::maxutmcol_ * MGRS::tile_ };
-  const int UTMUPS::minnorthing_[4] =
+  const int UTMUPS::minnorthing_[] =
     { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmSrow_ * MGRS::tile_,
       (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
       * MGRS::tile_ };
-  const int UTMUPS::maxnorthing_[4] =
+  const int UTMUPS::maxnorthing_[] =
     { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
       (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) *
       MGRS::tile_,

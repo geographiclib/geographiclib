@@ -16,6 +16,7 @@
 #include <sstream>
 #include <cctype>
 #include <ctime>
+#include <cstring>
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions and unsafe gmtime
@@ -458,6 +459,22 @@ namespace GeographicLib {
     static int lookup(const std::string& s, char c) {
       std::string::size_type r = s.find(char(toupper(c)));
       return r == std::string::npos ? -1 : int(r);
+    }
+
+    /**
+     * Lookup up a character in a char*.
+     *
+     * @param[in] s the char* string to be searched.
+     * @param[in] c the character to look for.
+     * @return the index of the first occurrence character in the string or
+     *   &minus;1 is the character is not present.
+     *
+     * \e c is converted to upper case before search \e s.  Therefore, it is
+     * intended that \e s should not contain any lower case letters.
+     **********************************************************************/
+    static int lookup(const char* s, char c) {
+      const char* p = std::strchr(s, toupper(c));
+      return p != NULL ? int(p - s) : -1;
     }
 
     /**

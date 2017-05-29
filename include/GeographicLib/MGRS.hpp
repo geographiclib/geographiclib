@@ -2,7 +2,7 @@
  * \file MGRS.hpp
  * \brief Header for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -74,14 +74,14 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT MGRS {
   private:
     typedef Math::real real;
-    static const std::string hemispheres_;
-    static const std::string utmcols_[3];
-    static const std::string utmrow_;
-    static const std::string upscols_[4];
-    static const std::string upsrows_[2];
-    static const std::string latband_;
-    static const std::string upsband_;
-    static const std::string digits_;
+    static const char* const hemispheres_;
+    static const char* const utmcols_[3];
+    static const char* const utmrow_;
+    static const char* const upscols_[4];
+    static const char* const upsrows_[2];
+    static const char* const latband_;
+    static const char* const upsband_;
+    static const char* const digits_;
 
     static const int mineasting_[4];
     static const int maxeasting_[4];

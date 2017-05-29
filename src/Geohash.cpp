@@ -14,8 +14,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
-  const string Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
+  const char* const Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
+  const char* const Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
   void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
     static const real shift = ldexp(real(1), 45);

@@ -42,8 +42,8 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int maxlen_ = 18;
     static const unsigned long long mask_ = 1ULL << 45;
-    static const std::string lcdigits_;
-    static const std::string ucdigits_;
+    static const char* const lcdigits_;
+    static const char* const ucdigits_;
     Geohash();                     // Disable constructor
 
   public:

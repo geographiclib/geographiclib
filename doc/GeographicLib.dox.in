@@ -7590,12 +7590,15 @@ git repository for GeographicLib</a>.
    (released 2017-mm-dd)
    - Fix warnings about implicit conversions of doubles to bools in C++,
      C, and JavaScript packages.
-   - Avoid a potential problem with the order of initializations in
-     SphericalEngine.
+   - Avoid potential problems with the order of initializations in DMS,
+     GARS, Geohash, Georef, MGRS, OSGB, SphericalEngine; this only would
+     have been an issue if GeographicLib objects were instantiated
+     globally.
+   - Add an overload, Utility::lookup(const char* s, char c).
    - NearestNeighbor::Search throws an error if \e pts is the wrong size
      (instead of merely returning no results).
    - Use complex arithmetic for Clenshaw sums in TransverseMercator and
-     tranmerc_{fwd,inv}.m
+     tranmerc_{fwd,inv}.m.
    - Changes in cmake support:
      - fix compiler flags for GEOGRAPHICLIB_PRECISION = 4;
      - add CONVERT_WARNINGS_TO_ERRORS option (default OFF), if ON then

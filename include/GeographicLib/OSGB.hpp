@@ -44,8 +44,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT OSGB {
   private:
     typedef Math::real real;
-    static const std::string letters_;
-    static const std::string digits_;
+    static const char* const letters_;
+    static const char* const digits_;
     static const TransverseMercator& OSGBTM();
     enum {
       base_ = 10,

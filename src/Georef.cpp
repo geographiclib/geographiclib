@@ -14,10 +14,10 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const string Georef::digits_ = "0123456789";
-  const string Georef::lontile_ = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const string Georef::lattile_ = "ABCDEFGHJKLM";
-  const string Georef::degrees_ = "ABCDEFGHJKLMNPQ";
+  const char* const Georef::digits_ = "0123456789";
+  const char* const Georef::lontile_ = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const char* const Georef::lattile_ = "ABCDEFGHJKLM";
+  const char* const Georef::degrees_ = "ABCDEFGHJKLMNPQ";
 
   void Georef::Forward(real lat, real lon, int prec, std::string& georef) {
     if (abs(lat) > 90)

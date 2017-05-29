@@ -38,10 +38,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Georef {
   private:
     typedef Math::real real;
-    static const std::string digits_;
-    static const std::string lontile_;
-    static const std::string lattile_;
-    static const std::string degrees_;
+    static const char* const digits_;
+    static const char* const lontile_;
+    static const char* const lattile_;
+    static const char* const degrees_;
     enum {
       tile_ = 15,               // The size of tile in degrees
       lonorig_ = -180,          // Origin for longitude
