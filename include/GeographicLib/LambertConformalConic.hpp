@@ -42,7 +42,13 @@ namespace GeographicLib {
    * parallels where one is a pole is singular and is disallowed.  The central
    * meridian (which is a trivial shift of the longitude) is specified as the
    * \e lon0 argument of the LambertConformalConic::Forward and
-   * LambertConformalConic::Reverse functions.  There is no provision in this
+   * LambertConformalConic::Reverse functions.
+   *
+   * This class also returns the meridian convergence \e gamma and scale \e k.
+   * The meridian convergence is the bearing of grid north (the \e y axis)
+   * measured clockwise from true north.
+   *
+   * There is no provision in this
    * class for specifying a false easting or false northing or a different
    * latitude of origin.  However these are can be simply included by the
    * calling function.  For example the Pennsylvania South state coordinate

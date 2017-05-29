@@ -74,6 +74,10 @@ namespace GeographicLib {
    * EPSG:7405</a>) which requires the use of a latitude of origin.  This is
    * implemented by the GeographicLib::OSGB class.
    *
+   * This class also returns the meridian convergence \e gamma and scale \e k.
+   * The meridian convergence is the bearing of grid north (the \e y axis)
+   * measured clockwise from true north.
+   *
    * See TransverseMercator.cpp for more information on the implementation.
    *
    * See \ref transversemercator for a discussion of this projection.
