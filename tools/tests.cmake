@@ -412,6 +412,24 @@ set_tests_properties (GeodSolve75
   # Exact area is 286698586.30197, but -E calculation is less accurate
   "54.* 15.* 55\\.72311035.* 54.* 15.* 55\\.72351567.* 39\\.52768638.* 0\\.00035549.* 39\\.52768638.* 0\\.99999999.* 0\\.99999999.* 286698586\\.(29[89]|30[0-5])")
 
+# The distance from Wellington and Salamanca (a classic failure of Vincenty)
+add_test (NAME GeodSolve76 COMMAND GeodSolve
+  -i -p 6 --input-string "41:19S 174:49E 40:58N 5:30W")
+add_test (NAME GeodSolve77 COMMAND GeodSolve
+  -i -p 6 --input-string "41:19S 174:49E 40:58N 5:30W" -E)
+set_tests_properties (GeodSolve76 GeodSolve77
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "160\\.39137649664 19\\.50042925176 19960543\\.857179")
+
+# An example where the NGS calculator fails to converge
+add_test (NAME GeodSolve78 COMMAND GeodSolve
+  -i -p 6 --input-string "27.2 0 -27.1 179.5")
+add_test (NAME GeodSolve79 COMMAND GeodSolve
+  -i -p 6 --input-string "27.2 0 -27.1 179.5" -E)
+set_tests_properties (GeodSolve78 GeodSolve79
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "45\\.82468716758 134\\.22776532670 19974354\\.765767")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

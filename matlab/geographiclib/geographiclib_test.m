@@ -32,6 +32,8 @@ function geographiclib_test
   i = GeodSolve61; if i, n=n+1; fprintf('GeodSolve61 fail: %d\n', i); end
   i = GeodSolve73; if i, n=n+1; fprintf('GeodSolve73 fail: %d\n', i); end
   i = GeodSolve74; if i, n=n+1; fprintf('GeodSolve74 fail: %d\n', i); end
+  i = GeodSolve76; if i, n=n+1; fprintf('GeodSolve76 fail: %d\n', i); end
+  i = GeodSolve78; if i, n=n+1; fprintf('GeodSolve78 fail: %d\n', i); end
   i = Planimeter0 ; if i, n=n+1; fprintf('Planimeter0  fail: %d\n', i); end
   i = Planimeter5 ; if i, n=n+1; fprintf('Planimeter5  fail: %d\n', i); end
   i = Planimeter6 ; if i, n=n+1; fprintf('Planimeter6  fail: %d\n', i); end
@@ -492,6 +494,26 @@ function n = GeodSolve74
   n = n + assertEquals(M12,   0.999999995, 5e-9);
   n = n + assertEquals(M21,   0.999999995, 5e-9);
   n = n + assertEquals(S12, 286698586.30197, 5e-4);
+end
+
+function n = GeodSolve76
+% The distance from Wellington and Salamanca (a classic failure of
+% Vincenty)
+  n = 0;
+  [s12, azi1, azi2] = ...
+      geoddistance(-(41+19/60), 174+49/60, 40+58/60, -(5+30/60));
+  n = n + assertEquals(azi1, 160.39137649664, 0.5e-11);
+  n = n + assertEquals(azi2,  19.50042925176, 0.5e-11);
+  n = n + assertEquals(s12,  19960543.857179, 0.5e-6);
+end
+
+function n = GeodSolve78
+% An example where the NGS calculator fails to converge
+  n = 0;
+  [s12, azi1, azi2] = geoddistance(27.2, 0.0, -27.1, 179.5);
+  n = n + assertEquals(azi1,  45.82468716758, 0.5e-11);
+  n = n + assertEquals(azi2, 134.22776532670, 0.5e-11);
+  n = n + assertEquals(s12,  19974354.765767, 0.5e-6);
 end
 
 function n = Planimeter0

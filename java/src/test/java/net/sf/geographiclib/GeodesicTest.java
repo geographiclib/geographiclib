@@ -551,6 +551,26 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve76() {
+    // The distance from Wellington and Salamanca (a classic failure of
+    // Vincenty)
+    GeodesicData inv = Geodesic.WGS84.Inverse(-(41+19/60.0), 174+49/60.0,
+                                              40+58/60.0, -(5+30/60.0));
+    assertEquals(inv.azi1, 160.39137649664, 0.5e-11);
+    assertEquals(inv.azi2,  19.50042925176, 0.5e-11);
+    assertEquals(inv.s12,  19960543.857179, 0.5e-6);
+  }
+
+  @Test
+  public void GeodSolve78() {
+    // An example where the NGS calculator fails to converge */
+    GeodesicData inv = Geodesic.WGS84.Inverse(27.2, 0.0, -27.1, 179.5);
+    assertEquals(inv.azi1,  45.82468716758, 0.5e-11);
+    assertEquals(inv.azi2, 134.22776532670, 0.5e-11);
+    assertEquals(inv.s12,  19974354.765767, 0.5e-6);
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

@@ -660,6 +660,34 @@ static int GeodSolve74() {
   return result;
 }
 
+static int GeodSolve76() {
+  /* The distance from Wellington and Salamanca (a classic failure of
+     Vincenty) */
+  double azi1, azi2, s12;
+  struct geod_geodesic g;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverse(&g, -(41+19/60.0), 174+49/60.0, 40+58/60.0, -(5+30/60.0),
+               &s12, &azi1, &azi2);
+  result += assertEquals(azi1, 160.39137649664, 0.5e-11);
+  result += assertEquals(azi2,  19.50042925176, 0.5e-11);
+  result += assertEquals(s12,  19960543.857179, 0.5e-6);
+  return result;
+}
+
+static int GeodSolve78() {
+  /* An example where the NGS calculator fails to converge */
+  double azi1, azi2, s12;
+  struct geod_geodesic g;
+  int result = 0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_inverse(&g, 27.2, 0.0, -27.1, 179.5, &s12, &azi1, &azi2);
+  result += assertEquals(azi1,  45.82468716758, 0.5e-11);
+  result += assertEquals(azi2, 134.22776532670, 0.5e-11);
+  result += assertEquals(s12,  19974354.765767, 0.5e-6);
+  return result;
+}
+
 static int Planimeter0() {
   /* Check fix for pole-encircling bug found 2011-03-16 */
   double pa[4][2] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};
@@ -788,6 +816,8 @@ int main() {
   if ((i = GeodSolve71())) {++n; printf("GeodSolve71 fail: %d\n", i);}
   if ((i = GeodSolve73())) {++n; printf("GeodSolve73 fail: %d\n", i);}
   if ((i = GeodSolve74())) {++n; printf("GeodSolve74 fail: %d\n", i);}
+  if ((i = GeodSolve76())) {++n; printf("GeodSolve76 fail: %d\n", i);}
+  if ((i = GeodSolve78())) {++n; printf("GeodSolve78 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}
