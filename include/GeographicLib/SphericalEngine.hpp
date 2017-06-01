@@ -98,7 +98,6 @@ namespace GeographicLib {
      **********************************************************************/
     class GEOGRAPHICLIB_EXPORT coeff {
     private:
-      static const std::vector<real>& Z(); // an empty vector
       int _Nx, _nmx, _mmx;
       std::vector<real>::const_iterator _Cnm;
       std::vector<real>::const_iterator _Snm;
@@ -106,12 +105,7 @@ namespace GeographicLib {
       /**
        * A default constructor
        **********************************************************************/
-      coeff()
-        : _Nx(-1)
-        , _nmx(-1)
-        , _mmx(-1)
-        , _Cnm(Z().begin())
-        , _Snm(Z().begin()) {}
+      coeff() : _Nx(-1) , _nmx(-1) , _mmx(-1) {}
       /**
        * The general constructor.
        *
