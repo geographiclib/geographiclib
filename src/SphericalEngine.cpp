@@ -144,10 +144,9 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const vector<Math::real> SphericalEngine::Z_(0);
   vector<Math::real>& SphericalEngine::sqrttable() {
-    static vector<real> table(0);
-    return table;
+    static vector<real> sqrttable(0);
+    return sqrttable;
   }
 
   template<bool gradp, SphericalEngine::normalization norm, int L>
@@ -383,6 +382,11 @@ namespace GeographicLib {
     root.resize(L);
     for (int l = oldL; l < L; ++l)
       root[l] = sqrt(real(l));
+  }
+
+  const vector<Math::real>& SphericalEngine::coeff::Z() {
+    static const std::vector<real> Z(0);
+    return Z;
   }
 
   void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,

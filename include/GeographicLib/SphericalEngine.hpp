@@ -62,7 +62,6 @@ namespace GeographicLib {
       return std::numeric_limits<real>::epsilon() *
         sqrt(std::numeric_limits<real>::epsilon());
     }
-    static const std::vector<real> Z_;
     SphericalEngine();          // Disable constructor
   public:
     /**
@@ -99,6 +98,7 @@ namespace GeographicLib {
      **********************************************************************/
     class GEOGRAPHICLIB_EXPORT coeff {
     private:
+      static const std::vector<real>& Z(); // an empty vector
       int _Nx, _nmx, _mmx;
       std::vector<real>::const_iterator _Cnm;
       std::vector<real>::const_iterator _Snm;
@@ -110,8 +110,8 @@ namespace GeographicLib {
         : _Nx(-1)
         , _nmx(-1)
         , _mmx(-1)
-        , _Cnm(Z_.begin())
-        , _Snm(Z_.begin()) {}
+        , _Cnm(Z().begin())
+        , _Snm(Z().begin()) {}
       /**
        * The general constructor.
        *
