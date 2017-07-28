@@ -1285,8 +1285,10 @@ class Geodesic(object):
   ALL           = GeodesicCapability.ALL
   """All of the above."""
   LONG_UNROLL   = GeodesicCapability.LONG_UNROLL
-  """Unroll longitudes, rather than reducing them to the reducing them to
-  the range [-180d,180d]."""
+  """Unroll longitudes, rather than reducing them to the range
+  [-180d,180d].
+
+  """
 
 Geodesic.WGS84 = Geodesic(Constants.WGS84_a, Constants.WGS84_f)
 """Instantiation for the WGS84 ellipsoid"""
