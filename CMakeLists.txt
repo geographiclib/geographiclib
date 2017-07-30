@@ -234,11 +234,6 @@ else ()
   endif ()
   set (CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
-  if (NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    # Clang compiler complains about seemingly innocuous float to bool
-    # conversions; need to catch these.
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-  endif ()
   # g++ 6.0 defaults to -std=gnu++14
   if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
         NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0) OR

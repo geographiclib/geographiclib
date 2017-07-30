@@ -30,6 +30,7 @@
 # instf - installed files, autoconf direct from git repository
 
 set -e
+umask 0022
 
 # The following files contain version information:
 #   pom.xml

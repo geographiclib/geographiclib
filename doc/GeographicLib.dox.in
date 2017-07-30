@@ -628,6 +628,34 @@ which will create the additional files and packages the results ready
 for distribution as \verbatim
   geographiclib-@PROJECT_VERSION@.tar.gz \endverbatim
 
+Required packages for Fedora:
+- cmake
+- automake
+- autoconf-archive
+- libtool
+- gcc-c++
+- gcc-gfortran
+- ccache
+- doxygen
+- boost-devel
+- octave
+- python2-sphinx
+- nodejs
+- maven
+
+npm install -g mocha jsdoc
+
+Install a recent version of mpreal.h from
+  https://bitbucket.org/advanpix/mpreal
+in include/
+
+Document tests/test-distribution
+Tests need: geoid egm96-5,
+magnetic/wmm2010
+magnetic/emm2015
+gravity/egm2008
+gravity/grs80
+
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
@@ -1740,6 +1768,15 @@ The resulting files sizes are
 \endverbatim
 Currently, there are no plans for GeographicLib to support this
 compressed format.
+
+The Geoid class only handles world-wide geoid models.  The pgm provides
+geoid height postings on grid of points with uniform spacing in latitude
+(row) and longitude (column).  If the dimensions of the pgm file are
+\e h &times; \e w, then latitude (resp. longitude) spacing is
+180&deg;/(\e h &minus; 1) (resp. 360&deg;/\e w), with the (0,0) pixel
+given the value at &phi; = 90&deg;, &lambda; = 0&deg;.  Models covering a
+restricted area will need to be "inserted" into a world-wide grid before
+being accessible to the Geoid class.
 
 \section geoidinterp Interpolating the geoid data
 
@@ -2855,29 +2892,33 @@ models.
 
 The supported models are
  - <b>wmm2010</b>, the
-   <a href="http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
+   <a href="https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2010</a>, which approximates the main magnetic field
    for the period 2010--2015.
  - <b>wmm2015</b>, the
-   <a href="http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
+   <a href="https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2015</a>, which approximates the main magnetic field
    for the period 2015--2020.
  - <b>igrf11</b>, the
-   <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
    the main magnetic field for the period 1900--2015.
  - <b>igrf12</b>, the
-   <a href="http://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (12th generation)</a>, which approximates
    the main magnetic field for the period 1900--2020.
  - <b>emm2010</b>, the
-   <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
+   <a href="https://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
    magnetic fields for the period 2010--2015.
  - <b>emm2015</b>, the
-   <a href="http://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
+   <a href="https://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2015</a>, which approximates the main and crustal
    magnetic fields for the period 2000--2020.
+ - <b>emm2017</b>, the
+   <a href="https://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
+   Magnetic Model 2017</a>, which approximates the main and crustal
+   magnetic fields for the period 2000--2022.
 
 Go to
  - \ref magneticinst
@@ -2978,10 +3019,24 @@ These magnetic models are available for download:
  link</a> (660)</center>
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/emm2015.exe">
- link</a> (1000)</center>
+ link</a> (990)</center>
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/emm2015.zip">
- link</a> (1100)</center>
+ link</a> (1030)</center>
+<tr>
+ <td>emm2017
+ <td><center>790</center>
+ <td><center>2000--2022</center>
+ <td><center>5050</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/emm2017.tar.bz2">
+ link</a> (1740)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/emm2017.exe">
+ link</a> (1700)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/emm2017.zip">
+ link</a> (2750)</center>
 </table>
 </center>
 The "size" column is the size of the uncompressed data.
@@ -2991,7 +3046,7 @@ geographiclib-get-magnetic (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the magnetic
 models.  For example
 \verbatim
-   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010, emm2015
+   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010, emm2015, emm2017
    geographiclib-get-magnetic -h   # for help
 \endverbatim
 This script should be run as a user with write access to the
@@ -3066,10 +3121,10 @@ keywords
      linear interpolation is used.
    - <b>NumConstants</b> (default 0), the number of time-independent
      terms; this can be 0 or 1.  This keyword was introduced in format
-     version 2 (GeographicLib version 1.43) to support the EMM2015
-     model.  This model includes long wavelength time-varying
+     version 2 (GeographicLib version 1.43) to support the EMM2015 and
+     later models.  This model includes long wavelength time-varying
      components of degree 15.  This is supplemented by a short
-     wavelength time-independent component with degree = 729.
+     wavelength time-independent component with much higher degree.
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
    - <b>DeltaEpoch</b> (default 1), the interval between models in years
@@ -3156,7 +3211,7 @@ WMMF-1
 # https://geographiclib.sourceforge.io/html/magnetic.html#magneticformat
 Name            igrf11
 Description     International Geomagnetic Reference Field 11th Generation
-URL             http://ngdc.noaa.gov/IAGA/vmod/igrf.html
+URL             https://ngdc.noaa.gov/IAGA/vmod/igrf.html
 Publisher       National Oceanic and Atmospheric Administration
 ReleaseDate     2009-12-15
 DataCutOff      2009-10-01
@@ -7603,6 +7658,11 @@ git repository for GeographicLib</a>.
      - fix compiler flags for GEOGRAPHICLIB_PRECISION = 4;
      - add CONVERT_WARNINGS_TO_ERRORS option (default OFF), if ON then
        compiler warnings are treated as errors.
+   - Add the Enhanced Magnetic Model 2017, emm2017.  This is valid for
+     2000 thru the end of 2021.
+   - TODO: document "full Javascript implementation"
+   - TODO: how to cite to GeographicLib.
+   - TODO: "See also" flat2ecc in matlab routines.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-04-09)
