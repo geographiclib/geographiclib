@@ -21,7 +21,8 @@ function [x, y, azi, rk] = cassini_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   y are in meters (more precisely the units used for the equatorial
 %   radius).  rk is dimensionless.
 %
-%   See also PROJDOC, CASSINI_INV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also PROJDOC, CASSINI_INV, GEODDISTANCE, DEFAULTELLIPSOID,
+%     FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 

@@ -32,7 +32,8 @@ function [x, y, azi, rk] = eqdazim_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   describes how to use this projection in the determination of maritime
 %   boundaries (finding the median line).
 %
-%   See also PROJDOC, EQDAZIM_INV, GEODDISTANCE, DEFAULTELLIPSOID.
+%   See also PROJDOC, EQDAZIM_INV, GEODDISTANCE, DEFAULTELLIPSOID,
+%     FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 

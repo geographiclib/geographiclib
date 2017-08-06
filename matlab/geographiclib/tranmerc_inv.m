@@ -37,7 +37,7 @@ function [lat, lon, gam, k] = tranmerc_inv(lat0, lon0, x, y, ellipsoid)
 %   can be continued accurately over the poles to the opposite meridian.
 %
 %   See also PROJDOC, TRANMERC_FWD, UTMUPS_FWD, UTMUPS_INV,
-%     DEFAULTELLIPSOID.
+%     DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 

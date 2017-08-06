@@ -24,7 +24,7 @@ This is a C implementation of the geodesic algorithms from
 is a self-contained library (requiring only the standard C math library)
 which makes it easy to do geodesic computations for an ellipsoid of
 revolution in a C program.  It is included with version 4.9.0 of
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> and later.
+<a href="http://proj4.org">proj.4</a> and later.
 It uses ANSI C as described in B. W. Kernigan and D. M. Ritchie, The C
 Programming Language, 2nd Ed. (Prentice Hall, 1988), and so should
 compile correctly with just about any C compiler.  However, the C99 math
@@ -43,7 +43,7 @@ the source, the C library can be found in the directory <tt>legacy/C</tt>.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> starting with
+<a href="http://proj.org">proj.4</a> starting with
 version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 Instructions for how to use the library via proj.4 are given below.
@@ -155,7 +155,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   - C (geodesic routines):
     <a href="../C/index.html">
       documentation</a>, also included with recent versions of
-    <a href="https://github.com/OSGeo/proj.4/wiki">
+    <a href="http://proj.org">
       proj.4</a>;
   - Fortran (geodesic routines):
     <a href="../Fortran/index.html">

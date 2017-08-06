@@ -39,7 +39,7 @@ the script for displaying
 
 This library is <i>not</i> a general purpose projection library nor does
 it perform datum conversions; instead use
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a>.  On the other
+<a href="http://proj.org">proj.4</a>.  On the other
 hand, it does provide the core functionality offered by
 <a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
 
@@ -69,6 +69,13 @@ see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
 
 For more information on GeographicLib, see
 - https://geographiclib.sourceforge.io/.
+
+\section citint Citing GeographicLib
+
+When citing GeographicLib, use (adjust the version number and date as
+appropriate)
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2017-mm-dd),
+  https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
  - \ref intro
@@ -628,7 +635,14 @@ which will create the additional files and packages the results ready
 for distribution as \verbatim
   geographiclib-@PROJECT_VERSION@.tar.gz \endverbatim
 
-Required packages for Fedora:
+Prior to making a release, the script
+<code>tests/test-distribution.sh</code> is run on a Fedora system.  This
+checked that the library compiles correctly is multiple configurations.
+In addition it creates a directory and scripts for checking the
+compilation on Windows.
+
+The following Fedora packages are required by
+<code>tests/test-distribution.sh</code>
 - cmake
 - automake
 - autoconf-archive
@@ -642,19 +656,16 @@ Required packages for Fedora:
 - python2-sphinx
 - nodejs
 - maven
-
-npm install -g mocha jsdoc
-
-Install a recent version of mpreal.h from
-  https://bitbucket.org/advanpix/mpreal
-in include/
-
-Document tests/test-distribution
-Tests need: geoid egm96-5,
-magnetic/wmm2010
-magnetic/emm2015
-gravity/egm2008
-gravity/grs80
+.
+The following npm packages need to be installed \verbatim
+  npm install -g mocha jsdoc \endverbatim
+A recent version of mpreal.h needs to be downloaded from
+https://bitbucket.org/advanpix/mpreal and installed
+in the <code>include/</code> directory.  For all the tests to be run,
+the following datasets need to be installed
+- geoid models: egm96-5
+- magnetic models: wmm2010 emm2015
+- gravity models: egm2008 grs80
 
 <center>
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
@@ -1224,7 +1235,7 @@ Here is a summary:
 - C (geodesic routines):
   <a href="C/index.html">
     documentation</a>, also included with recent versions of
-  <a href="https://github.com/OSGeo/proj.4/wiki">
+  <a href="http://proj.org">
     proj.4</a>;
 - Fortran (geodesic routines):
   <a href="Fortran/index.html">
@@ -1274,7 +1285,7 @@ direct and inverse geodesic problems and to compute polygonal areas are
 provided.
 
 The C library is also included as part of
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> starting with
+<a href="http://proj.org">proj.4</a> starting with
 version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 
@@ -7643,26 +7654,25 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-mm-dd)
-   - Fix warnings about implicit conversions of doubles to bools in C++,
-     C, and JavaScript packages.
+   - Add the Enhanced Magnetic Model 2017, emm2017.  This is valid for
+     2000 thru the end of 2021.
    - Avoid potential problems with the order of initializations in DMS,
      GARS, Geohash, Georef, MGRS, OSGB, SphericalEngine; this only would
      have been an issue if GeographicLib objects were instantiated
-     globally.
-   - Add an overload, Utility::lookup(const char* s, char c).
+     globally.  Now no GeographicLib initialization code should be run
+     prior to the entry of main().
+   - To support the previous fix, add an overload,
+     Utility::lookup(const char* s, char c).
    - NearestNeighbor::Search throws an error if \e pts is the wrong size
      (instead of merely returning no results).
-   - Use complex arithmetic for Clenshaw sums in TransverseMercator and
-     tranmerc_{fwd,inv}.m.
+   - Code cleanup: Use complex arithmetic for Clenshaw sums in
+     TransverseMercator and tranmerc_{fwd,inv}.m.
    - Changes in cmake support:
      - fix compiler flags for GEOGRAPHICLIB_PRECISION = 4;
      - add CONVERT_WARNINGS_TO_ERRORS option (default OFF), if ON then
        compiler warnings are treated as errors.
-   - Add the Enhanced Magnetic Model 2017, emm2017.  This is valid for
-     2000 thru the end of 2021.
-   - TODO: document "full Javascript implementation"
-   - TODO: how to cite to GeographicLib.
-   - TODO: "See also" flat2ecc in matlab routines.
+   - Fix warnings about implicit conversions of doubles to bools in C++,
+     C, and JavaScript packages.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-04-09)

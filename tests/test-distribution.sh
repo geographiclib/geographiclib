@@ -91,7 +91,7 @@ else
     WINDEVELSOURCE=/u/geographiclib
     WINDOWSBUILD=/u/temp
 fi
-WINDOWSBUILDWIN=u:/temp
+WINDOWSBUILDWIN=w:/temp
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
 NUMCPUS=4
@@ -172,11 +172,11 @@ for ver in 10 11 12 14 15; do
 	(
 	    echo "#! /bin/sh -exv"
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo rm -rf v:/data/scratch/\$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo rm -rf v:/data/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'mkdir -p v:/data/scratch/$b'
 	    echo 'cd v:/data/scratch/$b'
 	    echo 'unset GEOGRAPHICLIB_DATA'
-	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=w:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	    echo cmake --build . --config Debug   --target ALL_BUILD
 	    echo cmake --build . --config Debug   --target RUN_TESTS
 	    echo cmake --build . --config Debug   --target INSTALL

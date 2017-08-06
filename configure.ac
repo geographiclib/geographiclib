@@ -61,6 +61,7 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],
         [AX_CHECK_COMPILE_FLAG([-std=c++0x],
                 [CXXFLAGS="$CXXFLAGS -std=c++0x"])])
 # Check for C++11 math functions
+AC_MSG_CHECKING([for C++11 math functions])
 AC_LINK_IFELSE([AC_LANG_PROGRAM(
         [#include <cmath>],
         [int q;
@@ -70,8 +71,10 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM(
                     std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
                     std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0)) +
                     std::isfinite(4.0) + std::isnan(0.0);])],
-        [CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
-        [CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
+        [AC_MSG_RESULT([yes]);
+	 CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
+        [AC_MSG_RESULT([no]);
+	 CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
 
 # Check for doxygen.  Version 1.8.7 or later needed for &hellip;
 AC_CHECK_PROGS([DOXYGEN], [doxygen])

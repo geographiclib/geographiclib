@@ -273,7 +273,11 @@ if (DEVELOPER OR CONVERT_WARNINGS_TO_ERRORS)
 endif ()
 
 include (CheckCXXSourceCompiles)
-set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
+if (MSVC)
+  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+else ()
+  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+endif ()
 # Check whether the C++11 math function: std::expm1, std::atanh,
 # etc. are available.  This flag is *not* propagated to clients that use
 # GeographicLib.  However, this is of no consequence.  When the client
