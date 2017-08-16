@@ -478,7 +478,11 @@ git push --tags
 # post release notices
 # set default download files
 # make -f makefile-admin distrib-{cgi,html}
-# update home brew (commit message = geographiclib $VERSION)
+# update home brew
+#   dir = /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
+#   branch = geographiclib/$VERSION
+#   file = Formula/geographiclib.rb
+#   commit message = geographiclib $VERSION
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open
