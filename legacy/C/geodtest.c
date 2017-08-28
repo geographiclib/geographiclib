@@ -16,7 +16,7 @@
 #include <math.h>
 
 #if defined(_MSC_VER)
-// Squelch warnings about assignment within conditional expression
+/* Squelch warnings about assignment within conditional expression */
 #  pragma warning (disable: 4706)
 #endif
 
