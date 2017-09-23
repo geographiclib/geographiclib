@@ -32,7 +32,7 @@ namespace GeographicLib {
    * models treat only the gravitational field exterior to the mass of the
    * earth.  When computing the field at points near (but above) the surface of
    * the earth a small correction can be applied to account for the mass of the
-   * atomsphere above the point in question; see \ref gravityatmos.
+   * atmosphere above the point in question; see \ref gravityatmos.
    * Determining the height of the geoid above the ellipsoid entails correcting
    * for the mass of the earth above the geoid.  The egm96 and egm2008 include
    * separate correction terms to account for this mass.
