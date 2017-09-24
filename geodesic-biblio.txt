@@ -1511,7 +1511,7 @@
  * O. S. Adams,[[BR]]
    ''Latitude developments connected with geodesy and cartography'',
    Spec. Pub. 67 (US Coast and Geodetic Survey, 1921), Appendix.[[BR]]
-   http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf
+   https://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf
  * L. E. Ward,[[BR]]
    ''Geodesics and plane arcs on an oblate spheroid'',
    American Math. Monthly '''50'''(7), 423--429 (1943).[[BR]]
@@ -1519,7 +1519,7 @@
  * P. D. Thomas,[[BR]]
    ''Conformal projections in geodesy and cartography'',
    Spec. Pub. 251 (US Coast and Geodetic Survey, 1952), pp. 63--66.[[BR]]
-   http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no2511952.pdf
+   https://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no2511952.pdf
  * P. D. Thomas,[[BR]]
    ''Mathematical models for navigation systems'',
    TR-182 (US Naval Oceanographic Office, 1965).[[BR]]
@@ -1593,7 +1593,7 @@
    application of nested equations'',
    Survey Review '''23''' (misprinted as '''22''') (176), 88--93 (1975);
    Addendum: Survey Review '''23'''(180), 294 (1976).[[BR]]
-   http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf [[BR]]
+   https://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf [[BR]]
    https://doi.org/10.1179/sre.1975.23.176.88 [[BR]]
    https://doi.org/10.1179/sre.1976.23.180.293
  * T. Vincenty,[[BR]]

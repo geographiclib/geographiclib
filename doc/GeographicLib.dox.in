@@ -41,7 +41,7 @@ This library is <i>not</i> a general purpose projection library nor does
 it perform datum conversions; instead use
 <a href="http://proj.org">proj.4</a>.  On the other
 hand, it does provide the core functionality offered by
-<a href="http://earth-info.nima.mil/GandG/geotrans/">GEOTRANS</a>.
+<a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>.
 
 \section download Download
 
@@ -64,7 +64,7 @@ Each release is tagged, e.g., with r@PROJECT_VERSION@.  There are also
 binary installers available for some platforms.  See \ref binaryinst.
 
 GeographicLib is licensed under the
-<a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>;
+<a href="https://opensource.org/licenses/MIT">MIT/X11 License</a>;
 see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
 
 For more information on GeographicLib, see
@@ -114,7 +114,7 @@ Forward to \ref install.  Up to \ref contents.
 
 GeographicLib offers a C++ interfaces to a small (but important!) set
 of geographic transformations.  It grew out of a desire to improve on
-the <a href="http://earth-info.nima.mil/GandG/geotrans/">geotrans</a>
+the <a href="http://earth-info.nga.mil/GandG/geotrans/">geotrans</a>
 package for transforming between geographic and MGRS coordinates.  At
 present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local
 cartesian projections, gravity and geomagnetic models, and classes for
@@ -212,7 +212,7 @@ for binary installation under Windows).
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
-  <a href="http://www.cmake.org">cmake</a> installed.
+  <a href="https://www.cmake.org">cmake</a> installed.
 - \ref autoconf.  This method works for most Unix-like systems,
   including Linux and Mac OS X.
 - \ref gnu.  This is a simple installation method that works with g++
@@ -258,7 +258,7 @@ make software maintenance simpler
 \section cmake Installation with cmake
 
 This is the recommended method of installation; however it requires that
-<a href="http://www.cmake.org">cmake</a> be installed on your system.
+<a href="https://www.cmake.org">cmake</a> be installed on your system.
 This permits GeographicLib to be built either as a shared or a static
 library on a wide variety of systems.  cmake can also determine the
 capabilities of your system and adjust the compilation of the
@@ -273,7 +273,7 @@ command like
 GeographicLib is 2.8.4 (which was released on 2011-02-16).  (Actually,
 a few earlier versions will also work for non-Windows platforms.)
 
-On other systems, download a binary installer from http://www.cmake.org
+On other systems, download a binary installer from https://www.cmake.org
 click on download, and save and run the appropriate installer.  Run the
 cmake command with no arguments to get help.  Other useful tools are
 ccmake and cmake-gui which offer curses and graphical interfaces to
@@ -541,7 +541,7 @@ the shared library for GeographicLib.
 \subsection binaryinstosx MacOSX
 
 You can install using Homebrew.  Follow the directions on
-http://brew.sh/ for installing this package manager.  Then type
+https://brew.sh/ for installing this package manager.  Then type
 \verbatim
 brew install geographiclib \endverbatim
 Now links to GeographicLib are installed under /usr/local.
@@ -1243,7 +1243,7 @@ Here is a summary:
   <a href="Fortran/index.html">
     documentation</a>;
 - Java (geodesic routines):
-  <a href="http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
+  <a href="https://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
     Maven Central package</a>,
   <a href="java/index.html">
     documentation</a>;
@@ -1253,14 +1253,14 @@ Here is a summary:
   <a href="js/index.html">
     documentation</a>;
 - Python (geodesic routines):
-  <a href="http://pypi.python.org/pypi/geographiclib">
+  <a href="https://pypi.python.org/pypi/geographiclib">
     PyPI package</a>,
   <a href="python/index.html">
     documentation</a>;
 - MATLAB/Octave (geodesic and some other routines):
-  <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+  <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
     MATLAB Central package</a>,
-  <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+  <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
     documentation</a>;
 - C# (.NET wrapper for C++ library):
   <a href="NET/index.html">
@@ -1355,7 +1355,7 @@ entirely self-contained and does not depend on the rest of
 GeographicLib.
 
 The library is available as an
-<a href="http://pypi.python.org/pypi/geographiclib">
+<a href="https://pypi.python.org/pypi/geographiclib">
    PyPI package</a>.
 To install this package, use \verbatim
   pip install geographiclib \endverbatim
@@ -1387,7 +1387,7 @@ images.  The source code is in the directory
 self-contained and does not depend on the rest of GeographicLib.
 
 The library is available as an MATLAB Central package,
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+<a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
     GeographicLib toolbox</a>.
 
 A summary of the routines is obtained by \verbatim
@@ -1397,7 +1397,7 @@ Prior to version 1.42, GeographicLib was distributed with some MATLAB
 functionality offered via compiled interface code.  This has now been
 replaced by native MATLAB wrapper functions in
 <code>matlab/geographiclib-legacy</code>; these depend on the
-<a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+<a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
 GeographicLib toolbox</a>.
 A summary of the routines is obtained by \verbatim
    help geographiclib-legacy \endverbatim
@@ -2401,7 +2401,7 @@ to use a consistent definition of the geoid height.
  .
 A useful discussion of the problems with defining a geoid is given by
 Dru A. Smith in
-<a href="http://www.ngs.noaa.gov/PUBS_LIB/EGM96_GEOID_PAPER/egm96_geoid_paper.html">
+<a href="https://www.ngs.noaa.gov/PUBS_LIB/EGM96_GEOID_PAPER/egm96_geoid_paper.html">
 There is no such thing as "The" EGM96 geoid: Subtle points on the use of
 a global geopotential model</a>, IGeS Bulletin No. 8, International
 Geoid Service, Milan, Italy, pp. 17--28 (1998).
@@ -2496,7 +2496,7 @@ point.  There are two ways to speed up this computation:
 Both of these techniques are illustrated by the following code,
 which computes a table of geoid heights on
 a regular grid and writes on the result in a
-<a href="http://vdatum.noaa.gov/dev/gtx_info.html#dev_gtx_binary">.gtx</a>
+<a href="https://vdatum.noaa.gov/docs/gtx_info.html#dev_gtx_binary">.gtx</a>
 file.  On an 8-processor Intel 2.66 GHz machine using OpenMP
 (-DHAVE_OPENMP=1), it takes about 40 minutes of elapsed time to compute
 the geoid height for EGM2008 on a 1' grid.  (Without these
@@ -2898,7 +2898,7 @@ expand the internal magnetic potential of the earth as sum of spherical
 harmonics.  They neglect magnetic fields due to the ionosphere, the
 magnetosphere, nearby magnetized materials, electric machinery, etc.
 Users of MagneticModel are advised to read the
-<a href="http://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
+<a href="https://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
 Warning"</a> this is provided with igrf11.  Although the advice is
 specific to igrf11, many of the comments apply to all magnetic field
 models.
@@ -5268,7 +5268,7 @@ References:
    Aeronautical Chart and Information Center (St. Louis, 1964),
    Chaps. 5--7.
  - W. M. Kahan and R. J. Fateman,
-   <a href="http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf">
+   <a href="https://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf">
    Symbolic computation of divided differences</a>,
    SIGSAM Bull. 33(3), 7--28 (1999)
    DOI: <a href="https://doi.org/10.1145/334714.334716">
@@ -5854,7 +5854,7 @@ References:
    The Great Ellipse on the Surface of the Spheroid</a>,
    J. Navigation 49(2), 229--234 (1996).
  - T. Vincenty,
-   <a href="http://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
+   <a href="https://www.ngs.noaa.gov/PUBS_LIB/inverse.pdf">
    Direct and Inverse Solutions of Geodesics on the Ellipsoid with
    Application of Nested Equations</a>,
    Survey Review 23(176), 88--93 (1975).
@@ -6713,7 +6713,7 @@ Here we give the complete matrix of relations between all six latitudes;
 there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  These
 expansions complement the work of
 - O. S. Adams,
-  <a href="http://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf">
+  <a href="https://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf">
   Latitude developments connected with geodesy and cartography</a>,
   Spec. Pub. 67 (US Coast and Geodetic Survey, 1921).
 - P. Osborne,
@@ -8098,7 +8098,7 @@ git repository for GeographicLib</a>.
        architecture independent;
      - matlab/geographiclib is now packaged and distributed as
        MATLAB File Exchange package
-       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+       <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
        50605</a> (this supersedes three earlier MATLAB packages);
      - point fix for geodarea.m to correct bug in area of polygons which
        encircle a pole multiple times (released as version 1.41.1 of
@@ -8227,7 +8227,7 @@ git repository for GeographicLib</a>.
    - Add \ref highprec.
    - <b>INCOMPATIBLE CHANGE</b>: the static instantiations of various
      classes for the WGS84 ellipsoid have been changed to a
-     <a href="http://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use">
+     <a href="https://isocpp.org/wiki/faq/ctors#static-init-order-on-first-use">
      "construct on first use idiom"</a>.  This avoids a lot of wasteful
      initialization before the user's code starts.  Unfortunately it
      means that existing source code that relies on any of the following
@@ -8531,7 +8531,7 @@ git repository for GeographicLib</a>.
      - remove support for maintainer tasks in Makefile.mk;
      - upgrade to automake 1.11.6 to fix the "make distcheck" security
        vulnerability; see
-       http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
+       https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
 
  - <a href="https://geographiclib.sourceforge.io/1.24">Version 1.24</a>
    (released 2012-09-22)
@@ -8716,7 +8716,7 @@ git repository for GeographicLib</a>.
      - FIX BUG in transcription of Geodesic::Inverse;
      - include setup.py for easy installation;
      - Python only distribution is available at
-       http://pypi.python.org/pypi/geographiclib
+       https://pypi.python.org/pypi/geographiclib
    - Supply a minimal Qt qmake project file for library
      src/Geographic.pro.
 
