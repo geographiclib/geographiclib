@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2017-mm-dd
+\date 2017-10-05
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -221,8 +221,8 @@ Then pick one of the first five options below:
   Visual Studio 2008 and 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
-  installs the header files and the library for use by Visual Studio 12
-  2013.)
+  installs the header files and the library for use by Visual Studio 14
+  2015.)
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
   programs.
 - \ref maintainer.  This describes addition tasks of interest only to
@@ -506,7 +506,7 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 12 2013 (in either
+provided; these can only be used by Visual Studio 14 2015 (in either
 release or debug mode).  However, if you plan to use the library, it may
 be advisable to build it with the compiler you are using for your own
 code using either \ref cmake or \ref windows.
@@ -531,7 +531,7 @@ uninstalling the library).  If you ask for your PATH to be modified, it
 will include C:/pkg-vc12-{win32,x64}/GeographicLib-@PROJECT_VERSION@/bin
 where the utilities are installed.  The headers and library are
 installed in the include/GeographicLib and lib folders.  The libraries
-were built using using Visual Studio 12 2013 in release and debug modes.
+were built using using Visual Studio 14 2015 in release and debug modes.
 The utilities were linked against the release-mode shared library.
 
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
@@ -7655,7 +7655,7 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
-   (released 2017-mm-dd)
+   (released 2017-10-05)
    - Add the Enhanced Magnetic Model 2017, emm2017.  This is valid for
      2000 thru the end of 2021.
    - Avoid potential problems with the order of initializations in DMS,
@@ -7675,6 +7675,7 @@ git repository for GeographicLib</a>.
        compiler warnings are treated as errors.
    - Fix warnings about implicit conversions of doubles to bools in C++,
      C, and JavaScript packages.
+   - Binary installers for Windows now use Visual Studio 14 2015.
 
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-04-09)

@@ -175,8 +175,8 @@ and are therefore in the public domain.
 \section changes-for Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.49/Fortran">Version 1.49</a>
-   (released 2017-mm-dd)
-   - Fix code formatting.
+   (released 2017-10-05)
+   - Fix code formatting and add two tests.
 
  - <a href="https://geographiclib.sourceforge.io/1.48/Fortran">Version 1.48</a>
    (released 2017-04-09)

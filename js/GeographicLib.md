@@ -109,7 +109,7 @@ Two examples of this library in use are
 
 ### Change log
 
-* Version 1.49 (released 2017-mm-dd)
+* Version 1.49 (released 2017-10-05)
   * Use explicit test for nonzero real numbers.
 
 * Version 1.48 (released 2017-04-09)

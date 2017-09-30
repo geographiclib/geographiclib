@@ -98,9 +98,9 @@ GeographicLib in various languages
 Change log
 ----------
 
-* Version 1.49 (released 2017-mm-dd)
+* Version 1.49 (released 2017-10-05)
 
-  * Fix code formatting.
+  * Fix code formatting; add tests.
 
 * Version 1.48 (released 2017-04-09)
 

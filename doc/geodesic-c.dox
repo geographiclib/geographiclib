@@ -192,8 +192,8 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.49/C">Version 1.49</a>
-   (released 2017-mm-dd)
-   - Fix more warning messages from some compilers.
+   (released 2017-10-05)
+   - Fix more warning messages from some compilers; add tests.
 
  - <a href="https://geographiclib.sourceforge.io/1.48/C">Version 1.48</a>
    (released 2017-04-09)

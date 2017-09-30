@@ -266,7 +266,7 @@
  * <ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.49</a>
- *   (released 2017-mm-dd)
+ *   (released 2017-10-05)
  * <ul>
  * <li>
  *   Fix code formatting and add two tests.
