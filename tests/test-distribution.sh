@@ -84,11 +84,11 @@ BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
     DEVELSOURCE=$HOME/geographiclib
-    WINDEVELSOURCE=/u/geographiclib
+    WINDEVELSOURCE=/w/geographiclib
     WINDOWSBUILD=/u/temp
 else
     DEVELSOURCE=/u/geographiclib
-    WINDEVELSOURCE=/u/geographiclib
+    WINDEVELSOURCE=/w/geographiclib
     WINDOWSBUILD=/u/temp
 fi
 WINDOWSBUILDWIN=w:/temp
@@ -167,7 +167,7 @@ for ver in 10 11 12 14 15; do
 	pkg=vc$ver-$arch
 	gen="Visual Studio $ver"
 	installer=
-	test "$ver" = 12 && installer=y
+	test "$ver" = 14 && installer=y
 	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
 	(
 	    echo "#! /bin/sh -exv"
@@ -438,16 +438,18 @@ make -C $DEVELSOURCE -f makefile-admin distrib-files
 # install built version
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 
-# python release
+# python release -- authentication via ~/.pypirc
 cd $TEMP/gita/geographiclib/python
 python setup.py sdist --formats gztar upload
 sudo pip install --upgrade geographiclib
 
-# java release
+# java release -- authentication via ~/.m2/settings.xml; this gets signed too.
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
 # javascript release
+# authenticate via .npmrc; _auth value is
+# echo -n cffk:PW | openssl base64
 cd $TEMP/gita/geographiclib/BUILD/js && npm publish geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
@@ -456,7 +458,7 @@ $TEMP/gita/geographiclib/BUILD/js/geographiclib
 
 # matlab toolbox
 chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
-mv $DEVELSOURCE/geographiclib_*_$VERSION.* $DEVELSOURCE/matlab-distrib
+mv $DEVELSOURCE/geographiclib_toolbox_$VERSION.* $DEVELSOURCE/matlab-distrib
 
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
