@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.48
+\version 1.49
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/C</tt> for versions numbers
@@ -19,30 +19,31 @@ The documentation for other versions is available at
 
 \section abstract-c Abstract
 
-This is a C implementation of the geodesic algorithms from <a
-href="https://geographiclib.sourceforge.io">GeographicLib</a>.  This is a
-self-contained library (requiring only the standard C math library)
+This is a C implementation of the geodesic algorithms from
+<a href="https://geographiclib.sourceforge.io">GeographicLib</a>.  This
+is a self-contained library (requiring only the standard C math library)
 which makes it easy to do geodesic computations for an ellipsoid of
-revolution in a C program.  It is included with the recent version of
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a>.
+revolution in a C program.  It is included with version 4.9.0 of
+<a href="http://proj4.org">proj.4</a> and later.
 It uses ANSI C as described in B. W. Kernigan and D. M. Ritchie, The C
 Programming Language, 2nd Ed. (Prentice Hall, 1988), and so should
-compile correctly with just about any C compiler.
+compile correctly with just about any C compiler.  However, the C99 math
+functions are used if they are available.
 
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.tar.gz">
-  GeographicLib-1.48.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.48.zip">
-  GeographicLib-1.48.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.tar.gz">
+  GeographicLib-1.49.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.zip">
+  GeographicLib-1.49.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the C library can be found in the directory <tt>legacy/C</tt>.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of
-<a href="https://github.com/OSGeo/proj.4/wiki">proj.4</a> starting with
+<a href="http://proj.org">proj.4</a> starting with
 version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 Instructions for how to use the library via proj.4 are given below.
@@ -154,7 +155,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   - C (geodesic routines):
     <a href="../C/index.html">
       documentation</a>, also included with recent versions of
-    <a href="https://github.com/OSGeo/proj.4/wiki">
+    <a href="http://proj.org">
       proj.4</a>;
   - Fortran (geodesic routines):
     <a href="../Fortran/index.html">
@@ -190,8 +191,14 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
 \section changes-c Change log
 
+ - <a href="https://geographiclib.sourceforge.io/1.49/C">Version 1.49</a>
+   (released 2017-10-05)
+   - Fix more warning messages from some compilers; add tests.
+
  - <a href="https://geographiclib.sourceforge.io/1.48/C">Version 1.48</a>
    (released 2017-04-09)
+   - This is the version slated for the version of proj.4 after 4.9.4
+     (tagged v1.48.1-c).
    - Fix warnings messages from some compilers.
    - Change default range for longitude and azimuth to
      (&minus;180&deg;, 180&deg;] (instead of
@@ -199,6 +206,8 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
  - <a href="https://geographiclib.sourceforge.io/1.47/C">Version 1.47</a>
    (released 2017-02-15)
+   - This is the version incorporated into proj.4 version 4.9.3 (tagged
+     v1.46.1-c).
    - Fix the order of declarations, incorporating the patches in version
      1.46.1.
    - Improve accuracy of area calculation (fixing a flaw introduced in
@@ -221,6 +230,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
  - <a href="https://geographiclib.sourceforge.io/1.44/C">Version 1.44</a>
    (released 2015-08-14)
+   - This is the version incorporated into proj.4 version 4.9.2.
    - Improve accuracy of calculations by evaluating trigonometric
      functions more carefully and replacing the series for the reduced
      length with one with a smaller truncation error.
@@ -230,4 +240,13 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
      returning NaNs if the latitude is outside this range.
    - The inverse calculation sets \e s12 to zero for coincident points
      at pole (instead of returning a tiny quantity).
+
+ - <a href="https://geographiclib.sourceforge.io/1.40/C">Version 1.40</a>
+   (released 2014-12-18)
+   - This is the version incorporated into proj.4 version 4.9.1.
+
+ - <a href="https://geographiclib.sourceforge.io/1.40/C">Version 1.32</a>
+   (released 2013-07-12)
+   - This is the version incorporated into proj.4 version 4.9.0.
+
 **********************************************************************/

@@ -39,7 +39,8 @@ if (OPENMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES
     COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
   if (NOT WIN32)
-    set_target_properties (GeoidToGTX PROPERTIES LINK_FLAGS ${OpenMP_CXX_FLAGS})
+    set_target_properties (GeoidToGTX PROPERTIES
+      LINK_FLAGS ${OpenMP_CXX_FLAGS})
   endif ()
 endif ()
 

@@ -63,6 +63,10 @@ namespace GeographicLib {
    * type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
    * illustration of the transverse Mercator grid in Google Earth.
    *
+   * This class also returns the meridian convergence \e gamma and scale \e k.
+   * The meridian convergence is the bearing of grid north (the \e y axis)
+   * measured clockwise from true north.
+   *
    * See TransverseMercatorExact.cpp for more information on the
    * implementation.
    *

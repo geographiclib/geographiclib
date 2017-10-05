@@ -31,7 +31,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %     Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 %
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
-%     DEFAULTELLIPSOID.
+%     DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 

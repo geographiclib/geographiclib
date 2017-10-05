@@ -30,6 +30,7 @@
 # instf - installed files, autoconf direct from git repository
 
 set -e
+umask 0022
 
 # The following files contain version information:
 #   pom.xml
@@ -78,19 +79,19 @@ set -e
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.48
+VERSION=1.49
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
     DEVELSOURCE=$HOME/geographiclib
-    WINDEVELSOURCE=/u/geographiclib
+    WINDEVELSOURCE=/w/geographiclib
     WINDOWSBUILD=/u/temp
 else
     DEVELSOURCE=/u/geographiclib
-    WINDEVELSOURCE=/u/geographiclib
+    WINDEVELSOURCE=/w/geographiclib
     WINDOWSBUILD=/u/temp
 fi
-WINDOWSBUILDWIN=u:/temp
+WINDOWSBUILDWIN=w:/temp
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
 NUMCPUS=4
@@ -150,7 +151,7 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
 unset GEOGRAPHICLIB_DATA
-for v in 2015 2013 2012 2010; do
+for v in 2017 2015 2013 2012 2010; do
   for a in 64 32; do
     rm -rf v:/data/scratch/geog-mvn-$v-$a
     mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
@@ -166,16 +167,16 @@ for ver in 10 11 12 14 15; do
 	pkg=vc$ver-$arch
 	gen="Visual Studio $ver"
 	installer=
-	test "$ver" = 12 && installer=y
+	test "$ver" = 14 && installer=y
 	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
 	(
 	    echo "#! /bin/sh -exv"
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo rm -rf v:/data/scratch/\$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo rm -rf v:/data/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'mkdir -p v:/data/scratch/$b'
 	    echo 'cd v:/data/scratch/$b'
 	    echo 'unset GEOGRAPHICLIB_DATA'
-	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=w:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	    echo cmake --build . --config Debug   --target ALL_BUILD
 	    echo cmake --build . --config Debug   --target RUN_TESTS
 	    echo cmake --build . --config Debug   --target INSTALL
@@ -228,7 +229,7 @@ find . -type f | sort -u > ../files.b
 cd $TEMP/relc/GeographicLib-$VERSION
 mkdir BUILD
 cd BUILD
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
 make -j$NUMCPUS all
 make test
 make -j$NUMCPUS exampleprograms
@@ -240,7 +241,7 @@ make install
 
 mkdir ../BUILD-system
 cd ../BUILD-system
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
 make -j$NUMCPUS all
 make test
 cd ..
@@ -269,9 +270,28 @@ for l in C Fortran; do
     (
 	mkdir $TEMP/legacy/$l/BUILD
 	cd $TEMP/legacy/$l/BUILD
-	cmake ..
+	cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
 	make -j$NUMCPUS all
 	make test
+    )
+done
+
+cd $TEMP/gita/geographiclib
+(
+    cd BUILD
+    make -j$NUMCPUS testprograms
+)
+cp $DEVELSOURCE/include/mpreal.h include/
+for p in 1 3 4 5; do
+    mkdir BUILD-$p
+    (
+	cd BUILD-$p
+	cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p ..
+	make -j$NUMCPUS all
+	if test $p -ne 1; then
+	    make test
+	fi
+	make -j$NUMCPUS testprograms
     )
 done
 
@@ -418,15 +438,18 @@ make -C $DEVELSOURCE -f makefile-admin distrib-files
 # install built version
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 
-# python release
+# python release -- authentication via ~/.pypirc
 cd $TEMP/gita/geographiclib/python
 python setup.py sdist --formats gztar upload
+sudo pip install --upgrade geographiclib
 
-# java release
+# java release -- authentication via ~/.m2/settings.xml; this gets signed too.
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
 # javascript release
+# authenticate via .npmrc; _auth value is
+# echo -n cffk:PW | openssl base64
 cd $TEMP/gita/geographiclib/BUILD/js && npm publish geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
@@ -435,7 +458,7 @@ $TEMP/gita/geographiclib/BUILD/js/geographiclib
 
 # matlab toolbox
 chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
-mv $DEVELSOURCE/geographiclib_*_$VERSION.* $DEVELSOURCE/matlab-distrib
+mv $DEVELSOURCE/geographiclib_toolbox_$VERSION.* $DEVELSOURCE/matlab-distrib
 
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
@@ -457,7 +480,11 @@ git push --tags
 # post release notices
 # set default download files
 # make -f makefile-admin distrib-{cgi,html}
-# update home brew (commit message = geographiclib $VERSION)
+# update home brew
+#   dir = /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
+#   branch = geographiclib/$VERSION
+#   file = Formula/geographiclib.rb
+#   commit message = geographiclib $VERSION
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open

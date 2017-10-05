@@ -43,7 +43,7 @@ namespace GeographicLib {
     T _s, _t;
     // Same as Math::sum, but requires abs(u) >= abs(v).  This isn't currently
     // used.
-    static inline T fastsum(T u, T v, T& t) {
+    static T fastsum(T u, T v, T& t) {
       GEOGRAPHICLIB_VOLATILE T s = u + v;
       GEOGRAPHICLIB_VOLATILE T vp = s - u;
       t = v - vp;
@@ -52,7 +52,8 @@ namespace GeographicLib {
     void Add(T y) {
       // Here's Shewchuk's solution...
       T u;                       // hold exact sum as [s, t, u]
-      y  = Math::sum(y, _t,  u); // Accumulate starting at least significant end
+      // Accumulate starting at least significant end
+      y  = Math::sum(y, _t,  u);
       _s = Math::sum(y, _s, _t);
       // Start is _s, _t decreasing and non-adjacent.  Sum is now (s + t + u)
       // exactly with s, t, u non-adjacent and in decreasing order (except for
@@ -115,7 +116,8 @@ namespace GeographicLib {
      **********************************************************************/
     T operator()() const { return _s; }
     /**
-     * Return the result of adding a number to \e sum (but don't change \e sum).
+     * Return the result of adding a number to \e sum (but don't change \e
+     * sum).
      *
      * @param[in] y the number to be added to the sum.
      * @return \e sum + \e y.

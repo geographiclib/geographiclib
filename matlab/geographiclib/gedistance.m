@@ -24,7 +24,8 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %   geoddistance solves the equivalent geodesic problem and usually this is
 %   preferable to using GEDISTANCE.
 %
-%   See also GEDOC, GERECKON, DEFAULTELLIPSOID, GEODDISTANCE, GEODRECKON.
+%   See also GEDOC, GERECKON, DEFAULTELLIPSOID, FLAT2ECC, GEODDISTANCE,
+%     GEODRECKON.
 
 % Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
 

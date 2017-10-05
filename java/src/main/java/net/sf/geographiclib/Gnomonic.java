@@ -56,7 +56,8 @@ package net.sf.geographiclib;
  * maximum deviation (as a true distance) of the corresponding gnomonic line
  * segment (i.e., with the same end points) from the geodesic is<br>
  * <br>
- * (<i>K</i>(<i>T</i>) - <i>K</i>(<i>C</i>)) <i>l</i><sup>2</sup> <i>t</i> / 32.
+ * (<i>K</i>(<i>T</i>) &minus; <i>K</i>(<i>C</i>))
+ * <i>l</i><sup>2</sup> <i>t</i> / 32.
  * <br>
  * <br>
  * where <i>K</i> is the Gaussian curvature.
@@ -172,8 +173,9 @@ public class Gnomonic {
   public GnomonicData Forward(double lat0, double lon0, double lat, double lon)
   {
     GeodesicData inv =
-      _earth.Inverse(lat0, lon0, lat, lon, GeodesicMask.AZIMUTH
-                     | GeodesicMask.GEODESICSCALE | GeodesicMask.REDUCEDLENGTH);
+      _earth.Inverse(lat0, lon0, lat, lon,
+                     GeodesicMask.AZIMUTH | GeodesicMask.GEODESICSCALE |
+                     GeodesicMask.REDUCEDLENGTH);
     GnomonicData fwd =
       new GnomonicData(lat0, lon0, lat, lon, Double.NaN, Double.NaN,
                        inv.azi2, inv.M12);

@@ -114,8 +114,7 @@ namespace GeographicLib {
     return _a / sqrt(v);
   }
 
-  Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi)
-    const {
+  Math::real Ellipsoid::NormalCurvatureRadius(real phi, real azi) const {
     real calp, salp,
       v = 1 - _e2 * Math::sq(Math::sind(Math::LatFix(phi)));
     Math::sincosd(azi, salp, calp);

@@ -110,7 +110,8 @@ namespace GeographicLib {
     if (_caps & CAP_C3) {
       g.C3f(eps, _C3a);
       _A3c = -_f * _salp0 * g.A3f(eps);
-      _B31 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1, _C3a, nC3_-1);
+      _B31 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1,
+                                            _C3a, nC3_-1);
     }
 
     if (_caps & CAP_C4) {
@@ -234,8 +235,9 @@ namespace GeographicLib {
         salp12 = salp2 * _calp1 - calp2 * _salp1;
         calp12 = calp2 * _calp1 + salp2 * _salp1;
         // The right thing appears to happen if alp1 = +/-180 and alp2 = 0, viz
-        // salp12 = -0 and alp12 = -180.  However this depends on the sign being
-        // attached to 0 correctly.  The following ensures the correct behavior.
+        // salp12 = -0 and alp12 = -180.  However this depends on the sign
+        // being attached to 0 correctly.  The following ensures the correct
+        // behavior.
         if (salp12 == 0 && calp12 < 0) {
           salp12 = Geodesic30<real>::tiny_ * _calp1;
           calp12 = -1;

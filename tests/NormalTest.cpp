@@ -17,9 +17,9 @@ void checkdiff(const NormalGravity& g,
                Math::real eps, Math::real tol) {
   Math::real gX, gY, gZ, t,
     V   = g.V0(X, Y, Z, gX, gY, gZ),
-    VXp = g.V0(X+eps, Y, Z, t, t, t), VXm = g.V0(X-eps, Y, Z, t, t, t), 
-    VYp = g.V0(X, Y+eps, Z, t, t, t), VYm = g.V0(X, Y-eps, Z, t, t, t), 
-    VZp = g.V0(X, Y, Z+eps, t, t, t), VZm = g.V0(X, Y, Z-eps, t, t, t), 
+    VXp = g.V0(X+eps, Y, Z, t, t, t), VXm = g.V0(X-eps, Y, Z, t, t, t),
+    VYp = g.V0(X, Y+eps, Z, t, t, t), VYm = g.V0(X, Y-eps, Z, t, t, t),
+    VZp = g.V0(X, Y, Z+eps, t, t, t), VZm = g.V0(X, Y, Z-eps, t, t, t),
     ggX = (VXp - VXm) / (2*eps),
     ggY = (VYp - VYm) / (2*eps),
     ggZ = (VZp - VZm) / (2*eps),
@@ -45,7 +45,7 @@ Math::real atanzz(Math::real x, bool alt) {
   Math::real z = sqrt(abs(x));
   return x == 0 ? 1 :
     (alt
-     ? (!(x < 0) ? Math::asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x)) 
+     ? (!(x < 0) ? Math::asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x))
      : (!(x < 0) ? atan(z) : Math::atanh(z)) / z);
 }
 
@@ -127,7 +127,8 @@ int main() {
     cout << a << " " << a*(1-f[i]) << "\n";
     NormalGravity g(a, GM, omega, f[i], true);
     for (int j = 0; j < num; ++j) {
-      Math::real X = dis(r), Y = dis(r), Z = dis(r);
+      Math::real
+        X = Math::real(dis(r)), Y = Math::real(dis(r)), Z = Math::real(dis(r));
       checkdiff(g, X, Y, Z, eps, tol);
     }
   }

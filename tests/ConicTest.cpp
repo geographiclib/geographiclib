@@ -2,7 +2,7 @@
  * \file ConicTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -31,7 +31,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
   typedef Math::real real;
-  using std::cos; using std::sin;
+  using std::cos; using std::sin; using std::sqrt;
   real
     phi = lat0 * Math::degree(),
     e2 = f * (2 - f),
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
   try {
     if (checkstdlats) {         // stdin contains lat1 lat2 lat0 k0
       cout << setprecision(17);
-      real quant = 1e12L;
+      real quant = real(1e12);
       while (true) {
         real lat1, lat2, lat0, k0;
         if (!(cin >> lat1 >> lat2 >> lat0 >> k0))
@@ -180,7 +180,7 @@ int main(int argc, char* argv[]) {
           break;
         int
           sign0 = lat0 < 0 ? -1 : 1;
-        real quant = 1e12L;
+        real quant = real(1e12);
         real
           lat00 = real(floor(sign0 * lat0 * quant + 0.5L)),
           colat00 = (90 * quant - lat00) / quant;

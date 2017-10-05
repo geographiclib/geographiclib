@@ -138,8 +138,7 @@ namespace GeographicLib {
                                        real& lat2, real& lon2, real& azi2,
                                        real& s12, real& m12,
                                        real& M12, real& M21,
-                                       real& S12)
-  const {
+                                       real& S12) const {
     outmask &= _caps & OUT_MASK;
     if (!( Init() && (arcmode || (_caps & (OUT_MASK & DISTANCE_IN))) ))
       // Uninitialized or impossible distance calculation requested
@@ -171,7 +170,8 @@ namespace GeographicLib {
         // GeodesicExact.
         //     erri = the error in the inverse solution (nm)
         //     errd = the error in the direct solution (series only) (nm)
-        //     errda = the error in the direct solution (series + 1 Newton) (nm)
+        //     errda = the error in the direct solution
+        //             (series + 1 Newton) (nm)
         //
         //       f     erri  errd errda
         //     -1/5    12e6 1.2e9  69e6

@@ -118,9 +118,10 @@ int main(int argc, const char* const argv[]) {
       } else {
         int retval = usage(!(arg == "-h" || arg == "--help"), arg != "--help");
         if (arg == "-h")
-          std::cout<< "\nDefault geoid path = \""   << Geoid::DefaultGeoidPath()
-                   << "\"\nDefault geoid name = \"" << Geoid::DefaultGeoidName()
-                   << "\"\n";
+          std::cout
+            << "\nDefault geoid path = \""   << Geoid::DefaultGeoidPath()
+            << "\"\nDefault geoid name = \"" << Geoid::DefaultGeoidName()
+            << "\"\n";
         return retval;
       }
     }
@@ -184,10 +185,11 @@ int main(int argc, const char* const argv[]) {
                   << "Max error (m): " << g.MaxError()      << "\n"
                   << "RMS error (m): " << g.RMSError()      << "\n";
         if (g.Cache())
-          std::cerr<< "Caching:"
-                   << "\n SW Corner: " << g.CacheSouth() << " " << g.CacheWest()
-                   << "\n NE Corner: " << g.CacheNorth() << " " << g.CacheEast()
-                   << "\n";
+          std::cerr
+            << "Caching:"
+            << "\n SW Corner: " << g.CacheSouth() << " " << g.CacheWest()
+            << "\n NE Corner: " << g.CacheNorth() << " " << g.CacheEast()
+            << "\n";
       }
 
       GeoCoords p;

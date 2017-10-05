@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -100,11 +100,11 @@ namespace GeographicLib {
         s.replace(p, pat.length(), 1, c);
       }
     }
-    static const std::string hemispheres_;
-    static const std::string signs_;
-    static const std::string digits_;
-    static const std::string dmsindicators_;
-    static const std::string components_[3];
+    static const char* const hemispheres_;
+    static const char* const signs_;
+    static const char* const digits_;
+    static const char* const dmsindicators_;
+    static const char* const components_[3];
     static Math::real NumMatch(const std::string& s);
     static Math::real InternalDecode(const std::string& dmsa, flag& ind);
     DMS();                      // Disable constructor

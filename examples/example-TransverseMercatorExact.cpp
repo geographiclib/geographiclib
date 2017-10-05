@@ -1,9 +1,8 @@
 // Example of using the GeographicLib::TransverseMercatorExact class
 
 #include <iostream>
-#include <exception>
-#include <string>
 #include <iomanip>
+#include <exception>
 #include <GeographicLib/TransverseMercatorExact.hpp>
 
 using namespace std;

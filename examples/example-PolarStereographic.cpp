@@ -1,9 +1,8 @@
 // Example of using the GeographicLib::PolarStereographic class
 
 #include <iostream>
-#include <exception>
-#include <string>
 #include <iomanip>
+#include <exception>
 #include <GeographicLib/PolarStereographic.hpp>
 
 using namespace std;

@@ -16,7 +16,7 @@ function [lat, lon, h, M] = geocent_inv(X, Y, Z, ellipsoid)
 %   unit vector in geocentric coordinates by the transpose of M transforms
 %   the vector to local cartesian coordinates (east, north, up).
 %
-%   See also GEOCENT_FWD, DEFAULTELLIPSOID.
+%   See also GEOCENT_FWD, DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 

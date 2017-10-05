@@ -108,7 +108,8 @@ namespace GeographicLib {
                                bool abbrev, std::string& utm) {
     ostringstream os;
     prec = max(-5, min(9 + Math::extra_digits(), prec));
-    real scale = prec < 0 ? pow(real(10), -prec) : real(1);
+    // Need extra real because, since C++11, pow(float, int) returns double
+    real scale = prec < 0 ? real(pow(real(10), -prec)) : real(1);
     os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
     if (Math::isfinite(easting)) {
       os << " " << Utility::str(easting / scale, max(0, prec));
@@ -131,8 +132,8 @@ namespace GeographicLib {
     return utm;
   }
 
-  string GeoCoords::UTMUPSRepresentation(bool northp, int prec, bool abbrev)
-    const {
+  string GeoCoords::UTMUPSRepresentation(bool northp, int prec,
+                                         bool abbrev) const {
     real e, n;
     int z;
     UTMUPS::Transfer(_zone, _northp, _easting, _northing,
@@ -149,8 +150,8 @@ namespace GeographicLib {
     return utm;
   }
 
-  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec, bool abbrev)
-    const {
+  string GeoCoords::AltUTMUPSRepresentation(bool northp, int prec,
+                                            bool abbrev) const {
     real e, n;
     int z;
     UTMUPS::Transfer(_alt_zone, _northp, _alt_easting, _alt_northing,

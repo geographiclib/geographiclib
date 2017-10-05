@@ -64,7 +64,7 @@ function [lat2, lon2, azi2, S12, m12, M12, M21, a12_s12] = geodreckon ...
 %       points on a single geodesic.
 %     * Additional properties of the geodesic are calcuated.
 %
-%   See also GEODDOC, GEODDISTANCE, GEODAREA, DEFAULTELLIPSOID.
+%   See also GEODDOC, GEODDISTANCE, GEODAREA, DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
 %

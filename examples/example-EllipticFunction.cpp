@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <exception>
 #include <cmath>
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -36,7 +37,7 @@ int main() {
          << "RG(2,3,4)      = " << EllipticFunction::RG(2,3,4)    << "\n"
          << "RG(0,0.0796,4) = " << EllipticFunction::RG(0.0796,4) << "\n";
   }
-  catch (const GeographicErr& e) {
+  catch (const exception& e) {
     cout << "Caught exception: " << e.what() << "\n";
   }
 }

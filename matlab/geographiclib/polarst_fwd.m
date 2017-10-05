@@ -22,7 +22,7 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
 %   dimensionless.
 %
 %   See also PROJDOC, POLARST_INV, UTMUPS_FWD, UTMUPS_INV,
-%     DEFAULTELLIPSOID.
+%     DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 

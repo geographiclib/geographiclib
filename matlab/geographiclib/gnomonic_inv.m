@@ -41,7 +41,7 @@ function [lat, lon, azi, rk] = gnomonic_inv(lat0, lon0, x, y, ellipsoid)
 %   which also includes methods for solving the "intersection" and
 %   "interception" problems using the gnomonic projection.
 %
-%   See also PROJDOC, GNOMONIC_FWD, GEODRECKON, DEFAULTELLIPSOID.
+%   See also PROJDOC, GNOMONIC_FWD, GEODRECKON, DEFAULTELLIPSOID, FLAT2ECC.
 
 % Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
 

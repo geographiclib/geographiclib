@@ -151,6 +151,67 @@ int main(int argc, char* argv[]) {
         }
         storecoeff(fout, C, S, M, N);
       }
+    } else if (model == "emm2017") {
+      // download
+      //https://www.ngdc.noaa.gov/geomag/EMM/data/geomag/EMM2017_Sph_Linux.zip
+      // unpack
+      //
+      // * The only coefficients needed are EMM20{00-17}.COF and EMM2017SV.COF.
+      //
+      // * The other SV files can be ignored because the time dependence can be
+      //   obtained using linear interpolation for dates < 2017 (or
+      //   extrapolation for dates < 2000).
+      //
+      // * The time varying part of the field is of degree 15.  This
+      //   constitutes all the coefficients in EMM20{00-16}.COF and
+      //   EMM2017SV.COF and a subset of the coefficients in EMM2017.COF.
+      //
+      // * To this should be added a time independent short wavelength field
+      //   which is given by the degree > 15 terms in EMM2017.COF.
+      //
+      // * These time independent terms are of degree 790 and order 790.
+      //
+      // * The GeographicLib implementation produces the same results as listed
+      //   in EMM2017TestValues.txt
+
+      std::string id = "EMM2017A";
+      fout.write(id.c_str(), 8);
+      int maxy = 17;
+      for (int i = 0; i <= 19; ++i) {
+        // i = maxy for low res components for 2000+maxy
+        // i = maxy+1 for SV at 2000+maxy
+        // i = maxy+2 for high res components for 2000+maxy
+        std::string filename;
+        {
+          std::ostringstream os;
+          os << "EMM2017_Linux/EMM" << (2000 + std::min(maxy, i))
+             << (i == maxy+1 ? "SV" : "") << ".COF";
+          filename = os.str();
+        }
+        int
+          N = i == maxy+2 ? 790 : 15,
+          M = i == maxy+2 ? 790 : 15,
+          K = (M + 1) * (2*N - M + 2) / 2;
+        std::vector<double> C(K, 0.0);
+        std::vector<double> S(K - (N + 1), 0.0);
+        std::ifstream fin(filename.c_str());
+        std::string ss;
+        if (i != maxy+1) std::getline(fin, ss); // Skip first line
+        while (std::getline(fin, ss)) {
+          int n, m;
+          double c, s;
+          std::istringstream is(ss);
+          if (!(is >> n >> m >> c >> s))
+            throw std::runtime_error("Short read " + filename + ": " + ss);
+          if (i == maxy && n > 15)
+            continue;
+          if (i == maxy+2 && n <= 15)
+            continue;
+          storecos(C, N, M, c, n, m);
+          storesin(S, N, M, s, n, m);
+        }
+        storecoeff(fout, C, S, M, N);
+      }
     } else if (model == "wmm2010" || model == "igrf11") {
       // Download
       // http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz

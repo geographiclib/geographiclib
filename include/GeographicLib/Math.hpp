@@ -142,7 +142,7 @@ namespace GeographicLib {
     /**
      * @return the number of bits of precision in a real number.
      **********************************************************************/
-    static inline int digits() {
+    static int digits() {
 #if GEOGRAPHICLIB_PRECISION != 5
       return std::numeric_limits<real>::digits;
 #else
@@ -160,7 +160,7 @@ namespace GeographicLib {
      * Utility::set_digits for caveats about when this routine should be
      * called.
      **********************************************************************/
-    static inline int set_digits(int ndigits) {
+    static int set_digits(int ndigits) {
 #if GEOGRAPHICLIB_PRECISION != 5
       (void)ndigits;
 #else
@@ -172,7 +172,7 @@ namespace GeographicLib {
     /**
      * @return the number of decimal digits of precision in a real number.
      **********************************************************************/
-    static inline int digits10() {
+    static int digits10() {
 #if GEOGRAPHICLIB_PRECISION != 5
       return std::numeric_limits<real>::digits10;
 #else
@@ -184,7 +184,7 @@ namespace GeographicLib {
      * Number of additional decimal digits of precision for real relative to
      * double (0 for float).
      **********************************************************************/
-    static inline int extra_digits() {
+    static int extra_digits() {
       return
         digits10() > std::numeric_limits<double>::digits10 ?
         digits10() - std::numeric_limits<double>::digits10 : 0;
@@ -199,7 +199,7 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return &pi;.
      **********************************************************************/
-    template<typename T> static inline T pi() {
+    template<typename T> static T pi() {
       using std::atan2;
       static const T pi = atan2(T(0), T(-1));
       return pi;
@@ -207,20 +207,20 @@ namespace GeographicLib {
     /**
      * A synonym for pi<real>().
      **********************************************************************/
-    static inline real pi() { return pi<real>(); }
+    static real pi() { return pi<real>(); }
 
     /**
      * @tparam T the type of the returned value.
      * @return the number of radians in a degree.
      **********************************************************************/
-    template<typename T> static inline T degree() {
+    template<typename T> static T degree() {
       static const T degree = pi<T>() / 180;
       return degree;
     }
     /**
      * A synonym for degree<real>().
      **********************************************************************/
-    static inline real degree() { return degree<real>(); }
+    static real degree() { return degree<real>(); }
 
     /**
      * Square a number.
@@ -229,7 +229,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return <i>x</i><sup>2</sup>.
      **********************************************************************/
-    template<typename T> static inline T sq(T x)
+    template<typename T> static T sq(T x)
     { return x * x; }
 
     /**
@@ -240,7 +240,7 @@ namespace GeographicLib {
      * @param[in] y
      * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
      **********************************************************************/
-    template<typename T> static inline T hypot(T x, T y) {
+    template<typename T> static T hypot(T x, T y) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::hypot; return hypot(x, y);
 #else
@@ -262,7 +262,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return exp(\e x) &minus; 1.
      **********************************************************************/
-    template<typename T> static inline T expm1(T x) {
+    template<typename T> static T expm1(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::expm1; return expm1(x);
 #else
@@ -285,7 +285,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return log(1 + \e x).
      **********************************************************************/
-    template<typename T> static inline T log1p(T x) {
+    template<typename T> static T log1p(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::log1p; return log1p(x);
 #else
@@ -308,7 +308,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return asinh(\e x).
      **********************************************************************/
-    template<typename T> static inline T asinh(T x) {
+    template<typename T> static T asinh(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::asinh; return asinh(x);
 #else
@@ -325,7 +325,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return atanh(\e x).
      **********************************************************************/
-    template<typename T> static inline T atanh(T x) {
+    template<typename T> static T atanh(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::atanh; return atanh(x);
 #else
@@ -342,7 +342,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return the real cube root of \e x.
      **********************************************************************/
-    template<typename T> static inline T cbrt(T x) {
+    template<typename T> static T cbrt(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::cbrt; return cbrt(x);
 #else
@@ -366,7 +366,7 @@ namespace GeographicLib {
      * made to improve on the result of a rounded multiplication followed by a
      * rounded addition.
      **********************************************************************/
-    template<typename T> static inline T fma(T x, T y, T z) {
+    template<typename T> static T fma(T x, T y, T z) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::fma; return fma(x, y, z);
 #else
@@ -381,7 +381,7 @@ namespace GeographicLib {
      * @param[in,out] x on output set to <i>x</i>/hypot(<i>x</i>, <i>y</i>).
      * @param[in,out] y on output set to <i>y</i>/hypot(<i>x</i>, <i>y</i>).
      **********************************************************************/
-    template<typename T> static inline void norm(T& x, T& y)
+    template<typename T> static void norm(T& x, T& y)
     { T h = hypot(x, y); x /= h; y /= h; }
 
     /**
@@ -396,7 +396,7 @@ namespace GeographicLib {
      * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.  (Note that \e t can be
      * the same as one of the first two arguments.)
      **********************************************************************/
-    template<typename T> static inline T sum(T u, T v, T& t) {
+    template<typename T> static T sum(T u, T v, T& t) {
       GEOGRAPHICLIB_VOLATILE T s = u + v;
       GEOGRAPHICLIB_VOLATILE T up = s - v;
       GEOGRAPHICLIB_VOLATILE T vpp = s - up;
@@ -422,7 +422,10 @@ namespace GeographicLib {
      * Return 0 if \e N &lt; 0.  Return <i>p</i><sub>0</sub>, if \e N = 0 (even
      * if \e x is infinite or a nan).  The evaluation uses Horner's method.
      **********************************************************************/
-    template<typename T> static inline T polyval(int N, const T p[], T x)
+    template<typename T> static T polyval(int N, const T p[], T x)
+    // This used to employ Math::fma; but that's too slow and it seemed not to
+    // improve the accuracy noticeably.  This might change when there's direct
+    // hardware support for fma.
     { T y = N < 0 ? 0 : *p++; while (--N >= 0) y = y * x + *p++; return y; }
 
     /**
@@ -434,7 +437,7 @@ namespace GeographicLib {
      *
      * The range of \e x is unrestricted.
      **********************************************************************/
-    template<typename T> static inline T AngNormalize(T x) {
+    template<typename T> static T AngNormalize(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
       x = remainder(x, T(360)); return x != -180 ? x : 180;
@@ -461,7 +464,7 @@ namespace GeographicLib {
      * @return x if it is in the range [&minus;90&deg;, 90&deg;], otherwise
      *   return NaN.
      **********************************************************************/
-    template<typename T> static inline T LatFix(T x)
+    template<typename T> static T LatFix(T x)
     { using std::abs; return abs(x) > 90 ? NaN<T>() : x; }
 
     /**
@@ -480,7 +483,7 @@ namespace GeographicLib {
      * error.  If \e d = &minus;180, then \e e &gt; 0; If \e d = 180, then \e e
      * &le; 0.
      **********************************************************************/
-    template<typename T> static inline T AngDiff(T x, T y, T& e) {
+    template<typename T> static T AngDiff(T x, T y, T& e) {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder;
       T t, d = AngNormalize(sum(remainder(-x, T(360)),
@@ -511,7 +514,7 @@ namespace GeographicLib {
      * this prescription allows &minus;180&deg; to be returned (e.g., if \e x
      * is tiny and negative and \e y = 180&deg;).
      **********************************************************************/
-    template<typename T> static inline T AngDiff(T x, T y)
+    template<typename T> static T AngDiff(T x, T y)
     { T e; return AngDiff(x, y, e); }
 
     /**
@@ -529,7 +532,7 @@ namespace GeographicLib {
      * 10<sup>&minus;200</sup>).  This converts -0 to +0; however tiny negative
      * numbers get converted to -0.
      **********************************************************************/
-    template<typename T> static inline T AngRound(T x) {
+    template<typename T> static T AngRound(T x) {
       using std::abs;
       static const T z = 1/T(16);
       if (x == 0) return 0;
@@ -552,7 +555,7 @@ namespace GeographicLib {
      * If x = &minus;0, then \e sinx = &minus;0; this is the only case where
      * &minus;0 is returned.
      **********************************************************************/
-    template<typename T> static inline void sincosd(T x, T& sinx, T& cosx) {
+    template<typename T> static void sincosd(T x, T& sinx, T& cosx) {
       // In order to minimize round-off errors, this function exactly reduces
       // the argument to the range [-45, 45] before converting it to radians.
       using std::sin; using std::cos;
@@ -593,7 +596,7 @@ namespace GeographicLib {
       default: sinx = -c; cosx =  s; break; // case 3U
       }
       // Set sign of 0 results.  -0 only produced for sin(-0)
-      if (x) { sinx += T(0); cosx += T(0); }
+      if (x != 0) { sinx += T(0); cosx += T(0); }
     }
 
     /**
@@ -603,7 +606,7 @@ namespace GeographicLib {
      * @param[in] x in degrees.
      * @return sin(<i>x</i>).
      **********************************************************************/
-    template<typename T> static inline T sind(T x) {
+    template<typename T> static T sind(T x) {
       // See sincosd
       using std::sin; using std::cos;
       T r; int q;
@@ -622,7 +625,7 @@ namespace GeographicLib {
       unsigned p = unsigned(q);
       r = p & 1U ? cos(r) : sin(r);
       if (p & 2U) r = -r;
-      if (x) r += T(0);
+      if (x != 0) r += T(0);
       return r;
     }
 
@@ -633,7 +636,7 @@ namespace GeographicLib {
      * @param[in] x in degrees.
      * @return cos(<i>x</i>).
      **********************************************************************/
-    template<typename T> static inline T cosd(T x) {
+    template<typename T> static T cosd(T x) {
       // See sincosd
       using std::sin; using std::cos;
       T r; int q;
@@ -665,11 +668,11 @@ namespace GeographicLib {
      * If \e x = &plusmn;90&deg;, then a suitably large (but finite) value is
      * returned.
      **********************************************************************/
-    template<typename T> static inline T tand(T x) {
+    template<typename T> static T tand(T x) {
       static const T overflow = 1 / sq(std::numeric_limits<T>::epsilon());
       T s, c;
       sincosd(x, s, c);
-      return c ? s / c : (s < 0 ? -overflow : overflow);
+      return c != 0 ? s / c : (s < 0 ? -overflow : overflow);
     }
 
     /**
@@ -685,7 +688,7 @@ namespace GeographicLib {
      * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
      * atan2d(&plusmn;0, +1) = &plusmn;0&deg;.
      **********************************************************************/
-    template<typename T> static inline T atan2d(T y, T x) {
+    template<typename T> static T atan2d(T y, T x) {
       // In order to minimize round-off errors, this function rearranges the
       // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
       // converting it to degrees and mapping the result to the correct
@@ -717,7 +720,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan(<i>x</i>) in degrees.
      **********************************************************************/
-    template<typename T> static inline T atand(T x)
+    template<typename T> static T atand(T x)
     { return atan2d(x, T(1)); }
 
     /**
@@ -745,7 +748,7 @@ namespace GeographicLib {
      * This routine correctly handles the case \e y = &minus;0, returning
      * &minus|<i>x</i>|.
      **********************************************************************/
-    template<typename T> static inline T copysign(T x, T y) {
+    template<typename T> static T copysign(T x, T y) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::copysign; return copysign(x, y);
 #else
@@ -769,7 +772,8 @@ namespace GeographicLib {
      * <a href="https://doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
-     * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     * (preprint
+     * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T taupf(T tau, T es);
 
@@ -787,7 +791,8 @@ namespace GeographicLib {
      * <a href="https://doi.org/10.1007/s00190-011-0445-3">
      * Transverse Mercator with an accuracy of a few nanometers,</a>
      * J. Geodesy 85(8), 475--485 (Aug. 2011)
-     * (preprint <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
+     * (preprint
+     * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T tauf(T taup, T es);
 
@@ -798,7 +803,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return true if number is finite, false if NaN or infinite.
      **********************************************************************/
-    template<typename T> static inline bool isfinite(T x) {
+    template<typename T> static bool isfinite(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::isfinite; return isfinite(x);
 #else
@@ -822,7 +827,7 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
-    template<typename T> static inline T NaN() {
+    template<typename T> static T NaN() {
 #if defined(_MSC_VER)
       return std::numeric_limits<T>::has_quiet_NaN ?
         std::numeric_limits<T>::quiet_NaN() :
@@ -836,7 +841,7 @@ namespace GeographicLib {
     /**
      * A synonym for NaN<real>().
      **********************************************************************/
-    static inline real NaN() { return NaN<real>(); }
+    static real NaN() { return NaN<real>(); }
 
     /**
      * Test for NaN.
@@ -845,7 +850,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return true if argument is a NaN.
      **********************************************************************/
-    template<typename T> static inline bool isnan(T x) {
+    template<typename T> static bool isnan(T x) {
 #if GEOGRAPHICLIB_CXX11_MATH
       using std::isnan; return isnan(x);
 #else
@@ -859,7 +864,7 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return infinity if available, otherwise return the max real.
      **********************************************************************/
-    template<typename T> static inline T infinity() {
+    template<typename T> static T infinity() {
 #if defined(_MSC_VER)
       return std::numeric_limits<T>::has_infinity ?
         std::numeric_limits<T>::infinity() :
@@ -873,7 +878,7 @@ namespace GeographicLib {
     /**
      * A synonym for infinity<real>().
      **********************************************************************/
-    static inline real infinity() { return infinity<real>(); }
+    static real infinity() { return infinity<real>(); }
 
     /**
      * Swap the bytes of a quantity
@@ -882,7 +887,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return x with its bytes swapped.
      **********************************************************************/
-    template<typename T> static inline T swab(T x) {
+    template<typename T> static T swab(T x) {
       union {
         T r;
         unsigned char c[sizeof(T)];
@@ -905,33 +910,33 @@ namespace GeographicLib {
         <boost::math::policies::errno_on_error> >
       boost_special_functions_policy;
 
-    static inline real hypot(real x, real y)
+    static real hypot(real x, real y)
     { return boost::math::hypot(x, y, boost_special_functions_policy()); }
 
-    static inline real expm1(real x)
+    static real expm1(real x)
     { return boost::math::expm1(x, boost_special_functions_policy()); }
 
-    static inline real log1p(real x)
+    static real log1p(real x)
     { return boost::math::log1p(x, boost_special_functions_policy()); }
 
-    static inline real asinh(real x)
+    static real asinh(real x)
     { return boost::math::asinh(x, boost_special_functions_policy()); }
 
-    static inline real atanh(real x)
+    static real atanh(real x)
     { return boost::math::atanh(x, boost_special_functions_policy()); }
 
-    static inline real cbrt(real x)
+    static real cbrt(real x)
     { return boost::math::cbrt(x, boost_special_functions_policy()); }
 
-    static inline real fma(real x, real y, real z)
+    static real fma(real x, real y, real z)
     { return fmaq(__float128(x), __float128(y), __float128(z)); }
 
-    static inline real copysign(real x, real y)
+    static real copysign(real x, real y)
     { return boost::math::copysign(x, y); }
 
-    static inline bool isnan(real x) { return boost::math::isnan(x); }
+    static bool isnan(real x) { return boost::math::isnan(x); }
 
-    static inline bool isfinite(real x) { return boost::math::isfinite(x); }
+    static bool isfinite(real x) { return boost::math::isfinite(x); }
 #endif
   };
 

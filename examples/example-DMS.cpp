@@ -1,6 +1,7 @@
 // Example of using the GeographicLib::DMS class
 
 #include <iostream>
+#include <string>
 #include <exception>
 #include <GeographicLib/DMS.hpp>
 

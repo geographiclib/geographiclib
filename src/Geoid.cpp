@@ -144,7 +144,7 @@ namespace GeographicLib {
   // for k:1 thru length(warr) do c3n:endcons(c3nrow(k),c3n)$
   // c3n:apply(matrix,c3n)$
   // c0n:part(ratsimp(
-  //     genmatrix(yc,1,length(warr)).abs(c3n).genmatrix(yd,length(pows),1)),2)$
+  //    genmatrix(yc,1,length(warr)).abs(c3n).genmatrix(yd,length(pows),1)),2)$
   // c3n:c0n*c3n$
 
   const int Geoid::c0n_ = 372; // Common denominator
@@ -178,7 +178,7 @@ namespace GeographicLib {
   // c3sf[i,j]:=coeff(coeff(coeff(poly,v[i]),x,pows[j][1]),y,pows[j][2])$
   // c3s:genmatrix(c3sf,length(vv),length(pows))$
   // c0s:part(ratsimp(
-  //     genmatrix(yc,1,length(warr)).abs(c3s).genmatrix(yd,length(pows),1)),2)$
+  //    genmatrix(yc,1,length(warr)).abs(c3s).genmatrix(yd,length(pows),1)),2)$
   // c3s:c0s*c3s$
 
   const int Geoid::c0s_ = 372; // Common denominator

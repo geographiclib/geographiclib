@@ -158,5 +158,5 @@ B<GeodesicProj> was written by Charles Karney.
 =head1 HISTORY
 
 B<GeodesicProj> was added to GeographicLib,
-L<https://geographiclib.sourceforge.io>, in 2009-08.  Prior to version 1.9 it was
-called EquidistantTest.
+L<https://geographiclib.sourceforge.io>, in 2009-08.
+Prior to version 1.9 it was called EquidistantTest.

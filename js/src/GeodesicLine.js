@@ -215,7 +215,8 @@
         // GeodesicExact.
         //     erri = the error in the inverse solution (nm)
         //     errd = the error in the direct solution (series only) (nm)
-        //     errda = the error in the direct solution (series + 1 Newton) (nm)
+        //     errda = the error in the direct solution
+        //             (series + 1 Newton) (nm)
         //
         //       f     erri  errd errda
         //     -1/5    12e6 1.2e9  69e6
@@ -303,8 +304,10 @@
       if (outmask & g.GEODESICSCALE) {
         t = this._k2 * (ssig2 - this._ssig1) * (ssig2 + this._ssig1) /
           (this._dn1 + dn2);
-        vals.M12 = csig12 + (t * ssig2 - csig2 * J12) * this._ssig1 / this._dn1;
-        vals.M21 = csig12 - (t * this._ssig1 - this._csig1 * J12) * ssig2 / dn2;
+        vals.M12 = csig12 +
+          (t * ssig2 - csig2 * J12) * this._ssig1 / this._dn1;
+        vals.M21 = csig12 -
+          (t * this._ssig1 - this._csig1 * J12) * ssig2 / dn2;
       }
     }
 

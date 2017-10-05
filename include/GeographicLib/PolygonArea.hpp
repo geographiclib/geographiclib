@@ -73,7 +73,7 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    static inline int transit(real lon1, real lon2) {
+    static int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
       // Otherwise return zero.
       // Compute lon12 the same way as Geodesic::Inverse.
@@ -89,7 +89,7 @@ namespace GeographicLib {
     }
     // an alternate version of transit to deal with longitudes in the direct
     // problem.
-    static inline int transitdirect(real lon1, real lon2) {
+    static int transitdirect(real lon1, real lon2) {
       // We want to compute exactly
       //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
       // Since we only need the parity of the result we can use std::remquo;

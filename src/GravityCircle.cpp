@@ -16,8 +16,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Math::real GravityCircle::Gravity(real lon, real& gx, real& gy, real& gz)
-    const {
+  Math::real GravityCircle::Gravity(real lon,
+                                    real& gx, real& gy, real& gz) const {
     real slam, clam, M[Geocentric::dim2_];
     Math::sincosd(lon, slam, clam);
     real Wres = W(slam, clam, gx, gy, gz);
@@ -47,8 +47,7 @@ namespace GeographicLib {
   }
 
   void GravityCircle::SphericalAnomaly(real lon,
-                                       real& Dg01, real& xi, real& eta)
-    const {
+                                       real& Dg01, real& xi, real& eta) const {
     if ((_caps & SPHERICAL_ANOMALY) != SPHERICAL_ANOMALY) {
       Dg01 = xi = eta = Math::NaN();
       return;
@@ -77,8 +76,7 @@ namespace GeographicLib {
   }
 
   Math::real GravityCircle::V(real slam, real clam,
-                              real& GX, real& GY, real& GZ)
-    const {
+                              real& GX, real& GY, real& GZ) const {
     if ((_caps & GRAVITY) != GRAVITY) {
       GX = GY = GZ = Math::NaN();
       return Math::NaN();

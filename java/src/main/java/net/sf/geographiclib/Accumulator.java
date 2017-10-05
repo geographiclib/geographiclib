@@ -19,8 +19,8 @@ package net.sf.geographiclib;
  * Floating-Point Arithmetic and Fast Robust Geometric Predicates</a>,
  * Discrete &amp; Computational Geometry 18(3) 305&ndash;363 (1997).
  * <p>
- * In the documentation of the member functions, <i>sum</i> stands for the value
- * currently held in the accumulator.
+ * In the documentation of the member functions, <i>sum</i> stands for the
+ * value currently held in the accumulator.
  ***********************************************************************/
 public  class Accumulator {
   // _s + _t accumulators for the sum.

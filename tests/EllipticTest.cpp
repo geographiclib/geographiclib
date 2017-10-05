@@ -17,10 +17,10 @@ int main() {
       for (int i = -7; i <= 7; ++i) {
         if (i == 0)
           continue;
-        real a = 1, b = a*pow(2.0, i), f = (a-b)/a;
+        real a = 1, b = a * real(pow(real(2), i)), f = (a-b)/a;
         Ellipsoid e(a, f);
         real m = e.QuarterMeridian();
-        real na = a * 1e7/m, nb = na * (1-f);
+        real na = a * real(1e7)/m, nb = na * (1-f);
         Ellipsoid ne(na, f);
         cout << b/a << " " << na << " " << nb << " "
              << ne.QuarterMeridian() << "\n";
@@ -28,10 +28,10 @@ int main() {
       for (int i = -1; i <= 1; ++i) {
         if (i == 0)
           continue;
-        real a = 1, b = a*pow(3.0, i), f = (a-b)/a;
+        real a = 1, b = a * real(pow(real(3), i)), f = (a-b)/a;
         Ellipsoid e(a, f);
         real m = e.QuarterMeridian();
-        real na = a * 1e7/m, nb = na * (1-f);
+        real na = a * real(1e7)/m, nb = na * (1-f);
         Ellipsoid ne(na, f);
         cout << b/a << " " << na << " " << nb << " "
              << ne.QuarterMeridian() << "\n";
@@ -40,16 +40,17 @@ int main() {
     }
     if (false) {
       // Longitude check
-      real a=1.5, b = 1, f = (a - b)/a,
+      real a = real(1.5), b = 1, f = (a - b)/a,
         e2 = (a*a - b*b)/(a*a), ep2 = (a*a - b*b)/(b*b),
-        alp0 = 0.85, calp0 = cos(alp0), salp0 = sin(alp0),
+        alp0 = real(0.85), calp0 = cos(alp0), salp0 = sin(alp0),
         k2 = ep2 * Math::sq(calp0), kp2 = k2/(1 + k2),
-        sigma = 1.2, theta = atan(sqrt(1+k2) * tan(sigma)),
+        sigma = real(1.2), theta = atan(sqrt(1+k2) * tan(sigma)),
         kap2 = Math::sq(calp0)/(1-Math::sq(salp0)*e2),
         omg = atan(salp0 * tan(sigma)),
         ups = atan(sqrt((1+ep2)/(1+k2*Math::sq(sin(sigma)))) * tan(omg)),
         // psi = atan(sqrt((1+k2*Math::sq(sin(sigma)))/(1+ep2)) * tan(omg)),
-        psi = atan(sqrt((1-e2)/(1+k2*Math::sq(cos(theta)))) * salp0*tan(theta));
+        psi = atan(sqrt((1-e2)/(1+k2*Math::sq(cos(theta)))) *
+                   salp0*tan(theta));
       EllipticFunction ella1(-k2, Math::sq(calp0));
       EllipticFunction ella2(-k2, -ep2);
       EllipticFunction ellb1(kp2, kap2);
@@ -110,7 +111,7 @@ print meridian-measures.png -dpng
     }
 
     if (false) {
-      real alpha2 = 0.8, k2 = -0.4;
+      real alpha2 = real(0.8), k2 = real(-0.4);
       EllipticFunction ellG(k2,alpha2);
       EllipticFunction ellH(k2,k2/alpha2);
 
@@ -130,9 +131,9 @@ print meridian-measures.png -dpng
     if (false) {
       // For tabulated values in A+S
       real
-        ASalpha = 30*Math::degree<double>(),
+        ASalpha = 30*Math::degree<real>(),
         k2 = Math::sq(sin(ASalpha)),
-        alpha2 = 0.3;
+        alpha2 = real(0.3);
 
       EllipticFunction ell(k2, alpha2);
       real dphi = Math::degree();

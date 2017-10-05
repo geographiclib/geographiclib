@@ -65,12 +65,12 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 48, patch: 0 };
+  c.version = { major: 1, minor: 49, patch: 0 };
   /**
    * @constant
    * @summary version string
    */
-  c.version_string = "1.48";
+  c.version_string = "1.49";
 })(GeographicLib.Constants);
 
 (function(
@@ -283,7 +283,7 @@ GeographicLib.Accumulator = {};
       case 2:  sinx = -s; cosx = -c; break;
       default: sinx = -c; cosx =  s; break; // case 3
     }
-    if (x) { sinx += 0; cosx += 0; }
+    if (x !== 0) { sinx += 0; cosx += 0; }
     return {s: sinx, c: cosx};
   };
 

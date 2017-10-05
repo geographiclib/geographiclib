@@ -29,7 +29,7 @@ section of GeoConvert(1).  For each set of geodetic coordinates, the
 corresponding projected easting, I<x>, and northing, I<y>, (meters) are
 printed on standard output together with the meridian convergence
 I<gamma> (degrees) and scale I<k>.  The meridian convergence is the
-bearing of the I<y> axis measured clockwise from true north.
+bearing of grid north (the I<y> axis) measured clockwise from true north.
 
 =head1 OPTIONS
 
@@ -166,6 +166,6 @@ this paper.
 =head1 HISTORY
 
 B<TransverseMercatorProj> was added to GeographicLib,
-L<https://geographiclib.sourceforge.io>, in 2009-01.  Prior to version 1.9 it was
-called TransverseMercatorTest (and its interface was slightly
-different).
+L<https://geographiclib.sourceforge.io>, in 2009-01.
+Prior to version 1.9 it was called TransverseMercatorTest (and its
+interface was slightly different).

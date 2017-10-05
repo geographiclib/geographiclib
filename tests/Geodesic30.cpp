@@ -124,7 +124,7 @@ namespace GeographicLib {
                                    real& M12, real& M21,
                                    real& S12) const {
     return GeodesicLine30<real>(*this, lat1, lon1, azi1,
-                                // Automatically supply DISTANCE_IN if necessary
+                                // supply DISTANCE_IN if necessary
                                 outmask | (arcmode ? NONE : DISTANCE_IN))
       .                         // Note the dot!
       GenPosition(arcmode, s12_a12, outmask,
@@ -437,7 +437,8 @@ namespace GeographicLib {
 
   template<typename real>
   void Geodesic30<real>::Lengths(real eps, real sig12,
-                                 real ssig1, real csig1, real ssig2, real csig2,
+                                 real ssig1, real csig1,
+                                 real ssig2, real csig2,
                                  real cbet1, real cbet2,
                                  real& s12b, real& m12a, real& m0,
                                  bool scalep, real& M12, real& M21,

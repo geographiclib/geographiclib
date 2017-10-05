@@ -23,7 +23,7 @@ var GeographicLib = require("geographiclib");
 ## Documentation
 
 Full documentation is provided at
-[https://geographiclib.sourceforge.io/1.48/js/](https://geographiclib.sourceforge.io/1.48/js/).
+[https://geographiclib.sourceforge.io/1.49/js/](https://geographiclib.sourceforge.io/1.49/js/).
 
 ## Examples
 

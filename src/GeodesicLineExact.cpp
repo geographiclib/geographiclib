@@ -139,8 +139,7 @@ namespace GeographicLib {
                                             real& lat2, real& lon2, real& azi2,
                                             real& s12, real& m12,
                                             real& M12, real& M21,
-                                            real& S12)
-  const {
+                                            real& S12) const {
     outmask &= _caps & OUT_MASK;
     if (!( Init() && (arcmode || (_caps & (OUT_MASK & DISTANCE_IN))) ))
       // Uninitialized or impossible distance calculation requested
@@ -204,7 +203,8 @@ namespace GeographicLib {
         : atan2(somg2 * _cchi1 - cchi2 * _somg1,
                 cchi2 * _cchi1 + somg2 * _somg1);
       real lam12 = chi12 -
-        _e2/_f1 * _salp0 * _H0 * (sig12 + (_E.deltaH(ssig2, csig2, dn2) - _H1));
+        _e2/_f1 * _salp0 * _H0 *
+        (sig12 + (_E.deltaH(ssig2, csig2, dn2) - _H1));
       real lon12 = lam12 / Math::degree();
       lon2 = outmask & LONG_UNROLL ? _lon1 + lon12 :
         Math::AngNormalize(Math::AngNormalize(_lon1) +

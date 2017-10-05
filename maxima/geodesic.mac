@@ -101,7 +101,7 @@ documented at
 */
 
 /* The corresponding version of GeographicLib */
-geod_version:[1,48,0]$
+geod_version:[1,49,0]$
 
 /* Load series created by geod.mac (NEED TO UNCOMMENT THE LAST LINE OF
 geod.mac TO GENERATE THIS FILE). */

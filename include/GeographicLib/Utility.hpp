@@ -16,6 +16,7 @@
 #include <sstream>
 #include <cctype>
 #include <ctime>
+#include <cstring>
 
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions and unsafe gmtime
@@ -99,8 +100,8 @@ namespace GeographicLib {
         (1461 * y) / 4 // Julian years converted to days.  Julian year is 365 +
                        // 1/4 = 1461/4 days.
         // Gregorian leap year corrections.  The 2 offset with respect to the
-        // Julian calendar synchronizes the vernal equinox with that at the time
-        // of the Council of Nicea (325 AD).
+        // Julian calendar synchronizes the vernal equinox with that at the
+        // time of the Council of Nicea (325 AD).
         + (greg ? (y / 100) / 4 - (y / 100) + 2 : 0)
         + (153 * m + 2) / 5     // The zero-based start of the m'th month
         + d - 1                 // The zero-based day
@@ -426,7 +427,8 @@ namespace GeographicLib {
      *
      * @tparam T the type of the return value.
      * @param[in] s the string to be converted.
-     * @exception GeographicErr is \e s is not readable as a fraction of type T.
+     * @exception GeographicErr is \e s is not readable as a fraction of type
+     *   T.
      * @return object of type T
      *
      * \note The msys shell under Windows converts arguments which look
@@ -460,6 +462,22 @@ namespace GeographicLib {
     }
 
     /**
+     * Lookup up a character in a char*.
+     *
+     * @param[in] s the char* string to be searched.
+     * @param[in] c the character to look for.
+     * @return the index of the first occurrence character in the string or
+     *   &minus;1 is the character is not present.
+     *
+     * \e c is converted to upper case before search \e s.  Therefore, it is
+     * intended that \e s should not contain any lower case letters.
+     **********************************************************************/
+    static int lookup(const char* s, char c) {
+      const char* p = std::strchr(s, toupper(c));
+      return p != NULL ? int(p - s) : -1;
+    }
+
+    /**
      * Read data of type ExtT from a binary stream to an array of type IntT.
      * The data in the file is in (bigendp ? big : little)-endian format.
      *
@@ -473,8 +491,7 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be read.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void readarray(std::istream& str,
-                                   IntT array[], size_t num) {
+      static void readarray(std::istream& str, IntT array[], size_t num) {
 #if GEOGRAPHICLIB_PRECISION < 4
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
@@ -525,8 +542,7 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be read.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void readarray(std::istream& str,
-                                   std::vector<IntT>& array) {
+      static void readarray(std::istream& str, std::vector<IntT>& array) {
       if (array.size() > 0)
         readarray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
@@ -544,8 +560,8 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be written.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void writearray(std::ostream& str,
-                                    const IntT array[], size_t num) {
+      static void writearray(std::ostream& str, const IntT array[], size_t num)
+    {
 #if GEOGRAPHICLIB_PRECISION < 4
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
@@ -591,8 +607,7 @@ namespace GeographicLib {
      * @exception GeographicErr if the data cannot be written.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
-      static inline void writearray(std::ostream& str,
-                                   std::vector<IntT>& array) {
+      static void writearray(std::ostream& str, std::vector<IntT>& array) {
       if (array.size() > 0)
         writearray<ExtT, IntT, bigendp>(str, &array[0], array.size());
     }
