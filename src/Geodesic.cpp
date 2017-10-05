@@ -74,7 +74,7 @@ namespace GeographicLib {
       // sig12 = etol2.  Here 0.1 is a safety factor (error decreased by 100)
       // and max(0.001, abs(f)) stops etol2 getting too large in the nearly
       // spherical case.
-    , _etol2(0.1 * tol2_ /
+    , _etol2(real(0.1) * tol2_ /
              sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
   {
     if (!(Math::isfinite(_a) && _a > 0))
@@ -115,8 +115,8 @@ namespace GeographicLib {
       : cosx * (y0 - y1);       // cos(x) * (y0 - y1)
   }
 
-  GeodesicLine Geodesic::Line(real lat1, real lon1, real azi1, unsigned caps)
-    const {
+  GeodesicLine Geodesic::Line(real lat1, real lon1, real azi1,
+                              unsigned caps) const {
     return GeodesicLine(*this, lat1, lon1, azi1, caps);
   }
 
@@ -160,8 +160,8 @@ namespace GeographicLib {
                                   unsigned outmask, real& s12,
                                   real& salp1, real& calp1,
                                   real& salp2, real& calp2,
-                                  real& m12, real& M12, real& M21, real& S12)
-    const {
+                                  real& m12, real& M12, real& M21,
+                                  real& S12) const {
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
@@ -493,8 +493,8 @@ namespace GeographicLib {
   Math::real Geodesic::GenInverse(real lat1, real lon1, real lat2, real lon2,
                                   unsigned outmask,
                                   real& s12, real& azi1, real& azi2,
-                                  real& m12, real& M12, real& M21, real& S12)
-    const {
+                                  real& m12, real& M12, real& M21,
+                                  real& S12) const {
     outmask &= OUT_MASK;
     real salp1, calp1, salp2, calp2,
       a12 =  GenInverse(lat1, lon1, lat2, lon2,
@@ -507,7 +507,8 @@ namespace GeographicLib {
     return a12;
   }
 
-  GeodesicLine Geodesic::InverseLine(real lat1, real lon1, real lat2, real lon2,
+  GeodesicLine Geodesic::InverseLine(real lat1, real lon1,
+                                     real lat2, real lon2,
                                      unsigned caps) const {
     real t, salp1, calp1, salp2, calp2,
       a12 = GenInverse(lat1, lon1, lat2, lon2,
@@ -517,14 +518,16 @@ namespace GeographicLib {
       azi1 = Math::atan2d(salp1, calp1);
     // Ensure that a12 can be converted to a distance
     if (caps & (OUT_MASK & DISTANCE_IN)) caps |= DISTANCE;
-    return GeodesicLine(*this, lat1, lon1, azi1, salp1, calp1, caps, true, a12);
+    return
+      GeodesicLine(*this, lat1, lon1, azi1, salp1, calp1, caps, true, a12);
   }
 
   void Geodesic::Lengths(real eps, real sig12,
                          real ssig1, real csig1, real dn1,
                          real ssig2, real csig2, real dn2,
                          real cbet1, real cbet2, unsigned outmask,
-                         real& s12b, real& m12b, real& m0, real& M12, real& M21,
+                         real& s12b, real& m12b, real& m0,
+                         real& M12, real& M21,
                          // Scratch area of the right size
                          real Ca[]) const {
     // Return m12b = (reduced length)/_b; also calculate s12b = distance/_b,
@@ -609,7 +612,7 @@ namespace GeographicLib {
         // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
         real T = Math::cbrt(T3); // T = r * t
         // T can be zero; but then r2 / T -> 0.
-        u += T + (T ? r2 / T : 0);
+        u += T + (T != 0 ? r2 / T : 0);
       } else {
         // T is complex, but the way u is defined the result is real.
         real ang = atan2(sqrt(-disc), -(S + r3));
@@ -735,7 +738,8 @@ namespace GeographicLib {
         // Inverse.
         Lengths(_n, Math::pi() + bet12a,
                 sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-                cbet1, cbet2, REDUCEDLENGTH, dummy, m12b, m0, dummy, dummy, Ca);
+                cbet1, cbet2,
+                REDUCEDLENGTH, dummy, m12b, m0, dummy, dummy, Ca);
         x = -1 + m12b / (cbet1 * cbet2 * m0 * Math::pi());
         betscale = x < -real(0.01) ? sbet12a / x :
           -_f * Math::sq(cbet1) * Math::pi();

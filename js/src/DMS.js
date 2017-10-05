@@ -5,7 +5,7 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
- * Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -102,9 +102,9 @@ GeographicLib.DMS = {};
       pb = Math.min(mi, pi);
       vals = internalDecode(dmsa.substr(p, pb - p));
       v += vals.val; ind2 = vals.ind;
-      if (ind1 == d.NONE)
+      if (ind1 === d.NONE)
         ind1 = ind2;
-      else if (!(ind2 == d.NONE || ind1 == ind2))
+      else if (!(ind2 === d.NONE || ind1 === ind2))
         throw new Error("Incompatible hemisphere specifies in " +
                         dmsa.substr(0, pb));
     }
@@ -356,7 +356,8 @@ GeographicLib.DMS = {};
     var vals = d.Decode(angstr),
         ang = vals.val, ind = vals.ind;
     if (ind !== d.NONE)
-      throw new Error("Arc angle " + angstr + " includes a hemisphere N/E/W/S");
+      throw new Error("Arc angle " + angstr +
+                      " includes a hemisphere N/E/W/S");
     return ang;
   };
 
@@ -424,7 +425,7 @@ GeographicLib.DMS = {};
     fdegree = (angle - idegree) * scale + 0.5;
     f = Math.floor(fdegree);
     // Implement the "round ties to even" rule
-    fdegree = (f == fdegree && (f & 1)) ? f - 1 : f;
+    fdegree = (f === fdegree && (f & 1) === 1) ? f - 1 : f;
     fdegree /= scale;
 
     fdegree = Math.floor((angle - idegree) * scale + 0.5) / scale;

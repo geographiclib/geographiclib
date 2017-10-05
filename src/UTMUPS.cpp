@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -17,26 +17,27 @@ namespace GeographicLib {
 
   using namespace std;
 
-  const int UTMUPS::falseeasting_[4] =
+  const int UTMUPS::falseeasting_[] =
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::utmeasting_ * MGRS::tile_, MGRS::utmeasting_ * MGRS::tile_ };
-  const int UTMUPS::falsenorthing_[4] =
+  const int UTMUPS::falsenorthing_[] =
     { MGRS::upseasting_ * MGRS::tile_, MGRS::upseasting_ * MGRS::tile_,
       MGRS::maxutmSrow_ * MGRS::tile_, MGRS::minutmNrow_ * MGRS::tile_ };
-  const int UTMUPS::mineasting_[4] =
+  const int UTMUPS::mineasting_[] =
     { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmcol_ * MGRS::tile_, MGRS::minutmcol_ * MGRS::tile_ };
-  const int UTMUPS::maxeasting_[4] =
+  const int UTMUPS::maxeasting_[] =
     { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
       MGRS::maxutmcol_ * MGRS::tile_, MGRS::maxutmcol_ * MGRS::tile_ };
-  const int UTMUPS::minnorthing_[4] =
+  const int UTMUPS::minnorthing_[] =
     { MGRS::minupsSind_ * MGRS::tile_, MGRS::minupsNind_ * MGRS::tile_,
       MGRS::minutmSrow_ * MGRS::tile_,
       (MGRS::minutmNrow_ + MGRS::minutmSrow_ - MGRS::maxutmSrow_)
       * MGRS::tile_ };
-  const int UTMUPS::maxnorthing_[4] =
+  const int UTMUPS::maxnorthing_[] =
     { MGRS::maxupsSind_ * MGRS::tile_, MGRS::maxupsNind_ * MGRS::tile_,
-      (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) * MGRS::tile_,
+      (MGRS::maxutmSrow_ + MGRS::maxutmNrow_ - MGRS::minutmNrow_) *
+      MGRS::tile_,
       MGRS::maxutmNrow_ * MGRS::tile_ };
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
@@ -54,9 +55,9 @@ namespace GeographicLib {
         ilon += 360;
       int zone = (ilon + 186)/6;
       int band = MGRS::LatitudeBand(lat);
-      if (band == 7 && zone == 31 && ilon >= 3)
+      if (band == 7 && zone == 31 && ilon >= 3) // The Norway exception
         zone = 32;
-      else if (band == 9 && ilon >= 0 && ilon < 42)
+      else if (band == 9 && ilon >= 0 && ilon < 42) // The Svalbard exception
         zone = 2 * ((ilon + 183)/12) + 1;
       return zone;
     } else
@@ -107,7 +108,8 @@ namespace GeographicLib {
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + ", longitude " + Utility::str(lon)
                           + " out of legal range for "
-                          + (utmp ? "UTM zone " + Utility::str(zone1) : "UPS"));
+                          + (utmp ? "UTM zone " + Utility::str(zone1) :
+                             "UPS"));
     zone = zone1;
     northp = northp1;
     x = x1;
@@ -203,7 +205,8 @@ namespace GeographicLib {
     return;
   }
 
-  void UTMUPS::DecodeZone(const std::string& zonestr, int& zone, bool& northp) {
+  void UTMUPS::DecodeZone(const std::string& zonestr, int& zone, bool& northp)
+  {
     unsigned zlen = unsigned(zonestr.size());
     if (zlen == 0)
       throw GeographicErr("Empty zone specification");

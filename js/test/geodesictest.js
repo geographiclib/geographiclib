@@ -520,6 +520,26 @@ describe("GeographicLib", function() {
       assert.approx(inv.S12, 286698586.30197, 5e-4);
     });
 
+    it("GeodSolve76", function() {
+      // The distance from Wellington and Salamanca (a classic failure of
+      // Vincenty)
+      var geod = g.WGS84,
+          inv = geod.Inverse(-(41+19/60.0), 174+49/60.0,
+                             40+58/60.0, -(5+30/60.0));
+      assert.approx(inv.azi1, 160.39137649664, 0.5e-11);
+      assert.approx(inv.azi2,  19.50042925176, 0.5e-11);
+      assert.approx(inv.s12,  19960543.857179, 0.5e-6);
+    });
+
+    it("GeodSolve78", function() {
+      // An example where the NGS calculator fails to converge
+      var geod = g.WGS84,
+          inv = geod.Inverse(27.2, 0.0, -27.1, 179.5);
+      assert.approx(inv.azi1,  45.82468716758, 0.5e-11);
+      assert.approx(inv.azi2, 134.22776532670, 0.5e-11);
+      assert.approx(inv.s12,  19974354.765767, 0.5e-6);
+    });
+
   });
 
   describe("Planimeter", function () {

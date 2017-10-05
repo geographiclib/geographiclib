@@ -80,7 +80,7 @@ namespace GeographicLib {
       // sig12 = etol2.  Here 0.1 is a safety factor (error decreased by 100)
       // and max(0.001, abs(f)) stops etol2 getting too large in the nearly
       // spherical case.
-    , _etol2(0.1 * tol2_ /
+    , _etol2(real(0.1) * tol2_ /
              sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
   {
     if (!(Math::isfinite(_a) && _a > 0))
@@ -350,7 +350,7 @@ namespace GeographicLib {
         for (bool tripn = false, tripb = false;
              numit < maxit2_ || GEOGRAPHICLIB_PANIC;
              ++numit) {
-          // 1/4 meridan = 10e6 m and random input.  max err is estimated max
+          // 1/4 meridian = 10e6 m and random input.  max err is estimated max
           // error in nm (checking solution of inverse problem by direct
           // solution).  iter is mean and sd of number of iterations
           //
@@ -522,8 +522,7 @@ namespace GeographicLib {
                                        unsigned outmask,
                                        real& s12, real& azi1, real& azi2,
                                        real& m12, real& M12, real& M21,
-                                       real& S12)
-    const {
+                                       real& S12) const {
     outmask &= OUT_MASK;
     real salp1, calp1, salp2, calp2,
       a12 =  GenInverse(lat1, lon1, lat2, lon2,
@@ -623,7 +622,7 @@ namespace GeographicLib {
         // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
         real T = Math::cbrt(T3); // T = r * t
         // T can be zero; but then r2 / T -> 0.
-        u += T + (T ? r2 / T : 0);
+        u += T + (T != 0 ? r2 / T : 0);
       } else {
         // T is complex, but the way u is defined the result is real.
         real ang = atan2(sqrt(-disc), -(S + r3));
@@ -655,8 +654,7 @@ namespace GeographicLib {
                                          // Only updated if return val >= 0
                                          real& salp2, real& calp2,
                                          // Only updated for short lines
-                                         real& dnm)
-    const {
+                                         real& dnm) const {
     // Return a starting point for Newton's method in salp1 and calp1 (function
     // value is -1).  If Newton's method doesn't need to be used, return also
     // salp2 and calp2 and function value is sig12.

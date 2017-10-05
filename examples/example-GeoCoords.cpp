@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <exception>
-#include <string>
 #include <GeographicLib/GeoCoords.hpp>
 
 using namespace std;

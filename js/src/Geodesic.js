@@ -704,7 +704,8 @@ GeographicLib.PolygonArea = {};
 
   // return lam12, salp2, calp2, sig12, ssig1, csig1, ssig2, csig2, eps,
   // domg12, dlam12,
-  g.Geodesic.prototype.Lambda12 = function(sbet1, cbet1, dn1, sbet2, cbet2, dn2,
+  g.Geodesic.prototype.Lambda12 = function(sbet1, cbet1, dn1,
+                                           sbet2, cbet2, dn2,
                                            salp1, calp1, slam120, clam120,
                                            diffp, C1a, C2a, C3a) {
     var vals = {},
@@ -927,7 +928,7 @@ GeographicLib.PolygonArea = {};
       s12x = nvals.s12b;
       m12x = nvals.m12b;
       // Ignore m0
-      if ((outmask & g.GEODESICSCALE) !== 0) {
+      if (outmask & g.GEODESICSCALE) {
         vals.M12 = nvals.M12;
         vals.M21 = nvals.M21;
       }
@@ -1069,12 +1070,13 @@ GeographicLib.PolygonArea = {};
             (outmask & (g.REDUCEDLENGTH | g.GEODESICSCALE) ?
              g.DISTANCE : g.NONE);
         nvals = this.Lengths(eps, sig12,
-                             ssig1, csig1, dn1, ssig2, csig2, dn2, cbet1, cbet2,
+                             ssig1, csig1, dn1, ssig2, csig2, dn2,
+                             cbet1, cbet2,
                              lengthmask, C1a, C2a);
         s12x = nvals.s12b;
         m12x = nvals.m12b;
         // Ignore m0
-        if ((outmask & g.GEODESICSCALE) !== 0) {
+        if (outmask & g.GEODESICSCALE) {
           vals.M12 = nvals.M12;
           vals.M21 = nvals.M21;
         }

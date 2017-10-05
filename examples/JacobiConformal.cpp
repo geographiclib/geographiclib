@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <exception>
 #include <GeographicLib/Utility.hpp>
 #include "JacobiConformal.hpp"
 

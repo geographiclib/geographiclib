@@ -236,13 +236,13 @@ namespace GeographicLib {
                                       real& Ht, real& Ft,
                                       real& Dt, real& It) {
     H = Math::hypot(Bx, By);
-    Ht = H ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
-    D = H ? Math::atan2d(Bx, By) : Math::atan2d(Bxt, Byt);
-    Dt = (H ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree();
+    Ht = H != 0 ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
+    D = H != 0 ? Math::atan2d(Bx, By) : Math::atan2d(Bxt, Byt);
+    Dt = (H != 0 ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree();
     F = Math::hypot(H, Bz);
-    Ft = F ? (H * Ht + Bz * Bzt) / F : Math::hypot(Ht, Bzt);
-    I = F ? Math::atan2d(-Bz, H) : Math::atan2d(-Bzt, Ht);
-    It = (F ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree();
+    Ft = F != 0 ? (H * Ht + Bz * Bzt) / F : Math::hypot(Ht, Bzt);
+    I = F != 0 ? Math::atan2d(-Bz, H) : Math::atan2d(-Bzt, Ht);
+    It = (F != 0 ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree();
   }
 
   std::string MagneticModel::DefaultMagneticPath() {

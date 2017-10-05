@@ -863,6 +863,50 @@
       return
       end
 
+      integer function tstg76()
+* The distance from Wellington and Salamanca (a classic failure of
+* Vincenty
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      r = 0
+      call invers(a, f,
+     +    -(41+19/60d0), 174+49/60d0, 40+58/60d0, -(5+30/60d0),
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 160.39137649664d0, 0.5d-11)
+      r = r + assert(azi2,  19.50042925176d0, 0.5d-11)
+      r = r + assert(s12,  19960543.857179d0, 0.5d-6)
+      tstg76 = r
+      return
+      end
+
+      integer function tstg78()
+* An example where the NGS calculator fails to converge
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      r = 0
+      call invers(a, f, 27.2d0, 0d0, -27.1d0, 179.5d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1,  45.82468716758d0, 0.5d-11)
+      r = r + assert(azi2, 134.22776532670d0, 0.5d-11)
+      r = r + assert(s12,  19974354.765767d0, 0.5d-6)
+      tstg78 = r
+      return
+      end
+
       integer function tstp0()
 * Check fix for pole-encircling bug found 2011-03-16
       double precision lata(4), lona(4)
@@ -1008,7 +1052,7 @@
       integer tstinv, tstdir, tstarc,
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
-     +    tstg55, tstg59, tstg61, tstg73, tstg74,
+     +    tstg55, tstg59, tstg61, tstg73, tstg74, tstg76, tstg78,
      +    tstp0, tstp5, tstp6, tstp12, tstp13
 
       n = 0
@@ -1126,6 +1170,16 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstg74 fail:', i
+      end if
+      i = tstg76()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg76 fail:', i
+      end if
+      i = tstg78()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg78 fail:', i
       end if
       i = tstp0()
       if (i .gt. 0) then

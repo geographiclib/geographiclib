@@ -28,8 +28,9 @@ table:
   wmm2015    12    2015-2020      2       3
   igrf11     13    1900-2015      7      25
   igrf12     13    1900-2020      7      26
-  emm2010   740    2010-2015    3700    4400
-  emm2015   730    2000-2020     660    4300
+  emm2010   739    2010-2015    3700    4400
+  emm2015   729    2000-2020     660    4300
+  emm2017   790    2000-2022    1740    5050
 
 The size columns give the download and installed sizes of the datasets.
 In addition you can specify
@@ -118,6 +119,7 @@ wmm2010
 wmm2015
 emm2010
 emm2015
+emm2017
 igrf11
 igrf12
 EOF

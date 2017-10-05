@@ -23,7 +23,7 @@
 
 <p>Perform the transverse Mercator projections. Convert geodetic coordinates to transverse Mercator coordinates. The central meridian is given by <i>lon0</i>. The longitude of origin is the equator. The scale on the central meridian is <i>k0</i>. By default an implementation of the exact transverse Mercator projection is used.</p>
 
-<p>Geodetic coordinates are provided on standard input as a set of lines containing (blank separated) <i>latitude</i> and <i>longitude</i> (decimal degrees or degrees, minutes, seconds); for detils on the allowed formats for latitude and longitude, see the <code>GEOGRAPHIC COORDINATES</code> section of GeoConvert(1). For each set of geodetic coordinates, the corresponding projected easting, <i>x</i>, and northing, <i>y</i>, (meters) are printed on standard output together with the meridian convergence <i>gamma</i> (degrees) and scale <i>k</i>. The meridian convergence is the bearing of the <i>y</i> axis measured clockwise from true north.</p>
+<p>Geodetic coordinates are provided on standard input as a set of lines containing (blank separated) <i>latitude</i> and <i>longitude</i> (decimal degrees or degrees, minutes, seconds); for detils on the allowed formats for latitude and longitude, see the <code>GEOGRAPHIC COORDINATES</code> section of GeoConvert(1). For each set of geodetic coordinates, the corresponding projected easting, <i>x</i>, and northing, <i>y</i>, (meters) are printed on standard output together with the meridian convergence <i>gamma</i> (degrees) and scale <i>k</i>. The meridian convergence is the bearing of grid north (the <i>y</i> axis) measured clockwise from true north.</p>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 

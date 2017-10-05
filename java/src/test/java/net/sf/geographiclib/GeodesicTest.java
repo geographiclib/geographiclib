@@ -243,8 +243,8 @@ public class GeodesicTest {
     inv = Geodesic.WGS84.Inverse(89.262080389218, 0,
                                  -89.262080389218, 179.992207982775375662);
     assertEquals(inv.s12, 20003925.854, 0.5e-3);
-    inv = Geodesic.WGS84.Inverse(89.333123580033, 0,
-                                 -89.333123580032997687, 179.99295812360148422);
+    inv = Geodesic.WGS84.Inverse(89.333123580033, 0, -89.333123580032997687,
+                                 179.99295812360148422);
     assertEquals(inv.s12, 20003926.881, 0.5e-3);
   }
 
@@ -548,6 +548,26 @@ public class GeodesicTest {
     assertEquals(inv.M12,   0.999999995, 5e-9);
     assertEquals(inv.M21,   0.999999995, 5e-9);
     assertEquals(inv.S12, 286698586.30197, 5e-4);
+  }
+
+  @Test
+  public void GeodSolve76() {
+    // The distance from Wellington and Salamanca (a classic failure of
+    // Vincenty)
+    GeodesicData inv = Geodesic.WGS84.Inverse(-(41+19/60.0), 174+49/60.0,
+                                              40+58/60.0, -(5+30/60.0));
+    assertEquals(inv.azi1, 160.39137649664, 0.5e-11);
+    assertEquals(inv.azi2,  19.50042925176, 0.5e-11);
+    assertEquals(inv.s12,  19960543.857179, 0.5e-6);
+  }
+
+  @Test
+  public void GeodSolve78() {
+    // An example where the NGS calculator fails to converge */
+    GeodesicData inv = Geodesic.WGS84.Inverse(27.2, 0.0, -27.1, 179.5);
+    assertEquals(inv.azi1,  45.82468716758, 0.5e-11);
+    assertEquals(inv.azi2, 134.22776532670, 0.5e-11);
+    assertEquals(inv.s12,  19974354.765767, 0.5e-6);
   }
 
   @Test

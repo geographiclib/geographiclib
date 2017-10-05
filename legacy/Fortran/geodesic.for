@@ -101,13 +101,13 @@
 *!   &rarr; [\e azi1, \e azi2] + [\e d, \e d], for arbitrary \e d.
 *!
 *! These routines are a simple transcription of the corresponding C++
-*! classes in <a href="https://geographiclib.sourceforge.io"> GeographicLib</a>.
-*! Because of the limitations of Fortran 77, the classes have been
-*! replaced by simple subroutines with no attempt to save "state" across
-*! subroutine calls.  Most of the internal comments have been retained.
-*! However, in the process of transcription some documentation has been
-*! lost and the documentation for the C++ classes,
-*! GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
+*! classes in <a href="https://geographiclib.sourceforge.io">
+*! GeographicLib</a>.  Because of the limitations of Fortran 77, the
+*! classes have been replaced by simple subroutines with no attempt to
+*! save "state" across subroutine calls.  Most of the internal comments
+*! have been retained.  However, in the process of transcription some
+*! documentation has been lost and the documentation for the C++
+*! classes, GeographicLib::Geodesic, GeographicLib::GeodesicLine, and
 *! GeographicLib::PolygonAreaT, should be consulted.  The C++ code
 *! remains the "reference implementation".  Think twice about
 *! restructuring the internals of the Fortran code since this may make
@@ -118,7 +118,7 @@
 *! https://geographiclib.sourceforge.io/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.48.
+*! <a href="../index.html">GeographicLib</a> 1.49.
 
 *> Solve the direct geodesic problem
 *!
@@ -254,7 +254,7 @@
 
       call sncsdx(AngRnd(LatFix(lat1)), sbet1, cbet1)
       sbet1 = f1 * sbet1
-      call norm2(sbet1, cbet1)
+      call norm2x(sbet1, cbet1)
 * Ensure cbet1 = +dbleps at poles
       cbet1 = max(tiny, cbet1)
       dn1 = sqrt(1 + ep2 * sbet1**2)
@@ -283,8 +283,8 @@
       end if
       comg1 = csig1
 * sig1 in (-pi, pi]
-      call norm2(ssig1, csig1)
-* norm2(somg1, comg1); -- don't need to normalize!
+      call norm2x(ssig1, csig1)
+* norm2x(somg1, comg1); -- don't need to normalize!
 
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
@@ -653,13 +653,13 @@
 
       call sncsdx(lat1x, sbet1, cbet1)
       sbet1 = f1 * sbet1
-      call norm2(sbet1, cbet1)
+      call norm2x(sbet1, cbet1)
 * Ensure cbet1 = +dbleps at poles
       cbet1 = max(tiny, cbet1)
 
       call sncsdx(lat2x, sbet2, cbet2)
       sbet2 = f1 * sbet2
-      call norm2(sbet2, cbet2)
+      call norm2x(sbet2, cbet2)
 * Ensure cbet2 = +dbleps at poles
       cbet2 = max(tiny, cbet2)
 
@@ -825,7 +825,7 @@
               if (nsalp1 .gt. 0 .and. abs(dalp1) .lt. pi) then
                 calp1 = calp1 * cdalp1 - salp1 * sdalp1
                 salp1 = nsalp1
-                call norm2(salp1, calp1)
+                call norm2x(salp1, calp1)
 * In some regimes we don't get quadratic convergence because
 * slope -> 0.  So use convergence conditions based on dbleps
 * instead of sqrt(dbleps).
@@ -843,7 +843,7 @@
 * WGS84 and random input: mean = 4.74, sd = 0.99
             salp1 = (salp1a + salp1b)/2
             calp1 = (calp1a + calp1b)/2
-            call norm2(salp1, calp1)
+            call norm2x(salp1, calp1)
             tripn = .false.
             tripb = abs(salp1a - salp1) + (calp1a - calp1) .lt. tolb
      +          .or. abs(salp1 - salp1b) + (calp1 - calp1b) .lt. tolb
@@ -882,8 +882,8 @@
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
 * Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0).
           A4 = a**2 * calp0 * salp0 * e2
-          call norm2(ssig1, csig1)
-          call norm2(ssig2, csig2)
+          call norm2x(ssig1, csig1)
+          call norm2x(ssig2, csig2)
           call C4f(eps, C4x, Ca)
           B41 = TrgSum(.false., ssig1, csig1, Ca, nC4)
           B42 = TrgSum(.false., ssig2, csig2, Ca, nC4)
@@ -1037,7 +1037,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 48
+      minor = 49
       patch = 0
 
       return
@@ -1333,7 +1333,7 @@
           calp2 = 1 - comg12
         end if
         calp2 = sbet12 - cbet1 * sbet2 * calp2
-        call norm2(salp2, calp2)
+        call norm2x(salp2, calp2)
 * Set return value
         sig12 = atan2(ssig12, csig12)
       else if (abs(n) .gt. 0.1d0 .or. csig12 .ge. 0 .or.
@@ -1437,7 +1437,7 @@
       end if
 * Sanity check on starting guess.  Backwards check allows NaN through.
       if (.not. (salp1 .le. 0)) then
-        call norm2(salp1, calp1)
+        call norm2x(salp1, calp1)
       else
         salp1 = 1
         calp1 = 0
@@ -1497,8 +1497,8 @@
       somg1 = salp0 * sbet1
       csig1 = calp1 * cbet1
       comg1 = csig1
-      call norm2(ssig1, csig1)
-* norm2(somg1, comg1); -- don't need to normalize!
+      call norm2x(ssig1, csig1)
+* norm2x(somg1, comg1); -- don't need to normalize!
 
 * Enforce symmetries in the case abs(bet2) = -bet1.  Need to be careful
 * about this case, since this can yield singularities in the Newton
@@ -1529,8 +1529,8 @@
       somg2 = salp0 * sbet2
       csig2 = calp2 * cbet2
       comg2 = csig2
-      call norm2(ssig2, csig2)
-* norm2(somg2, comg2); -- don't need to normalize!
+      call norm2x(ssig2, csig2)
+* norm2x(somg2, comg2); -- don't need to normalize!
 
 * sig12 = sig2 - sig1, limit to [0, pi]
       sig12 = atan2(0d0 + max(0d0, csig1 * ssig2 - ssig1 * csig2),
@@ -1990,12 +1990,13 @@
 * input
       double precision x, y
 
+* With Fortran 2008, this becomes: hypotx = hypot(x, y)
       hypotx = sqrt(x**2 + y**2)
 
       return
       end
 
-      subroutine norm2(x, y)
+      subroutine norm2x(x, y)
 * input/output
       double precision x, y
 
@@ -2027,6 +2028,7 @@
 * input
       double precision x
 
+* With Fortran 2008, this becomes: atanhx = atanh(x)
       double precision log1px, y
       y = abs(x)
       y = log1px(2 * y/(1 - y))/2
@@ -2267,7 +2269,7 @@
 *    meridian      merid
 *    outmask       omask
 *    shortline     shortp
-*    norm          norm2
+*    norm          norm2x
 *    SinCosSeries  TrgSum
 *    xthresh       xthrsh
 *    transit       trnsit

@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 48)
+set (PROJECT_VERSION_MINOR 49)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 17)
-set (LIBVERSION_BUILD 17.1.1)
+set (LIBVERSION_BUILD 17.1.2)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -61,7 +61,8 @@ cmake_minimum_required (VERSION 2.8.4) # This version was released 2011-02-16
 # CMAKE_INSTALL_PREFIX being used when it's ON.
 
 if (WIN32)
-  option (COMMON_INSTALL_PATH "Use a common installation path for packages" OFF)
+  option (COMMON_INSTALL_PATH "Use a common installation path for packages"
+    OFF)
 else ()
   option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
 endif ()
@@ -172,11 +173,21 @@ option (USE_BOOST_FOR_EXAMPLES
 option (APPLE_MULTIPLE_ARCHITECTURES
   "Build multiple architectures for Apple systems" OFF)
 
+# (11) Convert warnings into errors?  Default is OFF.  If the tests
+# directory is present you get this behavior regardless.
+option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+
 set (LIBNAME Geographic)
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of
   # the library is called Geographic_d.
   set (CMAKE_DEBUG_POSTFIX _d)
+endif ()
+
+if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+  set (DEVELOPER ON)
+else ()
+  set (DEVELOPER OFF)
 endif ()
 
 if (NOT MSVC)
@@ -210,20 +221,28 @@ include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
 # Make the compiler more picky.
+include (CheckCXXCompilerFlag)
 if (MSVC)
   string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   # Turn on parallel builds for Visual Studio
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
 else ()
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra")
+  set (FLOAT_CONVERSION_FLAG "-Wfloat-conversion")
+  check_cxx_compiler_flag (${FLOAT_CONVERSION_FLAG} FLOAT_CONVERSION)
+  if (NOT FLOAT_CONVERSION)
+    set (FLOAT_CONVERSION_FLAG)
+  endif ()
+  set (CMAKE_CXX_FLAGS
+    "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
   # g++ 6.0 defaults to -std=gnu++14
   if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
-        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0))
+        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0) OR
+      # but Boost 1.60 quadmath needs c++14 and not gnu++14
+      GEOGRAPHICLIB_PRECISION EQUAL 4)
     # check for C++11 support.  This flag is *not* propagated to clients
     # that use GeographicLib.  However, this is of no consequence.  When
     # the client code is being compiled (and the GeographicLib headers
     # being included), work-alike substitutions are used.
-    include (CheckCXXCompilerFlag)
     # The only "deprecated" flag included here is "0x" to activate C++11
     # with old versions of g++.  We'll add "17" when it's available.
     # Note: C++11 (actually gnu++14) support is turned on by default in
@@ -242,9 +261,23 @@ else ()
     endif ()
   endif ()
 endif ()
+if (DEVELOPER OR CONVERT_WARNINGS_TO_ERRORS)
+  if (MSVC)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+    set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
+    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /WX")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /WX")
+  else ()
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+  endif ()
+endif ()
 
 include (CheckCXXSourceCompiles)
-set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS}")
+if (MSVC)
+  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+else ()
+  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
+endif ()
 # Check whether the C++11 math function: std::expm1, std::atanh,
 # etc. are available.  This flag is *not* propagated to clients that use
 # GeographicLib.  However, this is of no consequence.  When the client
@@ -453,8 +486,8 @@ endif ()
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
   GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj)
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
-set (SCRIPTS
-  geographiclib-get-geoids geographiclib-get-gravity geographiclib-get-magnetic)
+set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
+  geographiclib-get-magnetic)
 
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -479,7 +512,7 @@ if (MSVC AND BUILD_NETGEOGRAPHICLIB)
   endif ()
 endif ()
 add_subdirectory (cmake)
-if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+if (DEVELOPER)
   add_subdirectory (tests)
 endif ()
 

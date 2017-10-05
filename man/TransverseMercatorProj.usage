@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    TransverseMercatorProj --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/1.48/TransverseMercatorProj.1.html\n";
+"    https://geographiclib.sourceforge.io/1.49/TransverseMercatorProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -35,8 +35,8 @@ int usage(int retval, bool brief) {
 "       GeoConvert(1).  For each set of geodetic coordinates, the corresponding\n"
 "       projected easting, x, and northing, y, (meters) are printed on standard\n"
 "       output together with the meridian convergence gamma (degrees) and scale\n"
-"       k.  The meridian convergence is the bearing of the y axis measured\n"
-"       clockwise from true north.\n"
+"       k.  The meridian convergence is the bearing of grid north (the y axis)\n"
+"       measured clockwise from true north.\n"
 "\n"
 "OPTIONS\n"
 "       -s  use the sixth-order Krueger series approximation to the transverse\n"

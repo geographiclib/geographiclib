@@ -1,9 +1,9 @@
 // Example of using the GeographicLib::GeodesicLineExact class
 
 #include <iostream>
+#include <iomanip>
 #include <exception>
 #include <cmath>
-#include <iomanip>
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
 #include <GeographicLib/Constants.hpp>

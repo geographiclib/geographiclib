@@ -18,7 +18,8 @@ package net.sf.geographiclib;
  *   <a href="https://doi.org/10.1007/s00190-012-0578-z">
  *   Algorithms for geodesics</a>,
  *   J. Geodesy <b>87</b>, 43&ndash;55 (2013)
- *   (<a href="https://geographiclib.sourceforge.io/geod-addenda.html">addenda</a>).
+ *   (<a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+ *   addenda</a>).
  * </ul>
  * <p>
  * This class lets you add vertices one at a time to the polygon.  The area
@@ -225,7 +226,8 @@ public class PolygonArea {
       else if (tempsum.Sum() < 0)
         tempsum.Add(+_area0);
     }
-    return new PolygonResult(_num, _perimetersum.Sum(g.s12), 0 + tempsum.Sum());
+    return
+      new PolygonResult(_num, _perimetersum.Sum(g.s12), 0 + tempsum.Sum());
   }
 
   /**

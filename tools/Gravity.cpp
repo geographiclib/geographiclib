@@ -254,9 +254,9 @@ int main(int argc, const char* const argv[]) {
                 g.Disturbance(lat, lon, h, deltax, deltay, deltaz);
               }
               // Convert to mGals
-              *output << Utility::str(deltax * 1e5, prec) << " "
-                      << Utility::str(deltay * 1e5, prec) << " "
-                      << Utility::str(deltaz * 1e5, prec)
+              *output << Utility::str(deltax * 100000, prec) << " "
+                      << Utility::str(deltay * 100000, prec) << " "
+                      << Utility::str(deltaz * 100000, prec)
                       << eol;
             }
             break;
@@ -267,7 +267,7 @@ int main(int argc, const char* const argv[]) {
                 c.SphericalAnomaly(lon, Dg01, xi, eta);
               else
                 g.SphericalAnomaly(lat, lon, h, Dg01, xi, eta);
-              Dg01 *= 1e5;      // Convert to mGals
+              Dg01 *= 100000;      // Convert to mGals
               xi *= 3600;       // Convert to arcsecs
               eta *= 3600;
               *output << Utility::str(Dg01, prec) << " "

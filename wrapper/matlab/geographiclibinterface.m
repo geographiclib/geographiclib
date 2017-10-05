@@ -55,8 +55,8 @@ function geographiclibinterface(incdir, libdir)
     if ispc || ismac
       mex( ['-I' incdir], ['-L' libdir], ['-l' lib], [funs{i} '.cpp'] );
     else
-      mex( ['-I' incdir], ['-L' libdir], ['-l' lib], ['-Wl,-rpath=' libdir], ...
-           [funs{i} '.cpp'] );
+      mex( ['-I' incdir], ['-L' libdir], ['-l' lib], ...
+           ['-Wl,-rpath=' libdir], [funs{i} '.cpp'] );
     end
     fprintf(' done.\n');
   end

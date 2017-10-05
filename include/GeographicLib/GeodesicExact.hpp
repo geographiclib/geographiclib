@@ -139,7 +139,7 @@ namespace GeographicLib {
     // the rest.  This choice avoids double rounding with doubles and higher
     // precision types.  float coefficients will suffer double rounding;
     // however the accuracy is already lousy for floats.
-    static Math::real inline reale(long long hi, long long lo) {
+    static Math::real reale(long long hi, long long lo) {
       using std::ldexp;
       return ldexp(real(hi), 52) + lo;
     }
@@ -557,9 +557,10 @@ namespace GeographicLib {
      * longitude fixed, writing \e lat = &plusmn;(90&deg; &minus; &epsilon;),
      * and taking the limit &epsilon; &rarr; 0+.
      *
-     * The following functions are overloaded versions of GeodesicExact::Inverse
-     * which omit some of the output parameters.  Note, however, that the arc
-     * length is always computed and returned as the function value.
+     * The following functions are overloaded versions of
+     * GeodesicExact::Inverse which omit some of the output parameters.  Note,
+     * however, that the arc length is always computed and returned as the
+     * function value.
      **********************************************************************/
     Math::real Inverse(real lat1, real lon1, real lat2, real lon2,
                        real& s12, real& azi1, real& azi2, real& m12,
@@ -725,8 +726,8 @@ namespace GeographicLib {
      * fixed, writing \e lat1 = &plusmn;(90 &minus; &epsilon;), and taking the
      * limit &epsilon; &rarr; 0+.
      **********************************************************************/
-    GeodesicLineExact Line(real lat1, real lon1, real azi1, unsigned caps = ALL)
-      const;
+    GeodesicLineExact Line(real lat1, real lon1, real azi1,
+                           unsigned caps = ALL) const;
 
     /**
      * Define a GeodesicLineExact in terms of the inverse geodesic problem.
@@ -850,8 +851,8 @@ namespace GeographicLib {
     ///@}
 
     /**
-     * A global instantiation of GeodesicExact with the parameters for the WGS84
-     * ellipsoid.
+     * A global instantiation of GeodesicExact with the parameters for the
+     * WGS84 ellipsoid.
      **********************************************************************/
     static const GeodesicExact& WGS84();
 

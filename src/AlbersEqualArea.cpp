@@ -2,7 +2,7 @@
  * \file AlbersEqualArea.cpp
  * \brief Implementation for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -194,7 +194,8 @@ namespace GeographicLib {
                Math::sq(cxi1/cphi1) * (1 + sphi1) / (1 + sxi1))) ) *
           (1 + _e2 * (sphi1 + sphi2 + sphi1 * sphi2)) /
           (1 +       (sphi1 + sphi2 + sphi1 * sphi2)) +
-          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 : Math::sq(cphi2) / ( 1 + sphi2)) +
+          (scbet22 * (sphi2 <= 0 ? 1 - sphi2 :
+                      Math::sq(cphi2) / ( 1 + sphi2)) +
            scbet12 * (sphi1 <= 0 ? 1 - sphi1 : Math::sq(cphi1) / ( 1 + sphi1)))
           * (_e2 * (1 + sphi1 + sphi2 + _e2 * sphi1 * sphi2)/(es1 * es2)
           +_e2m * DDatanhee(sphi1, sphi2) ) / _qZ ) / den;
@@ -208,7 +209,8 @@ namespace GeographicLib {
         // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qZ + scbet0^2 * sphi0 * sxi0)
         //          = 0
         // Alt:
-        // (scbet0^2 * sphi0) / (1/qZ - scbet0^2 * sphi0 * (1-sxi0)) = s / (1-s)
+        // (scbet0^2 * sphi0) / (1/qZ - scbet0^2 * sphi0 * (1-sxi0))
+        //          = s / (1-s)
         // w(tphi0) = (1-s) * (scbet0^2 * sphi0)
         //             - s  * (1/qZ - scbet0^2 * sphi0 * (1-sxi0))
         //          = (1-s) * (scbet0^2 * sphi0)
@@ -382,8 +384,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::Forward(real lon0, real lat, real lon,
-                                real& x, real& y, real& gamma, real& k)
-    const {
+                                real& x, real& y, real& gamma, real& k) const {
     lon = Math::AngDiff(lon0, lon);
     lat *= _sign;
     real sphi, cphi;
@@ -396,38 +397,37 @@ namespace GeographicLib {
       drho = - _a * dq / (sqrt(_m02 - _n0 * dq) + _nrho0 / _a),
       theta = _k2 * _n0 * lam, stheta = sin(theta), ctheta = cos(theta),
       t = _nrho0 + _n0 * drho;
-    x = t * (_n0 ? stheta / _n0 : _k2 * lam) / _k0;
+    x = t * (_n0 != 0 ? stheta / _n0 : _k2 * lam) / _k0;
     y = (_nrho0 *
-         (_n0 ?
+         (_n0 != 0 ?
           (ctheta < 0 ? 1 - ctheta : Math::sq(stheta)/(1 + ctheta)) / _n0 :
           0)
          - drho * ctheta) / _k0;
-    k = _k0 * (t ? t * hyp(_fm * tphi) / _a : 1);
+    k = _k0 * (t != 0 ? t * hyp(_fm * tphi) / _a : 1);
     y *= _sign;
     gamma = _sign * theta / Math::degree();
   }
 
   void AlbersEqualArea::Reverse(real lon0, real x, real y,
                                 real& lat, real& lon,
-                                real& gamma, real& k)
-    const {
+                                real& gamma, real& k) const {
     y *= _sign;
     real
       nx = _k0 * _n0 * x, ny = _k0 * _n0 * y, y1 =  _nrho0 - ny,
       den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
-      drho = den ? (_k0*x*nx - 2*_k0*y*_nrho0 + _k0*y*ny) / den : 0,
+      drho = den != 0 ? (_k0*x*nx - 2*_k0*y*_nrho0 + _k0*y*ny) / den : 0,
       // dsxia = scxi0 * dsxi
       dsxia = - _scxi0 * (2 * _nrho0 + _n0 * drho) * drho /
               (Math::sq(_a) * _qZ),
       txi = (_txi0 + dsxia) / sqrt(max(1 - dsxia * (2*_txi0 + dsxia), epsx2_)),
       tphi = tphif(txi),
       theta = atan2(nx, y1),
-      lam = _n0 ? theta / (_k2 * _n0) : x / (y1 * _k0);
+      lam = _n0 != 0 ? theta / (_k2 * _n0) : x / (y1 * _k0);
     gamma = _sign * theta / Math::degree();
     lat = Math::atand(_sign * tphi);
     lon = lam / Math::degree();
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
-    k = _k0 * (den ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);
+    k = _k0 * (den != 0 ? (_nrho0 + _n0 * drho) * hyp(_fm * tphi) / _a : 1);
   }
 
   void AlbersEqualArea::SetScale(real lat, real k) {

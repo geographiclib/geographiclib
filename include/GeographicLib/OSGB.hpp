@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -44,8 +44,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT OSGB {
   private:
     typedef Math::real real;
-    static const std::string letters_;
-    static const std::string digits_;
+    static const char* const letters_;
+    static const char* const digits_;
     static const TransverseMercator& OSGBTM();
     enum {
       base_ = 10,
@@ -191,7 +191,7 @@ namespace GeographicLib {
     // result is about 6377563.3960320664406 m
       using std::pow;
       return pow(real(10), real(48401603 - 100000000) / 100000000)
-        * 20923713;
+        * real(20923713);
     }
 
     /**
@@ -203,7 +203,7 @@ namespace GeographicLib {
      * because the OSGB projection is based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening()
-    { return real(20923713 - 20853810) / 20923713; }
+    { return real(20923713 - 20853810) / real(20923713); }
 
     /**
      * @return \e k0 central scale for the OSGB projection (0.9996012717...).

@@ -26,6 +26,10 @@ namespace GeographicLib {
    * This is a straightforward implementation of the equations in Snyder except
    * that Newton's method is used to invert the projection.
    *
+   * This class also returns the meridian convergence \e gamma and scale \e k.
+   * The meridian convergence is the bearing of grid north (the \e y axis)
+   * measured clockwise from true north.
+   *
    * Example of use:
    * \include example-PolarStereographic.cpp
    **********************************************************************/

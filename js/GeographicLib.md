@@ -1,6 +1,6 @@
 ## Geodesic routines from GeographicLib
 
-This documentation applies to version 1.48.
+This documentation applies to version 1.49.
 
 The documentation for other versions is available
 at <tt>https://geographiclib.sourceforge.io/m.nn/js</tt> for versions
@@ -108,6 +108,9 @@ Two examples of this library in use are
     documentation}.
 
 ### Change log
+
+* Version 1.49 (released 2017-10-05)
+  * Use explicit test for nonzero real numbers.
 
 * Version 1.48 (released 2017-04-09)
   * Change default range for longitude and azimuth to
