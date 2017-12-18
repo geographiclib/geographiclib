@@ -61,6 +61,16 @@ set (@PROJECT_NAME@_STATIC_DEFINITIONS @PROJECT_STATIC_DEFINITIONS@)
 include ("${_DIR}/@PROJECT_NAME_LOWER@-targets.cmake")
 include ("${_DIR}/@PROJECT_NAME_LOWER@-namespace-targets.cmake")
 
+# For interoperability with older installations of GeographicLib and
+# with packages which depend on GeographicLib, @PROJECT_NAME@_LIBRARIES
+# etc. still point to the non-namespace variables.  Tentatively plan to
+# transition to namespace variables as follows:
+#
+# * namespace targets were introduced with version 1.47 (2017-02-15)
+# * switch @PROJECT_NAME@_LIBRARIES to point to namespace variable after
+#   2020-02
+# * remove non-namespace variables after 2023-02
+
 unset (_ROOT)
 unset (_DIR)
 

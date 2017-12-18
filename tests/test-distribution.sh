@@ -38,7 +38,7 @@ umask 0022
 #   NEWS
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
-#   doc/GeographicLib.dox.in
+#   doc/GeographicLib.dox.in (3 places)
 #   doc/NETGeographicLib.dox
 
 # Need updating if underlying library changes
@@ -79,13 +79,13 @@ umask 0022
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.49
+VERSION=1.50
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
     DEVELSOURCE=$HOME/geographiclib
     WINDEVELSOURCE=/w/geographiclib
-    WINDOWSBUILD=/u/temp
+    WINDOWSBUILD=/var/tmp
 else
     DEVELSOURCE=/u/geographiclib
     WINDEVELSOURCE=/w/geographiclib
@@ -153,9 +153,9 @@ cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 unset GEOGRAPHICLIB_DATA
 for v in 2017 2015 2013 2012 2010; do
   for a in 64 32; do
-    rm -rf v:/data/scratch/geog-mvn-$v-$a
+    rm -rf d:/data/scratch/geog-mvn-$v-$a
     mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
-      -Dcmake.project.bin.directory=v:/data/scratch/geog-mvn-$v-$a install
+      -Dcmake.project.bin.directory=d:/data/scratch/geog-mvn-$v-$a install
   done
 done
 EOF
@@ -172,9 +172,9 @@ for ver in 10 11 12 14 15; do
 	(
 	    echo "#! /bin/sh -exv"
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo rm -rf v:/data/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
-	    echo 'mkdir -p v:/data/scratch/$b'
-	    echo 'cd v:/data/scratch/$b'
+	    echo rm -rf d:/data/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo 'mkdir -p d:/data/scratch/$b'
+	    echo 'cd d:/data/scratch/$b'
 	    echo 'unset GEOGRAPHICLIB_DATA'
 	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=w:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	    echo cmake --build . --config Debug   --target ALL_BUILD
@@ -190,6 +190,27 @@ for ver in 10 11 12 14 15; do
 		echo cp GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ || true
 	) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
 	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+    done
+done
+
+for ver in 10 11 12 14 15; do
+    for arch in win32 x64; do
+	pkg=vc$ver-$arch
+	gen="Visual Studio $ver"
+	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/legacy/C/BUILD-$pkg
+	(
+	    echo "#! /bin/sh -exv"
+	    echo 'b=geogc-`pwd | sed s%.*/%%`'
+	    echo rm -rf d:/data/scratch/\$b
+	    echo 'mkdir -p d:/data/scratch/$b'
+	    echo 'cd d:/data/scratch/$b'
+	    echo cmake -G \"$gen\" -A $arch -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION/legacy/C
+	    echo cmake --build . --config Debug   --target ALL_BUILD
+	    echo cmake --build . --config Debug   --target RUN_TESTS
+	    echo cmake --build . --config Release --target ALL_BUILD
+	    echo cmake --build . --config Release --target RUN_TESTS
+	) > $WINDOWSBUILD/GeographicLib-$VERSION/legacy/C/BUILD-$pkg/build
+	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/legacy/C/BUILD-$pkg/build
     done
 done
 

@@ -70,11 +70,11 @@ namespace GeographicLib {
    * square root in the interests of "efficiency"; the squared distance does
    * not satisfy the triangle inequality!
    *
-   * This is a "header-only" implementation and, as such, depends in a minimal
-   * way on the rest of GeographicLib (the only dependency is through the use
-   * of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr for
-   * handling run-time and compile-time exceptions).  Therefore, it is easy to
-   * extract this class from the rest of GeographicLib and use it as a
+   * \note This is a "header-only" implementation and, as such, depends in a
+   * minimal way on the rest of GeographicLib (the only dependency is through
+   * the use of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr
+   * for handling compile-time and run-time exceptions).  Therefore, it is easy
+   * to extract this class from the rest of GeographicLib and use it as a
    * stand-alone facility.
    *
    * The \e dist_t type must support numeric_limits queries (specifically:

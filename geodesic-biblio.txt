@@ -1609,6 +1609,10 @@
    Solving Problems of Spheroidal Geodesy]''
    (Nedra, Moscow, 1980), 287 pp.[[BR]]
    http://doi.org/10.5281/zenodo.495726
+ * J. P. Snyder,[[BR]]
+   ''Map projections: a working manual'',
+   Professional Paper 1395 (US Geological Survey, 1987).[[BR]]
+   https://pubs.er.usgs.gov/publication/pp1395
  * R. Bourbon,[[BR]]
    ''Geodesic line on the surface of a spheroid'',
    J.  Navigation '''43'''(1), 132--135 (1990).[[BR]]
@@ -1626,7 +1630,7 @@
  * K. Borre,[[BR]]
    ''Ellipsoidal geometry and conformal mapping'' (Mar. 2001);
    these notes, with some modifications, constitute Chaps. 11 & 12
-   of K. Borre & W. G. Strang, ''Algorithms for Global Positioning''
+   of K. Borre and W. G. Strang, ''Algorithms for Global Positioning''
    (Wellesley-Cambridge Press, 2012) [[BR]]
    http://old.gps.aau.dk/downloads/notes.pdf
  * R. Sinclair,[[BR]]
