@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.49
+\version 1.50
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/C</tt> for versions numbers
@@ -33,10 +33,10 @@ functions are used if they are available.
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.tar.gz">
-  GeographicLib-1.49.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.zip">
-  GeographicLib-1.49.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.tar.gz">
+  GeographicLib-1.50.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.zip">
+  GeographicLib-1.50.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the C library can be found in the directory <tt>legacy/C</tt>.
@@ -190,6 +190,11 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   Geodesics on an ellipsoid</a>.
 
 \section changes-c Change log
+
+ - <a href="https://geographiclib.sourceforge.io/1.50/C">Version 1.50</a>
+   (released 2018-mm-dd)
+   - Workaround bugs in fmod and sin in Visual Studio 10, 11, and 12 and
+     relax delta for GeodSolve59 in geodtest (tagged v1.49.1-c).
 
  - <a href="https://geographiclib.sourceforge.io/1.49/C">Version 1.49</a>
    (released 2017-10-05)

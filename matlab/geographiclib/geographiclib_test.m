@@ -457,7 +457,7 @@ function n = GeodSolve59
   [s12, azi1, azi2] = geoddistance(5, 0.00000000000001, 10, 180);
   n = n + assertEquals(azi1, 0.000000000000035, 1.5e-14);
   n = n + assertEquals(azi2, 179.99999999999996, 1.5e-14);
-  n = n + assertEquals(s12, 18345191.174332713, 2.5e-9);
+  n = n + assertEquals(s12, 18345191.174332713, 5e-9);
 end
 
 function n = GeodSolve61
