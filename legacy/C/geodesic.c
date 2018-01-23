@@ -90,8 +90,12 @@ static void Init() {
     xthresh = 1000 * tol2;
     degree = pi/180;
     {
+    #if defined(NAN)
+      NaN = NAN;
+    #else
       real minus1 = -1;
       NaN = sqrt(minus1);
+    #endif
     }
     init = 1;
   }
