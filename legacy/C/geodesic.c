@@ -89,14 +89,14 @@ static void Init() {
     tolb = tol0 * tol2;
     xthresh = 1000 * tol2;
     degree = pi/180;
-    {
     #if defined(NAN)
-      NaN = NAN;
+    NaN = NAN;
     #else
+    {
       real minus1 = -1;
       NaN = sqrt(minus1);
-    #endif
     }
+    #endif
     init = 1;
   }
 }
