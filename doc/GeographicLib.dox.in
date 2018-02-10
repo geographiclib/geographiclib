@@ -7658,6 +7658,10 @@ git repository for GeographicLib</a>.
    (released 2018-mm-dd)
    - Java implementation: require Java 1.6 or later and so remove
      epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
+   - Fix bug in Rhumb class and
+     <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity which caused
+     incorrect area to be reported if an endpoint is at a pole.  Thanks
+     to Natalia Sabourova for reporting this.
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
