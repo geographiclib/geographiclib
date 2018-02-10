@@ -7656,6 +7656,9 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2018-mm-dd)
+   - Java implementation: require Java 1.6 or later and so remove
+     epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
+   - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
    - TODO: start converting MajorRadius methods to EquatorialRadius.
@@ -7667,12 +7670,19 @@ git repository for GeographicLib</a>.
    - TODO: document development environment for Windows: cmake + VS +
      NSIS.
    - TODO: fix installation path for binary installer.
-   - TODO: simplify STATIC_ASSERT.
    - TODO: fix allowed results for GeodSolve59 test.
    - TODO: fix dotnet CMakeLists.txt CMP0026 to match version in src.
    - TODO: implement Geodesic + TM + PolarStereographic on Jets.
    - TODO: update links to geotrans
    - TODO: update informentation on https://github.com/ngageoint/opensphere-asm
+   - TODO: document treatment of poles in RhumbSolve{,.cgi}.
+   - TODO: why is S12 = {nan,inf} returned with echo 0 0 90 {0,30} |
+     RhumbSolve -i.  The results should be S12 = {0,21050634712282}.
+   - TODO: Fix installation instructions (don't use make with Visual
+     Studio), maybe use less complicated install path (but at least make
+     sure install path is consistent with compiler.
+   - TODO: in example programs, document when additional data files are
+     needed.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
