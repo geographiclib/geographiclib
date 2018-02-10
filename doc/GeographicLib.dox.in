@@ -7662,6 +7662,8 @@ git repository for GeographicLib</a>.
      <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity which caused
      incorrect area to be reported if an endpoint is at a pole.  Thanks
      to Natalia Sabourova for reporting this.
+   - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
+     division by zero" messages from Octave.
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.

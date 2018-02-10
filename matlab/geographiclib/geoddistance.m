@@ -458,7 +458,7 @@ function k = Astroid(x, y)
   T3 = S(fl2) + r3(fl2);
   T3 = T3 + (1 - 2 * (T3 < 0)) .* sqrt(disc(fl2));
   T = cbrtx(T3);
-  u(fl2) = u(fl2) + T + cvmgt(r2(fl2) ./ T, 0, T ~= 0);
+  u(fl2) = u(fl2) + T + r2(fl2) ./ cvmgt(T, inf, T ~= 0);
   ang = atan2(sqrt(-disc(~fl2)), -(S(~fl2) + r3(~fl2)));
   u(~fl2) = u(~fl2) + 2 * r(~fl2) .* cos(ang / 3);
   v = sqrt(u.^2 + q);

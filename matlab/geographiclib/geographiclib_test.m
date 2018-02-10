@@ -53,6 +53,8 @@ function geographiclib_test
   i = mgrs2; if i, n=n+1; fprintf('mgrs2 fail: %d\n', i); end
   i = mgrs3; if i, n=n+1; fprintf('mgrs3 fail: %d\n', i); end
   i = mgrs4; if i, n=n+1; fprintf('mgrs4 fail: %d\n', i); end
+  % check for suppression of "warning: division by zero" in octave
+  [~, ~, ~, ~, ~, ~, ~, s12] = geodreckon(-30, 0, 180, 90, 1);
   assert(n == 0);
 end
 
