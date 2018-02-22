@@ -7673,8 +7673,6 @@ git repository for GeographicLib</a>.
    - TODO: start converting MajorRadius methods to EquatorialRadius.
    - TODO: add GreatEllipse class?
    - TODO: improve code coverage with geodesic tests.
-   - TODO: simpler GEOGRAPHICLIB_STATIC_ASSERT,
-     typedef char GEOGRAPHICLIB_TEMP[(COND) ? 1 : -1]
    - TODO: allow GravityModels to be truncated?
    - TODO: document development environment for Windows: cmake + VS +
      NSIS.
