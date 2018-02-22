@@ -1892,7 +1892,7 @@ void geod_polygon_addpoint(const struct geod_geodesic* g,
 void geod_polygon_addedge(const struct geod_geodesic* g,
                           struct geod_polygon* p,
                           real azi, real s) {
-  if (p->num) {                 /* Do nothing is num is zero */
+  if (p->num) {              /* Do nothing is num is zero */
     real lat, lon, S12 = 0;  /* Initialize S12 to stop Visual Studio warning */
     geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
                    &lat, &lon, 0,

@@ -114,7 +114,7 @@ Forward to \ref install.  Up to \ref contents.
 
 GeographicLib offers a C++ interfaces to a small (but important!) set
 of geographic transformations.  It grew out of a desire to improve on
-the <a href="http://earth-info.nga.mil/GandG/geotrans/">geotrans</a>
+the <a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>
 package for transforming between geographic and MGRS coordinates.  At
 present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local
 cartesian projections, gravity and geomagnetic models, and classes for
@@ -7664,6 +7664,9 @@ git repository for GeographicLib</a>.
      to Natalia Sabourova for reporting this.
    - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
      division by zero" messages from Octave.
+   - Fix bug in PolygonArea::AddEdge.  TODO: Java, JS, C, Python.
+   - TODO: Change templating in PolygonArea so that the AddPoint and
+     AddEdge methods are templated instead of the class itself.
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
@@ -7679,7 +7682,6 @@ git repository for GeographicLib</a>.
    - TODO: fix allowed results for GeodSolve59 test.
    - TODO: fix dotnet CMakeLists.txt CMP0026 to match version in src.
    - TODO: implement Geodesic + TM + PolarStereographic on Jets.
-   - TODO: update links to geotrans
    - TODO: update informentation on https://github.com/ngageoint/opensphere-asm
    - TODO: document treatment of poles in RhumbSolve{,.cgi}.
    - TODO: why is S12 = {nan,inf} returned with echo 0 0 90 {0,30} |
