@@ -7667,7 +7667,10 @@ git repository for GeographicLib</a>.
    - Fix bug in PolygonArea::AddEdge which caused the count of pole
      encirclings to be wrong, sometimes resulting in an incorrect area
      if a polygon vertex had longitude = 0; also fixed in C library.
-     TODO: Java, JS, C, Python.
+     TODO: Java, JS, Python.
+   - Improve code coverage of geodesic algorithms (C++ and C).  TODO:
+     Java, JS, Python, MATLAB, Fortran.
+   - TODO: PolygonArea: fix the range of the area more aggressively.
    - TODO: Change templating in PolygonArea so that the AddPoint and
      AddEdge methods are templated instead of the class itself.
    - TODO: cross ref aux latitude section in rhumb line page.
