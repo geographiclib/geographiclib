@@ -1813,13 +1813,13 @@ int transitdirect(real lon1, real lon2) {
 #if HAVE_C99_MATH
   lon1 = remainder(lon1, (real)(720));
   lon2 = remainder(lon2, (real)(720));
-  return ( (lon2 >= 0 && lon2 < 360 ? 0 : 1) -
-           (lon1 >= 0 && lon1 < 360 ? 0 : 1) );
+  return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
+           (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
 #else
   lon1 = fmod(lon1, (real)(720));
   lon2 = fmod(lon2, (real)(720));
-  return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
-           ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+  return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
+           ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
 #endif
 }
 

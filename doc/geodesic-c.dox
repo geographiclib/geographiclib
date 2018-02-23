@@ -195,6 +195,9 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
    (released 2018-mm-dd)
    - Workaround bugs in fmod and sin in Visual Studio 10, 11, and 12 and
      relax delta for GeodSolve59 in geodtest (tagged v1.49.1-c).
+   - Fix bug in geod_polygon_addedge which caused the count of pole
+     encirclings to be wrong, sometimes resulting in an incorrect area
+     if a polygon vertex had longitude = 0  (tagged v1.49.2-c).
 
  - <a href="https://geographiclib.sourceforge.io/1.49/C">Version 1.49</a>
    (released 2017-10-05)

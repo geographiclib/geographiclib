@@ -7664,7 +7664,10 @@ git repository for GeographicLib</a>.
      to Natalia Sabourova for reporting this.
    - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
      division by zero" messages from Octave.
-   - Fix bug in PolygonArea::AddEdge.  TODO: Java, JS, C, Python.
+   - Fix bug in PolygonArea::AddEdge which caused the count of pole
+     encirclings to be wrong, sometimes resulting in an incorrect area
+     if a polygon vertex had longitude = 0; also fixed in C library.
+     TODO: Java, JS, C, Python.
    - TODO: Change templating in PolygonArea so that the AddPoint and
      AddEdge methods are templated instead of the class itself.
    - TODO: cross ref aux latitude section in rhumb line page.
