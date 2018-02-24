@@ -444,7 +444,7 @@ set_tests_properties (GeodSolve81 PROPERTIES PASS_REGULAR_EXPRESSION
 add_test (NAME GeodSolve82 COMMAND GeodSolve
   -i --input-string "20.001 0 20.001 0" -f)
 set_tests_properties (GeodSolve82 PROPERTIES PASS_REGULAR_EXPRESSION
-  "20\\.0010* 0\\.0* 180\\.0* 20\\.0010* 0\\.0* 180\\.0* 0\\.0* 0\\.0* 0\\.0* 1\\.0* 1\\.0* 0")
+  "20\\.0010* 0\\.0* 180\\.0* 20\\.0010* 0\\.0* 180\\.0* 0\\.0* 0\\.0* 0\\.0* 1\\.0* 1\\.0* -?0")
 add_test (NAME GeodSolve83 COMMAND GeodSolve
   -i --input-string "90 0 90 180" -f)
 set_tests_properties (GeodSolve83 PROPERTIES PASS_REGULAR_EXPRESSION
@@ -550,7 +550,7 @@ set_tests_properties (Planimeter21 Planimeter22 PROPERTIES
 set_tests_properties (Planimeter23 PROPERTIES
   PASS_REGULAR_EXPRESSION " -118301654599714\\.[234]") # -3*r
 set_tests_properties (Planimeter24 PROPERTIES
-  PASS_REGULAR_EXPRESSION " 391763967124374\\.[123]") # -3*r+a0
+  PASS_REGULAR_EXPRESSION " 391763967124374\\.[0123]") # -3*r+a0
 add_test (NAME Planimeter25 COMMAND Planimeter
   --input-string "${_t};${_t};${_t};${_t}")
 add_test (NAME Planimeter26 COMMAND Planimeter
@@ -570,7 +570,7 @@ if (0)
     PASS_REGULAR_EXPRESSION " -157735539466285\\.[678]") # -4*r
 endif ()
 set_tests_properties (Planimeter28 PROPERTIES
-  PASS_REGULAR_EXPRESSION " 352330082257802\\.[789]") # -4*r+a0
+  PASS_REGULAR_EXPRESSION " 352330082257802\\.[5-9]") # -4*r+a0
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND ConicProj
