@@ -783,7 +783,7 @@
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(azi1, 0.000000000000035d0, 1.5d-14);
       r = r + assert(azi2, 179.99999999999996d0, 1.5d-14);
-      r = r + assert(s12, 18345191.174332713d0, 2.5d-9);
+      r = r + assert(s12, 18345191.174332713d0, 5d-9);
       tstg59 = r
       return
       end

@@ -90,8 +90,21 @@ namespace GeographicLib {
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
     static real Dlog(real x, real y) {
+      using std::sqrt;
       real t = x - y;
-      return t != 0 ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
+      // Change
+      //
+      //   atanh(t / (x + y))
+      //
+      // to
+      //
+      //   asinh(t / (2 * sqrt(x*y)))
+      //
+      // to avoid taking atanh(1) when x is large and y is 1.  N.B., this
+      // routine is invoked with positive x and y, so no need to guard against
+      // taking the sqrt of a negative quantity.  This fixes bogus results for
+      // the area being returning when an endpoint is at a pole.
+      return t != 0 ? 2 * Math::asinh(t / (2 * sqrt(x*y))) / t : 1 / x;
     }
     // N.B., x and y are in degrees
     static real Dtan(real x, real y) {

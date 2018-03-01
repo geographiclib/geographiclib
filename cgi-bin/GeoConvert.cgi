@@ -179,8 +179,8 @@ cat <<EOF
         universal polar stereographic (UPS)</a> coordinates, and the
       <a href="https://en.wikipedia.org/wiki/Military_grid_reference_system">
         military grid reference system (MGRS)</a>.
-      Examples of legal geographic locations are (these all refer to the
-      same place, Cape Morris Jesup on the northern tip of Greenland):
+      Examples of legal geographic locations are (these all refer to roughly
+      the same place, Cape Morris Jesup on the northern tip of Greenland):
       <pre>
     Latitude and longitude:       MGRS:
         83.627 -32.664                24XWT783908

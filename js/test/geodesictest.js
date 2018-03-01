@@ -415,7 +415,7 @@ describe("GeographicLib", function() {
           inv = geod.Inverse(5, 0.00000000000001, 10, 180);
       assert.approx(inv.azi1, 0.000000000000035, 1.5e-14);
       assert.approx(inv.azi2, 179.99999999999996, 1.5e-14);
-      assert.approx(inv.s12, 18345191.174332713, 4e-9);
+      assert.approx(inv.s12, 18345191.174332713, 5e-9);
     });
 
     it("GeodSolve61", function() {

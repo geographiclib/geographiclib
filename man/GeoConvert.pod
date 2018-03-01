@@ -189,7 +189,7 @@ file name of "-" stands for standard output.
 I<prec> gives precision of the output with I<prec> = 0 giving 1 m
 precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the
 number of digits after the decimal point for UTM/UPS.  For MGRS, The
-number of digits per coordinate is 5 + I<prec>; <prec> = -6 results in
+number of digits per coordinate is 5 + I<prec>; I<prec> = -6 results in
 just the grid zone.  For decimal degrees, the number of digits after the
 decimal point is 5 + I<prec>.  For DMS (degree, minute, seconds) output,
 the number of digits after the decimal point in the seconds components

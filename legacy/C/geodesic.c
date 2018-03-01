@@ -18,7 +18,7 @@
  *
  * See the comments in geodesic.h for documentation.
  *
- * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2018) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -89,10 +89,14 @@ static void Init() {
     tolb = tol0 * tol2;
     xthresh = 1000 * tol2;
     degree = pi/180;
+    #if defined(NAN)
+    NaN = NAN;
+    #else
     {
       real minus1 = -1;
       NaN = sqrt(minus1);
     }
+    #endif
     init = 1;
   }
 }
@@ -185,8 +189,18 @@ static real AngNormalize(real x) {
   x = remainder(x, (real)(360));
   return x != -180 ? x : 180;
 #else
-  x = fmod(x, (real)(360));
-  return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
+  real y = fmod(x, (real)(360));
+#if defined(_MSC_VER) && _MSC_VER < 1900
+  /*
+    Before version 14 (2015), Visual Studio had problems dealing
+    with -0.0.  Specifically
+      VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+    sincosdx has a similar fix.
+    python 2.7 on Windows 32-bit machines has the same problem.
+  */
+  if (x == 0) y = x;
+#endif
+  return y <= -180 ? y + 360 : (y <= 180 ? y : y - 360);
 #endif
 }
 
@@ -231,6 +245,17 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   r *= degree;
   /* Possibly could call the gnu extension sincos */
   s = sin(r); c = cos(r);
+#if defined(_MSC_VER) && _MSC_VER < 1900
+  /*
+    Before version 14 (2015), Visual Studio had problems dealing
+    with -0.0.  Specifically
+      VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+      VC 12       and 64-bit compile:  sin(-0.0)        -> +0.0
+    AngNormalize has a similar fix.
+    python 2.7 on Windows 32-bit machines has the same problem.
+  */
+  if (x == 0) s = x;
+#endif
   switch ((unsigned)q & 3U) {
   case 0U: *sinx =  s; *cosx =  c; break;
   case 1U: *sinx =  c; *cosx = -s; break;
@@ -1788,13 +1813,13 @@ int transitdirect(real lon1, real lon2) {
 #if HAVE_C99_MATH
   lon1 = remainder(lon1, (real)(720));
   lon2 = remainder(lon2, (real)(720));
-  return ( (lon2 >= 0 && lon2 < 360 ? 0 : 1) -
-           (lon1 >= 0 && lon1 < 360 ? 0 : 1) );
+  return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
+           (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
 #else
   lon1 = fmod(lon1, (real)(720));
   lon2 = fmod(lon2, (real)(720));
-  return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
-           ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+  return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
+           ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
 #endif
 }
 
@@ -1867,7 +1892,7 @@ void geod_polygon_addpoint(const struct geod_geodesic* g,
 void geod_polygon_addedge(const struct geod_geodesic* g,
                           struct geod_polygon* p,
                           real azi, real s) {
-  if (p->num) {                 /* Do nothing is num is zero */
+  if (p->num) {              /* Do nothing is num is zero */
     real lat, lon, S12 = 0;  /* Initialize S12 to stop Visual Studio warning */
     geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
                    &lat, &lon, 0,

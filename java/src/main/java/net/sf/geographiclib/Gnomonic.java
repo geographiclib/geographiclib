@@ -131,7 +131,7 @@ package net.sf.geographiclib;
  */
 
 public class Gnomonic {
-  private static final double eps_ = 0.01 * Math.sqrt(GeoMath.epsilon);
+  private static final double eps_ = 0.01 * Math.sqrt(Math.ulp(1.0));
   private static final int numit_ = 10;
   private Geodesic _earth;
   private double _a, _f;

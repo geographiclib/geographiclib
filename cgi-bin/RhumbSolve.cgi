@@ -298,6 +298,13 @@ cat <<EOF
       </ul>
     </p>
     <p>
+      A point at a pole is treated as a point a tiny distance away from
+      the pole on the given line of longitude.  The longitude becomes
+      indeterminate when a rhumb line passes through a pole, and
+      RhumbSolve reports NaNs for the longitude and the area in this
+      case.
+    </p>
+    <p>
       The ellipsoid is specified by its equatorial radius, <em>a</em>,
       and its flattening, <em>f</em>&nbsp;=
       (<em>a</em>&nbsp;&minus;&nbsp;<em>b</em>)/<em>a</em>,

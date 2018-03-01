@@ -223,8 +223,8 @@ public class Geodesic {
   // Underflow guard.  We require
   //   tiny_ * epsilon() > 0
   //   tiny_ + epsilon() == epsilon()
-  protected static final double tiny_ = Math.sqrt(GeoMath.min);
-  private static final double tol0_ = GeoMath.epsilon;
+  protected static final double tiny_ = Math.sqrt(Double.MIN_NORMAL);
+  private static final double tol0_ = Math.ulp(1.0);
   // Increase multiplier in defn of tol1_ from 100 to 200 to fix inverse case
   // 52.784459512564 0 -52.784459512563990912 179.634407464943777557
   // which otherwise failed for Visual Studio 10 (Release and Debug)
@@ -926,7 +926,7 @@ public class Geodesic {
       double
         // From Lambda12: sin(alp1) * cos(bet1) = sin(alp0)
         salp0 = salp1 * cbet1,
-        calp0 = GeoMath.hypot(calp1, salp1 * sbet1); // calp0 > 0
+        calp0 = Math.hypot(calp1, salp1 * sbet1); // calp0 > 0
       double alp12;
       if (calp0 != 0 && salp0 != 0) {
         double
@@ -1347,7 +1347,7 @@ public class Geodesic {
         // of the way the T is used in definition of u.
         T3 += T3 < 0 ? -Math.sqrt(disc) : Math.sqrt(disc); // T3 = (r * t)^3
         // N.B. cbrt always returns the double root.  cbrt(-8) = -2.
-        double T = GeoMath.cbrt(T3); // T = r * t
+        double T = Math.cbrt(T3); // T = r * t
         // T can be zero; but then r2 / T -> 0.
         u += T + (T != 0 ? r2 / T : 0);
       } else {
@@ -1423,7 +1423,7 @@ public class Geodesic {
       sbet12a - cbet2 * sbet1 * GeoMath.sq(somg12) / (1 - comg12);
 
     double
-      ssig12 = GeoMath.hypot(w.salp1, w.calp1),
+      ssig12 = Math.hypot(w.salp1, w.calp1),
       csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
 
     if (shortline && ssig12 < _etol2) {
@@ -1573,7 +1573,7 @@ public class Geodesic {
     double
       // sin(alp1) * cos(bet1) = sin(alp0)
       salp0 = salp1 * cbet1,
-      calp0 = GeoMath.hypot(calp1, salp1 * sbet1); // calp0 > 0
+      calp0 = Math.hypot(calp1, salp1 * sbet1); // calp0 > 0
 
     double somg1, comg1, somg2, comg2, somg12, comg12;
     // tan(bet1) = tan(sig1) * cos(alp1)

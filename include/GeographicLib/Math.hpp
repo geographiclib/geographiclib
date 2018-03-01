@@ -433,7 +433,7 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range([&minus;180&deg;, 180&deg;].
+     * @return the angle reduced to the range (&minus;180&deg;, 180&deg;].
      *
      * The range of \e x is unrestricted.
      **********************************************************************/

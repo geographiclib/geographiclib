@@ -19,16 +19,6 @@ public class GeoMath {
    * number (equivalent to C++'s {@code numeric_limits<double>::digits}).
    **********************************************************************/
   public static final int digits = 53;
-  /**
-   * Equivalent to C++'s {@code numeric_limits<double>::epsilon()}.  In Java
-   * version 1.5 and later, Math.ulp(1.0) can be used.
-   **********************************************************************/
-  public static final double epsilon = Math.pow(0.5, digits - 1);
-  /**
-   * Equivalent to C++'s {@code numeric_limits<double>::min()}.  In Java
-   * version 1.6 and later, Double.MIN_NORMAL can be used.
-   **********************************************************************/
-  public static final double min = Math.pow(0.5, 1022);
 
   /**
    * Square a number.
@@ -39,49 +29,8 @@ public class GeoMath {
   public static double sq(double x) { return x * x; }
 
   /**
-   * The hypotenuse function avoiding underflow and overflow.  In Java version
-   * 1.5 and later, Math.hypot can be used.
-   * <p>
-   * @param x the first argument.
-   * @param y the second argument.
-   * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
-   **********************************************************************/
-  public static double hypot(double x, double y) {
-    x = Math.abs(x); y = Math.abs(y);
-    double a = Math.max(x, y), b = Math.min(x, y) / (a != 0 ? a : 1);
-    return a * Math.sqrt(1 + b * b);
-    // For an alternative method see
-    // C. Moler and D. Morrision (1983) https://doi.org/10.1147/rd.276.0577
-    // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
-  }
-
-  /**
-   * log(1 + <i>x</i>) accurate near <i>x</i> = 0.  In Java version 1.5 and
-   * later, Math.log1p can be used.
-   * <p>
-   * This is taken from D. Goldberg,
-   * <a href="https://doi.org/10.1145/103162.103163">What every computer
-   * scientist should know about floating-point arithmetic</a> (1991),
-   * Theorem 4.  See also, N. J. Higham, Accuracy and Stability of Numerical
-   * Algorithms, 2nd Edition (SIAM, 2002), Answer to Problem 1.5, p 528.
-   * <p>
-   * @param x the argument.
-   * @return log(1 + <i>x</i>).
-   **********************************************************************/
-  public static double log1p(double x) {
-    double
-      y = 1 + x,
-      z = y - 1;
-    // Here's the explanation for this magic: y = 1 + z, exactly, and z
-    // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
-    // a good approximation to the true log(1 + x)/x.  The multiplication x *
-    // (log(y)/z) introduces little additional error.
-    return z == 0 ? x : x * Math.log(y) / z;
-  }
-
-  /**
    * The inverse hyperbolic tangent function.  This is defined in terms of
-   * GeoMath.log1p(<i>x</i>) in order to maintain accuracy near <i>x</i> = 0.
+   * Math.log1p(<i>x</i>) in order to maintain accuracy near <i>x</i> = 0.
    * In addition, the odd parity of the function is enforced.
    * <p>
    * @param x the argument.
@@ -94,31 +43,15 @@ public class GeoMath {
   }
 
   /**
-   * Copy the sign.  In Java version 1.6 and later, Math.copysign can be used.
+   * Normalize a sine cosine pair.
    * <p>
-   * @param x gives the magitude of the result.
-   * @param y gives the sign of the result.
-   * @return value with the magnitude of <i>x</i> and with the sign of
-   *   <i>y</i>.
+   * @param sinx the sine.
+   * @param cosx the cosine.
+   * @return a Pair of normalized quantities with sinx<sup>2</sup> +
+   *   cosx<sup>2</sup> = 1.
    **********************************************************************/
-  public static double copysign(double x, double y) {
-    return Math.abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
-  }
-
-  /**
-   * The cube root function.  In Java version 1.5 and later, Math.cbrt can be
-   * used.
-   * <p>
-   * @param x the argument.
-   * @return the real cube root of <i>x</i>.
-   **********************************************************************/
-  public static double cbrt(double x) {
-    double y = Math.pow(Math.abs(x), 1/3.0); // Return the real cube root
-    return x < 0 ? -y : y;
-  }
-
   public static Pair norm(double sinx, double cosx) {
-    double r = hypot(sinx, cosx);
+    double r = Math.hypot(sinx, cosx);
     return new Pair(sinx/r, cosx/r);
   }
 

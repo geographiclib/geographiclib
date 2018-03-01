@@ -43,4 +43,4 @@ if (_LIBTYPE STREQUAL "SHARED_LIBRARY")
 endif ()
 
 # Put all the examples into a folder in the IDE
-set_property (TARGET netexamples ${EXAMPLES} PROPERTY FOLDER .NET-examples)
+set_property (TARGET netexamples ${EXAMPLES} PROPERTY FOLDER dotNET-examples)

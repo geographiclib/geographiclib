@@ -350,7 +350,7 @@ class GeodSolveTest(unittest.TestCase):
     inv = Geodesic.WGS84.Inverse(5, 0.00000000000001, 10, 180)
     self.assertAlmostEqual(inv["azi1"], 0.000000000000035, delta = 1.5e-14)
     self.assertAlmostEqual(inv["azi2"], 179.99999999999996, delta = 1.5e-14)
-    self.assertAlmostEqual(inv["s12"], 18345191.174332713, delta = 4e-9)
+    self.assertAlmostEqual(inv["s12"], 18345191.174332713, delta = 5e-9)
 
   def test_GeodSolve61(self):
     # Make sure small negative azimuths are west-going

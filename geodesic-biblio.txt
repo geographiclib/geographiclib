@@ -48,7 +48,7 @@
    Mém. de l'Acad. Roy. des Sciences de Paris,
    406--416 (1733, publ. 1735).[[BR]]
    https://books.google.com/books?id=GOAEAAAAQAAJ&pg=PA406 [[BR]]
-   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3530m/f566.image
+   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3530m/f566
  * A. C. Clairaut,[[BR]]
    ''Suite d'un Mémoire donné en 1733, qui a pour titre: Détermination
    géométrique de la perpendiculaire à la méridienne tracée, &c
@@ -56,7 +56,7 @@
    determination of the perpendicular to the meridian, etc.]'',
    Mém. de l'Acad. Roy. des Sciences de Paris, 83--96 (1739, publ. 1741).[[BR]]
    https://books.google.com/books?id=5OAEAAAAQAAJ&pg=RA1-PA83 [[BR]]
-   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3536g/f183.image
+   alt: http://gallica.bnf.fr/ark:/12148/bpt6k3536g/f183
  * A. C. Clairaut,[[BR]]
    ''Théorie de la Figure de la Terre Tirée des Principes de
    l'Hydrostatique [The Theory of the Figure of the Earth Drawn from
@@ -326,7 +326,8 @@
    rélatifs à la rectification d'un arc de méridien [A new way to shorten
    the rectification of a meridian arc]'',
    Comptes Rendus '''13''', 53--55 (1841).[[BR]]
-   https://books.google.com/books?id=XWpGAQAAMAAJ&pg=PA53
+   https://books.google.com/books?id=XWpGAQAAMAAJ&pg=PA53 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k29723/f55
  * J. J. Littrow,[[BR]]
    ''Theoretische und practishe Astronomie
    [Theoretical and Practical Astronomy]'',
@@ -545,7 +546,8 @@
    [[BR]]Letter to Bessel, Dec. 28, 1838:
    https://books.google.com/books?id=_09tAAAAMAAJ&pg=PA385 (PDF jacobi-V7.pdf)
    [[BR]]Announcement: Comptes Rendus '''8''', 284 (1839).[[BR]]
-   https://books.google.com/books?id=J6sbAAAAMAAJ&pg=PA284
+   https://books.google.com/books?id=J6sbAAAAMAAJ&pg=PA284 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k2967c/f290
  * C. G. J. Jacobi,[[BR]]
    ''Bestimmungen der geodätischen Linie auf einem dreiaxiges Ellipsoid
    [Determining geodesics on a triaxial ellipsoid]'',
@@ -652,7 +654,8 @@
    ''Géométrie, Communication verbale de M. Liouville
    [Geometry, Verbal communication of J. Liouville]'',
    Comptes Rendus '''21''', 1410--1411 (1845).[[BR]]
-   https://books.google.com/books?id=vnFFAAAAcAAJ&pg=PA1410
+   https://books.google.com/books?id=vnFFAAAAcAAJ&pg=PA1410 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k64491361/f20.item
  * M. Roberts,[[BR]]
    ''Sur quelques propriétés des lignes géodésiques et des lignes de
    courbure de l'ellipsoïde [Properties of geodesics and lines of
@@ -712,17 +715,20 @@
    ''Sur quelques propriétés des lignes géodésiques
    [Some properties for geodesic lines]'',
    Comptes Rendus '''40''', 1311--1313 (1855).[[BR]]
-   https://books.google.com/books?id=v28kAQAAIAAJ&pg=PA1311
+   https://books.google.com/books?id=v28kAQAAIAAJ&pg=PA1311 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k29976/f1308
  * P. O. Bonnet,[[BR]]
    [Note sur la courbure géodésique [A note on geodesic curvature]'',
    Comptes Rendus '''42''', 1137--1139 (1856).[[BR]]
-   https://books.google.com/books?id=wQBBAQAAMAAJ&pg=PA1137
+   https://books.google.com/books?id=wQBBAQAAMAAJ&pg=PA1137 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k2999t/f1135
  * P. O. Bonnet,[[BR]]
    ''Démonstration du théorème de Gauss relatif aux petits triangles
    géodésiques situés sur une surface courbe quelconque [Demomstration of
    Gauss' theorem on small geodesic triangles for arbitrary surfaces]'',
    Comptes Rendus '''58''', 183--188 (1864).[[BR]]
-   https://books.google.com/books?id=ibUxAQAAMAAJ&pg=PA183
+   https://books.google.com/books?id=ibUxAQAAMAAJ&pg=PA183 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k3015d/f185
  * J. Bertrand,[[BR]]
    ''Démonstration géométrique de quelques théorèmes relatifs à la
    théorie des surfaces [Geometric proof of some theorems for surfaces]'',
@@ -770,7 +776,8 @@
    ''Sur la rectification des angles dans le calcul des triangles géodésiques
    [Rectifying angles in the solution of geodesic triangles]'',
    Comptes Rendus '''31''', 409--418 (1850).[[BR]]
-   https://books.google.com/books?id=7B1IAQAAMAAJ&pg=PA409
+   https://books.google.com/books?id=7B1IAQAAMAAJ&pg=PA409 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k29887/f409
  * A. R. Clarke,[[BR]]
    ''On the measurement of azimuths on a spheroid'',
    Mem. Roy. Astron. Soc. '''20''', 131--136 (1851).[[BR]]
@@ -779,7 +786,7 @@
    ''On the course of geodetic lines on the earth's surface'',
    Phil. Mag. '''39''' (4th ser.), 352--363 (1870).[[BR]]
    https://books.google.com/books?id=i2swAAAAIAAJ&pg=PA352 [[BR]]
-   broken DOI: https://doi.org/10.1080/14786447008640325
+   https://doi.org/10.1080/14786447008640325
  * A. R. Clarke,[[BR]]
    ''Geodesy'' (Clarendon Press, Oxford, 1880), Chap. 6.[[BR]]
    https://books.google.com/books?id=lfIoAAAAYAAJ&pg=PA124 (PDF clarke80.pdf)
@@ -859,7 +866,8 @@
    ellipsoidal geodesics and its use to determine the properties common to
    ellipsoidal lines and the corresponding plane curves]'',
    Comptes Rendus '''50''', 484--489 (1860).[[BR]]
-   https://books.google.com/books?id=lh5IAQAAMAAJ&pg=PA484
+   https://books.google.com/books?id=lh5IAQAAMAAJ&pg=PA484 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k3007r/f488
  * K. T. W. Weierstrass,[[BR]]
    ''Über die geodätischen Linien auf dem dreiaxigen Ellipsoid
    [Geodesic lines on a triaxial ellipsoid]'',
@@ -883,7 +891,8 @@
    ''Mémoire sur la flexion des lignes géodésiques tracées sur une même
    surface quelconque [The bending of geodesics on an arbitrary surface]'',
    Comptes Rendus '''66''', 342--344 (1868).[[BR]]
-   https://books.google.com/books?id=cpVDAQAAIAAJ&pg=PA342
+   https://books.google.com/books?id=cpVDAQAAIAAJ&pg=PA342 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k30232/f344
  * P. A. Gordan,[[BR]]
    ''De linea geodetica [On geodesic lines]''
    (Berolini, 1862).[[BR]]
@@ -975,7 +984,8 @@
    [A limit on the errors applying the theory of geodesic lines to
    triangulation]'',
    Comptes Rendus '''62''', 850--851 (1866).[[BR]]
-   https://books.google.com/books?id=HrVotkK9Wq4C&pg=PA850
+   https://books.google.com/books?id=HrVotkK9Wq4C&pg=PA850 [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k3019n/f850
  * E. B. Christoffel,[[BR]]
    ''Allgemeine Theorie der geodätischen Dreiecke
    [General theory of geodesic triangles]'',
@@ -996,7 +1006,7 @@
    Vol. 7 (Cambridge Univ. Press, 1894), paper 422, pp. 15--25.[[BR]]
    https://books.google.com/books?id=Zk0wAAAAIAAJ&pg=PA329 [[BR]]
    https://books.google.com/books?id=4XGIOoCMYYAC&pg=PA15 (PDF cayley-V7.pdf)
-   [[BR]]broken DOI: https://doi.org/10.1080/14786447008640411
+   [[BR]] https://doi.org/10.1080/14786447008640411
  * A. Cayley,[[BR]]
    ''Note on the geodesic lines on an ellipsoid'',
    Phil. Mag. '''41''' (4th ser.), 534--535 (1871),
@@ -1004,7 +1014,7 @@
    Vol. 7 (Cambridge Univ. Press, 1894), paper 425, pp. 34--35.[[BR]]
    https://books.google.com/books?id=oHUvAQAAIAAJ&pg=PA534 [[BR]]
    https://books.google.com/books?id=4XGIOoCMYYAC&pg=PA34 (PDF cayley-V7.pdf)
-   [[BR]]broken DOI: https://doi.org/10.1080/14786447108640519
+   [[BR]] https://doi.org/10.1080/14786447108640519
  * A. Cayley,[[BR]]
    ''On the geodesic lines on an ellipsoid'',
    Mem. Roy. Astron. Soc. '''39''', 31--53 & plate 2 (1872),
@@ -1042,7 +1052,8 @@
    ellipsoid]'',
    Comptes Rendus '''76''', 410--413 (1873).[[BR]]
    https://books.google.com/books?id=lqJDAQAAIAAJ&pg=PA410
-   (PDF comprendus-V76.pdf)
+   (PDF comprendus-V76.pdf) [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k3033b/f410
  * H. M. Jeffery,[[BR]]
    ''On the duals of geodesics and lines of curvature on an ellipsoid and
    on its pedal surfaces'',
@@ -1053,7 +1064,8 @@
    geodesic coordinates]'',
    Comptes Rendus '''80''', 36--40 (1875).[[BR]]
    https://books.google.com/books?id=vE9EAQAAIAAJ&pg=PA36
-   (PDF comprendus-V80.pdf)
+   (PDF comprendus-V80.pdf) [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k3037k/f36
  * F. R. Helmert,[[BR]]
    ''Einfache Ableitung Gaussischen Formeln für die Auflösung einer
    Hauptaufgabe der sphärischen Geodäsie [A simple derivation of the
@@ -1101,7 +1113,8 @@
    [On the rational integrals of geodesic lines]'',
    Comptes Rendus '''85''', 1065--1068 (1877).[[BR]]
    https://books.google.com/books?id=H9JEAQAAMAAJ&pg=PA1065
-   (PDF comprendus-V85.pdf)
+   (PDF comprendus-V85.pdf) [[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k30429/f1060
  * K. Schwering,[[BR]]
    ''Neue geometrische Darstellung der geodätischen Linie auf dem
    Rotationsellipsoid [New geometric representation of the geodesic on an
@@ -1512,6 +1525,12 @@
    ''Latitude developments connected with geodesy and cartography'',
    Spec. Pub. 67 (US Coast and Geodetic Survey, 1921), Appendix.[[BR]]
    https://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf
+ * L. A. Lyusternik and L. G. Schnirelmann,[[BR]]
+   ''Sur le problème de trois géodésiques fermées sur les surfaces de
+   genre 0 [The problem of three closed geodesics on surfaces of genus
+   0]'',
+   Comptes Rendus '''189''', 269--271 (1929).[[BR]]
+   http://gallica.bnf.fr/ark:/12148/bpt6k3142j/f269
  * L. E. Ward,[[BR]]
    ''Geodesics and plane arcs on an oblate spheroid'',
    American Math. Monthly '''50'''(7), 423--429 (1943).[[BR]]
@@ -1609,6 +1628,10 @@
    Solving Problems of Spheroidal Geodesy]''
    (Nedra, Moscow, 1980), 287 pp.[[BR]]
    http://doi.org/10.5281/zenodo.495726
+ * J. P. Snyder,[[BR]]
+   ''Map projections: a working manual'',
+   Professional Paper 1395 (US Geological Survey, 1987).[[BR]]
+   https://pubs.er.usgs.gov/publication/pp1395
  * R. Bourbon,[[BR]]
    ''Geodesic line on the surface of a spheroid'',
    J.  Navigation '''43'''(1), 132--135 (1990).[[BR]]
@@ -1626,7 +1649,7 @@
  * K. Borre,[[BR]]
    ''Ellipsoidal geometry and conformal mapping'' (Mar. 2001);
    these notes, with some modifications, constitute Chaps. 11 & 12
-   of K. Borre & W. G. Strang, ''Algorithms for Global Positioning''
+   of K. Borre and W. G. Strang, ''Algorithms for Global Positioning''
    (Wellesley-Cambridge Press, 2012) [[BR]]
    http://old.gps.aau.dk/downloads/notes.pdf
  * R. Sinclair,[[BR]]
@@ -1711,3 +1734,8 @@
    https://doi.org/10.1017/S0373463314000228 [[BR]]
    https://doi.org/10.1017/S0373463314000745 [[BR]]
    https://doi.org/10.1017/S0373463314000733
+ * C. Jekeli,[[BR]]
+   ''Geometric reference systems in geodesy'',
+   Division. of Geodetic Science,
+   Ohio State Univ. (2016), Chap. 2.[[BR]]
+   https://kb.osu.edu/dspace/handle/1811/77986

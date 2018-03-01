@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2017-10-05
+\date 2018-mm-dd
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2017-mm-dd),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2018-mm-dd),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -114,7 +114,7 @@ Forward to \ref install.  Up to \ref contents.
 
 GeographicLib offers a C++ interfaces to a small (but important!) set
 of geographic transformations.  It grew out of a desire to improve on
-the <a href="http://earth-info.nga.mil/GandG/geotrans/">geotrans</a>
+the <a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>
 package for transforming between geographic and MGRS coordinates.  At
 present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local
 cartesian projections, gravity and geomagnetic models, and classes for
@@ -1786,10 +1786,10 @@ The Geoid class only handles world-wide geoid models.  The pgm provides
 geoid height postings on grid of points with uniform spacing in latitude
 (row) and longitude (column).  If the dimensions of the pgm file are
 \e h &times; \e w, then latitude (resp. longitude) spacing is
-180&deg;/(\e h &minus; 1) (resp. 360&deg;/\e w), with the (0,0) pixel
-given the value at &phi; = 90&deg;, &lambda; = 0&deg;.  Models covering a
-restricted area will need to be "inserted" into a world-wide grid before
-being accessible to the Geoid class.
+&minus;180&deg;/(\e h &minus; 1) (resp. 360&deg;/\e w), with the (0,0)
+pixel given the value at &phi; = 90&deg;, &lambda; = 0&deg;.  Models
+covering a restricted area will need to be "inserted" into a world-wide
+grid before being accessible to the Geoid class.
 
 \section geoidinterp Interpolating the geoid data
 
@@ -7653,6 +7653,48 @@ available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
+
+ - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
+   (released 2018-mm-dd)
+   - Java implementation: require Java 1.6 or later and so remove
+     epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
+   - Fix bug in Rhumb class and
+     <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity which caused
+     incorrect area to be reported if an endpoint is at a pole.  Thanks
+     to Natalia Sabourova for reporting this.
+   - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
+     division by zero" messages from Octave.
+   - Fix bug in PolygonArea::AddEdge which caused the count of pole
+     encirclings to be wrong, sometimes resulting in an incorrect area
+     if a polygon vertex had longitude = 0; also fixed in C library.
+     TODO: Java, JS, Python.
+   - Improve code coverage of geodesic algorithms (C++ and C).  TODO:
+     Java, JS, Python, MATLAB, Fortran.
+   - TODO: PolygonArea: fix the range of the area more aggressively.
+   - TODO: Change templating in PolygonArea so that the AddPoint and
+     AddEdge methods are templated instead of the class itself.
+   - TODO: cross ref aux latitude section in rhumb line page.
+   - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
+     ellipsoids.
+   - TODO: start converting MajorRadius methods to EquatorialRadius.
+   - TODO: add GreatEllipse class?
+   - TODO: improve code coverage with geodesic tests.
+   - TODO: allow GravityModels to be truncated?
+   - TODO: document development environment for Windows: cmake + VS +
+     NSIS.
+   - TODO: fix installation path for binary installer.
+   - TODO: fix allowed results for GeodSolve59 test.
+   - TODO: fix dotnet CMakeLists.txt CMP0026 to match version in src.
+   - TODO: implement Geodesic + TM + PolarStereographic on Jets.
+   - TODO: update informentation on https://github.com/ngageoint/opensphere-asm
+   - TODO: document treatment of poles in RhumbSolve{,.cgi}.
+   - TODO: why is S12 = {nan,inf} returned with echo 0 0 90 {0,30} |
+     RhumbSolve -i.  The results should be S12 = {0,21050634712282}.
+   - TODO: Fix installation instructions (don't use make with Visual
+     Studio), maybe use less complicated install path (but at least make
+     sure install path is consistent with compiler.
+   - TODO: in example programs, document when additional data files are
+     needed.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

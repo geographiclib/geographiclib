@@ -430,6 +430,26 @@ set_tests_properties (GeodSolve78 GeodSolve79
   PROPERTIES PASS_REGULAR_EXPRESSION
   "45\\.82468716758 134\\.22776532670 19974354\\.765767")
 
+# Some tests to add code coverage: computing scale in special cases
+add_test (NAME GeodSolve80 COMMAND GeodSolve
+  -i --input-string "0 0 0 90" -f)
+set_tests_properties (GeodSolve80 PROPERTIES PASS_REGULAR_EXPRESSION
+  " -0\\.0052842753 -0\\.0052842753 ")
+add_test (NAME GeodSolve81 COMMAND GeodSolve
+  -i --input-string "0 0 0.000001 0.000001" -f)
+set_tests_properties (GeodSolve81 PROPERTIES PASS_REGULAR_EXPRESSION
+  " 0\\.157 1\\.0000000000 1\\.0000000000 0")
+
+# Tests to add code coverage: zero length geodesics
+add_test (NAME GeodSolve82 COMMAND GeodSolve
+  -i --input-string "20.001 0 20.001 0" -f)
+set_tests_properties (GeodSolve82 PROPERTIES PASS_REGULAR_EXPRESSION
+  "20\\.0010* 0\\.0* 180\\.0* 20\\.0010* 0\\.0* 180\\.0* 0\\.0* 0\\.0* 0\\.0* 1\\.0* 1\\.0* -?0")
+add_test (NAME GeodSolve83 COMMAND GeodSolve
+  -i --input-string "90 0 90 180" -f)
+set_tests_properties (GeodSolve83 PROPERTIES PASS_REGULAR_EXPRESSION
+  "90\\.0* 0\\.0* 0\\.0* 90\\.0* 180\\.0* 180\\.0* 0\\.0* 0\\.0* 0\\.0* 1\\.0* 1\\.0* 127516405431022")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
@@ -487,6 +507,70 @@ add_test (NAME Planimeter14 COMMAND Planimeter
   --input-string "-360 89;-240 89;-120 89;0 89;120 89;240 89" -w)
 set_tests_properties (Planimeter13 Planimeter14
   PROPERTIES PASS_REGULAR_EXPRESSION "6 1160741\\..* 32415230256\\.")
+
+# Some tests to add code coverage: all combinations of -r and -s
+add_test (NAME Planimeter15 COMMAND Planimeter
+  --input-string "2 1;1 2;3 3")
+add_test (NAME Planimeter16 COMMAND Planimeter
+  --input-string "2 1;1 2;3 3" -s)
+add_test (NAME Planimeter17 COMMAND Planimeter
+  --input-string "2 1;1 2;3 3" -r)
+add_test (NAME Planimeter18 COMMAND Planimeter
+  --input-string "2 1;1 2;3 3" -r -s)
+set_tests_properties (Planimeter15 Planimeter16
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  " 18454562325\\.5")		# more digits 18454562325.45119
+set_tests_properties (Planimeter17 PROPERTIES PASS_REGULAR_EXPRESSION
+  " -18454562325\\.5")
+set_tests_properties (Planimeter18 PROPERTIES PASS_REGULAR_EXPRESSION
+  " 510047167161763\\.[01]")  # 510065621724088.5093-18454562325.45119
+
+# Some test to add code coverage: degerate polygons
+add_test (NAME Planimeter19 COMMAND Planimeter --input-string "1 1")
+set_tests_properties (Planimeter19 PROPERTIES PASS_REGULAR_EXPRESSION
+  "1 0\\.0* 0\\.0")
+add_test (NAME Planimeter20 COMMAND Planimeter --input-string "1 1" -l)
+set_tests_properties (Planimeter20 PROPERTIES PASS_REGULAR_EXPRESSION
+  "1 0\\.0*")
+
+# Some test to add code coverage: multiple circlings of pole
+set (_t "45 60;45 180;45 -60")
+# r =   39433884866571.4277 = Area for one circuit
+# a0 = 510065621724088.5093 = Ellipsoid area
+add_test (NAME Planimeter21 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t}")
+add_test (NAME Planimeter22 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t}" -s)
+add_test (NAME Planimeter23 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t}" -r)
+add_test (NAME Planimeter24 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t}" -r -s)
+set_tests_properties (Planimeter21 Planimeter22 PROPERTIES
+  PASS_REGULAR_EXPRESSION " 118301654599714\\.[234]") # 3*r
+set_tests_properties (Planimeter23 PROPERTIES
+  PASS_REGULAR_EXPRESSION " -118301654599714\\.[234]") # -3*r
+set_tests_properties (Planimeter24 PROPERTIES
+  PASS_REGULAR_EXPRESSION " 391763967124374\\.[0123]") # -3*r+a0
+add_test (NAME Planimeter25 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t};${_t}")
+add_test (NAME Planimeter26 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t};${_t}" -s)
+add_test (NAME Planimeter27 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t};${_t}" -r)
+add_test (NAME Planimeter28 COMMAND Planimeter
+  --input-string "${_t};${_t};${_t};${_t}" -r -s)
+if (0)
+  # BUG (found 2018-02-32)! Currently (verion 1.49), these return 4*r-a0
+  # and -4*r+a0, resp.  Actually, the documentation says that only
+  # simple polygons are allowed.  So it's really just a misfeature.
+  # (But it should get fixed anyway.)
+  set_tests_properties (Planimeter25 Planimeter26 PROPERTIES
+    PASS_REGULAR_EXPRESSION " 157735539466285\\.[678]") # 4*r
+  set_tests_properties (Planimeter27 PROPERTIES
+    PASS_REGULAR_EXPRESSION " -157735539466285\\.[678]") # -4*r
+endif ()
+set_tests_properties (Planimeter28 PROPERTIES
+  PASS_REGULAR_EXPRESSION " 352330082257802\\.[5-9]") # -4*r+a0
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND ConicProj
@@ -574,12 +658,28 @@ set_tests_properties (TransverseMercatorProj6 TransverseMercatorProj7
 
 # Test fix to bad handling of pole by RhumbSolve -i
 # Reported 2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>
+# Supplement with tests of fix to bad areas (nan or inf) for this case
+# Reported 2018-02-08 by Natalia Sabourova <natalia.sabourova@ltu.se>
 add_test (NAME RhumbSolve0 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0")
 add_test (NAME RhumbSolve1 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0" -s)
-set_tests_properties (RhumbSolve0 RhumbSolve1
-  PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 ")
+# Treatment of the pole depends on the precision, so only check the area
+# for doubles
+if (GEOGRAPHICLIB_PRECISION EQUAL 2)
+  set_tests_properties (RhumbSolve0 RhumbSolve1
+    PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 0[\r\n]")
+  add_test (NAME RhumbSolve2 COMMAND RhumbSolve
+    -p 3 -i --input-string "0 0 90 30")
+  add_test (NAME RhumbSolve3 COMMAND RhumbSolve
+    -p 3 -i --input-string "0 0 90 30" -s)
+  set_tests_properties (RhumbSolve2 RhumbSolve3
+    PROPERTIES PASS_REGULAR_EXPRESSION
+    "^0.41222947 10002224.609 21050634712282[\r\n]")
+else ()
+  set_tests_properties (RhumbSolve0 RhumbSolve1
+    PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 ")
+endif ()
 
 # Test fix to CassiniSoldner::Forward bug found 2015-06-20
 add_test (NAME GeodesicProj0 COMMAND GeodesicProj
