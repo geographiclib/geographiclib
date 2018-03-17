@@ -278,7 +278,11 @@ endif ()
 # (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
 # x = -0.0).
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fp-model precise")
+  if (MSVC)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:precise")
+  else ()
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprotect-parens -fsigned-zeros")
+  endif ()
 endif ()
 
 include (CheckCXXSourceCompiles)
