@@ -167,7 +167,7 @@ namespace GeographicLib {
      * @param[in] phi the geographic latitude (degrees).
      * @return &beta; the parametric latitude (degrees).
      *
-     * The geographic latitude, &phi;, is the angle beween the equatorial
+     * The geographic latitude, &phi;, is the angle between the equatorial
      * plane and a vector normal to the surface of the ellipsoid.
      *
      * The parametric latitude (also called the reduced latitude), &beta;,
@@ -199,7 +199,7 @@ namespace GeographicLib {
      * @param[in] phi the geographic latitude (degrees).
      * @return &theta; the geocentric latitude (degrees).
      *
-     * The geocentric latitude, &theta;, is the angle beween the equatorial
+     * The geocentric latitude, &theta;, is the angle between the equatorial
      * plane and a line between the center of the ellipsoid and a point on the
      * ellipsoid.  For a sphere &theta; = &phi;.
      *

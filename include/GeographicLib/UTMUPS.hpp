@@ -367,7 +367,7 @@ namespace GeographicLib {
      * @param[out] northp hemisphere (true means north, false means south).
      *
      * EPSG (European Petroleum Survery Group) codes are a way to refer to many
-     * different projections.  DecodeEPSG decodes those refering to UTM or UPS
+     * different projections.  DecodeEPSG decodes those referring to UTM or UPS
      * projections for the WGS84 ellipsoid.  If the code does not refer to one
      * of these projections, \e zone is set to UTMUPS::INVALID.  See
      * http://spatialreference.org/ref/epsg/

@@ -32,7 +32,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   This extends the series given by Krueger (1912) to sixth order in the
 %   flattening.  This is a substantially better series than that used by
 %   the MATLAB mapping toolbox.  In particular the errors in the projection
-%   are less than 5 nanometers withing 3900 km of the central meridian (and
+%   are less than 5 nanometers within 3900 km of the central meridian (and
 %   less than 1 mm within 7600 km of the central meridian).  The mapping
 %   can be continued accurately over the poles to the opposite meridian.
 %
