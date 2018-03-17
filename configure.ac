@@ -64,7 +64,7 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],
 # needed to stop the compiler from ignoring parentheses in expressions
 # like (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
 # x = -0.0).
-AX_CHECK_COMPILE_FLAG([-fprotect-parens -fsigned-zeros],
+AX_CHECK_COMPILE_FLAG([-Werror -fprotect-parens -fsigned-zeros],
         [CXXFLAGS="$CXXFLAGS -fprotect-parens -fsigned-zeros"])
 # Check for C++11 math functions
 AC_MSG_CHECKING([for C++11 math functions])

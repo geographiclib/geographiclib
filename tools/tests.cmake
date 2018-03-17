@@ -521,11 +521,11 @@ add_test (NAME Planimeter18 COMMAND Planimeter
   --input-string "2 1;1 2;3 3" -r -s)
 set_tests_properties (Planimeter15 Planimeter16
   PROPERTIES PASS_REGULAR_EXPRESSION
-  " 18454562325\\.5")		# more digits 18454562325.45119
+  " 18454562325\\.5")           # more digits 18454562325.45119
 set_tests_properties (Planimeter17 PROPERTIES PASS_REGULAR_EXPRESSION
   " -18454562325\\.5")
 set_tests_properties (Planimeter18 PROPERTIES PASS_REGULAR_EXPRESSION
-  " 510047167161763\\.[01]")  # 510065621724088.5093-18454562325.45119
+  " 510047167161763\\.[01]")    # 510065621724088.5093-18454562325.45119
 
 # Some test to add code coverage: degerate polygons
 add_test (NAME Planimeter19 COMMAND Planimeter --input-string "1 1")

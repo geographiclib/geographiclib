@@ -7699,8 +7699,8 @@ git repository for GeographicLib</a>.
    - Turn off optimizations for the Intel compiler with causes incorrect
      code to be generated.  Tested only for C and C++ on Linux.  The
      changes should also work for Fortran and Windows.  TODO: add build
-     to test-distribution.sh. TODO: Add check of sign +0.0 in
-     GeodSolve73 to all languages.
+     to test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...). TODO:
+     Add check of sign +0.0 in GeodSolve73 to all languages.
      Cf. https://github.com/OSGeo/proj.4/issues/826
     - C fixes (also make changes to C++ library)
      - check nan->int conversions. TODO: repeat for other languages.
