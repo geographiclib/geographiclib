@@ -7707,9 +7707,9 @@ git repository for GeographicLib</a>.
        Cf. https://github.com/OSGeo/proj.4/issues/843
      - TODO: Michael Hagerty optimization issue in sincosdx
        https://github.com/OSGeo/proj.4/issues/831
-     - TODO: added parens from
+     - added parens from
        https://github.com/OSGeo/proj.4/pull/860/files#diff-2
-     - TODO: initialize various variables to please CLang Static Analyzer
+     - initialize various variables to please CLang Static Analyzer
        https://github.com/OSGeo/proj.4/commit/0692fc1
    - TODO: Reference
      https://github.com/megaserg/geographiclib-cython-bindings in
