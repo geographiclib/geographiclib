@@ -18,6 +18,14 @@ if (CONVERT_WARNINGS_TO_ERRORS)
   endif ()
 endif ()
 
+# Tell Intel compiler to do arithmetic accurately.  This is needed to
+# stop the compiler from ignoring parentheses in expressions like
+# (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
+# x = -0.0).
+if (CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
+  set (CMAKE_Fortan_FLAGS "${CMAKE_Fortran_FLAGS} -fp-model precise")
+endif ()
+
 foreach (TOOL ${TOOLS})
   add_executable (${TOOL} ${TOOL}.for geodesic.for geodesic.inc)
 endforeach ()

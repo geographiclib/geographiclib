@@ -60,6 +60,12 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],
         [CXXFLAGS="$CXXFLAGS -std=c++11"],
         [AX_CHECK_COMPILE_FLAG([-std=c++0x],
                 [CXXFLAGS="$CXXFLAGS -std=c++0x"])])
+# Check flag for accurate arithmetic with Intel compiler.  This is
+# needed to stop the compiler from ignoring parentheses in expressions
+# like (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
+# x = -0.0).
+AX_CHECK_COMPILE_FLAG([-fp-model precise],
+        [CXXFLAGS="$CXXFLAGS -fp-model precise"])
 # Check for C++11 math functions
 AC_MSG_CHECKING([for C++11 math functions])
 AC_LINK_IFELSE([AC_LANG_PROGRAM(

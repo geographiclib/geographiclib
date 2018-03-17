@@ -244,9 +244,10 @@ else ()
     # the client code is being compiled (and the GeographicLib headers
     # being included), work-alike substitutions are used.
     # The only "deprecated" flag included here is "0x" to activate C++11
-    # with old versions of g++.  We'll add "17" when it's available.
+    # with old versions of g++.
     # Note: C++11 (actually gnu++14) support is turned on by default in
     # g++ 6.1 and later.
+    # Don't include 17 for Intel.
     foreach (_F 14 11 0x)
       set (CXX11_FLAG "-std=c++${_F}")
       set (_T CXX11TEST${_F})
@@ -270,6 +271,14 @@ if (DEVELOPER OR CONVERT_WARNINGS_TO_ERRORS)
   else ()
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif ()
+endif ()
+
+# Tell Intel compiler to do arithmetic accurately.  This is needed to
+# stop the compiler from ignoring parentheses in expressions like
+# (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
+# x = -0.0).
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fp-model precise")
 endif ()
 
 include (CheckCXXSourceCompiles)
@@ -325,7 +334,7 @@ if (USE_BOOST_FOR_EXAMPLES)
   # quad precision numbers appeared in Boost 1.54.
   find_package (Boost 1.54 COMPONENTS serialization)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND CXX11_MATH)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CXX11_MATH)
     find_package (Boost 1.54)
   endif ()
 endif ()
@@ -342,7 +351,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND CXX11_MATH)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CXX11_MATH)
     if (Boost_FOUND)
       include_directories ("${Boost_INCLUDE_DIRS}")
       set (HIGHPREC_LIBRARIES quadmath)
@@ -405,7 +414,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
         link_directories (/usr/local/lib)
       endif ()
       # g++ before 4.5 doesn't work (no explicit cast operator)
-      if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
+      if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
             CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.5))
         set (HIGHPREC_LIBRARIES mpfr gmp)
       endif ()

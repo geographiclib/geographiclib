@@ -11,9 +11,20 @@ endif ()
 # Make the compiler more picky.
 if (MSVC)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
-else ()
+else
   set (CMAKE_C_FLAGS
-    "${CMAKE_C_FLAGS} -Wall -Wextra -Wfloat-conversion -Wno-array-bounds -pedantic")
+    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-array-bounds -pedantic")
+  if (NOT CMAKE_C_COMPILER_ID STREQUAL "Intel")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wfloat-conversion")
+  endif ()
+endif ()
+
+# Tell Intel compiler to do arithmetic accurately.  This is needed to
+# stop the compiler from ignoring parentheses in expressions like
+# (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
+# x = -0.0).
+if (CMAKE_C_COMPILER_ID STREQUAL "Intel")
+  set (CMAKE_Fortan_FLAGS "${CMAKE_C_FLAGS} -fp-model precise")
 endif ()
 
 include (CheckCSourceCompiles)
