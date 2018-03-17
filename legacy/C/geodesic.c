@@ -238,7 +238,7 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   r = remquo(x, (real)(90), &q);
 #else
   r = fmod(x, (real)(360));
-  q = (int)(floor(r / 90 + (real)(0.5)));
+  q = r == r ? (int)(floor(r / 90 + (real)(0.5))) : 0;
   r -= 90 * q;
 #endif
   /* now abs(r) <= 45 */
