@@ -392,6 +392,8 @@ set_tests_properties (GeodSolve71 GeodSolve72
 # Check for backwards from the pole bug reported by Anon on 2016-02-13.
 # This only affected the Java implementation.  It was introduced in Java
 # version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+# Also the + sign on azi2 is a check on the normalizing of azimuths
+# (converting -0.0 to +0.0).
 add_test (NAME GeodSolve73 COMMAND GeodSolve
   -p 0 --input-string "90 10 180 -1e6")
 set_tests_properties (GeodSolve73
