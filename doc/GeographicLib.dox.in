@@ -7664,6 +7664,8 @@ git repository for GeographicLib</a>.
      to Natalia Sabourova for reporting this.
    - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
      division by zero" messages from Octave.
+   - Fix bug in MATLAB routine mgrs_inv which resulted in incorrect
+     results for UPS zones with prec = -1.
    - Fix bug in PolygonArea::AddEdge which caused the count of pole
      encirclings to be wrong, sometimes resulting in an incorrect area
      if a polygon vertex had longitude = 0; also fixed in C library.

@@ -92,6 +92,20 @@ set_tests_properties (GeoConvert17
 set_tests_properties (GeoConvert18
   PROPERTIES PASS_REGULAR_EXPRESSION "38NNF000000000000638110")
 
+# Check prec = -6 for UPS (to check fix to Matlab mgrs_fwd, 2018-03-19)
+add_test (NAME GeoConvert19 COMMAND GeoConvert
+  -m -p -6 --input-string "s 2746000 1515000")
+add_test (NAME GeoConvert20 COMMAND GeoConvert
+  -m -p -5 --input-string "s 2746000 1515000")
+add_test (NAME GeoConvert21 COMMAND GeoConvert
+  -m -p -4 --input-string "s 2746000 1515000")
+set_tests_properties (GeoConvert19
+  PROPERTIES PASS_REGULAR_EXPRESSION "^B[\r\n]")
+set_tests_properties (GeoConvert20
+  PROPERTIES PASS_REGULAR_EXPRESSION "^BKH[\r\n]")
+set_tests_properties (GeoConvert21
+  PROPERTIES PASS_REGULAR_EXPRESSION "^BKH41[\r\n]")
+
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (GeodSolve0 PROPERTIES PASS_REGULAR_EXPRESSION
