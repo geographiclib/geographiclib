@@ -22,10 +22,10 @@ endif ()
 # x = -0.0).
 if (CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
   if (MSVC)
-    set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} /fp:precise")
-  else ()
+    set (CMAKE_Fortran_FLAGS
+      "${CMAKE_Fortran_FLAGS} /fp:precise /Qdiag-disable:11074,11076")
     set (CMAKE_Fortan_FLAGS
-      "${CMAKE_Fortran_FLAGS} -fprotect-parens -fsigned-zeros")
+      "${CMAKE_Fortran_FLAGS} -fp-model precise -diag-disable=11074,11076")
   endif ()
 endif ()
 

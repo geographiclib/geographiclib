@@ -64,8 +64,9 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],
 # needed to stop the compiler from ignoring parentheses in expressions
 # like (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
 # x = -0.0).
-AX_CHECK_COMPILE_FLAG([-Werror -fprotect-parens -fsigned-zeros],
-        [CXXFLAGS="$CXXFLAGS -fprotect-parens -fsigned-zeros"])
+AX_CHECK_COMPILE_FLAG([-fp-model precise -diag-disable=11074,11076],
+        [CXXFLAGS="$CXXFLAGS -fp-model precise -diag-disable=11074,11076"],,
+        [-Werror])
 # Check for C++11 math functions
 AC_MSG_CHECKING([for C++11 math functions])
 AC_LINK_IFELSE([AC_LANG_PROGRAM(
@@ -78,9 +79,9 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM(
                     std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0)) +
                     std::isfinite(4.0) + std::isnan(0.0);])],
         [AC_MSG_RESULT([yes]);
-	 CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
+         CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
         [AC_MSG_RESULT([no]);
-	 CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
+         CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
 
 # Check for doxygen.  Version 1.8.7 or later needed for &hellip;
 AC_CHECK_PROGS([DOXYGEN], [doxygen])

@@ -279,9 +279,11 @@ endif ()
 # x = -0.0).
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   if (MSVC)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:precise")
+    set (CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} /fp:precise /Qdiag-disable:11074,11076")
   else ()
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprotect-parens -fsigned-zeros")
+    set (CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -fp-model precise -diag-disable=11074,11076")
   endif ()
 endif ()
 

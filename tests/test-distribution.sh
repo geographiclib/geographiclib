@@ -410,7 +410,7 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo Files with tabs:
     find . -type f |
 	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.gif|\.pdf|\.xml' |
-	egrep -v '\.sh|depcomp|install-sh|/config\.|configure|compile|missing' |
+	egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
 	egrep -v 'js/samples/geod-.*\.html' |
 	xargs grep -l  '	' || true
     echo
