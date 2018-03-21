@@ -518,7 +518,7 @@ public class GeodesicLine {
     if ((outmask & GeodesicMask.LONGITUDE) != 0) {
       // tan(omg2) = sin(alp0) * tan(sig2)
       double somg2 = _salp0 * ssig2, comg2 = csig2, // No need to normalize
-        E = Math.copysign(1, _salp0);               // east or west going?
+        E = Math.copySign(1, _salp0);               // east or west going?
       // omg12 = omg2 - omg1
       double omg12 = ((outmask & GeodesicMask.LONG_UNROLL) != 0)
         ? E * (sig12

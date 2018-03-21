@@ -92,6 +92,20 @@ set_tests_properties (GeoConvert17
 set_tests_properties (GeoConvert18
   PROPERTIES PASS_REGULAR_EXPRESSION "38NNF000000000000638110")
 
+# Check prec = -6 for UPS (to check fix to Matlab mgrs_fwd, 2018-03-19)
+add_test (NAME GeoConvert19 COMMAND GeoConvert
+  -m -p -6 --input-string "s 2746000 1515000")
+add_test (NAME GeoConvert20 COMMAND GeoConvert
+  -m -p -5 --input-string "s 2746000 1515000")
+add_test (NAME GeoConvert21 COMMAND GeoConvert
+  -m -p -4 --input-string "s 2746000 1515000")
+set_tests_properties (GeoConvert19
+  PROPERTIES PASS_REGULAR_EXPRESSION "^B[\r\n]")
+set_tests_properties (GeoConvert20
+  PROPERTIES PASS_REGULAR_EXPRESSION "^BKH[\r\n]")
+set_tests_properties (GeoConvert21
+  PROPERTIES PASS_REGULAR_EXPRESSION "^BKH41[\r\n]")
+
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (GeodSolve0 PROPERTIES PASS_REGULAR_EXPRESSION
@@ -392,6 +406,8 @@ set_tests_properties (GeodSolve71 GeodSolve72
 # Check for backwards from the pole bug reported by Anon on 2016-02-13.
 # This only affected the Java implementation.  It was introduced in Java
 # version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+# Also the + sign on azi2 is a check on the normalizing of azimuths
+# (converting -0.0 to +0.0).
 add_test (NAME GeodSolve73 COMMAND GeodSolve
   -p 0 --input-string "90 10 180 -1e6")
 set_tests_properties (GeodSolve73
@@ -519,11 +535,11 @@ add_test (NAME Planimeter18 COMMAND Planimeter
   --input-string "2 1;1 2;3 3" -r -s)
 set_tests_properties (Planimeter15 Planimeter16
   PROPERTIES PASS_REGULAR_EXPRESSION
-  " 18454562325\\.5")		# more digits 18454562325.45119
+  " 18454562325\\.5")           # more digits 18454562325.45119
 set_tests_properties (Planimeter17 PROPERTIES PASS_REGULAR_EXPRESSION
   " -18454562325\\.5")
 set_tests_properties (Planimeter18 PROPERTIES PASS_REGULAR_EXPRESSION
-  " 510047167161763\\.[01]")  # 510065621724088.5093-18454562325.45119
+  " 510047167161763\\.[01]")    # 510065621724088.5093-18454562325.45119
 
 # Some test to add code coverage: degerate polygons
 add_test (NAME Planimeter19 COMMAND Planimeter --input-string "1 1")

@@ -53,6 +53,7 @@ function geographiclib_test
   i = mgrs2; if i, n=n+1; fprintf('mgrs2 fail: %d\n', i); end
   i = mgrs3; if i, n=n+1; fprintf('mgrs3 fail: %d\n', i); end
   i = mgrs4; if i, n=n+1; fprintf('mgrs4 fail: %d\n', i); end
+  i = mgrs5; if i, n=n+1; fprintf('mgrs5 fail: %d\n', i); end
   % check for suppression of "warning: division by zero" in octave
   [~, ~, ~, ~, ~, ~, ~, s12] = geodreckon(-30, 0, 180, 90, 1);
   assert(n == 0);
@@ -727,4 +728,17 @@ function n = mgrs4
   n = n + assertEquals(mgrs{1}, '38NNF0000000000063811', 0);
   mgrs = mgrs_fwd(500000, 63.811, 38, 1, 9);
   n = n + assertEquals(mgrs{1}, '38NNF000000000000638110', 0);
+end
+
+function n = mgrs5
+% GeoConvert19: Check prec = -6 for UPS (to check fix to Matlab mgrs_fwd,
+% 2018-03-19)
+  n = 0;
+  mgrs = mgrs_fwd(2746000, 1515000, 0, 0, [-1,0,1]);
+  n = n + assertEquals(length(mgrs{1}), 1, 0);
+  n = n + assertEquals(mgrs{1}, 'B', 0);
+  n = n + assertEquals(length(mgrs{2}), 3, 0);
+  n = n + assertEquals(mgrs{2}, 'BKH', 0);
+  n = n + assertEquals(length(mgrs{3}), 5, 0);
+  n = n + assertEquals(mgrs{3}, 'BKH41', 0);
 end

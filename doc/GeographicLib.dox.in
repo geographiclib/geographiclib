@@ -7664,6 +7664,8 @@ git repository for GeographicLib</a>.
      to Natalia Sabourova for reporting this.
    - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
      division by zero" messages from Octave.
+   - Fix bug in MATLAB routine mgrs_inv which resulted in incorrect
+     results for UPS zones with prec = -1.
    - Fix bug in PolygonArea::AddEdge which caused the count of pole
      encirclings to be wrong, sometimes resulting in an incorrect area
      if a polygon vertex had longitude = 0; also fixed in C library.
@@ -7673,6 +7675,7 @@ git repository for GeographicLib</a>.
    - TODO: PolygonArea: fix the range of the area more aggressively.
    - TODO: Change templating in PolygonArea so that the AddPoint and
      AddEdge methods are templated instead of the class itself.
+   - TODO: Add Math::remainder.
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
@@ -7695,6 +7698,25 @@ git repository for GeographicLib</a>.
      sure install path is consistent with compiler.
    - TODO: in example programs, document when additional data files are
      needed.
+   - Turn off optimizations for the Intel compiler with causes incorrect
+     code to be generated.  Tested only for C and C++ on Linux.  The
+     changes should also work for Fortran and Windows.  DONE: add build
+     to test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...). TODO:
+     Add check of sign +0.0 in GeodSolve73 to all languages.
+     Cf. https://github.com/OSGeo/proj.4/issues/826
+    - C fixes (also make changes to C++ library)
+     - check nan->int conversions. TODO: repeat for other languages.
+       Cf. https://github.com/OSGeo/proj.4/issues/843
+     - TODO: Michael Hagerty optimization issue in sincosdx
+       https://github.com/OSGeo/proj.4/issues/831
+     - added parens from
+       https://github.com/OSGeo/proj.4/pull/860/files#diff-2
+     - initialize various variables to please CLang Static Analyzer
+       https://github.com/OSGeo/proj.4/commit/0692fc1
+   - TODO: Reference
+     https://github.com/megaserg/geographiclib-cython-bindings in
+     wrappers/python also on main page?
+   - TODO: Reference man page in source files for tools.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

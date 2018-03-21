@@ -312,7 +312,7 @@ GeographicLib.DMS = {};
    * @param {string} stra the first string.
    * @param {string} strb the first string.
    * @param {bool} [longfirst = false] if true assume then longitude is given
-   *   first (in the absense of any hemisphere indicators).
+   *   first (in the absence of any hemisphere indicators).
    * @returns {object} r where r.lat is the decoded latitude and r.lon is the
    *   decoded longitude (both in degrees).
    * @throws an error if the strings are illegal.

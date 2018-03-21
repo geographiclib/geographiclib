@@ -13,7 +13,24 @@ if (MSVC)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
 else ()
   set (CMAKE_C_FLAGS
-    "${CMAKE_C_FLAGS} -Wall -Wextra -Wfloat-conversion -Wno-array-bounds -pedantic")
+    "${CMAKE_C_FLAGS} -Wall -Wextra -Wno-array-bounds -pedantic")
+  if (NOT CMAKE_C_COMPILER_ID STREQUAL "Intel")
+    set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wfloat-conversion")
+  endif ()
+endif ()
+
+# Tell Intel compiler to do arithmetic accurately.  This is needed to
+# stop the compiler from ignoring parentheses in expressions like
+# (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
+# x = -0.0).
+if (CMAKE_C_COMPILER_ID STREQUAL "Intel")
+  if (MSVC)
+    set (CMAKE_C_FLAGS
+      "${CMAKE_C_FLAGS} /fp:precise /Qdiag-disable:11074,11076")
+  else ()
+    set (CMAKE_C_FLAGS
+      "${CMAKE_C_FLAGS} -fp-model precise -diag-disable=11074,11076")
+  endif ()
 endif ()
 
 include (CheckCSourceCompiles)
