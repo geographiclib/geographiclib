@@ -153,6 +153,7 @@ cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 unset GEOGRAPHICLIB_DATA
 for v in 2017 2015 2013 2012 2010; do
   for a in 64 32; do
+    echo ========== maven $v-$a ==========
     rm -rf d:/data/scratch/geog-mvn-$v-$a
     mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
       -Dcmake.project.bin.directory=d:/data/scratch/geog-mvn-$v-$a install
@@ -171,11 +172,12 @@ for ver in 10 11 12 14 15; do
 	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
 	(
 	    echo "#! /bin/sh -exv"
+	    echo echo ========== cmake $pkg ==========
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
 	    echo rm -rf d:/data/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo 'unset GEOGRAPHICLIB_DATA'
 	    echo 'mkdir -p d:/data/scratch/$b'
 	    echo 'cd d:/data/scratch/$b'
-	    echo 'unset GEOGRAPHICLIB_DATA'
 	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=w:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	    echo cmake --build . --config Debug   --target ALL_BUILD
 	    echo cmake --build . --config Debug   --target RUN_TESTS
@@ -188,18 +190,6 @@ for ver in 10 11 12 14 15; do
 	    echo cmake --build . --config Release --target PACKAGE
 	    test "$installer" &&
 		echo cp GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ || true
-	) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
-	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
-    done
-done
-
-for ver in 10 11 12 14 15; do
-    for arch in win32 x64; do
-	pkg=vc$ver-$arch
-	gen="Visual Studio $ver"
-	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/legacy/C/BUILD-$pkg
-	(
-	    echo "#! /bin/sh -exv"
 	    echo 'b=geogc-`pwd | sed s%.*/%%`'
 	    echo rm -rf d:/data/scratch/\$b
 	    echo 'mkdir -p d:/data/scratch/$b'
@@ -209,10 +199,20 @@ for ver in 10 11 12 14 15; do
 	    echo cmake --build . --config Debug   --target RUN_TESTS
 	    echo cmake --build . --config Release --target ALL_BUILD
 	    echo cmake --build . --config Release --target RUN_TESTS
-	) > $WINDOWSBUILD/GeographicLib-$VERSION/legacy/C/BUILD-$pkg/build
-	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/legacy/C/BUILD-$pkg/build
+	) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
     done
 done
+cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
+#! /bin/sh
+(
+  ./mvn-build
+  for d in BUILD-vc1*; do
+    (cd $d; ./build)
+  done
+) >& build.log
+EOF
+chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
 
 cd $TEMP/gitr/geographiclib
 git checkout release
@@ -243,6 +243,12 @@ cd BUILD-config
 ../configure --prefix=$TEMP/instb
 make -j$NUMCPUS
 make install
+
+mkdir ../BUILD-config-intel
+cd ../BUILD-config-intel
+env FC=ifort CC=icc CXX=icpc ../configure
+make -j$NUMCPUS
+
 mv $TEMP/instb/share/doc/{geographiclib,GeographicLib}
 cd $TEMP/instb
 find . -type f | sort -u > ../files.b
@@ -265,6 +271,14 @@ cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
 make -j$NUMCPUS all
 make test
+
+mkdir ../BUILD-intel
+cd ../BUILD-intel
+env FC=ifort CC=icc CXX=icpc cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
+make -j$NUMCPUS all
+make test
+make -j$NUMCPUS exampleprograms
+
 cd ..
 # mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
@@ -292,6 +306,12 @@ for l in C Fortran; do
 	mkdir $TEMP/legacy/$l/BUILD
 	cd $TEMP/legacy/$l/BUILD
 	cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
+	make -j$NUMCPUS all
+	make test
+	test $l = Fortran && continue
+	mkdir $TEMP/legacy/$l/BUILD-intel
+	cd $TEMP/legacy/$l/BUILD-intel
+	env FC=ifort CC=icc CXX=icpc cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
 	make -j$NUMCPUS all
 	make test
     )
