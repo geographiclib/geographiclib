@@ -89,15 +89,15 @@ static void Init() {
     tolb = tol0 * tol2;
     xthresh = 1000 * tol2;
     degree = pi/180;
-    #if defined(NAN)
-    NaN = NAN;
-    #else
+#if defined(NAN)
+    NaN = NAN;                  /* NAN is defined in C99 */
+#else
     {
       real minus1 = -1;
       /* cppcheck-suppress wrongmathcall */
       NaN = sqrt(minus1);
     }
-    #endif
+#endif
     init = 1;
   }
 }
@@ -2043,7 +2043,7 @@ unsigned geod_polygon_testedge(const struct geod_geodesic* g,
   crossings = p->crossings;
   {
     /* Initialization of lat, lon, and S12 is to make CLang static analyzer
-       happy. */
+     * happy. */
     real lat = 0, lon = 0, s12, S12 = 0;
     geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
                    &lat, &lon, 0,
