@@ -314,7 +314,7 @@ namespace GeographicLib {
 #else
       using std::abs; T y = abs(x); // Enforce odd parity
       y = log1p(y * (1 + y/(hypot(T(1), y) + 1)));
-      return x < 0 ? -y : y;
+      return x > 0 ? y : (x < 0 ? -y : x); // asinh(-0.0) = -0.0
 #endif
     }
 
@@ -331,7 +331,7 @@ namespace GeographicLib {
 #else
       using std::abs; T y = abs(x); // Enforce odd parity
       y = log1p(2 * y/(1 - y))/2;
-      return x < 0 ? -y : y;
+      return x > 0 ? y : (x < 0 ? -y : x); // atanh(-0.0) = -0.0
 #endif
     }
 
@@ -348,7 +348,7 @@ namespace GeographicLib {
 #else
       using std::abs; using std::pow;
       T y = pow(abs(x), 1/T(3)); // Return the real cube root
-      return x < 0 ? -y : y;
+      return x > 0 ? y : (x < 0 ? -y : x); // cbrt(-0.0) = -0.0
 #endif
     }
 

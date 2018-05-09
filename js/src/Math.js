@@ -125,7 +125,7 @@ GeographicLib.Accumulator = {};
    */
   m.cbrt = function(x) {
     var y = Math.pow(Math.abs(x), 1/3);
-    return x < 0 ? -y : y;
+    return x > 0 ? y : (x < 0 ? -y : x);
   };
 
   /**
@@ -151,7 +151,7 @@ GeographicLib.Accumulator = {};
   m.atanh = function(x) {
     var y = Math.abs(x);          // Enforce odd parity
     y = m.log1p(2 * y/(1 - y))/2;
-    return x < 0 ? -y : y;
+    return x > 0 ? y : (x < 0 ? -y : x);
   };
 
   /**

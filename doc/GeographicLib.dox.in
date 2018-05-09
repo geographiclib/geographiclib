@@ -7707,6 +7707,7 @@ git repository for GeographicLib</a>.
      Cf. https://github.com/OSGeo/proj.4/issues/826
     - C fixes (also make changes to C++ library)
      - check nan->int conversions. TODO: repeat for other languages.
+       Maybe use llong(floor(x))
        Cf. https://github.com/OSGeo/proj.4/issues/843
      - TODO: Michael Hagerty optimization issue in sincosdx
        https://github.com/OSGeo/proj.4/issues/831
@@ -7720,6 +7721,12 @@ git repository for GeographicLib</a>.
    - TODO: Reference man page in source files for tools.
    - TODO: add test "echo 0 0 90 inf | GeodSolve" to catch python not
      handling sin(inf) properly.
+   - TODO: When parsing DMS ignore non-breaking spaces u+00a0 (regular),
+     u+202f (narrow), u+2007 (figure).
+   - Math::cbrt, Math::atanh, and Math::asinh now preserve the sign of
+     &minus;0.  (Also: C, Java, JavaScript, Python, MATLAB.  Not
+     necessary: Fortran.)
+   - TODO: Allow gravity models to be truncated.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

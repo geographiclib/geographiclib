@@ -39,7 +39,7 @@ public class GeoMath {
   public static double atanh(double x)  {
     double y = Math.abs(x);     // Enforce odd parity
     y = Math.log1p(2 * y/(1 - y))/2;
-    return x < 0 ? -y : y;
+    return x > 0 ? y : (x < 0 ? -y : x);
   }
 
   /**

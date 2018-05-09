@@ -134,7 +134,7 @@ static real log1px(real x) {
 static real atanhx(real x) {
   real y = fabs(x);             /* Enforce odd parity */
   y = log1px(2 * y/(1 - y))/2;
-  return x < 0 ? -y : y;
+  return x > 0 ? y : (x < 0 ? -y : x); /* atanh(-0.0) = -0.0 */
 }
 
 static real copysignx(real x, real y) {
@@ -145,8 +145,8 @@ static real hypotx(real x, real y)
 { return sqrt(x * x + y * y); }
 
 static real cbrtx(real x) {
-  real y = pow(fabs(x), 1/(real)(3)); /* Return the real cube root */
-  return x < 0 ? -y : y;
+  real y = pow(fabs(x), 1/(real)(3));  /* Return the real cube root */
+  return x > 0 ? y : (x < 0 ? -y : x); /* cbrt(-0.0) = -0.0 */
 }
 #endif
 
@@ -239,7 +239,8 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   r = remquo(x, (real)(90), &q);
 #else
   r = fmod(x, (real)(360));
-  /* check for NaN */
+  /* check for NaN -- do not use pj_is_nan, since we want geodesic.c not to
+   * depend on the rest of proj.4 */
   q = r == r ? (int)(floor(r / 90 + (real)(0.5))) : 0;
   r -= 90 * q;
 #endif
@@ -327,7 +328,7 @@ static real Lambda12(const struct geod_geodesic* g,
                      real* pssig1, real* pcsig1,
                      real* pssig2, real* pcsig2,
                      real* peps,
-                     real* pgomg12,
+                     real* pdomg12,
                      boolx diffp, real* pdlam12,
                      /* Scratch area of the right size */
                      real Ca[]);
@@ -477,10 +478,10 @@ void geod_lineinit(struct geod_geodesicline* l,
 void geod_gendirectline(struct geod_geodesicline* l,
                         const struct geod_geodesic* g,
                         real lat1, real lon1, real azi1,
-                        unsigned flags, real a12_s12,
+                        unsigned flags, real s12_a12,
                         unsigned caps) {
   geod_lineinit(l, g, lat1, lon1, azi1, caps);
-  geod_gensetdistance(l, flags, a12_s12);
+  geod_gensetdistance(l, flags, s12_a12);
 }
 
 void geod_directline(struct geod_geodesicline* l,
