@@ -47,7 +47,7 @@ set (LIBVERSION_BUILD 17.1.3)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
-cmake_minimum_required (VERSION 2.8.4) # This version was released 2011-02-16
+cmake_minimum_required (VERSION 3.0.0) # This version was released 2014-06-09
 
 # User-settable variables
 
@@ -122,7 +122,7 @@ else ()
 endif ()
 
 if (GEOGRAPHICLIB_SHARED_LIB)
-  set (PROJECT_SHARED_LIBRARIES GeographicLib)
+  set (PROJECT_SHARED_LIBRARIES GeographicLib_SHARED)
   set (PROJECT_LIBRARIES ${PROJECT_SHARED_LIBRARIES})
   set (PROJECT_SHARED_DEFINITIONS -DGEOGRAPHICLIB_SHARED_LIB=1)
   set (PROJECT_DEFINITIONS ${PROJECT_SHARED_DEFINITIONS})
@@ -132,6 +132,12 @@ else ()
   set (PROJECT_SHARED_DEFINITIONS)
   set (PROJECT_DEFINITIONS ${PROJECT_STATIC_DEFINITIONS})
 endif ()
+
+set (PROJECT_INTERFACE_LIBRARIES GeographicLib)
+set (PROJECT_ALL_LIBRARIES
+  ${PROJECT_STATIC_LIBRARIES}
+  ${PROJECT_SHARED_LIBRARIES}
+  ${PROJECT_INTERFACE_LIBRARIES})
 
 # (5) Create the documentation?  This depends on whether doxygen can be
 # found.  If this is OFF, then links will be provided to the online
@@ -306,8 +312,9 @@ int main() {
              std::log1p(2.0) + std::asinh(10.0) +
              std::atanh(0.8) + std::cbrt(8.0) +
              std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
-             std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0)) +
-             std::isfinite(4.0) + std::isnan(0.0);
+             std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0) +
+             std::round(3.5)) +
+         std::isfinite(4.0) + std::isnan(0.0) + int(std::lround(-3.5));
 }\n" CXX11_MATH)
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)

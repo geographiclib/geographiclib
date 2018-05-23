@@ -23,12 +23,21 @@
  * https://geographiclib.sourceforge.io/
  */
 
-#include "geodesic.h"
-#include <math.h>
-
 #if !defined(HAVE_C99_MATH)
 #define HAVE_C99_MATH 0
 #endif
+#if !defined(PJ_LIB__)
+#define PJ_LIB__ 0
+#endif
+
+#include "geodesic.h"
+#if PJ_LIB__
+#include "proj_math.h"
+#else
+#include <math.h>
+#endif
+#include <limits.h>
+#include <float.h>
 
 #define GEOGRAPHICLIB_GEODESIC_ORDER 6
 #define nA1   GEOGRAPHICLIB_GEODESIC_ORDER
@@ -56,21 +65,9 @@ static real epsilon, realmin, pi, degree, NaN,
 
 static void Init() {
   if (!init) {
-#if defined(__DBL_MANT_DIG__)
-    digits = __DBL_MANT_DIG__;
-#else
-    digits = 53;
-#endif
-#if defined(__DBL_EPSILON__)
-    epsilon = __DBL_EPSILON__;
-#else
-    epsilon = pow(0.5, digits - 1);
-#endif
-#if defined(__DBL_MIN__)
-    realmin = __DBL_MIN__;
-#else
-    realmin = pow(0.5, 1022);
-#endif
+    digits = DBL_MANT_DIG;
+    epsilon = DBL_EPSILON;
+    realmin = DBL_MIN;
 #if defined(M_PI)
     pi = M_PI;
 #else
@@ -113,13 +110,17 @@ enum captype {
   OUT_ALL  = 0x7F80U
 };
 
-static real sq(real x) { return x * x; }
-#if HAVE_C99_MATH
+#if HAVE_C99_MATH || PJ_LIB__
 #define atanhx atanh
 #define copysignx copysign
 #define hypotx hypot
 #define cbrtx cbrt
+#define lroundx lround
+/* #define log1px log1p */
+/* #define roundx round */
 #else
+/* Replacements for C99 math functions */
+
 static real log1px(real x) {
   volatile real
     y = 1 + x,
@@ -141,14 +142,52 @@ static real copysignx(real x, real y) {
   return fabs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
 }
 
-static real hypotx(real x, real y)
-{ return sqrt(x * x + y * y); }
+static real hypotx(real x, real y) {
+  x = fabs(x); y = fabs(y);
+  if (x < y) {
+    x /= y;                     /* y is nonzero */
+    return y * sqrt(1 + x * x);
+  } else {
+    y /= (x ? x : 1);
+    return x * sqrt(1 + y * y);
+  }
+}
 
 static real cbrtx(real x) {
   real y = pow(fabs(x), 1/(real)(3));  /* Return the real cube root */
   return x > 0 ? y : (x < 0 ? -y : x); /* cbrt(-0.0) = -0.0 */
 }
+
+static real roundx(real x) {
+  /* The handling of corner cases is copied from boost; see
+   *   https://github.com/boostorg/math/pull/8
+   * with improvements to return -0 when appropriate. */
+  real t;
+  if (0 < x && x < (real)(0.5))
+    return +(real)(0);
+  else if (0 > x && x > -(real)(0.5))
+    return -(real)(0);
+  else if (x > 0) {
+    t = ceil(x);
+    return t - v > (real)(0.5) ? t - 1 : t;
+  } else if (x < 0) {
+    t = floor(x);
+    return x - t > (real)(0.5) ? t + 1 : t;
+  } else                        /* +/-0 and NaN */
+    return x;                   /* Retain sign of 0 */
+}
+
+static long lroundx(real x) {
+  /* Default value for overflow + NaN + (x == LONG_MIN) */
+  long r = LONG_MIN;
+  x = roundx(x);
+  if (fabs(x) < -(real)(r))     /* Assume (real)(LONG_MIN) is exact */
+    r = (long)(x);
+  return r;
+}
 #endif
+
+static real sq(real x) { return x * x; }
 
 static real sumx(real u, real v, real* t) {
   volatile real s = u + v;
@@ -239,9 +278,7 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   r = remquo(x, (real)(90), &q);
 #else
   r = fmod(x, (real)(360));
-  /* check for NaN -- do not use pj_is_nan, since we want geodesic.c not to
-   * depend on the rest of proj.4 */
-  q = r == r ? (int)(floor(r / 90 + (real)(0.5))) : 0;
+  q = (int)(lroundx(r / 90));
   r -= 90 * q;
 #endif
   /* now abs(r) <= 45 */

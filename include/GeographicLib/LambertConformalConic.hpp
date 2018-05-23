@@ -126,8 +126,8 @@ namespace GeographicLib {
       // hx = hyp(x)
       real t = x - y;
       return t != 0 ?
-        Math::asinh(x*y > 0 ? t * (x+y) / (x*hy + y*hx) : x*hy - y*hx) / t :
-        1/hx;
+        Math::asinh(x*y > 0 ? t * (x + y) / (x*hy + y*hx) : x*hy - y*hx) / t :
+        1 / hx;
     }
     // Deatanhe(x,y) = eatanhe((x-y)/(1-e^2*x*y))/(x-y)
     real Deatanhe(real x, real y) const {

@@ -110,7 +110,7 @@ GeographicLib.Accumulator = {};
    * @param {number} y the second side.
    * @returns {number} the hypotenuse.
    */
-  m.hypot = function(x, y) {
+  m.hypot = Math.hypot || function(x, y) {
     var a, b;
     x = Math.abs(x);
     y = Math.abs(y);
@@ -123,7 +123,7 @@ GeographicLib.Accumulator = {};
    * @param {number} x the argument.
    * @returns {number} the real cube root.
    */
-  m.cbrt = function(x) {
+  m.cbrt = Math.cbrt || function(x) {
     var y = Math.pow(Math.abs(x), 1/3);
     return x > 0 ? y : (x < 0 ? -y : x);
   };
@@ -133,7 +133,7 @@ GeographicLib.Accumulator = {};
    * @param {number} x the argument.
    * @returns {number} log(1 + x).
    */
-  m.log1p = function(x) {
+  m.log1p = Math.log1p || function(x) {
     var y = 1 + x,
         z = y - 1;
     // Here's the explanation for this magic: y = 1 + z, exactly, and z
@@ -148,7 +148,7 @@ GeographicLib.Accumulator = {};
    * @param {number} x the argument.
    * @returns {number} tanh<sup>&minus;1</sup> x.
    */
-  m.atanh = function(x) {
+  m.atanh = Math.atanh || function(x) {
     var y = Math.abs(x);          // Enforce odd parity
     y = m.log1p(2 * y/(1 - y))/2;
     return x > 0 ? y : (x < 0 ? -y : x);
@@ -271,7 +271,7 @@ GeographicLib.Accumulator = {};
     // the argument to the range [-45, 45] before converting it to radians.
     var r, q, s, c, sinx, cosx;
     r = x % 360;
-    q = Math.floor(r / 90 + 0.5);
+    q = 0 + Math.round(r / 90);
     r -= 90 * q;
     // now abs(r) <= 45
     r *= this.degree;

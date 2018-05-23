@@ -14,10 +14,10 @@ configure_file (project-config.cmake.in
 configure_file (project-config-version.cmake.in
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
 export (TARGETS
-  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
+  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
 export (TARGETS
-  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
+  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
   NAMESPACE ${PROJECT_NAME}::
   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
 

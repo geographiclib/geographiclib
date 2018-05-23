@@ -16,7 +16,7 @@ function [sinx, cosx] = sincosdx(x)
     % workaround rem's bad handling of -0 in octave; fixed 2015-07-22
     % http://savannah.gnu.org/bugs/?45587
     r(x == 0 & signbit(x)) = -0;
-    q = floor(r / 90 + 0.5);
+    q = 0 + round(r / 90);
     r = r - 90 * q;
     q = mod(q, 4);
     r = r * (pi/180);

@@ -7675,13 +7675,11 @@ git repository for GeographicLib</a>.
    - TODO: PolygonArea: fix the range of the area more aggressively.
    - TODO: Change templating in PolygonArea so that the AddPoint and
      AddEdge methods are templated instead of the class itself.
-   - TODO: Add Math::remainder.
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
    - TODO: start converting MajorRadius methods to EquatorialRadius.
    - TODO: add GreatEllipse class?
-   - TODO: improve code coverage with geodesic tests.
    - TODO: allow GravityModels to be truncated?
    - TODO: document development environment for Windows: cmake + VS +
      NSIS.
@@ -7689,19 +7687,17 @@ git repository for GeographicLib</a>.
    - TODO: fix allowed results for GeodSolve59 test.
    - TODO: fix dotnet CMakeLists.txt CMP0026 to match version in src.
    - TODO: implement Geodesic + TM + PolarStereographic on Jets.
-   - TODO: update informentation on https://github.com/ngageoint/opensphere-asm
+   - TODO: update information on https://github.com/ngageoint/opensphere-asm
    - TODO: document treatment of poles in RhumbSolve{,.cgi}.
-   - TODO: why is S12 = {nan,inf} returned with echo 0 0 90 {0,30} |
-     RhumbSolve -i.  The results should be S12 = {0,21050634712282}.
    - TODO: Fix installation instructions (don't use make with Visual
      Studio), maybe use less complicated install path (but at least make
      sure install path is consistent with compiler.
    - TODO: in example programs, document when additional data files are
      needed.
-   - Turn off optimizations for the Intel compiler with causes incorrect
-     code to be generated.  Tested only for C and C++ on Linux.  The
-     changes should also work for Fortran and Windows.  TODO: move
-     affected code on Math.hpp to Math.cpp DONE: add build to
+   - Turn off optimizations for the Intel compiler which causes
+     incorrect code to be generated.  Tested only for C and C++ on
+     Linux.  The changes should also work for Fortran and Windows.
+     TODO: move affected code on Math.hpp to Math.cpp DONE: add build to
      test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...). TODO:
      Add check of sign +0.0 in GeodSolve73 to all languages.
      Cf. https://github.com/OSGeo/proj.4/issues/826
@@ -7725,8 +7721,17 @@ git repository for GeographicLib</a>.
      u+202f (narrow), u+2007 (figure).
    - Math::cbrt, Math::atanh, and Math::asinh now preserve the sign of
      &minus;0.  (Also: C, Java, JavaScript, Python, MATLAB.  Not
-     necessary: Fortran.)
+     necessary: Fortran because sign is a built-in function.)
    - TODO: Allow gravity models to be truncated.
+   - JS: use polyfills for math functions.
+   - Add Math::remainder, Math::round, and Math::lround; Math::sincosd,
+     et al., use lround.  TODO: port to C, etc.
+   - TODO: add test to check remquo(3419.0, 360.0, &n) != 539?
+   - TODO: check logic in C interface (plus others?) on defaults for
+     caps in geod_gendirectline.  Also improve description of "point 3".
+   - Minimum CMake version = 3.0.  Change CMake target names and add an
+     interface library (thanks to Matthew Woehlke). TODO: Update
+     documentation.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

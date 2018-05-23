@@ -139,8 +139,8 @@ namespace GeographicLib {
     static real Dasinh(real x, real y) {
       real d = x - y,
         hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
-      return d != 0 ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
-                                  x*hy - y*hx) / d :
+      return d != 0 ?
+        Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) : x*hy - y*hx) / d :
         1 / hx;
     }
     static real Dgd(real x, real y) {

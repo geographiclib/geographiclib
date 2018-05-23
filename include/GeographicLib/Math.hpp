@@ -353,6 +353,88 @@ namespace GeographicLib {
     }
 
     /**
+     * The remainder function.
+     *
+     * @tparam T the type of the arguments and the returned value.
+     * @param[in] x
+     * @param[in] y
+     * @return the remainder of \e x/\e y in the range [&minus;\e y/2, \e y/2].
+     **********************************************************************/
+    template<typename T> static T remainder(T x, T y) {
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
+      using std::remainder; return remainder(x, y);
+#else
+      using std::fmod;
+      T z = fmod(x, y);
+#if defined(_MSC_VER) && _MSC_VER < 1900
+      // Before version 14 (2015), Visual Studio had problems dealing
+      // with -0.0.  Specifically
+      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+      // sincosd has a similar fix.
+      // python 2.7 on Windows 32-bit machines has the same problem.
+      if (x == 0) z = x;
+#endif
+      // Don't worry here about how ties are handled.  Also assume that y is
+      // positive.
+      return 2 * z > y ? z - y : (2 * z < -y ? z + y : z);
+#endif
+    }
+
+    /**
+     * The round function.
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @return \e x round to the nearest integer (ties round away from 0).
+     **********************************************************************/
+    template<typename T> static T round(T x) {
+#if GEOGRAPHICLIB_CXX11_MATH
+      using std::round; return round(x);
+#else
+      // The handling of corner cases is copied from boost; see
+      //   https://github.com/boostorg/math/pull/8
+      // with improvements to return -0 when appropriate.
+      using std::ceil; using std::floor;
+      if (0 < x && x < T(0.5))
+        return +T(0);
+      else if (0 > x && x > -T(0.5))
+        return -T(0);
+      else if (x > 0) {
+        T t = ceil(x);
+        return t - v > T(0.5) ? t - 1 : t;
+      } else if (x < 0) {
+        T t = floor(x);
+        return x - t > T(0.5) ? t + 1 : t;
+      } else                    // +/-0 and NaN
+        return x;               // Retain sign of 0
+#endif
+    }
+
+    /**
+     * The lround function.
+     *
+     * @tparam T the type of the argument.
+     * @param[in] x
+     * @return \e x round to the nearest integer as a long int (ties round away
+     *   from 0).
+     *
+     * If the result does not fit in a long int, the return value is undefined.
+     **********************************************************************/
+    template<typename T> static long lround(T x) {
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+      using std::lround; return lround(x);
+#else
+      using std::abs;
+      // Default value for overflow + NaN + (x == LONG_MIN)
+      long r = std::numeric_limits<long>::min();
+      x = round(x);
+      if (abs(x) < -T(r))       // Assume T(LONG_MIN) is exact
+        r = long(x);
+      return r;
+#endif
+    }
+
+    /**
      * Fused multiply and add.
      *
      * @tparam T the type of the arguments and the returned value.
@@ -438,22 +520,7 @@ namespace GeographicLib {
      * The range of \e x is unrestricted.
      **********************************************************************/
     template<typename T> static T AngNormalize(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
-      using std::remainder;
       x = remainder(x, T(360)); return x != -180 ? x : 180;
-#else
-      using std::fmod;
-      T y = fmod(x, T(360));
-#if defined(_MSC_VER) && _MSC_VER < 1900
-      // Before version 14 (2015), Visual Studio had problems dealing
-      // with -0.0.  Specifically
-      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
-      // sincosd has a similar fix.
-      // python 2.7 on Windows 32-bit machines has the same problem.
-      if (x == 0) y = x;
-#endif
-      return y <= -180 ? y + 360 : (y <= 180 ? y : y - 360);
-#endif
     }
 
     /**
@@ -484,13 +551,8 @@ namespace GeographicLib {
      * &le; 0.
      **********************************************************************/
     template<typename T> static T AngDiff(T x, T y, T& e) {
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
-      using std::remainder;
       T t, d = AngNormalize(sum(remainder(-x, T(360)),
                                 remainder( y, T(360)), t));
-#else
-      T t, d = AngNormalize(sum(AngNormalize(-x), AngNormalize(y), t));
-#endif
       // Here y - x = d + t (mod 360), exactly, where d is in (-180,180] and
       // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
       // addition of t takes the result outside the range (-180,180] is d = 180
@@ -571,9 +633,9 @@ namespace GeographicLib {
       using std::remquo;
       r = remquo(x, T(90), &q);
 #else
-      using std::fmod; using std::floor;
+      using std::fmod;
       r = fmod(x, T(360));
-      q = int(floor(r / 90 + T(0.5)));
+      q = int(lround(r / 90));
       r -= 90 * q;
 #endif
       // now abs(r) <= 45
@@ -615,9 +677,9 @@ namespace GeographicLib {
       using std::remquo;
       r = remquo(x, T(90), &q);
 #else
-      using std::fmod; using std::floor;
+      using std::fmod;
       r = fmod(x, T(360));
-      q = int(floor(r / 90 + T(0.5)));
+      q = int(lround(r / 90));
       r -= 90 * q;
 #endif
       // now abs(r) <= 45
@@ -645,9 +707,9 @@ namespace GeographicLib {
       using std::remquo;
       r = remquo(x, T(90), &q);
 #else
-      using std::fmod; using std::floor;
+      using std::fmod;
       r = fmod(x, T(360));
-      q = int(floor(r / 90 + T(0.5)));
+      q = int(lround(r / 90));
       r -= 90 * q;
 #endif
       // now abs(r) <= 45

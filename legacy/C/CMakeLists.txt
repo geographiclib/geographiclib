@@ -47,7 +47,9 @@ int main() {
   int q;
   return (int)(hypot(3.0, 4.0) + atanh(0.8) + cbrt(8.0) +
                remquo(100.0, 90.0, &q) +
-               remainder(100.0, 90.0) + copysign(1.0, -0.0));
+               remainder(100.0, 90.0) + copysign(1.0, -0.0) +
+               log1p(0.1) + round(3.5)) +
+         (int)(lround(-3.5));
 }\n" C99_MATH)
 if (C99_MATH)
   add_definitions (-DHAVE_C99_MATH=1)

@@ -524,9 +524,9 @@ extern "C" {
    * @param[out] pazi2 pointer to the (forward) azimuth at point 2 (degrees).
    *
    * \e l must have been initialized with a call, e.g., to geod_lineinit(),
-   * with \e caps |= GEOD_DISTANCE_IN.  The values of \e lon2 and \e azi2
-   * returned are in the range [&minus;180&deg;, 180&deg;].  Any of the
-   * "return" arguments \e plat2, etc., may be replaced by 0, if you do not
+   * with \e caps |= GEOD_DISTANCE_IN (or \e caps = 0).  The values of \e lon2
+   * and \e azi2 returned are in the range [&minus;180&deg;, 180&deg;].  Any of
+   * the "return" arguments \e plat2, etc., may be replaced by 0, if you do not
    * need some quantities computed.
    *
    * Example, compute way points between JFK and Singapore Changi Airport

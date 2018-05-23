@@ -175,7 +175,7 @@ public class GeoMath {
     // the argument to the range [-45, 45] before converting it to radians.
     double r; int q;
     r = x % 360.0;
-    q = (int)Math.floor(r / 90 + 0.5);
+    q = (int)Math.round(r / 90);
     r -= 90 * q;
     // now abs(r) <= 45
     r = Math.toRadians(r);

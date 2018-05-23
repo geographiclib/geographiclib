@@ -14,6 +14,10 @@ if (GEOGRAPHICLIB_STATIC_LIB)
   add_library (${PROJECT_STATIC_LIBRARIES} STATIC ${SOURCES} ${HEADERS})
 endif ()
 
+add_library (${PROJECT_INTERFACE_LIBRARIES} INTERFACE)
+target_link_libraries (${PROJECT_INTERFACE_LIBRARIES}
+  INTERFACE ${PROJECT_LIBRARIES})
+
 # Set the version number on the library
 if (MSVC)
   if (GEOGRAPHICLIB_SHARED_LIB)
@@ -70,7 +74,7 @@ if (NOT CMAKE_VERSION VERSION_LESS 2.8.11)
 endif ()
 
 # Specify where the library is installed, adding it to the export targets
-install (TARGETS ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES}
+install (TARGETS ${PROJECT_ALL_LIBRARIES}
   EXPORT targets
   # A potentially useful option.  However it's only supported in recent
   # versions of cmake (2.8.12 and later?).  So comment out for now.
