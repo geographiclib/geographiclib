@@ -141,36 +141,6 @@ namespace GeographicLib {
      **********************************************************************/
     NormalGravity(real a, real GM, real omega, real f_J2,
                   bool geometricp = true);
-    /**
-     * \deprecated Old constructor for the normal gravity.
-     *
-     * @param[in] a equatorial radius (meters).
-     * @param[in] GM mass constant of the ellipsoid
-     *   (meters<sup>3</sup>/seconds<sup>2</sup>); this is the product of \e G
-     *   the gravitational constant and \e M the mass of the earth (usually
-     *   including the mass of the earth's atmosphere).
-     * @param[in] omega the angular velocity (rad s<sup>&minus;1</sup>).
-     * @param[in] f the flattening of the ellipsoid.
-     * @param[in] J2 the dynamical form factor.
-     * @exception if \e a is not positive or the other constants are
-     *   inconsistent (see below).
-     *
-     * If \e omega is non-zero, then exactly one of \e f and \e J2 should be
-     * positive and this will be used to define the ellipsoid.  The shape of
-     * the ellipsoid can be given in one of two ways:
-     * - geometrically, the ellipsoid is defined by the flattening \e f = (\e a
-     *   &minus; \e b) / \e a, where \e a and \e b are the equatorial radius
-     *   and the polar semi-axis.
-     * - physically, the ellipsoid is defined by the dynamical form factor
-     *   <i>J</i><sub>2</sub> = (\e C &minus; \e A) / <i>Ma</i><sup>2</sup>,
-     *   where \e A and \e C are the equatorial and polar moments of inertia
-     *   and \e M is the mass of the earth.
-     * .
-     * If \e omega, \e f, and \e J2 are all zero, then the ellipsoid becomes a
-     * sphere.
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use new NormalGravity constructor")
-    NormalGravity(real a, real GM, real omega, real f, real J2);
 
     /**
      * A default constructor for the normal gravity.  This sets up an

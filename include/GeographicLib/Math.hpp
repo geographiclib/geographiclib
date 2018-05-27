@@ -624,8 +624,8 @@ namespace GeographicLib {
       T r; int q;
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
   !defined(__GNUC__)
-      // Disable for gcc because of bug in glibc version < 2.22, see
-      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
+      // Disable for gcc because of bug in glibc version < 2.22 (released
+      // 2015-08-14), see https://sourceware.org/bugzilla/show_bug.cgi?id=17569
       // Once this fix is widely deployed, should insert a runtime test for the
       // glibc version number.  For example
       //   #include <gnu/libc-version.h>

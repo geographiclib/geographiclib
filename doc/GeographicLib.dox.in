@@ -7729,9 +7729,13 @@ git repository for GeographicLib</a>.
    - TODO: add test to check remquo(3419.0, 360.0, &n) != 539?
    - TODO: check logic in C interface (plus others?) on defaults for
      caps in geod_gendirectline.  Also improve description of "point 3".
-   - Minimum CMake version = 3.0.  Change CMake target names and add an
-     interface library (thanks to Matthew Woehlke). TODO: Update
-     documentation.
+   - Minimum CMake version = 3.0 (2014-06-09).  Change CMake target
+     names and add an interface library (thanks to Matthew
+     Woehlke). TODO: Update documentation.
+   - Minimum g++ version = 4.8.0 (2013-03-22).
+   - SphericalEngine::coeff::readcoeffs takes new optional argument
+     \e truncate.
+   - Old deprecated NormalGravity::NormalGravity constructor removed.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

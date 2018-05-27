@@ -273,8 +273,8 @@ static void sincosdx(real x, real* sinx, real* cosx) {
    * the argument to the range [-45, 45] before converting it to radians. */
   real r, s, c; int q;
 #if HAVE_C99_MATH && !defined(__GNUC__)
-  /* Disable for gcc because of bug in glibc version < 2.22, see
-   * https://sourceware.org/bugzilla/show_bug.cgi?id=17569 */
+  /* Disable for gcc because of bug in glibc version < 2.22 (released
+   * 2015-08-14), see https://sourceware.org/bugzilla/show_bug.cgi?id=17569 */
   r = remquo(x, (real)(90), &q);
 #else
   r = fmod(x, (real)(360));
@@ -1325,22 +1325,7 @@ real InverseStart(const struct geod_geodesic* g,
   boolx shortline = cbet12 >= 0 && sbet12 < (real)(0.5) &&
     cbet2 * lam12 < (real)(0.5);
   real somg12, comg12, ssig12, csig12;
-#if defined(__GNUC__) && __GNUC__ == 4 &&       \
-  (__GNUC_MINOR__ < 6 || defined(__MINGW32__))
-  /* Volatile declaration needed to fix inverse cases
-   * 88.202499451857 0 -88.202499451857 179.981022032992859592
-   * 89.262080389218 0 -89.262080389218 179.992207982775375662
-   * 89.333123580033 0 -89.333123580032997687 179.99295812360148422
-   * which otherwise fail with g++ 4.4.4 x86 -O3 (Linux)
-   * and g++ 4.4.0 (mingw) and g++ 4.6.1 (tdm mingw). */
-  {
-    volatile real xx1 = sbet2 * cbet1;
-    volatile real xx2 = cbet2 * sbet1;
-    sbet12a = xx1 + xx2;
-  }
-#else
   sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
-#endif
   if (shortline) {
     real sbetm2 = sq(sbet1 + sbet2), omg12;
     /* sin((bet1+bet2)/2)^2

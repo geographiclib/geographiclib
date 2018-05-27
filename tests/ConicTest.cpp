@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
     } else if (arg == "-e") {
       if (m + 2 >= argc) return usage(1);
       try {
-        a = Utility::num<real>(string(argv[m + 1]));
+        a = Utility::val<real>(string(argv[m + 1]));
         f = Utility::fract<real>(string(argv[m + 2]));
       }
       catch (const exception& e) {

@@ -63,23 +63,6 @@ namespace GeographicLib {
     Initialize(a, GM, omega, f_J2, geometricp);
   }
 
-  NormalGravity::NormalGravity(real a, real GM, real omega, real f, real J2) {
-    if (!(Math::isfinite(GM) && GM > 0))
-      throw GeographicErr("Gravitational constant is not positive");
-    bool geometricp;
-    if (!(omega == 0 && f == 0 && J2 == 0)) {
-      geometricp = f > 0 && Math::isfinite(f);
-      if (J2 > 0 && Math::isfinite(J2) && geometricp)
-        throw GeographicErr("Cannot specify both f and J2");
-      if (!(J2 > 0 && Math::isfinite(J2)) && !geometricp)
-        throw GeographicErr("Must specify one of f and J2");
-      if (!(Math::isfinite(omega) && omega != 0))
-        throw GeographicErr("Angular velocity is not non-zero");
-    } else
-      geometricp = true;
-    Initialize(a, GM, omega, geometricp ? f : J2, geometricp);
-  }
-
   const NormalGravity& NormalGravity::WGS84() {
     static const NormalGravity wgs84(Constants::WGS84_a(),
                                      Constants::WGS84_GM(),

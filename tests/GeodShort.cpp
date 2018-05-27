@@ -246,7 +246,7 @@ int main(int argc, char* argv[]) {
     typedef Math::real real;
     real
       f = Utility::fract<real>(string(argv[1])),
-      sig = Utility::num<real>(string(argv[2]));
+      sig = Utility::val<real>(string(argv[2]));
     Geodesic g(1, f);
     GeodesicExact ge(1, f);
     GeodShort s(1, f);
