@@ -95,6 +95,7 @@ WINDOWSBUILDWIN=w:/temp
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
 NUMCPUS=4
+HAVEINTEL=
 
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
@@ -243,11 +244,15 @@ cd BUILD-config
 ../configure --prefix=$TEMP/instb
 make -j$NUMCPUS
 make install
+cd ..
 
-mkdir ../BUILD-config-intel
-cd ../BUILD-config-intel
-env FC=ifort CC=icc CXX=icpc ../configure
-make -j$NUMCPUS
+if test "$HAVEINTEL"; then
+    mkdir BUILD-config-intel
+    cd BUILD-config-intel
+    env FC=ifort CC=icc CXX=icpc ../configure
+    make -j$NUMCPUS
+    cd ..
+fi
 
 mv $TEMP/instb/share/doc/{geographiclib,GeographicLib}
 cd $TEMP/instb
@@ -271,15 +276,18 @@ cd ../BUILD-system
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
 make -j$NUMCPUS all
 make test
-
-mkdir ../BUILD-intel
-cd ../BUILD-intel
-env FC=ifort CC=icc CXX=icpc cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
-make -j$NUMCPUS all
-make test
-make -j$NUMCPUS exampleprograms
-
 cd ..
+
+if test "$HAVEINTEL"; then
+    mkdir ../BUILD-intel
+    cd ../BUILD-intel
+    env FC=ifort CC=icc CXX=icpc cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
+    make -j$NUMCPUS all
+    make test
+    make -j$NUMCPUS exampleprograms
+    cd ..
+fi
+
 # mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
 cd $TEMP/gita/geographiclib/tests/sandbox
@@ -309,11 +317,14 @@ for l in C Fortran; do
 	make -j$NUMCPUS all
 	make test
 	test $l = Fortran && continue
-	mkdir $TEMP/legacy/$l/BUILD-intel
-	cd $TEMP/legacy/$l/BUILD-intel
-	env FC=ifort CC=icc CXX=icpc cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
-	make -j$NUMCPUS all
-	make test
+	if test "$HAVEINTEL"; then
+	    mkdir $TEMP/legacy/$l/BUILD-intel
+	    cd $TEMP/legacy/$l/BUILD-intel
+	    env FC=ifort CC=icc CXX=icpc \
+		cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
+	    make -j$NUMCPUS all
+	    make test
+	fi
     )
 done
 

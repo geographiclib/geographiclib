@@ -165,8 +165,12 @@ namespace GeographicLib {
      *
      * @param[in] name the name of the model.
      * @param[in] path (optional) directory for data file.
+     * @param[in] Nmax (optional) if non-negative, truncate the degree of the
+     *   model this value.
+     * @param[in] Mmax (optional) if non-negative, truncate the order of the
+     *   model this value.
      * @exception GeographicErr if the data file cannot be found, is
-     *   unreadable, or is corrupt.
+     *   unreadable, or is corrupt, or if \e Mmax > \e Nmax.
      * @exception std::bad_alloc if the memory necessary for storing the model
      *   can't be allocated.
      *
@@ -179,9 +183,12 @@ namespace GeographicLib {
      * model.  The coefficients for the spherical harmonic sums are obtained
      * from a file obtained by appending ".cof" to metadata file (so the
      * filename ends in ".egm.cof").
+     *
+     * If \e Nmax &ge; 0 and \e Mmax < 0, then set \e Mmax = \e Nmax.
      **********************************************************************/
     explicit GravityModel(const std::string& name,
-                          const std::string& path = "");
+                          const std::string& path = "",
+                          int Nmax = -1, int Mmax = -1);
     ///@}
 
     /** \name Compute gravity in geodetic coordinates

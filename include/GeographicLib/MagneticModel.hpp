@@ -96,8 +96,12 @@ namespace GeographicLib {
      * @param[in] path (optional) directory for data file.
      * @param[in] earth (optional) Geocentric object for converting
      *   coordinates; default Geocentric::WGS84().
+     * @param[in] Nmax (optional) if non-negative, truncate the degree of the
+     *   model this value.
+     * @param[in] Mmax (optional) if non-negative, truncate the order of the
+     *   model this value.
      * @exception GeographicErr if the data file cannot be found, is
-     *   unreadable, or is corrupt.
+     *   unreadable, or is corrupt, or if \e Mmax > \e Nmax.
      * @exception std::bad_alloc if the memory necessary for storing the model
      *   can't be allocated.
      *
@@ -115,10 +119,13 @@ namespace GeographicLib {
      * The final earth argument to the constructor specifies an ellipsoid to
      * allow geodetic coordinates to the transformed into the spherical
      * coordinates used in the spherical harmonic sum.
+     *
+     * If \e Nmax &ge; 0 and \e Mmax < 0, then \e Mmax is set to \e Nmax.
      **********************************************************************/
     explicit MagneticModel(const std::string& name,
                            const std::string& path = "",
-                           const Geocentric& earth = Geocentric::WGS84());
+                           const Geocentric& earth = Geocentric::WGS84(),
+                          int Nmax = -1, int Mmax = -1);
     ///@}
 
     /** \name Compute the magnetic field

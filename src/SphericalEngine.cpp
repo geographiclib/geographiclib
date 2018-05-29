@@ -414,15 +414,15 @@ namespace GeographicLib {
       if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
     } else {
       for (int m = 0, k = 0; m <= M; ++m) {
-        Utility::readarray<double, real, false>(stream, &C[k], N+1-m);
+        Utility::readarray<double, real, false>(stream, &C[k], N + 1 - m);
         stream.seekg((N0 - N) * sizeof(double), ios::cur);
-        k += N0 + 1 - m;
+        k += N + 1 - m;
       }
       if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
       for (int m = 1, k = 0; m <= M; ++m) {
-        Utility::readarray<double, real, false>(stream, &S[k], N+1-m);
+        Utility::readarray<double, real, false>(stream, &S[k], N + 1 - m);
         stream.seekg((N0 - N) * sizeof(double), ios::cur);
-        k += N0 + 1 - m;
+        k += N + 1 - m;
       }
       if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
     }

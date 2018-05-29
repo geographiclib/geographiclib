@@ -5,6 +5,7 @@ MagneticField -- compute the earth's magnetic field
 =head1 SYNOPSIS
 
 B<MagneticField> [ B<-n> I<name> ] [ B<-d> I<dir> ]
+[ B<-N> I<Nmax> ] [ B<-M> I<Mmax> ]
 [ B<-t> I<time> | B<-c> I<time> I<lat> I<h> ]
 [ B<-r> ] [ B<-w> ] [ B<-T> I<tguard> ] [ B<-H> I<hguard> ] [ B<-p> I<prec> ]
 [ B<-v> ]
@@ -64,6 +65,14 @@ L</MODELS>.
 
 read magnetic models from I<dir> instead of the default.  See
 L</MODELS>.
+
+=item B<-N> I<Nmax>
+
+limit the degree of the model to I<Nmax>.
+
+=item B<-M> I<Mmax>
+
+limit the order of the model to I<Mmax>.
 
 =item B<-t> I<time>
 

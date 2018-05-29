@@ -9,6 +9,7 @@
 
 #include <GeographicLib/GravityModel.hpp>
 #include <fstream>
+#include <limits>
 #include <GeographicLib/SphericalEngine.hpp>
 #include <GeographicLib/GravityCircle.hpp>
 #include <GeographicLib/Utility.hpp>
@@ -34,7 +35,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  GravityModel::GravityModel(const std::string& name,const std::string& path)
+  GravityModel::GravityModel(const std::string& name, const std::string& path,
+                             int Nmax, int Mmax)
     : _name(name)
     , _dir(path)
     , _description("NONE")
@@ -47,6 +49,12 @@ namespace GeographicLib {
   {
     if (_dir.empty())
       _dir = DefaultGravityPath();
+    bool truncate = Nmax >= 0 || Mmax >= 0;
+    if (truncate) {
+      if (Nmax >= 0 && Mmax < 0) Mmax = Nmax;
+      if (Nmax < 0) Nmax = numeric_limits<int>::max();
+      if (Mmax < 0) Mmax = numeric_limits<int>::max();
+    }
     ReadMetadata(_name);
     {
       string coeff = _filename + ".cof";
@@ -61,14 +69,16 @@ namespace GeographicLib {
       if (_id != string(id))
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       int N, M;
-      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _Cx, _Sx);
+      if (truncate) { N = Nmax; M = Mmax; }
+      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _Cx, _Sx, truncate);
       if (!(N >= 0 && M >= 0))
         throw GeographicErr("Degree and order must be at least 0");
       if (_Cx[0] != 0)
-        throw GeographicErr("A degree 0 term should be zero");
+        throw GeographicErr("The degree 0 term should be zero");
       _Cx[0] = 1;               // Include the 1/r term in the sum
       _gravitational = SphericalHarmonic(_Cx, _Sx, N, N, M, _amodel, _norm);
-      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _CC, _CS);
+      if (truncate) { N = Nmax; M = Mmax; }
+      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _CC, _CS, truncate);
       if (N < 0) {
         N = M = 0;
         _CC.resize(1, real(0));

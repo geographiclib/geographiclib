@@ -35,7 +35,7 @@ namespace GeographicLib {
   using namespace std;
 
   MagneticModel::MagneticModel(const std::string& name,const std::string& path,
-                               const Geocentric& earth)
+                               const Geocentric& earth, int Nmax, int Mmax)
     : _name(name)
     , _dir(path)
     , _description("NONE")
@@ -54,6 +54,12 @@ namespace GeographicLib {
   {
     if (_dir.empty())
       _dir = DefaultMagneticPath();
+    bool truncate = Nmax >= 0 || Mmax >= 0;
+    if (truncate) {
+      if (Nmax >= 0 && Mmax < 0) Mmax = Nmax;
+      if (Nmax < 0) Nmax = numeric_limits<int>::max();
+      if (Mmax < 0) Mmax = numeric_limits<int>::max();
+    }
     ReadMetadata(_name);
     _G.resize(_Nmodels + 1 + _Nconstants);
     _H.resize(_Nmodels + 1 + _Nconstants);
@@ -71,7 +77,9 @@ namespace GeographicLib {
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       for (int i = 0; i < _Nmodels + 1 + _Nconstants; ++i) {
         int N, M;
-        SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _G[i], _H[i]);
+        if (truncate) { N = Nmax; M = Mmax; }
+        SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _G[i], _H[i],
+                                           truncate);
         if (!(M < 0 || _G[i][0] == 0))
           throw GeographicErr("A degree 0 term is not permitted");
         _harm.push_back(SphericalHarmonic(_G[i], _H[i], N, N, M, _a, _norm));
