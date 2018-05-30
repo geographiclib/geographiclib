@@ -118,7 +118,7 @@
 *! https://geographiclib.sourceforge.io/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.49.
+*! <a href="../index.html">GeographicLib</a> 1.50.
 
 *> Solve the direct geodesic problem
 *!
@@ -1037,7 +1037,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 49
+      minor = 50
       patch = 0
 
       return

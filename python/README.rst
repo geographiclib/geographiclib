@@ -4,4 +4,4 @@ This implements
 ellipsoid of revolution.
 
 Documentation is available at
-`<https://geographiclib.sourceforge.io/1.49/python/>`_.
+`<https://geographiclib.sourceforge.io/1.50/python/>`_.

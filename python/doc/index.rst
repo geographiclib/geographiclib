@@ -45,8 +45,8 @@ and install it with
 
 .. code-block:: sh
 
-  tar xpfz geographiclib-1.49.tar.gz
-  cd geographiclib-1.49
+  tar xpfz geographiclib-1.50.tar.gz
+  cd geographiclib-1.50
   python setup.py install
 
 It's a good idea to run the unit tests to verify that the installation
@@ -97,6 +97,8 @@ GeographicLib in various languages
 
 Change log
 ----------
+
+* Version 1.50 (released 2018-mm-dd)
 
 * Version 1.49 (released 2017-10-05)
 

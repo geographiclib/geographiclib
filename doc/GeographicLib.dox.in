@@ -7656,7 +7656,6 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2018-mm-dd)
-   - TODO: update versions for Fortran, C, JavaScript, Python, MATLAB.
    - TODO: update copyright dates.
    - Java implementation: require Java 1.6 or later and so remove
      epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.

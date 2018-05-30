@@ -70,7 +70,7 @@ GeographicLib.Accumulator = {};
    * @constant
    * @summary version string
    */
-  c.version_string = "1.49";
+  c.version_string = "1.50";
 })(GeographicLib.Constants);
 
 (function(
