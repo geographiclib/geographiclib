@@ -364,19 +364,55 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
       using std::remainder; return remainder(x, y);
 #else
-      using std::fmod;
+      using std::fmod; using std::abs;
+      y = abs(y);               // The result doesn't depend on the sign of y
       T z = fmod(x, y);
-#if defined(_MSC_VER) && _MSC_VER < 1900
-      // Before version 14 (2015), Visual Studio had problems dealing
-      // with -0.0.  Specifically
-      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
-      // sincosd has a similar fix.
-      // python 2.7 on Windows 32-bit machines has the same problem.
-      if (x == 0) z = x;
+      if (z == 0)
+        // This shouldn't be necessary.  However, before version 14 (2015),
+        // Visual Studio had problems dealing with -0.0.  Specifically
+        //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+        // python 2.7 on Windows 32-bit machines has the same problem.
+        z = copysign(z, x);
+      else if (2 * abs(z) == y)
+        z -= fmod(x, 2 * y) - z; // Implement ties to even
+      else if (2 * abs(z) > y)
+        z += (z < 0 ? y : -y);  // Fold remaining cases to (-y/2, y/2)
+      return z;
 #endif
-      // Don't worry here about how ties are handled.  Also assume that y is
-      // positive.
-      return 2 * z > y ? z - y : (2 * z < -y ? z + y : z);
+    }
+
+    /**
+     * The remquo function.
+     *
+     * @tparam T the type of the arguments and the returned value.
+     * @param[in] x
+     * @param[in] y
+     * @param[out] n the low 3 bits of the quotient
+     * @return the remainder of \e x/\e y in the range [&minus;\e y/2, \e y/2].
+     **********************************************************************/
+    template<typename T> static T remquo(T x, T y, int* n) {
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+      using std::remquo; return remquo(x, y, n);
+#else
+      using std::remainder;
+      T z = remainder(x, y);
+      if (n) {
+        T
+          a = remainder(x, 2 * y),
+          b = remainder(x, 4 * y),
+          c = remainder(x, 8 * y);
+        *n  = (a > z ? 1 : (a < z ? -1 : 0));
+        *n += (b > a ? 2 : (b < a ? -2 : 0));
+        *n += (c > b ? 4 : (c < b ? -4 : 0));
+        if (y < 0) *n *= -1;
+        if (y != 0) {
+          if (x/y > 0 && *n <= 0)
+            *n += 8;
+          else if (x/y < 0 && *n >= 0)
+            *n -= 8;
+        }
+      }
+      return z;
 #endif
     }
 
@@ -401,7 +437,7 @@ namespace GeographicLib {
         return -T(0);
       else if (x > 0) {
         T t = ceil(x);
-        return t - v > T(0.5) ? t - 1 : t;
+        return t - x > T(0.5) ? t - 1 : t;
       } else if (x < 0) {
         T t = floor(x);
         return x - t > T(0.5) ? t + 1 : t;
@@ -620,25 +656,9 @@ namespace GeographicLib {
     template<typename T> static void sincosd(T x, T& sinx, T& cosx) {
       // In order to minimize round-off errors, this function exactly reduces
       // the argument to the range [-45, 45] before converting it to radians.
-      using std::sin; using std::cos;
+      using std::sin; using std::cos; using std::remquo;
       T r; int q;
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
-  !defined(__GNUC__)
-      // Disable for gcc because of bug in glibc version < 2.22 (released
-      // 2015-08-14), see https://sourceware.org/bugzilla/show_bug.cgi?id=17569
-      // Once this fix is widely deployed, should insert a runtime test for the
-      // glibc version number.  For example
-      //   #include <gnu/libc-version.h>
-      //   std::string version(gnu_get_libc_version()); => "2.22"
-      using std::remquo;
-      r = remquo(x, T(90), &q);
-#else
-      using std::fmod;
-      r = fmod(x, T(360));
-      q = int(lround(r / 90));
-      r -= 90 * q;
-#endif
-      // now abs(r) <= 45
+      r = remquo(x, T(90), &q); // now abs(r) <= 45
       r *= degree();
       // Possibly could call the gnu extension sincos
       T s = sin(r), c = cos(r);
@@ -670,19 +690,9 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static T sind(T x) {
       // See sincosd
-      using std::sin; using std::cos;
+      using std::sin; using std::cos; using std::remquo;
       T r; int q;
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
-  !defined(__GNUC__)
-      using std::remquo;
-      r = remquo(x, T(90), &q);
-#else
-      using std::fmod;
-      r = fmod(x, T(360));
-      q = int(lround(r / 90));
-      r -= 90 * q;
-#endif
-      // now abs(r) <= 45
+      r = remquo(x, T(90), &q); // now abs(r) <= 45
       r *= degree();
       unsigned p = unsigned(q);
       r = p & 1U ? cos(r) : sin(r);
@@ -700,19 +710,9 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static T cosd(T x) {
       // See sincosd
-      using std::sin; using std::cos;
+      using std::sin; using std::cos; using std::remquo;
       T r; int q;
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3 && \
-  !defined(__GNUC__)
-      using std::remquo;
-      r = remquo(x, T(90), &q);
-#else
-      using std::fmod;
-      r = fmod(x, T(360));
-      q = int(lround(r / 90));
-      r -= 90 * q;
-#endif
-      // now abs(r) <= 45
+      r = remquo(x, T(90), &q); // now abs(r) <= 45
       r *= degree();
       unsigned p = unsigned(q + 1);
       r = p & 1U ? cos(r) : sin(r);

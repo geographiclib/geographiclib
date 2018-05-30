@@ -7656,6 +7656,8 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2018-mm-dd)
+   - TODO: update versions for Fortran, C, JavaScript, Python, MATLAB.
+   - TODO: update copyright dates.
    - Java implementation: require Java 1.6 or later and so remove
      epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
    - Fix bug in Rhumb class and
@@ -7673,20 +7675,19 @@ git repository for GeographicLib</a>.
    - Improve code coverage of geodesic algorithms (C++ and C).  TODO:
      Java, JS, Python, MATLAB, Fortran.
    - TODO: PolygonArea: fix the range of the area more aggressively.
-   - TODO: Change templating in PolygonArea so that the AddPoint and
+   - TODO?: Change templating in PolygonArea so that the AddPoint and
      AddEdge methods are templated instead of the class itself.
    - TODO: cross ref aux latitude section in rhumb line page.
-   - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
+   - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
-   - TODO: start converting MajorRadius methods to EquatorialRadius.
-   - TODO: add GreatEllipse class?
-   - TODO: allow GravityModels to be truncated?
+   - TODO?: start converting MajorRadius methods to EquatorialRadius.
+   - TODO?: add GreatEllipse class.
    - TODO: document development environment for Windows: cmake + VS +
      NSIS.
    - TODO: fix installation path for binary installer.
    - TODO: fix allowed results for GeodSolve59 test.
    - TODO: fix dotnet CMakeLists.txt CMP0026 to match version in src.
-   - TODO: implement Geodesic + TM + PolarStereographic on Jets.
+   - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
    - TODO: update information on https://github.com/ngageoint/opensphere-asm
    - TODO: document treatment of poles in RhumbSolve{,.cgi}.
    - TODO: Fix installation instructions (don't use make with Visual
@@ -7701,7 +7702,7 @@ git repository for GeographicLib</a>.
      test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...). TODO:
      Add check of sign +0.0 in GeodSolve73 to all languages.
      Cf. https://github.com/OSGeo/proj.4/issues/826
-    - C fixes (also make changes to C++ library)
+   - C fixes (also make changes to C++ library)
      - check nan->int conversions. TODO: repeat for other languages.
        Maybe use llong(floor(x))
        Cf. https://github.com/OSGeo/proj.4/issues/843
@@ -7722,10 +7723,9 @@ git repository for GeographicLib</a>.
    - Math::cbrt, Math::atanh, and Math::asinh now preserve the sign of
      &minus;0.  (Also: C, Java, JavaScript, Python, MATLAB.  Not
      necessary: Fortran because sign is a built-in function.)
-   - TODO: Allow gravity models to be truncated.
    - JS: use polyfills for math functions.
-   - Add Math::remainder, Math::round, and Math::lround; Math::sincosd,
-     et al., use lround.  TODO: port to C, etc.
+   - Add Math::remainder, Math::remquo, Math::round, and Math::lround;
+     Math::sincosd, et al., use lround.  TODO: port to C, etc.
    - TODO: add test to check remquo(3419.0, 360.0, &n) != 539?
    - TODO: check logic in C interface (plus others?) on defaults for
      caps in geod_gendirectline.  Also improve description of "point 3".

@@ -184,7 +184,7 @@ namespace GeographicLib {
      * from a file obtained by appending ".cof" to metadata file (so the
      * filename ends in ".egm.cof").
      *
-     * If \e Nmax &ge; 0 and \e Mmax < 0, then set \e Mmax = \e Nmax.
+     * If \e Nmax &ge; 0 and \e Mmax < 0, then \e Mmax is set to \e Nmax.
      **********************************************************************/
     explicit GravityModel(const std::string& name,
                           const std::string& path = "",

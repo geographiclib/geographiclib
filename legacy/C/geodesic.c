@@ -169,7 +169,7 @@ static real roundx(real x) {
     return -(real)(0);
   else if (x > 0) {
     t = ceil(x);
-    return t - v > (real)(0.5) ? t - 1 : t;
+    return t - x > (real)(0.5) ? t - 1 : t;
   } else if (x < 0) {
     t = floor(x);
     return x - t > (real)(0.5) ? t + 1 : t;
