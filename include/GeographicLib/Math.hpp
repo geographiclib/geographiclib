@@ -63,12 +63,8 @@
 
 #if GEOGRAPHICLIB_PRECISION == 4
 #include <boost/version.hpp>
-#if BOOST_VERSION >= 105600
-#include <boost/cstdfloat.hpp>
-#endif
 #include <boost/multiprecision/float128.hpp>
 #include <boost/math/special_functions.hpp>
-__float128 fmaq(__float128, __float128, __float128);
 #elif GEOGRAPHICLIB_PRECISION == 5
 #include <mpreal.h>
 #endif
@@ -361,7 +357,7 @@ namespace GeographicLib {
      * @return the remainder of \e x/\e y in the range [&minus;\e y/2, \e y/2].
      **********************************************************************/
     template<typename T> static T remainder(T x, T y) {
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
+#if GEOGRAPHICLIB_CXX11_MATH
       using std::remainder; return remainder(x, y);
 #else
       using std::fmod; using std::abs;
@@ -391,6 +387,7 @@ namespace GeographicLib {
      * @return the remainder of \e x/\e y in the range [&minus;\e y/2, \e y/2].
      **********************************************************************/
     template<typename T> static T remquo(T x, T y, int* n) {
+      // boost::math::remquo doesn't handle nans correctly
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
       using std::remquo; return remquo(x, y, n);
 #else
@@ -457,7 +454,7 @@ namespace GeographicLib {
      * If the result does not fit in a long int, the return value is undefined.
      **********************************************************************/
     template<typename T> static long lround(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
+#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 5
       using std::lround; return lround(x);
 #else
       using std::abs;
@@ -656,7 +653,7 @@ namespace GeographicLib {
     template<typename T> static void sincosd(T x, T& sinx, T& cosx) {
       // In order to minimize round-off errors, this function exactly reduces
       // the argument to the range [-45, 45] before converting it to radians.
-      using std::sin; using std::cos; using std::remquo;
+      using std::sin; using std::cos;
       T r; int q;
       r = remquo(x, T(90), &q); // now abs(r) <= 45
       r *= degree();
@@ -690,7 +687,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static T sind(T x) {
       // See sincosd
-      using std::sin; using std::cos; using std::remquo;
+      using std::sin; using std::cos;
       T r; int q;
       r = remquo(x, T(90), &q); // now abs(r) <= 45
       r *= degree();
@@ -710,7 +707,7 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T> static T cosd(T x) {
       // See sincosd
-      using std::sin; using std::cos; using std::remquo;
+      using std::sin; using std::cos;
       T r; int q;
       r = remquo(x, T(90), &q); // now abs(r) <= 45
       r *= degree();
@@ -960,46 +957,6 @@ namespace GeographicLib {
       return b.r;
     }
 
-#if GEOGRAPHICLIB_PRECISION == 4
-    typedef boost::math::policies::policy
-      < boost::math::policies::domain_error
-        <boost::math::policies::errno_on_error>,
-        boost::math::policies::pole_error
-        <boost::math::policies::errno_on_error>,
-        boost::math::policies::overflow_error
-        <boost::math::policies::errno_on_error>,
-        boost::math::policies::evaluation_error
-        <boost::math::policies::errno_on_error> >
-      boost_special_functions_policy;
-
-    static real hypot(real x, real y)
-    { return boost::math::hypot(x, y, boost_special_functions_policy()); }
-
-    static real expm1(real x)
-    { return boost::math::expm1(x, boost_special_functions_policy()); }
-
-    static real log1p(real x)
-    { return boost::math::log1p(x, boost_special_functions_policy()); }
-
-    static real asinh(real x)
-    { return boost::math::asinh(x, boost_special_functions_policy()); }
-
-    static real atanh(real x)
-    { return boost::math::atanh(x, boost_special_functions_policy()); }
-
-    static real cbrt(real x)
-    { return boost::math::cbrt(x, boost_special_functions_policy()); }
-
-    static real fma(real x, real y, real z)
-    { return fmaq(__float128(x), __float128(y), __float128(z)); }
-
-    static real copysign(real x, real y)
-    { return boost::math::copysign(x, y); }
-
-    static bool isnan(real x) { return boost::math::isnan(x); }
-
-    static bool isfinite(real x) { return boost::math::isfinite(x); }
-#endif
   };
 
 } // namespace GeographicLib

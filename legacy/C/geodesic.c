@@ -25,6 +25,9 @@
 
 #if !defined(HAVE_C99_MATH)
 #define HAVE_C99_MATH 0
+#else
+#undef HAVE_C99_MATH
+#define HAVE_C99_MATH 0
 #endif
 #if !defined(PJ_LIB__)
 #define PJ_LIB__ 0
@@ -115,9 +118,9 @@ enum captype {
 #define copysignx copysign
 #define hypotx hypot
 #define cbrtx cbrt
-#define lroundx lround
+#define remainderx remainder
+#define remquox remquo
 /* #define log1px log1p */
-/* #define roundx round */
 #else
 /* Replacements for C99 math functions */
 
@@ -158,33 +161,44 @@ static real cbrtx(real x) {
   return x > 0 ? y : (x < 0 ? -y : x); /* cbrt(-0.0) = -0.0 */
 }
 
-static real roundx(real x) {
-  /* The handling of corner cases is copied from boost; see
-   *   https://github.com/boostorg/math/pull/8
-   * with improvements to return -0 when appropriate. */
-  real t;
-  if (0 < x && x < (real)(0.5))
-    return +(real)(0);
-  else if (0 > x && x > -(real)(0.5))
-    return -(real)(0);
-  else if (x > 0) {
-    t = ceil(x);
-    return t - x > (real)(0.5) ? t - 1 : t;
-  } else if (x < 0) {
-    t = floor(x);
-    return x - t > (real)(0.5) ? t + 1 : t;
-  } else                        /* +/-0 and NaN */
-    return x;                   /* Retain sign of 0 */
+static real remainderx(real x, real y) {
+  real z;
+  y = fabs(y);                 /* The result doesn't depend on the sign of y */
+  z = fmod(x, y);
+  if (z == 0)
+    /* This shouldn't be necessary.  However, before version 14 (2015),
+     * Visual Studio had problems dealing with -0.0.  Specifically
+     *   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+     * python 2.7 on Windows 32-bit machines has the same problem. */
+    z = copysignx(z, x);
+  else if (2 * fabs(z) == y)
+    z -= fmod(x, 2 * y) - z;    /* Implement ties to even */
+  else if (2 * fabs(z) > y)
+    z += (z < 0 ? y : -y);      /* Fold remaining cases to (-y/2, y/2) */
+  return z;
 }
 
-static long lroundx(real x) {
-  /* Default value for overflow + NaN + (x == LONG_MIN) */
-  long r = LONG_MIN;
-  x = roundx(x);
-  if (fabs(x) < -(real)(r))     /* Assume (real)(LONG_MIN) is exact */
-    r = (long)(x);
-  return r;
+static real remquox(real x, real y, int* n) {
+  real z = remainderx(x, y);
+  if (n) {
+    real
+      a = remainderx(x, 2 * y),
+      b = remainderx(x, 4 * y),
+      c = remainderx(x, 8 * y);
+    *n  = (a > z ? 1 : (a < z ? -1 : 0));
+    *n += (b > a ? 2 : (b < a ? -2 : 0));
+    *n += (c > b ? 4 : (c < b ? -4 : 0));
+    if (y < 0) *n *= -1;
+    if (y != 0) {
+      if (x/y > 0 && *n <= 0)
+        *n += 8;
+      else if (x/y < 0 && *n >= 0)
+        *n -= 8;
+    }
+  }
+  return z;
 }
+
 #endif
 
 static real sq(real x) { return x * x; }
@@ -225,23 +239,8 @@ static void norm2(real* sinx, real* cosx) {
 }
 
 static real AngNormalize(real x) {
-#if HAVE_C99_MATH
-  x = remainder(x, (real)(360));
+  x = remainderx(x, (real)(360));
   return x != -180 ? x : 180;
-#else
-  real y = fmod(x, (real)(360));
-#if defined(_MSC_VER) && _MSC_VER < 1900
-  /*
-   * Before version 14 (2015), Visual Studio had problems dealing
-   * with -0.0.  Specifically
-   *   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
-   * sincosdx has a similar fix.
-   * python 2.7 on Windows 32-bit machines has the same problem.
-   */
-  if (x == 0) y = x;
-#endif
-  return y <= -180 ? y + 360 : (y <= 180 ? y : y - 360);
-#endif
 }
 
 static real LatFix(real x)
@@ -272,15 +271,7 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   /* In order to minimize round-off errors, this function exactly reduces
    * the argument to the range [-45, 45] before converting it to radians. */
   real r, s, c; int q;
-#if HAVE_C99_MATH && !defined(__GNUC__)
-  /* Disable for gcc because of bug in glibc version < 2.22 (released
-   * 2015-08-14), see https://sourceware.org/bugzilla/show_bug.cgi?id=17569 */
-  r = remquo(x, (real)(90), &q);
-#else
-  r = fmod(x, (real)(360));
-  q = (int)(lroundx(r / 90));
-  r -= 90 * q;
-#endif
+  r = remquox(x, (real)(90), &q);
   /* now abs(r) <= 45 */
   r *= degree;
   /* Possibly could call the gnu extension sincos */
@@ -1843,17 +1834,10 @@ int transit(real lon1, real lon2) {
 }
 
 int transitdirect(real lon1, real lon2) {
-#if HAVE_C99_MATH
-  lon1 = remainder(lon1, (real)(720));
-  lon2 = remainder(lon2, (real)(720));
+  lon1 = remainderx(lon1, (real)(720));
+  lon2 = remainderx(lon2, (real)(720));
   return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
            (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
-#else
-  lon1 = fmod(lon1, (real)(720));
-  lon2 = fmod(lon2, (real)(720));
-  return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
-           ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
-#endif
 }
 
 void accini(real s[]) {

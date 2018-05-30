@@ -313,7 +313,7 @@ int main() {
              std::atanh(0.8) + std::cbrt(8.0) +
              std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
              std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0) +
-             std::round(3.5) + std::remquo(100.0, 90.0, &q)) +
+             std::round(3.5)) +
          std::isfinite(4.0) + std::isnan(0.0) + int(std::lround(-3.5));
 }\n" CXX11_MATH)
 if (CXX11_MATH)
@@ -344,7 +344,8 @@ endif ()
 include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
 if (USE_BOOST_FOR_EXAMPLES)
-  # quad precision numbers appeared in Boost 1.54.
+  # quad precision numbers appeared in Boost 1.54.  Various workarounds
+  # stopped being needed with Boost 1.64.
   find_package (Boost 1.54 COMPONENTS serialization)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CXX11_MATH)

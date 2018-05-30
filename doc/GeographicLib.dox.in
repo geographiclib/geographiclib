@@ -7378,7 +7378,7 @@ Here's what you should know:
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
    this requires:
-   - <a href="http://www.boost.org"> Boost</a>, version 1.54 or later,
+   - <a href="http://www.boost.org"> Boost</a>, version 1.64 or later,
    - the quadmath library (the package names are libquadmath
      and libquadmath-devel),
    - the use of g++.
@@ -7724,8 +7724,8 @@ git repository for GeographicLib</a>.
      &minus;0.  (Also: C, Java, JavaScript, Python, MATLAB.  Not
      necessary: Fortran because sign is a built-in function.)
    - JS: use polyfills for math functions.
-   - Add Math::remainder, Math::remquo, Math::round, and Math::lround;
-     Math::sincosd, et al., use lround.  TODO: port to C, etc.
+   - Add Math::remainder, Math::remquo, Math::round, and Math::lround.
+     Also add remainder, remquo to C.  TODO: others?.
    - TODO: add test to check remquo(3419.0, 360.0, &n) != 539?
    - TODO: check logic in C interface (plus others?) on defaults for
      caps in geod_gendirectline.  Also improve description of "point 3".
@@ -7733,6 +7733,8 @@ git repository for GeographicLib</a>.
      names and add an interface library (thanks to Matthew
      Woehlke). TODO: Update documentation.
    - Minimum g++ version = 4.8.0 (2013-03-22).
+   - Minimum boost version = 1.64 needed for GEOGRAPHICLIB_PRECISION =
+     4.
    - SphericalEngine::coeff::readcoeffs takes new optional argument
      \e truncate.
    - GravityModel::GravityModel and MagneticModel::MagneticModel
