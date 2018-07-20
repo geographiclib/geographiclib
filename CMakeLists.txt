@@ -242,9 +242,11 @@ else ()
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
   # g++ 6.0 defaults to -std=gnu++14
   if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
-        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0) OR
+        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
       # but Boost 1.60 quadmath needs c++14 and not gnu++14
-      GEOGRAPHICLIB_PRECISION EQUAL 4)
+      # OR GEOGRAPHICLIB_PRECISION EQUAL 4
+      # This exception is no longer needed with Boost 1.66
+      )
     # check for C++11 support.  This flag is *not* propagated to clients
     # that use GeographicLib.  However, this is of no consequence.  When
     # the client code is being compiled (and the GeographicLib headers
@@ -344,12 +346,12 @@ endif ()
 include_directories ("${PROJECT_BINARY_DIR}/include" include)
 
 if (USE_BOOST_FOR_EXAMPLES)
-  # quad precision numbers appeared in Boost 1.54.  Various workarounds
-  # stopped being needed with Boost 1.64.
-  find_package (Boost 1.54 COMPONENTS serialization)
+  # quad precision numbers appeared in Boost 1.54.  Various
+  # workarounds stopped being needed with Boost 1.64.
+  find_package (Boost 1.64 COMPONENTS serialization)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CXX11_MATH)
-    find_package (Boost 1.54)
+    find_package (Boost 1.64)
   endif ()
 endif ()
 
