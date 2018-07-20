@@ -2072,7 +2072,7 @@
       end if
       y1 = 0
 * Now n2 is even
-      do 10 k = n2, 1, -2
+      do 10 k = n2, 2, -2
 * Unroll loop x 2, so accumulators return to their original role
         y1 = ar * y0 - y1 + c(k)
         y0 = ar * y1 - y0 + c(k-1)
