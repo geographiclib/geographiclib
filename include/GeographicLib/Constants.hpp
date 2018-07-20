@@ -82,7 +82,7 @@
   GEOGRAPHICLIB_SHARED_LIB
 #  if GEOGRAPHICLIB_SHARED_LIB > 1
 #    error GEOGRAPHICLIB_SHARED_LIB must be 0 or 1
-#  elif defined(GeographicLib_EXPORTS)
+#  elif defined(GeographicLib_SHARED_EXPORTS)
 #    define GEOGRAPHICLIB_EXPORT __declspec(dllexport)
 #  else
 #    define GEOGRAPHICLIB_EXPORT __declspec(dllimport)

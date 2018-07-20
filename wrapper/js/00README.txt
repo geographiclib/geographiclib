@@ -1,5 +1,5 @@
 The geodesic routines in GeographicLib have been implemented in
-JavaScript Python library.  See
+JavaScript library.  See
 
   https://geographiclib.sourceforge.io/html/js
 

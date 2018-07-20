@@ -7738,11 +7738,13 @@ git repository for GeographicLib</a>.
      \e truncate.
    - GravityModel::GravityModel and MagneticModel::MagneticModel
      constructors allows maximum degree and order to be specified.
+     TODO: provide methods to return maximum degree and order.
    - <a href="Gravity.1.html">Gravity</a> and
      <a href="MagneticField.1.html">MagneticField</a> utilities
      accept -N and -M options to to allow the maximum degree and order
      to be specified.
    - Old deprecated NormalGravity::NormalGravity constructor removed.
+   - Split DMS stuff from main JS package.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
