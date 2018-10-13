@@ -1788,22 +1788,13 @@ geoid height postings on grid of points with uniform spacing in latitude
 \e h &times; \e w, then latitude (resp. longitude) spacing is
 &minus;180&deg;/(\e h &minus; 1) (resp. 360&deg;/\e w), with the (0,0)
 pixel given the value at &phi; = 90&deg;, &lambda; = 0&deg;.  Models
-covering a restricted area will need to be "inserted" into a world-wide
+covering a limited area will need to be "inserted" into a world-wide
 grid before being accessible to the Geoid class.
 
 \section geoidinterp Interpolating the geoid data
 
 Geoid evaluates the geoid height using bilinear or cubic
-interpolation.  The gradient of the geoid height is obtained by
-differentiating the interpolated height and referencing the result to
-distance on the WGS84 ellipsoid.
-
-<b>WARNING</b>: Although Geoid computes the gradient of
-the geoid height, this is subject to large quantization errors as a
-result of the way that the geoid data is stored.  This is particularly
-acute for fine grids, at high latitudes, and for the easterly gradient.
-If you need to compute the direction of the acceleration due to gravity
-accurately, you should use GravityModel::Gravity.
+interpolation.
 
 The bilinear interpolation is based on the values at the 4 corners of
 the enclosing cell.  The interpolated height is a continuous function of
@@ -1827,9 +1818,9 @@ boundaries.  The over-constrained cubic fit slightly reduces the
 quantization errors on average.
 
 The algorithm for the least squares fit is taken from, F. H. Lesh,
-Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29--30
-(1959).  This algorithm is not part of Geoid; instead it is implemented
-as
+<a href="https://doi.org/10.1145/368424.368443">Multi-dimensional
+least-squares polynomial curve fitting</a>, CACM 2, 29--30 (1959).
+This algorithm is not part of Geoid; instead it is implemented as
 <a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
 code which is used to precompute the matrices to convert the function
 values on the stencil into the coefficients from the cubic polynomial.
@@ -2744,19 +2735,19 @@ Similarly, \f$ U_q \f$ is generated in the oblate case by
 \begin{align}
 \rho_q &= \frac{a^2 b^3 \omega^2}G
    \frac{2E^2 - 3R^2}{6\pi E^5 \sqrt{E^2 - R^2} Q(E/b)}, \\
-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q(E/b)}, \\
-C_q &= -\frac{a^2 b^3 \omega^2}G \frac4{45 Q(E/b)}, \\
-C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q(E/b)}.
+A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45\,Q(E/b)}, \\
+C_q &= -\frac{a^2 b^3 \omega^2}G \frac4{45\,Q(E/b)}, \\
+C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45\,Q(E/b)}.
 \end{align}
 \f]
 The corresponding results for a prolate ellipsoid are
 \f[
 \begin{align}
 \rho_q' &= \frac{a^2 b^3 \omega^2}G
-   \frac{3Z^2 - E'^2}{12 E'^5 Q'(E'/a)}, \\
-A_q &= \frac{a^2 b^3 \omega^2}G \frac2{45 Q'(E'/a)}, \\
+   \frac{3Z^2 - E'^2}{12\,E'^5 Q'(E'/a)}, \\
+A_q &= \frac{a^2 b^3 \omega^2}G \frac2{45\,Q'(E'/a)}, \\
 C_q &= 0, \\
-C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q'(E'/a)}.
+C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45\,Q'(E'/a)}.
 \end{align}
 \f]
 
@@ -7656,6 +7647,8 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2018-mm-dd)
+   - TODO: add doc links to ge{distance,reckon}.m.
+   - TODO: add Ellipsoid class links auxlat page.
    - TODO: update copyright dates.
    - Java implementation: require Java 1.6 or later and so remove
      epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
@@ -7744,7 +7737,9 @@ git repository for GeographicLib</a>.
      accept -N and -M options to to allow the maximum degree and order
      to be specified.
    - Old deprecated NormalGravity::NormalGravity constructor removed.
-   - Split DMS stuff from main JS package.
+   - TODO: Split DMS stuff from main JS package.
+   - TODO: Add _d suffix to example programs.
+   - Geoid class, std::ios::streamoff -> std::streamoff.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

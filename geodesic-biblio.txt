@@ -1640,12 +1640,12 @@
    ''Geometric geodesy, Part I'',
    Dept. of Geodetic Science and Surveying,
    Ohio State Univ. (1991), Chaps. 4 & 6.[[BR]]
-   http://hdl.handle.net/1811/24333
+   https://hdl.handle.net/1811/24333
  * R. H. Rapp,[[BR]]
    ''Geometric geodesy, Part II'',
    Dept. of Geodetic Science and Surveying,
    Ohio State Univ. (1993), Chap. 1.[[BR]]
-   http://hdl.handle.net/1811/24409
+   https://hdl.handle.net/1811/24409
  * K. Borre,[[BR]]
    ''Ellipsoidal geometry and conformal mapping'' (Mar. 2001);
    these notes, with some modifications, constitute Chaps. 11 & 12
@@ -1738,4 +1738,4 @@
    ''Geometric reference systems in geodesy'',
    Division. of Geodetic Science,
    Ohio State Univ. (2016), Chap. 2.[[BR]]
-   https://kb.osu.edu/dspace/handle/1811/77986
+   https://hdl.handle.net/1811/77986

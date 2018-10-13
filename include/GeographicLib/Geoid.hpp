@@ -120,7 +120,7 @@ namespace GeographicLib {
     mutable real _v00, _v01, _v10, _v11;
     mutable real _t[nterms_];
     void filepos(int ix, int iy) const {
-      _file.seekg(std::ios::streamoff
+      _file.seekg(std::streamoff
                   (_datastart +
                    pixel_size_ * (unsigned(iy)*_swidth + unsigned(ix))));
     }

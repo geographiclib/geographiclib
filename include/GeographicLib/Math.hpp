@@ -657,7 +657,7 @@ namespace GeographicLib {
       T r; int q;
       r = remquo(x, T(90), &q); // now abs(r) <= 45
       r *= degree();
-      // Possibly could call the gnu extension sincos
+      // g++ -O turns these two function calls into a call to sincos
       T s = sin(r), c = cos(r);
 #if defined(_MSC_VER) && _MSC_VER < 1900
       // Before version 14 (2015), Visual Studio had problems dealing
