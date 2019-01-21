@@ -1,5 +1,5 @@
 % GeographicLib toolbox
-% Version 1.50 2018-mm-dd
+% Version 1.50 2019-mm-dd
 %
 %   This toolbox provides native MATLAB implementations of a subset of the
 %   C++ library, GeographicLib.  Key components of this toolbox are
@@ -90,4 +90,4 @@
 %   projdoc          - Projections for an ellipsoid
 %   gedoc            - Great ellipses on an ellipsoid of revolution
 
-% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2018) <charles@karney.com>.

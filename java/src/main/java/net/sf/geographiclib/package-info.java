@@ -266,7 +266,7 @@
  * <ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.50</a>
- *   (released 2018-mm-dd)
+ *   (released 2019-mm-dd)
  * <ul>
  * <li>
  *   Require Java 1.6 or later and so remove epsilon, min, hypot, log1p,

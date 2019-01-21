@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2018-mm-dd
+\date 2019-mm-dd
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2018-mm-dd),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2019-mm-dd),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -7646,10 +7646,10 @@ of the
 git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
-   (released 2018-mm-dd)
+   (released 2019-mm-dd)
    - TODO: add doc links to ge{distance,reckon}.m.
    - TODO: add Ellipsoid class links auxlat page.
-   - TODO: update copyright dates.
+   - TODO: update copyright dates for 2019.
    - Java implementation: require Java 1.6 or later and so remove
      epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
    - Fix bug in Rhumb class and
