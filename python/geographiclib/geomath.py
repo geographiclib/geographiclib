@@ -156,7 +156,7 @@ class Math(object):
     """Compute sine and cosine of x in degrees."""
 
     r = math.fmod(x, 360)
-    q = Math.nan if Math.isnan(r) else int(round(r / 90))
+    q = 0 if Math.isnan(r) else int(round(r / 90))
     r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
     q = q % 4

@@ -26,7 +26,7 @@ $ node
 ```
 The npm package includes a test suite.  Run this by
 ```bash
-$ cd node_modules/geograliblib
+$ cd node_modules/geographiclib
 $ npm test
 ```
 

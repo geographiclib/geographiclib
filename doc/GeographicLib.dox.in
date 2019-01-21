@@ -7645,9 +7645,18 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
+\if SKIP
+   - TODO?: Change templating in PolygonArea so that the AddPoint and
+     AddEdge methods are templated instead of the class itself.
+   - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
+     ellipsoids.
+   - TODO?: start converting MajorRadius methods to EquatorialRadius.
+   - TODO?: add GreatEllipse class.
+   - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
+\endif
+
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2019-mm-dd)
-   - TODO: add doc links to ge{distance,reckon}.m.
    - TODO: add Ellipsoid class links auxlat page.
    - TODO: update copyright dates for 2019.
    - Java implementation: require Java 1.6 or later and so remove
@@ -7664,29 +7673,24 @@ git repository for GeographicLib</a>.
      encirclings to be wrong, sometimes resulting in an incorrect area
      if a polygon vertex had longitude = 0; also fixed in C library.
      TODO: Java, JS, Python.
+   - Additions to the documentation:
+     - add documentation links to ge{distance,reckon}.m;
+     - TODO: document development environment for Windows: cmake + VS +
+       NSIS;
+     - TODO: document treatment of poles in RhumbSolve{,.cgi}.
+     - TODO: in example programs, document when additional data files
+       are needed.
    - Improve code coverage of geodesic algorithms (C++ and C).  TODO:
      Java, JS, Python, MATLAB, Fortran.
    - TODO: PolygonArea: fix the range of the area more aggressively.
-   - TODO?: Change templating in PolygonArea so that the AddPoint and
-     AddEdge methods are templated instead of the class itself.
    - TODO: cross ref aux latitude section in rhumb line page.
-   - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
-     ellipsoids.
-   - TODO?: start converting MajorRadius methods to EquatorialRadius.
-   - TODO?: add GreatEllipse class.
-   - TODO: document development environment for Windows: cmake + VS +
-     NSIS.
    - TODO: fix installation path for binary installer.
    - TODO: fix allowed results for GeodSolve59 test.
    - TODO: fix dotnet CMakeLists.txt CMP0026 to match version in src.
-   - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
    - TODO: update information on https://github.com/ngageoint/opensphere-asm
-   - TODO: document treatment of poles in RhumbSolve{,.cgi}.
    - TODO: Fix installation instructions (don't use make with Visual
      Studio), maybe use less complicated install path (but at least make
      sure install path is consistent with compiler.
-   - TODO: in example programs, document when additional data files are
-     needed.
    - Turn off optimizations for the Intel compiler which causes
      incorrect code to be generated.  Tested only for C and C++ on
      Linux.  The changes should also work for Fortran and Windows.
