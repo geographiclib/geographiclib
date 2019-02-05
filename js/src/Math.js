@@ -271,7 +271,7 @@ GeographicLib.Accumulator = {};
     // the argument to the range [-45, 45] before converting it to radians.
     var r, q, s, c, sinx, cosx;
     r = x % 360;
-    q = 0 + Math.round(r / 90); // If r is NaN this returns NaN 
+    q = 0 + Math.round(r / 90); // If r is NaN this returns NaN
     r -= 90 * q;
     // now abs(r) <= 45
     r *= this.degree;

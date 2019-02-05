@@ -47,6 +47,10 @@ add_dependencies (testprograms GeodExact)
 target_link_libraries (GeodExact ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 set (TESTPROGRAMS ${TESTPROGRAMS} GeodExact)
 
+add_executable (reformat EXCLUDE_FROM_ALL reformat.cpp)
+add_dependencies (testprograms reformat)
+set (TESTPROGRAMS ${TESTPROGRAMS} reformat)
+
 # Put all the tools into a folder in the IDE
 set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
 

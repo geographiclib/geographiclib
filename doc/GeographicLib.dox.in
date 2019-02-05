@@ -7744,7 +7744,7 @@ git repository for GeographicLib</a>.
    - TODO: Split DMS stuff from main JS package.
    - TODO: Add _d suffix to example programs.
    - Geoid class, std::ios::streamoff -> std::streamoff.
-   - TODO: Fix use of <install> and <install folder> in
+   - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in
      NETGeographicLib doc.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
