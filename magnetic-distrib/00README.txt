@@ -6,7 +6,7 @@ The data is provided either as a compressed tar (extension .tar.bz2), a
 zip file, or a windows installer (extension .exe).  If you're unsure
 which one to install, start with
 
- wmm2015
+ wmm2015v2
 
 For more information, see
 

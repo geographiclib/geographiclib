@@ -15,7 +15,7 @@ TOOL=MagneticField
 EXT=wmm.cof
 usage() {
     cat <<EOF
-usage: $0 [-p parentdir] [-d] [-h] $MODEL...
+usage: $0 [-p parentdir] [-f] [-d] [-h] $MODEL...
 
 This program downloads and installs the datasets used by the
 GeographicLib::$CLASS class and the $TOOL tool to compute
@@ -25,7 +25,8 @@ table:
                                   size (kB)
   name     degree    years      tar.bz2  disk
   wmm2010    12    2010-2015      2       3
-  wmm2015    12    2015-2020      2       3
+  wmm2015    12    2015-2020      2       3  *deprecated*
+  wmm2015v2  12    2015-2020      2       3
   igrf11     13    1900-2015      7      25
   igrf12     13    1900-2020      7      26
   emm2010   739    2010-2015    3700    4400
@@ -36,7 +37,7 @@ The size columns give the download and installed sizes of the datasets.
 In addition you can specify
 
   all = all of the supported magnetic models
-  minimal = wmm2015 igrf12
+  minimal = wmm2015v2 igrf12
 
 -p parentdir (default $DEFAULTDIR) specifies where the
 datasets should be stored.  The "Default $NAME path" listed when running
@@ -48,6 +49,8 @@ write access to this directory.
 
 Normally only datasets which are not already in parentdir are
 downloaded.  You can force the download and reinstallation with -f.
+The -f flag also let you download new models (not yet in the set
+defined by "all").
 
 If -d is provided, the temporary directory which holds the downloads,
 \$TMPDIR/$NAME-XXXXXXXX or ${TMPDIR:-/tmp}/$NAME-XXXXXXXX,
@@ -117,6 +120,7 @@ set -e
 cat > $TEMP/all <<EOF
 wmm2010
 wmm2015
+wmm2015v2
 emm2010
 emm2015
 emm2017
@@ -133,11 +137,15 @@ while test $# -gt 0; do
 		cat $TEMP/all
 		;;
 	    minimal )
-		echo wmm2015; echo igrf12
+		echo wmm2015v2; echo igrf12
 		;;
 	    * )
-		echo Unknown magnetic model $1 1>&2
-		exit 1
+		if test -n "$FORCE"; then
+		    echo $1
+		else
+		    echo Unknown $MODEL $1 1>&2
+		    exit 1
+		fi
 		;;
 	esac
     fi

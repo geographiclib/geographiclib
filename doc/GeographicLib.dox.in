@@ -7657,6 +7657,15 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2019-mm-dd)
+   - Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This
+     is now the default magnetic model for
+     <a href="MagneticField.1.html">MagneticField</a> (replacing
+     wmm2015 which is now deprecated).
+   - The -f flag in the scripts geographiclib-get-geoids,
+     geographiclib-get-gravity, and geographiclib-get-magnetic, allows you
+     to load new models (not yet in the set defined by "all").  This is in
+     addition to its original role of allowing you to overwrite
+     existing models.
    - TODO: add Ellipsoid class links auxlat page.
    - TODO: update copyright dates for 2019.
    - Java implementation: require Java 1.6 or later and so remove
