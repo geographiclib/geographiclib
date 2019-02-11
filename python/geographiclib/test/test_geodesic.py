@@ -425,10 +425,13 @@ class GeodSolveTest(unittest.TestCase):
     # Check for backwards from the pole bug reported by Anon on 2016-02-13.
     # This only affected the Java implementation.  It was introduced in Java
     # version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+    # Also the + sign on azi2 is a check on the normalizing of azimuths
+    # (converting -0.0 to +0.0).
     dir = Geodesic.WGS84.Direct(90, 10, 180, -1e6)
     self.assertAlmostEqual(dir["lat2"], 81.04623, delta = 0.5e-5)
     self.assertAlmostEqual(dir["lon2"], -170, delta = 0.5e-5)
     self.assertAlmostEqual(dir["azi2"], 0, delta = 0.5e-5)
+    self.assertTrue(Math.copysign(1, dir["azi2"]) > 0)
 
   def test_GeodSolve74(self):
     # Check fix for inaccurate areas, bug introduced in v1.46, fixed

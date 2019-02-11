@@ -476,11 +476,14 @@ function n = GeodSolve73
 % Check for backwards from the pole bug reported by Anon on 2016-02-13.
 % This only affected the Java implementation.  It was introduced in Java
 % version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+% Also the + sign on azi2 is a check on the normalizing of azimuths
+% (converting -0.0 to +0.0).
   n = 0;
   [lat2, lon2, azi2] = geodreckon(90, 10, -1e6, 180);
   n = n + assertEquals(lat2, 81.04623, 0.5e-5);
   n = n + assertEquals(lon2, -170, 0.5e-5);
   n = n + assertEquals(azi2, 0, 0.5e-5);
+  n = n + assertEquals(copysignx(1, azi2), 1, 0);
 end
 
 function n = GeodSolve74

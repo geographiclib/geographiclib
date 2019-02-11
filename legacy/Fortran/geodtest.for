@@ -815,6 +815,8 @@
 * Check for backwards from the pole bug reported by Anon on 2016-02-13.
 * This only affected the Java implementation.  It was introduced in Java
 * version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+* Also the + sign on azi2 is a check on the normalizing of azimuths
+* (converting -0.0 to +0.0).
       double precision lat2, lon2, azi2, a12, m12, MM12, MM21, SS12
       double precision a, f
       integer r, assert, omask, flags
@@ -831,6 +833,7 @@
       r = r + assert(lat2, 81.04623d0, 0.5d-5)
       r = r + assert(lon2, -170d0, 0.5d-5)
       r = r + assert(azi2, 0d0, 0.5d-5)
+      r = r + assert(sign(1d0, azi2), 1d0, 0d0)
 
       tstg73 = r
       return

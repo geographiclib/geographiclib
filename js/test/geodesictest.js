@@ -4,6 +4,7 @@ var assert = require("assert"),
     G = require("../geographiclib"),
     g = G.Geodesic,
     d = G.DMS,
+    m = G.Math,
     testcases = [
       [35.60777, -139.44815, 111.098748429560326,
        -11.17491, -69.95921, 129.289270889708762,
@@ -498,11 +499,14 @@ describe("GeographicLib", function() {
       // Check for backwards from the pole bug reported by Anon on 2016-02-13.
       // This only affected the Java implementation.  It was introduced in Java
       // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+      // Also the + sign on azi2 is a check on the normalizing of azimuths
+      // (converting -0.0 to +0.0).
       var geod = g.WGS84,
           dir = geod.Direct(90, 10, 180, -1e6);
       assert.approx(dir.lat2, 81.04623, 0.5e-5);
       assert.approx(dir.lon2, -170, 0.5e-5);
       assert.approx(dir.azi2, 0, 0.5e-5);
+      assert.ok(m.copysign(1, dir.azi2) > 0);
     });
 
     it("GeodSolve74", function() {
