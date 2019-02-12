@@ -7690,7 +7690,10 @@ git repository for GeographicLib</a>.
      - TODO: in example programs, document when additional data files
        are needed.
    - Improve code coverage of geodesic algorithms (C++ and C).  TODO:
-     Java, JS, Python, MATLAB, Fortran.
+     Java, JS, Python, MATLAB, Fortran (done for GeodSolve80 - 83;
+     still to go Planimeter15 - 28).
+   - geoddistance.m: fix division by 0 warning calculating area of
+     equatorial geodesic.
    - TODO: PolygonArea: fix the range of the area more aggressively.
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: fix installation path for binary installer.
