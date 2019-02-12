@@ -781,9 +781,9 @@
       r = 0
       call invers(a, f, 5d0, 0.00000000000001d0, 10d0, 180d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
-      r = r + assert(azi1, 0.000000000000035d0, 1.5d-14);
-      r = r + assert(azi2, 179.99999999999996d0, 1.5d-14);
-      r = r + assert(s12, 18345191.174332713d0, 5d-9);
+      r = r + assert(azi1, 0.000000000000035d0, 1.5d-14)
+      r = r + assert(azi2, 179.99999999999996d0, 1.5d-14)
+      r = r + assert(s12, 18345191.174332713d0, 5d-9)
       tstg59 = r
       return
       end
@@ -854,14 +854,14 @@
       r = 0
       call invers(a, f, 54.1589d0, 15.3872d0, 54.1591d0, 15.3877d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
-      r = r + assert(azi1, 55.723110355d0, 5d-9);
-      r = r + assert(azi2, 55.723515675d0, 5d-9);
-      r = r + assert(s12,  39.527686385d0, 5d-9);
-      r = r + assert(a12,   0.000355495d0, 5d-9);
-      r = r + assert(m12,  39.527686385d0, 5d-9);
-      r = r + assert(MM12,  0.999999995d0, 5d-9);
-      r = r + assert(MM21,  0.999999995d0, 5d-9);
-      r = r + assert(SS12, 286698586.30197d0, 5d-4);
+      r = r + assert(azi1, 55.723110355d0, 5d-9)
+      r = r + assert(azi2, 55.723515675d0, 5d-9)
+      r = r + assert(s12,  39.527686385d0, 5d-9)
+      r = r + assert(a12,   0.000355495d0, 5d-9)
+      r = r + assert(m12,  39.527686385d0, 5d-9)
+      r = r + assert(MM12,  0.999999995d0, 5d-9)
+      r = r + assert(MM21,  0.999999995d0, 5d-9)
+      r = r + assert(SS12, 286698586.30197d0, 5d-4)
       tstg74 = r
       return
       end
@@ -907,6 +907,57 @@
       r = r + assert(azi2, 134.22776532670d0, 0.5d-11)
       r = r + assert(s12,  19974354.765767d0, 0.5d-6)
       tstg78 = r
+      return
+      end
+
+      integer function tstg80()
+* Some tests to add code coverage: computing scale in special cases + zero
+* length geodesic (includes GeodSolve80 - GeodSolve83).
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 4
+      r = 0
+
+      call invers(a, f, 0d0, 0d0, 0d0, 90d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(MM12, -0.00528427534d0, 0.5d-10)
+      r = r + assert(MM21, -0.00528427534d0, 0.5d-10)
+
+      call invers(a, f, 0d0, 0d0, 1d-6, 1d-6,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(MM12, 1d0, 0.5d-10)
+      r = r + assert(MM21, 1d0, 0.5d-10)
+
+      omask = 15
+      call invers(a, f, 20.001d0, 0d0, 20.001d0, 0d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(a12, 0d0, 1d-13)
+      r = r + assert(s12, 0d0, 1d-8)
+      r = r + assert(azi1, 180d0, 1d-13)
+      r = r + assert(azi2, 180d0, 1d-13)
+      r = r + assert(m12, 0d0,  1d-8)
+      r = r + assert(MM12, 1d0, 1d-15)
+      r = r + assert(MM21, 1d0, 1d-15)
+      r = r + assert(SS12, 0d0, 1d-10)
+
+      call invers(a, f, 90d0, 0d0, 90d0, 180d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(a12, 0d0, 1d-13)
+      r = r + assert(s12, 0d0, 1d-8)
+      r = r + assert(azi1, 0d0, 1d-13)
+      r = r + assert(azi2, 180d0, 1d-13)
+      r = r + assert(m12, 0d0, 1d-8)
+      r = r + assert(MM12, 1d0, 1d-15)
+      r = r + assert(MM21, 1d0, 1d-15)
+      r = r + assert(SS12, 127516405431022d0, 0.5d0)
+
+      tstg80 = r
       return
       end
 
@@ -1056,6 +1107,7 @@
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
      +    tstg55, tstg59, tstg61, tstg73, tstg74, tstg76, tstg78,
+     +    tstg80,
      +    tstp0, tstp5, tstp6, tstp12, tstp13
 
       n = 0
@@ -1183,6 +1235,11 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstg78 fail:', i
+      end if
+      i = tstg80()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg80 fail:', i
       end if
       i = tstp0()
       if (i .gt. 0) then

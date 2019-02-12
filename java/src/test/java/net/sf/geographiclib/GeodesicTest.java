@@ -566,11 +566,50 @@ public class GeodesicTest {
 
   @Test
   public void GeodSolve78() {
-    // An example where the NGS calculator fails to converge */
+    // An example where the NGS calculator fails to converge
     GeodesicData inv = Geodesic.WGS84.Inverse(27.2, 0.0, -27.1, 179.5);
     assertEquals(inv.azi1,  45.82468716758, 0.5e-11);
     assertEquals(inv.azi2, 134.22776532670, 0.5e-11);
     assertEquals(inv.s12,  19974354.765767, 0.5e-6);
+  }
+
+  @Test
+  public void GeodSolve80() {
+    // Some tests to add code coverage: computing scale in special cases + zero
+    // length geodesic (includes GeodSolve80 - GeodSolve83).
+    GeodesicData inv = Geodesic.WGS84.Inverse(0, 0, 0, 90,
+                                              GeodesicMask.GEODESICSCALE);
+    assertEquals(inv.M12, -0.00528427534, 0.5e-10);
+    assertEquals(inv.M21, -0.00528427534, 0.5e-10);
+
+    inv = Geodesic.WGS84.Inverse(0, 0, 1e-6, 1e-6, GeodesicMask.GEODESICSCALE);
+    assertEquals(inv.M12, 1, 0.5e-10);
+    assertEquals(inv.M21, 1, 0.5e-10);
+
+    inv = Geodesic.WGS84.Inverse(20.001, 0, 20.001, 0, GeodesicMask.ALL);
+    assertEquals(inv.a12, 0, 1e-13);
+    assertEquals(inv.s12, 0, 1e-8);
+    assertEquals(inv.azi1, 180, 1e-13);
+    assertEquals(inv.azi2, 180, 1e-13);
+    assertEquals(inv.m12, 0,  1e-8);
+    assertEquals(inv.M12, 1, 1e-15);
+    assertEquals(inv.M21, 1, 1e-15);
+    assertEquals(inv.S12, 0, 1e-10);
+
+    inv = Geodesic.WGS84.Inverse(90, 0, 90, 180, GeodesicMask.ALL);
+    assertEquals(inv.a12, 0, 1e-13);
+    assertEquals(inv.s12, 0, 1e-8);
+    assertEquals(inv.azi1, 0, 1e-13);
+    assertEquals(inv.azi2, 180, 1e-13);
+    assertEquals(inv.m12, 0, 1e-8);
+    assertEquals(inv.M12, 1, 1e-15);
+    assertEquals(inv.M21, 1, 1e-15);
+    assertEquals(inv.S12, 127516405431022.0, 0.5);
+
+    // An incapable line which can't take distance as input
+    GeodesicLine line = Geodesic.WGS84.Line(1, 2, 90, GeodesicMask.LATITUDE);
+    GeodesicData dir = line.Position(1000, GeodesicMask.NONE);
+    assertTrue(isNaN(dir.a12));
   }
 
   @Test

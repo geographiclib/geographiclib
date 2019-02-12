@@ -463,6 +463,43 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(inv["azi2"], 134.22776532670, delta = 0.5e-11)
     self.assertAlmostEqual(inv["s12"],  19974354.765767, delta = 0.5e-6)
 
+  def test_GeodSolve80(self):
+    # Some tests to add code coverage: computing scale in special cases + zero
+    # length geodesic (includes GeodSolve80 - GeodSolve83) + using an incapable
+    # line.
+    inv = Geodesic.WGS84.Inverse(0, 0, 0, 90, Geodesic.GEODESICSCALE)
+    self.assertAlmostEqual(inv["M12"], -0.00528427534, delta = 0.5e-10)
+    self.assertAlmostEqual(inv["M21"], -0.00528427534, delta = 0.5e-10)
+
+    inv = Geodesic.WGS84.Inverse(0, 0, 1e-6, 1e-6, Geodesic.GEODESICSCALE)
+    self.assertAlmostEqual(inv["M12"], 1, delta = 0.5e-10)
+    self.assertAlmostEqual(inv["M21"], 1, delta = 0.5e-10)
+
+    inv = Geodesic.WGS84.Inverse(20.001, 0, 20.001, 0, Geodesic.ALL)
+    self.assertAlmostEqual(inv["a12"], 0, delta = 1e-13)
+    self.assertAlmostEqual(inv["s12"], 0, delta = 1e-8)
+    self.assertAlmostEqual(inv["azi1"], 180, delta = 1e-13)
+    self.assertAlmostEqual(inv["azi2"], 180, delta = 1e-13)
+    self.assertAlmostEqual(inv["m12"], 0, delta =  1e-8)
+    self.assertAlmostEqual(inv["M12"], 1, delta = 1e-15)
+    self.assertAlmostEqual(inv["M21"], 1, delta = 1e-15)
+    self.assertAlmostEqual(inv["S12"], 0, delta = 1e-10)
+
+    inv = Geodesic.WGS84.Inverse(90, 0, 90, 180, Geodesic.ALL)
+    self.assertAlmostEqual(inv["a12"], 0, delta = 1e-13)
+    self.assertAlmostEqual(inv["s12"], 0, delta = 1e-8)
+    self.assertAlmostEqual(inv["azi1"], 0, delta = 1e-13)
+    self.assertAlmostEqual(inv["azi2"], 180, delta = 1e-13)
+    self.assertAlmostEqual(inv["m12"], 0, delta = 1e-8)
+    self.assertAlmostEqual(inv["M12"], 1, delta = 1e-15)
+    self.assertAlmostEqual(inv["M21"], 1, delta = 1e-15)
+    self.assertAlmostEqual(inv["S12"], 127516405431022.0, delta = 0.5);
+
+    # An incapable line which can't take distance as input
+    line = Geodesic.WGS84.Line(1, 2, 90, Geodesic.LATITUDE);
+    dir = line.Position(1000, Geodesic.EMPTY);
+    self.assertTrue(Math.isnan(dir["a12"]))
+
 class PlanimeterTest(unittest.TestCase):
 
   polygon = Geodesic.WGS84.Polygon(False)

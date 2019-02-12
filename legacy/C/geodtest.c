@@ -709,12 +709,15 @@ static int GeodSolve80() {
   struct geod_geodesicline l;
   int result = 0;
   geod_init(&g, wgs84_a, wgs84_f);
+
   geod_geninverse(&g, 0, 0, 0, 90, 0, 0, 0, 0, &M12, &M21, 0);
   result += checkEquals(M12, -0.00528427534, 0.5e-10);
   result += checkEquals(M21, -0.00528427534, 0.5e-10);
+
   geod_geninverse(&g, 0, 0, 1e-6, 1e-6, 0, 0, 0, 0, &M12, &M21, 0);
   result += checkEquals(M12, 1, 0.5e-10);
   result += checkEquals(M21, 1, 0.5e-10);
+
   a12 = geod_geninverse(&g, 20.001, 0, 20.001, 0,
                         &s12, &azi1, &azi2, &m12, &M12, &M21, &S12);
   result += checkEquals(a12, 0, 1e-13);
@@ -725,6 +728,7 @@ static int GeodSolve80() {
   result += checkEquals(M12, 1, 1e-15);
   result += checkEquals(M21, 1, 1e-15);
   result += checkEquals(S12, 0, 1e-10);
+
   a12 = geod_geninverse(&g, 90, 0, 90, 180,
                         &s12, &azi1, &azi2, &m12, &M12, &M21, &S12);
   result += checkEquals(a12, 0, 1e-13);
@@ -734,7 +738,8 @@ static int GeodSolve80() {
   result += checkEquals(m12, 0, 1e-8);
   result += checkEquals(M12, 1, 1e-15);
   result += checkEquals(M21, 1, 1e-15);
-  result += checkEquals(S12, 127516405431022, 0.5);
+  result += checkEquals(S12, 127516405431022.0, 0.5);
+
   /* An incapable line which can't take distance as input */
   geod_lineinit(&l, &g, 1, 2, 90, GEOD_LATITUDE);
   a12 = geod_genposition(&l, 0, 1000, 0, 0, 0, 0, 0, 0, 0, 0);

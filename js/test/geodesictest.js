@@ -544,6 +544,44 @@ describe("GeographicLib", function() {
       assert.approx(inv.s12,  19974354.765767, 0.5e-6);
     });
 
+    it("GeodSolve80", function() {
+      // An example where the NGS calculator fails to converge
+      var geod = g.WGS84, inv, line, dir;
+
+      inv = geod.Inverse(0, 0, 0, 90, g.GEODESICSCALE);
+      assert.approx(inv.M12, -0.00528427534, 0.5e-10);
+      assert.approx(inv.M21, -0.00528427534, 0.5e-10);
+
+      inv = geod.Inverse(0, 0, 1e-6, 1e-6, g.GEODESICSCALE);
+      assert.approx(inv.M12, 1, 0.5e-10);
+      assert.approx(inv.M21, 1, 0.5e-10);
+
+      inv = geod.Inverse(20.001, 0, 20.001, 0, g.ALL);
+      assert.approx(inv.a12, 0, 1e-13);
+      assert.approx(inv.s12, 0, 1e-8);
+      assert.approx(inv.azi1, 180, 1e-13);
+      assert.approx(inv.azi2, 180, 1e-13);
+      assert.approx(inv.m12, 0,  1e-8);
+      assert.approx(inv.M12, 1, 1e-15);
+      assert.approx(inv.M21, 1, 1e-15);
+      assert.approx(inv.S12, 0, 1e-10);
+
+      inv = geod.Inverse(90, 0, 90, 180, g.ALL);
+      assert.approx(inv.a12, 0, 1e-13);
+      assert.approx(inv.s12, 0, 1e-8);
+      assert.approx(inv.azi1, 0, 1e-13);
+      assert.approx(inv.azi2, 180, 1e-13);
+      assert.approx(inv.m12, 0, 1e-8);
+      assert.approx(inv.M12, 1, 1e-15);
+      assert.approx(inv.M21, 1, 1e-15);
+      assert.approx(inv.S12, 127516405431022.0, 0.5);
+
+      // An incapable line which can't take distance as input
+      line = geod.Line(1, 2, 90, g.LATITUDE);
+      dir = line.Position(1000, g.NONE);
+      assert(isNaN(dir.a12));
+    });
+
   });
 
   describe("Planimeter", function () {

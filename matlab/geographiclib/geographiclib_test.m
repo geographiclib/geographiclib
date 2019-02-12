@@ -34,6 +34,7 @@ function geographiclib_test
   i = GeodSolve74; if i, n=n+1; fprintf('GeodSolve74 fail: %d\n', i); end
   i = GeodSolve76; if i, n=n+1; fprintf('GeodSolve76 fail: %d\n', i); end
   i = GeodSolve78; if i, n=n+1; fprintf('GeodSolve78 fail: %d\n', i); end
+  i = GeodSolve80; if i, n=n+1; fprintf('GeodSolve80 fail: %d\n', i); end
   i = Planimeter0 ; if i, n=n+1; fprintf('Planimeter0  fail: %d\n', i); end
   i = Planimeter5 ; if i, n=n+1; fprintf('Planimeter5  fail: %d\n', i); end
   i = Planimeter6 ; if i, n=n+1; fprintf('Planimeter6  fail: %d\n', i); end
@@ -520,6 +521,41 @@ function n = GeodSolve78
   n = n + assertEquals(azi1,  45.82468716758, 0.5e-11);
   n = n + assertEquals(azi2, 134.22776532670, 0.5e-11);
   n = n + assertEquals(s12,  19974354.765767, 0.5e-6);
+end
+
+function n = GeodSolve80
+% Some tests to add code coverage: computing scale in special cases + zero
+% length geodesic (includes GeodSolve80 - GeodSolve83).
+  n = 0;
+  [~, ~, ~, ~, ~, M12, M21] = geoddistance(0, 0, 0, 90);
+  n = n + assertEquals(M12, -0.00528427534, 0.5e-10);
+  n = n + assertEquals(M21, -0.00528427534, 0.5e-10);
+
+  [~, ~, ~, ~, ~, M12, M21] = geoddistance(0, 0, 1e-6, 1e-6);
+  n = n + assertEquals(M12, 1, 0.5e-10);
+  n = n + assertEquals(M21, 1, 0.5e-10);
+
+  [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
+      geoddistance(20.001, 0, 20.001, 0);
+  n = n + assertEquals(a12, 0, 1e-13);
+  n = n + assertEquals(s12, 0, 1e-8);
+  n = n + assertEquals(azi1, 180, 1e-13);
+  n = n + assertEquals(azi2, 180, 1e-13);
+  n = n + assertEquals(m12, 0,  1e-8);
+  n = n + assertEquals(M12, 1, 1e-15);
+  n = n + assertEquals(M21, 1, 1e-15);
+  n = n + assertEquals(S12, 0, 1e-10);
+
+  [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
+      geoddistance(90, 0, 90, 180);
+  n = n + assertEquals(a12, 0, 1e-13);
+  n = n + assertEquals(s12, 0, 1e-8);
+  n = n + assertEquals(azi1, 0, 1e-13);
+  n = n + assertEquals(azi2, 180, 1e-13);
+  n = n + assertEquals(m12, 0, 1e-8);
+  n = n + assertEquals(M12, 1, 1e-15);
+  n = n + assertEquals(M21, 1, 1e-15);
+  n = n + assertEquals(S12, 127516405431022.0, 0.5);
 end
 
 function n = Planimeter0
