@@ -67,7 +67,7 @@ namespace GeographicLib {
         break;
       // If little, solve rho(s) = rho with drho(s)/ds = 1/M^2
       // else solve 1/rho(s) = 1/rho with d(1/rho(s))/ds = -1/m^2
-      real ds = little ? (m/M - rho) * M * M : (rho - M/m) * m * m;
+      real ds = little ? (m - rho * M) * M : (rho * m - M) * m;
       s -= ds;
       // Reversed test to allow escape with NaNs
       if (!(abs(ds) >= eps_ * _a))

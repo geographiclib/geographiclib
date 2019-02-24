@@ -105,7 +105,15 @@ namespace GeographicLib {
     real eps0_, eps_;
     Geodesic _earth;
     real _a, _f;
-    static const int numit_ = 10;
+    // numit_ increased from 10 to 20 to fix convergence failure with high
+    // precision (e.g., GEOGRAPHICLIB_DIGITS=2000) calculations.  Reverse uses
+    // Newton's method which converges quadratically and so numit_ = 10 would
+    // normally be big enough.  However, since the Geodesic class is based on a
+    // series it is of limited accuracy; in particular, the derivative rules
+    // used by Reverse only hold approximately.  Consequently, after a few
+    // iterations, the convergence in the Reverse falls back to improvements in
+    // each step by a constant (albeit small) factor.
+    static const int numit_ = 20;
   public:
 
     /**

@@ -1,7 +1,7 @@
 # Build the test programs...
 
 set (TESTPROGRAMS
-  ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest)
+  ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect)
 
 # Check whether the C++11 random routines are available.
 check_cxx_source_compiles (
