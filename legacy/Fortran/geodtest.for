@@ -167,6 +167,18 @@
       return
       end
 
+      integer function chknan(x)
+      double precision x
+
+      if (x .ne. x) then
+        chknan = 0
+      else
+        chknan = 1
+      end if
+
+      return
+      end
+
       integer function tstinv()
       double precision tstdat(20, 12)
       common /tstcom/ tstdat
@@ -184,7 +196,7 @@
       omask = 1 + 2 + 4 + 8
       r = 0
 
-      do i = 1,20
+      do 10 i = 1,20
         lat1 = tstdat(i, 1)
         lon1 = tstdat(i, 2)
         azi1 = tstdat(i, 3)
@@ -207,7 +219,7 @@
         r = r + assert(MM12, MM12a, 1d-15)
         r = r + assert(MM21, MM21a, 1d-15)
         r = r + assert(SS12, SS12a, 0.1d0)
-      end do
+ 10   continue
 
       tstinv = r
       return
@@ -231,7 +243,7 @@
       flags = 2
       r = 0
 
-      do i = 1,20
+      do 10 i = 1,20
         lat1 = tstdat(i, 1)
         lon1 = tstdat(i, 2)
         azi1 = tstdat(i, 3)
@@ -254,7 +266,7 @@
         r = r + assert(MM12, MM12a, 1d-15)
         r = r + assert(MM21, MM21a, 1d-15)
         r = r + assert(SS12, SS12a, 0.1d0)
-      end do
+ 10   continue
 
       tstdir = r
       return
@@ -278,7 +290,7 @@
       flags = 1 + 2
       r = 0
 
-      do i = 1,20
+      do 10 i = 1,20
         lat1 = tstdat(i, 1)
         lon1 = tstdat(i, 2)
         azi1 = tstdat(i, 3)
@@ -301,20 +313,9 @@
         r = r + assert(MM12, MM12a, 1d-15)
         r = r + assert(MM21, MM21a, 1d-15)
         r = r + assert(SS12, SS12a, 0.1d0)
-      end do
+ 10   continue
 
       tstarc = r
-      return
-      end
-
-      integer function notnan(x)
-      double precision x
-      if (x .eq. x) then
-        notnan = 1
-      else
-        notnan = 0
-      end if
-
       return
       end
 
@@ -556,7 +557,7 @@
 * Check fix for inverse ignoring lon12 = nan
       double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
       double precision a, f, LatFix
-      integer r, notnan, omask
+      integer r, chknan, omask
       include 'geodesic.inc'
 
 * WGS84 values
@@ -566,9 +567,9 @@
       r = 0
       call invers(a, f, 0d0, 0d0, 1d0, LatFix(91d0),
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
-      r = r + notnan(azi1)
-      r = r + notnan(azi2)
-      r = r + notnan(s12)
+      r = r + chknan(azi1)
+      r = r + chknan(azi2)
+      r = r + chknan(s12)
       tstg14 = r
       return
       end
@@ -745,7 +746,7 @@
 * Geodesic::Inverse, found 2015-09-23.
       double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
       double precision a, f
-      integer r, notnan, omask
+      integer r, chknan, omask
       include 'geodesic.inc'
 
 * WGS84 values
@@ -755,14 +756,14 @@
       r = 0
       call invers(a, f, 91d0, 0d0, 0d0, 90d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
-      r = r + notnan(azi1)
-      r = r + notnan(azi2)
-      r = r + notnan(s12)
+      r = r + chknan(azi1)
+      r = r + chknan(azi2)
+      r = r + chknan(s12)
       call invers(a, f, 91d0, 0d0, 90d0, 9d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
-      r = r + notnan(azi1)
-      r = r + notnan(azi2)
-      r = r + notnan(s12)
+      r = r + chknan(azi1)
+      r = r + chknan(azi2)
+      r = r + chknan(s12)
       tstg55 = r
       return
       end
@@ -1101,6 +1102,96 @@
       return
       end
 
+      integer function tstp15()
+* Coverage tests, includes Planimeter15 - Planimeter18 (combinations of
+* reverse and sign).  But flags aren't supported in the Fortran
+* implementation.
+      double precision lat(3), lon(3)
+      data lat / 2d0, 1d0, 3d0 /
+      data lon / 1d0, 2d0, 3d0 /
+      double precision a, f, AA, PP
+      integer r, assert
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      r = 0
+
+      call area(a, f, lat, lon, 3, AA, PP)
+      r = r + assert(AA, 18454562325.45119d0, 1d0)
+* Interchanging lat and lon is equivalent to traversing the polygon
+* backwards.
+      call area(a, f, lon, lat, 3, AA, PP)
+      r = r + assert(AA, -18454562325.45119d0, 1d0)
+
+      tstp15 = r
+      return
+      end
+
+      integer function tstp19()
+* Coverage tests, includes Planimeter19 - Planimeter20 (degenerate
+* polygons).
+      double precision lat(1), lon(1)
+      data lat / 1d0 /
+      data lon / 1d0 /
+      double precision a, f, AA, PP
+      integer r, assert
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      r = 0
+
+      call area(a, f, lat, lon, 1, AA, PP)
+      r = r + assert(AA, 0d0, 0d0)
+      r = r + assert(PP, 0d0, 0d0)
+
+      tstp19 = r
+      return
+      end
+
+      integer function tstp21()
+* Some test to add code coverage: multiple circlings of pole (includes
+* Planimeter21 - Planimeter28).  Some of the results for i = 4 in the
+* loop are wrong because we don't reduce the area to the allowed range
+* correctly.  However these cases are not "simple" polygons, so we'll
+* defer fixing the problem for now.
+      double precision lat(12), lon(12), lonr(12)
+      data lat / 12*45d0 /
+      data lon / 60d0, 180d0, -60d0,
+     +    60d0, 180d0, -60d0,
+     +    60d0, 180d0, -60d0,
+     +    60d0, 180d0, -60d0 /
+      data lonr / -60d0, 180d0, 60d0,
+     +    -60d0, 180d0, 60d0,
+     +    -60d0, 180d0, 60d0,
+     +    -60d0, 180d0, 60d0 /
+      double precision a, f, AA, PP, AA1
+      integer r, assert
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+* Area for one circuit
+      AA1 = 39433884866571.4277d0
+
+      do 10 i = 3,4
+        call area(a, f, lat, lon, 3*i, AA, PP)
+        if (i .ne. 4) then
+          r = r + assert(AA, AA1*i, 0.5d0)
+        end if
+        call area(a, f, lat, lonr, 3*i, AA, PP)
+        if (i .ne. 4) then
+          r = r + assert(AA, -AA1*i, 0.5d0)
+        end if
+ 10   continue
+      tstp21 = r
+      return
+      end
+
       program geodtest
       integer n, i
       integer tstinv, tstdir, tstarc,
@@ -1108,7 +1199,7 @@
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
      +    tstg55, tstg59, tstg61, tstg73, tstg74, tstg76, tstg78,
      +    tstg80,
-     +    tstp0, tstp5, tstp6, tstp12, tstp13
+     +    tstp0, tstp5, tstp6, tstp12, tstp13, tstp15, tstp19, tstp21
 
       n = 0
       i = tstinv()
@@ -1265,6 +1356,21 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstp13 fail:', i
+      end if
+      i = tstp15()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstp15 fail:', i
+      end if
+      i = tstp19()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstp19 fail:', i
+      end if
+      i = tstp21()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstp21 fail:', i
       end if
 
       if (n .gt. 0) then

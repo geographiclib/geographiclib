@@ -7653,6 +7653,9 @@ git repository for GeographicLib</a>.
    - TODO?: start converting MajorRadius methods to EquatorialRadius.
    - TODO?: add GreatEllipse class.
    - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
+   - TODO: template versions of Gnomonic and AzimuthalEquidistant so
+     that they can use either Geodesic and GeodesicExact.  Use
+     typedefs so that Geodesic::Line points to GeodesicLine.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
@@ -7758,6 +7761,7 @@ git repository for GeographicLib</a>.
    - Geoid class, std::ios::streamoff -> std::streamoff.
    - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in
      NETGeographicLib doc.
+   - TODO: Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

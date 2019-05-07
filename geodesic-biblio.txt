@@ -209,6 +209,12 @@
    https://books.google.com/books?id=vaAKAAAAYAAJ&pg=PA360 [[BR]]
    figures:
    https://geographiclib.sourceforge.io/geodesic-papers/legendre25-fig.pdf
+ * N. Bowditch,[[BR]]
+   ''The New American Practical Navigator''
+   (Newburyport, Mass., 1802).[[BR]]
+   1802 edition: https://archive.org/details/newamericanpract00bowd [[BR]]
+   1888 edition: https://archive.org/stream/practica00bowdamericanrich [[BR]]
+   NGA editions: https://msi.nga.mil/NGAPortal/MSI.portal?_nfpb=true&_st=&_pageLabel=msi_portal_page_62&pubCode=0002
  * J. G. Soldner,[[BR]]
    ''Über die kürzeste Linie auf dem Sphäroide
    [The shortest line on the spheroid]'',

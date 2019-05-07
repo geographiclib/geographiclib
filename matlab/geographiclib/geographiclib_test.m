@@ -40,6 +40,9 @@ function geographiclib_test
   i = Planimeter6 ; if i, n=n+1; fprintf('Planimeter6  fail: %d\n', i); end
   i = Planimeter12; if i, n=n+1; fprintf('Planimeter12 fail: %d\n', i); end
   i = Planimeter13; if i, n=n+1; fprintf('Planimeter13 fail: %d\n', i); end
+  i = Planimeter15; if i, n=n+1; fprintf('Planimeter15 fail: %d\n', i); end
+  i = Planimeter19; if i, n=n+1; fprintf('Planimeter19 fail: %d\n', i); end
+  i = Planimeter21; if i, n=n+1; fprintf('Planimeter21 fail: %d\n', i); end
   i = TransverseMercatorProj1;
   if i, n=n+1; fprintf('TransverseMercatorProj1 fail: %d\n', i); end
   i = TransverseMercatorProj3;
@@ -631,6 +634,55 @@ function n = Planimeter13
   [area, perimeter] = geodarea(points(:,1), points(:,2));
   n = n + assertEquals(perimeter, 1160741, 1);
   n = n + assertEquals(area, 32415230256.0, 1);
+end
+
+function n = Planimeter15
+% Coverage tests, includes Planimeter15 - Planimeter18 (combinations of
+% reverse and sign).  But flags aren't supported in the MATLAB
+% implementation.
+  n = 0;
+  points = [2,1; 1,2; 3,3];
+  area = geodarea(points(:,1), points(:,2));
+  n = n + assertEquals(area, 18454562325.45119, 1);
+  % Interchanging lat and lon is equivalent to traversing the polygon
+  % backwards.
+  area = geodarea(points(:,2), points(:,1));
+  n = n + assertEquals(area, -18454562325.45119, 1);
+end
+
+function n = Planimeter19
+% Coverage tests, includes Planimeter19 - Planimeter20 (degenerate
+% polygons).
+  n = 0;
+  points = [1,1];
+  [area, perimeter] = geodarea(points(:,1), points(:,2));
+  n = n + assertEquals(area, 0, 0);
+  n = n + assertEquals(perimeter, 0, 0);
+end
+
+function n = Planimeter21
+% Some test to add code coverage: multiple circlings of pole (includes
+% Planimeter21 - Planimeter28).  Some of the results for i = 4 in the
+% loop are wrong because we don't reduce the area to the allowed range
+% correctly.  However these cases are not "simple" polygons, so we'll
+% defer fixing the problem for now.
+  n = 0;
+  points = [45 60;45 180;45 -60;...
+            45 60;45 180;45 -60;...
+            45 60;45 180;45 -60;...
+            45 60;45 180;45 -60;...
+           ];
+  r = 39433884866571.4277;              % Area for one circuit
+  for i = 3 : 4
+    area = geodarea(points(1:3*i,1), points(1:3*i,2));
+    if i ~= 4
+      n = n + assertEquals(area, i*r, 0.5);
+    end
+    area = geodarea(points(3*i:-1:1,1), points(3*i:-1:1,2));
+    if i ~= 4
+      n = n + assertEquals(area, -i*r, 0.5);
+    end
+  end
 end
 
 function n = TransverseMercatorProj1

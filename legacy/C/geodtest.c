@@ -577,7 +577,7 @@ static int GeodSolve65() {
 
 static int GeodSolve67() {
   /* Check for InverseLine if line is slightly west of S and that s13 is
-     correctly set. */
+   * correctly set. */
   double lat2, lon2, azi2;
   struct geod_geodesic g;
   struct geod_geodesicline l;
@@ -654,7 +654,7 @@ static void polylength(const struct geod_geodesic* g,
 
 static int GeodSolve74() {
   /* Check fix for inaccurate areas, bug introduced in v1.46, fixed
-     2015-10-16. */
+   * 2015-10-16. */
   double a12, s12, azi1, azi2, m12, M12, M21, S12;
   struct geod_geodesic g;
   int result = 0;
@@ -674,7 +674,7 @@ static int GeodSolve74() {
 
 static int GeodSolve76() {
   /* The distance from Wellington and Salamanca (a classic failure of
-     Vincenty) */
+   * Vincenty) */
   double azi1, azi2, s12;
   struct geod_geodesic g;
   int result = 0;
@@ -702,8 +702,8 @@ static int GeodSolve78() {
 
 static int GeodSolve80() {
   /* Some tests to add code coverage: computing scale in special cases + zero
-     length geodesic (includes GeodSolve80 - GeodSolve83) + using an incapable
-     line. */
+   * length geodesic (includes GeodSolve80 - GeodSolve83) + using an incapable
+   * line. */
   double a12, s12, azi1, azi2, m12, M12, M21, S12;
   struct geod_geodesic g;
   struct geod_geodesicline l;
@@ -848,7 +848,7 @@ static int Planimeter13() {
 
 static int Planimeter15() {
   /* Coverage tests, includes Planimeter15 - Planimeter18 (combinations of
-     reverse and sign) + calls to testpoint, testedge, geod_polygonarea. */
+   * reverse and sign) + calls to testpoint, testedge, geod_polygonarea. */
   struct geod_geodesic g;
   struct geod_polygon p;
   double lat[] = {2, 1, 3}, lon[] = {1, 2, 3};
@@ -893,7 +893,7 @@ static int Planimeter15() {
 
 static int Planimeter19() {
   /* Coverage tests, includes Planimeter19 - Planimeter20 (degenerate
-     polygons) + extra cases.  */
+   * polygons) + extra cases.  */
   struct geod_geodesic g;
   struct geod_polygon p;
   double area, perim;
@@ -928,11 +928,10 @@ static int Planimeter19() {
 
 static int Planimeter21() {
   /* Some test to add code coverage: multiple circlings of pole (includes
-     Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
-     Some of the results for i = 4 in the loop are wrong because we don't
-     reduce the area to the allowed range correctly.  However these cases are
-     not "simple" polygons, so we'll defer fixing the problem for now.
-   */
+   * Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
+   * Some of the results for i = 4 in the loop are wrong because we don't
+   * reduce the area to the allowed range correctly.  However these cases are
+   * not "simple" polygons, so we'll defer fixing the problem for now. */
   struct geod_geodesic g;
   struct geod_polygon p;
   double area, lat = 45,
