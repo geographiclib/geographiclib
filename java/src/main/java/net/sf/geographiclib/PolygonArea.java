@@ -338,10 +338,10 @@ public class PolygonArea {
         _earth.Direct(_lat1, _lon1, azi, false, s, _mask);
       tempsum += g.S12;
       crossings += transitdirect(_lon1, g.lon2);
+      crossings += transit(g.lon2, _lon0);
       g = _earth.Inverse(g.lat2, g.lon2, _lat0, _lon0, _mask);
       perimeter += g.s12;
       tempsum += g.S12;
-      crossings += transit(g.lon2, _lon0);
     }
 
     if ((crossings & 1) != 0)

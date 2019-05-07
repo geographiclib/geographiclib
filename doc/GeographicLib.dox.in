@@ -7660,6 +7660,7 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2019-mm-dd)
+   - Fix BUG in Java implementation of PolygonArea::TestEdge.
    - Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This
      is now the default magnetic model for
      <a href="MagneticField.1.html">MagneticField</a> (replacing
