@@ -48,7 +48,7 @@ void UTMUPS::Forward(double lat, double lon,
                                        lgamma, lk,
                                        setzone, mgrslimits);
         zone = lzone;
-        northp = northp;
+        northp = lnorthp;
         x = lx;
         y = ly;
         gamma = lgamma;
