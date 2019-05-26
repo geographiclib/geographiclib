@@ -43,7 +43,7 @@ the source, the C library can be found in the directory <tt>legacy/C</tt>.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of
-<a href="http://proj.org">proj.4</a> starting with
+<a href="http://proj4.org">proj.4</a> starting with
 version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 Instructions for how to use the library via proj.4 are given below.
@@ -155,7 +155,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   - C (geodesic routines):
     <a href="../C/index.html">
       documentation</a>, also included with recent versions of
-    <a href="http://proj.org">
+    <a href="http://proj4.org">
       proj.4</a>;
   - Fortran (geodesic routines):
     <a href="../Fortran/index.html">

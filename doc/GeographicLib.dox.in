@@ -39,7 +39,7 @@ the script for displaying
 
 This library is <i>not</i> a general purpose projection library nor does
 it perform datum conversions; instead use
-<a href="http://proj.org">proj.4</a>.  On the other
+<a href="http://proj4.org">proj.4</a>.  On the other
 hand, it does provide the core functionality offered by
 <a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>.
 
@@ -1237,7 +1237,7 @@ Here is a summary:
 - C (geodesic routines):
   <a href="C/index.html">
     documentation</a>, also included with recent versions of
-  <a href="http://proj.org">
+  <a href="http://proj4.org">
     proj.4</a>;
 - Fortran (geodesic routines):
   <a href="Fortran/index.html">
@@ -1287,7 +1287,7 @@ direct and inverse geodesic problems and to compute polygonal areas are
 provided.
 
 The C library is also included as part of
-<a href="http://proj.org">proj.4</a> starting with
+<a href="http://proj4.org">proj.4</a> starting with
 version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 
