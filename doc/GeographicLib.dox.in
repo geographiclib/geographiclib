@@ -2465,7 +2465,7 @@ g) \e A = 8.552&nbsp;&times;&nbsp;10<sup>&minus;11</sup> \e
 A&nbsp;m<sup>2</sup>/kg, where \e G is the gravitational constant, \e g
 is the earth's gravity, and \e A is the pressure of the atmosphere.  At
 sea level we have \e A = 101.3&nbsp;kPa, and &delta;\e g =
-8.7&minus;&times;&minus;10<sup>&minus;6</sup>&nbsp;m&nbsp;s<sup>&minus;2</sup>,
+8.7&nbsp;&times;&nbsp;10<sup>&minus;6</sup>&nbsp;m&nbsp;s<sup>&minus;2</sup>,
 approximately.  (In other words the effect is about 1&nbsp;part in a
 million; by way of comparison, buoyancy effects are about 100 times
 larger.)
@@ -7671,6 +7671,7 @@ git repository for GeographicLib</a>.
      addition to its original role of allowing you to overwrite
      existing models.
    - TODO: add Ellipsoid class links auxlat page.
+   - TODO: index.html fix link for MATLAB documentation.
    - TODO: update copyright dates for 2019.
    - Java implementation: require Java 1.6 or later and so remove
      epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.

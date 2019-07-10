@@ -54,6 +54,7 @@ function geoid = geoid_load(name, dir)
 
 % Copyright (c) Charles Karney (2015) <charles@karney.com>.
 
+  narginchk(0, 2)
   if nargin < 1
     file = geoid_file;
   elseif nargin < 2

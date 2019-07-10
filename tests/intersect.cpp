@@ -65,7 +65,7 @@ int main() {
     lon0 = lon1;
     s120 = s121;
   }
-  std::cout  << "Final result " << lat0 << " " << lon0 << "\n";
+  std::cout << "Final result " << lat0 << " " << lon0 << "\n";
   GeographicLib::Math::real azi1, azi2;
   geod.Inverse(lata1, lona1, lat0, lon0, azi1, azi2);
   std::cout << "Azimuths on line A " << azi2 << " ";

@@ -41,7 +41,7 @@ namespace GeographicLib {
       // followed by 1752-09-14. We also assume that the year always begins
       // with January 1, whereas in reality it often was reckoned to begin in
       // March.
-      return 100 * (100 * y + m) + d >= 17520914; // or 15821004
+      return 100 * (100 * y + m) + d >= 17520914; // or 15821015
     }
     static bool gregorian(int s) {
       return s >= 639799;       // 1752-09-14

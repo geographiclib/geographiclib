@@ -7,5 +7,6 @@ function e = flat2ecc(f)
 %
 %   See also ECC2FLAT.
 
+  narginchk(1, 1)
   e = sqrt(f .* (2 - f));
 end

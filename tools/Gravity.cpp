@@ -293,7 +293,7 @@ int main(int argc, const char* const argv[]) {
                 c.SphericalAnomaly(lon, Dg01, xi, eta);
               else
                 g.SphericalAnomaly(lat, lon, h, Dg01, xi, eta);
-              Dg01 *= 100000;      // Convert to mGals
+              Dg01 *= 100000;   // Convert to mGals
               xi *= 3600;       // Convert to arcsecs
               eta *= 3600;
               *output << Utility::str(Dg01, prec) << " "
