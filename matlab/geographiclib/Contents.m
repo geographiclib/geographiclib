@@ -90,4 +90,4 @@
 %   projdoc          - Projections for an ellipsoid
 %   gedoc            - Great ellipses on an ellipsoid of revolution
 
-% Copyright (c) Charles Karney (2015-2018) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2019) <charles@karney.com>.
