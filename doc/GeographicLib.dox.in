@@ -150,8 +150,8 @@ Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 5.3.1 under Linux, with
 Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
-(2012), 12 (2013), 14 (2015), and 15 (2017) compiled for 32 bit and 64
-bit on Windows.
+(2012), 12 (2013), 14 (2015), 15 (2017), and 16 (2019) compiled for 32
+bit and 64 bit on Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -240,9 +240,9 @@ make software maintenance simpler
   directory for compiling the code.  In the description here the
   directories are called BUILD and are located in the top-level of the
   source tree.  You might want to use a suffix to denote the type of
-  build, e.g., BUILD-vc11 for Visual Studio 11, or BUILD-shared for a
-  build which creates a shared library.  The advantages of out-of-source
-  builds are:
+  build, e.g., BUILD-vc14 for Visual Studio 14 (2015), or BUILD-shared
+  for a build which creates a shared library.  The advantages of
+  out-of-source builds are:
   - You don't mess up the source tree, so it's easy to "clean up".
     Indeed the source tree might be on a read-only file system.
   - Builds for multiple platforms or compilers don't interfere with each
@@ -296,8 +296,8 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 11" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
-  cmake -G "Visual Studio 12" -A x64 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11-x64/GeographicLib-@PROJECT_VERSION@ ..\endverbatim
+  cmake -G "Visual Studio 14" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc14/GeographicLib-@PROJECT_VERSION@ ..
+  cmake -G "Visual Studio 14" -A x64 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc14-x64/GeographicLib-@PROJECT_VERSION@ ..\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
   settings given above are recommended to ensure that packages that use
   GeographicLib use the version compiled with the right compiler.
@@ -519,8 +519,8 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc12-win32\\GeographicLib-@PROJECT_VERSION@ or
-   C:\\pkg-vc12-x64\\GeographicLib-@PROJECT_VERSION@,
+   C:\\pkg-vc14-win32\\GeographicLib-@PROJECT_VERSION@ or
+   C:\\pkg-vc14-x64\\GeographicLib-@PROJECT_VERSION@,
  - select the start menu folder,
  - and install.
  .
@@ -528,7 +528,7 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc12-{win32,x64}/GeographicLib-@PROJECT_VERSION@/bin
+will include C:/pkg-vc14-{win32,x64}/GeographicLib-@PROJECT_VERSION@/bin
 where the utilities are installed.  The headers and library are
 installed in the include/GeographicLib and lib folders.  The libraries
 were built using using Visual Studio 14 2015 in release and debug modes.
@@ -621,7 +621,7 @@ Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
 library included in the package.  For example, the 64-bit binary
 installer is created with \verbatim
-  cmake -G "Visual Studio 12" -A x64 \
+  cmake -G "Visual Studio 14" -A x64 \
     -D GEOGRAPHICLIB_LIB_TYPE=BOTH \
     -D PACKAGE_DEBUG_LIBS=ON \
     -D BUILD_NETGEOGRAPHICLIB=ON \
@@ -711,9 +711,9 @@ In order to use GeographicLib from C++ code, you will need to
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
-    cmake -G "Visual Studio 12" -A x64 \
-      -D CMAKE_PREFIX_PATH=C:/pkg-vc10-x64 \
-      -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/testgeographic \
+    cmake -G "Visual Studio 14" -A x64 \
+      -D CMAKE_PREFIX_PATH=C:/pkg-vc14-x64 \
+      -D CMAKE_INSTALL_PREFIX=C:/pkg-vc14-x64/testgeographic \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
@@ -813,7 +813,7 @@ In order to use GeographicLib from C++ code, you will need to
     With Visual Studio, specify the include directory in the IDE via,
     e.g.,
     \verbatim
-    C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
+    C/C++ -> General -> Additional Include Directories = C:\pkg-vc14-x64\GeographicLib\include
     \endverbatim
   - If using the shared (or static) library with Visual Studio, define
     the macro <code>GEOGRAPHICLIB_SHARED_LIB=1</code> (or
@@ -832,7 +832,7 @@ In order to use GeographicLib from C++ code, you will need to
     e.g., \verbatim
     Linker -> Input -> Additional Dependencies = Geographic-i.lib (for shared library)
     Linker -> Input -> Additional Dependencies = Geographic.lib (for static library)
-    Linker -> General -> Additional Library Directories = C:\pkg-vc10\Geographic\lib
+    Linker -> General -> Additional Library Directories = C:\pkg-vc14-x64\Geographic\lib
     \endverbatim
     Note that the library name is <b>Geographic</b> and not
     GeographicLib.  For the Debug version of your program on Windows
@@ -7671,8 +7671,7 @@ git repository for GeographicLib</a>.
      addition to its original role of allowing you to overwrite
      existing models.
    - TODO: add Ellipsoid class links auxlat page.
-   - TODO: index.html fix link for MATLAB documentation.
-   - TODO: update copyright dates for 2019.
+   - TODO: update copyright dates for 2019 (mostly done?).
    - Java implementation: require Java 1.6 or later and so remove
      epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
    - Fix bug in Rhumb class and
@@ -7707,7 +7706,7 @@ git repository for GeographicLib</a>.
    - TODO: update information on https://github.com/ngageoint/opensphere-asm
    - TODO: Fix installation instructions (don't use make with Visual
      Studio), maybe use less complicated install path (but at least make
-     sure install path is consistent with compiler.
+     sure install path is consistent with compiler).
    - Turn off optimizations for the Intel compiler which causes
      incorrect code to be generated.  Tested only for C and C++ on
      Linux.  The changes should also work for Fortran and Windows.
@@ -7764,6 +7763,12 @@ git repository for GeographicLib</a>.
    - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in
      NETGeographicLib doc.
    - TODO: Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
+   - GeodSolve: fractional distances can be entered as fractions.
+   - cmake: fine tune Visual Studio compatibility check in
+     find_package(GeographicLib); this allows GeographicLib compiled
+     with Visual Studio 14 2015 to be used with a project compiled with
+     Visual Studio 15 2017.
+   - GARS::Forward: fix BUG in handling of longitude = &plusmn;180&deg;.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

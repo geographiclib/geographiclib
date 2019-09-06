@@ -53,6 +53,7 @@ umask 0022
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
 #   matlab/geographiclib-blurb.txt version + date
+#   update version number in documentation link in index.html
 # use MATLAB's analyze code
 
 # C
@@ -169,6 +170,9 @@ for ver in 10 11 12 14 15; do
 	pkg=vc$ver-$arch
 	gen="Visual Studio $ver"
 	installer=
+	# N.B. update CPACK_NSIS_INSTALL_ROOT in CMakeLists.txt and
+	# update documentation examples if VS version for binary
+	# installer changes.
 	test "$ver" = 14 && installer=y
 	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
 	(

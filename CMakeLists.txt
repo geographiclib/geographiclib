@@ -588,15 +588,15 @@ if (WIN32)
   set (CPACK_NSIS_URL_INFO_ABOUT "https://geographiclib.sourceforge.io")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    # Hardcode the prefix for Visual Studio 12 2013
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc12-x64")
+    # Hardcode the prefix for Visual Studio 14 2015
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc14-x64")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
   else ()
-    # Hardcode the prefix for Visual Studio 12 2013
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc12-win32")
+    # Hardcode the prefix for Visual Studio 14 2015
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc14-win32")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} win32 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY

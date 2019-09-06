@@ -58,8 +58,8 @@
 //   1700     vc11  (2012)
 //   1800     vc12  (2013)
 //   1900     vc14  (2015)
-//   191[0-6] vc15  (2017)
-//   192[0-?] vc16  (2019)
+//   191[0-9] vc15  (2017)
+//   192[0-9] vc16  (2019)
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
 #  else
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 0
