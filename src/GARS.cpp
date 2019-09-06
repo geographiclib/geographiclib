@@ -25,7 +25,8 @@ namespace GeographicLib {
       gars = "INVALID";
       return;
     }
-    lon = Math::AngNormalize(lon); // lon in [-180,180)
+    lon = Math::AngNormalize(lon);
+    if (lon == 180) lon = -180; // lon now in [-180,180)
     if (lat == 90) lat *= (1 - numeric_limits<real>::epsilon() / 2);
     prec = max(0, min(int(maxprec_), prec));
     int

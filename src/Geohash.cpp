@@ -29,7 +29,8 @@ namespace GeographicLib {
       return;
     }
     if (lat == 90) lat -= lateps / 2;
-    lon = Math::AngNormalize(lon); // lon in [-180,180)
+    lon = Math::AngNormalize(lon);
+    if (lon == 180) lon = -180; // lon now in [-180,180)
     // lon/loneps in [-2^45,2^45); lon/loneps + shift in [0,2^46)
     // similarly for lat
     len = max(0, min(int(maxlen_), len));
