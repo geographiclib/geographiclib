@@ -109,7 +109,8 @@ fractional mode.  This only has any effect with the B<-D> and B<-I>
 options (and is otherwise ignored).  The values read on standard input
 are interpreted as fractional distances to point 3, i.e., as
 I<s12>/I<s13> instead of I<s12>.  If arc mode is in effect, then the
-values denote fractional arc length, i.e., I<a12>/I<a13>.
+values denote fractional arc length, i.e., I<a12>/I<a13>.  The
+fractional distances can be entered as a simple fraction, e.g., 3/4.
 
 =item B<-d>
 
