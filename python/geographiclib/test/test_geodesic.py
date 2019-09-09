@@ -438,14 +438,14 @@ class GeodSolveTest(unittest.TestCase):
     # 2015-10-16.
     inv = Geodesic.WGS84.Inverse(54.1589, 15.3872, 54.1591, 15.3877,
                                  Geodesic.ALL)
-    self.assertAlmostEqual(inv["azi1"], 55.723110355, delta = 5e-9);
-    self.assertAlmostEqual(inv["azi2"], 55.723515675, delta = 5e-9);
-    self.assertAlmostEqual(inv["s12"],  39.527686385, delta = 5e-9);
-    self.assertAlmostEqual(inv["a12"],   0.000355495, delta = 5e-9);
-    self.assertAlmostEqual(inv["m12"],  39.527686385, delta = 5e-9);
-    self.assertAlmostEqual(inv["M12"],   0.999999995, delta = 5e-9);
-    self.assertAlmostEqual(inv["M21"],   0.999999995, delta = 5e-9);
-    self.assertAlmostEqual(inv["S12"], 286698586.30197, delta = 5e-4);
+    self.assertAlmostEqual(inv["azi1"], 55.723110355, delta = 5e-9)
+    self.assertAlmostEqual(inv["azi2"], 55.723515675, delta = 5e-9)
+    self.assertAlmostEqual(inv["s12"],  39.527686385, delta = 5e-9)
+    self.assertAlmostEqual(inv["a12"],   0.000355495, delta = 5e-9)
+    self.assertAlmostEqual(inv["m12"],  39.527686385, delta = 5e-9)
+    self.assertAlmostEqual(inv["M12"],   0.999999995, delta = 5e-9)
+    self.assertAlmostEqual(inv["M21"],   0.999999995, delta = 5e-9)
+    self.assertAlmostEqual(inv["S12"], 286698586.30197, delta = 5e-4)
 
   def test_GeodSolve76(self):
     # The distance from Wellington and Salamanca (a classic failure of
@@ -493,11 +493,11 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(inv["m12"], 0, delta = 1e-8)
     self.assertAlmostEqual(inv["M12"], 1, delta = 1e-15)
     self.assertAlmostEqual(inv["M21"], 1, delta = 1e-15)
-    self.assertAlmostEqual(inv["S12"], 127516405431022.0, delta = 0.5);
+    self.assertAlmostEqual(inv["S12"], 127516405431022.0, delta = 0.5)
 
     # An incapable line which can't take distance as input
-    line = Geodesic.WGS84.Line(1, 2, 90, Geodesic.LATITUDE);
-    dir = line.Position(1000, Geodesic.EMPTY);
+    line = Geodesic.WGS84.Line(1, 2, 90, Geodesic.LATITUDE)
+    dir = line.Position(1000, Geodesic.EMPTY)
     self.assertTrue(Math.isnan(dir["a12"]))
 
 class PlanimeterTest(unittest.TestCase):
@@ -582,3 +582,146 @@ class PlanimeterTest(unittest.TestCase):
     num, perimeter, area = PlanimeterTest.Planimeter(points)
     self.assertAlmostEqual(perimeter, 1160741, delta = 1)
     self.assertAlmostEqual(area, 32415230256.0, delta = 1)
+
+  def test_Planimeter15(self):
+    # Coverage tests, includes Planimeter15 - Planimeter18 (combinations of
+    # reverse and sign) + calls to testpoint, testedge.
+    lat = [2, 1, 3]
+    lon = [1, 2, 3]
+    r = 18454562325.45119
+    a0 = 510065621724088.5093   # ellipsoid area
+    PlanimeterTest.polygon.Clear()
+    PlanimeterTest.polygon.AddPoint(lat[0], lon[0])
+    PlanimeterTest.polygon.AddPoint(lat[1], lon[1])
+    num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat[2], lon[2],
+                                                            False, True)
+    self.assertAlmostEqual(area, r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat[2], lon[2],
+                                                            False, False)
+    self.assertAlmostEqual(area, r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat[2], lon[2],
+                                                            True, True)
+    self.assertAlmostEqual(area, -r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat[2], lon[2],
+                                                            True, False)
+    self.assertAlmostEqual(area, a0-r, delta = 0.5)
+    inv = Geodesic.WGS84.Inverse(lat[1], lon[1], lat[2], lon[2])
+    azi1 = inv["azi1"]
+    s12 = inv["s12"]
+    num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi1, s12,
+                                                           False, True)
+    self.assertAlmostEqual(area, r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi1, s12,
+                                                           False, False)
+    self.assertAlmostEqual(area, r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi1, s12,
+                                                           True, True)
+    self.assertAlmostEqual(area, -r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi1, s12,
+                                                           True, False)
+    self.assertAlmostEqual(area, a0-r, delta = 0.5)
+    PlanimeterTest.polygon.AddPoint(lat[2], lon[2])
+    num, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
+    self.assertAlmostEqual(area, r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.Compute(False, False)
+    self.assertAlmostEqual(area, r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.Compute(True, True)
+    self.assertAlmostEqual(area, -r, delta = 0.5)
+    num, perimeter, area = PlanimeterTest.polygon.Compute(True, False)
+    self.assertAlmostEqual(area, a0-r, delta = 0.5)
+
+  def test_Planimeter19(self):
+    # Coverage tests, includes Planimeter19 - Planimeter20 (degenerate
+    # polygons) + extra cases.
+    PlanimeterTest.polygon.Clear()
+    num, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
+    self.assertTrue(area == 0)
+    self.assertTrue(perimeter == 0)
+    num, perimeter, area = PlanimeterTest.polygon.TestPoint(1, 1,
+                                                            False, True)
+    self.assertTrue(area == 0)
+    self.assertTrue(perimeter == 0)
+    num, perimeter, area = PlanimeterTest.polygon.TestEdge(90, 1000,
+                                                           False, True)
+    self.assertTrue(Math.isnan(area))
+    self.assertTrue(Math.isnan(perimeter))
+    PlanimeterTest.polygon.AddPoint(1, 1)
+    num, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
+    self.assertTrue(area == 0)
+    self.assertTrue(perimeter == 0)
+    PlanimeterTest.polyline.Clear()
+    num, perimeter, area = PlanimeterTest.polyline.Compute(False, True)
+    self.assertTrue(perimeter == 0)
+    num, perimeter, area = PlanimeterTest.polyline.TestPoint(1, 1,
+                                                             False, True)
+    self.assertTrue(perimeter == 0)
+    num, perimeter, area = PlanimeterTest.polyline.TestEdge(90, 1000,
+                                                            False, True)
+    self.assertTrue(Math.isnan(perimeter))
+    PlanimeterTest.polyline.AddPoint(1, 1)
+    num, perimeter, area = PlanimeterTest.polyline.Compute(False, True)
+    self.assertTrue(perimeter == 0)
+
+  def test_Planimeter21(self):
+    # Some test to add code coverage: multiple circlings of pole (includes
+    # Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
+    # Some of the results for i = 4 in the loop are wrong because we don't
+    # reduce the area to the allowed range correctly.  However these cases are
+    #  not "simple" polygons, so we'll defer fixing the problem for now.
+    lat = 45
+    azi = 39.2144607176828184218
+    s = 8420705.40957178156285
+    r = 39433884866571.4277     # Area for one circuit
+    a0 = 510065621724088.5093   # Ellipsoid area
+    PlanimeterTest.polygon.Clear()
+    PlanimeterTest.polygon.AddPoint(lat,  60)
+    PlanimeterTest.polygon.AddPoint(lat, 180)
+    PlanimeterTest.polygon.AddPoint(lat, -60)
+    PlanimeterTest.polygon.AddPoint(lat,  60)
+    PlanimeterTest.polygon.AddPoint(lat, 180)
+    PlanimeterTest.polygon.AddPoint(lat, -60)
+    for i in [3, 4]:
+      PlanimeterTest.polygon.AddPoint(lat,  60)
+      PlanimeterTest.polygon.AddPoint(lat, 180)
+      num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
+                                                              False, True)
+      if i != 4:
+        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
+                                                              False, False)
+      if i != 4:
+        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
+                                                              True, True)
+      if i != 4:
+        self.assertAlmostEqual(area, -i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
+                                                              True, False)
+      self.assertAlmostEqual(area, -i*r + a0, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
+                                                             False, True)
+      if i != 4:
+        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
+                                                             False, False)
+      if i != 4:
+        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
+                                                             True, True)
+      if i != 4:
+        self.assertAlmostEqual(area, -i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
+                                                             True, False)
+      self.assertAlmostEqual(area, -i*r + a0, delta = 0.5)
+      PlanimeterTest.polygon.AddPoint(lat, -60)
+      num, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
+      if i != 4:
+        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.Compute(False, False)
+      if i != 4:
+        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.Compute(True, True)
+      if i != 4:
+        self.assertAlmostEqual(area, -i*r, delta = 0.5)
+      num, perimeter, area = PlanimeterTest.polygon.Compute(True, False)
+      self.assertAlmostEqual(area, -i*r + a0, delta = 0.5)

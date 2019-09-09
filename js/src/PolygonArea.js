@@ -193,8 +193,8 @@
     } else {
       if (tempsum.Sum() >= this._area0)
         tempsum.Add( -this._area0 );
-      else if (tempsum < 0)
-        tempsum.Add( -this._area0 );
+      else if (tempsum.Sum() < 0)
+        tempsum.Add( +this._area0 );
     }
     vals.area = tempsum.Sum();
     return vals;
@@ -290,10 +290,10 @@
     t = this._geod.Direct(this.lat, this.lon, azi, s, this._mask);
     tempsum += t.S12;
     crossings += transitdirect(this.lon, t.lon2);
+    crossings += transit(t.lon2, this._lon0);
     t = this._geod.Inverse(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
     vals.perimeter += t.s12;
     tempsum += t.S12;
-    crossings += transit(t.lon2, this._lon0);
 
     if (crossings & 1)
       tempsum += (tempsum < 0 ? 1 : -1) * this._area0/2;

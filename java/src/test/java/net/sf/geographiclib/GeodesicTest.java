@@ -770,7 +770,7 @@ public class GeodesicTest {
       azi = 39.2144607176828184218, s = 8420705.40957178156285,
       r = 39433884866571.4277,    // Area for one circuit
       a0 = 510065621724088.5093;  // Ellipsoid area
-    int result = 0, i;
+    int i;
     polygon.Clear();
     polygon.AddPoint(lat,  60);
     polygon.AddPoint(lat, 180);

@@ -684,6 +684,124 @@ describe("GeographicLib", function() {
       assert.approx(a.area, 32415230256.0, 1);
     });
 
+    it("Planimeter15", function() {
+      // Coverage tests, includes Planimeter15 - Planimeter18 (combinations of
+      // reverse and sign) + calls to testpoint, testedge.
+      var a, lat, lon, r, a0, area, inv;
+      lat = [2, 1, 3]; lon = [1, 2, 3];
+      r = 18454562325.45119;
+      a0 = 510065621724088.5093; // ellipsoid area
+      polygon.Clear();
+      polygon.AddPoint(lat[0], lon[0]);
+      polygon.AddPoint(lat[1], lon[1]);
+      a = polygon.TestPoint(lat[2], lon[2], false, true);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestPoint(lat[2], lon[2], false, false);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestPoint(lat[2], lon[2], true, true);
+      assert.approx(a.area, -r, 0.5);
+      a = polygon.TestPoint(lat[2], lon[2], true, false);
+      assert.approx(a.area, a0-r, 0.5);
+      inv = geod.Inverse(lat[1], lon[1], lat[2], lon[2]);
+      a = polygon.TestEdge(inv.azi1, inv.s12, false, true);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestEdge(inv.azi1, inv.s12, false, false);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestEdge(inv.azi1, inv.s12, true, true);
+      assert.approx(a.area, -r, 0.5);
+      a = polygon.TestEdge(inv.azi1, inv.s12, true, false);
+      assert.approx(a.area, a0-r, 0.5);
+      polygon.AddPoint(lat[2], lon[2]);
+      a = polygon.Compute(false, true);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.Compute(false, false);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.Compute(true, true);
+      assert.approx(a.area, -r, 0.5);
+      a = polygon.Compute(true, false);
+      assert.approx(a.area, a0-r, 0.5);
+    });
+
+    it("Planimeter19", function() {
+      // Coverage tests, includes Planimeter19 - Planimeter20 (degenerate
+      // polygons) + extra cases.
+      var a;
+      polygon.Clear();
+      a = polygon.Compute(false, true);
+      assert(a.area == 0);
+      assert(a.perimeter == 0);
+      a = polygon.TestPoint(1, 1, false, true);
+      assert(a.area == 0);
+      assert(a.perimeter == 0);
+      a = polygon.TestEdge(90, 1000, false, true);
+      assert(isNaN(a.area));
+      assert(isNaN(a.perimeter));
+      polygon.AddPoint(1, 1);
+      a = polygon.Compute(false, true);
+      assert(a.area == 0);
+      assert(a.perimeter == 0);
+      polyline.Clear();
+      a = polyline.Compute(false, true);
+      assert(a.perimeter == 0);
+      a = polyline.TestPoint(1, 1, false, true);
+      assert(a.perimeter == 0);
+      a = polyline.TestEdge(90, 1000, false, true);
+      assert(isNaN(a.perimeter));
+      polyline.AddPoint(1, 1);
+      a = polyline.Compute(false, true);
+      assert(a.perimeter == 0);
+    });
+
+    it("Planimeter21", function() {
+      // Some test to add code coverage: multiple circlings of pole (includes
+      // Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
+      // Some of the results for i = 4 in the loop are wrong because we don't
+      // reduce the area to the allowed range correctly.  However these cases
+      // are not "simple" polygons, so we'll defer fixing the problem for now.
+      var a, lat, azi, s, r, a0, i;
+      lat = 45;
+      azi = 39.2144607176828184218;
+      s = 8420705.40957178156285;
+      r = 39433884866571.4277;   // Area for one circuit
+      a0 = 510065621724088.5093; // Ellipsoid area
+      polygon.Clear();
+      polygon.AddPoint(lat,  60);
+      polygon.AddPoint(lat, 180);
+      polygon.AddPoint(lat, -60);
+      polygon.AddPoint(lat,  60);
+      polygon.AddPoint(lat, 180);
+      polygon.AddPoint(lat, -60);
+      for (i = 3; i <= 4; ++i) {
+        polygon.AddPoint(lat,  60);
+        polygon.AddPoint(lat, 180);
+        a = polygon.TestPoint(lat, -60, false, true);
+        if (i != 4) assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestPoint(lat, -60, false, false);
+        if (i != 4) assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestPoint(lat, -60, true, true);
+        if (i != 4) assert.approx(a.area, -i*r, 0.5);
+        a = polygon.TestPoint(lat, -60, true, false);
+        assert.approx(a.area, -i*r + a0, 0.5);
+        a = polygon.TestEdge(azi, s, false, true);
+        if (i != 4) assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestEdge(azi, s, false, false);
+        if (i != 4) assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestEdge(azi, s, true, true);
+        if (i != 4) assert.approx(a.area, -i*r, 0.5);
+        a = polygon.TestEdge(azi, s, true, false);
+        assert.approx(a.area, -i*r + a0, 0.5);
+        polygon.AddPoint(lat, -60);
+        a = polygon.Compute(false, true);
+        if (i != 4) assert.approx(a.area,  i*r, 0.5);
+        a = polygon.Compute(false, false);
+        if (i != 4) assert.approx(a.area,  i*r, 0.5);
+        a = polygon.Compute(true, true);
+        if (i != 4) assert.approx(a.area, -i*r, 0.5);
+        a = polygon.Compute(true, false);
+        assert.approx(a.area, -i*r + a0, 0.5);
+      }
+    });
+
     it("check TestEdge", function() {
       // Check fix of bugs found by threepointone, 2015-10-14
       polygon.Clear();
