@@ -923,6 +923,11 @@ static int Planimeter19() {
   geod_polygon_addpoint(&g, &p, 1, 1);
   geod_polygon_compute(&g, &p, 0, 1, 0, &perim);
   result += perim == 0 ? 0 : 1;
+  geod_polygon_addpoint(&g, &p, 1, 1);
+  geod_polygon_testedge(&g, &p, 90, 1000, 0, 1, 0, &perim);
+  result += checkEquals(perim, 1000, 1e-10);
+  geod_polygon_testpoint(&g, &p, 2, 2, 0, 1, 0, &perim);
+  result += checkEquals(perim, 156876.149, 0.5e-3);
   return result;
 }
 
@@ -979,7 +984,7 @@ static int Planimeter21() {
   return result;
 }
 
-static int AddEdge1() {
+static int Planimeter29() {
   /* Check fix to transitdirect vs transit zero handling inconsistency */
   struct geod_geodesic g;
   struct geod_polygon p;
@@ -992,38 +997,9 @@ static int AddEdge1() {
   geod_polygon_addedge(&g, &p,   0, 1000);
   geod_polygon_addedge(&g, &p, -90, 1000);
   geod_polygon_compute(&g, &p, 0, 1, &area, 0);
+  /* The area should be 1e6.  Prior to the fix it was 1e6 - A/2, where
+     A = ellipsoid area. */
   result += checkEquals(area, 1000000.0, 0.01);
-  return result;
-}
-
-static int EmptyPoly() {
-  struct geod_geodesic g;
-  struct geod_polygon p;
-  double perim, area;
-  int result = 0;
-  geod_init(&g, wgs84_a, wgs84_f);
-  geod_polygon_init(&p, 0);
-  geod_polygon_testpoint(&g, &p, 1, 1, 0, 1, &area, &perim);
-  result += area == 0 ? 0 : 1;
-  result += perim == 0 ? 0 : 1;
-  geod_polygon_testedge(&g, &p, 90, 1000, 0, 1, &area, &perim);
-  result += checkNaN(area);
-  result += checkNaN(perim);
-  geod_polygon_compute(&g, &p, 0, 1, &area, &perim);
-  result += area == 0 ? 0 : 1;
-  result += perim == 0 ? 0 : 1;
-  geod_polygon_init(&p, 1);
-  geod_polygon_testpoint(&g, &p, 1, 1, 0, 1, 0, &perim);
-  result += perim == 0 ? 0 : 1;
-  geod_polygon_testedge(&g, &p, 90, 1000, 0, 1, 0, &perim);
-  result += checkNaN(perim);
-  geod_polygon_compute(&g, &p, 0, 1, 0, &perim);
-  result += perim == 0 ? 0 : 1;
-  geod_polygon_addpoint(&g, &p, 1, 1);
-  geod_polygon_testedge(&g, &p, 90, 1000, 0, 1, 0, &perim);
-  result += checkEquals(perim, 1000, 1e-10);
-  geod_polygon_testpoint(&g, &p, 2, 2, 0, 1, 0, &perim);
-  result += checkEquals(perim, 156876.149, 0.5e-3);
   return result;
 }
 
@@ -1067,8 +1043,7 @@ int main() {
   if ((i = Planimeter15())) {++n; printf("Planimeter15 fail: %d\n", i);}
   if ((i = Planimeter19())) {++n; printf("Planimeter19 fail: %d\n", i);}
   if ((i = Planimeter21())) {++n; printf("Planimeter21 fail: %d\n", i);}
-  if ((i = AddEdge1())) {++n; printf("AddEdge1 fail: %d\n", i);}
-  if ((i = EmptyPoly())) {++n; printf("EmptyPoly fail: %d\n", i);}
+  if ((i = Planimeter29())) {++n; printf("AddEdge1 fail: %d\n", i);}
   return n;
 }
 

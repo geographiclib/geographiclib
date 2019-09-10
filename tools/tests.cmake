@@ -588,6 +588,12 @@ endif ()
 set_tests_properties (Planimeter28 PROPERTIES
   PASS_REGULAR_EXPRESSION " 352330082257802\\.[5-9]") # -4*r+a0
 
+# Placeholder to implement check on AddEdge bug: AddPoint(0,0) +
+# AddEdge(90, 1000) + AddEdge(0, 1000) + AddEdge(-90, 0).  The area
+# should be 1e6.  Prior to the fix it was 1e6 - A/2, where A = ellipsoid
+# area.
+# add_test (NAME Planimeter29 COMMAND Planimeter ...)
+
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND ConicProj
   -a 40d58 39d56 -l 77d45W -r --input-string "220e3 -52e3")

@@ -1834,6 +1834,8 @@ int transit(real lon1, real lon2) {
 }
 
 int transitdirect(real lon1, real lon2) {
+  /* Compute exactly the parity of
+     int(ceil(lon2 / 360)) - int(ceil(lon1 / 360)) */
   lon1 = remainderx(lon1, (real)(720));
   lon2 = remainderx(lon2, (real)(720));
   return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -

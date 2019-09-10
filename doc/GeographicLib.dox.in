@@ -6620,7 +6620,7 @@ To obtain a practical measure of the error for the general case we define
 .
 We then find <i>err</i><sub>h</sub> < 8&nbsp;nm,
 <i>err</i><sub>out</sub> < 4&nbsp;nm, and <i>err</i><sub>in</sub> <
-7&nbsp;nm.  (1&nbsp;nm = 1 nanometer.)
+7&nbsp;nm (1&nbsp;nm = 1 nanometer).
 
 The testing has been confined to the WGS84 ellipsoid.  The method will
 work for all ellipsoids used in terrestrial geodesy.  However, the
@@ -7686,8 +7686,8 @@ git repository for GeographicLib</a>.
      results for UPS zones with prec = -1.
    - Fix bug in PolygonArea::AddEdge which caused the count of pole
      encirclings to be wrong, sometimes resulting in an incorrect area
-     if a polygon vertex had longitude = 0; also fixed in C library.
-     TODO: Java, JS, Python.
+     if a polygon vertex had longitude = 0; also fixed in C, Java, JS,
+     Python libraries.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
      - TODO: document development environment for Windows: cmake + VS +

@@ -67,12 +67,12 @@ class PolygonArea(object):
   def _transitdirect(lon1, lon2):
     """Count crossings of prime meridian for AddEdge."""
     # We want to compute exactly
-    #   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+    #   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
     # Since we only need the parity of the result we can use std::remquo but
     # this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
     lon1 = math.fmod(lon1, 720.0); lon2 = math.fmod(lon2, 720.0)
-    return ( (0 if ((lon2 >= 0 and lon2 < 360) or lon2 < -360) else 1) -
-             (0 if ((lon1 >= 0 and lon1 < 360) or lon1 < -360) else 1) )
+    return ( (1 if ((lon2 <= 0 and lon2 > -360) or lon2 > 360) else 0) -
+             (1 if ((lon1 <= 0 and lon1 > -360) or lon1 > 360) else 0) )
   _transitdirect = staticmethod(_transitdirect)
 
   def __init__(self, earth, polyline = False):

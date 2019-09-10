@@ -83,12 +83,12 @@ public class PolygonArea {
   // problem.
   private static int transitdirect(double lon1, double lon2) {
     // We want to compute exactly
-    //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+    //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
     // Since we only need the parity of the result we can use std::remquo but
     // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
     lon1 = lon1 % 720.0; lon2 = lon2 % 720.0;
-    return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
-             ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+    return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
+             ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
     }
 
   /**

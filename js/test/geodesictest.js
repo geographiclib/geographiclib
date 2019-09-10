@@ -750,6 +750,11 @@ describe("GeographicLib", function() {
       polyline.AddPoint(1, 1);
       a = polyline.Compute(false, true);
       assert(a.perimeter == 0);
+      polygon.AddPoint(1, 1);
+      a = polyline.TestEdge(90, 1000, false, true);
+      assert.approx(a.perimeter, 1000, 1e-10);
+      a = polyline.TestPoint(2, 2, false, true);
+      assert.approx(a.perimeter, 156876.149, 0.5e-3);
     });
 
     it("Planimeter21", function() {
@@ -800,6 +805,20 @@ describe("GeographicLib", function() {
         a = polygon.Compute(true, false);
         assert.approx(a.area, -i*r + a0, 0.5);
       }
+    });
+
+    it("Planimeter29", function() {
+      // Check fix to transitdirect vs transit zero handling inconsistency
+      var a;
+      polygon.Clear();
+      polygon.AddPoint(0, 0);
+      polygon.AddEdge( 90, 1000);
+      polygon.AddEdge(  0, 1000);
+      polygon.AddEdge(-90, 1000);
+      a = polygon.Compute(false, true);
+      // The area should be 1e6.  Prior to the fix it was 1e6 - A/2, where
+      // A = ellipsoid area.
+      assert.approx(a.area, 1000000.0, 0.01);
     });
 
     it("check TestEdge", function() {

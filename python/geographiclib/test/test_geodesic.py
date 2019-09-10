@@ -661,6 +661,13 @@ class PlanimeterTest(unittest.TestCase):
     PlanimeterTest.polyline.AddPoint(1, 1)
     num, perimeter, area = PlanimeterTest.polyline.Compute(False, True)
     self.assertTrue(perimeter == 0)
+    PlanimeterTest.polygon.AddPoint(1, 1)
+    num, perimeter, area = PlanimeterTest.polyline.TestEdge(90, 1000,
+                                                            False, True)
+    self.assertAlmostEqual(perimeter, 1000, delta = 1e-10)
+    num, perimeter, area = PlanimeterTest.polyline.TestPoint(2, 2,
+                                                             False, True)
+    self.assertAlmostEqual(perimeter, 156876.149, delta = 0.5e-3)
 
   def test_Planimeter21(self):
     # Some test to add code coverage: multiple circlings of pole (includes
@@ -725,3 +732,15 @@ class PlanimeterTest(unittest.TestCase):
         self.assertAlmostEqual(area, -i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.Compute(True, False)
       self.assertAlmostEqual(area, -i*r + a0, delta = 0.5)
+
+  def test_Planimeter29(self):
+    # Check fix to transitdirect vs transit zero handling inconsistency
+    PlanimeterTest.polygon.Clear()
+    PlanimeterTest.polygon.AddPoint(0, 0)
+    PlanimeterTest.polygon.AddEdge( 90, 1000)
+    PlanimeterTest.polygon.AddEdge(  0, 1000)
+    PlanimeterTest.polygon.AddEdge(-90, 1000)
+    num, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
+    # The area should be 1e6.  Prior to the fix it was 1e6 - A/2, where
+    # A = ellipsoid area.
+    self.assertAlmostEqual(area, 1000000.0, delta = 0.01)
