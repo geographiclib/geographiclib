@@ -98,13 +98,21 @@ public class GeoMath {
     return y;
   }
 
+  /**
+   * Coarsen a value close to zero.
+   * <p>
+   * @param x
+   * @return the coarsened value.
+   * <p>
+   * This makes the smallest gap in <i>x</i> = 1/16 &minus; nextafter(1/16, 0)
+   * = 1/2<sup>57</sup> for reals = 0.7 pm on the earth if <i>x</i> is an angle
+   * in degrees.  (This is about 1000 times more resolution than we get with
+   * angles around 90 degrees.)  We use this to avoid having to deal with near
+   * singular cases when <i>x</i> is non-zero but tiny (e.g.,
+   * 10<sup>&minus;200</sup>).  This converts &minus;0 to +0; however tiny
+   * negative numbers get converted to &minus;0.
+   **********************************************************************/
   public static double AngRound(double x) {
-    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    // is about 1000 times more resolution than we get with angles around 90
-    // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This converts -0 to
-    // +0; however tiny negative numbers get converted to -0.
     final double z = 1/16.0;
     if (x == 0) return 0;
     double y = Math.abs(x);
@@ -114,7 +122,21 @@ public class GeoMath {
   }
 
   /**
-   * Normalize an angle (restricted input range).
+   * The remainder function.
+   * <p>
+   * @param x the numerator of the division
+   * @param y the denominator of the division
+   * @return the remainder in the range [&minus;<i>y</i>/2, <i>y</i>/2].
+   * <p>
+   * The range of <i>x</i> is unrestricted; <i>y</i> must be positive.
+   **********************************************************************/
+  public static double remainder(double x, double y) {
+    x = x % y;
+    return x < -y/2 ? x + y : (x < y/2 ? x : x - y);
+  }
+
+  /**
+   * Normalize an angle.
    * <p>
    * @param x the angle in degrees.
    * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
@@ -122,8 +144,8 @@ public class GeoMath {
    * The range of <i>x</i> is unrestricted.
    **********************************************************************/
   public static double AngNormalize(double x) {
-    x = x % 360.0;
-    return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
+    x = remainder(x, 360.0);
+    return x == -180 ? 180 : x;
   }
 
   /**

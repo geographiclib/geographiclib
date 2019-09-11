@@ -126,16 +126,22 @@ class Math(object):
     return 0.0 if x == 0 else (-y if x < 0 else y)
   AngRound = staticmethod(AngRound)
 
-  def AngNormalize(x):
-    """reduce angle to (-180,180]"""
-
-    y = math.fmod(x, 360)
+  def remainder(x, y):
+    """remainder of x/y in the range [-y/2, y/2]."""
+    z = math.fmod(x, y)
     # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
     # This fixes this bug.  See also Math::AngNormalize in the C++ library.
     # sincosd has a similar fix.
-    y = x if x == 0 else y
-    return (y + 360 if y <= -180 else
-            (y if y <= 180 else y - 360))
+    z = x if x == 0 else z
+    return (z + y if z < -y/2 else
+            (z if z < y/2 else z -y))
+  remainder = staticmethod(remainder)
+
+  def AngNormalize(x):
+    """reduce angle to (-180,180]"""
+
+    y = Math.remainder(x, 360)
+    return 180 if y == -180 else y
   AngNormalize = staticmethod(AngNormalize)
 
   def LatFix(x):

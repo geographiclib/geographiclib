@@ -89,7 +89,57 @@ public class PolygonArea {
     lon1 = lon1 % 720.0; lon2 = lon2 % 720.0;
     return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
              ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
+  }
+  // reduce Accumulator area to allowed range
+  private static double AreaReduceA(Accumulator area, double area0,
+                                    int crossings,
+                                    boolean reverse, boolean sign) {
+    area.Remainder(area0);
+    if ((crossings & 1) != 0)
+      area.Add((area.Sum() < 0 ? 1 : -1) * area0/2);
+    // area is with the clockwise sense.  If !reverse convert to
+    // counter-clockwise convention.
+    if (!reverse)
+      area.Negate();
+    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if (sign) {
+      if (area.Sum() > area0/2)
+        area.Add(-area0);
+      else if (area.Sum() <= -area0/2)
+        area.Add(+area0);
+    } else {
+      if (area.Sum() >= area0)
+        area.Add(-area0);
+      else if (area.Sum() < 0)
+        area.Add(+area0);
     }
+    return 0 + area.Sum();
+  }
+  // reduce double area to allowed range
+  private static double AreaReduceB(double area, double area0,
+                                    int crossings,
+                                    boolean reverse, boolean sign) {
+    area = GeoMath.remainder(area, area0);
+    if ((crossings & 1) != 0)
+      area += (area < 0 ? 1 : -1) * area0/2;
+    // area is with the clockwise sense.  If !reverse convert to
+    // counter-clockwise convention.
+    if (!reverse)
+      area *= -1;
+    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if (sign) {
+      if (area > area0/2)
+        area -= area0;
+      else if (area <= -area0/2)
+        area += area0;
+    } else {
+      if (area >= area0)
+        area -= area0;
+      else if (area < 0)
+        area += area0;
+    }
+    return 0 + area;
+  }
 
   /**
    * Constructor for PolygonArea.
@@ -207,27 +257,12 @@ public class PolygonArea {
     GeodesicData g = _earth.Inverse(_lat1, _lon1, _lat0, _lon0, _mask);
     Accumulator tempsum = new Accumulator(_areasum);
     tempsum.Add(g.S12);
-    int crossings = _crossings + transit(_lon1, _lon0);
-    if ((crossings & 1) != 0)
-      tempsum.Add((tempsum.Sum() < 0 ? 1 : -1) * _area0/2);
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum.Negate();
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum.Sum() > _area0/2)
-        tempsum.Add(-_area0);
-      else if (tempsum.Sum() <= -_area0/2)
-        tempsum.Add(+_area0);
-    } else {
-      if (tempsum.Sum() >= _area0)
-        tempsum.Add(-_area0);
-      else if (tempsum.Sum() < 0)
-        tempsum.Add(+_area0);
-    }
+
     return
-      new PolygonResult(_num, _perimetersum.Sum(g.s12), 0 + tempsum.Sum());
+      new PolygonResult(_num, _perimetersum.Sum(g.s12),
+                        AreaReduceA(tempsum, _area0,
+                                    _crossings + transit(_lon1, _lon0),
+                                    reverse, sign));
   }
 
   /**
@@ -278,25 +313,9 @@ public class PolygonArea {
     if (_polyline)
       return new PolygonResult(num, perimeter, Double.NaN);
 
-    if ((crossings & 1) != 0)
-      tempsum += (tempsum < 0 ? 1 : -1) * _area0/2;
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum *= -1;
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum > _area0/2)
-        tempsum -= _area0;
-      else if (tempsum <= -_area0/2)
-        tempsum += _area0;
-    } else {
-      if (tempsum >= _area0)
-        tempsum -= _area0;
-      else if (tempsum < 0)
-        tempsum += _area0;
-    }
-    return new PolygonResult(num, perimeter, 0 + tempsum);
+    return new PolygonResult(num, perimeter,
+                             AreaReduceB(tempsum, _area0, crossings,
+                                         reverse, sign));
   }
 
   /**
@@ -344,26 +363,9 @@ public class PolygonArea {
       tempsum += g.S12;
     }
 
-    if ((crossings & 1) != 0)
-      tempsum += (tempsum < 0 ? 1 : -1) * _area0/2;
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum *= -1;
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum > _area0/2)
-        tempsum -= _area0;
-      else if (tempsum <= -_area0/2)
-        tempsum += _area0;
-    } else {
-      if (tempsum >= _area0)
-        tempsum -= _area0;
-      else if (tempsum < 0)
-        tempsum += _area0;
-    }
-
-    return new PolygonResult(num, perimeter, 0 + tempsum);
+    return new PolygonResult(num, perimeter,
+                             AreaReduceB(tempsum, _area0, crossings,
+                                         reverse, sign));
   }
 
   /**

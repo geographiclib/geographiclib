@@ -80,6 +80,8 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
     N(k) = m1(k) - m0(k) + 1;
     P(k) = accumulator(s12(m0(k):m1(k)));
     [As, At] = accumulator(S12(m0(k):m1(k)));
+    As = remx(As, area0);
+    [As, At] = accumulator(0, As, At);
     crossings = sum(cross(m0(k):m1(k)));
     if mod(crossings, 2) ~= 0
       [As, At] = accumulator( ((As < 0) * 2 - 1) * area0 / 2, As, At);
@@ -92,6 +94,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
     end
     A(k) = As;
   end
+  A = 0 + A;
 end
 
 function cross = transit(lon1, lon2)

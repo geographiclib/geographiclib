@@ -672,9 +672,6 @@ class PlanimeterTest(unittest.TestCase):
   def test_Planimeter21(self):
     # Some test to add code coverage: multiple circlings of pole (includes
     # Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
-    # Some of the results for i = 4 in the loop are wrong because we don't
-    # reduce the area to the allowed range correctly.  However these cases are
-    #  not "simple" polygons, so we'll defer fixing the problem for now.
     lat = 45
     azi = 39.2144607176828184218
     s = 8420705.40957178156285
@@ -692,44 +689,35 @@ class PlanimeterTest(unittest.TestCase):
       PlanimeterTest.polygon.AddPoint(lat, 180)
       num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
                                                               False, True)
-      if i != 4:
-        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      self.assertAlmostEqual(area,  i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
                                                               False, False)
-      if i != 4:
-        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      self.assertAlmostEqual(area,  i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
                                                               True, True)
-      if i != 4:
-        self.assertAlmostEqual(area, -i*r, delta = 0.5)
+      self.assertAlmostEqual(area, -i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.TestPoint(lat, -60,
                                                               True, False)
       self.assertAlmostEqual(area, -i*r + a0, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
                                                              False, True)
-      if i != 4:
-        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      self.assertAlmostEqual(area,  i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
                                                              False, False)
-      if i != 4:
-        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      self.assertAlmostEqual(area,  i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
                                                              True, True)
-      if i != 4:
-        self.assertAlmostEqual(area, -i*r, delta = 0.5)
+      self.assertAlmostEqual(area, -i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.TestEdge(azi, s,
                                                              True, False)
       self.assertAlmostEqual(area, -i*r + a0, delta = 0.5)
       PlanimeterTest.polygon.AddPoint(lat, -60)
       num, perimeter, area = PlanimeterTest.polygon.Compute(False, True)
-      if i != 4:
-        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      self.assertAlmostEqual(area,  i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.Compute(False, False)
-      if i != 4:
-        self.assertAlmostEqual(area,  i*r, delta = 0.5)
+      self.assertAlmostEqual(area,  i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.Compute(True, True)
-      if i != 4:
-        self.assertAlmostEqual(area, -i*r, delta = 0.5)
+      self.assertAlmostEqual(area, -i*r, delta = 0.5)
       num, perimeter, area = PlanimeterTest.polygon.Compute(True, False)
       self.assertAlmostEqual(area, -i*r + a0, delta = 0.5)
 

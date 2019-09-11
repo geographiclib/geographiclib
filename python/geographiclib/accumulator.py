@@ -80,3 +80,8 @@ class Accumulator(object):
     """Negate sum"""
     self._s *= -1
     self._t *= -1
+
+  def Remainder(self, y):
+    """Remainder on division by y"""
+    self._s = Math.remainder(self._s, y)
+    self.Add(0.0)

@@ -767,9 +767,6 @@ public class GeodesicTest {
   public void Planimeter21() {
     // Some test to add code coverage: multiple circlings of pole (includes
     // Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
-    // Some of the results for i = 4 in the loop are wrong because we don't
-    // reduce the area to the allowed range correctly.  However these cases are
-    //  not "simple" polygons, so we'll defer fixing the problem for now.
     PolygonResult a;
     double lat = 45,
       azi = 39.2144607176828184218, s = 8420705.40957178156285,
@@ -787,28 +784,28 @@ public class GeodesicTest {
       polygon.AddPoint(lat,  60);
       polygon.AddPoint(lat, 180);
       a = polygon.TestPoint(lat, -60, false, true);
-      if (i != 4) assertEquals(a.area,  i*r, 0.5);
+      assertEquals(a.area,  i*r, 0.5);
       a = polygon.TestPoint(lat, -60, false, false);
-      if (i != 4) assertEquals(a.area,  i*r, 0.5);
+      assertEquals(a.area,  i*r, 0.5);
       a = polygon.TestPoint(lat, -60, true, true);
-      if (i != 4) assertEquals(a.area, -i*r, 0.5);
+      assertEquals(a.area, -i*r, 0.5);
       a = polygon.TestPoint(lat, -60, true, false);
       assertEquals(a.area, -i*r + a0, 0.5);
       a = polygon.TestEdge(azi, s, false, true);
-      if (i != 4) assertEquals(a.area,  i*r, 0.5);
+      assertEquals(a.area,  i*r, 0.5);
       a = polygon.TestEdge(azi, s, false, false);
-      if (i != 4) assertEquals(a.area,  i*r, 0.5);
+      assertEquals(a.area,  i*r, 0.5);
       a = polygon.TestEdge(azi, s, true, true);
-      if (i != 4) assertEquals(a.area, -i*r, 0.5);
+      assertEquals(a.area, -i*r, 0.5);
       a = polygon.TestEdge(azi, s, true, false);
       assertEquals(a.area, -i*r + a0, 0.5);
       polygon.AddPoint(lat, -60);
       a = polygon.Compute(false, true);
-      if (i != 4) assertEquals(a.area,  i*r, 0.5);
+      assertEquals(a.area,  i*r, 0.5);
       a = polygon.Compute(false, false);
-      if (i != 4) assertEquals(a.area,  i*r, 0.5);
+      assertEquals(a.area,  i*r, 0.5);
       a = polygon.Compute(true, true);
-      if (i != 4) assertEquals(a.area, -i*r, 0.5);
+      assertEquals(a.area, -i*r, 0.5);
       a = polygon.Compute(true, false);
       assertEquals(a.area, -i*r + a0, 0.5);
     }

@@ -1007,6 +1007,7 @@
         c2 = (a**2 + b**2 * atan(sqrt(abs(e2))) / sqrt(abs(e2))) / 2
       end if
       area0 = 4 * pi * c2
+      call accrem(Aacc, area0)
       if (mod(abs(cross), 2) .eq. 1) then
         if (Aacc(1) .lt. 0) then
           call accadd(Aacc, +area0/2)
@@ -1541,7 +1542,7 @@
       comg12 =                comg1 * comg2 + somg1 * somg2
 * eta = omg12 - lam120
       eta = atan2(somg12 * clm120 - comg12 * slm120,
-     +    comg12 * clm120 + somg12 * slm120);
+     +    comg12 * clm120 + somg12 * slm120)
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
       call C3f(eps, C3x, Ca)
@@ -1906,15 +1907,30 @@
       return
       end
 
+      double precision function remx(x, y)
+* the remainder function but not worrying how ties are handled
+* y must be positive
+* input
+      double precision x, y
+
+      remx = mod(x, y)
+      if (remx .lt. -y/2) then
+        remx = remx + y
+      else if (remx .gt. +y/2) then
+        remx = remx - y
+      end if
+
+      return
+      end
+
       double precision function AngNm(x)
 * input
       double precision x
 
-      AngNm = mod(x, 360d0)
-      if (AngNm .le. -180) then
-        AngNm = AngNm + 360
-      else if (AngNm .gt. 180) then
-        AngNm = AngNm - 360
+      double precision remx
+      AngNm = remx(x, 360d0)
+      if (AngNm .eq. -180) then
+        AngNm = 180
       end if
 
       return
@@ -2132,6 +2148,20 @@
       else
         s(2) = s(2) + u
       end if
+
+      return
+      end
+
+      subroutine accrem(s, y)
+* Reduce s to [-y/2, y/2].
+* input
+      double precision y
+* input/output
+      double precision s(2)
+
+      double precision remx
+      s(1) = remx(s(1), y)
+      call accadd(s, 0d0)
 
       return
       end

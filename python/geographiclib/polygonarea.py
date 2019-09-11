@@ -75,6 +75,52 @@ class PolygonArea(object):
              (1 if ((lon1 <= 0 and lon1 > -360) or lon1 > 360) else 0) )
   _transitdirect = staticmethod(_transitdirect)
 
+  def _areareduceA(area, area0, crossings, reverse, sign):
+    """Reduce accumulator area to allowed range."""
+    area.Remainder(area0)
+    if crossings & 1:
+      area.Add( (1 if area.Sum() < 0 else -1) * area0/2 )
+    # area is with the clockwise sense.  If !reverse convert to
+    # counter-clockwise convention.
+    if not reverse: area.Negate()
+    # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if sign:
+      if area.Sum() > area0/2:
+        area.Add( -area0 )
+      elif area.Sum() <= -area0/2:
+        area.Add(  area0 )
+    else:
+      if area.Sum() >= area0:
+        area.Add( -area0 )
+      elif area.Sum() < 0:
+        area.Add(  area0 )
+
+    return 0.0 + area.Sum()
+  _areareduceA = staticmethod(_areareduceA)
+
+  def _areareduceB(area, area0, crossings, reverse, sign):
+    """Reduce double area to allowed range."""
+    area = Math.remainder(area, area0)
+    if crossings & 1:
+      area += (1 if area < 0 else -1) * area0/2
+    # area is with the clockwise sense.  If !reverse convert to
+    # counter-clockwise convention.
+    if not reverse: area *= -1
+    # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if sign:
+      if area > area0/2:
+        area -= area0
+      elif area <= -area0/2:
+        area += area0
+    else:
+      if area >= area0:
+        area -= area0
+      elif area < 0:
+        area += area0
+
+    return 0.0 + area
+  _areareduceB = staticmethod(_areareduceB)
+
   def __init__(self, earth, polyline = False):
     """Construct a PolygonArea object
 
@@ -192,24 +238,8 @@ class PolygonArea(object):
     tempsum = Accumulator(self._areasum)
     tempsum.Add(S12)
     crossings = self._crossings + PolygonArea._transit(self.lon1, self._lon0)
-    if crossings & 1:
-      tempsum.Add( (1 if tempsum.Sum() < 0 else -1) * self.area0/2 )
-    # area is with the clockwise sense.  If !reverse convert to
-    # counter-clockwise convention.
-    if not reverse: tempsum.Negate()
-    # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if sign:
-      if tempsum.Sum() > self.area0/2:
-        tempsum.Add( -self.area0 )
-      elif tempsum.Sum() <= -self.area0/2:
-        tempsum.Add(  self.area0 )
-    else:
-      if tempsum.Sum() >= self.area0:
-        tempsum.Add( -self.area0 )
-      elif tempsum.Sum() < 0:
-        tempsum.Add(  self.area0 )
-
-    area = 0.0 + tempsum.Sum()
+    area = PolygonArea._areareduceA(tempsum, self.area0, crossings,
+                                    reverse, sign)
     return self.num, perimeter, area
 
   # return number, perimeter, area
@@ -249,24 +279,8 @@ class PolygonArea(object):
     if self.polyline:
       return num, perimeter, area
 
-    if crossings & 1:
-      tempsum += (1 if tempsum < 0 else -1) * self.area0/2
-    # area is with the clockwise sense.  If !reverse convert to
-    # counter-clockwise convention.
-    if not reverse: tempsum *= -1
-    # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if sign:
-      if tempsum > self.area0/2:
-        tempsum -= self.area0
-      elif tempsum <= -self.area0/2:
-        tempsum += self.area0
-    else:
-      if tempsum >= self.area0:
-        tempsum -= self.area0
-      elif tempsum < 0:
-        tempsum += self.area0
-
-    area = 0.0 + tempsum
+    area = PolygonArea._areareduceB(tempsum, self.area0, crossings,
+                                    reverse, sign)
     return num, perimeter, area
 
   # return num, perimeter, area
@@ -303,22 +317,6 @@ class PolygonArea(object):
     tempsum += S12
     crossings += PolygonArea._transit(lon, self._lon0)
 
-    if crossings & 1:
-      tempsum += (1 if tempsum < 0 else -1) * self.area0/2
-    # area is with the clockwise sense.  If !reverse convert to
-    # counter-clockwise convention.
-    if not reverse: tempsum *= -1
-    # If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if sign:
-      if tempsum > self.area0/2:
-        tempsum -= self.area0
-      elif tempsum <= -self.area0/2:
-        tempsum += self.area0
-    else:
-      if tempsum >= self.area0:
-        tempsum -= self.area0
-      elif tempsum < 0:
-        tempsum += self.area0
-
-    area = 0.0 + tempsum
+    area = PolygonArea._areareduceB(tempsum, self.area0, crossings,
+                                    reverse, sign)
     return num, perimeter, area

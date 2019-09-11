@@ -28,7 +28,7 @@
    */
   p, g, m, a) {
 
-  var transit, transitdirect;
+  var transit, transitdirect, AreaReduceA, AreaReduceB;
   transit = function(lon1, lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
     // Otherwise return zero.
@@ -53,6 +53,54 @@
     return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
              ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
   };
+
+  // Reduce Accumulator area
+  AreaReduceA = function(area, area0, crossings, reverse, sign) {
+    area.Remainder(area0);
+    if (crossings & 1)
+      area.Add( (area.Sum() < 0 ? 1 : -1) * area0/2 );
+    // area is with the clockwise sense.  If !reverse convert to
+    // counter-clockwise convention.
+    if (!reverse)
+      area.Negate();
+    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if (sign) {
+      if (area.Sum() > area0/2)
+        area.Add( -area0 );
+      else if (area.Sum() <= -area0/2)
+        area.Add( +area0 );
+    } else {
+      if (area.Sum() >= area0)
+        area.Add( -area0 );
+      else if (area.Sum() < 0)
+        area.Add( +area0 );
+    }
+    return 0 + area.Sum();
+  };
+
+  // Reduce double area
+  AreaReduceB = function(area, area0, crossings, reverse, sign) {
+    area = m.remainder(area, area0);
+    if (crossings & 1)
+      area += (area < 0 ? 1 : -1) * area0/2;
+    // area is with the clockwise sense.  If !reverse convert to
+    // counter-clockwise convention.
+    if (!reverse)
+      area *= -1;
+    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if (sign) {
+      if (area > area0/2)
+        area -= area0;
+      else if (area <= -area0/2)
+        area += area0;
+    } else {
+      if (area >= area0)
+        area -= area0;
+      else if (area < 0)
+        area += area0;
+    }
+    return 0 + area;
+  }
 
   /**
    * @class
@@ -161,7 +209,7 @@
    *   points can be added to the polygon after this call.
    */
   p.PolygonArea.prototype.Compute = function(reverse, sign) {
-    var vals = {number: this.num}, t, tempsum, crossings;
+    var vals = {number: this.num}, t, tempsum;
     if (this.num < 2) {
       vals.perimeter = 0;
       if (!this.polyline)
@@ -177,26 +225,9 @@
     vals.perimeter = this._perimetersum.Sum(t.s12);
     tempsum = new a.Accumulator(this._areasum);
     tempsum.Add(t.S12);
-    crossings = this._crossings + transit(this.lon, this._lon0);
-    if (crossings & 1)
-      tempsum.Add( (tempsum.Sum() < 0 ? 1 : -1) * this._area0/2 );
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum.Negate();
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum.Sum() > this._area0/2)
-        tempsum.Add( -this._area0 );
-      else if (tempsum.Sum() <= -this._area0/2)
-        tempsum.Add( +this._area0 );
-    } else {
-      if (tempsum.Sum() >= this._area0)
-        tempsum.Add( -this._area0 );
-      else if (tempsum.Sum() < 0)
-        tempsum.Add( +this._area0 );
-    }
-    vals.area = tempsum.Sum();
+    vals.area = AreaReduceA(tempsum, this._area0,
+                            this._crossings + transit(this.lon, this._lon0),
+                            reverse, sign);
     return vals;
   };
 
@@ -241,25 +272,7 @@
     if (this.polyline)
       return vals;
 
-    if (crossings & 1)
-      tempsum += (tempsum < 0 ? 1 : -1) * this._area0/2;
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum *= -1;
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum > this._area0/2)
-        tempsum -= this._area0;
-      else if (tempsum <= -this._area0/2)
-        tempsum += this._area0;
-    } else {
-      if (tempsum >= this._area0)
-        tempsum -= this._area0;
-      else if (tempsum < 0)
-        tempsum += this._area0;
-    }
-    vals.area = tempsum;
+    vals.area = AreaReduceB(tempsum, this._area0, crossings, reverse, sign);
     return vals;
   };
 
@@ -295,25 +308,7 @@
     vals.perimeter += t.s12;
     tempsum += t.S12;
 
-    if (crossings & 1)
-      tempsum += (tempsum < 0 ? 1 : -1) * this._area0/2;
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum *= -1;
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum > this._area0/2)
-        tempsum -= this._area0;
-      else if (tempsum <= -this._area0/2)
-        tempsum += this._area0;
-    } else {
-      if (tempsum >= this._area0)
-        tempsum -= this._area0;
-      else if (tempsum < 0)
-        tempsum += this._area0;
-    }
-    vals.area = tempsum;
+    vals.area = AreaReduceB(tempsum, this._area0, crossings, reverse, sign);
     return vals;
   };
 

@@ -1154,10 +1154,7 @@
 
       integer function tstp21()
 * Some test to add code coverage: multiple circlings of pole (includes
-* Planimeter21 - Planimeter28).  Some of the results for i = 4 in the
-* loop are wrong because we don't reduce the area to the allowed range
-* correctly.  However these cases are not "simple" polygons, so we'll
-* defer fixing the problem for now.
+* Planimeter21 - Planimeter28).
       double precision lat(12), lon(12), lonr(12)
       data lat / 12*45d0 /
       data lon / 60d0, 180d0, -60d0,
@@ -1180,13 +1177,9 @@
 
       do 10 i = 3,4
         call area(a, f, lat, lon, 3*i, AA, PP)
-        if (i .ne. 4) then
-          r = r + assert(AA, AA1*i, 0.5d0)
-        end if
+        r = r + assert(AA, AA1*i, 0.5d0)
         call area(a, f, lat, lonr, 3*i, AA, PP)
-        if (i .ne. 4) then
-          r = r + assert(AA, -AA1*i, 0.5d0)
-        end if
+        r = r + assert(AA, -AA1*i, 0.5d0)
  10   continue
       tstp21 = r
       return

@@ -933,10 +933,7 @@ static int Planimeter19() {
 
 static int Planimeter21() {
   /* Some test to add code coverage: multiple circlings of pole (includes
-   * Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
-   * Some of the results for i = 4 in the loop are wrong because we don't
-   * reduce the area to the allowed range correctly.  However these cases are
-   * not "simple" polygons, so we'll defer fixing the problem for now. */
+   * Planimeter21 - Planimeter28) + invocations via testpoint and testedge. */
   struct geod_geodesic g;
   struct geod_polygon p;
   double area, lat = 45,
@@ -956,28 +953,28 @@ static int Planimeter21() {
     geod_polygon_addpoint(&g, &p, lat,  60);
     geod_polygon_addpoint(&g, &p, lat, 180);
     geod_polygon_testpoint(&g, &p, lat, -60, 0, 1, &area, 0);
-    if (i != 4) result += checkEquals(area,  i*r, 0.5);
+    result += checkEquals(area,  i*r, 0.5);
     geod_polygon_testpoint(&g, &p, lat, -60, 0, 0, &area, 0);
-    if (i != 4) result += checkEquals(area,  i*r, 0.5);
+    result += checkEquals(area,  i*r, 0.5);
     geod_polygon_testpoint(&g, &p, lat, -60, 1, 1, &area, 0);
-    if (i != 4) result += checkEquals(area, -i*r, 0.5);
+    result += checkEquals(area, -i*r, 0.5);
     geod_polygon_testpoint(&g, &p, lat, -60, 1, 0, &area, 0);
     result += checkEquals(area, -i*r + a0, 0.5);
     geod_polygon_testedge(&g, &p, a, s, 0, 1, &area, 0);
-    if (i != 4) result += checkEquals(area,  i*r, 0.5);
+    result += checkEquals(area,  i*r, 0.5);
     geod_polygon_testedge(&g, &p, a, s, 0, 0, &area, 0);
-    if (i != 4) result += checkEquals(area,  i*r, 0.5);
+    result += checkEquals(area,  i*r, 0.5);
     geod_polygon_testedge(&g, &p, a, s, 1, 1, &area, 0);
-    if (i != 4) result += checkEquals(area, -i*r, 0.5);
+    result += checkEquals(area, -i*r, 0.5);
     geod_polygon_testedge(&g, &p, a, s, 1, 0, &area, 0);
     result += checkEquals(area, -i*r + a0, 0.5);
     geod_polygon_addpoint(&g, &p, lat, -60);
     geod_polygon_compute(&g, &p, 0, 1, &area, 0);
-    if (i != 4) result += checkEquals(area,  i*r, 0.5);
+    result += checkEquals(area,  i*r, 0.5);
     geod_polygon_compute(&g, &p, 0, 0, &area, 0);
-    if (i != 4) result += checkEquals(area,  i*r, 0.5);
+    result += checkEquals(area,  i*r, 0.5);
     geod_polygon_compute(&g, &p, 1, 1, &area, 0);
-    if (i != 4) result += checkEquals(area, -i*r, 0.5);
+    result += checkEquals(area, -i*r, 0.5);
     geod_polygon_compute(&g, &p, 1, 0, &area, 0);
     result += checkEquals(area, -i*r + a0, 0.5);
   }

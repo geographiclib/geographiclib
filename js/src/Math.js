@@ -219,15 +219,28 @@ GeographicLib.Accumulator = {};
   };
 
   /**
+   * @summary The remainder function.
+   * @param {number} x the numerator of the division
+   * @param {number} y the denominator of the division
+   * @return {number} the remainder in the range [&minus;y/2, y/2].
+   * <p>
+   * The range of x is unrestricted; y must be positive.
+   **********************************************************************/
+  m.remainder = function(x, y) {
+    x = x % y;
+    return x < -y/2 ? x + y : (x < y/2 ? x : x - y);
+  }
+
+  /**
    * @summary Normalize an angle.
    * @param {number} x the angle in degrees.
    * @returns {number} the angle reduced to the range (&minus;180&deg;,
    *   180&deg;].
    */
   m.AngNormalize = function(x) {
-    // Place angle in [-180, 180).
-    x = x % 360;
-    return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
+    // Place angle in (-180, 180].
+    x = m.remainder(x, 360);
+    return x == -180 ? 180 : x;
   };
 
   /**
@@ -424,5 +437,15 @@ GeographicLib.Accumulator = {};
   a.Accumulator.prototype.Negate = function() {
     this._s *= -1;
     this._t *= -1;
+  };
+
+  /**
+   * @summary Take the remainder
+   * @param {number} y the divisor of the remainder operation.
+   * @return sum in range [&minus;y/2, y/2].
+   */
+  a.Accumulator.prototype.Remainder = function(y) {
+    this._s = m.remainder(this._s, y);
+    this.Add(0);
   };
 })(GeographicLib.Accumulator, GeographicLib.Math);

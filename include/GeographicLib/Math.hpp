@@ -619,13 +619,13 @@ namespace GeographicLib {
      * @param[in] x
      * @return the coarsened value.
      *
-     * The makes the smallest gap in \e x = 1/16 - nextafter(1/16, 0) =
+     * The makes the smallest gap in \e x = 1/16 &minus; nextafter(1/16, 0) =
      * 1/2<sup>57</sup> for reals = 0.7 pm on the earth if \e x is an angle in
      * degrees.  (This is about 1000 times more resolution than we get with
      * angles around 90&deg;.)  We use this to avoid having to deal with near
      * singular cases when \e x is non-zero but tiny (e.g.,
-     * 10<sup>&minus;200</sup>).  This converts -0 to +0; however tiny negative
-     * numbers get converted to -0.
+     * 10<sup>&minus;200</sup>).  This converts &minus;0 to +0; however tiny
+     * negative numbers get converted to &minus;0.
      **********************************************************************/
     template<typename T> static T AngRound(T x) {
       using std::abs;

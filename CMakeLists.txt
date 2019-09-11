@@ -47,7 +47,8 @@ set (LIBVERSION_BUILD 19.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
-cmake_minimum_required (VERSION 3.0.0) # This version was released 2014-06-09
+# cmake_minimum_required (VERSION 3.0.0) # This version was released 2014-06-0
+cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
 
 # User-settable variables
 

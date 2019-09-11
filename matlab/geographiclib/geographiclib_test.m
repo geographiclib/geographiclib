@@ -662,10 +662,7 @@ end
 
 function n = Planimeter21
 % Some test to add code coverage: multiple circlings of pole (includes
-% Planimeter21 - Planimeter28).  Some of the results for i = 4 in the
-% loop are wrong because we don't reduce the area to the allowed range
-% correctly.  However these cases are not "simple" polygons, so we'll
-% defer fixing the problem for now.
+% Planimeter21 - Planimeter28).
   n = 0;
   points = [45 60;45 180;45 -60;...
             45 60;45 180;45 -60;...
@@ -675,13 +672,13 @@ function n = Planimeter21
   r = 39433884866571.4277;              % Area for one circuit
   for i = 3 : 4
     area = geodarea(points(1:3*i,1), points(1:3*i,2));
-    if i ~= 4
+    %    if i ~= 4
       n = n + assertEquals(area, i*r, 0.5);
-    end
+      %    end
     area = geodarea(points(3*i:-1:1,1), points(3*i:-1:1,2));
-    if i ~= 4
+    %    if i ~= 4
       n = n + assertEquals(area, -i*r, 0.5);
-    end
+      %    end
   end
 end
 

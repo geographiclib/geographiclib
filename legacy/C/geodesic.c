@@ -375,6 +375,11 @@ static void acccopy(const real s[], real t[]);
 static void accadd(real s[], real y);
 static real accsum(const real s[], real y);
 static void accneg(real s[]);
+static void accrem(real s[], real y);
+static real areareduceA(real area[], real area0,
+                        int crossings, boolx reverse, boolx sign);
+static real areareduceB(real area, real area0,
+                        int crossings, boolx reverse, boolx sign);
 
 void geod_init(struct geod_geodesic* g, real a, real f) {
   if (!init) Init();
@@ -1875,6 +1880,12 @@ void accneg(real s[]) {
   s[0] = -s[0]; s[1] = -s[1];
 }
 
+void accrem(real s[], real y) {
+  /* Reduce to [-y/2, y/2]. */
+  s[0] = remainderx(s[0], y);
+  accadd(s, (real)(0));
+}
+
 void geod_polygon_init(struct geod_polygon* p, boolx polylinep) {
   p->polyline = (polylinep != 0);
   geod_polygon_clear(p);
@@ -1932,8 +1943,7 @@ unsigned geod_polygon_compute(const struct geod_geodesic* g,
                               const struct geod_polygon* p,
                               boolx reverse, boolx sign,
                               real* pA, real* pP) {
-  real s12, S12, t[2], area0;
-  int crossings;
+  real s12, S12, t[2];
   if (p->num < 2) {
     if (pP) *pP = 0;
     if (!p->polyline && pA) *pA = 0;
@@ -1948,27 +1958,9 @@ unsigned geod_polygon_compute(const struct geod_geodesic* g,
   if (pP) *pP = accsum(p->P, s12);
   acccopy(p->A, t);
   accadd(t, S12);
-  crossings = p->crossings + transit(p->lon, p->lon0);
-  area0 = 4 * pi * g->c2;
-  if (crossings & 1)
-    accadd(t, (t[0] < 0 ? 1 : -1) * area0/2);
-  /* area is with the clockwise sense.  If !reverse convert to
-   * counter-clockwise convention. */
-  if (!reverse)
-    accneg(t);
-  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
-  if (sign) {
-    if (t[0] > area0/2)
-      accadd(t, -area0);
-    else if (t[0] <= -area0/2)
-      accadd(t, +area0);
-  } else {
-    if (t[0] >= area0)
-      accadd(t, -area0);
-    else if (t[0] < 0)
-      accadd(t, +area0);
-  }
-  if (pA) *pA = 0 + t[0];
+  if (pA) *pA = areareduceA(t, 4 * pi * g->c2,
+                            p->crossings + transit(p->lon, p->lon0),
+                            reverse, sign);
   return p->num;
 }
 
@@ -1977,7 +1969,7 @@ unsigned geod_polygon_testpoint(const struct geod_geodesic* g,
                                 real lat, real lon,
                                 boolx reverse, boolx sign,
                                 real* pA, real* pP) {
-  real perimeter, tempsum, area0;
+  real perimeter, tempsum;
   int crossings, i;
   unsigned num = p->num + 1;
   if (num == 1) {
@@ -2006,26 +1998,7 @@ unsigned geod_polygon_testpoint(const struct geod_geodesic* g,
   if (p->polyline)
     return num;
 
-  area0 = 4 * pi * g->c2;
-  if (crossings & 1)
-    tempsum += (tempsum < 0 ? 1 : -1) * area0/2;
-  /* area is with the clockwise sense.  If !reverse convert to
-   * counter-clockwise convention. */
-  if (!reverse)
-    tempsum *= -1;
-  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
-  if (sign) {
-    if (tempsum > area0/2)
-      tempsum -= area0;
-    else if (tempsum <= -area0/2)
-      tempsum += area0;
-  } else {
-    if (tempsum >= area0)
-      tempsum -= area0;
-    else if (tempsum < 0)
-      tempsum += area0;
-  }
-  if (pA) *pA = 0 + tempsum;
+  if (pA) *pA = areareduceB(tempsum, 4 * pi * g->c2, crossings, reverse, sign);
   return num;
 }
 
@@ -2034,7 +2007,7 @@ unsigned geod_polygon_testedge(const struct geod_geodesic* g,
                                real azi, real s,
                                boolx reverse, boolx sign,
                                real* pA, real* pP) {
-  real perimeter, tempsum, area0;
+  real perimeter, tempsum;
   int crossings;
   unsigned num = p->num + 1;
   if (num == 1) {               /* we don't have a starting point! */
@@ -2066,27 +2039,8 @@ unsigned geod_polygon_testedge(const struct geod_geodesic* g,
     crossings += transit(lon, p->lon0);
   }
 
-  area0 = 4 * pi * g->c2;
-  if (crossings & 1)
-    tempsum += (tempsum < 0 ? 1 : -1) * area0/2;
-  /* area is with the clockwise sense.  If !reverse convert to
-   * counter-clockwise convention. */
-  if (!reverse)
-    tempsum *= -1;
-  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
-  if (sign) {
-    if (tempsum > area0/2)
-      tempsum -= area0;
-    else if (tempsum <= -area0/2)
-      tempsum += area0;
-  } else {
-    if (tempsum >= area0)
-      tempsum -= area0;
-    else if (tempsum < 0)
-      tempsum += area0;
-  }
   if (pP) *pP = perimeter;
-  if (pA) *pA = 0 + tempsum;
+  if (pA) *pA = areareduceB(tempsum, 4 * pi * g->c2, crossings, reverse, sign);
   return num;
 }
 
@@ -2099,6 +2053,54 @@ void geod_polygonarea(const struct geod_geodesic* g,
   for (i = 0; i < n; ++i)
     geod_polygon_addpoint(g, &p, lats[i], lons[i]);
   geod_polygon_compute(g, &p, FALSE, TRUE, pA, pP);
+}
+
+real areareduceA(real area[], real area0,
+                 int crossings, boolx reverse, boolx sign) {
+  accrem(area, area0);
+  if (crossings & 1)
+    accadd(area, (area[0] < 0 ? 1 : -1) * area0/2);
+  /* area is with the clockwise sense.  If !reverse convert to
+   * counter-clockwise convention. */
+  if (!reverse)
+    accneg(area);
+  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
+  if (sign) {
+    if (area[0] > area0/2)
+      accadd(area, -area0);
+    else if (area[0] <= -area0/2)
+      accadd(area, +area0);
+  } else {
+    if (area[0] >= area0)
+      accadd(area, -area0);
+    else if (area[0] < 0)
+      accadd(area, +area0);
+  }
+  return 0 + area[0];
+}
+
+real areareduceB(real area, real area0,
+                 int crossings, boolx reverse, boolx sign) {
+  area = remainderx(area, area0);
+    if (crossings & 1)
+    area += (area < 0 ? 1 : -1) * area0/2;
+  /* area is with the clockwise sense.  If !reverse convert to
+   * counter-clockwise convention. */
+  if (!reverse)
+    area *= -1;
+  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
+  if (sign) {
+    if (area > area0/2)
+      area -= area0;
+    else if (area <= -area0/2)
+      area += area0;
+  } else {
+    if (area >= area0)
+      area -= area0;
+    else if (area < 0)
+      area += area0;
+  }
+  return 0 + area;
 }
 
 /** @endcond */

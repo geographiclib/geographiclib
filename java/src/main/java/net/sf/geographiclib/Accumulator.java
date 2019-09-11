@@ -110,4 +110,15 @@ public  class Accumulator {
    * Set <i>sum</i> = &minus;<i>sum</i>.
    **********************************************************************/
   public void Negate() { _s = -_s; _t = -_t; }
+  /**
+   * Take the remainder.
+   * <p>
+   * @param y the modulus
+   * <p>
+   * Put <i>sum</i> in the rangle [&minus;<i>y</i>, <i>y</i>].
+   **********************************************************************/
+  public void Remainder(double y) {
+    _s = GeoMath.remainder(_s, y);
+    Add(0.0);                   // renormalize
+  }
 }
