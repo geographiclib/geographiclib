@@ -156,6 +156,16 @@ namespace GeographicLib {
       return *this;
     }
     /**
+     * Reduce accumulator to the range [-y/2, y/2].
+     *
+     * @param[in] y the modulus.
+     **********************************************************************/
+    Accumulator& remainder(T y) {
+      _s = Math::remainder(_s, y);
+      Add(0);                   // This renormalizes the result.
+      return *this;
+    }
+    /**
      * Test equality of an Accumulator with a number.
      **********************************************************************/
     bool operator==(T y) const { return _s == y; }

@@ -97,6 +97,10 @@ namespace GeographicLib {
       return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
                (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
     }
+    void Remainder(Accumulator<>& a) const { a.remainder(_area0); }
+    void Remainder(real& a) const { a = Math::remainder(a, _area0); }
+    template <typename T>
+    void AreaReduce(T& area, int crossings, bool reverse, bool sign) const;
   public:
 
     /**

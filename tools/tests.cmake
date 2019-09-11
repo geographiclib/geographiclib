@@ -575,16 +575,13 @@ add_test (NAME Planimeter27 COMMAND Planimeter
   --input-string "${_t};${_t};${_t};${_t}" -r)
 add_test (NAME Planimeter28 COMMAND Planimeter
   --input-string "${_t};${_t};${_t};${_t}" -r -s)
-if (0)
-  # BUG (found 2018-02-32)! Currently (verion 1.49), these return 4*r-a0
-  # and -4*r+a0, resp.  Actually, the documentation says that only
-  # simple polygons are allowed.  So it's really just a misfeature.
-  # (But it should get fixed anyway.)
-  set_tests_properties (Planimeter25 Planimeter26 PROPERTIES
-    PASS_REGULAR_EXPRESSION " 157735539466285\\.[678]") # 4*r
-  set_tests_properties (Planimeter27 PROPERTIES
-    PASS_REGULAR_EXPRESSION " -157735539466285\\.[678]") # -4*r
-endif ()
+# BUG (found 2018-02-32)! In version 1.49, Planimeter2[56] and
+# Planimeter27 returned 4*r-a0 and -4*r+a0, resp.  Fixed in 1.50 to
+# return +/-4*r
+set_tests_properties (Planimeter25 Planimeter26 PROPERTIES
+  PASS_REGULAR_EXPRESSION " 157735539466285\\.[678]") # 4*r
+set_tests_properties (Planimeter27 PROPERTIES
+  PASS_REGULAR_EXPRESSION " -157735539466285\\.[678]") # -4*r
 set_tests_properties (Planimeter28 PROPERTIES
   PASS_REGULAR_EXPRESSION " 352330082257802\\.[5-9]") # -4*r+a0
 

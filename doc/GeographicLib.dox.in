@@ -7699,7 +7699,8 @@ git repository for GeographicLib</a>.
      Python, MATLAB, Fortran).
    - geoddistance.m: fix division by 0 warning calculating area of
      equatorial geodesic.
-   - TODO: PolygonArea: fix the range of the area more aggressively.
+   - PolygonArea: fix the range of the area more aggressively; done for
+     C++.  TODO: C, Fortran, Java, JS, Python, MATLAB.
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: fix installation path for binary installer.
    - TODO: fix allowed results for GeodSolve59 test.
