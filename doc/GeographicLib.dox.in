@@ -7769,7 +7769,7 @@ git repository for GeographicLib</a>.
    - cmake: fine tune Visual Studio compatibility check in
      find_package(GeographicLib); this allows GeographicLib compiled
      with Visual Studio 14 2015 to be used with a project compiled with
-     Visual Studio 15 2017.
+     Visual Studio 15 2017 and 16 2019.
    - GARS::Forward: fix BUG in handling of longitude = &plusmn;180&deg;.
    - TODO: Geocentric::Reverse describe different solutions.
 

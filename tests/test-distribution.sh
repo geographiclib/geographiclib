@@ -153,19 +153,21 @@ unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
 unset GEOGRAPHICLIB_DATA
-for v in 2017 2015 2013 2012 2010; do
+# for v in 2019 2017 2015 2013 2012 2010; do
+for v in 2019 2017 2015; do
   for a in 64 32; do
     echo ========== maven $v-$a ==========
-    rm -rf d:/data/scratch/geog-mvn-$v-$a
+    rm -rf c:/scratch/geog-mvn-$v-$a
     mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
-      -Dcmake.project.bin.directory=d:/data/scratch/geog-mvn-$v-$a install
+      -Dcmake.project.bin.directory=c:/scratch/geog-mvn-$v-$a install
   done
 done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
 cp $TEMP/gita/geographiclib/pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
-for ver in 10 11 12 14 15; do
+# for ver in 10 11 12 14 15 16; do
+for ver in 14 15 16; do
     for arch in win32 x64; do
 	pkg=vc$ver-$arch
 	gen="Visual Studio $ver"
@@ -179,10 +181,10 @@ for ver in 10 11 12 14 15; do
 	    echo "#! /bin/sh -exv"
 	    echo echo ========== cmake $pkg ==========
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo rm -rf d:/data/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo rm -rf c:/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'unset GEOGRAPHICLIB_DATA'
-	    echo 'mkdir -p d:/data/scratch/$b'
-	    echo 'cd d:/data/scratch/$b'
+	    echo 'mkdir -p c:/scratch/$b'
+	    echo 'cd c:/scratch/$b'
 	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=w:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	    echo cmake --build . --config Debug   --target ALL_BUILD
 	    echo cmake --build . --config Debug   --target RUN_TESTS
@@ -196,9 +198,9 @@ for ver in 10 11 12 14 15; do
 	    test "$installer" &&
 		echo cp GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ || true
 	    echo 'b=geogc-`pwd | sed s%.*/%%`'
-	    echo rm -rf d:/data/scratch/\$b
-	    echo 'mkdir -p d:/data/scratch/$b'
-	    echo 'cd d:/data/scratch/$b'
+	    echo rm -rf c:/scratch/\$b
+	    echo 'mkdir -p c:/scratch/$b'
+	    echo 'cd c:/scratch/$b'
 	    echo cmake -G \"$gen\" -A $arch -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION/legacy/C
 	    echo cmake --build . --config Debug   --target ALL_BUILD
 	    echo cmake --build . --config Debug   --target RUN_TESTS
