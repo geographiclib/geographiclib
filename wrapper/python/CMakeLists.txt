@@ -1,6 +1,6 @@
 project (PyGeographicLib)
 
-cmake_minimum_required (VERSION 2.8.8)
+cmake_minimum_required (VERSION 3.1.0)
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
@@ -28,8 +28,7 @@ find_package (Boost REQUIRED COMPONENTS python)
 
 find_package (GeographicLib REQUIRED COMPONENTS SHARED)
 
-include_directories (${GeographicLib_INCLUDE_DIRS}
-  ${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
+include_directories (${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS})
 
 add_library (${PROJECT_NAME} MODULE ${PROJECT_NAME}.cpp)
 

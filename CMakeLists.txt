@@ -47,7 +47,6 @@ set (LIBVERSION_BUILD 19.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
-# cmake_minimum_required (VERSION 3.0.0) # This version was released 2014-06-0
 cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
 
 # User-settable variables
@@ -210,14 +209,9 @@ if (NOT MSVC)
     # Use relative path so that package is relocatable
     set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
   else ()
-    if (CMAKE_VERSION VERSION_LESS 2.8.12)
-      # Use absolute path with MacOSx
-      set (CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
-    else ()
-      # cmake 2.8.12 introduced a way to make the package relocatable.
-      # See also INSTALL_RPATH property on the tools.
-      set (CMAKE_MACOSX_RPATH ON)
-    endif ()
+    # cmake 2.8.12 introduced a way to make the package relocatable.
+    # See also INSTALL_RPATH property on the tools.
+    set (CMAKE_MACOSX_RPATH ON)
   endif ()
 endif ()
 

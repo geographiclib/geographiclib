@@ -187,8 +187,8 @@ two ways:
   %GeographicLib documentation).  In this case, you are restricted to using
   Visual Studio 10.
 
-The minimum recommended version of cmake for use with NETGeographicLib
-is 2.8.7.  In order to build an application that uses NETGeographicLib
+The minimum version of cmake for use with NETGeographicLib
+is 3.1.0 or later.  In order to build an application that uses NETGeographicLib
 with cmake, ask for the NETGeographicLib "component" of %GeographicLib
 using \verbatim
 find_package(GeographicLib COMPONENTS NETGeographicLib) \endverbatim

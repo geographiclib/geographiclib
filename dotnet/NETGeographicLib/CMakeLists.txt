@@ -35,20 +35,9 @@ if (PACKAGE_DEBUG_LIBS)
     DESTINATION bin CONFIGURATIONS Release)
 endif ()
 
-if (NOT CMAKE_VERSION VERSION_LESS 3.0)
-  # Suppress 3.0 warnings about use of the LOCATION target property
-  cmake_policy (SET CMP0026 OLD)
-endif ()
-
 # Install pdb file.
-foreach (_c ${CMAKE_CONFIGURATION_TYPES})
-  string (TOUPPER ${_c} _C)
-  get_target_property (_P ${NETGEOGRAPHICLIB_LIBRARIES} LOCATION_${_C})
-  get_filename_component (_D ${_P} PATH)
-  get_filename_component (_N ${_P} NAME_WE)
-  set (_PDB ${_D}/${_N}.pdb)
-  install (FILES ${_PDB} DESTINATION bin CONFIGURATIONS ${_c} OPTIONAL)
-endforeach ()
+install (FILES $<TARGET_PDB_FILE:${NETGEOGRAPHICLIB_LIBRARIES}>
+  DESTINATION bin OPTIONAL)
 
 # Put all the library into a folder in the IDE
 set_property (TARGET ${NETGEOGRAPHICLIB_LIBRARIES} PROPERTY FOLDER library)

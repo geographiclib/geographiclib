@@ -258,11 +258,11 @@ make software maintenance simpler
 \section cmake Installation with cmake
 
 This is the recommended method of installation; however it requires that
-<a href="https://www.cmake.org">cmake</a> be installed on your system.
-This permits GeographicLib to be built either as a shared or a static
-library on a wide variety of systems.  cmake can also determine the
-capabilities of your system and adjust the compilation of the
-libraries and examples appropriately.
+<a href="https://www.cmake.org">cmake</a>, version 3.1.0 or later, be
+installed on your system.  This permits GeographicLib to be built either
+as a shared or a static library on a wide variety of systems.  cmake can
+also determine the capabilities of your system and adjust the
+compilation of the libraries and examples appropriately.
 
 cmake is available for most computer platforms.  On Linux systems cmake
 will typically one of the standard packages and can be installed by a
@@ -270,8 +270,7 @@ command like
   \verbatim
   yum install cmake \endverbatim
 (executed as root).  The minimum version of cmake supported for building
-GeographicLib is 2.8.4 (which was released on 2011-02-16).  (Actually,
-a few earlier versions will also work for non-Windows platforms.)
+GeographicLib is 3.1.0 (which was released on 2014-12-15).
 
 On other systems, download a binary installer from https://www.cmake.org
 click on download, and save and run the appropriate installer.  Run the
@@ -701,13 +700,8 @@ In order to use GeographicLib from C++ code, you will need to
 - Building your code with cmake.  In brief, the necessary steps are:
   - include in your CMakeLists.txt files \verbatim
     find_package (GeographicLib 1.34 REQUIRED)
-    include_directories (${GeographicLib_INCLUDE_DIRS})
-    add_definitions (${GeographicLib_DEFINITIONS})
     add_executable (program source1.cpp source2.cpp)
     target_link_libraries (program ${GeographicLib_LIBRARIES}) \endverbatim
-    If you're using cmake version 2.8.11 or later, you can omit the
-    <code>include_directories </code> and <code>add_definitions</code>
-    lines.
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
@@ -873,7 +867,7 @@ print out \verbatim
 Here is a complete CMakeList.txt files you can use to build this test
 code using the installed library: \verbatim
 project (geodesictest)
-cmake_minimum_required (VERSION 2.8.4)
+cmake_minimum_required (VERSION 3.1.0)
 
 find_package (GeographicLib 1.34 REQUIRED)
 
@@ -881,10 +875,6 @@ if (NOT MSVC)
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif ()
 
-if (CMAKE_VERSION VERSION_LESS 2.8.11)
-  include_directories (${GeographicLib_INCLUDE_DIRS})
-  add_definitions (${GeographicLib_DEFINITIONS})
-endif ()
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 
@@ -7656,6 +7646,7 @@ git repository for GeographicLib</a>.
    - TODO: template versions of Gnomonic and AzimuthalEquidistant so
      that they can use either Geodesic and GeodesicExact.  Use
      typedefs so that Geodesic::Line points to GeodesicLine.
+   - TODO: Split DMS stuff from main JS package.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
@@ -7691,7 +7682,8 @@ git repository for GeographicLib</a>.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
      - TODO: document development environment for Windows: cmake + VS +
-       NSIS;
+       NSIS + geoids: egm96-5 + magnetic wmm2010, emm2015 + gravity
+       egm2008 + grs80.
      - TODO: document treatment of poles in RhumbSolve{,.cgi}.
      - TODO: in example programs, document when additional data files
        are needed.
@@ -7714,7 +7706,7 @@ git repository for GeographicLib</a>.
      incorrect code to be generated.  Tested only for C and C++ on
      Linux.  The changes should also work for Fortran and Windows.
      TODO: move affected code on Math.hpp to Math.cpp DONE: add build to
-     test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...). TODO:
+     test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...).
      Add check of sign +0.0 in GeodSolve73 to all languages.
      Cf. https://github.com/OSGeo/proj.4/issues/826
    - C fixes (also make changes to C++ library)
@@ -7744,7 +7736,7 @@ git repository for GeographicLib</a>.
    - TODO: add test to check remquo(3419.0, 360.0, &n) != 539?
    - TODO: check logic in C interface (plus others?) on defaults for
      caps in geod_gendirectline.  Also improve description of "point 3".
-   - Minimum CMake version = 3.0 (2014-06-09) (maybe 3.1 2014-12-15).
+   - Minimum CMake version =  3.1.0, released 2014-12-15.
      Change CMake target names and add an interface library (thanks to
      Matthew Woehlke). TODO: Update documentation.  TODO: Remove old
      cmake stuff.
@@ -7761,7 +7753,6 @@ git repository for GeographicLib</a>.
      accept -N and -M options to to allow the maximum degree and order
      to be specified.
    - Old deprecated NormalGravity::NormalGravity constructor removed.
-   - TODO: Split DMS stuff from main JS package.
    - TODO: Add _d suffix to example programs.
    - Geoid class, std::ios::streamoff -> std::streamoff.
    - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in
@@ -7771,9 +7762,11 @@ git repository for GeographicLib</a>.
    - cmake: fine tune Visual Studio compatibility check in
      find_package(GeographicLib); this allows GeographicLib compiled
      with Visual Studio 14 2015 to be used with a project compiled with
-     Visual Studio 15 2017 and 16 2019.
+     Visual Studio 15 2017 and 16 2019.  TODO: update documentation +
+     make sure this actually works.
    - GARS::Forward: fix BUG in handling of longitude = &plusmn;180&deg;.
-   - TODO: Geocentric::Reverse describe different solutions.
+   - TODO: Geocentric::Reverse update documentation to describe
+     different solutions.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
