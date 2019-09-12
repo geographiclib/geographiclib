@@ -391,7 +391,6 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
       using std::remquo; return remquo(x, y, n);
 #else
-      using std::remainder;
       T z = remainder(x, y);
       if (n) {
         T
