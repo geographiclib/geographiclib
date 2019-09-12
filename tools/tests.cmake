@@ -562,11 +562,11 @@ add_test (NAME Planimeter23 COMMAND Planimeter
 add_test (NAME Planimeter24 COMMAND Planimeter
   --input-string "${_t};${_t};${_t}" -r -s)
 set_tests_properties (Planimeter21 Planimeter22 PROPERTIES
-  PASS_REGULAR_EXPRESSION " 118301654599714\\.[234]") # 3*r
+  PASS_REGULAR_EXPRESSION " 118301654599714\\.[2-5]") # 3*r
 set_tests_properties (Planimeter23 PROPERTIES
-  PASS_REGULAR_EXPRESSION " -118301654599714\\.[234]") # -3*r
+  PASS_REGULAR_EXPRESSION " -118301654599714\\.[2-5]") # -3*r
 set_tests_properties (Planimeter24 PROPERTIES
-  PASS_REGULAR_EXPRESSION " 391763967124374\\.[0123]") # -3*r+a0
+  PASS_REGULAR_EXPRESSION " 391763967124374\\.[0-3]") # -3*r+a0
 add_test (NAME Planimeter25 COMMAND Planimeter
   --input-string "${_t};${_t};${_t};${_t}")
 add_test (NAME Planimeter26 COMMAND Planimeter
@@ -579,9 +579,9 @@ add_test (NAME Planimeter28 COMMAND Planimeter
 # Planimeter27 returned 4*r-a0 and -4*r+a0, resp.  Fixed in 1.50 to
 # return +/-4*r
 set_tests_properties (Planimeter25 Planimeter26 PROPERTIES
-  PASS_REGULAR_EXPRESSION " 157735539466285\\.[678]") # 4*r
+  PASS_REGULAR_EXPRESSION " 157735539466285\\.[6-9]") # 4*r
 set_tests_properties (Planimeter27 PROPERTIES
-  PASS_REGULAR_EXPRESSION " -157735539466285\\.[678]") # -4*r
+  PASS_REGULAR_EXPRESSION " -157735539466285\\.[6-9]") # -4*r
 set_tests_properties (Planimeter28 PROPERTIES
   PASS_REGULAR_EXPRESSION " 352330082257802\\.[5-9]") # -4*r+a0
 
