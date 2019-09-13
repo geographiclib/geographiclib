@@ -613,6 +613,45 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve84() {
+    // Tests for python implementation to check fix for range errors with
+    // {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve91).
+    GeodesicData dir;
+    dir = Geodesic.WGS84.Direct(0, 0, 90, Double.POSITIVE_INFINITY);
+    assertTrue(isNaN(dir.lat2));
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(isNaN(dir.azi2));
+    dir = Geodesic.WGS84.Direct(0, 0, 90, Double.NaN);
+    assertTrue(isNaN(dir.lat2));
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(isNaN(dir.azi2));
+    dir = Geodesic.WGS84.Direct(0, 0, Double.POSITIVE_INFINITY, 1000);
+    assertTrue(isNaN(dir.lat2));
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(isNaN(dir.azi2));
+    dir = Geodesic.WGS84.Direct(0, 0, Double.NaN, 1000);
+    assertTrue(isNaN(dir.lat2));
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(isNaN(dir.azi2));
+    dir = Geodesic.WGS84.Direct(0, Double.POSITIVE_INFINITY, 90, 1000);
+    assertTrue(dir.lat2 == 0);
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(dir.azi2 == 90);
+    dir = Geodesic.WGS84.Direct(0, Double.NaN, 90, 1000);
+    assertTrue(dir.lat2 == 0);
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(dir.azi2 == 90);
+    dir = Geodesic.WGS84.Direct(Double.POSITIVE_INFINITY, 0, 90, 1000);
+    assertTrue(isNaN(dir.lat2));
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(isNaN(dir.azi2));
+    dir = Geodesic.WGS84.Direct(Double.NaN, 0, 90, 1000);
+    assertTrue(isNaN(dir.lat2));
+    assertTrue(isNaN(dir.lon2));
+    assertTrue(isNaN(dir.azi2));
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

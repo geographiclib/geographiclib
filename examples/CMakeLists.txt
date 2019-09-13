@@ -25,6 +25,11 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
     set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} ${EXAMPLE}.hpp)
   endif ()
   add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
+  if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+    # Add _d suffix for your debug versions of the tools
+    set_target_properties (${EXAMPLE} PROPERTIES
+      DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+  endif ()
   target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 endforeach ()
 

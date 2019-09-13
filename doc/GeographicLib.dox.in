@@ -7723,8 +7723,8 @@ git repository for GeographicLib</a>.
      https://github.com/megaserg/geographiclib-cython-bindings in
      wrappers/python also on main page?
    - TODO: Reference man page in source files for tools.
-   - TODO: add test "echo 0 0 90 inf | GeodSolve" to catch python not
-     handling sin(inf) properly.
+   - Add test "echo 0 0 90 inf | GeodSolve" to catch python not
+     handling sin(inf) properly + other languages
    - TODO: When parsing DMS ignore non-breaking spaces u+00a0 (regular),
      u+202f (narrow), u+2007 (figure).
    - Math::cbrt, Math::atanh, and Math::asinh now preserve the sign of
@@ -7753,17 +7753,16 @@ git repository for GeographicLib</a>.
      accept -N and -M options to to allow the maximum degree and order
      to be specified.
    - Old deprecated NormalGravity::NormalGravity constructor removed.
-   - TODO: Add _d suffix to example programs.
+   - Add _d suffix to example programs.
    - Geoid class, std::ios::streamoff -> std::streamoff.
    - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in
      NETGeographicLib doc.
-   - TODO: Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
+   - Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
    - GeodSolve: fractional distances can be entered as fractions.
    - cmake: fine tune Visual Studio compatibility check in
      find_package(GeographicLib); this allows GeographicLib compiled
      with Visual Studio 14 2015 to be used with a project compiled with
-     Visual Studio 15 2017 and 16 2019.  TODO: update documentation +
-     make sure this actually works.
+     Visual Studio 15 2017 and 16 2019.  TODO: update documentation.
    - GARS::Forward: fix BUG in handling of longitude = &plusmn;180&deg;.
    - TODO: Geocentric::Reverse update documentation to describe
      different solutions.

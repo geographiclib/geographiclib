@@ -500,6 +500,42 @@ class GeodSolveTest(unittest.TestCase):
     dir = line.Position(1000, Geodesic.EMPTY)
     self.assertTrue(Math.isnan(dir["a12"]))
 
+  def test_GeodSolve84(self):
+    # Tests for python implementation to check fix for range errors with
+    # {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve91).
+    dir = Geodesic.WGS84.Direct(0, 0, 90, Math.inf)
+    self.assertTrue(Math.isnan(dir["lat2"]))
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(Math.isnan(dir["azi2"]))
+    dir = Geodesic.WGS84.Direct(0, 0, 90, Math.nan)
+    self.assertTrue(Math.isnan(dir["lat2"]))
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(Math.isnan(dir["azi2"]))
+    dir = Geodesic.WGS84.Direct(0, 0, Math.inf, 1000)
+    self.assertTrue(Math.isnan(dir["lat2"]))
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(Math.isnan(dir["azi2"]))
+    dir = Geodesic.WGS84.Direct(0, 0, Math.nan, 1000)
+    self.assertTrue(Math.isnan(dir["lat2"]))
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(Math.isnan(dir["azi2"]))
+    dir = Geodesic.WGS84.Direct(0, Math.inf, 90, 1000)
+    self.assertTrue(dir["lat1"] == 0)
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(dir["azi2"] == 90)
+    dir = Geodesic.WGS84.Direct(0, Math.nan, 90, 1000)
+    self.assertTrue(dir["lat1"] == 0)
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(dir["azi2"] == 90)
+    dir = Geodesic.WGS84.Direct(Math.inf, 0, 90, 1000)
+    self.assertTrue(Math.isnan(dir["lat2"]))
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(Math.isnan(dir["azi2"]))
+    dir = Geodesic.WGS84.Direct(Math.nan, 0, 90, 1000)
+    self.assertTrue(Math.isnan(dir["lat2"]))
+    self.assertTrue(Math.isnan(dir["lon2"]))
+    self.assertTrue(Math.isnan(dir["azi2"]))
+
 class PlanimeterTest(unittest.TestCase):
 
   polygon = Geodesic.WGS84.Polygon(False)

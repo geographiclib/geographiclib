@@ -466,6 +466,30 @@ add_test (NAME GeodSolve83 COMMAND GeodSolve
 set_tests_properties (GeodSolve83 PROPERTIES PASS_REGULAR_EXPRESSION
   "90\\.0* 0\\.0* 0\\.0* 90\\.0* 180\\.0* 180\\.0* 0\\.0* 0\\.0* 0\\.0* 1\\.0* 1\\.0* 127516405431022")
 
+# Tests for python implementation to check fix for range errors with
+# {fmod,sin,cos}(inf).
+add_test (NAME GeodSolve84 COMMAND GeodSolve
+  --input-string "0 0 90 inf")
+add_test (NAME GeodSolve85 COMMAND GeodSolve
+  --input-string "0 0 90 nan")
+add_test (NAME GeodSolve86 COMMAND GeodSolve
+  --input-string "0 0 inf 1000")
+add_test (NAME GeodSolve87 COMMAND GeodSolve
+  --input-string "0 0 nan 1000")
+add_test (NAME GeodSolve88 COMMAND GeodSolve
+  --input-string "0 inf 90 1000")
+add_test (NAME GeodSolve89 COMMAND GeodSolve
+  --input-string "0 nan 90 1000")
+add_test (NAME GeodSolve90 COMMAND GeodSolve
+  --input-string "inf 0 90 1000")
+add_test (NAME GeodSolve91 COMMAND GeodSolve
+  --input-string "nan 0 90 1000")
+set_tests_properties (GeodSolve84 GeodSolve85 GeodSolve86 GeodSolve87
+  GeodSolve91 PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+set_tests_properties (GeodSolve88 GeodSolve89 PROPERTIES PASS_REGULAR_EXPRESSION
+  "0\\.0* nan 90\\.0*")
+set_tests_properties (GeodSolve90 PROPERTIES WILL_FAIL ON)
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

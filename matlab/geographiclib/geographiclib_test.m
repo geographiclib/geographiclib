@@ -35,6 +35,7 @@ function geographiclib_test
   i = GeodSolve76; if i, n=n+1; fprintf('GeodSolve76 fail: %d\n', i); end
   i = GeodSolve78; if i, n=n+1; fprintf('GeodSolve78 fail: %d\n', i); end
   i = GeodSolve80; if i, n=n+1; fprintf('GeodSolve80 fail: %d\n', i); end
+  i = GeodSolve84; if i, n=n+1; fprintf('GeodSolve84 fail: %d\n', i); end
   i = Planimeter0 ; if i, n=n+1; fprintf('Planimeter0  fail: %d\n', i); end
   i = Planimeter5 ; if i, n=n+1; fprintf('Planimeter5  fail: %d\n', i); end
   i = Planimeter6 ; if i, n=n+1; fprintf('Planimeter6  fail: %d\n', i); end
@@ -486,7 +487,7 @@ function n = GeodSolve73
   [lat2, lon2, azi2] = geodreckon(90, 10, -1e6, 180);
   n = n + assertEquals(lat2, 81.04623, 0.5e-5);
   n = n + assertEquals(lon2, -170, 0.5e-5);
-  n = n + assertEquals(azi2, 0, 0.5e-5);
+  n = n + assertEquals(azi2, 0, 0);
   n = n + assertEquals(copysignx(1, azi2), 1, 0);
 end
 
@@ -559,6 +560,44 @@ function n = GeodSolve80
   n = n + assertEquals(M12, 1, 1e-15);
   n = n + assertEquals(M21, 1, 1e-15);
   n = n + assertEquals(S12, 127516405431022.0, 0.5);
+end
+
+function n = GeodSolve84
+% Tests for python implementation to check fix for range errors with
+% {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve86).
+  n = 0;
+  [lat2, lon2, azi2] = geodreckon(0, 0, inf, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, 0, nan, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, 0, 1000, inf);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, 0, 1000, nan);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, inf, 1000, 90);
+  n = n + assertEquals(lat2, 0, 0);
+  n = n + assertNaN(lon2);
+  n = n + assertEquals(azi2, 90, 0);
+  [lat2, lon2, azi2] = geodreckon(0, nan, 1000, 90);
+  n = n + assertEquals(lat2, 0, 0);
+  n = n + assertNaN(lon2);
+  n = n + assertEquals(azi2, 90, 0);
+  [lat2, lon2, azi2] = geodreckon(inf, 0, 1000, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(nan, 0, 1000, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
 end
 
 function n = Planimeter0

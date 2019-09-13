@@ -545,7 +545,8 @@ describe("GeographicLib", function() {
     });
 
     it("GeodSolve80", function() {
-      // An example where the NGS calculator fails to converge
+      // Some tests to add code coverage: computing scale in special cases +
+      // zero length geodesic (includes GeodSolve80 - GeodSolve83).
       var geod = g.WGS84, inv, line, dir;
 
       inv = geod.Inverse(0, 0, 0, 90, g.GEODESICSCALE);
@@ -580,6 +581,44 @@ describe("GeographicLib", function() {
       line = geod.Line(1, 2, 90, g.LATITUDE);
       dir = line.Position(1000, g.NONE);
       assert(isNaN(dir.a12));
+    });
+
+    it("GeodSolve84", function() {
+      // Tests for python implementation to check fix for range errors with
+      // {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve86).
+      var geod = g.WGS84, dir;
+      dir = geod.Direct(0, 0, 90, Infinity);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, 0, 90, NaN);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, 0, Infinity, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, 0, NaN, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, Infinity, 90, 1000);
+      assert(dir.lat2 == 0);
+      assert(isNaN(dir.lon2));
+      assert(dir.azi2 == 90);
+      dir = geod.Direct(0, NaN, 90, 1000);
+      assert(dir.lat2 == 0);
+      assert(isNaN(dir.lon2));
+      assert(dir.azi2 == 90);
+      dir = geod.Direct(Infinity, 0, 90, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(NaN, 0, 90, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
     });
 
   });

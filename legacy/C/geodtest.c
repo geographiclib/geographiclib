@@ -747,6 +747,55 @@ static int GeodSolve80() {
   return result;
 }
 
+static int GeodSolve84() {
+  /* Tests for python implementation to check fix for range errors with
+     {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve86). */
+
+  double lat2, lon2, azi2, inf, nan;
+  struct geod_geodesic g;
+  int result = 0;
+  inf = 1.0/0.0;
+  {
+    double minus1 = -1;
+    /* cppcheck-suppress wrongmathcall */
+    nan = sqrt(minus1);
+  }
+  geod_init(&g, wgs84_a, wgs84_f);
+  geod_direct(&g, 0, 0, 90, inf, &lat2, &lon2, &azi2);
+  result += checkNaN(lat2);
+  result += checkNaN(lon2);
+  result += checkNaN(azi2);
+  geod_direct(&g, 0, 0, 90, nan, &lat2, &lon2, &azi2);
+  result += checkNaN(lat2);
+  result += checkNaN(lon2);
+  result += checkNaN(azi2);
+  geod_direct(&g, 0, 0, inf, 1000, &lat2, &lon2, &azi2);
+  result += checkNaN(lat2);
+  result += checkNaN(lon2);
+  result += checkNaN(azi2);
+  geod_direct(&g, 0, 0, nan, 1000, &lat2, &lon2, &azi2);
+  result += checkNaN(lat2);
+  result += checkNaN(lon2);
+  result += checkNaN(azi2);
+  geod_direct(&g, 0, inf, 90, 1000, &lat2, &lon2, &azi2);
+  result += lat2 == 0 ? 0 : 1;
+  result += checkNaN(lon2);
+  result += azi2 == 90 ? 0 : 1;
+  geod_direct(&g, 0, nan, 90, 1000, &lat2, &lon2, &azi2);
+  result += lat2 == 0 ? 0 : 1;
+  result += checkNaN(lon2);
+  result += azi2 == 90 ? 0 : 1;
+  geod_direct(&g, inf, 0, 90, 1000, &lat2, &lon2, &azi2);
+  result += checkNaN(lat2);
+  result += checkNaN(lon2);
+  result += checkNaN(azi2);
+  geod_direct(&g, nan, 0, 90, 1000, &lat2, &lon2, &azi2);
+  result += checkNaN(lat2);
+  result += checkNaN(lon2);
+  result += checkNaN(azi2);
+  return result;
+}
+
 static int Planimeter0() {
   /* Check fix for pole-encircling bug found 2011-03-16 */
   double pa[4][2] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};
@@ -1032,6 +1081,7 @@ int main() {
   if ((i = GeodSolve76())) {++n; printf("GeodSolve76 fail: %d\n", i);}
   if ((i = GeodSolve78())) {++n; printf("GeodSolve78 fail: %d\n", i);}
   if ((i = GeodSolve80())) {++n; printf("GeodSolve80 fail: %d\n", i);}
+  if ((i = GeodSolve84())) {++n; printf("GeodSolve84 fail: %d\n", i);}
   if ((i = Planimeter0())) {++n; printf("Planimeter0 fail: %d\n", i);}
   if ((i = Planimeter5())) {++n; printf("Planimeter5 fail: %d\n", i);}
   if ((i = Planimeter6())) {++n; printf("Planimeter6 fail: %d\n", i);}

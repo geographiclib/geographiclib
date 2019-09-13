@@ -570,6 +570,7 @@
       r = r + chknan(azi1)
       r = r + chknan(azi2)
       r = r + chknan(s12)
+
       tstg14 = r
       return
       end
@@ -764,6 +765,7 @@
       r = r + chknan(azi1)
       r = r + chknan(azi2)
       r = r + chknan(s12)
+
       tstg55 = r
       return
       end
@@ -785,6 +787,7 @@
       r = r + assert(azi1, 0.000000000000035d0, 1.5d-14)
       r = r + assert(azi2, 179.99999999999996d0, 1.5d-14)
       r = r + assert(s12, 18345191.174332713d0, 5d-9)
+
       tstg59 = r
       return
       end
@@ -833,7 +836,7 @@
      +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
       r = r + assert(lat2, 81.04623d0, 0.5d-5)
       r = r + assert(lon2, -170d0, 0.5d-5)
-      r = r + assert(azi2, 0d0, 0.5d-5)
+      r = r + assert(azi2, 0d0, 0d0)
       r = r + assert(sign(1d0, azi2), 1d0, 0d0)
 
       tstg73 = r
@@ -863,6 +866,7 @@
       r = r + assert(MM12,  0.999999995d0, 5d-9)
       r = r + assert(MM21,  0.999999995d0, 5d-9)
       r = r + assert(SS12, 286698586.30197d0, 5d-4)
+
       tstg74 = r
       return
       end
@@ -886,6 +890,7 @@
       r = r + assert(azi1, 160.39137649664d0, 0.5d-11)
       r = r + assert(azi2,  19.50042925176d0, 0.5d-11)
       r = r + assert(s12,  19960543.857179d0, 0.5d-6)
+
       tstg76 = r
       return
       end
@@ -907,6 +912,7 @@
       r = r + assert(azi1,  45.82468716758d0, 0.5d-11)
       r = r + assert(azi2, 134.22776532670d0, 0.5d-11)
       r = r + assert(s12,  19974354.765767d0, 0.5d-6)
+
       tstg78 = r
       return
       end
@@ -959,6 +965,67 @@
       r = r + assert(SS12, 127516405431022d0, 0.5d0)
 
       tstg80 = r
+      return
+      end
+
+      integer function tstg84()
+* Tests for python implementation to check fix for range errors with
+* {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve86).
+      double precision lat2, lon2, azi2, a12, m12, MM12, MM21, SS12
+      double precision a, f, nan, inf, LatFix
+      integer r, assert, chknan, omask, flags
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      flags = 0
+      inf = 1d0/LatFix(0d0)
+      nan = LatFix(91d0)
+      r = 0
+      call direct(a, f, 0d0, 0d0, 90d0, inf,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + chknan(lat2)
+      r = r + chknan(lon2)
+      r = r + chknan(azi2)
+      call direct(a, f, 0d0, 0d0, 90d0, nan,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + chknan(lat2)
+      r = r + chknan(lon2)
+      r = r + chknan(azi2)
+      call direct(a, f, 0d0, 0d0, inf, 1000d0,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + chknan(lat2)
+      r = r + chknan(lon2)
+      r = r + chknan(azi2)
+      call direct(a, f, 0d0, 0d0, nan, 1000d0,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + chknan(lat2)
+      r = r + chknan(lon2)
+      r = r + chknan(azi2)
+      call direct(a, f, 0d0, inf, 90d0, 1000d0,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(lat2, 0d0, 0d0)
+      r = r + chknan(lon2)
+      r = r + assert(azi2, 90d0, 0d0)
+      call direct(a, f, 0d0, nan, 90d0, 1000d0,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(lat2, 0d0, 0d0)
+      r = r + chknan(lon2)
+      r = r + assert(azi2, 90d0, 0d0)
+      call direct(a, f, inf, 0d0, 90d0, 1000d0,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + chknan(lat2)
+      r = r + chknan(lon2)
+      r = r + chknan(azi2)
+      call direct(a, f, nan, 0d0, 90d0, 1000d0,
+     +    flags, lat2, lon2, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + chknan(lat2)
+      r = r + chknan(lon2)
+      r = r + chknan(azi2)
+
+      tstg84 = r
       return
       end
 
@@ -1172,6 +1239,7 @@
 * WGS84 values
       a = 6378137d0
       f = 1/298.257223563d0
+      r = 0
 * Area for one circuit
       AA1 = 39433884866571.4277d0
 
@@ -1181,6 +1249,7 @@
         call area(a, f, lat, lonr, 3*i, AA, PP)
         r = r + assert(AA, -AA1*i, 0.5d0)
  10   continue
+
       tstp21 = r
       return
       end
@@ -1191,7 +1260,7 @@
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
      +    tstg55, tstg59, tstg61, tstg73, tstg74, tstg76, tstg78,
-     +    tstg80,
+     +    tstg80, tstg84,
      +    tstp0, tstp5, tstp6, tstp12, tstp13, tstp15, tstp19, tstp21
 
       n = 0
@@ -1324,6 +1393,11 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstg80 fail:', i
+      end if
+      i = tstg84()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg84 fail:', i
       end if
       i = tstp0()
       if (i .gt. 0) then

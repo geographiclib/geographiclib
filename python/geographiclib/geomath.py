@@ -128,7 +128,7 @@ class Math(object):
 
   def remainder(x, y):
     """remainder of x/y in the range [-y/2, y/2]."""
-    z = math.fmod(x, y)
+    z = math.fmod(x, y) if Math.isfinite(x) else Math.nan
     # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
     # This fixes this bug.  See also Math::AngNormalize in the C++ library.
     # sincosd has a similar fix.
@@ -161,7 +161,7 @@ class Math(object):
   def sincosd(x):
     """Compute sine and cosine of x in degrees."""
 
-    r = math.fmod(x, 360)
+    r = math.fmod(x, 360) if Math.isfinite(x) else Math.nan
     q = 0 if Math.isnan(r) else int(round(r / 90))
     r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
