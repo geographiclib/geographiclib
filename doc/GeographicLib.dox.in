@@ -295,11 +295,13 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 14" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc14/GeographicLib-@PROJECT_VERSION@ ..
-  cmake -G "Visual Studio 14" -A x64 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc14-x64/GeographicLib-@PROJECT_VERSION@ ..\endverbatim
-  The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
-  settings given above are recommended to ensure that packages that use
-  GeographicLib use the version compiled with the right compiler.
+  cmake -G "Visual Studio 14" -A win32 -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" ..
+  cmake -G "Visual Studio 14" -A x64 -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" ..\endverbatim
+  The definitions of CMAKE_INSTALL_PREFIX point to system directories.
+  You might instead prefer to install to a user directory such as
+  <code>C:/Users/jsmith/projects/GeographicLib-@PROJECT_VERSION@</code>.
+  The settings given above are recommended to ensure that packages that
+  use GeographicLib use the version compiled with the right compiler.
   If you need to rerun cmake, use \verbatim
   cmake . \endverbatim
   possibly including some options via <code>-D</code> (see the next step).
@@ -311,10 +313,11 @@ Here are the steps to compile and install GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-@PROJECT_VERSION@.  The installation
-    directories for the documentation, cmake configuration, Python and
-    MATLAB interfaces all depend on the variable with deeper paths
-    relative to CMAKE_INSTALL_PREFIX being used when it's ON:
+    name, e.g.,
+    <code>C:/Program Files/GeographicLib-@PROJECT_VERSION@</code>.  The
+    installation directories for the documentation, cmake configuration,
+    Python and MATLAB interfaces all depend on the variable with deeper
+    paths relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - cmake configuration: OFF cmake; ON: lib/cmake/GeographicLib;
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
     - JavaScript interface: OFF: node_modules; ON: lib/node_modules;
@@ -322,11 +325,13 @@ Here are the steps to compile and install GeographicLib:
     - MATLAB interface: OFF: matlab; ON: share/matlab.
     .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
-    on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
+    on non-Windows systems, <code>C:/Program Files (x86)/GeographicLib</code>
     on Windows systems) specifies where the library will be installed.
-    For windows systems, it is recommended to use a prefix which
-    includes the compiler version, as shown above.  If you just want to
-    try the library to see if it suits your needs, pick, for example,
+    For Windows systems, you might want to use a prefix which includes
+    the compiler version, in order to keep the libraries built with
+    different versions of the compiler in distinct locations.  If you
+    just want to try the library to see if it suits your needs, pick,
+    for example,
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -505,10 +510,10 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 14 2015 (in either
-release or debug mode).  However, if you plan to use the library, it may
-be advisable to build it with the compiler you are using for your own
-code using either \ref cmake or \ref windows.
+provided; these can only be used by Visual Studio 14 2015 or later (2017
+or 2019) (in either release or debug mode).  However, if you plan to use
+the library, it may be advisable to build it with the compiler you are
+using for your own code using either \ref cmake or \ref windows.
 
 Download and run
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
@@ -527,7 +532,8 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc14-{win32,x64}/GeographicLib-@PROJECT_VERSION@/bin
+will include
+<code>C:/Program Files{, (x86)}/GeographicLib-@PROJECT_VERSION@/bin</code>
 where the utilities are installed.  The headers and library are
 installed in the include/GeographicLib and lib folders.  The libraries
 were built using using Visual Studio 14 2015 in release and debug modes.
@@ -562,7 +568,7 @@ under cygwin with, for example, \verbatim
   export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
   mkdir BUILD
   cd BUILD
-  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
+  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
   mingw32-make
   mingw32-make install \endverbatim
 If cmake complains that sh mustn't be in your path, invoke cmake with
@@ -570,7 +576,7 @@ If cmake complains that sh mustn't be in your path, invoke cmake with
   env PATH="$( echo $PATH | tr : '\n' |
   while read d; do test -f "$d/sh.exe" || echo -n "$d:"; done |
   sed 's/:$//' )" \
-  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
+  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
 \endverbatim
 
 \section maintainer Maintainer tasks
@@ -699,15 +705,15 @@ In order to use GeographicLib from C++ code, you will need to
   - Set the include paths and linking options "manually".
 - Building your code with cmake.  In brief, the necessary steps are:
   - include in your CMakeLists.txt files \verbatim
-    find_package (GeographicLib 1.34 REQUIRED)
+    find_package (GeographicLib REQUIRED)
     add_executable (program source1.cpp source2.cpp)
     target_link_libraries (program ${GeographicLib_LIBRARIES}) \endverbatim
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
     cmake -G "Visual Studio 14" -A x64 \
-      -D CMAKE_PREFIX_PATH=C:/pkg-vc14-x64 \
-      -D CMAKE_INSTALL_PREFIX=C:/pkg-vc14-x64/testgeographic \
+      -D CMAKE_PREFIX_PATH="C:/Program Files" \
+      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeographic" \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
@@ -764,11 +770,8 @@ In order to use GeographicLib from C++ code, you will need to
   - <code>GeographicLib_VERSION</code> = @PROJECT_VERSION@
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
-  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib
+  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib_SHARED
   - <code>GeographicLib_STATIC_LIBRARIES</code> = GeographicLib_STATIC
-  - <code>GeographicLib_DEFINITIONS</code> = one of the following two:
-  - <code>GeographicLib_SHARED_DEFINITIONS</code> = -DGEOGRAPHICLIB_SHARED_LIB=1
-  - <code>GeographicLib_STATIC_DEFINITIONS</code> = -DGEOGRAPHICLIB_SHARED_LIB=0
   - <code>GeographicLib_LIBRARY_DIRS</code>
   - <code>GeographicLib_BINARY_DIRS</code>
   - <code>GEOGRAPHICLIB_DATA</code> = value of this compile-time parameter
@@ -782,8 +785,7 @@ In order to use GeographicLib from C++ code, you will need to
     find_package (GeographicLib 1.34 REQUIRED COMPONENTS SHARED) \endverbatim
   causes only packages which include the shared library to be found.  If
   the package includes both versions of the library, then
-  <code>GeographicLib_LIBRARIES</code> and
-  <code>GeographicLib_DEFINITIONS</code> are set to the shared versions,
+  <code>GeographicLib_LIBRARIES</code> is set to the shared version,
   unless you include \verbatim
     set (GeographicLib_USE_STATIC_LIBS ON) \endverbatim
   <i>before</i> the find_package command.  You can check whether
@@ -869,7 +871,7 @@ code using the installed library: \verbatim
 project (geodesictest)
 cmake_minimum_required (VERSION 3.1.0)
 
-find_package (GeographicLib 1.34 REQUIRED)
+find_package (GeographicLib REQUIRED)
 
 if (NOT MSVC)
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -7636,17 +7638,18 @@ of the
 git repository for GeographicLib</a>.
 
 \if SKIP
-   - TODO?: Change templating in PolygonArea so that the AddPoint and
-     AddEdge methods are templated instead of the class itself.
-   - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
-     ellipsoids.
-   - TODO?: start converting MajorRadius methods to EquatorialRadius.
-   - TODO?: add GreatEllipse class.
-   - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
-   - TODO: template versions of Gnomonic and AzimuthalEquidistant so
-     that they can use either Geodesic and GeodesicExact.  Use
-     typedefs so that Geodesic::Line points to GeodesicLine.
-   - TODO: Split DMS stuff from main JS package.
+- Planned updates
+  - TODO?: Change templating in PolygonArea so that the AddPoint and
+    AddEdge methods are templated instead of the class itself.
+  - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
+    ellipsoids.
+  - TODO?: start converting MajorRadius methods to EquatorialRadius.
+  - TODO?: add GreatEllipse class.
+  - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
+  - TODO: template versions of Gnomonic and AzimuthalEquidistant so
+    that they can use either Geodesic and GeodesicExact.  Use
+    typedefs so that Geodesic::Line points to GeodesicLine.
+  - TODO: Split DMS stuff from main JS package.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
@@ -7694,7 +7697,8 @@ git repository for GeographicLib</a>.
      - suppress warnings with dotnet build.
      - Change CMake target names and add an interface library (thanks to
        Matthew Woehlke).
-     - Remove pre-3.1.0 cruft.  TODO: Update documentation.
+     - Remove pre-3.1.0 cruft and update the documentation to remove the
+       need to call include_dirctories.
      - Fix installation path for binary installer to the default.  TODO:
        Fix installation instructions (don't use make with Visual
        Studio), maybe use less complicated install path (but at least
@@ -7768,7 +7772,7 @@ git repository for GeographicLib</a>.
    - TODO: Geocentric::Reverse update documentation to describe
      different solutions.
    - TODO: add Ellipsoid class links auxlat page.
-   - TODO: update copyright dates for 2019 (mostly done?).
+   - TODO: update copyright dates for 2019 (since commit d2b3173).
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
