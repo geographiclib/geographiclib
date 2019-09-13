@@ -25,11 +25,6 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
     set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} ${EXAMPLE}.hpp)
   endif ()
   add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
-  if (MSVC OR CMAKE_CONFIGURATION_TYPES)
-    # Add _d suffix for your debug versions of the tools
-    set_target_properties (${EXAMPLE} PROPERTIES
-      DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
-  endif ()
   target_link_libraries (${EXAMPLE} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 endforeach ()
 
@@ -46,6 +41,12 @@ if (OPENMP_FOUND)
     set_target_properties (GeoidToGTX PROPERTIES
       LINK_FLAGS ${OpenMP_CXX_FLAGS})
   endif ()
+endif ()
+
+if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+  # Add _d suffix for your debug versions of the tools
+  set_target_properties (${EXAMPLES} PROPERTIES
+    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 endif ()
 
 add_custom_target (exampleprograms DEPENDS ${EXAMPLES})

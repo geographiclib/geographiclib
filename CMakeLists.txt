@@ -582,16 +582,17 @@ if (WIN32)
   set (CPACK_NSIS_CONTACT "charles@karney.com")
   set (CPACK_NSIS_URL_INFO_ABOUT "https://geographiclib.sourceforge.io")
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
+  # No provision for accommodating different compiler versions.  However
+  # the Visual Studio 14 2015 build works also with Visual Studio 15
+  # 2017 and Visual Studio 16 2019.
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    # Hardcode the prefix for Visual Studio 14 2015
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc14-x64")
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
   else ()
-    # Hardcode the prefix for Visual Studio 14 2015
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\pkg-vc14-win32")
+    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files (x86)")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} win32 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
