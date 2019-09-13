@@ -3,7 +3,7 @@
 *!
 *! Run these tests by configuring with cmake and running "make test".
 *!
-*! Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2015-2019) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
 *! https://geographiclib.sourceforge.io/
 

@@ -33,7 +33,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   See also GEODDOC, GEODDISTANCE, GEODRECKON, POLYGONAREA,
 %     DEFAULTELLIPSOID, FLAT2ECC.
 
-% Copyright (c) Charles Karney (2012-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2019) <charles@karney.com>.
 
   narginchk(2, 3)
   if nargin < 3, ellipsoid = defaultellipsoid; end

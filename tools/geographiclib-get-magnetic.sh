@@ -2,7 +2,7 @@
 #
 # Download magnetic models for use by GeographicLib::MagneticModel.
 #
-# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
