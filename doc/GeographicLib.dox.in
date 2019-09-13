@@ -7699,10 +7699,7 @@ git repository for GeographicLib</a>.
        Matthew Woehlke).
      - Remove pre-3.1.0 cruft and update the documentation to remove the
        need to call include_dirctories.
-     - Fix installation path for binary installer to the default.  TODO:
-       Fix installation instructions (don't use make with Visual
-       Studio), maybe use less complicated install path (but at least
-       make sure install path is consistent with compiler).
+     - Fix installation path for binary installer to the default.
      - Add _d suffix to example and test programs.
    - Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This
      is now the default magnetic model for
@@ -7727,10 +7724,13 @@ git repository for GeographicLib</a>.
      Python, MATLAB, Fortran).
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: update information on https://github.com/ngageoint/opensphere-asm
+   - Move some of the functionality from Math.hpp to Math.cpp to make
+     compilation of package which depend on GeographicLib less sensitive
+     to the current compiler environment.
    - Turn off optimizations for the Intel compiler which causes
      incorrect code to be generated.  Tested only for C and C++ on
      Linux.  The changes should also work for Fortran and Windows.
-     TODO: move affected code on Math.hpp to Math.cpp DONE: add build to
+     DONE: add build to
      test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...).
      Add check of sign +0.0 in GeodSolve73 to all languages.
      Cf. https://github.com/OSGeo/proj.4/issues/826
