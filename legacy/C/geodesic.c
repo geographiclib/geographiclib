@@ -120,7 +120,7 @@ enum captype {
 #define cbrtx cbrt
 #define remainderx remainder
 #define remquox remquo
-/* #define log1px log1p */
+#define log1px log1p
 #else
 /* Replacements for C99 math functions */
 

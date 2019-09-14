@@ -754,13 +754,18 @@ static int GeodSolve84() {
   double lat2, lon2, azi2, inf, nan;
   struct geod_geodesic g;
   int result = 0;
-  inf = 1.0/0.0;
+  geod_init(&g, wgs84_a, wgs84_f);
+  {
+    /* a round about way to set inf = 0 */
+    geod_direct(&g, 0, 0, 90, 0, &inf, 0, 0);
+    /* so that this doesn't give a compiler time error on Windows */
+    inf = 1.0/inf;
+  }
   {
     double minus1 = -1;
     /* cppcheck-suppress wrongmathcall */
     nan = sqrt(minus1);
   }
-  geod_init(&g, wgs84_a, wgs84_f);
   geod_direct(&g, 0, 0, 90, inf, &lat2, &lon2, &azi2);
   result += checkNaN(lat2);
   result += checkNaN(lon2);
