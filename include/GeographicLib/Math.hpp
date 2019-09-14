@@ -162,7 +162,7 @@ namespace GeographicLib {
     /**
      * true if the machine is big-endian.
      **********************************************************************/
-    static const bool bigendian;
+    static const bool bigendian = GEOGRAPHICLIB_WORDS_BIGENDIAN;
 
     /**
      * @tparam T the type of the returned value.
