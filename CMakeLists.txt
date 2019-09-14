@@ -217,7 +217,12 @@ endif ()
 
 include (CheckTypeSize)
 check_type_size ("long double" LONG_DOUBLE BUILTIN_TYPES_ONLY)
-set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE ${HAVE_LONG_DOUBLE})
+check_type_size ("double" DOUBLE BUILTIN_TYPES_ONLY)
+if (HAVE_LONG_DOUBLE AND (LONG_DOUBLE GREATER DOUBLE))
+  set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE TRUE)
+else ()
+  set (GEOGRAPHICLIB_HAVE_LONG_DOUBLE FALSE)
+endif ()
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
