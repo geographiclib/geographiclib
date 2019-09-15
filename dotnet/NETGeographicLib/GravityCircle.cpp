@@ -135,11 +135,11 @@ double GravityCircle::T(double lon)
 }
 
 //*****************************************************************************
-double GravityCircle::MajorRadius::get()
+double GravityCircle::EquatorialRadius::get()
 {
     if ( m_pGravityCircle->Init() )
-        return m_pGravityCircle->MajorRadius();
-    throw gcnew GeographicErr("GravityCircle::MajorRadius failed because the GravityCircle is not initialized.");
+        return m_pGravityCircle->EquatorialRadius();
+    throw gcnew GeographicErr("GravityCircle::EquatorialRadius failed because the GravityCircle is not initialized.");
 }
 
 //*****************************************************************************

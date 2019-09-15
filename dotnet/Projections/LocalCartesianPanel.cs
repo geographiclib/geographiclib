@@ -35,7 +35,7 @@ namespace Projections
             InitializeComponent();
 
             Geocentric g = new Geocentric();
-            m_majorRadiusTextBox.Text = g.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = g.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = g.Flattening.ToString();
             m_lc = new LocalCartesian(g);
             m_functionComboBox.SelectedIndex = (int)m_function;

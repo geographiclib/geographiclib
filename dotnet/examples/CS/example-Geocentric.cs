@@ -8,7 +8,7 @@ namespace example_Geocentric
         static void Main(string[] args)
         {
             try {
-                Geocentric earth = new Geocentric( Constants.WGS84.MajorRadius,
+                Geocentric earth = new Geocentric( Constants.WGS84.EquatorialRadius,
                                                    Constants.WGS84.Flattening);
                 // Alternatively: Geocentric earth = new Geocentric();
                 {

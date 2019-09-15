@@ -2,7 +2,7 @@
  * \file GravityModel.hpp
  * \brief Header for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -469,7 +469,7 @@ namespace GeographicLib {
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).
      **********************************************************************/
-    Math::real MajorRadius() const { return _earth.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _earth.EquatorialRadius(); }
 
     /**
      * @return \e GM the mass constant of the model (m<sup>3</sup>
@@ -507,6 +507,12 @@ namespace GeographicLib {
      * @return \e Mmax the maximum order of the components of the model.
      **********************************************************************/
     int Order() const { return _mmx; }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

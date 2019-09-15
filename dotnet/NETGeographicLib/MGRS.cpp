@@ -77,7 +77,7 @@ void MGRS::Reverse(System::String^ mgrs,
 }
 
 //*****************************************************************************
-double MGRS::MajorRadius() { return GeographicLib::UTMUPS::MajorRadius(); }
+double MGRS::EquatorialRadius() { return GeographicLib::UTMUPS::EquatorialRadius(); }
 
 //*****************************************************************************
 double MGRS::Flattening() { return GeographicLib::UTMUPS::Flattening(); }

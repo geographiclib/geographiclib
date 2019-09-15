@@ -123,8 +123,8 @@ void PolygonArea::CurrentPoint(
 }
 
 //*****************************************************************************
-double PolygonArea::MajorRadius::get()
-{ return m_pPolygonArea->MajorRadius(); }
+double PolygonArea::EquatorialRadius::get()
+{ return m_pPolygonArea->EquatorialRadius(); }
 
 //*****************************************************************************
 double PolygonArea::Flattening::get() { return m_pPolygonArea->Flattening(); }
@@ -234,8 +234,8 @@ void PolygonAreaExact::CurrentPoint(
 }
 
 //*****************************************************************************
-double PolygonAreaExact::MajorRadius::get()
-{ return m_pPolygonArea->MajorRadius(); }
+double PolygonAreaExact::EquatorialRadius::get()
+{ return m_pPolygonArea->EquatorialRadius(); }
 
 //*****************************************************************************
 double PolygonAreaExact::Flattening::get()
@@ -346,8 +346,8 @@ void PolygonAreaRhumb::CurrentPoint(
 }
 
 //*****************************************************************************
-double PolygonAreaRhumb::MajorRadius::get()
-{ return m_pPolygonArea->MajorRadius(); }
+double PolygonAreaRhumb::EquatorialRadius::get()
+{ return m_pPolygonArea->EquatorialRadius(); }
 
 //*****************************************************************************
 double PolygonAreaRhumb::Flattening::get()

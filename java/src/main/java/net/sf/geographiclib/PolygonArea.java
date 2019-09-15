@@ -372,8 +372,7 @@ public class PolygonArea {
    * @return <i>a</i> the equatorial radius of the ellipsoid (meters).  This is
    *   the value inherited from the Geodesic object used in the constructor.
    **********************************************************************/
-
-  public double MajorRadius() { return _earth.MajorRadius(); }
+  public double EquatorialRadius() { return _earth.EquatorialRadius(); }
 
   /**
    * @return <i>f</i> the flattening of the ellipsoid.  This is the value
@@ -390,4 +389,11 @@ public class PolygonArea {
    * <i>lon</i> will be in the range [&minus;180&deg;, 180&deg;].
    **********************************************************************/
   public Pair CurrentPoint() { return new Pair(_lat1, _lon1); }
+
+  /**
+   * @deprecated An old name for {@link #EquatorialRadius()}.
+   * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
+   **********************************************************************/
+  // @Deprecated
+  public double MajorRadius() { return EquatorialRadius(); }
 }

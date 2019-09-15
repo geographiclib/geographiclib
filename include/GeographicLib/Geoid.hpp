@@ -2,7 +2,7 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -428,7 +428,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the supported geoid models are all
      * based on this ellipsoid.)
      **********************************************************************/
-    Math::real MajorRadius() const
+    Math::real EquatorialRadius() const
     { return Constants::WGS84_a(); }
 
     /**
@@ -438,6 +438,12 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real Flattening() const { return Constants::WGS84_f(); }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

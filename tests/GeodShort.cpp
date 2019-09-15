@@ -258,8 +258,8 @@ int main(int argc, char* argv[]) {
         ge.Inverse(0, 0, 90, 0, m);
       else
         g.Inverse(0, 0, 90, 0, m);
-      norm = max(m, Math::pi()/2 * g.MajorRadius());
-      consist = min(m, Math::pi()/2 * g.MajorRadius()) /
+      norm = max(m, Math::pi()/2 * g.EquatorialRadius());
+      consist = min(m, Math::pi()/2 * g.EquatorialRadius()) /
         (Math::pi()/2);
     }
     unsigned seed = random_device()(); // Set seed from random_device

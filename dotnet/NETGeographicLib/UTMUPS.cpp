@@ -209,7 +209,7 @@ int UTMUPS::EncodeEPSG(int zone, bool northp)
 double UTMUPS::UTMShift() { return GeographicLib::UTMUPS::UTMShift(); }
 
 //****************************************************************************
-double UTMUPS::MajorRadius() { return GeographicLib::UTMUPS::MajorRadius(); }
+double UTMUPS::EquatorialRadius() { return GeographicLib::UTMUPS::EquatorialRadius(); }
 
 //****************************************************************************
 double UTMUPS::Flattening() { return GeographicLib::UTMUPS::Flattening(); }

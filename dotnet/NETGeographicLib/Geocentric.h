@@ -60,7 +60,7 @@ namespace NETGeographicLib
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes WGS84 parameters.
    *
-   * The MajorRadius and Flattening functions are implemented as properties.
+   * The EquatorialRadius and Flattening functions are implemented as properties.
    *
    * The Forward and Reverse functions return rotation matrices as 2D,
    * 3 &times; 3 arrays rather than vectors.
@@ -213,7 +213,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the  flattening of the ellipsoid.  This is the

@@ -143,8 +143,8 @@ System::IntPtr^ Geocentric::GetUnmanaged()
 }
 
 //*****************************************************************************
-double Geocentric::MajorRadius::get()
-{ return m_pGeocentric->MajorRadius(); }
+double Geocentric::EquatorialRadius::get()
+{ return m_pGeocentric->EquatorialRadius(); }
 
 //*****************************************************************************
 double Geocentric::Flattening::get()

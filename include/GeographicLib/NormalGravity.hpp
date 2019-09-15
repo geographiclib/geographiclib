@@ -2,7 +2,7 @@
  * \file NormalGravity.hpp
  * \brief Header for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -266,7 +266,7 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const
+    Math::real EquatorialRadius() const
     { return Init() ? _a : Math::NaN(); }
 
     /**
@@ -338,6 +338,12 @@ namespace GeographicLib {
      * @return the Geocentric object used by this instance.
      **********************************************************************/
     const Geocentric& Earth() const { return _earth; }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

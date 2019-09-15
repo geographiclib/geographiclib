@@ -61,7 +61,7 @@ namespace NETGeographicLib
    * The following functions are implemented as properties:
    * Description, DateTime, MagneticFile, MagneticModelName,
    * MagneticModelDirectory, MinHeight, MaxHeight, MinTime, MaxTime,
-   * MajorRadius, and Flattening.
+   * EquatorialRadius, and Flattening.
    **********************************************************************/
     public ref class MagneticModel
     {
@@ -337,7 +337,7 @@ namespace NETGeographicLib
          *   the value of \e a inherited from the Geocentric object used in the
          *   constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the flattening of the ellipsoid.  This is the value

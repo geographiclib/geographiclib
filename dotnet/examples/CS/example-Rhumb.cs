@@ -11,7 +11,7 @@ namespace example_Rhumb
         static void Main(string[] args)
         {
             try {
-            Rhumb rhumb = new Rhumb(Constants.WGS84.MajorRadius, Constants.WGS84.Flattening, true);
+            Rhumb rhumb = new Rhumb(Constants.WGS84.EquatorialRadius, Constants.WGS84.Flattening, true);
             // Alternatively: const Rhumb& rhumb = Rhumb::WGS84();
             {
                 // Sample direct calculation, travelling about NE from JFK

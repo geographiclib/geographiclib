@@ -110,7 +110,7 @@ void Gnomonic::Reverse(double lat0, double lon0, double x, double y,
 }
 
 //*****************************************************************************
-double Gnomonic::MajorRadius::get() { return m_pGnomonic->MajorRadius(); }
+double Gnomonic::EquatorialRadius::get() { return m_pGnomonic->EquatorialRadius(); }
 
 //*****************************************************************************
 double Gnomonic::Flattening::get() { return m_pGnomonic->Flattening(); }

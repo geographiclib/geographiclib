@@ -325,7 +325,7 @@ namespace GeographicLib {
      *   the value of \e a inherited from the Geocentric object used in the
      *   constructor.
      **********************************************************************/
-    Math::real MajorRadius() const { return _earth.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _earth.EquatorialRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
@@ -342,6 +342,12 @@ namespace GeographicLib {
      * @return \e Mmax the maximum order of the components of the model.
      **********************************************************************/
     int Order() const { return _mmx; }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

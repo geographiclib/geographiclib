@@ -112,7 +112,7 @@ void OSGB::GridReference(System::String^ gridref,
 }
 
 //*****************************************************************************
-double OSGB::MajorRadius() { return GeographicLib::OSGB::MajorRadius(); }
+double OSGB::EquatorialRadius() { return GeographicLib::OSGB::EquatorialRadius(); }
 
 //*****************************************************************************
 double OSGB::Flattening() { return GeographicLib::OSGB::Flattening(); }

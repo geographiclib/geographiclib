@@ -23,7 +23,7 @@ namespace GeographicLib {
     : eps0_(numeric_limits<real>::epsilon())
     , eps_(real(0.01) * sqrt(eps0_))
     , _earth(earth)
-    , _a(_earth.MajorRadius())
+    , _a(_earth.EquatorialRadius())
     , _f(_earth.Flattening())
   {}
 

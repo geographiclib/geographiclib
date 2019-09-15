@@ -101,7 +101,7 @@ public class GeoMath {
   /**
    * Coarsen a value close to zero.
    * <p>
-   * @param x
+   * @param x the argument
    * @return the coarsened value.
    * <p>
    * This makes the smallest gap in <i>x</i> = 1/16 &minus; nextafter(1/16, 0)

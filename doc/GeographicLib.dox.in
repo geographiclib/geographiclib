@@ -7638,19 +7638,18 @@ of the
 git repository for GeographicLib</a>.
 
 \if SKIP
-- Planned updates
-  - TODO?: Change templating in PolygonArea so that the AddPoint and
-    AddEdge methods are templated instead of the class itself.
-  - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
-    ellipsoids.
-  - TODO?: start converting MajorRadius methods to EquatorialRadius.
-  - TODO?: add GreatEllipse class.
-  - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
-  - TODO: template versions of Gnomonic and AzimuthalEquidistant so
-    that they can use either Geodesic and GeodesicExact.  Use
-    typedefs so that Geodesic::Line points to GeodesicLine.
-  - TODO: Split DMS stuff from main JS package.
-  - TODO: Add C++ tests not dependent on utility programs
+ - Planned updates
+   - TODO?: Change templating in PolygonArea so that the AddPoint and
+     AddEdge methods are templated instead of the class itself.
+   - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
+     ellipsoids.
+   - TODO?: add GreatEllipse class.
+   - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
+   - TODO: template versions of Gnomonic and AzimuthalEquidistant so
+     that they can use either Geodesic and GeodesicExact.  Use
+     typedefs so that Geodesic::Line points to GeodesicLine.
+   - TODO: Split DMS stuff from main JS package.
+   - TODO: Add C++ tests not dependent on utility programs
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
@@ -7692,6 +7691,9 @@ git repository for GeographicLib</a>.
        <a href="MagneticField.1.html">MagneticField</a> utilities
        accept -N and -M options to to allow the maximum degree and order
        to be specified.
+   - MajorRadius() methods are now called EquatorialRadius() for C++,
+     Java, .NET.  MajorRadius() is retained for backward compatibility
+     but is deprecated.
    - Minimum version updates:
      - CMake = 3.1.0, released 2014-12-15.
      - Minimum g++ version = 4.8.0, released 2013-03-22.

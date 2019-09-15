@@ -27,7 +27,7 @@ namespace Projections
         {
             InitializeComponent();
             m_poly = new PolygonArea(false);
-            m_majorRadiusTextBox.Text = m_poly.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_poly.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_poly.Flattening.ToString();
             m_lengthTextBox.Text = m_areaTextBox.Text = m_numPointsTextBox.Text = "0";
             m_currLatTextBox.Text = m_currLonTextBox.Text = "";

@@ -232,7 +232,7 @@ namespace GeographicLib {
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
 
-    Math::real MajorRadius() const { return _earth.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _earth.EquatorialRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
@@ -251,6 +251,12 @@ namespace GeographicLib {
      **********************************************************************/
     void CurrentPoint(real& lat, real& lon) const
     { lat = _lat1; lon = _lon1; }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };
 

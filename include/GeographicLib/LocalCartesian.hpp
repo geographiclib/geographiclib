@@ -2,7 +2,7 @@
  * \file LocalCartesian.hpp
  * \brief Header for GeographicLib::LocalCartesian class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -220,13 +220,19 @@ namespace GeographicLib {
      *   the value of \e a inherited from the Geocentric object used in the
      *   constructor.
      **********************************************************************/
-    Math::real MajorRadius() const { return _earth.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _earth.EquatorialRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the Geocentric object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _earth.Flattening(); }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };

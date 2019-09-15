@@ -235,7 +235,7 @@ namespace NETGeographicLib
          * (The WGS84 value is returned because the UTM and UPS projections are
          * based on this ellipsoid.)
          **********************************************************************/
-        static double MajorRadius();
+        static double EquatorialRadius();
 
         /**
          * @return \e f the flattening of the WGS84 ellipsoid.

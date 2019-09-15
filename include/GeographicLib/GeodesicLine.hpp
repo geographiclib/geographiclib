@@ -2,7 +2,7 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -647,7 +647,7 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const
+    Math::real EquatorialRadius() const
     { return Init() ? _a : Math::NaN(); }
 
     /**
@@ -693,6 +693,12 @@ namespace GeographicLib {
      * @return \e a13, the arc length to point 3 (degrees).
      **********************************************************************/
     Math::real Arc() const { return GenDistance(true); }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };

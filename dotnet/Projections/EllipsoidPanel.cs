@@ -27,7 +27,7 @@ namespace Projections
         {
             InitializeComponent();
             m_ell = new Ellipsoid();
-            m_majorRadiusTextBox.Text = m_ell.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_ell.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_ell.Flattening.ToString();
 
             m_minorRadiusTextBox.Text = m_ell.MinorRadius.ToString();

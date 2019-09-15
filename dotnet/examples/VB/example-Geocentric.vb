@@ -3,7 +3,7 @@ Imports NETGeographicLib
 Module example_Geocentric
     Sub Main()
         Try
-            Dim earth As Geocentric = New Geocentric(Constants.WGS84.MajorRadius,
+            Dim earth As Geocentric = New Geocentric(Constants.WGS84.EquatorialRadius,
                                                      Constants.WGS84.Flattening)
             ' Alternatively: Geocentric earth = new Geocentric();
             ' Sample forward calculation

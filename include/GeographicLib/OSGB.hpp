@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -187,7 +187,7 @@ namespace GeographicLib {
      * of Britain; see Section A.1 (p. 37) of <i>A guide to coordinate systems
      * in Great Britain</i>, v2.2 (Dec. 2013).
      **********************************************************************/
-    static Math::real MajorRadius() {
+    static Math::real EquatorialRadius() {
     // result is about 6377563.3960320664406 m
       using std::pow;
       return pow(real(10), real(48401603 - 100000000) / 100000000)
@@ -236,6 +236,12 @@ namespace GeographicLib {
      * @return false easting the OSGB projection (400000 meters).
      **********************************************************************/
     static Math::real FalseEasting() { return real(400000); }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 
   };

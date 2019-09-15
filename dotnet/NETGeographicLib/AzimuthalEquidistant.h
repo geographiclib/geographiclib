@@ -41,7 +41,7 @@ namespace NETGeographicLib
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor is provided that assumes a WGS84 ellipsoid.
    *
-   * The MajorRadius and Flattening functions are implemented as
+   * The EquatorialRadius and Flattening functions are implemented as
    * properties.
    **********************************************************************/
     public ref class AzimuthalEquidistant
@@ -147,7 +147,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value inherited from the Geodesic object used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the flattening of the ellipsoid.  This is the value

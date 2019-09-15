@@ -188,7 +188,7 @@ double GeoCoords::AltConvergence::get()
 double GeoCoords::AltScale::get() { return m_pGeoCoords->AltScale(); }
 
 //*****************************************************************************
-double GeoCoords::MajorRadius::get() { return UTMUPS::MajorRadius(); }
+double GeoCoords::EquatorialRadius::get() { return UTMUPS::EquatorialRadius(); }
 
 //*****************************************************************************
 double GeoCoords::Flattening::get() { return UTMUPS::Flattening(); }

@@ -70,7 +70,7 @@ namespace Projections
                 MessageBox.Show(err.Message, warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            m_majorRadiusTextBox.Text = m_geodesic.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_geodesic.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_geodesic.Flattening.ToString();
             m_functionComboBox.SelectedIndex = 0;
             m_classComboBox.SelectedIndex = 0;
@@ -192,7 +192,7 @@ namespace Projections
                         m_S12TextBox.Text = S12.ToString();
                         break;
                     case Classes.GEODESICEXACT:
-                        GeodesicExact ge = new GeodesicExact(m_geodesic.MajorRadius, m_geodesic.Flattening);
+                        GeodesicExact ge = new GeodesicExact(m_geodesic.EquatorialRadius, m_geodesic.Flattening);
                         switch (sw)
                         {
                             case 0: // function == Direct, variable == distance
@@ -344,7 +344,7 @@ namespace Projections
             try
             {
                 Geodesic g = new Geodesic();
-                g = new Geodesic(g.MajorRadius, g.Flattening);
+                g = new Geodesic(g.EquatorialRadius, g.Flattening);
                 arcDistance = g.Direct(32.0, -86.0, 45.0, 20000.0, out finalLatitude, out finalLongitude,
                     out finalAzimuth, out reducedLength, out M12, out M21,
                     out S12);
@@ -488,7 +488,7 @@ namespace Projections
                     throw new Exception("GeodesicLine.GenPosition (false) failed");
 
                 GeodesicExact ge = new GeodesicExact();
-                ge = new GeodesicExact(g.MajorRadius, g.Flattening);
+                ge = new GeodesicExact(g.EquatorialRadius, g.Flattening);
                 arcDistance = ge.Direct(32.0, -86.0, 45.0, 20000.0, out finalLatitude, out finalLongitude,
                     out finalAzimuth, out reducedLength, out M12, out M21,
                     out S12);

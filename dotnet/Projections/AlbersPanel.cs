@@ -45,7 +45,7 @@ namespace Projections
             InitializeComponent();
             m_projectionComboBox.SelectedIndex = 0; // this calls OnProjection and sets it to an AlbersEqualArea
             m_constructorComboBox.SelectedIndex = 3; // this calls OnConstructorChanged
-            m_majorRadiusTextBox.Text = m_albers.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_albers.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_albers.Flattening.ToString();
             m_centralScaleTextBox.Text = m_albers.CentralScale.ToString();
             m_originLatitudeTextBox.Text = m_albers.OriginLatitude.ToString();
@@ -210,7 +210,7 @@ namespace Projections
 
             if (m_constructorComboBox.SelectedIndex > 2)
             {
-                m_majorRadiusTextBox.Text = m_albers.MajorRadius.ToString();
+                m_majorRadiusTextBox.Text = m_albers.EquatorialRadius.ToString();
                 m_flatteningTextBox.Text = m_albers.Flattening.ToString();
                 m_centralScaleTextBox.Text = m_albers.CentralScale.ToString();
                 m_originLatitudeTextBox.Text = m_albers.OriginLatitude.ToString();
@@ -508,7 +508,7 @@ namespace Projections
                 const double DEG_TO_RAD = 3.1415926535897932384626433832795 / 180.0;
                 AlbersEqualArea a = new AlbersEqualArea(AlbersEqualArea.StandardTypes.AzimuthalEqualAreaNorth);
                 a = new AlbersEqualArea(AlbersEqualArea.StandardTypes.AzimuthalEqualAreaSouth);
-                double radius = a.MajorRadius;
+                double radius = a.EquatorialRadius;
                 double f = a.Flattening;
                 a = new AlbersEqualArea(radius, f, 60.0, 1.0);
                 a = new AlbersEqualArea(radius, f, 60.0, 70.0, 1.0);

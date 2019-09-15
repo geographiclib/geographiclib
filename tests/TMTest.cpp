@@ -2,7 +2,7 @@
  * \file TMTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -153,7 +153,7 @@ int main(int argc, char* argv[]) {
                                       Constants::UTM_k0<real>(),
                                       true);
     real
-      a = series ? tm.MajorRadius() : tme.MajorRadius(),
+      a = series ? tm.EquatorialRadius() : tme.EquatorialRadius(),
       f = series ? tm.Flattening() : tme.Flattening();
     const Geodesic geod(a, f);
     Math::extended lat0l, lon0l, x0l, y0l, gam0l, k0l;

@@ -2,7 +2,7 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -402,7 +402,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius()
+    static Math::real EquatorialRadius()
     { return Constants::WGS84_a(); }
 
     /**
@@ -413,6 +413,12 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real Flattening()
     { return Constants::WGS84_f(); }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 
   };

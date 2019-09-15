@@ -40,7 +40,7 @@ namespace NETGeographicLib
    * A default constructor has been provided that assumes a WGS84 ellipsoid.
    *
    * The following functions are implemented as properties:
-   * MajorRadius, MinorRadius, QuarterMeridian, Area, Volume, Flattening,
+   * EquatorialRadius, MinorRadius, QuarterMeridian, Area, Volume, Flattening,
    * SecondFlattening, ThirdFlattening, EccentricitySq, SecondEccentricitySq,
    * and ThirdEccentricitySq.
    **********************************************************************/
@@ -87,7 +87,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e b the polar semi-axis (meters).

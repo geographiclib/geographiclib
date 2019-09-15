@@ -226,8 +226,8 @@ double Ellipsoid::FlatteningToThirdEccentricitySq(double f)
 }
 
 //*****************************************************************************
-double Ellipsoid::MajorRadius::get()
-{ return m_pEllipsoid->MajorRadius(); }
+double Ellipsoid::EquatorialRadius::get()
+{ return m_pEllipsoid->EquatorialRadius(); }
 
 //*****************************************************************************
 double Ellipsoid::MinorRadius::get()

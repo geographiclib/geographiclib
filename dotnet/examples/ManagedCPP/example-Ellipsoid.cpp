@@ -4,7 +4,7 @@ using namespace NETGeographicLib;
 int main(array<System::String ^> ^/*args*/)
 {
     try {
-        Ellipsoid^ wgs84 = gcnew Ellipsoid( Constants::WGS84::MajorRadius,
+        Ellipsoid^ wgs84 = gcnew Ellipsoid( Constants::WGS84::EquatorialRadius,
                                             Constants::WGS84::Flattening );
         // Alternatively: Ellipsoid^ wgs84 = gcnew Ellipsoid();
         Console::WriteLine( String::Format(
