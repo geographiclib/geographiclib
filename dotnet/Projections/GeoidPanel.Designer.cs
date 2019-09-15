@@ -39,7 +39,7 @@ namespace Projections
             this.m_descriptionTextBox = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.m_majorRadiusTextBox = new System.Windows.Forms.TextBox();
+            this.m_equatorialRadiusTextBox = new System.Windows.Forms.TextBox();
             this.m_flatteningTtextBox = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -144,7 +144,7 @@ namespace Projections
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(69, 13);
             this.label4.TabIndex = 8;
-            this.label4.Text = "Major Radius";
+            this.label4.Text = "Equatorial Radius";
             //
             // label5
             //
@@ -155,13 +155,13 @@ namespace Projections
             this.label5.TabIndex = 9;
             this.label5.Text = "Flattening";
             //
-            // m_majorRadiusTextBox
+            // m_equatorialRadiusTextBox
             //
-            this.m_majorRadiusTextBox.Location = new System.Drawing.Point(83, 126);
-            this.m_majorRadiusTextBox.Name = "m_majorRadiusTextBox";
-            this.m_majorRadiusTextBox.ReadOnly = true;
-            this.m_majorRadiusTextBox.Size = new System.Drawing.Size(126, 20);
-            this.m_majorRadiusTextBox.TabIndex = 10;
+            this.m_equatorialRadiusTextBox.Location = new System.Drawing.Point(83, 126);
+            this.m_equatorialRadiusTextBox.Name = "m_equatorialRadiusTextBox";
+            this.m_equatorialRadiusTextBox.ReadOnly = true;
+            this.m_equatorialRadiusTextBox.Size = new System.Drawing.Size(126, 20);
+            this.m_equatorialRadiusTextBox.TabIndex = 10;
             //
             // m_flatteningTtextBox
             //
@@ -383,7 +383,7 @@ namespace Projections
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.m_flatteningTtextBox);
-            this.Controls.Add(this.m_majorRadiusTextBox);
+            this.Controls.Add(this.m_equatorialRadiusTextBox);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.m_descriptionTextBox);
@@ -413,7 +413,7 @@ namespace Projections
         private System.Windows.Forms.TextBox m_descriptionTextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox m_majorRadiusTextBox;
+        private System.Windows.Forms.TextBox m_equatorialRadiusTextBox;
         private System.Windows.Forms.TextBox m_flatteningTtextBox;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;

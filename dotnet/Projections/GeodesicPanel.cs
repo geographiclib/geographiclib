@@ -70,18 +70,18 @@ namespace Projections
                 MessageBox.Show(err.Message, warning, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            m_majorRadiusTextBox.Text = m_geodesic.EquatorialRadius.ToString();
+            m_equatorialRadiusTextBox.Text = m_geodesic.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_geodesic.Flattening.ToString();
             m_functionComboBox.SelectedIndex = 0;
             m_classComboBox.SelectedIndex = 0;
         }
 
-        // gets the major radius and flattening and creates a new Geodesic
+        // gets the equatorial radius and flattening and creates a new Geodesic
         private void OnSet(object sender, EventArgs e)
         {
             try
             {
-                double radius = Double.Parse(m_majorRadiusTextBox.Text);
+                double radius = Double.Parse(m_equatorialRadiusTextBox.Text);
                 double flattening = Double.Parse(m_flatteningTextBox.Text);
                 m_geodesic = new Geodesic(radius, flattening);
             }

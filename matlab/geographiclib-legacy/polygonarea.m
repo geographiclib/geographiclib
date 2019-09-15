@@ -21,7 +21,7 @@ function [area, perimeter] = polygonarea(latlong, a, f)
 %
 %   Arbitrarily complex polygons are allowed.  In the case of
 %   self-intersecting polygons the area is accumulated "algebraically",
-%   i.e., the areas of the 2 loops in a figure-8 polygon will partially
+%   e.g., the areas of the 2 loops in a figure-8 polygon will partially
 %   cancel.  There is no need to "close" the polygon.  Counter-clockwise
 %   traversal counts as a positive area.  A polygon may encircle one or
 %   both poles.  The total area of the WGS84 ellipsoid is given by

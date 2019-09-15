@@ -963,7 +963,7 @@
 *!
 *! Arbitrarily complex polygons are allowed.  In the case of
 *! self-intersecting polygons the area is accumulated "algebraically",
-*! i.e., the areas of the 2 loops in a figure-8 polygon will partially
+*! e.g., the areas of the 2 loops in a figure-8 polygon will partially
 *! cancel.  There's no need to "close" the polygon by repeating the
 *! first vertex.  The area returned is signed with counter-clockwise
 *! traversal being treated as positive.

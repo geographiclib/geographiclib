@@ -217,7 +217,7 @@ class PolygonArea(object):
 
     Arbitrarily complex polygons are allowed.  In the case of
     self-intersecting polygons the area is accumulated "algebraically",
-    i.e., the areas of the 2 loops in a figure-8 polygon will partially
+    e.g., the areas of the 2 loops in a figure-8 polygon will partially
     cancel.
 
     If the object is a polygon (and not a polyline), the perimeter

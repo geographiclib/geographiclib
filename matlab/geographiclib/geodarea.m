@@ -15,7 +15,7 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   arrays where the 5th row is NaN.  The output, A, is in meters^2.
 %   Counter-clockwise traversal counts as a positive area.  Arbitrarily
 %   complex polygons are allowed.  In the case of self-intersecting
-%   polygons the area is accumulated "algebraically", i.e., the areas of
+%   polygons the area is accumulated "algebraically", e.g., the areas of
 %   the 2 loops in a figure-8 polygon will partially cancel.  Also returned
 %   are the perimeters of the polygons in P (meters) and the numbers of
 %   vertices in N.  geoddoc gives the restrictions on the allowed ranges of

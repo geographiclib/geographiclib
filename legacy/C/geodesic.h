@@ -764,7 +764,7 @@ extern "C" {
    * The area and perimeter are accumulated at two times the standard floating
    * point precision to guard against the loss of accuracy with many-sided
    * polygons.  Arbitrarily complex polygons are allowed.  In the case of
-   * self-intersecting polygons the area is accumulated "algebraically", i.e.,
+   * self-intersecting polygons the area is accumulated "algebraically", e.g.,
    * the areas of the 2 loops in a figure-8 polygon will partially cancel.
    * There's no need to "close" the polygon by repeating the first vertex.  Set
    * \e pA or \e pP to zero, if you do not want the corresponding quantity
@@ -871,7 +871,7 @@ extern "C" {
    * \e lats should be in the range [&minus;90&deg;, 90&deg;].
    *
    * Arbitrarily complex polygons are allowed.  In the case self-intersecting
-   * of polygons the area is accumulated "algebraically", i.e., the areas of
+   * of polygons the area is accumulated "algebraically", e.g., the areas of
    * the 2 loops in a figure-8 polygon will partially cancel.  There's no need
    * to "close" the polygon by repeating the first vertex.  The area returned
    * is signed with counter-clockwise traversal being treated as positive.

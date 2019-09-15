@@ -1306,7 +1306,7 @@ dependency \verbatim
   <dependency>
     <groupId>net.sf.geographiclib</groupId>
     <artifactId>GeographicLib-Java</artifactId>
-    <version>1.46</version>
+    <version>@PROJECT_VERSION@</version>
   </dependency>
   \endverbatim
 in your <code>pom.xml</code>.
@@ -7639,17 +7639,20 @@ git repository for GeographicLib</a>.
 
 \if SKIP
  - Planned updates
-   - TODO?: Change templating in PolygonArea so that the AddPoint and
-     AddEdge methods are templated instead of the class itself.
-   - TODO?: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
+   - Change templating in PolygonArea so that the AddPoint and AddEdge
+     methods are templated instead of the class itself.  This would
+     allow a polygon to contain a mixture of geodesic and rhumb-line
+     edges.
+   - Generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
-   - TODO?: add GreatEllipse class.
-   - TODO?: implement Geodesic + TM + PolarStereographic on Jets.
-   - TODO: template versions of Gnomonic and AzimuthalEquidistant so
-     that they can use either Geodesic and GeodesicExact.  Use
-     typedefs so that Geodesic::Line points to GeodesicLine.
-   - TODO: Split DMS stuff from main JavaScript package.
-   - TODO: Add C++ tests not dependent on utility programs
+   - Add GreatEllipse class.
+   - Implement Geodesic + TM + PolarStereographic on Jets.
+   - Template versions of Gnomonic and AzimuthalEquidistant so that they
+     can use either Geodesic and GeodesicExact.  Use typedefs so that
+     Geodesic::Line points to GeodesicLine.
+   - Split DMS stuff from main JavaScript package.
+   - Add C++ tests not dependent on utility programs.
+   - Add information on radius of convergence for aux latitude series.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
@@ -7657,7 +7660,8 @@ git repository for GeographicLib</a>.
    - BUG fixes:
      - Java + JavaScript implementations of PolygonArea::TestEdge counted
        the pole encirclings wrong.
-     - Fix typo in JavaScript implementation with affected unsigned areas.
+     - Fix typo in JavaScript implementation which affected unsigned
+       areas.
      - Adding edges to a polygon counted pole encirclings inconsistent
        with the way the adding point counted them.  This might have
        caused an incorrect result if a polygon vertex had longitude = 0.
@@ -7679,7 +7683,7 @@ git repository for GeographicLib</a>.
      equivalents in C, Fortran, MATLAB, Java, JavaScript, Python can now
      handle arbitrarily complex polygons.  In the case of
      self-intersecting polygons the area is accumulated "algebraically",
-     i.e., the areas of the 2 loops in a figure-8 polygon will partially
+     e.g., the areas of the 2 loops in a figure-8 polygon will partially
      cancel.
    - Changes in gravity and magnetic model handling
      - SphericalEngine::coeff::readcoeffs takes new optional argument

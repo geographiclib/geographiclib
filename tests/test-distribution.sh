@@ -39,7 +39,7 @@ umask 0022
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
 #   doc/GeographicLib.dox.in (3 places)
-#   doc/NETGeographicLib.dox
+#   doc/NETGeographicLib.dox (a few places)
 
 # Need updating if underlying library changes
 

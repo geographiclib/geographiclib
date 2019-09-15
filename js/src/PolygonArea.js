@@ -205,7 +205,7 @@
    *   false) is the area (meters<sup>2</sup>).
    * @description Arbitrarily complex polygons are allowed.  In the case of
    *   self-intersecting polygons the area is accumulated "algebraically",
-   *   i.e., the areas of the 2 loops in a figure-8 polygon will partially
+   *   e.g., the areas of the 2 loops in a figure-8 polygon will partially
    *   cancel.  If the object is a polygon (and not a polyline), the perimeter
    *   includes the length of a final edge connecting the current point to the
    *   initial point.  If the object is a polyline, then area is nan.  More

@@ -31,7 +31,7 @@ namespace Projections
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.m_majorRadiusTextBox = new System.Windows.Forms.TextBox();
+            this.m_equatorialRadiusTextBox = new System.Windows.Forms.TextBox();
             this.m_flatteningTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.m_setButton = new System.Windows.Forms.Button();
@@ -76,7 +76,7 @@ namespace Projections
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(109, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Major Radius (meters)";
+            this.label1.Text = "Equatorial Radius (meters)";
             //
             // label2
             //
@@ -87,12 +87,12 @@ namespace Projections
             this.label2.TabIndex = 1;
             this.label2.Text = "Flattening";
             //
-            // m_majorRadiusTextBox
+            // m_equatorialRadiusTextBox
             //
-            this.m_majorRadiusTextBox.Location = new System.Drawing.Point(129, 21);
-            this.m_majorRadiusTextBox.Name = "m_majorRadiusTextBox";
-            this.m_majorRadiusTextBox.Size = new System.Drawing.Size(125, 20);
-            this.m_majorRadiusTextBox.TabIndex = 2;
+            this.m_equatorialRadiusTextBox.Location = new System.Drawing.Point(129, 21);
+            this.m_equatorialRadiusTextBox.Name = "m_equatorialRadiusTextBox";
+            this.m_equatorialRadiusTextBox.Size = new System.Drawing.Size(125, 20);
+            this.m_equatorialRadiusTextBox.TabIndex = 2;
             //
             // m_flatteningTextBox
             //
@@ -106,7 +106,7 @@ namespace Projections
             this.groupBox1.Controls.Add(this.m_setButton);
             this.groupBox1.Controls.Add(this.m_flatteningTextBox);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.m_majorRadiusTextBox);
+            this.groupBox1.Controls.Add(this.m_equatorialRadiusTextBox);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(4, 4);
             this.groupBox1.Name = "groupBox1";
@@ -445,7 +445,7 @@ namespace Projections
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox m_majorRadiusTextBox;
+        private System.Windows.Forms.TextBox m_equatorialRadiusTextBox;
         private System.Windows.Forms.TextBox m_flatteningTextBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button m_setButton;
