@@ -13,11 +13,13 @@ function [A, P, N] = geodarea(lats, lons, ellipsoid)
 %   polygons can be specified by separating the vertices by NaNs in the
 %   vectors.  Thus a series of quadrilaterals can be specified as two 5 x K
 %   arrays where the 5th row is NaN.  The output, A, is in meters^2.
-%   Counter-clockwise traversal counts as a positive area.  Only simple
-%   polygons (which do not intersect themselves) are supported.  Also
-%   returned are the perimeters of the polygons in P (meters) and the
-%   numbers of vertices in N.  geoddoc gives the restrictions on the
-%   allowed ranges of the arguments.
+%   Counter-clockwise traversal counts as a positive area.  Arbitrarily
+%   complex polygons are allowed.  In the case of self-intersecting
+%   polygons the area is accumulated "algebraically", i.e., the areas of
+%   the 2 loops in a figure-8 polygon will partially cancel.  Also returned
+%   are the perimeters of the polygons in P (meters) and the numbers of
+%   vertices in N.  geoddoc gives the restrictions on the allowed ranges of
+%   the arguments.
 %
 %   GEODAREA loosely duplicates the functionality of the areaint function
 %   in the MATLAB mapping toolbox.  The major difference is that the

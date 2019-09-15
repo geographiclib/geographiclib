@@ -19,10 +19,12 @@ function [area, perimeter] = polygonarea(latlong, a, f)
 %   f = flattening (0 means a sphere)
 %   If a and f are omitted, the WGS84 values are used.
 %
-%   Only simple polygons (which do not intersect themselves) are supported.
-%   There is no need to "close" the polygon.  Counter-clockwise traversal
-%   counts as a positive area.  A polygon may encircle one or both poles.
-%   The total area of the WGS84 ellipsoid is given by
+%   Arbitrarily complex polygons are allowed.  In the case of
+%   self-intersecting polygons the area is accumulated "algebraically",
+%   i.e., the areas of the 2 loops in a figure-8 polygon will partially
+%   cancel.  There is no need to "close" the polygon.  Counter-clockwise
+%   traversal counts as a positive area.  A polygon may encircle one or
+%   both poles.  The total area of the WGS84 ellipsoid is given by
 %     8 * polygonarea([ 0 0; 0 90; 90 0 ])
 %
 %   See also GEODAREA.

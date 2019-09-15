@@ -69,7 +69,7 @@ package net.sf.geographiclib;
  *   counter-clockwise, of the geodesic quadrilateral with corners
  *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
  *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
- *   simple geodesic polygon.
+ *   geodesic polygon.
  * </ul>
  * <p>
  * The quantities <i>m12</i>, <i>M12</i>, <i>M21</i> which all specify the

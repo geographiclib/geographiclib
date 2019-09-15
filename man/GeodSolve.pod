@@ -357,7 +357,7 @@ Route from JFK Airport to Singapore Changi Airport:
 
 Equally spaced waypoints on the route:
 
-   for ((i = 0; i <= 10; ++i)); do echo ${i}e-1; done |
+   for ((i = 0; i <= 10; ++i)); do echo ${i}/10; done |
    GeodSolve -I 40:38:23N 073:46:44W 01:21:33N 103:59:22E -F -: -p 0
 
    40:38:23.0N 073:46:44.0W 003:18:29.9

@@ -32,6 +32,10 @@ namespace GeographicLib {
    *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
    *
+   * Arbitrarily complex polygons are allowed.  In the case self-intersecting
+   * of polygons the area is accumulated "algebraically", i.e., the areas of
+   * the 2 loops in a figure-8 polygon will partially cancel.
+   *
    * This class lets you add vertices and edges one at a time to the polygon.
    * The sequence must start with a vertex and thereafter vertices and edges
    * can be added in any order.  Any vertex after the first creates a new edge

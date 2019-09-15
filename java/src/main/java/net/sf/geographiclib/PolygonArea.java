@@ -22,6 +22,10 @@ package net.sf.geographiclib;
  *   addenda</a>).
  * </ul>
  * <p>
+ * Arbitrarily complex polygons are allowed.  In the case self-intersecting of
+ * polygons the area is accumulated "algebraically", i.e., the areas of the 2
+ * loops in a figure-8 polygon will partially cancel.
+ * <p>
  * This class lets you add vertices one at a time to the polygon.  The area
  * and perimeter are accumulated at two times the standard floating point
  * precision to guard against the loss of accuracy with many-sided polygons.

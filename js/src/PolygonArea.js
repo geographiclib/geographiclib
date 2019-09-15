@@ -203,7 +203,10 @@
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
-   * @description If the object is a polygon (and not a polygon), the perimeter
+   * @description Arbitrarily complex polygons are allowed.  In the case of
+   *   self-intersecting polygons the area is accumulated "algebraically",
+   *   i.e., the areas of the 2 loops in a figure-8 polygon will partially
+   *   cancel.  If the object is a polygon (and not a polyline), the perimeter
    *   includes the length of a final edge connecting the current point to the
    *   initial point.  If the object is a polyline, then area is nan.  More
    *   points can be added to the polygon after this call.
@@ -240,6 +243,7 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
+   *   area for the rest of the earth.
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
@@ -285,6 +289,7 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
+   *   area for the rest of the earth.
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).

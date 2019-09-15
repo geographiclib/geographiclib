@@ -153,8 +153,10 @@ namespace GeographicLib {
      * @param[out] lon longitude of point (degrees).
      * @param[out] h height of point above the ellipsoid (meters).
      *
-     * The value of \e lon returned is in the range [&minus;180&deg;,
-     * 180&deg;].
+     * In general, there are multiple solutions and the result which minimizes
+     * |<i>h</i> |is returned, i.e., (<i>lat</i>, <i>lon</i>) corresponds to
+     * the closest point on the ellipsoid.  The value of \e lon returned is in
+     * the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(real x, real y, real z, real& lat, real& lon, real& h)
       const {

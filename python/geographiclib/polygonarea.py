@@ -215,7 +215,12 @@ class PolygonArea(object):
       the area for the rest of the earth
     :return: a tuple of number, perimeter (meters), area (meters^2)
 
-    If the object is a polygon (and not a polygon), the perimeter
+    Arbitrarily complex polygons are allowed.  In the case of
+    self-intersecting polygons the area is accumulated "algebraically",
+    i.e., the areas of the 2 loops in a figure-8 polygon will partially
+    cancel.
+
+    If the object is a polygon (and not a polyline), the perimeter
     includes the length of a final edge connecting the current point to
     the initial point.  If the object is a polyline, then area is nan.
 

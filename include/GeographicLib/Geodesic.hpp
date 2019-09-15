@@ -87,7 +87,7 @@ namespace GeographicLib {
    *   counter-clockwise, of the geodesic quadrilateral with corners
    *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
    *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
-   *   simple geodesic polygon.
+   *   geodesic polygon.
    *
    * Overloaded versions of Geodesic::Direct, Geodesic::ArcDirect, and
    * Geodesic::Inverse allow these quantities to be returned.  In addition

@@ -181,15 +181,16 @@ namespace GeographicLib {
      * @param[out] lon longitude of point (degrees).
      * @param[out] h height of point above the ellipsoid (meters).
      *
-     * In general there are multiple solutions and the result which maximizes
-     * \e h is returned.  If there are still multiple solutions with different
-     * latitudes (applies only if \e Z = 0), then the solution with \e lat > 0
-     * is returned.  If there are still multiple solutions with different
-     * longitudes (applies only if \e X = \e Y = 0) then \e lon = 0 is
-     * returned.  The value of \e h returned satisfies \e h &ge; &minus; \e a
-     * (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus; <i>e</i><sup>2</sup>
-     * sin<sup>2</sup>\e lat).  The value of \e lon returned is in the range
-     * [&minus;180&deg;, 180&deg;].
+     * In general, there are multiple solutions and the result which minimizes
+     * |<i>h</i> |is returned, i.e., (<i>lat</i>, <i>lon</i>) corresponds to
+     * the closest point on the ellipsoid.  If there are still multiple
+     * solutions with different latitudes (applies only if \e Z = 0), then the
+     * solution with \e lat > 0 is returned.  If there are still multiple
+     * solutions with different longitudes (applies only if \e X = \e Y = 0)
+     * then \e lon = 0 is returned.  The value of \e h returned satisfies \e h
+     * &ge; &minus; \e a (1 &minus; <i>e</i><sup>2</sup>) / sqrt(1 &minus;
+     * <i>e</i><sup>2</sup> sin<sup>2</sup>\e lat).  The value of \e lon
+     * returned is in the range [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     void Reverse(real X, real Y, real Z, real& lat, real& lon, real& h)
       const {

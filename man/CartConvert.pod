@@ -37,9 +37,12 @@ I<x>, I<y>, I<z> (meters) are printed on standard output.
 
 =item B<-r>
 
-perform the reverse projection.  I<x>, I<y>, I<z> are given on standard
-input and each line of standard output gives I<latitude>, I<longitude>,
-I<height>.
+perform the reverse projection.  I<x>, I<y>, I<z> are given on
+standard input and each line of standard output gives I<latitude>,
+I<longitude>, I<height>.  In general there are multiple solutions and
+the result which minimizes the absolute value of I<height> is
+returned, i.e., (I<latitude>, I<longitude>) corresponds to the closest
+point on the ellipsoid.
 
 =item B<-l> I<lat0> I<lon0> I<h0>
 
