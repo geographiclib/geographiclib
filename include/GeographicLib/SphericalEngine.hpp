@@ -257,10 +257,10 @@ namespace GeographicLib {
        * @param[in,out] M The maximum order of the coefficients.
        * @param[out] C The vector of cosine coefficients.
        * @param[out] S The vector of sine coefficients.
-       * @param[in] truncate; if false (the default) then \e N and \e M are
-       *   determined by the values in the binary stream; otherwise, use the
-       *   input values of \e N and \e M are used to truncate the coefficients
-       *   read from the stream at the given degree and order.
+       * @param[in] truncate if false (the default) then \e N and \e M are
+       *   determined by the values in the binary stream; otherwise, the input
+       *   values of \e N and \e M are used to truncate the coefficients read
+       *   from the stream at the given degree and order.
        * @exception GeographicErr if \e N and \e M do not satisfy \e N &ge;
        *   \e M &ge; &minus;1.
        * @exception GeographicErr if there's an error reading the data.

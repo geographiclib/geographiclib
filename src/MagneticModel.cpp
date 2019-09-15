@@ -49,6 +49,8 @@ namespace GeographicLib {
     , _hmax(Math::NaN())
     , _Nmodels(1)
     , _Nconstants(0)
+    , _nmx(-1)
+    , _mmx(-1)
     , _norm(SphericalHarmonic::SCHMIDT)
     , _earth(earth)
   {
@@ -83,6 +85,8 @@ namespace GeographicLib {
         if (!(M < 0 || _G[i][0] == 0))
           throw GeographicErr("A degree 0 term is not permitted");
         _harm.push_back(SphericalHarmonic(_G[i], _H[i], N, N, M, _a, _norm));
+        _nmx = max(_nmx, _harm.back().Coefficients().nmx());
+        _mmx = max(_mmx, _harm.back().Coefficients().mmx());
       }
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);

@@ -7650,6 +7650,7 @@ git repository for GeographicLib</a>.
     that they can use either Geodesic and GeodesicExact.  Use
     typedefs so that Geodesic::Line points to GeodesicLine.
   - TODO: Split DMS stuff from main JS package.
+  - TODO: Add C++ tests not dependent on utility programs
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
@@ -7673,15 +7674,20 @@ git repository for GeographicLib</a>.
        division by zero" messages from Octave.
      - In python implementation, work around problems by sin(inf) and
        fmod(inf) raising exceptions.
+     - Geoid class, fix the use of streamoff.
    - PolygonArea: fix the range of the area more aggressively; done for
      C++, C, Fortran, MATLAB, Java, JS, Python.  TODO: update
      documentation to remove the restriction to simple polygons.
    - Changes in gravity and magnetic model handling
      - SphericalEngine::coeff::readcoeffs takes new optional argument
        \e truncate.
-     - GravityModel::GravityModel and MagneticModel::MagneticModel
-       constructors allows maximum degree and order to be specified.
-       TODO: provide methods to return maximum degree and order.
+     - The constructors for GravityModel and MagneticModel allow the
+       maximum degree and order to be specified.  The array of
+       coefficients will then be truncated if necessary.
+     - GravityModel::Degree(), GravityModel::Order(),
+       MagneticModel::Degree(), MagneticModel::Order() return the
+       maximum degree and order of all the components of a GravityModel
+       or MagneticModel.
      - <a href="Gravity.1.html">Gravity</a> and
        <a href="MagneticField.1.html">MagneticField</a> utilities
        accept -N and -M options to to allow the maximum degree and order
@@ -7693,14 +7699,25 @@ git repository for GeographicLib</a>.
        2008 for a long time).
      - Minimum boost version = 1.64 needed for GEOGRAPHICLIB_PRECISION =
        4.
+     - Java = 1.6 allows removal of epsilon, min, hypot, log1p,
+       copysign, cbrt from GeoMath.
    - CMake updates:
+     - Fine tune Visual Studio compatibility check in
+       find_package(GeographicLib); this allows GeographicLib compiled
+       with Visual Studio 14 2015 to be used with a project compiled
+       with Visual Studio 15 2017 and 16 2019.
      - suppress warnings with dotnet build.
      - Change CMake target names and add an interface library (thanks to
        Matthew Woehlke).
      - Remove pre-3.1.0 cruft and update the documentation to remove the
        need to call include_dirctories.
-     - Fix installation path for binary installer to the default.
      - Add _d suffix to example and test programs.
+     - Changer installation path for binary installer to the Windows
+       default.
+     - Add support for Intel compiler (for C++, C, Fortran).  This
+       entails supplying the <code>-fp-model precise</code> flag to
+       prevent the compiler from incorrectly simplying <code>(a + b) +
+       c</code> and <code>0.0 + x</code>.
    - Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This
      is now the default magnetic model for
      <a href="MagneticField.1.html">MagneticField</a> (replacing
@@ -7710,8 +7727,22 @@ git repository for GeographicLib</a>.
      to load new models (not yet in the set defined by "all").  This is in
      addition to its original role of allowing you to overwrite
      existing models.
-   - Java implementation: require Java 1.6 or later and so remove
-     epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
+   - Changes in math function support:
+     - Move some of the functionality from Math.hpp to Math.cpp to make
+       compilation of package which depend on GeographicLib less
+       sensitive to the current compiler environment.
+     - Add Math::remainder, Math::remquo, Math::round, and Math::lround.
+       Also add implementations of remainder, remquo to C
+       implementation.
+     - Math::cbrt, Math::atanh, and Math::asinh now preserve the sign of
+       &minus;0.  (Also: C, Java, JavaScript, Python, MATLAB.  Not
+       necessary: Fortran because sign is a built-in function.)
+     - JavaScript: fall back to Math.hypot, Math.cbrt, Math.log1p,
+       Math.atanh if they are available.
+   - Improve code coverage of geodesic algorithms (C++, C, Java, JS,
+     Python, MATLAB, Fortran).
+   - Old deprecated NormalGravity::NormalGravity constructor removed.
+     Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
      - TODO: document development environment for Windows: cmake + VS +
@@ -7720,55 +7751,19 @@ git repository for GeographicLib</a>.
      - TODO: document treatment of poles in RhumbSolve{,.cgi}.
      - TODO: in example programs, document when additional data files
        are needed.
-   - Improve code coverage of geodesic algorithms (C++, C, Java, JS,
-     Python, MATLAB, Fortran).
    - TODO: cross ref aux latitude section in rhumb line page.
    - TODO: update information on https://github.com/ngageoint/opensphere-asm
-   - Move some of the functionality from Math.hpp to Math.cpp to make
-     compilation of package which depend on GeographicLib less sensitive
-     to the current compiler environment.
-   - Turn off optimizations for the Intel compiler which causes
-     incorrect code to be generated.  Tested only for C and C++ on
-     Linux.  The changes should also work for Fortran and Windows.
-     DONE: add build to
-     test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...).
-     Add check of sign +0.0 in GeodSolve73 to all languages.
-     Cf. https://github.com/OSGeo/proj.4/issues/826
-   - C fixes (also make changes to C++ library)
-     - check nan->int conversions. TODO: repeat for other languages.
-       Maybe use llong(floor(x))
-       Cf. https://github.com/OSGeo/proj.4/issues/843
-     - TODO: Michael Hagerty optimization issue in sincosdx
-       https://github.com/OSGeo/proj.4/issues/831
-     - added parens from
-       https://github.com/OSGeo/proj.4/pull/860/files#diff-2
-     - initialize various variables to please CLang Static Analyzer
-       https://github.com/OSGeo/proj.4/commit/0692fc1
    - TODO: Reference
      https://github.com/megaserg/geographiclib-cython-bindings in
      wrappers/python also on main page?
    - TODO: Reference man page in source files for tools.
    - TODO: When parsing DMS ignore non-breaking spaces u+00a0 (regular),
      u+202f (narrow), u+2007 (figure).
-   - Math::cbrt, Math::atanh, and Math::asinh now preserve the sign of
-     &minus;0.  (Also: C, Java, JavaScript, Python, MATLAB.  Not
-     necessary: Fortran because sign is a built-in function.)
-   - JS: use polyfills for math functions.
-   - Add Math::remainder, Math::remquo, Math::round, and Math::lround.
-     Also add remainder, remquo to C.  TODO: others?.
-   - TODO: add test to check remquo(3419.0, 360.0, &n) != 539?
    - TODO: check logic in C interface (plus others?) on defaults for
      caps in geod_gendirectline.  Also improve description of "point 3".
-   - Old deprecated NormalGravity::NormalGravity constructor removed.
-     Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
-   - Geoid class, std::ios::streamoff -> std::streamoff.
    - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in
      NETGeographicLib doc.
    - GeodSolve: fractional distances can be entered as fractions.
-   - cmake: fine tune Visual Studio compatibility check in
-     find_package(GeographicLib); this allows GeographicLib compiled
-     with Visual Studio 14 2015 to be used with a project compiled with
-     Visual Studio 15 2017 and 16 2019.  TODO: update documentation.
    - TODO: Geocentric::Reverse update documentation to describe
      different solutions.
    - TODO: add Ellipsoid class links auxlat page.

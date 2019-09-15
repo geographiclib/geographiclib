@@ -87,6 +87,7 @@ namespace GeographicLib {
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
     real _amodel, _GMmodel, _zeta0, _corrmult;
+    int _nmx, _mmx;
     SphericalHarmonic::normalization _norm;
     NormalGravity _earth;
     std::vector<real> _Cx, _Sx, _CC, _CS, _zonal;
@@ -185,6 +186,8 @@ namespace GeographicLib {
      * filename ends in ".egm.cof").
      *
      * If \e Nmax &ge; 0 and \e Mmax < 0, then \e Mmax is set to \e Nmax.
+     * After the model is loaded, the maximum degree and order of the model can
+     * be found by the Degree() and Order() methods.
      **********************************************************************/
     explicit GravityModel(const std::string& name,
                           const std::string& path = "",
@@ -494,6 +497,16 @@ namespace GeographicLib {
      * @return \e f the flattening of the ellipsoid.
      **********************************************************************/
     Math::real Flattening() const { return _earth.Flattening(); }
+
+    /**
+     * @return \e Nmax the maximum degree of the components of the model.
+     **********************************************************************/
+    int Degree() const { return _nmx; }
+
+    /**
+     * @return \e Mmax the maximum order of the components of the model.
+     **********************************************************************/
+    int Order() const { return _mmx; }
     ///@}
 
     /**

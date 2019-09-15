@@ -45,6 +45,8 @@ namespace GeographicLib {
     , _GMmodel(Math::NaN())
     , _zeta0(0)
     , _corrmult(1)
+    , _nmx(-1)
+    , _mmx(-1)
     , _norm(SphericalHarmonic::FULL)
   {
     if (_dir.empty())
@@ -91,6 +93,9 @@ namespace GeographicLib {
         throw GeographicErr("Extra data in " + coeff);
     }
     int nmx = _gravitational.Coefficients().nmx();
+    _nmx = max(nmx, _correction.Coefficients().nmx());
+    _mmx = max(_gravitational.Coefficients().mmx(),
+               _correction.Coefficients().mmx());
     // Adjust the normalization of the normal potential to match the model.
     real mult = _earth._GM / _GMmodel;
     real amult = Math::sq(_earth._a / _amodel);

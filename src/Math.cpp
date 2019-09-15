@@ -251,7 +251,10 @@ namespace GeographicLib {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
     T r; int q;
-    r = remquo(x, T(90), &q); // now abs(r) <= 45
+    // N.B. the implementation of remquo in glibc pre 2.22 were buggy.  See
+    // https://sourceware.org/bugzilla/show_bug.cgi?id=17569
+    // This was fixed in version 2.22 on 2015-08-05
+    r = remquo(x, T(90), &q);   // now abs(r) <= 45
     r *= degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);

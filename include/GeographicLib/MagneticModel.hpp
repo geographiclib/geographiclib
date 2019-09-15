@@ -75,7 +75,7 @@ namespace GeographicLib {
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
     real _t0, _dt0, _tmin, _tmax, _a, _hmin, _hmax;
-    int _Nmodels, _Nconstants;
+    int _Nmodels, _Nconstants, _nmx, _mmx;
     SphericalHarmonic::normalization _norm;
     Geocentric _earth;
     std::vector< std::vector<real> > _G;
@@ -124,11 +124,13 @@ namespace GeographicLib {
      * coordinates used in the spherical harmonic sum.
      *
      * If \e Nmax &ge; 0 and \e Mmax < 0, then \e Mmax is set to \e Nmax.
+     * After the model is loaded, the maximum degree and order of the model can
+     * be found by the Degree() and Order() methods.
      **********************************************************************/
     explicit MagneticModel(const std::string& name,
                            const std::string& path = "",
                            const Geocentric& earth = Geocentric::WGS84(),
-                          int Nmax = -1, int Mmax = -1);
+                           int Nmax = -1, int Mmax = -1);
     ///@}
 
     /** \name Compute the magnetic field
@@ -330,6 +332,16 @@ namespace GeographicLib {
      *   inherited from the Geocentric object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _earth.Flattening(); }
+
+    /**
+     * @return \e Nmax the maximum degree of the components of the model.
+     **********************************************************************/
+    int Degree() const { return _nmx; }
+
+    /**
+     * @return \e Mmax the maximum order of the components of the model.
+     **********************************************************************/
+    int Order() const { return _mmx; }
     ///@}
 
     /**
