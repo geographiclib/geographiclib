@@ -7648,7 +7648,7 @@ git repository for GeographicLib</a>.
    - TODO: template versions of Gnomonic and AzimuthalEquidistant so
      that they can use either Geodesic and GeodesicExact.  Use
      typedefs so that Geodesic::Line points to GeodesicLine.
-   - TODO: Split DMS stuff from main JS package.
+   - TODO: Split DMS stuff from main JavaScript package.
    - TODO: Add C++ tests not dependent on utility programs
 \endif
 
@@ -7676,10 +7676,11 @@ git repository for GeographicLib</a>.
      - Geoid class, fix the use of streamoff.
    - The PolygonArea class, the
      <a href="Planimeter.1.html">Planimeter</a> utility, and their
-     equivalents in C, Fortran, MATLAB, Java, JS, Python can now handle
-     arbitrarily complex polygons.  In the case of self-intersecting
-     polygons the area is accumulated "algebraically", i.e., the areas
-     of the 2 loops in a figure-8 polygon will partially cancel.
+     equivalents in C, Fortran, MATLAB, Java, JavaScript, Python can now
+     handle arbitrarily complex polygons.  In the case of
+     self-intersecting polygons the area is accumulated "algebraically",
+     i.e., the areas of the 2 loops in a figure-8 polygon will partially
+     cancel.
    - Changes in gravity and magnetic model handling
      - SphericalEngine::coeff::readcoeffs takes new optional argument
        \e truncate.
@@ -7747,8 +7748,10 @@ git repository for GeographicLib</a>.
        necessary: Fortran because sign is a built-in function.)
      - JavaScript: fall back to Math.hypot, Math.cbrt, Math.log1p,
        Math.atanh if they are available.
-   - Improve code coverage of geodesic algorithms (C++, C, Java, JS,
-     Python, MATLAB, Fortran).
+   - When parsing DMS strings ignore various non-breaking spaces (C++
+     and JavaScript).
+   - Improve code coverage in the tests of geodesic algorithms (C++, C,
+     Java, JavaScript, Python, MATLAB, Fortran).
    - Old deprecated NormalGravity::NormalGravity constructor removed.
      Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
    - Additions to the documentation:
@@ -7766,8 +7769,6 @@ git repository for GeographicLib</a>.
      https://github.com/megaserg/geographiclib-cython-bindings in
      wrappers/python also on main page?
    - TODO: Reference man page in source files for tools.
-   - TODO: When parsing DMS ignore non-breaking spaces u+00a0 (regular),
-     u+202f (narrow), u+2007 (figure).
    - TODO: check logic in C interface (plus others?) on defaults for
      caps in geod_gendirectline.  Also improve description of "point 3".
    - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in

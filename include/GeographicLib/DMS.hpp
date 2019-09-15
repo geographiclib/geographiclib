@@ -90,14 +90,15 @@ namespace GeographicLib {
 
   private:
     typedef Math::real real;
-    // Replace all occurrences of pat by c
+    // Replace all occurrences of pat by c.  If c is NULL remove pat.
     static void replace(std::string& s, const std::string& pat, char c) {
       std::string::size_type p = 0;
+      int count = c ? 1 : 0;
       while (true) {
         p = s.find(pat, p);
         if (p == std::string::npos)
           break;
-        s.replace(p, pat.length(), 1, c);
+        s.replace(p, pat.length(), count, c);
       }
     }
     static const char* const hemispheres_;
