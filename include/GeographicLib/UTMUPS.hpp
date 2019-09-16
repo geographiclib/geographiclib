@@ -370,7 +370,7 @@ namespace GeographicLib {
      * different projections.  DecodeEPSG decodes those referring to UTM or UPS
      * projections for the WGS84 ellipsoid.  If the code does not refer to one
      * of these projections, \e zone is set to UTMUPS::INVALID.  See
-     * http://spatialreference.org/ref/epsg/
+     * https://www.spatialreference.org/ref/epsg/
      **********************************************************************/
     static void DecodeEPSG(int epsg, int& zone, bool& northp);
 

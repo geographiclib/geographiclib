@@ -39,7 +39,7 @@ the script for displaying
 
 This library is <i>not</i> a general purpose projection library nor does
 it perform datum conversions; instead use
-<a href="http://proj4.org">proj.4</a>.  On the other
+<a href="https://proj.org">PROJ</a>.  On the other
 hand, it does provide the core functionality offered by
 <a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>.
 
@@ -620,7 +620,7 @@ Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
 GeographicLib.  For Windows, this requires in the installation of
-<a href="http://nsis.sourceforge.net">NSIS</a>.  On Windows, you should
+<a href="https://nsis.sourceforge.io">NSIS</a>.  On Windows, you should
 configure GeographicLib with <code>PACKAGE_DEBUG_LIBS</code>=ON, build both
 Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
@@ -1229,8 +1229,8 @@ Here is a summary:
 - C (geodesic routines):
   <a href="C/index.html">
     documentation</a>, also included with recent versions of
-  <a href="http://proj4.org">
-    proj.4</a>;
+  <a href="https://proj.org">
+    PROJ</a>;
 - Fortran (geodesic routines):
   <a href="Fortran/index.html">
     documentation</a>;
@@ -1252,7 +1252,7 @@ Here is a summary:
 - MATLAB/Octave (geodesic and some other routines):
   <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
     MATLAB Central package</a>,
-  <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+  <a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
     documentation</a>;
 - C# (.NET wrapper for C++ library):
   <a href="NET/index.html">
@@ -1279,9 +1279,9 @@ direct and inverse geodesic problems and to compute polygonal areas are
 provided.
 
 The C library is also included as part of
-<a href="http://proj4.org">proj.4</a> starting with
+<a href="https://proj.org">PROJ</a> starting with
 version 4.9.0, where it is used as the computational backend for
-<a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
+<a href="https://proj.org/apps/geod.html">geod(1)</a>.
 
 For documentation, see
  - <a href="C/index.html">C library for geodesics</a>,
@@ -2473,7 +2473,7 @@ point.  There are two ways to speed up this computation:
    point to about 92&nbsp;&mu;s (a reduction by a factor of over 800).
  - Compute the values on several circles of latitude in parallel.  One
    of the simplest ways of doing this is with
-   <a href="http://openmp.org"> OpenMP</a>; on an 8-processor system,
+   <a href="https://www.openmp.org"> OpenMP</a>; on an 8-processor system,
    this can speed up the computation by another factor of 8.
  .
 Both of these techniques are illustrated by the following code,
@@ -3783,7 +3783,7 @@ and
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, \f$D(\phi, k)\f$, and
 \f$\Pi(\phi, \alpha^2, k)\f$, are incomplete elliptic integrals (see
-http://dlmf.nist.gov/19.2.ii).  The formula for \f$ s \f$ and the
+https://dlmf.nist.gov/19.2.ii).  The formula for \f$ s \f$ and the
 first expression for \f$ \lambda \f$ are given by Legendre (1811) and
 are the most common representation of geodesics in terms of elliptic
 integrals.  The second (equivalent) expression for \f$ \lambda \f$,
@@ -3791,7 +3791,7 @@ which was given by Cayley (1870), is useful in that the elliptic
 integral is relegated to a small correction term.  This form allows
 the longitude to be computed more accurately and is used in
 GeographicLib.  (The equivalence of the two expressions for \f$
-\lambda \f$ follows from http://dlmf.nist.gov/19.7.E8.)
+\lambda \f$ follows from https://dlmf.nist.gov/19.7.E8.)
 
 Nominally, GeodesicExact and GeodesicLineExact will give "exact" results
 for any value of the flattening.  However, the geographic latitude is a
@@ -3923,17 +3923,17 @@ with the quarter meridian distance given by
   M  = aE(e) = bE(ie') = (b^2/a)\Pi(e^2,e) = (a^2/b)\Pi(-e'^2,ie').
 \f]
 (Here \f$ E, F, \Pi \f$ are elliptic integrals defined in
-http://dlmf.nist.gov/19.2.ii.  \f$ \cal E, \mathrm{am}, \mathrm{sn},
+https://dlmf.nist.gov/19.2.ii.  \f$ \cal E, \mathrm{am}, \mathrm{sn},
 \mathrm{cn}, \mathrm{sd}, \mathrm{cd}, \mathrm{dn}, \mathrm{nd} \f$ are
-Jacobi elliptic functions defined in http://dlmf.nist.gov/22.2 and
-http://dlmf.nist.gov/22.16.)
+Jacobi elliptic functions defined in https://dlmf.nist.gov/22.2 and
+https://dlmf.nist.gov/22.16.)
 
 There are several considerations in the choice of independent variable
 for evaluate the meridian distance
 - The use of an imaginary modulus (namely, \f$ ie' \f$, above) is of no
   practical concern.  The integrals are real in this case and modern
   methods (GeographicLib uses the method given in
-  http://dlmf.nist.gov/19.36.i) for computing integrals handles this
+  https://dlmf.nist.gov/19.36.i) for computing integrals handles this
   case using just real arithmetic.
 - If the "natural" origin is the equator, choose one of \f$ \phi, \beta,
   u, v \f$ (this might be preferred in geodesy).  If it's the pole,
@@ -3969,7 +3969,7 @@ circle solution using Bessel's auxiliary sphere.  References:
  - B. R. Bowring, The Direct and Inverse Problems for Short Geodesic
    Lines on the Ellipsoid, Surveying and Mapping 41(2), 135--141 (1981).
  - R. H. Rapp,
-   <a href="http://hdl.handle.net/1811/24333">
+   <a href="https://hdl.handle.net/1811/24333">
    Geometric Geodesy, Part I</a>, Ohio State Univ. (1991), Sec. 6.5.
 
 Bowring considers the conformal mapping of the ellipsoid to a sphere of
@@ -4743,7 +4743,7 @@ geodesic and \f$K\f$ is the Gaussian curvature of the surface.  If the
 reference geodesic is closed, then this is a linear homogeneous
 differential equation with periodic coefficients.  In fact it's a
 special case of Hill's equation which can be treated using Floquet
-theory, see <a href="http://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
+theory, see <a href="https://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
 Using the notation of &sect;3 of
 <a href="https://doi.org/10.1007/s00190-012-0578-z"> Algorithms for
 geodesics</a>, the stability is determined by computing the reduced
@@ -4961,7 +4961,7 @@ e_c = \frac{\sqrt{b^2-c^2}}b, \\
 \f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
 \omega = \frac12\pi\f$ (the angle a normal at the umbilic point makes
 with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
-elliptic integral of the third kind, http://dlmf.nist.gov/19.2.E7.  This
+elliptic integral of the third kind, https://dlmf.nist.gov/19.2.E7.  This
 allows the projection to be numerically computed using
 EllipticFunction::Pi(real phi) const.
 
@@ -4976,7 +4976,7 @@ Nyrtsov, et al.,
 also expressed the projection in terms of elliptic integrals.
 However, their expressions don't allow the limits of ellipsoids of
 revolution to be readily recovered.  The relations
-http://dlmf.nist.gov/19.7.E5 can be used to put their results in the
+https://dlmf.nist.gov/19.7.E5 can be used to put their results in the
 form given here.
 
 \section jacobi-properties Properties of the projection
@@ -5012,7 +5012,7 @@ y\bigl(\tfrac12\pi\bigr) &=(1-e_c^2)\,\Pi(e_c^2, \sin\nu),
 \end{align}
 \f]
 where \f$\Pi(\alpha^2,k)\f$ is the complete elliptic integral of the
-third kind, http://dlmf.nist.gov/19.2.E8.
+third kind, https://dlmf.nist.gov/19.2.E8.
 
 In particular, if we substitute values appropriate for the earth,
 \f[
@@ -5059,7 +5059,7 @@ is
 Thus \f$\beta\f$ (resp. \f$\beta'\f$) is the parametric
 (resp. geographic) latitude and \f$\omega=\omega'\f$ is the longitude;
 the quantity \f$e_c\f$ is the eccentricity of the ellipsoid.
-Using http://dlmf.nist.gov/19.6.E12 and http://dlmf.nist.gov/19.2.E19
+Using https://dlmf.nist.gov/19.6.E12 and https://dlmf.nist.gov/19.2.E19
 the projection reduces to the normal Mercator projection for an oblate
 ellipsoid,
 \f[
@@ -5082,8 +5082,8 @@ is
 \f]
 Thus \f$\omega\f$ (resp. \f$\omega'\f$) now plays the role of the
 parametric (resp. geographic) latitude and while \f$\beta=\beta'\f$ is
-the longitude.  Using http://dlmf.nist.gov/19.6.E12
-http://dlmf.nist.gov/19.2.E19 and http://dlmf.nist.gov/19.2.E18 the
+the longitude.  Using https://dlmf.nist.gov/19.6.E12
+https://dlmf.nist.gov/19.2.E19 and https://dlmf.nist.gov/19.2.E18 the
 projection reduces to similar expressions with the roles of \f$\beta\f$
 and \f$\omega\f$ switched,
 \f[
@@ -5105,8 +5105,8 @@ non-uniform limit depending on the parameter \f$\nu\f$,
   Z &= b \sin\beta \sqrt{1 - \cos^2\nu\sin^2\omega}.
 \end{align}
 \f]
-Using http://dlmf.nist.gov/19.6.E13 the projection can be put in terms
-of the elliptic integral of the first kind, http://dlmf.nist.gov/19.2.E4
+Using https://dlmf.nist.gov/19.6.E13 the projection can be put in terms
+of the elliptic integral of the first kind, https://dlmf.nist.gov/19.2.E4
 \f[
 \begin{align}
 x &= F(\omega, \cos\nu), \\
@@ -5117,7 +5117,7 @@ k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}},
 Obtaining the limit of a sphere via an oblate (resp. prolate) ellipsoid
 corresponds to setting \f$\nu = \frac12\pi\f$ (resp. \f$\nu
 =0\f$).  In these limits, the elliptic integral reduces to elementary
-functions http://dlmf.nist.gov/19.6.E7 and http://dlmf.nist.gov/19.6.E8
+functions https://dlmf.nist.gov/19.6.E7 and https://dlmf.nist.gov/19.6.E8
 \f[
 \begin{align}
 F(\phi, 0) &= \phi, \\
@@ -5141,7 +5141,7 @@ name is usually associated with the particular choice,
 However, by varying \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be
 mapped into a rectangle with any aspect ratio, \f$K(\cos\nu) :
 K(\sin\nu)\f$, where \f$K(k)\f$ is the complete elliptic integral of
-the first find, http://dlmf.nist.gov/19.2.E8.
+the first find, https://dlmf.nist.gov/19.2.E8.
 
 \section jacobi-sphere Conformal mapping of an ellipsoid to a sphere
 
@@ -5419,9 +5419,9 @@ In terms of \f$\beta\f$, the rectifying latitude  is given by
 \f]
 where \f$e'=e/\sqrt{1-e^2}\f$ is the second eccentricity and \f$E(k)\f$
 and \f$E(\phi,k)\f$ are the complete and incomplete elliptic integrals
-of the second kind; see http://dlmf.nist.gov/19.2.ii.  These can be
+of the second kind; see https://dlmf.nist.gov/19.2.ii.  These can be
 evaluated accurately for arbitrary flattening using the method given in
-http://dlmf.nist.gov/19.36.i.  To find \f$\beta\f$ in terms of
+https://dlmf.nist.gov/19.36.i.  To find \f$\beta\f$ in terms of
 \f$\mu\f$, Newton's method can be used (noting that \f$dE(\phi,k)/d\phi
 = \sqrt{1 - k^2\sin^2\phi}\f$); for a starting guess use \f$\beta_0 =
 \mu\f$ (or use the first terms in the reverted series; see below).
@@ -5643,7 +5643,7 @@ limits the applicability of the method to \f$\left|f\right|\lt 0.01\f$.
 If we want to extend the method to arbitrary flattening we need to
 compute \f$\Delta[E](x,y;k)\f$.  The necessary relation is the "addition
 theorem" for the incomplete elliptic integral of the second kind given
-in http://dlmf.nist.gov/19.11.E2.  This can be converted in the
+in https://dlmf.nist.gov/19.11.E2.  This can be converted in the
 following divided difference formula
 \f[
 \Delta[E](x,y;k)
@@ -5802,7 +5802,7 @@ ellipses.
 
 References:
  - P. D. Thomas,
-   <a href="http://www.dtic.mil/docs/citations/AD0627893">
+   <a href="https://apps.dtic.mil/docs/citations/AD0627893">
    Mathematical Models for Navigation Systems</a>,
    TR-182 (U.S. Naval Oceanographic Office, 1965).
  - B. R. Bowring,
@@ -7361,13 +7361,13 @@ Here's what you should know:
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
    this requires:
-   - <a href="http://www.boost.org"> Boost</a>, version 1.64 or later,
+   - <a href="https://www.boost.org"> Boost</a>, version 1.64 or later,
    - the quadmath library (the package names are libquadmath
      and libquadmath-devel),
    - the use of g++.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires:
-   - <a href="http://www.mpfr.org"> MPFR</a>, version 3.0 or later,
+   - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
      (version 3.6.5, dated 2016-12-19, or later),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
@@ -7599,8 +7599,7 @@ The following steps needed to be taken
        most 52 significant bits;
      - also needed to simplify one routine in GeodesicExact which took
        inordinately long (15 minutes) to compile using g++;
-     - but Visual Studio 12 then complained (with an <a
-       href="http://connect.microsoft.com/VisualStudio/feedback/details/920594">
+     - but Visual Studio 12 then complained (with an
        internal compiler error</a> presumably due to overly aggressive
        whole-file optimization); fixed by splitting one function into a
        separate file.
@@ -7962,7 +7961,7 @@ git repository for GeographicLib</a>.
        (instead of +0), however &minus;0 is still converted to +0.
    - Add -S and -T options to
      <a href="GeoConvert.1.html">GeoConvert(1)</a>.
-   - Add <a href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>
+   - Add <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a>
      documentation for Python package.
    - Samples of wrapping the C++ library, so it's accessible in other
      languages, are given in <code>wrapper/C</code>,

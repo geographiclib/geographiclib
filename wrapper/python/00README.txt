@@ -9,7 +9,7 @@ PyGeographicLib.cpp, which uses boost-python and the Geoid class to
 convert heights above the geoid to heights above the ellipsoid.  More
 information on calling boost-python, see
 
-  http://www.boost.org/doc/libs/release/libs/python
+  https://www.boost.org/doc/libs/release/libs/python
 
 To build and install this interface, do
 

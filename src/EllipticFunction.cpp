@@ -53,7 +53,7 @@ namespace GeographicLib {
       Z = - (X + Y),
       E2 = X*Y - Z*Z,
       E3 = X*Y*Z;
-    // http://dlmf.nist.gov/19.36.E1
+    // https://dlmf.nist.gov/19.36.E1
     // Polynomial is
     // (1 - E2/10 + E3/14 + E2^2/24 - 3*E2*E3/44
     //    - 5*E2^3/208 + 3*E3^2/104 + E2^2*E3/16)
@@ -81,14 +81,14 @@ namespace GeographicLib {
   Math::real EllipticFunction::RC(real x, real y) {
     // Defined only for y != 0 and x >= 0.
     return ( !(x >= y) ?        // x < y  and catch nans
-             // http://dlmf.nist.gov/19.2.E18
+             // https://dlmf.nist.gov/19.2.E18
              atan(sqrt((y - x) / x)) / sqrt(y - x) :
              ( x == y ? 1 / sqrt(y) :
                Math::asinh( y > 0 ?
-                            // http://dlmf.nist.gov/19.2.E19
+                            // https://dlmf.nist.gov/19.2.E19
                             // atanh(sqrt((x - y) / x))
                             sqrt((x - y) / y) :
-                            // http://dlmf.nist.gov/19.2.E20
+                            // https://dlmf.nist.gov/19.2.E20
                             // atanh(sqrt(x / (x - y)))
                             sqrt(-x / y) ) / sqrt(x - y) ) );
   }
@@ -165,7 +165,7 @@ namespace GeographicLib {
       E3 = X*Y*Z + 2*P * (E2 + 2*P*P),
       E4 = (2*X*Y*Z + P * (E2 + 3*P*P)) * P,
       E5 = X*Y*Z*P*P;
-    // http://dlmf.nist.gov/19.36.E2
+    // https://dlmf.nist.gov/19.36.E2
     // Polynomial is
     // (1 - 3*E2/14 + E3/6 + 9*E2^2/88 - 3*E4/22 - 9*E2*E3/52 + 3*E5/26
     //    - E2^3/16 + 3*E3^2/40 + 3*E2*E4/20 + 45*E2^2*E3/272
@@ -209,7 +209,7 @@ namespace GeographicLib {
       E3 = (3*X*Y - 8*Z*Z)*Z,
       E4 = 3 * (X*Y - Z*Z) * Z*Z,
       E5 = X*Y*Z*Z*Z;
-    // http://dlmf.nist.gov/19.36.E2
+    // https://dlmf.nist.gov/19.36.E2
     // Polynomial is
     // (1 - 3*E2/14 + E3/6 + 9*E2^2/88 - 3*E4/22 - 9*E2*E3/52 + 3*E5/26
     //    - E2^3/16 + 3*E3^2/40 + 3*E2*E4/20 + 45*E2^2*E3/272
@@ -261,19 +261,19 @@ namespace GeographicLib {
     // G(alpha2, 1) = H(alpha2, 1) = RC(1, alphap2)
     if (_k2 != 0) {
       // Complete elliptic integral K(k), Carlson eq. 4.1
-      // http://dlmf.nist.gov/19.25.E1
+      // https://dlmf.nist.gov/19.25.E1
       _Kc = _kp2 != 0 ? RF(_kp2, 1) : Math::infinity();
       // Complete elliptic integral E(k), Carlson eq. 4.2
-      // http://dlmf.nist.gov/19.25.E1
+      // https://dlmf.nist.gov/19.25.E1
       _Ec = _kp2 != 0 ? 2 * RG(_kp2, 1) : 1;
       // D(k) = (K(k) - E(k))/k^2, Carlson eq.4.3
-      // http://dlmf.nist.gov/19.25.E1
+      // https://dlmf.nist.gov/19.25.E1
       _Dc = _kp2 != 0 ? RD(0, _kp2, 1) / 3 : Math::infinity();
     } else {
       _Kc = _Ec = Math::pi()/2; _Dc = _Kc/2;
     }
     if (_alpha2 != 0) {
-      // http://dlmf.nist.gov/19.25.E2
+      // https://dlmf.nist.gov/19.25.E2
       real rj = (_kp2 != 0 && _alphap2 != 0) ? RJ(0, _kp2, 1, _alphap2) :
         Math::infinity(),
         // Only use rc if _kp2 = 0.
@@ -295,7 +295,7 @@ namespace GeographicLib {
       // and use D(k) = RD(0, kp2, 1) / 3
       // so Hc = 1/kp * RD(0, 1/kp2, 1) / 3
       //       = kp2 * RD(0, 1, kp2) / 3
-      // using http://dlmf.nist.gov/19.20.E18
+      // using https://dlmf.nist.gov/19.20.E18
       // Equivalently
       //   RF(x, 1) - RD(0, x, 1)/3 = x * RD(0, 1, x)/3 for x > 0
       // For k2 = 1 and alpha2 = 0, we have
@@ -369,7 +369,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::F(real sn, real cn, real dn) const {
     // Carlson, eq. 4.5 and
-    // http://dlmf.nist.gov/19.25.E5
+    // https://dlmf.nist.gov/19.25.E5
     real cn2 = cn*cn, dn2 = dn*dn,
       fi = cn2 != 0 ? abs(sn) * RF(cn2, dn2, 1) : K();
     // Enforce usual trig-like symmetries
@@ -384,14 +384,14 @@ namespace GeographicLib {
       ei = cn2 != 0 ?
       abs(sn) * ( _k2 <= 0 ?
                   // Carlson, eq. 4.6 and
-                  // http://dlmf.nist.gov/19.25.E9
+                  // https://dlmf.nist.gov/19.25.E9
                   RF(cn2, dn2, 1) - _k2 * sn2 * RD(cn2, dn2, 1) / 3 :
                   ( _kp2 >= 0 ?
-                    // http://dlmf.nist.gov/19.25.E10
+                    // https://dlmf.nist.gov/19.25.E10
                     _kp2 * RF(cn2, dn2, 1) +
                     _k2 * _kp2 * sn2 * RD(cn2, 1, dn2) / 3 +
                     _k2 * abs(cn) / dn :
-                    // http://dlmf.nist.gov/19.25.E11
+                    // https://dlmf.nist.gov/19.25.E11
                     - _kp2 * sn2 * RD(dn2, 1, cn2) / 3 +
                     dn / abs(cn) ) ) :
       E();
@@ -403,7 +403,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::D(real sn, real cn, real dn) const {
     // Carlson, eq. 4.8 and
-    // http://dlmf.nist.gov/19.25.E13
+    // https://dlmf.nist.gov/19.25.E13
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       di = cn2 != 0 ? abs(sn) * sn2 * RD(cn2, dn2, 1) / 3 : D();
@@ -415,7 +415,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::Pi(real sn, real cn, real dn) const {
     // Carlson, eq. 4.7 and
-    // http://dlmf.nist.gov/19.25.E14
+    // https://dlmf.nist.gov/19.25.E14
     real
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       pii = cn2 != 0 ? abs(sn) * (RF(cn2, dn2, 1) +

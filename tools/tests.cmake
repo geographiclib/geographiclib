@@ -38,7 +38,6 @@ set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
 if (NOT (MSVC AND MSVC_VERSION MATCHES "1[78].."))
   # Check fix for DMS::Decode double rounding bug fixed on 2012-11-15
   # This test is known to fail for VC 11 and 12 bug reported 2013-01-10
-  # http://connect.microsoft.com/VisualStudio/feedback/details/776287
   # OK to skip this test for these compilers because this is a question
   # of accuracy of the least significant bit.  The bug is fixed in VC 14.
   #

@@ -53,7 +53,10 @@ umask 0022
 # MATLAB
 #   matlab/geographiclib/Contents.m version + date
 #   matlab/geographiclib-blurb.txt version + date
-#   update version number in documentation link in index.html
+#   update version number "%2F15%2F" in documentation link in index.html,
+#     GeographicLib.dox.in, geodesic-{c,for}.dox,
+#     java/src/main/java/net/sf/geographiclib/package-info.java,
+#     js/GeographicLib.md, python/doc/index.rst
 # use MATLAB's analyze code
 
 # C
@@ -213,10 +216,12 @@ done
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 #! /bin/sh
 (
-  ./mvn-build
-  for d in BUILD-vc1*; do
-    (cd $d; ./build)
-  done
+    # Queue vs2015 build first for the binary installers
+    for d in BUILD-vc14* BUILD-vc*; do
+	test -f $d/build.done && continue
+	(cd $d; ./build; touch $d/build.done)
+    done
+    ./mvn-build
 ) >& build.log
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
@@ -387,7 +392,7 @@ int main() {
   using namespace GeographicLib;
   double
     // These are the constants for Pennsylvania South, EPSG:3364
-    // http://www.spatialreference.org/ref/epsg/3364/
+    // https://www.spatialreference.org/ref/epsg/3364/
     a = Constants::WGS84_a(),   // major radius
     f = 1/298.257222101,        // inverse flattening (GRS80)
     lat1 = DMS::Decode(40,58),  // standard parallel 1

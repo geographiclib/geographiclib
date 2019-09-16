@@ -93,7 +93,7 @@ namespace GeographicLib {
    * Because of the overhead in constructing a NearestNeighbor object for a
    * large set of points, functions Save() and Load() are provided to save the
    * object to an external file.  operator<<(), operator>>() and <a
-   * href="http://www.boost.org/libs/serialization/doc"> Boost
+   * href="https://www.boost.org/libs/serialization/doc"> Boost
    * serialization</a> can also be used to save and restore a NearestNeighbor
    * object.  This is illustrated in the example.
    *
@@ -367,7 +367,7 @@ namespace GeographicLib {
      * the initializtion cost is saved.  The format of the binary saves is \e
      * not portable.
      *
-     * \note <a href="http://www.boost.org/libs/serialization/doc">
+     * \note <a href="https://www.boost.org/libs/serialization/doc">
      * Boost serialization</a> can also be used to save and restore a
      * NearestNeighbor object.  This requires that the
      * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.
@@ -442,7 +442,7 @@ namespace GeographicLib {
      * architecture.  If an exception is thrown, the state of the
      * NearestNeighbor is unchanged.
      *
-     * \note <a href="http://www.boost.org/libs/serialization/doc">
+     * \note <a href="https://www.boost.org/libs/serialization/doc">
      * Boost serialization</a> can also be used to save and restore a
      * NearestNeighbor object.  This requires that the
      * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.

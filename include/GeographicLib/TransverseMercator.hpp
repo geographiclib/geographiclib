@@ -70,7 +70,7 @@ namespace GeographicLib {
    * However these are can be simply included by the calling function.  For
    * example, the UTMUPS class applies the false easting and false northing for
    * the UTM projections.  A more complicated example is the British National
-   * Grid (<a href="http://www.spatialreference.org/ref/epsg/7405/">
+   * Grid (<a href="https://www.spatialreference.org/ref/epsg/7405/">
    * EPSG:7405</a>) which requires the use of a latitude of origin.  This is
    * implemented by the GeographicLib::OSGB class.
    *

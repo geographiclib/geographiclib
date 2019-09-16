@@ -99,9 +99,9 @@ Two examples of this library in use are
   {@link https://geographiclib.sourceforge.io/html/python/index.html
     documentation};
 * Matlab/Octave (geodesic and some other routines):
-  {@link http://www.mathworks.com/matlabcentral/fileexchange/50605
+  {@link https://www.mathworks.com/matlabcentral/fileexchange/50605
     Matlab Central package},
-  {@link http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m
+  {@link https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m
     documentation};
 * C# (.NET wrapper for complete C++ library):
   {@link https://geographiclib.sourceforge.io/html/NET/index.html

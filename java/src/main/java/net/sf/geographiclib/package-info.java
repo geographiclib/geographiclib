@@ -240,9 +240,9 @@
  *         documentation</a>
  *     <li>
  *       Matlab/Octave (geodesic and some other routines):
- *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+ *       <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
  *         Matlab Central package</a>,
- *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+ *       <a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
  *         documentation</a>
  *     <li>
  *       C# (.NET wrapper for complete C++ library):

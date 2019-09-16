@@ -52,7 +52,7 @@ namespace GeographicLib {
    * class for specifying a false easting or false northing or a different
    * latitude of origin.  However these are can be simply included by the
    * calling function.  For example the Pennsylvania South state coordinate
-   * system (<a href="http://www.spatialreference.org/ref/epsg/3364/">
+   * system (<a href="https://www.spatialreference.org/ref/epsg/3364/">
    * EPSG:3364</a>) is obtained by:
    * \include example-LambertConformalConic.cpp
    *

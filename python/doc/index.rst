@@ -89,9 +89,9 @@ GeographicLib in various languages
   `PyPI package <http://pypi.python.org/pypi/geographiclib>`_,
   `documentation <../python/index.html>`__
 * Matlab/Octave (geodesic and some other routines):
-  `Matlab Central package <http://www.mathworks.com/matlabcentral/fileexchange/50605>`_,
+  `Matlab Central package <https://www.mathworks.com/matlabcentral/fileexchange/50605>`_,
   `documentation
-  <http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m>`__
+  <https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m>`__
 * C# (.NET wrapper for complete C++ library):
   `documentation <../NET/index.html>`__
 

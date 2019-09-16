@@ -21,10 +21,10 @@ namespace NETGeographicLib
    * GeodesicExact, and TransverseMercatorExact.  Two categories of function
    * are provided:
    * - \e static functions to compute symmetric elliptic integrals
-   *   (http://dlmf.nist.gov/19.16.i)
+   *   (https://dlmf.nist.gov/19.16.i)
    * - \e member functions to compute Legrendre's elliptic
-   *   integrals (http://dlmf.nist.gov/19.2.ii) and the
-   *   Jacobi elliptic functions (http://dlmf.nist.gov/22.2).
+   *   integrals (https://dlmf.nist.gov/19.2.ii) and the
+   *   Jacobi elliptic functions (https://dlmf.nist.gov/22.2).
    * .
    * In the latter case, an object is constructed giving the modulus \e k (and
    * optionally the parameter &alpha;<sup>2</sup>).  The modulus is always
@@ -46,7 +46,7 @@ namespace NETGeographicLib
    *   <a href="https://doi.org/10.1007/BF02198293"> Computation of real or
    *   complex elliptic integrals</a>, Numerical Algorithms 10, 13--26 (1995)
    * .
-   * with the additional optimizations given in http://dlmf.nist.gov/19.36.i.
+   * with the additional optimizations given in https://dlmf.nist.gov/19.36.i.
    * The computation of the Jacobi elliptic functions uses the algorithm given
    * in
    * - R. Bulirsch,
@@ -54,7 +54,7 @@ namespace NETGeographicLib
    *   Elliptic Integrals and Elliptic Functions</a>, Numericshe Mathematik 7,
    *   78--90 (1965).
    * .
-   * The notation follows http://dlmf.nist.gov/19 and http://dlmf.nist.gov/22
+   * The notation follows https://dlmf.nist.gov/19 and https://dlmf.nist.gov/22
    *
    * C# Example:
    * \include example-EllipticFunction.cs
@@ -188,7 +188,7 @@ namespace NETGeographicLib
          *
          * @return \e K(\e k).
          *
-         * \e K(\e k) is defined in http://dlmf.nist.gov/19.2.E4
+         * \e K(\e k) is defined in https://dlmf.nist.gov/19.2.E4
          * \f[
          *   K(k) = \int_0^{\pi/2} \frac1{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
          * \f]
@@ -200,7 +200,7 @@ namespace NETGeographicLib
          *
          * @return \e E(\e k)
          *
-         * \e E(\e k) is defined in http://dlmf.nist.gov/19.2.E5
+         * \e E(\e k) is defined in https://dlmf.nist.gov/19.2.E5
          * \f[
          *   E(k) = \int_0^{\pi/2} \sqrt{1-k^2\sin^2\phi}\,d\phi.
          * \f]
@@ -212,7 +212,7 @@ namespace NETGeographicLib
          *
          * @return \e D(\e k).
          *
-         * \e D(\e k) is defined in http://dlmf.nist.gov/19.2.E6
+         * \e D(\e k) is defined in https://dlmf.nist.gov/19.2.E6
          * \f[
          *   D(k) = \int_0^{\pi/2} \frac{\sin^2\phi}{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
          * \f]
@@ -233,7 +233,7 @@ namespace NETGeographicLib
          * @return &Pi;(&alpha;<sup>2</sup>, \e k)
          *
          * &Pi;(&alpha;<sup>2</sup>, \e k) is defined in
-         * http://dlmf.nist.gov/19.2.E7
+         * https://dlmf.nist.gov/19.2.E7
          * \f[
          *   \Pi(\alpha^2, k) = \int_0^{\pi/2}
          *     \frac1{\sqrt{1-k^2\sin^2\phi}(1 - \alpha^2\sin^2\phi_)}\,d\phi.
@@ -278,7 +278,7 @@ namespace NETGeographicLib
          * @param[in] phi
          * @return \e F(&phi;, \e k).
          *
-         * \e F(&phi;, \e k) is defined in http://dlmf.nist.gov/19.2.E4
+         * \e F(&phi;, \e k) is defined in https://dlmf.nist.gov/19.2.E4
          * \f[
          *   F(\phi, k) = \int_0^\phi \frac1{\sqrt{1-k^2\sin^2\theta}}\,d\theta.
          * \f]
@@ -291,7 +291,7 @@ namespace NETGeographicLib
          * @param[in] phi
          * @return \e E(&phi;, \e k).
          *
-         * \e E(&phi;, \e k) is defined in http://dlmf.nist.gov/19.2.E5
+         * \e E(&phi;, \e k) is defined in https://dlmf.nist.gov/19.2.E5
          * \f[
          *   E(\phi, k) = \int_0^\phi \sqrt{1-k^2\sin^2\theta}\,d\theta.
          * \f]
@@ -323,7 +323,7 @@ namespace NETGeographicLib
          * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k).
          *
          * &Pi;(&phi;, &alpha;<sup>2</sup>, \e k) is defined in
-         * http://dlmf.nist.gov/19.2.E7
+         * https://dlmf.nist.gov/19.2.E7
          * \f[
          *   \Pi(\phi, \alpha^2, k) = \int_0^\phi
          *     \frac1{\sqrt{1-k^2\sin^2\theta}(1 - \alpha^2\sin^2\theta_)}\,d\theta.
@@ -337,7 +337,7 @@ namespace NETGeographicLib
          * @param[in] phi
          * @return \e D(&phi;, \e k).
          *
-         * \e D(&phi;, \e k) is defined in http://dlmf.nist.gov/19.2.E4
+         * \e D(&phi;, \e k) is defined in https://dlmf.nist.gov/19.2.E4
          * \f[
          *   D(\phi, k) = \int_0^\phi
          *    \frac{\sin^2\theta}{\sqrt{1-k^2\sin^2\theta}}\,d\theta.
@@ -602,7 +602,7 @@ namespace NETGeographicLib
          * @param[in] z
          * @return <i>R<sub>F</sub></i>(\e x, \e y, \e z)
          *
-         * <i>R<sub>F</sub></i> is defined in http://dlmf.nist.gov/19.16.E1
+         * <i>R<sub>F</sub></i> is defined in https://dlmf.nist.gov/19.16.E1
          * \f[ R_F(x, y, z) = \frac12
          *       \int_0^\infty\frac1{\sqrt{(t + x) (t + y) (t + z)}}\, dt \f]
          * If one of the arguments is zero, it is more efficient to call the
@@ -628,7 +628,7 @@ namespace NETGeographicLib
          * @return <i>R<sub>C</sub></i>(\e x, \e y) = <i>R<sub>F</sub></i>(\e x, \e
          *   y, \e y)
          *
-         * <i>R<sub>C</sub></i> is defined in http://dlmf.nist.gov/19.2.E17
+         * <i>R<sub>C</sub></i> is defined in https://dlmf.nist.gov/19.2.E17
          * \f[ R_C(x, y) = \frac12
          *       \int_0^\infty\frac1{\sqrt{t + x}(t + y)}\,dt \f]
          **********************************************************************/
@@ -648,7 +648,7 @@ namespace NETGeographicLib
          *        \biggl(
          *             \frac x{t + x} + \frac y{t + y} + \frac z{t + z}
          *        \biggr)t\,dt \f]
-         * See also http://dlmf.nist.gov/19.16.E3.
+         * See also https://dlmf.nist.gov/19.16.E3.
          * If one of the arguments is zero, it is more efficient to call the
          * two-argument version of this function with the non-zero arguments.
          **********************************************************************/
@@ -673,7 +673,7 @@ namespace NETGeographicLib
          * @param[in] p
          * @return <i>R<sub>J</sub></i>(\e x, \e y, \e z, \e p)
          *
-         * <i>R<sub>J</sub></i> is defined in http://dlmf.nist.gov/19.16.E2
+         * <i>R<sub>J</sub></i> is defined in https://dlmf.nist.gov/19.16.E2
          * \f[ R_J(x, y, z, p) = \frac32
          *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt \f]
          **********************************************************************/
@@ -688,7 +688,7 @@ namespace NETGeographicLib
          * @return <i>R<sub>D</sub></i>(\e x, \e y, \e z) = <i>R<sub>J</sub></i>(\e
          *   x, \e y, \e z, \e z)
          *
-         * <i>R<sub>D</sub></i> is defined in http://dlmf.nist.gov/19.16.E5
+         * <i>R<sub>D</sub></i> is defined in https://dlmf.nist.gov/19.16.E5
          * \f[ R_D(x, y, z) = \frac32
          *       \int_0^\infty[(t + x) (t + y)]^{-1/2} (t + z)^{-3/2}\, dt \f]
          **********************************************************************/

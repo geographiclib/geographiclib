@@ -32,8 +32,9 @@ cat <<'EOF'
       out of date; let me know if this happens.
     </p>
     <p>This bibliography was started on 2009-06-06 (at
-      <a href=" http://trac.osgeo.org/proj/wiki/GeodesicCalculations">
-        http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>) and
+      <a href="http://trac.osgeo.org/proj/wiki/GeodesicCalculations">
+        http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>, now
+      defunct) and
       moved to this site on 2011-02-01.  The last update was on
 EOF
 git log --date=short $1 | head -3 | tail -1 | tr -s ' ' '	' |
