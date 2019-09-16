@@ -380,7 +380,7 @@
    * @param {number} s13_a13 if arcmode is false, this is the distance from
    *   point 1 to point 3 (meters); otherwise it is the arc length from
    *   point 1 to point 3 (degrees); it can be negative.
-   **********************************************************************/
+   */
   l.GeodesicLine.prototype.GenSetDistance = function(arcmode, s13_a13) {
     if (arcmode)
       this.SetArc(s13_a13);
@@ -392,7 +392,7 @@
    * @summary Specify position of point 3 in terms distance.
    * @param {number} s13 the distance from point 1 to point 3 (meters); it
    *   can be negative.
-   **********************************************************************/
+   */
   l.GeodesicLine.prototype.SetDistance = function(s13) {
     var r;
     this.s13 = s13;
@@ -404,7 +404,7 @@
    * @summary Specify position of point 3 in terms of arc length.
    * @param {number} a13 the arc length from point 1 to point 3 (degrees);
    *   it can be negative.
-   **********************************************************************/
+   */
   l.GeodesicLine.prototype.SetArc = function(a13) {
     var r;
     this.a13 = a13;

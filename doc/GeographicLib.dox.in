@@ -543,6 +543,8 @@ The utilities were linked against the release-mode shared library.
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
 
+Also included are the Python, JavaScript, and MATLAB interfaces.
+
 \subsection binaryinstosx MacOSX
 
 You can install using Homebrew.  Follow the directions on
@@ -7774,8 +7776,6 @@ git repository for GeographicLib</a>.
    - TODO: Reference man page in source files for tools.
    - TODO: check logic in C interface (plus others?) on defaults for
      caps in geod_gendirectline.  Also improve description of "point 3".
-   - TODO: Fix use of &lt;install&gt; and &lt;install folder&gt; in
-     NETGeographicLib doc.
    - TODO: add Ellipsoid class links auxlat page.
    - TODO: update copyright dates for 2019 (since commit e811562).
 

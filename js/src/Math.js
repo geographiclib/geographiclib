@@ -225,11 +225,11 @@ GeographicLib.Accumulator = {};
    * @return {number} the remainder in the range [&minus;y/2, y/2].
    * <p>
    * The range of x is unrestricted; y must be positive.
-   **********************************************************************/
+   */
   m.remainder = function(x, y) {
     x = x % y;
     return x < -y/2 ? x + y : (x < y/2 ? x : x - y);
-  }
+  };
 
   /**
    * @summary Normalize an angle.

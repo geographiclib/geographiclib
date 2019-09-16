@@ -479,6 +479,9 @@ cd $TEMP/relx/GeographicLib-$VERSION
 	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
 	done
     echo
+    echo JS files with bad comment ends:
+    find js -type f -name '*.js' | xargs grep -l '\*\*/' || true
+    echo
 ) > $TEMP/badfiles.txt
 cat $TEMP/badfiles.txt
 cat > $TEMP/tasks.txt <<EOF

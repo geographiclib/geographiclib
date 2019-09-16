@@ -482,7 +482,9 @@
    ''Disquisitiones generales circa superficies curvas''
    (Dieterich, Göttingen, 1828).[[BR]]
    https://books.google.com/books?id=bX0AAAAAMAAJ&pg=PA3 [[BR]]
-   alt: https://gdz.sub.uni-goettingen.de/dms/load/img/?PPN=PPN236005081
+   In ''Carl Friedrich Gauss Werke'',
+   Vol. 4 (Ges. Wiss., Göttingen, 1873), pp. 217--258.[[BR]]
+   https://gdz.sub.uni-goettingen.de/id/PPN236005081?tify={"pages":[221]}
    [[BR]]French translation:
    ''Recherches générales sur les surfaces courbes'', by E. Roger
    (Grenoble, 1855).[[BR]]
@@ -504,8 +506,10 @@
    '''2''', 3--45 (1843); '''3''', 3--43 (1846).[[BR]]
    Reprint: edited by J. Frischauf, Ostwald's Klass. ex. Wiss., No. 177
    (Engelmann, Leipzig, 1910).[[BR]]
-   https://gdz.sub.uni-goettingen.de/dms/load/img/?IDDOC=39018 (broken) [[BR]]
-   https://gdz.sub.uni-goettingen.de/dms/load/img/?IDDOC=39036 (broken) [[BR]]
+   https://gdz.sub.uni-goettingen.de/id/PPN236005081?tify={"pages":[263]}
+   [[BR]]
+   https://gdz.sub.uni-goettingen.de/id/PPN236005081?tify={"pages":[305]}
+   [[BR]]
    https://geographiclib.sourceforge.io/geodesic-papers/gauss43.pdf
  * C. F. Gauss,[[BR]]
    ''Erdellipsoid und geodätischen linie
@@ -513,12 +517,13 @@
    in ''Carl Friedrich Gauss Werke'',
    Vol. 9 (Ges. Wiss., Göttingen, 1903), pp. 65--104.[[BR]]
    https://books.google.com/books?id=ICwPAAAAIAAJ&pg=PA65 (PDF gauss-V9.pdf)
-   [[BR]]alt: https://gdz.sub.uni-goettingen.de/dms/load/img/?PPN=PPN23601515X
+   [[BR]] alt:
+   https://gdz.sub.uni-goettingen.de/id/PPN23601515X?tify={"pages":[71]}
  * A. Galle,[[BR]]
    ''Über die geodätischen Arbeiten von Gauss [The Geodetic Works of Gauss]'',
    in ''Carl Friedrich Gauss Werke'',
-   Vol. 11 (Ges. Wiss., Göttingen, 1863), Part 2, 1--161.[[BR]]
-   https://gdz.sub.uni-goettingen.de/dms/load/img/?IDDOC=139786 (broken)
+   Vol. 11 (Ges. Wiss., Göttingen, 1924), Part 2, 1--161.[[BR]]
+   https://gdz.sub.uni-goettingen.de/id/PPN236059505?tify={"pages":[7]}
  * C. G. J. Jacobi,[[BR]]
    ''Fundamenta nova theoriae functionum ellipticarum
    [A Fundamental New Theory of Elliptic Functions]''
