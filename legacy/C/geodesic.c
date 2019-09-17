@@ -23,22 +23,21 @@
  * https://geographiclib.sourceforge.io/
  */
 
-/* The PROJ_COMPILATION flag indicated that this is part of the compilation of
- * the PROJ library.  Steps to activate:
- *   autoconf: Add definition to AM_CPPFLAGS in src/Makefile.am.
- *   cmake:
- *     set_source_files_properties (geodesic.c
- *       PROPERTIES COMPILE_DEFINITIONS PROJ_COMPILATION=1)
- * See https://github.com/OSGeo/PROJ/pull/1425
+/* The PROJ_COMPILATION flag indicates that this is part of the compilation of
+ * the PROJ library (keyed off the presence of the PROJ_LIB macro which points
+ * to the data directory for PROJ).  If this is set, we use the PROJ supplied
+ * implementations of the C99 math functions instead of the ones defined here.
  */
-#if !defined(PROJ_COMPILATION)
+#if defined(PROJ_LIB)
+#define PROJ_COMPILATION 1
+#else
 #define PROJ_COMPILATION 0
 #endif
 
 #include "geodesic.h"
 #if PROJ_COMPILATION
-/* This handles the definition of the C89 functions if necessary (and also
- * includes math.h and limits.h) */
+/* This provides the C99 math functions (and also includes
+ * math.h and limits.h) */
 #include "proj_math.h"
 #else
 #include <math.h>
@@ -126,16 +125,26 @@ enum captype {
 };
 
 #if HAVE_C99_MATH || PROJ_COMPILATION
+#define hypotx hypot
 /* no need to redirect log1px, since it's only used by atanhx */
 #define atanhx atanh
 #define copysignx copysign
-#define hypotx hypot
 #define cbrtx cbrt
 #define remainderx remainder
 #define remquox remquo
-#define log1px log1p
 #else
 /* Replacements for C99 math functions */
+
+static real hypotx(real x, real y) {
+  x = fabs(x); y = fabs(y);
+  if (x < y) {
+    x /= y;                     /* y is nonzero */
+    return y * sqrt(1 + x * x);
+  } else {
+    y /= (x != 0 ? x : 1);
+    return x * sqrt(1 + y * y);
+  }
+}
 
 static real log1px(real x) {
   volatile real
@@ -155,18 +164,8 @@ static real atanhx(real x) {
 }
 
 static real copysignx(real x, real y) {
+  /* 1/y trick to get the sign of -0.0 */
   return fabs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
-}
-
-static real hypotx(real x, real y) {
-  x = fabs(x); y = fabs(y);
-  if (x < y) {
-    x /= y;                     /* y is nonzero */
-    return y * sqrt(1 + x * x);
-  } else {
-    y /= (x ? x : 1);
-    return x * sqrt(1 + y * y);
-  }
 }
 
 static real cbrtx(real x) {

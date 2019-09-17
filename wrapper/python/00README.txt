@@ -11,6 +11,9 @@ information on calling boost-python, see
 
   https://www.boost.org/doc/libs/release/libs/python
 
+An alternative to boost-python is provided by Cython.  For more
+information, see below.
+
 To build and install this interface, do
 
   mkdir BUILD
@@ -67,3 +70,13 @@ Acknowledgment:
 
 Thanks to Jonathan Takahashi <jtakahashi@gmail.com> for the sample code
 in PyGeographicLib.cpp and the commands needed to compile and link this.
+
+An alternative to boost-python is provided by Cython.  See
+
+  https::/cython.org
+
+Sergey Serebryakov offers the github project
+
+  https://github.com/megaserg/geographiclib-cython-bindings
+
+which provides a fast python interface to the geodesic routines.

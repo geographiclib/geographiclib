@@ -277,8 +277,8 @@ extern "C" {
    @endcode
    **********************************************************************/
   void GEOD_DLL geod_direct(const struct geod_geodesic* g,
-                   double lat1, double lon1, double azi1, double s12,
-                   double* plat2, double* plon2, double* pazi2);
+                            double lat1, double lon1, double azi1, double s12,
+                            double* plat2, double* plon2, double* pazi2);
 
   /**
    * The general direct geodesic problem.
@@ -319,11 +319,12 @@ extern "C" {
    * what sense the geodesic encircles the ellipsoid.
    **********************************************************************/
   double GEOD_DLL geod_gendirect(const struct geod_geodesic* g,
-                        double lat1, double lon1, double azi1,
-                        unsigned flags, double s12_a12,
-                        double* plat2, double* plon2, double* pazi2,
-                        double* ps12, double* pm12, double* pM12, double* pM21,
-                        double* pS12);
+                                 double lat1, double lon1, double azi1,
+                                 unsigned flags, double s12_a12,
+                                 double* plat2, double* plon2, double* pazi2,
+                                 double* ps12, double* pm12,
+                                 double* pM12, double* pM21,
+                                 double* pS12);
 
   /**
    * Solve the inverse geodesic problem.
@@ -364,8 +365,9 @@ extern "C" {
    @endcode
    **********************************************************************/
   void GEOD_DLL geod_inverse(const struct geod_geodesic* g,
-                    double lat1, double lon1, double lat2, double lon2,
-                    double* ps12, double* pazi1, double* pazi2);
+                             double lat1, double lon1,
+                             double lat2, double lon2,
+                             double* ps12, double* pazi1, double* pazi2);
 
   /**
    * The general inverse geodesic calculation.
@@ -395,10 +397,11 @@ extern "C" {
    * some quantities computed.
    **********************************************************************/
   double GEOD_DLL geod_geninverse(const struct geod_geodesic* g,
-                         double lat1, double lon1, double lat2, double lon2,
-                         double* ps12, double* pazi1, double* pazi2,
-                         double* pm12, double* pM12, double* pM21,
-                         double* pS12);
+                                  double lat1, double lon1,
+                                  double lat2, double lon2,
+                                  double* ps12, double* pazi1, double* pazi2,
+                                  double* pm12, double* pM12, double* pM21,
+                                  double* pS12);
 
   /**
    * Initialize a geod_geodesicline object.
@@ -430,7 +433,7 @@ extern "C" {
    * - \e caps |= GEOD_AREA for the area \e S12,
    * - \e caps |= GEOD_DISTANCE_IN permits the length of the
    *   geodesic to be given in terms of \e s12; without this capability the
-   *   length can only be specified in terms of arc length.
+   *   length can only be specified in terms of arc length,
    * .
    * A value of \e caps = 0 is treated as GEOD_LATITUDE | GEOD_LONGITUDE |
    * GEOD_AZIMUTH | GEOD_DISTANCE_IN (to support the solution of the "standard"
@@ -440,8 +443,9 @@ extern "C" {
    * NaN).
    **********************************************************************/
   void GEOD_DLL geod_lineinit(struct geod_geodesicline* l,
-                     const struct geod_geodesic* g,
-                     double lat1, double lon1, double azi1, unsigned caps);
+                              const struct geod_geodesic* g,
+                              double lat1, double lon1, double azi1,
+                              unsigned caps);
 
   /**
    * Initialize a geod_geodesicline object in terms of the direct geodesic
@@ -465,9 +469,10 @@ extern "C" {
    * information.
    **********************************************************************/
   void GEOD_DLL geod_directline(struct geod_geodesicline* l,
-                       const struct geod_geodesic* g,
-                       double lat1, double lon1, double azi1, double s12,
-                       unsigned caps);
+                                const struct geod_geodesic* g,
+                                double lat1, double lon1,
+                                double azi1, double s12,
+                                unsigned caps);
 
   /**
    * Initialize a geod_geodesicline object in terms of the direct geodesic
@@ -495,10 +500,10 @@ extern "C" {
    * information.
    **********************************************************************/
   void GEOD_DLL geod_gendirectline(struct geod_geodesicline* l,
-                          const struct geod_geodesic* g,
-                          double lat1, double lon1, double azi1,
-                          unsigned flags, double s12_a12,
-                          unsigned caps);
+                                   const struct geod_geodesic* g,
+                                   double lat1, double lon1, double azi1,
+                                   unsigned flags, double s12_a12,
+                                   unsigned caps);
 
   /**
    * Initialize a geod_geodesicline object in terms of the inverse geodesic
@@ -521,9 +526,10 @@ extern "C" {
    * information.
    **********************************************************************/
   void GEOD_DLL geod_inverseline(struct geod_geodesicline* l,
-                       const struct geod_geodesic* g,
-                       double lat1, double lon1, double lat2, double lon2,
-                       unsigned caps);
+                                 const struct geod_geodesic* g,
+                                 double lat1, double lon1,
+                                 double lat2, double lon2,
+                                 unsigned caps);
 
   /**
    * Compute the position along a geod_geodesicline.
@@ -571,7 +577,7 @@ extern "C" {
    @endcode
    **********************************************************************/
   void GEOD_DLL geod_position(const struct geod_geodesicline* l, double s12,
-                     double* plat2, double* plon2, double* pazi2);
+                              double* plat2, double* plon2, double* pazi2);
 
   /**
    * The general position function.
@@ -638,11 +644,11 @@ extern "C" {
    @endcode
    **********************************************************************/
   double GEOD_DLL geod_genposition(const struct geod_geodesicline* l,
-                          unsigned flags, double s12_a12,
-                          double* plat2, double* plon2, double* pazi2,
-                          double* ps12, double* pm12,
-                          double* pM12, double* pM21,
-                          double* pS12);
+                                   unsigned flags, double s12_a12,
+                                   double* plat2, double* plon2, double* pazi2,
+                                   double* ps12, double* pm12,
+                                   double* pM12, double* pM21,
+                                   double* pS12);
 
   /**
    * Specify position of point 3 in terms of distance.
@@ -672,7 +678,7 @@ extern "C" {
    * been constructed with \e caps |= GEOD_DISTANCE.
    **********************************************************************/
   void GEOD_DLL geod_gensetdistance(struct geod_geodesicline* l,
-                           unsigned flags, double s13_a13);
+                                    unsigned flags, double s13_a13);
 
   /**
    * Initialize a geod_polygon object.
@@ -721,8 +727,8 @@ extern "C" {
    * geod_polygon_compute().
    **********************************************************************/
   void GEOD_DLL geod_polygon_addpoint(const struct geod_geodesic* g,
-                             struct geod_polygon* p,
-                             double lat, double lon);
+                                      struct geod_polygon* p,
+                                      double lat, double lon);
 
   /**
    * Add an edge to the polygon or polyline.
@@ -741,8 +747,8 @@ extern "C" {
    * new vertex.
    **********************************************************************/
   void GEOD_DLL geod_polygon_addedge(const struct geod_geodesic* g,
-                            struct geod_polygon* p,
-                            double azi, double s);
+                                     struct geod_polygon* p,
+                                     double azi, double s);
 
   /**
    * Return the results for a polygon.
@@ -790,9 +796,9 @@ extern "C" {
    @endcode
    **********************************************************************/
   unsigned GEOD_DLL geod_polygon_compute(const struct geod_geodesic* g,
-                                const struct geod_polygon* p,
-                                int reverse, int sign,
-                                double* pA, double* pP);
+                                         const struct geod_polygon* p,
+                                         int reverse, int sign,
+                                         double* pA, double* pP);
 
   /**
    * Return the results assuming a tentative final test point is added;
@@ -821,10 +827,10 @@ extern "C" {
    * \e lat should be in the range [&minus;90&deg;, 90&deg;].
    **********************************************************************/
   unsigned GEOD_DLL geod_polygon_testpoint(const struct geod_geodesic* g,
-                                  const struct geod_polygon* p,
-                                  double lat, double lon,
-                                  int reverse, int sign,
-                                  double* pA, double* pP);
+                                           const struct geod_polygon* p,
+                                           double lat, double lon,
+                                           int reverse, int sign,
+                                           double* pA, double* pP);
 
   /**
    * Return the results assuming a tentative final test point is added via an
@@ -852,10 +858,10 @@ extern "C" {
    * @return the number of points.
    **********************************************************************/
   unsigned GEOD_DLL geod_polygon_testedge(const struct geod_geodesic* g,
-                                 const struct geod_polygon* p,
-                                 double azi, double s,
-                                 int reverse, int sign,
-                                 double* pA, double* pP);
+                                          const struct geod_polygon* p,
+                                          double azi, double s,
+                                          int reverse, int sign,
+                                          double* pA, double* pP);
 
   /**
    * A simple interface for computing the area of a geodesic polygon.
@@ -891,8 +897,8 @@ extern "C" {
    @endcode
    **********************************************************************/
   void GEOD_DLL geod_polygonarea(const struct geod_geodesic* g,
-                        double lats[], double lons[], int n,
-                        double* pA, double* pP);
+                                 double lats[], double lons[], int n,
+                                 double* pA, double* pP);
 
   /**
    * mask values for the \e caps argument to geod_lineinit().

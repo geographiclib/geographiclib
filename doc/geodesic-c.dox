@@ -193,6 +193,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
  - <a href="https://geographiclib.sourceforge.io/1.50/C">Version 1.50</a>
    (released 2019-mm-dd)
+   - Allow arbitrarily complex polygons in geod_polygon_*.
    - Workaround bugs in fmod and sin in Visual Studio 10, 11, and 12 and
      relax delta for GeodSolve59 in geodtest (tagged v1.49.1-c).
    - Fix bug in geod_polygon_addedge which caused the count of pole

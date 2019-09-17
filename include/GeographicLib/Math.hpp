@@ -248,6 +248,19 @@ namespace GeographicLib {
     template<typename T> static T atanh(T x);
 
     /**
+     * Copy the sign.
+     *
+     * @tparam T the type of the argument.
+     * @param[in] x gives the magitude of the result.
+     * @param[in] y gives the sign of the result.
+     * @return value with the magnitude of \e x and with the sign of \e y.
+     *
+     * This routine correctly handles the case \e y = &minus;0, returning
+     * &minus|<i>x</i>|.
+     **********************************************************************/
+    template<typename T> static T copysign(T x, T y);
+
+    /**
      * The cube root function.
      *
      * @tparam T the type of the argument and the returned value.
@@ -297,19 +310,6 @@ namespace GeographicLib {
      * If the result does not fit in a long int, the return value is undefined.
      **********************************************************************/
     template<typename T> static long lround(T x);
-
-    /**
-     * Copy the sign.
-     *
-     * @tparam T the type of the argument.
-     * @param[in] x gives the magitude of the result.
-     * @param[in] y gives the sign of the result.
-     * @return value with the magnitude of \e x and with the sign of \e y.
-     *
-     * This routine correctly handles the case \e y = &minus;0, returning
-     * &minus|<i>x</i>|.
-     **********************************************************************/
-    template<typename T> static T copysign(T x, T y);
 
     /**
      * Fused multiply and add.

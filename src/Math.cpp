@@ -61,7 +61,7 @@ namespace GeographicLib {
 #else
     x = abs(x); y = abs(y);
     if (x < y) std::swap(x, y); // Now x >= y >= 0
-    y /= (x ? x : 1);
+    y /= (x != 0 ? x : 1);
     return x * sqrt(1 + y * y);
     // For an alternative (square-root free) method see
     // C. Moler and D. Morrision (1983) https://doi.org/10.1147/rd.276.0577
@@ -116,6 +116,15 @@ namespace GeographicLib {
     T y = abs(x); // Enforce odd parity
     y = log1p(2 * y/(1 - y))/2;
     return x > 0 ? y : (x < 0 ? -y : x); // atanh(-0.0) = -0.0
+#endif
+  }
+
+  template<typename T> T Math::copysign(T x, T y) {
+#if GEOGRAPHICLIB_CXX11_MATH
+    using std::copysign; return copysign(x, y);
+#else
+    // NaN counts as positive
+    return abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
 #endif
   }
 
@@ -181,11 +190,11 @@ namespace GeographicLib {
     // The handling of corner cases is copied from boost; see
     //   https://github.com/boostorg/math/pull/8
     // with improvements to return -0 when appropriate.
-    if (0 < x && x < T(0.5))
+    if      (0 < x && x <  T(0.5))
       return +T(0);
     else if (0 > x && x > -T(0.5))
       return -T(0);
-    else if (x > 0) {
+    else if   (x > 0) {
       T t = ceil(x);
       return t - x > T(0.5) ? t - 1 : t;
     } else if (x < 0) {
@@ -206,15 +215,6 @@ namespace GeographicLib {
     if (abs(x) < -T(r))       // Assume T(LONG_MIN) is exact
       r = long(x);
     return r;
-#endif
-  }
-
-  template<typename T> T Math::copysign(T x, T y) {
-#if GEOGRAPHICLIB_CXX11_MATH
-    using std::copysign; return copysign(x, y);
-#else
-    // NaN counts as positive
-    return abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
 #endif
   }
 

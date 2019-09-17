@@ -176,6 +176,7 @@ and are therefore in the public domain.
 
  - <a href="https://geographiclib.sourceforge.io/1.50/Fortran">Version 1.50</a>
    (released 2019-mm-dd)
+   - Allow arbitrarily complex polygons in geod_polygon_*.
 
  - <a href="https://geographiclib.sourceforge.io/1.49/Fortran">Version 1.49</a>
    (released 2017-10-05)
