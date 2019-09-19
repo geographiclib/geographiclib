@@ -51,8 +51,8 @@ umask 0022
 # use: cd python; pychecker geographiclib/*.py
 
 # MATLAB
-#   matlab/geographiclib/Contents.m version + date
-#   matlab/geographiclib-blurb.txt version + date
+#   matlab/geographiclib/Contents.m version (multiple places) + date
+#   matlab/geographiclib-blurb.txt version (multiple places) + date
 #   update version number "%2F15%2F" in documentation link in index.html,
 #     GeographicLib.dox.in, geodesic-{c,for}.dox,
 #     java/src/main/java/net/sf/geographiclib/package-info.java,

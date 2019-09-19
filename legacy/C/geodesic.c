@@ -23,30 +23,18 @@
  * https://geographiclib.sourceforge.io/
  */
 
-/* The PROJ_COMPILATION flag indicates that this is part of the compilation of
- * the PROJ library (keyed off the presence of the PROJ_LIB macro which points
- * to the data directory for PROJ).  If this is set, we use the PROJ supplied
- * implementations of the C99 math functions instead of the ones defined here.
- */
-#if defined(PROJ_LIB)
-#define PROJ_COMPILATION 1
-#else
-#define PROJ_COMPILATION 0
-#endif
-
 #include "geodesic.h"
-#if PROJ_COMPILATION
-/* This provides the C99 math functions (and also includes
- * math.h and limits.h) */
-#include "proj_math.h"
-#else
 #include <math.h>
 #include <limits.h>
-#endif
 #include <float.h>
 
 #if !defined(HAVE_C99_MATH)
+#if defined(PROJ_LIB)
+/* PROJ requires C99 so HAVE_C99_MATH is implicit */
+#define HAVE_C99_MATH 1
+#else
 #define HAVE_C99_MATH 0
+#endif
 #endif
 
 #if !defined(__cplusplus)
@@ -124,7 +112,7 @@ enum captype {
   OUT_ALL  = 0x7F80U
 };
 
-#if HAVE_C99_MATH || PROJ_COMPILATION
+#if HAVE_C99_MATH
 #define hypotx hypot
 /* no need to redirect log1px, since it's only used by atanhx */
 #define atanhx atanh

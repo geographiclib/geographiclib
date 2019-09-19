@@ -7639,7 +7639,7 @@ of the
 git repository for GeographicLib</a>.
 
 \if SKIP
- - Planned updates
+ - TODO: Planned updates
    - Change templating in PolygonArea so that the AddPoint and AddEdge
      methods are templated instead of the class itself.  This would
      allow a polygon to contain a mixture of geodesic and rhumb-line
@@ -7654,8 +7654,9 @@ git repository for GeographicLib</a>.
    - Split DMS stuff from main JavaScript package.
    - Add C++ tests not dependent on utility programs.
    - Add information on radius of convergence for aux latitude series.
-   - Requite C++11 and C99(?) compiler support.  Mark Math::hypot et
+   - Require C++11 and C99(?) compiler support.  Mark Math::hypot et
      al. deprecated.
+   - Check Geocentric for extreme ellipsoids.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>

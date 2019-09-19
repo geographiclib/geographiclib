@@ -5,6 +5,12 @@
 # this is an absolute path, it's in the build tree; otherwise, it's in the
 # install tree.  (Note that the whole install tree can be relocated.)
 
+if(CMAKE_CROSSCOMPILING)
+  set(CMAKE_CROSSCOMPILING_STR "ON")
+else()
+  set(CMAKE_CROSSCOMPILING_STR "OFF")
+endif()
+
 # geographiclib-config.cmake for the build tree
 set (PROJECT_ROOT_DIR "${PROJECT_BINARY_DIR}")
 set (PROJECT_INCLUDE_DIRS
