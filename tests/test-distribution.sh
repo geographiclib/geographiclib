@@ -219,7 +219,7 @@ cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
     # Queue vs2015 build first for the binary installers
     for d in BUILD-vc14* BUILD-vc*; do
 	test -f $d/build.done && continue
-	(cd $d; ./build; touch $d/build.done)
+	(cd $d; ./build; touch build.done)
     done
     ./mvn-build
 ) >& build.log

@@ -720,8 +720,12 @@ In order to use GeographicLib from C++ code, you will need to
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
     BUILD subdirectory).  Also, on Windows, make sure that the version
-    of Visual Sudio (12 in the example above) architecture (x64 in the
-    example above) matches that used to build GeographicLib.
+    of Visual Studio (14 in the example above) architecture (x64 in the
+    example above) is compatible with that used to build GeographicLib.
+    In this example, it's not necessary to specify
+    <code>CMAKE_PREFIX_PATH</code>, because <code>C:/Program
+    Files</code> is one of the system paths which is searched
+    automatically.
   - build your package.  On Linux and MacOS this usually involves just
     running make.  On Windows, you can load the solution file created by
     cmake into Visual Studio; alternatively, you can get cmake to run
