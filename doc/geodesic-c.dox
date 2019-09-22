@@ -192,7 +192,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.50/C">Version 1.50</a>
-   (released 2019-mm-dd)
+   (released 2019-09-22)
    - Allow arbitrarily complex polygons in geod_polygon_*.  In the case
      of self-intersecting polygons the area is accumulated
      "algebraically", e.g., the areas of the 2 loops in a figure-8

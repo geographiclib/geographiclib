@@ -7780,7 +7780,7 @@ git repository for GeographicLib</a>.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
      - Clarify which solution is returned for Geocentric::Reverse.
-   - TODO: update copyright dates for 2019 (since commit 477b255).
+   - TODO: update copyright dates for 2019 (since commit c367f40).
    - TODO: update Matlab doc link.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
