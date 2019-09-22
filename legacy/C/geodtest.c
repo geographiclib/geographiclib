@@ -1115,7 +1115,7 @@ int main() {
   if ((i = Planimeter15())) {++n; printf("Planimeter15 fail: %d\n", i);}
   if ((i = Planimeter19())) {++n; printf("Planimeter19 fail: %d\n", i);}
   if ((i = Planimeter21())) {++n; printf("Planimeter21 fail: %d\n", i);}
-  if ((i = Planimeter29())) {++n; printf("AddEdge1 fail: %d\n", i);}
+  if ((i = Planimeter29())) {++n; printf("Planimeter29 fail: %d\n", i);}
   return n;
 }
 

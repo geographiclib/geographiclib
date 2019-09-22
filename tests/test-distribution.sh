@@ -46,7 +46,7 @@ umask 0022
 # python
 #   python/setup.py
 #   python/geographiclib/__init__.py
-#   python/doc/index.rst
+#   python/doc/index.rst (date + update change log)
 #   python/README.rst
 # use: cd python; pychecker geographiclib/*.py
 
@@ -57,19 +57,22 @@ umask 0022
 #     GeographicLib.dox.in, geodesic-{c,for}.dox,
 #     java/src/main/java/net/sf/geographiclib/package-info.java,
 #     js/GeographicLib.md, python/doc/index.rst
+#   mathworks has switched to an uglier URL.  Only update if there are
+#   changes.
 # use MATLAB's analyze code
 
 # C
 #   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
-#   doc/geodesic-c.dox
+#   doc/geodesic-c.dox (date + update change log)
 
 # Fortran
 #   legacy/Fortran/geodesic.for comment + geover
-#   doc/geodesic-for.dox
+#   doc/geodesic-for.dox (date + update change log)
 
 # Java
 #   java/pom.xml java/*/pom.xml
-#   java/src/main/java/net/sf/geographiclib/package-info.java
+#   java/src/main/java/net/sf/geographiclib/package-info.java (date +
+#   update change log)
 #   (remember to remove SNAPSHOT from version number of lib)
 
 # maxima
@@ -79,7 +82,7 @@ umask 0022
 #   js/src/Math.js
 #   js/package.json
 #   js/README.md
-#   js/GeographicLib.md
+#   js/GeographicLib.md (date + update change log)
 # use: cd js; jshint src
 
 DATE=`date +%F`

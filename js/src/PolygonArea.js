@@ -100,7 +100,7 @@
         area += area0;
     }
     return 0 + area;
-  }
+  };
 
   /**
    * @class

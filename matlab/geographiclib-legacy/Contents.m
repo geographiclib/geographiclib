@@ -30,4 +30,4 @@
 %   localcartesianforward  - Wrapper for loccart_fwd
 %   localcartesianreverse  - Wrapper for loccart_inv
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2019) <charles@karney.com>.

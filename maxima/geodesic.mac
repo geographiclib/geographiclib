@@ -101,7 +101,7 @@ documented at
 */
 
 /* The corresponding version of GeographicLib */
-geod_version:[1,49,0]$
+geod_version:[1,50,0]$
 
 /* Load series created by geod.mac (NEED TO UNCOMMENT THE LAST LINE OF
 geod.mac TO GENERATE THIS FILE). */
@@ -1182,6 +1182,7 @@ geod_polygonarea(g, points) := block([n:length(points), crossings : 0,
     /* The minus sign is due to the counter-clockwise convention */
     A : A - S12,
     crossings : crossings + transit(points[i][2], points[mod(i,n)+1][2])),
+  A : mod(A+area0/2, area0) - area0/2,
   if mod(crossings, 2) = 1 then
   A : A + (if A < 0b0 then 1 else -1) * area0/2,
   /* Put area in (-area0/2, area0/2] */

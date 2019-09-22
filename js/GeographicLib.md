@@ -110,6 +110,17 @@ Two examples of this library in use are
 ### Change log
 
 * Version 1.50 (released 2019-mm-dd)
+  * PolygonArea can now handle arbitrarily complex polygons.  In the
+    case of self-intersecting polygons the area is accumulated
+    "algebraically", e.g., the areas of the 2 loops in a figure-8
+    polygon will partially cancel.
+  * Fix two bugs in the computation of areas when some vertices are specified
+    by an added edge.
+  * Fix bug in computing unsigned area.
+  * When parsing DMS strings ignore various non-breaking spaces.
+  * Fall back to system versions of hypot, cbrt, log1p, atanh if they
+    are available.
+  * Math.cbrt, Math.atanh, and Math.asinh preserve the sign of &minus;0.
 
 * Version 1.49 (released 2017-10-05)
   * Use explicit test for nonzero real numbers.

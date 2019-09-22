@@ -100,6 +100,16 @@ Change log
 
 * Version 1.50 (released 2019-mm-dd)
 
+  * PolygonArea can now handle arbitrarily complex polygons.  In the
+    case of self-intersecting polygons the area is accumulated
+    "algebraically", e.g., the areas of the 2 loops in a figure-8
+    polygon will partially cancel.
+  * Fixed bug in counting pole encirclings when adding edges to a
+    polygon.
+  * Work around problems caused by sin(inf) and fmod(inf) raising
+    exceptions.
+  * Math.cbrt, Math.atanh, and Math.asinh now preserve the sign of −0.
+
 * Version 1.49 (released 2017-10-05)
 
   * Fix code formatting; add tests.

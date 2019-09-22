@@ -269,8 +269,19 @@
  *   (released 2019-mm-dd)
  * <ul>
  * <li>
+ *   {@link net.sf.geographiclib.PolygonArea} can now handle arbitrarily
+ *   complex polygons.  In the case of self-intersecting polygons the area is
+ *   accumulated "algebraically", e.g., the areas of the 2 loops in a figure-8
+ *   polygon will partially cancel.
+ * <li>
+ *   Fix two bugs in the computation of areas when some vertices are specified
+ *   by an added edge.
+ * <li>
  *   Require Java 1.6 or later and so remove epsilon, min, hypot, log1p,
  *   copysign, cbrt from GeoMath.
+ * <li>
+ *   GeoMath.cbrt, GeoMath.atanh, and GeoMath.asinh preserve the sign of
+ *   &minus;0.
  * </ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.49</a>

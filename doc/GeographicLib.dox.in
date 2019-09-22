@@ -165,7 +165,7 @@ projection.
 The bulk of the testing has used geographically relevant values of the
 flattening.  Thus, you can expect close to full accuracy for &minus;0.01
 &le; \e f &le; 0.01 (but note that TransverseMercatorExact is restricted
-to \e f > 0).  However, reasonably accurate results can be expected if
+to \e f &gt; 0).  However, reasonably accurate results can be expected if
 &minus;0.1 &le; \e f &le; 0.1.  Outside this range, you should attempt
 to verify the accuracy of the routines independently.  Two types of
 problems may occur with larger values of <i>f</i>:
@@ -666,8 +666,13 @@ The following Fedora packages are required by
 - nodejs
 - maven
 .
-The following npm packages need to be installed \verbatim
-  npm install -g mocha jsdoc \endverbatim
+
+The following npm packages need to be installed (jshint is just for
+syntax checking) \verbatim
+  npm install -g mocha jsdoc jshint \endverbatim
+The following Fedora package is also useful for syntax checking python
+- pychecker
+.
 A recent version of mpreal.h needs to be downloaded from
 https://bitbucket.org/advanpix/mpreal and installed
 in the <code>include/</code> directory.  For all the tests to be run,
@@ -1386,7 +1391,9 @@ self-contained and does not depend on the rest of GeographicLib.
 
 The library is available as an MATLAB Central package,
 <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
-    GeographicLib toolbox</a>.
+   GeographicLib toolbox</a>,
+<a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
+   documentation</a>.
 
 A summary of the routines is obtained by \verbatim
    help geographiclib \endverbatim
@@ -3130,7 +3137,7 @@ keywords
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
    - <b>DeltaEpoch</b> (default 1), the interval between models in years
-     (only relevant for NumModels > 1).
+     (only relevant for NumModels &gt; 1).
    - <b>Normalization</b> (default schmidt), the normalization used for
      the associated Legendre functions (schmidt or full).
    - <b>ID</b> (required), 8 printable characters which serve as a
@@ -3166,7 +3173,7 @@ The coefficient file NAME.wmm.cof is a binary file in little endian
 order.  The first 8 bytes of this file must match the ID given in
 NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
 coefficients.  The first NumModels of these model the magnetic field at
-Epoch + \e i * DeltaEpoch for 0 &le; \e i < NumModels.  The last set of
+Epoch + \e i * DeltaEpoch for 0 &le; \e i &lt; NumModels.  The last set of
 coefficients model the rate of change of the magnetic field at Epoch +
 (NumModels &minus; 1) * DeltaEpoch.  The format for each set of coefficients
 is:
@@ -5356,14 +5363,13 @@ where the last relation is given by the defining equations for
 
 This provides a complete solution for rhumb lines.  This formulation
 entirely encapsulates the ellipsoidal shape of the earth via the
-auxiliary latitudes; thus in the Rhumb class, the ellipsoidal
+\ref auxlat; thus in the Rhumb class, the ellipsoidal
 generalization is handled by the Ellipsoid class where the auxiliary
 latitudes are defined.
 
 \section rhumblat Determining the auxiliary latitudes
 
-Here we brief develop the necessary formulas for the auxiliary
-latitudes.
+Here we brief develop the necessary formulas for the \ref auxlat.
 
 <b>Isometric latitude:</b> The equation for \f$\psi\f$ can be integrated
 to give
@@ -6254,12 +6260,12 @@ The contents of the file are as follows:
    lon = 90&deg;;
  - 1000 entries randomly distributed on lat in [&minus;89&deg;, 0&deg;],
    lon = (1 &minus; \e e) 90&deg;;
- - 1000 entries close to lat = 0&deg;, lon = 90&deg; (lat < 0&deg;, lon
+ - 1000 entries close to lat = 0&deg;, lon = 90&deg; (lat &lt; 0&deg;, lon
    &le; 90&deg;);
  - 1000 entries close to lat = 0&deg;, lon = (1 &minus; \e e) 90&deg;
-   (lat < 0&deg;, lon &le; (1 &minus; \e e) 90&deg;);
+   (lat &lt; 0&deg;, lon &le; (1 &minus; \e e) 90&deg;);
  .
-(a total of 287000 entries).  The entries for lat < 0&deg; and
+(a total of 287000 entries).  The entries for lat &lt; 0&deg; and
 lon in [(1 &minus; \e e) 90&deg;, 90&deg;] use the "extended"
 domain for the transverse Mercator projection explained in Sec. 5 of
 Karney (2011).  The first
@@ -6456,7 +6462,7 @@ the lines of latitude.)  This projection places the point latitude =
 \image html gauss-krueger-graticule-a.png "Fig. 1(b)"
 Fig. 1(b):
 The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
-The equator lies on \e y = 0 for longitude < 81&deg;; beyond
+The equator lies on \e y = 0 for longitude &lt; 81&deg;; beyond
 this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
 (upper), which shows the graticule for the International Ellipsoid.  Lee,
 Fig. 46, shows the graticule for the entire ellipsoid.  This projection
@@ -6465,7 +6471,7 @@ Fig. 46, shows the graticule for the entire ellipsoid.  This projection
 \image html thompson-tm-graticule-a.png "Fig. 1(c)"
 Fig. 1(c):
 The graticule for the Thompson transverse Mercator projection.  The
-equator lies on \e y = 0 for longitude < 81&deg;; at longitude =
+equator lies on \e y = 0 for longitude &lt; 81&deg;; at longitude =
 81&deg;, it turns by 120&deg; and heads for \e y = 1.
 Compare this with Lee, Fig. 43, which shows the graticule for the
 International Ellipsoid.  Lee, Fig. 44, shows the graticule for the
@@ -6518,7 +6524,7 @@ rectangular region shown
  .
 The coloring of the lines is the same as Fig. 3(a), except that latitude
 lines extended down to &minus;10&deg; and a red line has been added
-showing the line \e y = 0 for \e x > 1.71 in the Gauss-Kr&uuml;ger
+showing the line \e y = 0 for \e x &gt; 1.71 in the Gauss-Kr&uuml;ger
 projection (Fig. 3(a)).  The extended Thompson projection figure has
 reflection symmetry on all the four sides of Fig. 3(c).
 
@@ -6590,14 +6596,14 @@ Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
 Convert (\e lat1 &minus; \e lat0, \e lon1 &minus; \e lon0) to a
 distance, \e ds, on the surface of the ellipsoid and define \e err =
-hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| < 5000&nbsp;km, we
-have \e err < 7&nbsp;nm (7 nanometers).
+hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| &lt; 5000&nbsp;km, we
+have \e err &lt; 7&nbsp;nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
 absolute errors in the approximate geodetic height become large, or
 within 50&nbsp;km of the center of the earth, because of errors in
 computing the approximate geodetic latitude.  To illustrate the second
-issue, the maximum value of \e err for \e h0 < 0 is about 80&nbsp;mm.
+issue, the maximum value of \e err for \e h0 &lt; 0 is about 80&nbsp;mm.
 The error is maximum close to the circle given by geocentric coordinates
 satisfying hypot(\e x, \e y) = \e a <i>e</i><sup>2</sup> (=
 42.7&nbsp;km), \e z = 0.  (This is the center of meridional curvature
@@ -6610,21 +6616,21 @@ this, Reverse does quite well in this vicinity.
 
 To obtain a practical measure of the error for the general case we define
 - <i>err</i><sub>h</sub> = |\e h1 &minus; <i>h0</i>| / max(1, \e h0 / \e a)
-- for \e h0 > 0, <i>err</i><sub>out</sub> = \e ds
-- for \e h0 < 0, apply the long double version of WGS84.Forward to (\e
+- for \e h0 &gt; 0, <i>err</i><sub>out</sub> = \e ds
+- for \e h0 &lt; 0, apply the long double version of WGS84.Forward to (\e
   lat1, \e lon1, \e h1) to give (\e x1, \e y1, \e z1) and compute
   <i>err</i><sub>in</sub> = hypot(\e x1 &minus; \e x0, \e y1 &minus; \e
   y0, \e z1 &minus; \e z0).
 .
-We then find <i>err</i><sub>h</sub> < 8&nbsp;nm,
-<i>err</i><sub>out</sub> < 4&nbsp;nm, and <i>err</i><sub>in</sub> <
+We then find <i>err</i><sub>h</sub> &lt; 8&nbsp;nm,
+<i>err</i><sub>out</sub> &lt; 4&nbsp;nm, and <i>err</i><sub>in</sub> <
 7&nbsp;nm (1&nbsp;nm = 1 nanometer).
 
 The testing has been confined to the WGS84 ellipsoid.  The method will
 work for all ellipsoids used in terrestrial geodesy.  However, the
 central region, which leads to multiple real roots for the cubic
 equation in Reverse, pokes outside the ellipsoid (at the poles) for
-ellipsoids with \e e > 1/sqrt(2); Reverse has not been analyzed for this
+ellipsoids with \e e &gt; 1/sqrt(2); Reverse has not been analyzed for this
 case.  Similarly ellipsoids which are very nearly spherical may yield
 inaccurate results due to underflow; in the other hand, the case of the
 sphere, \e f = 0, is treated specially and gives accurate results.
@@ -6668,7 +6674,8 @@ Six latitudes are used by GeographicLib:
 The last five of these are called <i>auxiliary latitudes</i>.  These
 quantities are all defined in the
 <a href="https://en.wikipedia.org/wiki/Latitude#Auxiliary_latitudes">
-Wikipedia article on latitudes</a>.
+Wikipedia article on latitudes</a>.  The Ellipsoid class contains
+methods for converting all of these and the geographic latitude.
 
 In addition there's the isometric latitude, &psi;, defined by &psi; =
 gd<sup>&minus;1</sup>&chi; = sinh<sup>&minus;1</sup>&nbsp;tan&chi; and
@@ -7655,12 +7662,14 @@ git repository for GeographicLib</a>.
    - Template versions of Gnomonic and AzimuthalEquidistant so that they
      can use either Geodesic and GeodesicExact.  Use typedefs so that
      Geodesic::Line points to GeodesicLine.
-   - Split DMS stuff from main JavaScript package.
+   - Split DMS stuff from main JavaScript package.  Also move 'use
+     strict' into functions (to make jshint happy).
    - Add C++ tests not dependent on utility programs.
    - Add information on radius of convergence for aux latitude series.
    - Require C++11 and C99(?) compiler support.  Mark Math::hypot et
      al. deprecated.
-   - Check Geocentric for extreme ellipsoids.
+   - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
+     &gt; 1/sqrt(2).
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
@@ -7683,13 +7692,13 @@ git repository for GeographicLib</a>.
        results for UPS zones with prec = -1.
      - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
        division by zero" messages from Octave.
-     - In python implementation, work around problems by sin(inf) and
-       fmod(inf) raising exceptions.
+     - In python implementation, work around problems caused by sin(inf)
+       and fmod(inf) raising exceptions.
      - Geoid class, fix the use of streamoff.
    - The PolygonArea class, the
      <a href="Planimeter.1.html">Planimeter</a> utility, and their
-     equivalents in C, Fortran, MATLAB, Java, JavaScript, Python can now
-     handle arbitrarily complex polygons.  In the case of
+     equivalents in C, Fortran, MATLAB, Java, JavaScript, Python, and
+     Maxima can now handle arbitrarily complex polygons.  In the case of
      self-intersecting polygons the area is accumulated "algebraically",
      e.g., the areas of the 2 loops in a figure-8 polygon will partially
      cancel.
@@ -7768,16 +7777,11 @@ git repository for GeographicLib</a>.
    - Improve code coverage in the tests of geodesic algorithms (C++, C,
      Java, JavaScript, Python, MATLAB, Fortran).
    - Old deprecated NormalGravity::NormalGravity constructor removed.
-     Fix NormalGravity call arg 5 at line 161 GravitPanel.cs.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
      - Clarify which solution is returned for Geocentric::Reverse.
-     - TODO: in example programs, document when additional data files
-       are needed.
-   - TODO: cross ref aux latitude section in rhumb line page.
-   - TODO: Reference man page in source files for tools.
-   - TODO: add Ellipsoid class links auxlat page.
-   - TODO: update copyright dates for 2019 (since commit e811562).
+   - TODO: update copyright dates for 2019 (since commit 477b255).
+   - TODO: update Matlab doc link.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
@@ -8013,7 +8017,7 @@ git repository for GeographicLib</a>.
      - work around Octave problem which causes mgrs_fwd to return
        garbage with prec = 10 or 11;
      - add geographiclib_test.m to run a test suite.
-   - Behavior of substituting 1/\e f for \e f if \e f > 1 is now
+   - Behavior of substituting 1/\e f for \e f if \e f &gt; 1 is now
      <b>deprecated</b>.  This behavior has been removed from the
      JavaScript, C, and Python implementations (it was never
      documented).  Maxima, MATLAB, and Fortran implementations never
@@ -8116,7 +8120,7 @@ git repository for GeographicLib</a>.
      - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
        azimuth for points at the pole.
    - MATLAB-specific fixes:
-     - mgrs_fwd now treats treats prec > 11 as prec = 11;
+     - mgrs_fwd now treats treats prec &gt; 11 as prec = 11;
      - illegal letter combinations are now correctly detected by
        mgrs_inv;
      - fixed bug where mgrs_inv returned the wrong results for prec = 0
@@ -8704,7 +8708,7 @@ git repository for GeographicLib</a>.
    (released 2012-05-27)
    - Add Geohash and Ellipsoid classes.
    - FIX BUG in AlbersEqualArea for very prolate
-     ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
+     ellipsoids (<i>b</i><sup>2</sup> &gt; 2 <i>a</i><sup>2</sup>).
    - cmake changes:
      - optionally use PACKAGE_PATH and INSTALL_PATH to determine
        CMAKE_INSTALL_PREFIX;
@@ -9086,7 +9090,7 @@ git repository for GeographicLib</a>.
      Geocentric for consistency with
      the forthcoming paper on geodesics.
    - Increase order of series using in Geodesic to 6 (full
-     accuracy maintained for ellipsoid flattening < 0.01).
+     accuracy maintained for ellipsoid flattening &lt; 0.01).
    - Macro __NO_LONG_DOUBLE_MATH to disable use of long double.
    - Correct declaration of Math::isfinite to return a bool.
    - Changes in the \ref utilities,

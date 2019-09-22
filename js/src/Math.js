@@ -65,7 +65,7 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 49, patch: 0 };
+  c.version = { major: 1, minor: 50, patch: 0 };
   /**
    * @constant
    * @summary version string

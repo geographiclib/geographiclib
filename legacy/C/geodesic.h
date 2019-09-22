@@ -433,7 +433,7 @@ extern "C" {
    * - \e caps |= GEOD_AREA for the area \e S12,
    * - \e caps |= GEOD_DISTANCE_IN permits the length of the
    *   geodesic to be given in terms of \e s12; without this capability the
-   *   length can only be specified in terms of arc length,
+   *   length can only be specified in terms of arc length.
    * .
    * A value of \e caps = 0 is treated as GEOD_LATITUDE | GEOD_LONGITUDE |
    * GEOD_AZIMUTH | GEOD_DISTANCE_IN (to support the solution of the "standard"
