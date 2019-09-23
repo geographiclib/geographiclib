@@ -64,6 +64,9 @@ umask 0022
 # C
 #   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
 #   doc/geodesic-c.dox (date + update change log)
+# PROJ integration
+#   geodesic.[hc], geodtest.c (renamed to geodtest.cpp)
+#   plus man/man1/geod.1 man/man3/geodesic.3
 
 # Fortran
 #   legacy/Fortran/geodesic.for comment + geover
@@ -508,6 +511,8 @@ make -C $DEVELSOURCE -f makefile-admin distrib-files
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 
 # python release -- authentication via ~/.pypirc
+# New method in
+# https://packaging.python.org/tutorials/packaging-projects/#uploading-your-project-to-pypi
 cd $TEMP/gita/geographiclib/python
 python setup.py sdist --formats gztar upload
 sudo pip install --upgrade geographiclib
@@ -518,7 +523,9 @@ mvn clean deploy -P release
 
 # javascript release
 # authenticate via .npmrc; _auth value is
-# echo -n cffk:PW | openssl base64
+#   echo -n cffk:PASSWORD | openssl base64
+# decode with
+#   echo AUTHSTRING | openssl base64 -d
 cd $TEMP/gita/geographiclib/BUILD/js && npm publish geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js

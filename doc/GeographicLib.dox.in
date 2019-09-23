@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2019-mm-dd
+\date 2019-09-24
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2019-mm-dd),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2019-09-24),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -7673,7 +7673,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
-   (released 2019-mm-dd)
+   (released 2019-09-24)
    - BUG fixes:
      - Java + JavaScript implementations of PolygonArea::TestEdge counted
        the pole encirclings wrong.
@@ -7719,9 +7719,10 @@ git repository for GeographicLib</a>.
    - The <a href="GeodSolve.1.html">GeodSolve</a> allows fractional
      distances to be entered as fractions (with the <code>-F</code>
      flag).
-   - MajorRadius() methods are now called EquatorialRadius() for C++,
-     Java, .NET.  MajorRadius() is retained for backward compatibility
-     for C++ and Java but is deprecated.
+   - MajorRadius() methods are now called EquatorialRadius() for the
+     C++, Java, and .NET libraries.  "Equatorial" is more descriptive in
+     the case of prolate ellipsoids.  MajorRadius() is retained for
+     backward compatibility for C++ and Java but is deprecated.
    - Minimum version updates:
      - CMake = 3.1.0, released 2014-12-15.
      - Minimum g++ version = 4.8.0, released 2013-03-22.
@@ -7732,8 +7733,8 @@ git repository for GeographicLib</a>.
        version of Visual Studio will be Visual Studio 12 2013.
      - Minimum boost version = 1.64 needed for GEOGRAPHICLIB_PRECISION =
        4.
-     - Java = 1.6 allows removal of epsilon, min, hypot, log1p,
-       copysign, cbrt from GeoMath.
+     - Java = 1.6; this allows the removal of epsilon, min, hypot,
+       log1p, copysign, cbrt from GeoMath.
    - CMake updates:
      - Fine tune Visual Studio compatibility check in
        find_package(GeographicLib); this allows GeographicLib compiled
@@ -7753,12 +7754,12 @@ git repository for GeographicLib</a>.
        c</code> and <code>0.0 + x</code>.
    - Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This
      is now the default magnetic model for
-     <a href="MagneticField.1.html">MagneticField</a> (replacing
-     wmm2015 which is now deprecated).  Coming soon the wmm2020 model.
+     <a href="MagneticField.1.html">MagneticField</a> (replacing wmm2015
+     which is now deprecated).  Coming in 2019-12: the wmm2020 model.
    - The -f flag in the scripts geographiclib-get-geoids,
-     geographiclib-get-gravity, and geographiclib-get-magnetic, allows you
-     to load new models (not yet in the set defined by "all").  This is in
-     addition to its original role of allowing you to overwrite
+     geographiclib-get-gravity, and geographiclib-get-magnetic, allows
+     you to load new models (not yet in the set defined by "all").  This
+     is in addition to its original role of allowing you to overwrite
      existing models.
    - Changes in math function support:
      - Move some of the functionality from Math.hpp to Math.cpp to make
@@ -7780,8 +7781,6 @@ git repository for GeographicLib</a>.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
      - Clarify which solution is returned for Geocentric::Reverse.
-   - TODO: update copyright dates for 2019 (since commit c367f40).
-   - TODO: update Matlab doc link.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)

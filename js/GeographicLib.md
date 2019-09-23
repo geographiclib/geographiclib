@@ -109,7 +109,7 @@ Two examples of this library in use are
 
 ### Change log
 
-* Version 1.50 (released 2019-mm-dd)
+* Version 1.50 (released 2019-09-24)
   * PolygonArea can now handle arbitrarily complex polygons.  In the
     case of self-intersecting polygons the area is accumulated
     "algebraically", e.g., the areas of the 2 loops in a figure-8

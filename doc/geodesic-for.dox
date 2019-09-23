@@ -175,7 +175,7 @@ and are therefore in the public domain.
 \section changes-for Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.50/Fortran">Version 1.50</a>
-   (released 2019-mm-dd)
+   (released 2019-09-24)
    - Allow arbitrarily complex polygons in area.  In the case of
      self-intersecting polygons the area is accumulated "algebraically",
      e.g., the areas of the 2 loops in a figure-8 polygon will partially

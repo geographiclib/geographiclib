@@ -266,7 +266,7 @@
  * <ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.50</a>
- *   (released 2019-mm-dd)
+ *   (released 2019-09-24)
  * <ul>
  * <li>
  *   {@link net.sf.geographiclib.PolygonArea} can now handle arbitrarily
