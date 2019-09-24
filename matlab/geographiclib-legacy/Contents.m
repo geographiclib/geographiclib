@@ -4,7 +4,7 @@
 %   The functions in this directory are DEPRECATED.  They are wrapper
 %   routines for the GeographicLib toolbox, which is available at
 %
-%     href="http://www.mathworks.com/matlabcentral/fileexchange/50605
+%     href="https://www.mathworks.com/matlabcentral/fileexchange/50605
 %
 %   Directly using the GeographicLib toolbox provides greater functionality
 %   and flexiblility.
@@ -30,4 +30,4 @@
 %   localcartesianforward  - Wrapper for loccart_fwd
 %   localcartesianreverse  - Wrapper for loccart_inv
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2019) <charles@karney.com>.

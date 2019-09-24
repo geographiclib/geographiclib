@@ -12,7 +12,7 @@ int main(array<System::String ^> ^/*args*/)
             lat0 = 39 + 20/60.0, lon0 =-77 - 45/60.0, // origin
             fe = 600000, fn = 0;                      // false easting and northing
         // Set up basic projection
-        LambertConformalConic^ PASouth = gcnew LambertConformalConic( Constants::WGS84::MajorRadius,
+        LambertConformalConic^ PASouth = gcnew LambertConformalConic( Constants::WGS84::EquatorialRadius,
                                                                       Constants::WGS84::Flattening,
                                                                       lat1, lat2, k1);
         double x0, y0;

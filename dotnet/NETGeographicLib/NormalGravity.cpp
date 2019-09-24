@@ -138,8 +138,8 @@ Geocentric^ NormalGravity::Earth()
 }
 
 //*****************************************************************************
-double NormalGravity::MajorRadius::get()
-{ return m_pNormalGravity->MajorRadius(); }
+double NormalGravity::EquatorialRadius::get()
+{ return m_pNormalGravity->EquatorialRadius(); }
 
 //*****************************************************************************
 double NormalGravity::MassConstant::get()

@@ -16,5 +16,6 @@ function ellipsoid = defaultellipsoid
     e = flat2ecc(f);
     ell = [a, e];
   end
+  narginchk(0, 0)
   ellipsoid = ell;
 end

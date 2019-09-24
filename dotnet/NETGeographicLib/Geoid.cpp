@@ -190,7 +190,7 @@ double Geoid::CacheNorth::get() { return m_pGeoid->CacheNorth(); }
 double Geoid::CacheSouth::get() { return m_pGeoid->CacheSouth(); }
 
 //*****************************************************************************
-double Geoid::MajorRadius::get() { return m_pGeoid->MajorRadius(); }
+double Geoid::EquatorialRadius::get() { return m_pGeoid->EquatorialRadius(); }
 
 //*****************************************************************************
 double Geoid::Flattening::get() { return m_pGeoid->Flattening(); }

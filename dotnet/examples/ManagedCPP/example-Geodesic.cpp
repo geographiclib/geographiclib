@@ -4,7 +4,7 @@ using namespace NETGeographicLib;
 int main(array<System::String ^> ^/*args*/)
 {
     try {
-        Geodesic^ geod = gcnew Geodesic( Constants::WGS84::MajorRadius,
+        Geodesic^ geod = gcnew Geodesic( Constants::WGS84::EquatorialRadius,
                                          Constants::WGS84::Flattening );
         // Alternatively: Geodesic^ geod = gcnew Geodesic();
         {

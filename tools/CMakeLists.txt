@@ -28,7 +28,7 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 endif ()
 
-if (APPLE AND NOT CMAKE_VERSION VERSION_LESS 2.8.12)
+if (APPLE)
   # Ensure that the package is relocatable
   set_target_properties (${TOOLS} PROPERTIES
     INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
@@ -36,6 +36,17 @@ endif ()
 
 # Specify where the tools are installed, adding them to the export targets
 install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
+
+if (MSVC AND PACKAGE_DEBUG_LIBS)
+  # Possibly don't EXPORT the debug versions of the tools and then this
+  # wouldn't be necessary.  However, including the debug versions of the
+  # tools in the installer package is innocuous.
+  foreach (TOOL ${TOOLS})
+    install (PROGRAMS
+      "${PROJECT_BINARY_DIR}/bin/Debug/${TOOL}${CMAKE_DEBUG_POSTFIX}.exe"
+      DESTINATION bin CONFIGURATIONS Release)
+  endforeach ()
+endif ()
 
 # Put all the tools into a folder in the IDE
 set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)

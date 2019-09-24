@@ -10,7 +10,7 @@ Module example_LambertConformalConic
             Dim lat0 As Double = 39 + 20 / 60.0, lon0 = -77 - 45 / 60.0 ' origin
             Dim fe As Double = 600000, fn = 0                           ' false easting and northing
             ' Set up basic projection
-            Dim PASouth As LambertConformalConic = New LambertConformalConic(Constants.WGS84.MajorRadius,
+            Dim PASouth As LambertConformalConic = New LambertConformalConic(Constants.WGS84.EquatorialRadius,
                                                                              Constants.WGS84.Flattening,
                                                                              lat1, lat2, k1)
             Dim x0, y0 As Double

@@ -2,7 +2,7 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -367,10 +367,10 @@ namespace GeographicLib {
      * @param[out] northp hemisphere (true means north, false means south).
      *
      * EPSG (European Petroleum Survery Group) codes are a way to refer to many
-     * different projections.  DecodeEPSG decodes those refering to UTM or UPS
+     * different projections.  DecodeEPSG decodes those referring to UTM or UPS
      * projections for the WGS84 ellipsoid.  If the code does not refer to one
      * of these projections, \e zone is set to UTMUPS::INVALID.  See
-     * http://spatialreference.org/ref/epsg/
+     * https://www.spatialreference.org/ref/epsg/
      **********************************************************************/
     static void DecodeEPSG(int epsg, int& zone, bool& northp);
 
@@ -402,7 +402,7 @@ namespace GeographicLib {
      * (The WGS84 value is returned because the UTM and UPS projections are
      * based on this ellipsoid.)
      **********************************************************************/
-    static Math::real MajorRadius()
+    static Math::real EquatorialRadius()
     { return Constants::WGS84_a(); }
 
     /**
@@ -413,6 +413,12 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real Flattening()
     { return Constants::WGS84_f(); }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 
   };

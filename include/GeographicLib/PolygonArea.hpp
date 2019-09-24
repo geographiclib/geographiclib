@@ -2,7 +2,7 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -31,6 +31,10 @@ namespace GeographicLib {
    *   addenda:
    *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
+   *
+   * Arbitrarily complex polygons are allowed.  In the case self-intersecting
+   * of polygons the area is accumulated "algebraically", e.g., the areas of
+   * the 2 loops in a figure-8 polygon will partially cancel.
    *
    * This class lets you add vertices and edges one at a time to the polygon.
    * The sequence must start with a vertex and thereafter vertices and edges
@@ -90,24 +94,17 @@ namespace GeographicLib {
     // an alternate version of transit to deal with longitudes in the direct
     // problem.
     static int transitdirect(real lon1, real lon2) {
-      // We want to compute exactly
-      //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
-      // Since we only need the parity of the result we can use std::remquo;
-      // but this is buggy with g++ 4.8.3 (glibc version < 2.22), see
-      //   https://sourceware.org/bugzilla/show_bug.cgi?id=17569
-      // and requires C++11.  So instead we do
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 4
-      using std::remainder;
-      lon1 = remainder(lon1, real(720)); lon2 = remainder(lon2, real(720));
-      return ( (lon2 >= 0 && lon2 < 360 ? 0 : 1) -
-               (lon1 >= 0 && lon1 < 360 ? 0 : 1) );
-#else
-      using std::fmod;
-      lon1 = fmod(lon1, real(720)); lon2 = fmod(lon2, real(720));
-      return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
-               ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
-#endif
+      // Compute exactly the parity of
+      //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
+      lon1 = Math::remainder(lon1, real(720));
+      lon2 = Math::remainder(lon2, real(720));
+      return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
+               (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
     }
+    void Remainder(Accumulator<>& a) const { a.remainder(_area0); }
+    void Remainder(real& a) const { a = Math::remainder(a, _area0); }
+    template <typename T>
+    void AreaReduce(T& area, int crossings, bool reverse, bool sign) const;
   public:
 
     /**
@@ -239,7 +236,7 @@ namespace GeographicLib {
      *   the value inherited from the Geodesic object used in the constructor.
      **********************************************************************/
 
-    Math::real MajorRadius() const { return _earth.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _earth.EquatorialRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
@@ -258,6 +255,12 @@ namespace GeographicLib {
      **********************************************************************/
     void CurrentPoint(real& lat, real& lon) const
     { lat = _lat1; lon = _lon1; }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };
 

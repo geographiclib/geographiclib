@@ -3,7 +3,7 @@ Imports NETGeographicLib
 Module example_Ellipsoid
     Sub Main()
         Try
-            Dim wgs84 As Ellipsoid = New Ellipsoid(Constants.WGS84.MajorRadius,
+            Dim wgs84 As Ellipsoid = New Ellipsoid(Constants.WGS84.EquatorialRadius,
                                                    Constants.WGS84.Flattening)
             ' Alternatively: Dim wgs84 As Ellipsoid = new Ellipsoid()
             Console.WriteLine(String.Format(

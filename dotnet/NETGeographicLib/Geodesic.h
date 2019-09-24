@@ -76,7 +76,7 @@ namespace NETGeographicLib
    *   counter-clockwise, of the geodesic quadrilateral with corners
    *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
    *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
-   *   simple geodesic polygon.
+   *   geodesic polygon.
    *
    * Overloaded versions of Geodesic::Direct, Geodesic::ArcDirect, and
    * Geodesic::Inverse allow these quantities to be returned.  In addition
@@ -127,7 +127,7 @@ namespace NETGeographicLib
    * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
    * obtained for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate
    * maximum error (expressed as a distance) for an ellipsoid with the same
-   * major radius as the WGS84 ellipsoid and different values of the
+   * equatorial radius as the WGS84 ellipsoid and different values of the
    * flattening.<pre>
    *     |f|      error
    *     0.01     25 nm
@@ -160,7 +160,7 @@ namespace NETGeographicLib
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A default constructor has been provided that assumes WGS84 parameters.
    *
-   * The MajorRadius, Flattening, and EllipsoidArea functions are
+   * The EquatorialRadius, Flattening, and EllipsoidArea functions are
    * implemented as properties.
    *
    * The GenDirect, GenInverse, and Line functions accept the
@@ -827,7 +827,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the  flattening of the ellipsoid.  This is the

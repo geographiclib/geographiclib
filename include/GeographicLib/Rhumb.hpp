@@ -2,7 +2,7 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -90,8 +90,21 @@ namespace GeographicLib {
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
     static real Dlog(real x, real y) {
+      using std::sqrt;
       real t = x - y;
-      return t != 0 ? 2 * Math::atanh(t / (x + y)) / t : 1 / x;
+      // Change
+      //
+      //   atanh(t / (x + y))
+      //
+      // to
+      //
+      //   asinh(t / (2 * sqrt(x*y)))
+      //
+      // to avoid taking atanh(1) when x is large and y is 1.  N.B., this
+      // routine is invoked with positive x and y, so no need to guard against
+      // taking the sqrt of a negative quantity.  This fixes bogus results for
+      // the area being returning when an endpoint is at a pole.
+      return t != 0 ? 2 * Math::asinh(t / (2 * sqrt(x*y))) / t : 1 / x;
     }
     // N.B., x and y are in degrees
     static real Dtan(real x, real y) {
@@ -126,8 +139,8 @@ namespace GeographicLib {
     static real Dasinh(real x, real y) {
       real d = x - y,
         hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
-      return d != 0 ? Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) :
-                                  x*hy - y*hx) / d :
+      return d != 0 ?
+        Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) : x*hy - y*hx) / d :
         1 / hx;
     }
     static real Dgd(real x, real y) {
@@ -399,7 +412,7 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const { return _ell.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _ell.EquatorialRadius(); }
 
     /**
      * @return \e f the  flattening of the ellipsoid.  This is the
@@ -407,7 +420,20 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const { return _ell.Flattening(); }
 
+    /**
+     * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a
+     *   polygon encircling a pole can be found by adding
+     *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the
+     *   polygon.
+     **********************************************************************/
     Math::real EllipsoidArea() const { return _ell.Area(); }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
+    ///@}
 
     /**
      * A global instantiation of Rhumb with the parameters for the WGS84
@@ -576,7 +602,7 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value inherited from the Rhumb object used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const { return _rh.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _rh.EquatorialRadius(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value

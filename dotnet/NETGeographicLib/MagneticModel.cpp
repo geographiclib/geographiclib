@@ -226,8 +226,8 @@ double MagneticModel::MinTime::get() { return m_pMagneticModel->MinTime(); }
 double MagneticModel::MaxTime::get() { return m_pMagneticModel->MaxTime(); }
 
 //*****************************************************************************
-double MagneticModel::MajorRadius::get()
-{ return m_pMagneticModel->MajorRadius(); }
+double MagneticModel::EquatorialRadius::get()
+{ return m_pMagneticModel->EquatorialRadius(); }
 
 //*****************************************************************************
 double MagneticModel::Flattening::get()

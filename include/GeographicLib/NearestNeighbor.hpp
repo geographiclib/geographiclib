@@ -2,7 +2,7 @@
  * \file NearestNeighbor.hpp
  * \brief Header for GeographicLib::NearestNeighbor class
  *
- * Copyright (c) Charles Karney (2016-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2016-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -70,11 +70,11 @@ namespace GeographicLib {
    * square root in the interests of "efficiency"; the squared distance does
    * not satisfy the triangle inequality!
    *
-   * This is a "header-only" implementation and, as such, depends in a minimal
-   * way on the rest of GeographicLib (the only dependency is through the use
-   * of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr for
-   * handling run-time and compile-time exceptions).  Therefore, it is easy to
-   * extract this class from the rest of GeographicLib and use it as a
+   * \note This is a "header-only" implementation and, as such, depends in a
+   * minimal way on the rest of GeographicLib (the only dependency is through
+   * the use of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr
+   * for handling compile-time and run-time exceptions).  Therefore, it is easy
+   * to extract this class from the rest of GeographicLib and use it as a
    * stand-alone facility.
    *
    * The \e dist_t type must support numeric_limits queries (specifically:
@@ -93,7 +93,7 @@ namespace GeographicLib {
    * Because of the overhead in constructing a NearestNeighbor object for a
    * large set of points, functions Save() and Load() are provided to save the
    * object to an external file.  operator<<(), operator>>() and <a
-   * href="http://www.boost.org/libs/serialization/doc"> Boost
+   * href="https://www.boost.org/libs/serialization/doc"> Boost
    * serialization</a> can also be used to save and restore a NearestNeighbor
    * object.  This is illustrated in the example.
    *
@@ -367,7 +367,7 @@ namespace GeographicLib {
      * the initializtion cost is saved.  The format of the binary saves is \e
      * not portable.
      *
-     * \note <a href="http://www.boost.org/libs/serialization/doc">
+     * \note <a href="https://www.boost.org/libs/serialization/doc">
      * Boost serialization</a> can also be used to save and restore a
      * NearestNeighbor object.  This requires that the
      * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.
@@ -442,7 +442,7 @@ namespace GeographicLib {
      * architecture.  If an exception is thrown, the state of the
      * NearestNeighbor is unchanged.
      *
-     * \note <a href="http://www.boost.org/libs/serialization/doc">
+     * \note <a href="https://www.boost.org/libs/serialization/doc">
      * Boost serialization</a> can also be used to save and restore a
      * NearestNeighbor object.  This requires that the
      * GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION macro be defined.

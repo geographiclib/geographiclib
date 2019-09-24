@@ -3,7 +3,7 @@ Imports NETGeographicLib
 Module example_GeodesicExact
     Sub Main()
         Try
-            Dim geod As GeodesicExact = New GeodesicExact(Constants.WGS84.MajorRadius,
+            Dim geod As GeodesicExact = New GeodesicExact(Constants.WGS84.EquatorialRadius,
                                                           Constants.WGS84.Flattening)
             ' Alternatively: Dim geod As GeodesicExact = new GeodesicExact()
             ' Sample direct calculation, travelling about NE from JFK

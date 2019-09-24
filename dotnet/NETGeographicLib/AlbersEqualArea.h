@@ -61,7 +61,7 @@ namespace NETGeographicLib
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * A constructor has been provided that creates the standard projections.
    *
-   * The MajorRadius, Flattening, OriginLatitude, and CentralScale functions
+   * The EquatorialRadius, Flattening, OriginLatitude, and CentralScale functions
    * are implemented as properties.
    **********************************************************************/
     public ref class AlbersEqualArea
@@ -237,7 +237,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the flattening of the ellipsoid.  This is the value used in

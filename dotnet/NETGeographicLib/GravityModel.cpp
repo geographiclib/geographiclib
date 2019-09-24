@@ -246,8 +246,8 @@ NormalGravity^ GravityModel::ReferenceEllipsoid()
 }
 
 //*****************************************************************************
-double GravityModel::MajorRadius::get()
-{ return m_pGravityModel->MajorRadius(); }
+double GravityModel::EquatorialRadius::get()
+{ return m_pGravityModel->EquatorialRadius(); }
 
 //*****************************************************************************
 double GravityModel::MassConstant::get()

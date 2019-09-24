@@ -59,7 +59,7 @@ namespace NETGeographicLib
    * A default constructor has been provided that assumes a Mercator
    * projection.
    *
-   * The MajorRadius, Flattening, OriginLatitude, and CentralScale
+   * The EquatorialRadius, Flattening, OriginLatitude, and CentralScale
    * functions are implemented as properties.
    **********************************************************************/
     public ref class LambertConformalConic
@@ -232,7 +232,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the flattening of the ellipsoid.  This is the

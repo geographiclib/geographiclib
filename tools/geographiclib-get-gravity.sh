@@ -2,8 +2,8 @@
 #
 # Download gravity models for use by GeographicLib::GravityModel.
 #
-# Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed
-# under the MIT/X11 License.  For more information, see
+# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and
+# licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
 DEFAULTDIR="@GEOGRAPHICLIB_DATA@"
@@ -15,7 +15,7 @@ TOOL=Gravity
 EXT=egm.cof
 usage() {
     cat <<EOF
-usage: $0 [-p parentdir] [-d] [-h] $MODEL...
+usage: $0 [-p parentdir] [-f] [-d] [-h] $MODEL...
 
 This program downloads and installs the datasets used by the
 GeographicLib::$CLASS class and the $TOOL tool to compute
@@ -46,6 +46,8 @@ write access to this directory.
 
 Normally only datasets which are not already in parentdir are
 downloaded.  You can force the download and reinstallation with -f.
+The -f flag also let you download new models (not yet in the set
+defined by "all").
 
 If -d is provided, the temporary directory which holds the downloads,
 \$TMPDIR/$NAME-XXXXXXXX or ${TMPDIR:-/tmp}/$NAME-XXXXXXXX,
@@ -133,8 +135,12 @@ while test $# -gt 0; do
 		echo egm96; echo wgs84
 		;;
 	    * )
-		echo Unknown $MODEL $1 1>&2
-		exit 1
+		if test -n "$FORCE"; then
+		    echo $1
+		else
+		    echo Unknown $MODEL $1 1>&2
+		    exit 1
+		fi
 		;;
 	esac
     fi

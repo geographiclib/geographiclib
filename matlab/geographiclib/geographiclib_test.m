@@ -34,11 +34,16 @@ function geographiclib_test
   i = GeodSolve74; if i, n=n+1; fprintf('GeodSolve74 fail: %d\n', i); end
   i = GeodSolve76; if i, n=n+1; fprintf('GeodSolve76 fail: %d\n', i); end
   i = GeodSolve78; if i, n=n+1; fprintf('GeodSolve78 fail: %d\n', i); end
+  i = GeodSolve80; if i, n=n+1; fprintf('GeodSolve80 fail: %d\n', i); end
+  i = GeodSolve84; if i, n=n+1; fprintf('GeodSolve84 fail: %d\n', i); end
   i = Planimeter0 ; if i, n=n+1; fprintf('Planimeter0  fail: %d\n', i); end
   i = Planimeter5 ; if i, n=n+1; fprintf('Planimeter5  fail: %d\n', i); end
   i = Planimeter6 ; if i, n=n+1; fprintf('Planimeter6  fail: %d\n', i); end
   i = Planimeter12; if i, n=n+1; fprintf('Planimeter12 fail: %d\n', i); end
   i = Planimeter13; if i, n=n+1; fprintf('Planimeter13 fail: %d\n', i); end
+  i = Planimeter15; if i, n=n+1; fprintf('Planimeter15 fail: %d\n', i); end
+  i = Planimeter19; if i, n=n+1; fprintf('Planimeter19 fail: %d\n', i); end
+  i = Planimeter21; if i, n=n+1; fprintf('Planimeter21 fail: %d\n', i); end
   i = TransverseMercatorProj1;
   if i, n=n+1; fprintf('TransverseMercatorProj1 fail: %d\n', i); end
   i = TransverseMercatorProj3;
@@ -53,6 +58,10 @@ function geographiclib_test
   i = mgrs2; if i, n=n+1; fprintf('mgrs2 fail: %d\n', i); end
   i = mgrs3; if i, n=n+1; fprintf('mgrs3 fail: %d\n', i); end
   i = mgrs4; if i, n=n+1; fprintf('mgrs4 fail: %d\n', i); end
+  i = mgrs5; if i, n=n+1; fprintf('mgrs5 fail: %d\n', i); end
+  % check for suppression of "warning: division by zero" in octave
+  [~, ~, ~, ~, ~, ~, ~, s12] = geodreckon(-30, 0, 180, 90, 1);
+  assert(~isnan(s12));
   assert(n == 0);
 end
 
@@ -457,7 +466,7 @@ function n = GeodSolve59
   [s12, azi1, azi2] = geoddistance(5, 0.00000000000001, 10, 180);
   n = n + assertEquals(azi1, 0.000000000000035, 1.5e-14);
   n = n + assertEquals(azi2, 179.99999999999996, 1.5e-14);
-  n = n + assertEquals(s12, 18345191.174332713, 2.5e-9);
+  n = n + assertEquals(s12, 18345191.174332713, 5e-9);
 end
 
 function n = GeodSolve61
@@ -473,11 +482,14 @@ function n = GeodSolve73
 % Check for backwards from the pole bug reported by Anon on 2016-02-13.
 % This only affected the Java implementation.  It was introduced in Java
 % version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+% Also the + sign on azi2 is a check on the normalizing of azimuths
+% (converting -0.0 to +0.0).
   n = 0;
   [lat2, lon2, azi2] = geodreckon(90, 10, -1e6, 180);
   n = n + assertEquals(lat2, 81.04623, 0.5e-5);
   n = n + assertEquals(lon2, -170, 0.5e-5);
-  n = n + assertEquals(azi2, 0, 0.5e-5);
+  n = n + assertEquals(azi2, 0, 0);
+  n = n + assertEquals(copysignx(1, azi2), 1, 0);
 end
 
 function n = GeodSolve74
@@ -514,6 +526,79 @@ function n = GeodSolve78
   n = n + assertEquals(azi1,  45.82468716758, 0.5e-11);
   n = n + assertEquals(azi2, 134.22776532670, 0.5e-11);
   n = n + assertEquals(s12,  19974354.765767, 0.5e-6);
+end
+
+function n = GeodSolve80
+% Some tests to add code coverage: computing scale in special cases + zero
+% length geodesic (includes GeodSolve80 - GeodSolve83).
+  n = 0;
+  [~, ~, ~, ~, ~, M12, M21] = geoddistance(0, 0, 0, 90);
+  n = n + assertEquals(M12, -0.00528427534, 0.5e-10);
+  n = n + assertEquals(M21, -0.00528427534, 0.5e-10);
+
+  [~, ~, ~, ~, ~, M12, M21] = geoddistance(0, 0, 1e-6, 1e-6);
+  n = n + assertEquals(M12, 1, 0.5e-10);
+  n = n + assertEquals(M21, 1, 0.5e-10);
+
+  [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
+      geoddistance(20.001, 0, 20.001, 0);
+  n = n + assertEquals(a12, 0, 1e-13);
+  n = n + assertEquals(s12, 0, 1e-8);
+  n = n + assertEquals(azi1, 180, 1e-13);
+  n = n + assertEquals(azi2, 180, 1e-13);
+  n = n + assertEquals(m12, 0,  1e-8);
+  n = n + assertEquals(M12, 1, 1e-15);
+  n = n + assertEquals(M21, 1, 1e-15);
+  n = n + assertEquals(S12, 0, 1e-10);
+
+  [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
+      geoddistance(90, 0, 90, 180);
+  n = n + assertEquals(a12, 0, 1e-13);
+  n = n + assertEquals(s12, 0, 1e-8);
+  n = n + assertEquals(azi1, 0, 1e-13);
+  n = n + assertEquals(azi2, 180, 1e-13);
+  n = n + assertEquals(m12, 0, 1e-8);
+  n = n + assertEquals(M12, 1, 1e-15);
+  n = n + assertEquals(M21, 1, 1e-15);
+  n = n + assertEquals(S12, 127516405431022.0, 0.5);
+end
+
+function n = GeodSolve84
+% Tests for python implementation to check fix for range errors with
+% {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve86).
+  n = 0;
+  [lat2, lon2, azi2] = geodreckon(0, 0, inf, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, 0, nan, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, 0, 1000, inf);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, 0, 1000, nan);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(0, inf, 1000, 90);
+  n = n + assertEquals(lat2, 0, 0);
+  n = n + assertNaN(lon2);
+  n = n + assertEquals(azi2, 90, 0);
+  [lat2, lon2, azi2] = geodreckon(0, nan, 1000, 90);
+  n = n + assertEquals(lat2, 0, 0);
+  n = n + assertNaN(lon2);
+  n = n + assertEquals(azi2, 90, 0);
+  [lat2, lon2, azi2] = geodreckon(inf, 0, 1000, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
+  [lat2, lon2, azi2] = geodreckon(nan, 0, 1000, 90);
+  n = n + assertNaN(lat2);
+  n = n + assertNaN(lon2);
+  n = n + assertNaN(azi2);
 end
 
 function n = Planimeter0
@@ -589,6 +674,52 @@ function n = Planimeter13
   [area, perimeter] = geodarea(points(:,1), points(:,2));
   n = n + assertEquals(perimeter, 1160741, 1);
   n = n + assertEquals(area, 32415230256.0, 1);
+end
+
+function n = Planimeter15
+% Coverage tests, includes Planimeter15 - Planimeter18 (combinations of
+% reverse and sign).  But flags aren't supported in the MATLAB
+% implementation.
+  n = 0;
+  points = [2,1; 1,2; 3,3];
+  area = geodarea(points(:,1), points(:,2));
+  n = n + assertEquals(area, 18454562325.45119, 1);
+  % Interchanging lat and lon is equivalent to traversing the polygon
+  % backwards.
+  area = geodarea(points(:,2), points(:,1));
+  n = n + assertEquals(area, -18454562325.45119, 1);
+end
+
+function n = Planimeter19
+% Coverage tests, includes Planimeter19 - Planimeter20 (degenerate
+% polygons).
+  n = 0;
+  points = [1,1];
+  [area, perimeter] = geodarea(points(:,1), points(:,2));
+  n = n + assertEquals(area, 0, 0);
+  n = n + assertEquals(perimeter, 0, 0);
+end
+
+function n = Planimeter21
+% Some test to add code coverage: multiple circlings of pole (includes
+% Planimeter21 - Planimeter28).
+  n = 0;
+  points = [45 60;45 180;45 -60;...
+            45 60;45 180;45 -60;...
+            45 60;45 180;45 -60;...
+            45 60;45 180;45 -60;...
+           ];
+  r = 39433884866571.4277;              % Area for one circuit
+  for i = 3 : 4
+    area = geodarea(points(1:3*i,1), points(1:3*i,2));
+    %    if i ~= 4
+      n = n + assertEquals(area, i*r, 0.5);
+      %    end
+    area = geodarea(points(3*i:-1:1,1), points(3*i:-1:1,2));
+    %    if i ~= 4
+      n = n + assertEquals(area, -i*r, 0.5);
+      %    end
+  end
 end
 
 function n = TransverseMercatorProj1
@@ -725,4 +856,17 @@ function n = mgrs4
   n = n + assertEquals(mgrs{1}, '38NNF0000000000063811', 0);
   mgrs = mgrs_fwd(500000, 63.811, 38, 1, 9);
   n = n + assertEquals(mgrs{1}, '38NNF000000000000638110', 0);
+end
+
+function n = mgrs5
+% GeoConvert19: Check prec = -6 for UPS (to check fix to Matlab mgrs_fwd,
+% 2018-03-19)
+  n = 0;
+  mgrs = mgrs_fwd(2746000, 1515000, 0, 0, [-1,0,1]);
+  n = n + assertEquals(length(mgrs{1}), 1, 0);
+  n = n + assertEquals(mgrs{1}, 'B', 0);
+  n = n + assertEquals(length(mgrs{2}), 3, 0);
+  n = n + assertEquals(mgrs{2}, 'BKH', 0);
+  n = n + assertEquals(length(mgrs{3}), 5, 0);
+  n = n + assertEquals(mgrs{3}, 'BKH41', 0);
 end

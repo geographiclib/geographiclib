@@ -347,8 +347,8 @@ double GeodesicLine::EquatorialArc::get()
 { return m_pGeodesicLine->EquatorialArc(); }
 
 //*****************************************************************************
-double GeodesicLine::MajorRadius::get()
-{ return m_pGeodesicLine->MajorRadius(); }
+double GeodesicLine::EquatorialRadius::get()
+{ return m_pGeodesicLine->EquatorialRadius(); }
 
 //*****************************************************************************
 double GeodesicLine::Flattening::get()

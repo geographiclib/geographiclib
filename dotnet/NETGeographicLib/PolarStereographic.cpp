@@ -126,8 +126,8 @@ void PolarStereographic::Reverse(bool northp, double x, double y,
 }
 
 //*****************************************************************************
-double PolarStereographic::MajorRadius::get()
-{ return m_pPolarStereographic->MajorRadius(); }
+double PolarStereographic::EquatorialRadius::get()
+{ return m_pPolarStereographic->EquatorialRadius(); }
 
 //*****************************************************************************
 double PolarStereographic::Flattening::get()

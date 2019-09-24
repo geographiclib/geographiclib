@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeoMath class
  *
- * Copyright (c) Charles Karney (2013-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -19,16 +19,6 @@ public class GeoMath {
    * number (equivalent to C++'s {@code numeric_limits<double>::digits}).
    **********************************************************************/
   public static final int digits = 53;
-  /**
-   * Equivalent to C++'s {@code numeric_limits<double>::epsilon()}.  In Java
-   * version 1.5 and later, Math.ulp(1.0) can be used.
-   **********************************************************************/
-  public static final double epsilon = Math.pow(0.5, digits - 1);
-  /**
-   * Equivalent to C++'s {@code numeric_limits<double>::min()}.  In Java
-   * version 1.6 and later, Double.MIN_NORMAL can be used.
-   **********************************************************************/
-  public static final double min = Math.pow(0.5, 1022);
 
   /**
    * Square a number.
@@ -39,49 +29,8 @@ public class GeoMath {
   public static double sq(double x) { return x * x; }
 
   /**
-   * The hypotenuse function avoiding underflow and overflow.  In Java version
-   * 1.5 and later, Math.hypot can be used.
-   * <p>
-   * @param x the first argument.
-   * @param y the second argument.
-   * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
-   **********************************************************************/
-  public static double hypot(double x, double y) {
-    x = Math.abs(x); y = Math.abs(y);
-    double a = Math.max(x, y), b = Math.min(x, y) / (a != 0 ? a : 1);
-    return a * Math.sqrt(1 + b * b);
-    // For an alternative method see
-    // C. Moler and D. Morrision (1983) https://doi.org/10.1147/rd.276.0577
-    // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
-  }
-
-  /**
-   * log(1 + <i>x</i>) accurate near <i>x</i> = 0.  In Java version 1.5 and
-   * later, Math.log1p can be used.
-   * <p>
-   * This is taken from D. Goldberg,
-   * <a href="https://doi.org/10.1145/103162.103163">What every computer
-   * scientist should know about floating-point arithmetic</a> (1991),
-   * Theorem 4.  See also, N. J. Higham, Accuracy and Stability of Numerical
-   * Algorithms, 2nd Edition (SIAM, 2002), Answer to Problem 1.5, p 528.
-   * <p>
-   * @param x the argument.
-   * @return log(1 + <i>x</i>).
-   **********************************************************************/
-  public static double log1p(double x) {
-    double
-      y = 1 + x,
-      z = y - 1;
-    // Here's the explanation for this magic: y = 1 + z, exactly, and z
-    // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
-    // a good approximation to the true log(1 + x)/x.  The multiplication x *
-    // (log(y)/z) introduces little additional error.
-    return z == 0 ? x : x * Math.log(y) / z;
-  }
-
-  /**
    * The inverse hyperbolic tangent function.  This is defined in terms of
-   * GeoMath.log1p(<i>x</i>) in order to maintain accuracy near <i>x</i> = 0.
+   * Math.log1p(<i>x</i>) in order to maintain accuracy near <i>x</i> = 0.
    * In addition, the odd parity of the function is enforced.
    * <p>
    * @param x the argument.
@@ -90,35 +39,19 @@ public class GeoMath {
   public static double atanh(double x)  {
     double y = Math.abs(x);     // Enforce odd parity
     y = Math.log1p(2 * y/(1 - y))/2;
-    return x < 0 ? -y : y;
+    return x > 0 ? y : (x < 0 ? -y : x);
   }
 
   /**
-   * Copy the sign.  In Java version 1.6 and later, Math.copysign can be used.
+   * Normalize a sine cosine pair.
    * <p>
-   * @param x gives the magitude of the result.
-   * @param y gives the sign of the result.
-   * @return value with the magnitude of <i>x</i> and with the sign of
-   *   <i>y</i>.
+   * @param sinx the sine.
+   * @param cosx the cosine.
+   * @return a Pair of normalized quantities with sinx<sup>2</sup> +
+   *   cosx<sup>2</sup> = 1.
    **********************************************************************/
-  public static double copysign(double x, double y) {
-    return Math.abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
-  }
-
-  /**
-   * The cube root function.  In Java version 1.5 and later, Math.cbrt can be
-   * used.
-   * <p>
-   * @param x the argument.
-   * @return the real cube root of <i>x</i>.
-   **********************************************************************/
-  public static double cbrt(double x) {
-    double y = Math.pow(Math.abs(x), 1/3.0); // Return the real cube root
-    return x < 0 ? -y : y;
-  }
-
   public static Pair norm(double sinx, double cosx) {
-    double r = hypot(sinx, cosx);
+    double r = Math.hypot(sinx, cosx);
     return new Pair(sinx/r, cosx/r);
   }
 
@@ -165,13 +98,21 @@ public class GeoMath {
     return y;
   }
 
+  /**
+   * Coarsen a value close to zero.
+   * <p>
+   * @param x the argument
+   * @return the coarsened value.
+   * <p>
+   * This makes the smallest gap in <i>x</i> = 1/16 &minus; nextafter(1/16, 0)
+   * = 1/2<sup>57</sup> for reals = 0.7 pm on the earth if <i>x</i> is an angle
+   * in degrees.  (This is about 1000 times more resolution than we get with
+   * angles around 90 degrees.)  We use this to avoid having to deal with near
+   * singular cases when <i>x</i> is non-zero but tiny (e.g.,
+   * 10<sup>&minus;200</sup>).  This converts &minus;0 to +0; however tiny
+   * negative numbers get converted to &minus;0.
+   **********************************************************************/
   public static double AngRound(double x) {
-    // The makes the smallest gap in x = 1/16 - nextafter(1/16, 0) = 1/2^57
-    // for reals = 0.7 pm on the earth if x is an angle in degrees.  (This
-    // is about 1000 times more resolution than we get with angles around 90
-    // degrees.)  We use this to avoid having to deal with near singular
-    // cases when x is non-zero but tiny (e.g., 1.0e-200).  This converts -0 to
-    // +0; however tiny negative numbers get converted to -0.
     final double z = 1/16.0;
     if (x == 0) return 0;
     double y = Math.abs(x);
@@ -181,7 +122,21 @@ public class GeoMath {
   }
 
   /**
-   * Normalize an angle (restricted input range).
+   * The remainder function.
+   * <p>
+   * @param x the numerator of the division
+   * @param y the denominator of the division
+   * @return the remainder in the range [&minus;<i>y</i>/2, <i>y</i>/2].
+   * <p>
+   * The range of <i>x</i> is unrestricted; <i>y</i> must be positive.
+   **********************************************************************/
+  public static double remainder(double x, double y) {
+    x = x % y;
+    return x < -y/2 ? x + y : (x < y/2 ? x : x - y);
+  }
+
+  /**
+   * Normalize an angle.
    * <p>
    * @param x the angle in degrees.
    * @return the angle reduced to the range [&minus;180&deg;, 180&deg;).
@@ -189,8 +144,8 @@ public class GeoMath {
    * The range of <i>x</i> is unrestricted.
    **********************************************************************/
   public static double AngNormalize(double x) {
-    x = x % 360.0;
-    return x <= -180 ? x + 360 : (x <= 180 ? x : x - 360);
+    x = remainder(x, 360.0);
+    return x == -180 ? 180 : x;
   }
 
   /**
@@ -242,7 +197,7 @@ public class GeoMath {
     // the argument to the range [-45, 45] before converting it to radians.
     double r; int q;
     r = x % 360.0;
-    q = (int)Math.floor(r / 90 + 0.5);
+    q = (int)Math.round(r / 90); // If r is NaN this returns 0
     r -= 90 * q;
     // now abs(r) <= 45
     r = Math.toRadians(r);

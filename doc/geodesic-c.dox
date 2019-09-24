@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.49
+\version 1.50
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/C</tt> for versions numbers
@@ -24,7 +24,7 @@ This is a C implementation of the geodesic algorithms from
 is a self-contained library (requiring only the standard C math library)
 which makes it easy to do geodesic computations for an ellipsoid of
 revolution in a C program.  It is included with version 4.9.0 of
-<a href="http://proj4.org">proj.4</a> and later.
+<a href="https://proj.org">PROJ</a> and later.
 It uses ANSI C as described in B. W. Kernigan and D. M. Ritchie, The C
 Programming Language, 2nd Ed. (Prentice Hall, 1988), and so should
 compile correctly with just about any C compiler.  However, the C99 math
@@ -33,17 +33,17 @@ functions are used if they are available.
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.tar.gz">
-  GeographicLib-1.49.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.zip">
-  GeographicLib-1.49.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.tar.gz">
+  GeographicLib-1.50.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.zip">
+  GeographicLib-1.50.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the C library can be found in the directory <tt>legacy/C</tt>.
 The library consists of two files geodesic.c and geodesic.h.
 
 The library is also included as part of
-<a href="http://proj.org">proj.4</a> starting with
+<a href="https://proj.org">PROJ</a> starting with
 version 4.9.0, where it is used as the computational backend for
 <a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
 Instructions for how to use the library via proj.4 are given below.
@@ -155,8 +155,8 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   - C (geodesic routines):
     <a href="../C/index.html">
       documentation</a>, also included with recent versions of
-    <a href="http://proj.org">
-      proj.4</a>;
+    <a href="https://proj.org">
+      PROJ</a>;
   - Fortran (geodesic routines):
     <a href="../Fortran/index.html">
       documentation</a>;
@@ -176,9 +176,9 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
     <a href="../python/index.html">
       documentation</a>;
   - Matlab/Octave (geodesic and some other routines):
-    <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+    <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
       Matlab Central package</a>,
-    <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+    <a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
       documentation</a>;
   - C# (.NET wrapper for complete C++ library):
     <a href="../NET/index.html">
@@ -190,6 +190,18 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   Geodesics on an ellipsoid</a>.
 
 \section changes-c Change log
+
+ - <a href="https://geographiclib.sourceforge.io/1.50/C">Version 1.50</a>
+   (released 2019-09-22)
+   - Allow arbitrarily complex polygons in geod_polygon_*.  In the case
+     of self-intersecting polygons the area is accumulated
+     "algebraically", e.g., the areas of the 2 loops in a figure-8
+     polygon will partially cancel.
+   - Workaround bugs in fmod and sin in Visual Studio 10, 11, and 12 and
+     relax delta for GeodSolve59 in geodtest (tagged v1.49.1-c).
+   - Fix bug in geod_polygon_addedge which caused the count of pole
+     encirclings to be wrong, sometimes resulting in an incorrect area
+     if a polygon vertex had longitude = 0  (tagged v1.49.2-c).
 
  - <a href="https://geographiclib.sourceforge.io/1.49/C">Version 1.49</a>
    (released 2017-10-05)

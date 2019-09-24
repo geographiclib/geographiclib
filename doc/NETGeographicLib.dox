@@ -11,8 +11,8 @@
 /**
 \mainpage NETGeographicLib library
 \author Scott Heiman (mrmtdew2@outlook.com)
-\version 1.49
-\date 2017-10-05
+\version 1.50
+\date 2019-09-24
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/NET</tt> for versions numbers
@@ -30,14 +30,16 @@ to the GeographicLib classes.  GeographicLib and NETGeographicLib is an
 integrated product.
 
 The NETGeographic solutions and C++ projects are located in the
-\<install\>/windows folder.  The C# Projections projects are located in
-the \<install\>/dotnet/Projections folder.  Solution files have been provided
-for VS 2010 and VS 2013 NETGeographicLib is not available for older
-versions of Microsoft Visual Studio.
+\<ROOT\>/GeographicLib-1.50/windows folder where \<ROOT\> is the
+directory where you unpacked the GeographicLib source distribution.  The
+C# Projections projects are located in the
+\<ROOT\>/GeographicLib-1.50/dotnet/Projections folder.  Solution files
+have been provided for VS 2010 and VS 2013 NETGeographicLib is not
+available for older versions of Microsoft Visual Studio.
 
 NETGeographicLib has been tested with C#, Managed C++, and Visual Basic.
 Sample code snippets can be found in
-\<install folder\>/GeographicLib-1.49/dotnet/examples.
+\<ROOT\>/GeographicLib-1.50/dotnet/examples.
 
 \section differences Differences between NETGeographicLib and GeographicLib
 
@@ -143,7 +145,7 @@ to any Visual Basic source that uses NETGeographicLib classes.
 
 A C# sample application is provided that demonstrates NETGeographicLib classes.
 The source code for the sample application is located in
-\<install folder\>/GeographicLib-1.49/dotnet/Projections.  The sample
+\<ROOT\>/GeographicLib-1.50/dotnet/Projections.  The sample
 application creates a tabbed dialog.  Each tab provides data entry fields that
 allow the user to exercise one or more NETGeographicLib classes.
 
@@ -187,8 +189,8 @@ two ways:
   %GeographicLib documentation).  In this case, you are restricted to using
   Visual Studio 10.
 
-The minimum recommended version of cmake for use with NETGeographicLib
-is 2.8.7.  In order to build an application that uses NETGeographicLib
+The minimum version of cmake for use with NETGeographicLib
+is 3.1.0 or later.  In order to build an application that uses NETGeographicLib
 with cmake, ask for the NETGeographicLib "component" of %GeographicLib
 using \verbatim
 find_package(GeographicLib COMPONENTS NETGeographicLib) \endverbatim

@@ -19,49 +19,36 @@
 # The initial version of this file was provided by
 # Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au>.
 
-from distutils.core import setup
-from distutils.cmd import Command
-
-class TestCommand(Command):
-    user_options = []
-    def initialize_options(self):
-        pass
-    def finalize_options(self):
-        pass
-    def run(self):
-        import sys, subprocess
-        raise SystemExit(subprocess.call([sys.executable,
-                                          '-m',
-                                          'unittest',
-                                          '-v',
-                                          'geographiclib.test.test_geodesic'
-                                          ]))
+import setuptools
 
 name = "geographiclib"
-version = "1.49"
+version = "1.50"
 
-setup(name = name,
-      version = version,
-      description = "The geodesic routines from GeographicLib",
-      long_description = open("README.rst").read(),
-      author = "Charles Karney",
-      author_email = "charles@karney.com",
-      url = "https://geographiclib.sourceforge.io/" + version + "/python",
-      packages = ["geographiclib", "geographiclib/test"],
-      data_files = [],
-      license = "MIT",
-      keywords = "gis geographical earth distance geodesic",
-      classifiers = [
-          "Development Status :: 5 - Production/Stable",
-          "Intended Audience :: Developers",
-          "Intended Audience :: Science/Research",
-          "License :: OSI Approved :: MIT License",
-          "Operating System :: OS Independent",
-          "Programming Language :: Python",
-          "Topic :: Scientific/Engineering :: GIS",
-          "Topic :: Software Development :: Libraries :: Python Modules",
-      ],
-      cmdclass={
-          'test': TestCommand,
-      },
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
+setuptools.setup(
+  name = name,
+  version = version,
+  author = "Charles Karney",
+  author_email = "charles@karney.com",
+  description = "The geodesic routines from GeographicLib",
+  long_description = long_description,
+  long_description_content_type = "text/markdown",
+  url = "https://geographiclib.sourceforge.io/" + version + "/python",
+  include_package_data = True,
+  packages = setuptools.find_packages(),
+  license = "MIT",
+  keywords = "gis geographical earth distance geodesic",
+  classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+  ],
+  test_suite = "geographiclib.test.test_geodesic",
 )

@@ -126,8 +126,8 @@ double CassiniSoldner::LongitudeOrigin::get()
 { return m_pCassiniSoldner->LongitudeOrigin(); }
 
 //*****************************************************************************
-double CassiniSoldner::MajorRadius::get()
-{ return m_pCassiniSoldner->MajorRadius(); }
+double CassiniSoldner::EquatorialRadius::get()
+{ return m_pCassiniSoldner->EquatorialRadius(); }
 
 //*****************************************************************************
 double CassiniSoldner::Flattening::get()

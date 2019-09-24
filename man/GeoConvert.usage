@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoConvert --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/1.49/GeoConvert.1.html\n";
+"    https://geographiclib.sourceforge.io/1.50/GeoConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -153,7 +153,7 @@ int usage(int retval, bool brief) {
 "       prec gives precision of the output with prec = 0 giving 1 m precision,\n"
 "       prec = 3 giving 1 mm precision, etc.  prec is the number of digits\n"
 "       after the decimal point for UTM/UPS.  For MGRS, The number of digits\n"
-"       per coordinate is 5 + prec; <prec> = -6 results in just the grid zone.\n"
+"       per coordinate is 5 + prec; prec = -6 results in just the grid zone.\n"
 "       For decimal degrees, the number of digits after the decimal point is 5\n"
 "       + prec.  For DMS (degree, minute, seconds) output, the number of digits\n"
 "       after the decimal point in the seconds components is 1 + prec; if this\n"

@@ -113,12 +113,12 @@
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
 *!
-*! Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2012-2019) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
 *! https://geographiclib.sourceforge.io/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.49.
+*! <a href="../index.html">GeographicLib</a> 1.50.
 
 *> Solve the direct geodesic problem
 *!
@@ -961,10 +961,12 @@
 *!
 *! \e lats should be in the range [&minus;90&deg;, 90&deg;].
 *!
-*! Only simple polygons (which are not self-intersecting) are allowed.
-*! There's no need to "close" the polygon by repeating the first vertex.
-*! The area returned is signed with counter-clockwise traversal being
-*! treated as positive.
+*! Arbitrarily complex polygons are allowed.  In the case of
+*! self-intersecting polygons the area is accumulated "algebraically",
+*! e.g., the areas of the 2 loops in a figure-8 polygon will partially
+*! cancel.  There's no need to "close" the polygon by repeating the
+*! first vertex.  The area returned is signed with counter-clockwise
+*! traversal being treated as positive.
 
       subroutine area(a, f, lats, lons, n, AA, PP)
 * input
@@ -1007,6 +1009,7 @@
         c2 = (a**2 + b**2 * atan(sqrt(abs(e2))) / sqrt(abs(e2))) / 2
       end if
       area0 = 4 * pi * c2
+      call accrem(Aacc, area0)
       if (mod(abs(cross), 2) .eq. 1) then
         if (Aacc(1) .lt. 0) then
           call accadd(Aacc, +area0/2)
@@ -1037,7 +1040,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 49
+      minor = 50
       patch = 0
 
       return
@@ -1541,7 +1544,7 @@
       comg12 =                comg1 * comg2 + somg1 * somg2
 * eta = omg12 - lam120
       eta = atan2(somg12 * clm120 - comg12 * slm120,
-     +    comg12 * clm120 + somg12 * slm120);
+     +    comg12 * clm120 + somg12 * slm120)
       k2 = calp0**2 * ep2
       eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2)
       call C3f(eps, C3x, Ca)
@@ -1906,15 +1909,30 @@
       return
       end
 
+      double precision function remx(x, y)
+* the remainder function but not worrying how ties are handled
+* y must be positive
+* input
+      double precision x, y
+
+      remx = mod(x, y)
+      if (remx .lt. -y/2) then
+        remx = remx + y
+      else if (remx .gt. +y/2) then
+        remx = remx - y
+      end if
+
+      return
+      end
+
       double precision function AngNm(x)
 * input
       double precision x
 
-      AngNm = mod(x, 360d0)
-      if (AngNm .le. -180) then
-        AngNm = AngNm + 360
-      else if (AngNm .gt. 180) then
-        AngNm = AngNm - 360
+      double precision remx
+      AngNm = remx(x, 360d0)
+      if (AngNm .eq. -180) then
+        AngNm = 180
       end if
 
       return
@@ -2072,7 +2090,7 @@
       end if
       y1 = 0
 * Now n2 is even
-      do 10 k = n2, 1, -2
+      do 10 k = n2, 2, -2
 * Unroll loop x 2, so accumulators return to their original role
         y1 = ar * y0 - y1 + c(k)
         y0 = ar * y1 - y0 + c(k-1)
@@ -2132,6 +2150,20 @@
       else
         s(2) = s(2) + u
       end if
+
+      return
+      end
+
+      subroutine accrem(s, y)
+* Reduce s to [-y/2, y/2].
+* input
+      double precision y
+* input/output
+      double precision s(2)
+
+      double precision remx
+      s(1) = remx(s(1), y)
+      call accadd(s, 0d0)
 
       return
       end

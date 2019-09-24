@@ -2,7 +2,7 @@
  * \file OSGB.cpp
  * \brief Implementation for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -18,7 +18,7 @@ namespace GeographicLib {
   const char* const OSGB::digits_ = "0123456789";
 
   const TransverseMercator& OSGB::OSGBTM() {
-    static const TransverseMercator osgbtm(MajorRadius(), Flattening(),
+    static const TransverseMercator osgbtm(EquatorialRadius(), Flattening(),
                                            CentralScale());
     return osgbtm;
   }

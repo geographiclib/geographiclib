@@ -5,6 +5,25 @@
 # this is an absolute path, it's in the build tree; otherwise, it's in the
 # install tree.  (Note that the whole install tree can be relocated.)
 
+# Variables needed by ${PROJECT_NAME_LOWER}-config-version.cmake
+if (MSVC)
+  # For checking the compatibility of MSVC_TOOLSET_VERSION; see
+  # https://docs.microsoft.com/en-us/cpp/porting/overview-of-potential-upgrade-issues-visual-cpp
+  # Assume major version number is obtained by dropping the last decimal
+  # digit.
+  math (EXPR MSVC_TOOLSET_MAJOR "${MSVC_TOOLSET_VERSION}/10")
+else ()
+  set (MSVC_TOOLSET_VERSION 0)
+  set (MSVC_TOOLSET_MAJOR 0)
+endif ()
+if (CMAKE_CROSSCOMPILING)
+  # Ensure that all "true" (resp. "false") settings are represented by
+  # the same string.
+  set (CMAKE_CROSSCOMPILING_STR "ON")
+else ()
+  set (CMAKE_CROSSCOMPILING_STR "OFF")
+endif ()
+
 # geographiclib-config.cmake for the build tree
 set (PROJECT_ROOT_DIR "${PROJECT_BINARY_DIR}")
 set (PROJECT_INCLUDE_DIRS
@@ -14,10 +33,10 @@ configure_file (project-config.cmake.in
 configure_file (project-config-version.cmake.in
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
 export (TARGETS
-  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
+  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
 export (TARGETS
-  ${PROJECT_SHARED_LIBRARIES} ${PROJECT_STATIC_LIBRARIES} ${TOOLS}
+  ${PROJECT_ALL_LIBRARIES} ${TOOLS}
   NAMESPACE ${PROJECT_NAME}::
   FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
 

@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodSolve --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/1.49/GeodSolve.1.html\n";
+"    https://geographiclib.sourceforge.io/1.50/GeodSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -91,7 +91,8 @@ int usage(int retval, bool brief) {
 "           options (and is otherwise ignored).  The values read on standard\n"
 "           input are interpreted as fractional distances to point 3, i.e., as\n"
 "           s12/s13 instead of s12.  If arc mode is in effect, then the values\n"
-"           denote fractional arc length, i.e., a12/a13.\n"
+"           denote fractional arc length, i.e., a12/a13.  The fractional\n"
+"           distances can be entered as a simple fraction, e.g., 3/4.\n"
 "\n"
 "       -d  output angles as degrees, minutes, seconds instead of decimal\n"
 "           degrees.\n"
@@ -296,7 +297,7 @@ int usage(int retval, bool brief) {
 "\n"
 "       Equally spaced waypoints on the route:\n"
 "\n"
-"          for ((i = 0; i <= 10; ++i)); do echo ${i}e-1; done |\n"
+"          for ((i = 0; i <= 10; ++i)); do echo $i/10; done |\n"
 "          GeodSolve -I 40:38:23N 073:46:44W 01:21:33N 103:59:22E -F -: -p 0\n"
 "\n"
 "          40:38:23.0N 073:46:44.0W 003:18:29.9\n"

@@ -5,7 +5,7 @@
  * See the documentation for the C++ class.  The conversion is a literal
  * conversion from C++.
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -72,18 +72,23 @@ GeographicLib.DMS = {};
     var dmsa = dms, end,
         v = 0, i = 0, mi, pi, vals,
         ind1 = d.NONE, ind2, p, pa, pb;
-    dmsa = dmsa.replace(/\u00b0/g, 'd')
-          .replace(/\u00ba/g, 'd')
-          .replace(/\u2070/g, 'd')
-          .replace(/\u02da/g, 'd')
-          .replace(/\u2032/g, '\'')
-          .replace(/\u00b4/g, '\'')
-          .replace(/\u2019/g, '\'')
-          .replace(/\u2033/g, '"')
-          .replace(/\u201d/g, '"')
-          .replace(/\u2212/g, '-')
-          .replace(/''/g, '"')
-          .trim();
+    dmsa = dmsa
+      .replace(/\u2212/g, '-')  // U+2212 minus sign
+      .replace(/\u00b0/g, 'd')  // U+00b0 degree symbol
+      .replace(/\u00ba/g, 'd')  // U+00ba alt symbol
+      .replace(/\u2070/g, 'd')  // U+2070 sup zero
+      .replace(/\u02da/g, 'd')  // U+02da ring above
+      .replace(/\u2032/g, '\'') // U+2032 prime
+      .replace(/\u00b4/g, '\'') // U+00b4 acute accent
+      .replace(/\u2019/g, '\'') // U+2019 right single quote
+      .replace(/\u2033/g, '"')  // U+2033 double prime
+      .replace(/\u201d/g, '"')  // U+201d right double quote
+      .replace(/\u00a0/g, '')   // U+00a0 non-breaking space
+      .replace(/\u202f/g, '')   // U+202f narrow space
+      .replace(/\u2007/g, '')   // U+2007 figure space
+      .replace(/''/g, '"')      // '' -> "
+      .trim();
+
     end = dmsa.length;
     // p is pointer to the next piece that needs decoding
     for (p = 0; p < end; p = pb, ++i) {
@@ -312,7 +317,7 @@ GeographicLib.DMS = {};
    * @param {string} stra the first string.
    * @param {string} strb the first string.
    * @param {bool} [longfirst = false] if true assume then longitude is given
-   *   first (in the absense of any hemisphere indicators).
+   *   first (in the absence of any hemisphere indicators).
    * @returns {object} r where r.lat is the decoded latitude and r.lon is the
    *   decoded longitude (both in degrees).
    * @throws an error if the strings are illegal.

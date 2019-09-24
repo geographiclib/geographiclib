@@ -155,7 +155,7 @@ areas is based on Danielsen (1989).  These improve on the work of
 Vincenty (1975) in the following respects:
 
 * The results are accurate to round-off for terrestrial ellipsoids (the
-  error in the distance is less then 15 nanometers, compared to 0.1 mm
+  error in the distance is less than 15 nanometers, compared to 0.1 mm
   for Vincenty).
 * The solution of the inverse problem is always found.  (Vincenty's
   method fails to converge for nearly antipodal points.)

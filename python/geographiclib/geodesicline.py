@@ -51,7 +51,7 @@ The public attributes for this class are
 #    https://doi.org/10.1007/s00190-012-0578-z
 #    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -112,7 +112,7 @@ class GeodesicLine(object):
       """the cosine of the azimuth at the first point (readonly)"""
 
     # real cbet1, sbet1
-    sbet1, cbet1 = Math.sincosd(Math.AngRound(lat1)); sbet1 *= self._f1
+    sbet1, cbet1 = Math.sincosd(Math.AngRound(self.lat1)); sbet1 *= self._f1
     # Ensure cbet1 = +epsilon at poles
     sbet1, cbet1 = Math.norm(sbet1, cbet1); cbet1 = max(Geodesic.tiny_, cbet1)
     self._dn1 = math.sqrt(1 + geod._ep2 * Math.sq(sbet1))
@@ -205,6 +205,7 @@ class GeodesicLine(object):
     else:
       # Interpret s12_a12 as distance
       tau12 = s12_a12 / (self._b * (1 + self._A1m1))
+      tau12 = tau12 if Math.isfinite(tau12) else Math.nan
       s = math.sin(tau12); c = math.cos(tau12)
       # tau2 = tau1 + tau12
       B12 = - Geodesic._SinCosSeries(True,

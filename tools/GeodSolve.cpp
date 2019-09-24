@@ -2,7 +2,7 @@
  * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -61,9 +61,10 @@ std::string DistanceStrings(real s12, real a12,
   return s;
 }
 
-real ReadDistance(const std::string& s, bool arcmode) {
+real ReadDistance(const std::string& s, bool arcmode, bool fraction = false) {
   using namespace GeographicLib;
-  return arcmode ? DMS::DecodeAngle(s) : Utility::val<real>(s);
+  return fraction ? Utility::fract<real>(s) :
+    (arcmode ? DMS::DecodeAngle(s) : Utility::val<real>(s));
 }
 
 int main(int argc, const char* const argv[]) {
@@ -339,7 +340,7 @@ int main(int argc, const char* const argv[]) {
             if (str >> strc)
               throw GeographicErr("Extraneous input: " + strc);
             // In fraction mode input is read as a distance
-            s12 = ReadDistance(ss12, !fraction && arcmode) * mult;
+            s12 = ReadDistance(ss12, !fraction && arcmode, fraction) * mult;
             a12 = exact ?
               le.GenPosition(arcmode, s12, outmask,
                              lat2, lon2, azi2, s12, m12, M12, M21, S12) :

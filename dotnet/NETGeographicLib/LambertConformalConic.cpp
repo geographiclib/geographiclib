@@ -167,8 +167,8 @@ void LambertConformalConic::Reverse(double lon0, double x, double y,
 }
 
 //*****************************************************************************
-double LambertConformalConic::MajorRadius::get()
-{ return m_pLambertConformalConic->MajorRadius(); }
+double LambertConformalConic::EquatorialRadius::get()
+{ return m_pLambertConformalConic->EquatorialRadius(); }
 
 //*****************************************************************************
 double LambertConformalConic::Flattening::get()

@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    CartConvert --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/1.49/CartConvert.1.html\n";
+"    https://geographiclib.sourceforge.io/1.50/CartConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -43,7 +43,10 @@ int usage(int retval, bool brief) {
 "OPTIONS\n"
 "       -r  perform the reverse projection.  x, y, z are given on standard\n"
 "           input and each line of standard output gives latitude, longitude,\n"
-"           height.\n"
+"           height.  In general there are multiple solutions and the result\n"
+"           which minimizes the absolute value of height is returned, i.e.,\n"
+"           (latitude, longitude) corresponds to the closest point on the\n"
+"           ellipsoid.\n"
 "\n"
 "       -l lat0 lon0 h0\n"
 "           specifies conversions to and from a local cartesion coordinate\n"

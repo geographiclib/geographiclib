@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>Gravity</b> [ <b>-n</b> <i>name</i> ] [ <b>-d</b> <i>dir</i> ] [ <b>-G</b> | <b>-D</b> | <b>-A</b> | <b>-H</b> ] [ <b>-c</b> <i>lat</i> <i>h</i> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-v</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>Gravity</b> [ <b>-n</b> <i>name</i> ] [ <b>-d</b> <i>dir</i> ] [ <b>-N</b> <i>Nmax</i> ] [ <b>-M</b> <i>Mmax</i> ] [ <b>-G</b> | <b>-D</b> | <b>-A</b> | <b>-H</b> ] [ <b>-c</b> <i>lat</i> <i>h</i> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-v</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -41,6 +41,18 @@
 <dd>
 
 <p>read gravity models from <i>dir</i> instead of the default. See <a href="#MODELS">&quot;MODELS&quot;</a>.</p>
+
+</dd>
+<dt id="N-Nmax"><b>-N</b> <i>Nmax</i></dt>
+<dd>
+
+<p>limit the degree of the model to <i>Nmax</i>.</p>
+
+</dd>
+<dt id="M-Mmax"><b>-M</b> <i>Mmax</i></dt>
+<dd>
+
+<p>limit the order of the model to <i>Mmax</i>.</p>
 
 </dd>
 <dt id="G"><b>-G</b></dt>

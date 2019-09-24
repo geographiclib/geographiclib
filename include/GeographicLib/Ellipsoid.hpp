@@ -2,7 +2,7 @@
  * \file Ellipsoid.hpp
  * \brief Header for GeographicLib::Ellipsoid class
  *
- * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -77,7 +77,7 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    Math::real MajorRadius() const { return _a; }
+    Math::real EquatorialRadius() const { return _a; }
 
     /**
      * @return \e b the polar semi-axis (meters).
@@ -105,6 +105,12 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Volume() const
     { return (4 * Math::pi()) * Math::sq(_a) * _b / 3; }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /** \name %Ellipsoid shape
@@ -167,7 +173,7 @@ namespace GeographicLib {
      * @param[in] phi the geographic latitude (degrees).
      * @return &beta; the parametric latitude (degrees).
      *
-     * The geographic latitude, &phi;, is the angle beween the equatorial
+     * The geographic latitude, &phi;, is the angle between the equatorial
      * plane and a vector normal to the surface of the ellipsoid.
      *
      * The parametric latitude (also called the reduced latitude), &beta;,
@@ -199,7 +205,7 @@ namespace GeographicLib {
      * @param[in] phi the geographic latitude (degrees).
      * @return &theta; the geocentric latitude (degrees).
      *
-     * The geocentric latitude, &theta;, is the angle beween the equatorial
+     * The geocentric latitude, &theta;, is the angle between the equatorial
      * plane and a line between the center of the ellipsoid and a point on the
      * ellipsoid.  For a sphere &theta; = &phi;.
      *

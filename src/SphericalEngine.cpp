@@ -2,7 +2,7 @@
  * \file SphericalEngine.cpp
  * \brief Implementation for GeographicLib::SphericalEngine class
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2018) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -386,18 +386,46 @@ namespace GeographicLib {
 
   void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,
                                           std::vector<real>& C,
-                                          std::vector<real>& S) {
+                                          std::vector<real>& S,
+                                          bool truncate) {
+    if (truncate) {
+      if (!((N >= M && M >= 0) || (N == -1 && M == -1)))
+        // The last condition is that M = -1 implies N = -1.
+        throw GeographicErr("Bad requested degree and order " +
+                            Utility::str(N) + " " + Utility::str(M));
+    }
     int nm[2];
     Utility::readarray<int, int, false>(stream, nm, 2);
-    N = nm[0]; M = nm[1];
-    if (!(N >= M && M >= -1 && N * M >= 0))
-      // The last condition is that M = -1 implies N = -1 and vice versa.
+    int N0 = nm[0], M0 = nm[1];
+    if (!((N0 >= M0 && M0 >= 0) || (N0 == -1 && M0 == -1)))
+      // The last condition is that M0 = -1 implies N0 = -1.
       throw GeographicErr("Bad degree and order " +
-                          Utility::str(N) + " " + Utility::str(M));
+                          Utility::str(N0) + " " + Utility::str(M0));
+    N = truncate ? min(N, N0) : N0;
+    M = truncate ? min(M, M0) : M0;
     C.resize(SphericalEngine::coeff::Csize(N, M));
-    Utility::readarray<double, real, false>(stream, C);
     S.resize(SphericalEngine::coeff::Ssize(N, M));
-    Utility::readarray<double, real, false>(stream, S);
+    int skip = (SphericalEngine::coeff::Csize(N0, M0) -
+                SphericalEngine::coeff::Csize(N0, M )) * sizeof(double);
+    if (N == N0) {
+      Utility::readarray<double, real, false>(stream, C);
+      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+      Utility::readarray<double, real, false>(stream, S);
+      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+    } else {
+      for (int m = 0, k = 0; m <= M; ++m) {
+        Utility::readarray<double, real, false>(stream, &C[k], N + 1 - m);
+        stream.seekg((N0 - N) * sizeof(double), ios::cur);
+        k += N + 1 - m;
+      }
+      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+      for (int m = 1, k = 0; m <= M; ++m) {
+        Utility::readarray<double, real, false>(stream, &S[k], N + 1 - m);
+        stream.seekg((N0 - N) * sizeof(double), ios::cur);
+        k += N + 1 - m;
+      }
+      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+    }
     return;
   }
 

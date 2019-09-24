@@ -1,6 +1,6 @@
 ## Geodesic routines from GeographicLib
 
-This documentation applies to version 1.49.
+This documentation applies to version 1.50.
 
 The documentation for other versions is available
 at <tt>https://geographiclib.sourceforge.io/m.nn/js</tt> for versions
@@ -26,7 +26,7 @@ $ node
 ```
 The npm package includes a test suite.  Run this by
 ```bash
-$ cd node_modules/geograliblib
+$ cd node_modules/geographiclib
 $ npm test
 ```
 
@@ -99,15 +99,28 @@ Two examples of this library in use are
   {@link https://geographiclib.sourceforge.io/html/python/index.html
     documentation};
 * Matlab/Octave (geodesic and some other routines):
-  {@link http://www.mathworks.com/matlabcentral/fileexchange/50605
+  {@link https://www.mathworks.com/matlabcentral/fileexchange/50605
     Matlab Central package},
-  {@link http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m
+  {@link https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m
     documentation};
 * C# (.NET wrapper for complete C++ library):
   {@link https://geographiclib.sourceforge.io/html/NET/index.html
     documentation}.
 
 ### Change log
+
+* Version 1.50 (released 2019-09-24)
+  * PolygonArea can now handle arbitrarily complex polygons.  In the
+    case of self-intersecting polygons the area is accumulated
+    "algebraically", e.g., the areas of the 2 loops in a figure-8
+    polygon will partially cancel.
+  * Fix two bugs in the computation of areas when some vertices are specified
+    by an added edge.
+  * Fix bug in computing unsigned area.
+  * When parsing DMS strings ignore various non-breaking spaces.
+  * Fall back to system versions of hypot, cbrt, log1p, atanh if they
+    are available.
+  * Math.cbrt, Math.atanh, and Math.asinh preserve the sign of &minus;0.
 
 * Version 1.49 (released 2017-10-05)
   * Use explicit test for nonzero real numbers.

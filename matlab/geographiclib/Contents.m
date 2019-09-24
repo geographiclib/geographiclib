@@ -1,5 +1,5 @@
 % GeographicLib toolbox
-% Version 1.49 2017-10-05
+% Version 1.50 2019-09-19
 %
 %   This toolbox provides native MATLAB implementations of a subset of the
 %   C++ library, GeographicLib.  Key components of this toolbox are
@@ -16,7 +16,7 @@
 %   available in the documentation for the GeographicLib, which is
 %   available at
 %
-%       https://geographiclib.sourceforge.io/html
+%       https://geographiclib.sourceforge.io/1.50
 %
 %   Some common features of these functions:
 %     * Angles (latitude, longitude, azimuth, meridian convergence) are
@@ -90,4 +90,4 @@
 %   projdoc          - Projections for an ellipsoid
 %   gedoc            - Great ellipses on an ellipsoid of revolution
 
-% Copyright (c) Charles Karney (2015-2017) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2019) <charles@karney.com>.

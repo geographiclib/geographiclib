@@ -42,7 +42,7 @@ namespace Projections
             {
                 MessageBox.Show(xcpt.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            m_majorRadiusTextBox.Text = m_geocentric.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_geocentric.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_geocentric.Flattening.ToString();
             m_functionComboBox.SelectedIndex = (int)m_function;
         }
@@ -127,7 +127,7 @@ namespace Projections
             {
                 Geocentric g = new Geocentric();
                 string test = g.ToString();
-                g = new Geocentric(g.MajorRadius, g.Flattening);
+                g = new Geocentric(g.EquatorialRadius, g.Flattening);
                 double x, y, z, lat, lon, alt, tx, ty, tz;
                 double[,] rot;
                 g.Forward(32.0, -86.0, 45.0, out x, out y, out z, out rot);

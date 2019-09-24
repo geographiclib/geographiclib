@@ -4,6 +4,7 @@ var assert = require("assert"),
     G = require("../geographiclib"),
     g = G.Geodesic,
     d = G.DMS,
+    m = G.Math,
     testcases = [
       [35.60777, -139.44815, 111.098748429560326,
        -11.17491, -69.95921, 129.289270889708762,
@@ -415,7 +416,7 @@ describe("GeographicLib", function() {
           inv = geod.Inverse(5, 0.00000000000001, 10, 180);
       assert.approx(inv.azi1, 0.000000000000035, 1.5e-14);
       assert.approx(inv.azi2, 179.99999999999996, 1.5e-14);
-      assert.approx(inv.s12, 18345191.174332713, 4e-9);
+      assert.approx(inv.s12, 18345191.174332713, 5e-9);
     });
 
     it("GeodSolve61", function() {
@@ -498,11 +499,14 @@ describe("GeographicLib", function() {
       // Check for backwards from the pole bug reported by Anon on 2016-02-13.
       // This only affected the Java implementation.  It was introduced in Java
       // version 1.44 and fixed in 1.46-SNAPSHOT on 2016-01-17.
+      // Also the + sign on azi2 is a check on the normalizing of azimuths
+      // (converting -0.0 to +0.0).
       var geod = g.WGS84,
           dir = geod.Direct(90, 10, 180, -1e6);
       assert.approx(dir.lat2, 81.04623, 0.5e-5);
       assert.approx(dir.lon2, -170, 0.5e-5);
       assert.approx(dir.azi2, 0, 0.5e-5);
+      assert.ok(m.copysign(1, dir.azi2) > 0);
     });
 
     it("GeodSolve74", function() {
@@ -538,6 +542,83 @@ describe("GeographicLib", function() {
       assert.approx(inv.azi1,  45.82468716758, 0.5e-11);
       assert.approx(inv.azi2, 134.22776532670, 0.5e-11);
       assert.approx(inv.s12,  19974354.765767, 0.5e-6);
+    });
+
+    it("GeodSolve80", function() {
+      // Some tests to add code coverage: computing scale in special cases +
+      // zero length geodesic (includes GeodSolve80 - GeodSolve83).
+      var geod = g.WGS84, inv, line, dir;
+
+      inv = geod.Inverse(0, 0, 0, 90, g.GEODESICSCALE);
+      assert.approx(inv.M12, -0.00528427534, 0.5e-10);
+      assert.approx(inv.M21, -0.00528427534, 0.5e-10);
+
+      inv = geod.Inverse(0, 0, 1e-6, 1e-6, g.GEODESICSCALE);
+      assert.approx(inv.M12, 1, 0.5e-10);
+      assert.approx(inv.M21, 1, 0.5e-10);
+
+      inv = geod.Inverse(20.001, 0, 20.001, 0, g.ALL);
+      assert.approx(inv.a12, 0, 1e-13);
+      assert.approx(inv.s12, 0, 1e-8);
+      assert.approx(inv.azi1, 180, 1e-13);
+      assert.approx(inv.azi2, 180, 1e-13);
+      assert.approx(inv.m12, 0,  1e-8);
+      assert.approx(inv.M12, 1, 1e-15);
+      assert.approx(inv.M21, 1, 1e-15);
+      assert.approx(inv.S12, 0, 1e-10);
+
+      inv = geod.Inverse(90, 0, 90, 180, g.ALL);
+      assert.approx(inv.a12, 0, 1e-13);
+      assert.approx(inv.s12, 0, 1e-8);
+      assert.approx(inv.azi1, 0, 1e-13);
+      assert.approx(inv.azi2, 180, 1e-13);
+      assert.approx(inv.m12, 0, 1e-8);
+      assert.approx(inv.M12, 1, 1e-15);
+      assert.approx(inv.M21, 1, 1e-15);
+      assert.approx(inv.S12, 127516405431022.0, 0.5);
+
+      // An incapable line which can't take distance as input
+      line = geod.Line(1, 2, 90, g.LATITUDE);
+      dir = line.Position(1000, g.NONE);
+      assert(isNaN(dir.a12));
+    });
+
+    it("GeodSolve84", function() {
+      // Tests for python implementation to check fix for range errors with
+      // {fmod,sin,cos}(inf) (includes GeodSolve84 - GeodSolve86).
+      var geod = g.WGS84, dir;
+      dir = geod.Direct(0, 0, 90, Infinity);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, 0, 90, NaN);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, 0, Infinity, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, 0, NaN, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(0, Infinity, 90, 1000);
+      assert(dir.lat2 == 0);
+      assert(isNaN(dir.lon2));
+      assert(dir.azi2 == 90);
+      dir = geod.Direct(0, NaN, 90, 1000);
+      assert(dir.lat2 == 0);
+      assert(isNaN(dir.lon2));
+      assert(dir.azi2 == 90);
+      dir = geod.Direct(Infinity, 0, 90, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
+      dir = geod.Direct(NaN, 0, 90, 1000);
+      assert(isNaN(dir.lat2));
+      assert(isNaN(dir.lon2));
+      assert(isNaN(dir.azi2));
     });
 
   });
@@ -640,6 +721,140 @@ describe("GeographicLib", function() {
       a =  Planimeter(points);
       assert.approx(a.perimeter, 1160741, 1);
       assert.approx(a.area, 32415230256.0, 1);
+    });
+
+    it("Planimeter15", function() {
+      // Coverage tests, includes Planimeter15 - Planimeter18 (combinations of
+      // reverse and sign) + calls to testpoint, testedge.
+      var a, lat, lon, r, a0, area, inv;
+      lat = [2, 1, 3]; lon = [1, 2, 3];
+      r = 18454562325.45119;
+      a0 = 510065621724088.5093; // ellipsoid area
+      polygon.Clear();
+      polygon.AddPoint(lat[0], lon[0]);
+      polygon.AddPoint(lat[1], lon[1]);
+      a = polygon.TestPoint(lat[2], lon[2], false, true);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestPoint(lat[2], lon[2], false, false);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestPoint(lat[2], lon[2], true, true);
+      assert.approx(a.area, -r, 0.5);
+      a = polygon.TestPoint(lat[2], lon[2], true, false);
+      assert.approx(a.area, a0-r, 0.5);
+      inv = geod.Inverse(lat[1], lon[1], lat[2], lon[2]);
+      a = polygon.TestEdge(inv.azi1, inv.s12, false, true);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestEdge(inv.azi1, inv.s12, false, false);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.TestEdge(inv.azi1, inv.s12, true, true);
+      assert.approx(a.area, -r, 0.5);
+      a = polygon.TestEdge(inv.azi1, inv.s12, true, false);
+      assert.approx(a.area, a0-r, 0.5);
+      polygon.AddPoint(lat[2], lon[2]);
+      a = polygon.Compute(false, true);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.Compute(false, false);
+      assert.approx(a.area, r, 0.5);
+      a = polygon.Compute(true, true);
+      assert.approx(a.area, -r, 0.5);
+      a = polygon.Compute(true, false);
+      assert.approx(a.area, a0-r, 0.5);
+    });
+
+    it("Planimeter19", function() {
+      // Coverage tests, includes Planimeter19 - Planimeter20 (degenerate
+      // polygons) + extra cases.
+      var a;
+      polygon.Clear();
+      a = polygon.Compute(false, true);
+      assert(a.area == 0);
+      assert(a.perimeter == 0);
+      a = polygon.TestPoint(1, 1, false, true);
+      assert(a.area == 0);
+      assert(a.perimeter == 0);
+      a = polygon.TestEdge(90, 1000, false, true);
+      assert(isNaN(a.area));
+      assert(isNaN(a.perimeter));
+      polygon.AddPoint(1, 1);
+      a = polygon.Compute(false, true);
+      assert(a.area == 0);
+      assert(a.perimeter == 0);
+      polyline.Clear();
+      a = polyline.Compute(false, true);
+      assert(a.perimeter == 0);
+      a = polyline.TestPoint(1, 1, false, true);
+      assert(a.perimeter == 0);
+      a = polyline.TestEdge(90, 1000, false, true);
+      assert(isNaN(a.perimeter));
+      polyline.AddPoint(1, 1);
+      a = polyline.Compute(false, true);
+      assert(a.perimeter == 0);
+      polygon.AddPoint(1, 1);
+      a = polyline.TestEdge(90, 1000, false, true);
+      assert.approx(a.perimeter, 1000, 1e-10);
+      a = polyline.TestPoint(2, 2, false, true);
+      assert.approx(a.perimeter, 156876.149, 0.5e-3);
+    });
+
+    it("Planimeter21", function() {
+      // Some test to add code coverage: multiple circlings of pole (includes
+      // Planimeter21 - Planimeter28) + invocations via testpoint and testedge.
+      var a, lat, azi, s, r, a0, i;
+      lat = 45;
+      azi = 39.2144607176828184218;
+      s = 8420705.40957178156285;
+      r = 39433884866571.4277;   // Area for one circuit
+      a0 = 510065621724088.5093; // Ellipsoid area
+      polygon.Clear();
+      polygon.AddPoint(lat,  60);
+      polygon.AddPoint(lat, 180);
+      polygon.AddPoint(lat, -60);
+      polygon.AddPoint(lat,  60);
+      polygon.AddPoint(lat, 180);
+      polygon.AddPoint(lat, -60);
+      for (i = 3; i <= 4; ++i) {
+        polygon.AddPoint(lat,  60);
+        polygon.AddPoint(lat, 180);
+        a = polygon.TestPoint(lat, -60, false, true);
+        assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestPoint(lat, -60, false, false);
+        assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestPoint(lat, -60, true, true);
+        assert.approx(a.area, -i*r, 0.5);
+        a = polygon.TestPoint(lat, -60, true, false);
+        assert.approx(a.area, -i*r + a0, 0.5);
+        a = polygon.TestEdge(azi, s, false, true);
+        assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestEdge(azi, s, false, false);
+        assert.approx(a.area,  i*r, 0.5);
+        a = polygon.TestEdge(azi, s, true, true);
+        assert.approx(a.area, -i*r, 0.5);
+        a = polygon.TestEdge(azi, s, true, false);
+        assert.approx(a.area, -i*r + a0, 0.5);
+        polygon.AddPoint(lat, -60);
+        a = polygon.Compute(false, true);
+        assert.approx(a.area,  i*r, 0.5);
+        a = polygon.Compute(false, false);
+        assert.approx(a.area,  i*r, 0.5);
+        a = polygon.Compute(true, true);
+        assert.approx(a.area, -i*r, 0.5);
+        a = polygon.Compute(true, false);
+        assert.approx(a.area, -i*r + a0, 0.5);
+      }
+    });
+
+    it("Planimeter29", function() {
+      // Check fix to transitdirect vs transit zero handling inconsistency
+      var a;
+      polygon.Clear();
+      polygon.AddPoint(0, 0);
+      polygon.AddEdge( 90, 1000);
+      polygon.AddEdge(  0, 1000);
+      polygon.AddEdge(-90, 1000);
+      a = polygon.Compute(false, true);
+      // The area should be 1e6.  Prior to the fix it was 1e6 - A/2, where
+      // A = ellipsoid area.
+      assert.approx(a.area, 1000000.0, 0.01);
     });
 
     it("check TestEdge", function() {

@@ -1,7 +1,7 @@
 /**
  * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.49
+ * @version 1.50
  *
  * <p>
  * The documentation for other versions is available at
@@ -29,15 +29,15 @@
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.tar.gz">
- *   GeographicLib-1.49.tar.gz</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.tar.gz">
+ *   GeographicLib-1.50.tar.gz</a>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.49.zip">
- *   GeographicLib-1.49.zip</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.zip">
+ *   GeographicLib-1.50.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.49/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.50/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
@@ -50,7 +50,7 @@
  *   <dependency>
  *     <groupId>net.sf.geographiclib</groupId>
  *     <artifactId>GeographicLib-Java</artifactId>
- *     <version>1.49</version>
+ *     <version>1.50</version>
  *   </dependency> }</pre>
  * in your {@code pom.xml}.
  *
@@ -119,9 +119,9 @@
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-Java-1.49.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.50.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-Java-1.49.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.50.jar Inverse </pre>
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * The sample code includes a {@code pom.xml} which specifies
@@ -240,9 +240,9 @@
  *         documentation</a>
  *     <li>
  *       Matlab/Octave (geodesic and some other routines):
- *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+ *       <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
  *         Matlab Central package</a>,
- *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+ *       <a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
  *         documentation</a>
  *     <li>
  *       C# (.NET wrapper for complete C++ library):
@@ -264,6 +264,25 @@
  *
  * <h2>Change log</h2>
  * <ul>
+ * <li>
+ *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.50</a>
+ *   (released 2019-09-24)
+ * <ul>
+ * <li>
+ *   {@link net.sf.geographiclib.PolygonArea} can now handle arbitrarily
+ *   complex polygons.  In the case of self-intersecting polygons the area is
+ *   accumulated "algebraically", e.g., the areas of the 2 loops in a figure-8
+ *   polygon will partially cancel.
+ * <li>
+ *   Fix two bugs in the computation of areas when some vertices are specified
+ *   by an added edge.
+ * <li>
+ *   Require Java 1.6 or later and so remove epsilon, min, hypot, log1p,
+ *   copysign, cbrt from GeoMath.
+ * <li>
+ *   GeoMath.cbrt, GeoMath.atanh, and GeoMath.asinh preserve the sign of
+ *   &minus;0.
+ * </ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.49</a>
  *   (released 2017-10-05)

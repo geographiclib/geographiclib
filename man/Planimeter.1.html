@@ -29,7 +29,7 @@
 
 <p>Of course, encircling an area in the clockwise direction is equivalent to encircling the rest of the ellipsoid in the counter-clockwise direction. The default interpretation used by <b>Planimeter</b> is the one that results in a smaller magnitude of area; i.e., the magnitude of the area is less than or equal to one half the total area of the ellipsoid. If the <b>-s</b> option is given, then the interpretation used is the one that results in a positive area; i.e., the area is positive and less than the total area of the ellipsoid.</p>
 
-<p>Only simple (i.e., non-self-intersecting) polygons are supported for the area computation. Polygons may include one or both poles. There is no need to close the polygon.</p>
+<p>Arbitrarily complex polygons are allowed. In the case of self-intersecting polygons the area is accumulated &quot;algebraically&quot;, e.g., the areas of the 2 loops in a figure-8 polygon will partially cancel. Polygons may include one or both poles. There is no need to close the polygon.</p>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 

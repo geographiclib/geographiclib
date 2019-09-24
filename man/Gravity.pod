@@ -5,6 +5,7 @@ Gravity -- compute the earth's gravity field
 =head1 SYNOPSIS
 
 B<Gravity> [ B<-n> I<name> ] [ B<-d> I<dir> ]
+[ B<-N> I<Nmax> ] [ B<-M> I<Mmax> ]
 [ B<-G> | B<-D> | B<-A> | B<-H> ] [ B<-c> I<lat> I<h> ]
 [ B<-w> ] [ B<-p> I<prec> ]
 [ B<-v> ]
@@ -47,6 +48,14 @@ L</MODELS>.
 
 read gravity models from I<dir> instead of the default.  See
 L</MODELS>.
+
+=item B<-N> I<Nmax>
+
+limit the degree of the model to I<Nmax>.
+
+=item B<-M> I<Mmax>
+
+limit the order of the model to I<Mmax>.
 
 =item B<-G>
 

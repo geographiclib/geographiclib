@@ -5,7 +5,7 @@ int main(array<System::String ^> ^/*args*/
 )
 {
   try {
-    Rhumb^ rhumb = gcnew Rhumb(Constants::WGS84::MajorRadius, Constants::WGS84::Flattening, true);
+    Rhumb^ rhumb = gcnew Rhumb(Constants::WGS84::EquatorialRadius, Constants::WGS84::Flattening, true);
     // Alternatively: const Rhumb& rhumb = Rhumb::WGS84();
     {
       // Sample direct calculation, travelling about NE from JFK

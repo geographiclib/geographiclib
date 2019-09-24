@@ -36,7 +36,7 @@ namespace NETGeographicLib
    * The () operator has been replaced with Field.
    *
    * The following functions are implemented as properties:
-   * Init, MajorRadius, Flattening, Latitude, Height, and Time.
+   * Init, EquatorialRadius, Flattening, Latitude, Height, and Time.
    **********************************************************************/
     public ref class MagneticCircle
     {
@@ -116,7 +116,7 @@ namespace NETGeographicLib
          *   constructor.  This property throws a GeographicErr exception if
          *   the object is not initialized.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
         /**
          * @return \e f the flattening of the ellipsoid.  This is the value
          *   inherited from the MagneticModel object used in the constructor.

@@ -4,7 +4,7 @@ using namespace NETGeographicLib;
 int main(array<System::String ^> ^/*args*/)
 {
     try {
-        Geocentric^ earth = gcnew Geocentric( Constants::WGS84::MajorRadius,
+        Geocentric^ earth = gcnew Geocentric( Constants::WGS84::EquatorialRadius,
                                               Constants::WGS84::Flattening);
         // Alternatively: Geocentric earth = new Geocentric();
         {

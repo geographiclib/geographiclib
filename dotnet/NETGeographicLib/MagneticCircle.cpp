@@ -71,11 +71,11 @@ void MagneticCircle::Field(double lon,
 }
 
 //*****************************************************************************
-double MagneticCircle::MajorRadius::get()
+double MagneticCircle::EquatorialRadius::get()
 {
     if ( m_pMagneticCircle->Init() )
-        return m_pMagneticCircle->MajorRadius();
-    throw  gcnew GeographicErr("MagneticCircle::MajorRadius failed because the MagneticCircle is not initialized.");
+        return m_pMagneticCircle->EquatorialRadius();
+    throw  gcnew GeographicErr("MagneticCircle::EquatorialRadius failed because the MagneticCircle is not initialized.");
 }
 
 //*****************************************************************************

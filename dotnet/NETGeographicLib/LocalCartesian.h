@@ -39,7 +39,7 @@ namespace NETGeographicLib
    * Constructors have been provided that assume WGS84 parameters.
    *
    * The following functions are implemented as properties:
-   * LatitudeOrigin, LongitudeOrigin, HeightOrigin, MajorRadius,
+   * LatitudeOrigin, LongitudeOrigin, HeightOrigin, EquatorialRadius,
    * and Flattening.
    *
    * The rotation matrices returned by the Forward and Reverse functions
@@ -233,7 +233,7 @@ namespace NETGeographicLib
          *   the value of \e a inherited from the Geocentric object used in the
          *   constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the flattening of the ellipsoid.  This is the value

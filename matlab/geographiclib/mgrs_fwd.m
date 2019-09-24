@@ -30,7 +30,7 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %
 %   See also MGRS_INV, UTMUPS_FWD.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2018) <charles@karney.com>.
 
   narginchk(4, 5)
   if nargin < 5, prec = 5; end
@@ -84,6 +84,9 @@ function mgrs = mgrs_fwd_p(x, y, zone, northp, prec)
   t = mgrs_fwd_utm(x(utm), y(utm), zone(utm), prec); mgrs(utm,:) = t;
   t = mgrs_fwd_upsn(x(upsn), y(upsn), prec); mgrs(upsn,1:end-2) = t;
   t = mgrs_fwd_upss(x(upss), y(upss), prec); mgrs(upss,1:end-2) = t;
+  if prec == -1                         % For UPS overwrite the 'NV'
+    mgrs(upsn | upss, 2:3) = ' ';
+  end
 end
 
 function mgrs = mgrs_fwd_utm(x, y, zone, prec)

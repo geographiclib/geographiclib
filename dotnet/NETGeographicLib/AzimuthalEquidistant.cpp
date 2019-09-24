@@ -102,8 +102,8 @@ void AzimuthalEquidistant::Reverse(double lat0, double lon0, double x, double y,
 }
 
 //*****************************************************************************
-double AzimuthalEquidistant::MajorRadius::get()
-{ return m_pAzimuthalEquidistant->MajorRadius(); }
+double AzimuthalEquidistant::EquatorialRadius::get()
+{ return m_pAzimuthalEquidistant->EquatorialRadius(); }
 
 //*****************************************************************************
 double AzimuthalEquidistant::Flattening::get()

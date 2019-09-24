@@ -87,7 +87,7 @@
 <dt id="F"><b>-F</b></dt>
 <dd>
 
-<p>fractional mode. This only has any effect with the <b>-D</b> and <b>-I</b> options (and is otherwise ignored). The values read on standard input are interpreted as fractional distances to point 3, i.e., as <i>s12</i>/<i>s13</i> instead of <i>s12</i>. If arc mode is in effect, then the values denote fractional arc length, i.e., <i>a12</i>/<i>a13</i>.</p>
+<p>fractional mode. This only has any effect with the <b>-D</b> and <b>-I</b> options (and is otherwise ignored). The values read on standard input are interpreted as fractional distances to point 3, i.e., as <i>s12</i>/<i>s13</i> instead of <i>s12</i>. If arc mode is in effect, then the values denote fractional arc length, i.e., <i>a12</i>/<i>a13</i>. The fractional distances can be entered as a simple fraction, e.g., 3/4.</p>
 
 </dd>
 <dt id="d"><b>-d</b></dt>
@@ -292,7 +292,7 @@
 
 <p>Equally spaced waypoints on the route:</p>
 
-<pre><code>   for ((i = 0; i &lt;= 10; ++i)); do echo ${i}e-1; done |
+<pre><code>   for ((i = 0; i &lt;= 10; ++i)); do echo $i/10; done |
    GeodSolve -I 40:38:23N 073:46:44W 01:21:33N 103:59:22E -F -: -p 0
 
    40:38:23.0N 073:46:44.0W 003:18:29.9

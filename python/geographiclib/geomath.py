@@ -6,7 +6,7 @@
 #
 #    https://geographiclib.sourceforge.io/html/annotated.html
 #
-# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -44,7 +44,7 @@ class Math(object):
     """Real cube root of a number"""
 
     y = math.pow(abs(x), 1/3.0)
-    return y if x >= 0 else -y
+    return y if x > 0 else (-y if x < 0 else x)
   cbrt = staticmethod(cbrt)
 
   def log1p(x):
@@ -70,7 +70,7 @@ class Math(object):
 
     y = abs(x)                  # Enforce odd parity
     y = Math.log1p(2 * y/(1 - y))/2
-    return -y if x < 0 else y
+    return y if x > 0 else (-y if x < 0 else x)
   atanh = staticmethod(atanh)
 
   def copysign(x, y):
@@ -126,16 +126,22 @@ class Math(object):
     return 0.0 if x == 0 else (-y if x < 0 else y)
   AngRound = staticmethod(AngRound)
 
-  def AngNormalize(x):
-    """reduce angle to (-180,180]"""
-
-    y = math.fmod(x, 360)
+  def remainder(x, y):
+    """remainder of x/y in the range [-y/2, y/2]."""
+    z = math.fmod(x, y) if Math.isfinite(x) else Math.nan
     # On Windows 32-bit with python 2.7, math.fmod(-0.0, 360) = +0.0
     # This fixes this bug.  See also Math::AngNormalize in the C++ library.
     # sincosd has a similar fix.
-    y = x if x == 0 else y
-    return (y + 360 if y <= -180 else
-            (y if y <= 180 else y - 360))
+    z = x if x == 0 else z
+    return (z + y if z < -y/2 else
+            (z if z < y/2 else z -y))
+  remainder = staticmethod(remainder)
+
+  def AngNormalize(x):
+    """reduce angle to (-180,180]"""
+
+    y = Math.remainder(x, 360)
+    return 180 if y == -180 else y
   AngNormalize = staticmethod(AngNormalize)
 
   def LatFix(x):
@@ -155,8 +161,8 @@ class Math(object):
   def sincosd(x):
     """Compute sine and cosine of x in degrees."""
 
-    r = math.fmod(x, 360)
-    q = Math.nan if Math.isnan(r) else int(math.floor(r / 90 + 0.5))
+    r = math.fmod(x, 360) if Math.isfinite(x) else Math.nan
+    q = 0 if Math.isnan(r) else int(round(r / 90))
     r -= 90 * q; r = math.radians(r)
     s = math.sin(r); c = math.cos(r)
     q = q % 4
