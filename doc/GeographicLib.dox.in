@@ -673,6 +673,8 @@ syntax checking) \verbatim
 The following Fedora package is also useful for syntax checking python
 - pychecker
 .
+Installing the python package requires the following \verbatim
+  python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
 A recent version of mpreal.h needs to be downloaded from
 https://bitbucket.org/advanpix/mpreal and installed
 in the <code>include/</code> directory.  For all the tests to be run,
@@ -7689,7 +7691,7 @@ git repository for GeographicLib</a>.
        incorrect area to be reported if an endpoint is at a pole.
        Thanks to Natalia Sabourova for reporting this.
      - Fix bug in MATLAB routine mgrs_inv which resulted in incorrect
-       results for UPS zones with prec = -1.
+       results for UPS zones with prec = &minus;1.
      - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
        division by zero" messages from Octave.
      - In python implementation, work around problems caused by sin(inf)
@@ -7740,7 +7742,7 @@ git repository for GeographicLib</a>.
        find_package(GeographicLib); this allows GeographicLib compiled
        with Visual Studio 14 2015 to be used with a project compiled
        with Visual Studio 15 2017 and 16 2019.
-     - suppress warnings with dotnet build.
+     - Suppress warnings with dotnet build.
      - Change CMake target names and add an interface library (thanks to
        Matthew Woehlke).
      - Remove pre-3.1.0 cruft and update the documentation to remove the
@@ -7780,7 +7782,7 @@ git repository for GeographicLib</a>.
    - Old deprecated NormalGravity::NormalGravity constructor removed.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
-     - Clarify which solution is returned for Geocentric::Reverse.
+     - clarify which solution is returned for Geocentric::Reverse.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
@@ -8458,9 +8460,9 @@ git repository for GeographicLib</a>.
      misinterpretation of the zone designator, consider calling
      EncodeZone with \e abbrev = false and GeoConvert with -l, so that
      north/south are used to denote the hemisphere.
-   - MGRS::Forward with \e prec = -1 will produce a grid
+   - MGRS::Forward with \e prec = &minus;1 will produce a grid
      zone designation.  Similarly MGRS::Reverse will
-     decode a grid zone designation (and return \e prec = -1).
+     decode a grid zone designation (and return \e prec = &minus;1).
    - Stop using the throw() declaration specification which is
      deprecated in C++11.
    - Add missing std:: qualifications to copy in LocalCartesion and

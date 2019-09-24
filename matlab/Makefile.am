@@ -65,6 +65,7 @@ MATLAB_PRIVATE = \
 	$(srcdir)/geographiclib/private/geoid_file.m \
 	$(srcdir)/geographiclib/private/geoid_load_file.m \
 	$(srcdir)/geographiclib/private/norm2.m \
+	$(srcdir)/geographiclib/private/remx.m \
 	$(srcdir)/geographiclib/private/sincosdx.m \
 	$(srcdir)/geographiclib/private/sumx.m \
 	$(srcdir)/geographiclib/private/swap.m \

@@ -40,4 +40,4 @@ clean-local:
 	rm -rf *.pyc $(PACKAGE)/*.pyc
 
 EXTRA_DIST = Makefile.mk $(PACKAGE)/CMakeLists.txt $(PYTHON_FILES) \
-	$(TEST_FILES) $(DOC_FILES) setup.py MANIFEST.in README.rst
+	$(TEST_FILES) $(DOC_FILES) LICENSE setup.py MANIFEST.in README.md

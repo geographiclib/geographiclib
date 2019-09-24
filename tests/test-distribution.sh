@@ -514,8 +514,9 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 # New method in
 # https://packaging.python.org/tutorials/packaging-projects/#uploading-your-project-to-pypi
 cd $TEMP/gita/geographiclib/python
-python setup.py sdist --formats gztar upload
-sudo pip install --upgrade geographiclib
+python3 setup.py sdist bdist_wheel
+python3 -m twine upload dist/*
+sudo python3 -m pip install --upgrade geographiclib
 
 # java release -- authentication via ~/.m2/settings.xml; this gets signed too.
 cd $TEMP/gita/geographiclib/java
