@@ -516,9 +516,11 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 cd $TEMP/gita/geographiclib/python
 python3 setup.py sdist bdist_wheel
 python3 -m twine upload dist/*
-sudo python3 -m pip install --upgrade geographiclib
+# installs in /usr/local/lib/python3.7/site-packages/geographiclib
+cd; sudo python3 -m pip install --upgrade geographiclib
 
-# java release -- authentication via ~/.m2/settings.xml; this gets signed too.
+# java release -- authentication via ~/.m2/settings.xml; this gets signed too
+# (multiple ~4 times!).
 cd $TEMP/gita/geographiclib/java
 mvn clean deploy -P release
 
@@ -531,6 +533,7 @@ cd $TEMP/gita/geographiclib/BUILD/js && npm publish geographiclib
 make -C $DEVELSOURCE -f makefile-admin distrib-js
 make -C $DEVELSOURCE -f makefile-admin install-js
 # also update devel branch of node-geographiclib from ??
+# git@github.com:yurijmikhalevich/node-geographiclib.git
 $TEMP/gita/geographiclib/BUILD/js/geographiclib
 
 # matlab toolbox
