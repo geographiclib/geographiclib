@@ -2,7 +2,7 @@
  * \file NormalGravity.cpp
  * \brief Implementation for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2018) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -61,23 +61,6 @@ namespace GeographicLib {
   NormalGravity::NormalGravity(real a, real GM, real omega, real f_J2,
                                bool geometricp) {
     Initialize(a, GM, omega, f_J2, geometricp);
-  }
-
-  NormalGravity::NormalGravity(real a, real GM, real omega, real f, real J2) {
-    if (!(Math::isfinite(GM) && GM > 0))
-      throw GeographicErr("Gravitational constant is not positive");
-    bool geometricp;
-    if (!(omega == 0 && f == 0 && J2 == 0)) {
-      geometricp = f > 0 && Math::isfinite(f);
-      if (J2 > 0 && Math::isfinite(J2) && geometricp)
-        throw GeographicErr("Cannot specify both f and J2");
-      if (!(J2 > 0 && Math::isfinite(J2)) && !geometricp)
-        throw GeographicErr("Must specify one of f and J2");
-      if (!(Math::isfinite(omega) && omega != 0))
-        throw GeographicErr("Angular velocity is not non-zero");
-    } else
-      geometricp = true;
-    Initialize(a, GM, omega, geometricp ? f : J2, geometricp);
   }
 
   const NormalGravity& NormalGravity::WGS84() {

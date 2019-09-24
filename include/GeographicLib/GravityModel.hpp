@@ -2,7 +2,7 @@
  * \file GravityModel.hpp
  * \brief Header for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -87,6 +87,7 @@ namespace GeographicLib {
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
     real _amodel, _GMmodel, _zeta0, _corrmult;
+    int _nmx, _mmx;
     SphericalHarmonic::normalization _norm;
     NormalGravity _earth;
     std::vector<real> _Cx, _Sx, _CC, _CS, _zonal;
@@ -165,8 +166,12 @@ namespace GeographicLib {
      *
      * @param[in] name the name of the model.
      * @param[in] path (optional) directory for data file.
+     * @param[in] Nmax (optional) if non-negative, truncate the degree of the
+     *   model this value.
+     * @param[in] Mmax (optional) if non-negative, truncate the order of the
+     *   model this value.
      * @exception GeographicErr if the data file cannot be found, is
-     *   unreadable, or is corrupt.
+     *   unreadable, or is corrupt, or if \e Mmax > \e Nmax.
      * @exception std::bad_alloc if the memory necessary for storing the model
      *   can't be allocated.
      *
@@ -179,9 +184,14 @@ namespace GeographicLib {
      * model.  The coefficients for the spherical harmonic sums are obtained
      * from a file obtained by appending ".cof" to metadata file (so the
      * filename ends in ".egm.cof").
+     *
+     * If \e Nmax &ge; 0 and \e Mmax < 0, then \e Mmax is set to \e Nmax.
+     * After the model is loaded, the maximum degree and order of the model can
+     * be found by the Degree() and Order() methods.
      **********************************************************************/
     explicit GravityModel(const std::string& name,
-                          const std::string& path = "");
+                          const std::string& path = "",
+                          int Nmax = -1, int Mmax = -1);
     ///@}
 
     /** \name Compute gravity in geodetic coordinates
@@ -459,7 +469,7 @@ namespace GeographicLib {
     /**
      * @return \e a the equatorial radius of the ellipsoid (meters).
      **********************************************************************/
-    Math::real MajorRadius() const { return _earth.MajorRadius(); }
+    Math::real EquatorialRadius() const { return _earth.EquatorialRadius(); }
 
     /**
      * @return \e GM the mass constant of the model (m<sup>3</sup>
@@ -487,6 +497,22 @@ namespace GeographicLib {
      * @return \e f the flattening of the ellipsoid.
      **********************************************************************/
     Math::real Flattening() const { return _earth.Flattening(); }
+
+    /**
+     * @return \e Nmax the maximum degree of the components of the model.
+     **********************************************************************/
+    int Degree() const { return _nmx; }
+
+    /**
+     * @return \e Mmax the maximum order of the components of the model.
+     **********************************************************************/
+    int Order() const { return _mmx; }
+
+    /**
+      * \deprecated An old name for EquatorialRadius().
+      **********************************************************************/
+    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

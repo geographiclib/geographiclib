@@ -28,14 +28,14 @@ The distance from Wellington, NZ (41.32S, 174.81E) to Salamanca, Spain
 (40.96N, 5.50W) using :meth:`~geographiclib.geodesic.Geodesic.Inverse`:
 
   >>> g = geod.Inverse(-41.32, 174.81, 40.96, -5.50)
-  >>> print "The distance is {:.3f} m.".format(g['s12'])
+  >>> print("The distance is {:.3f} m.".format(g['s12']))
   The distance is 19959679.267 m.
 
-The point the point 20000 km SW of Perth, Australia (32.06S, 115.74E)
+The point 20000 km SW of Perth, Australia (32.06S, 115.74E)
 using :meth:`~geographiclib.geodesic.Geodesic.Direct`:
 
   >>> g = geod.Direct(-32.06, 115.74, 225, 20000e3)
-  >>> print "The position is ({:.8f}, {:.8f}).".format(g['lat2'],g['lon2'])
+  >>> print("The position is ({:.8f}, {:.8f}).".format(g['lat2'],g['lon2']))
   The position is (32.11195529, -63.95925278).
 
 The area between the geodesic from JFK Airport (40.6N, 73.8W) to LHR
@@ -43,7 +43,7 @@ Airport (51.6N, 0.5W) and the equator. This is an example of setting the
 the :ref:`output mask <outmask>` parameter.
 
   >>> g = geod.Inverse(40.6, -73.8, 51.6, -0.5, Geodesic.AREA)
-  >>> print "The area is {:.1f}  m^2".format(g['S12'])
+  >>> print("The area is {:.1f}  m^2".format(g['S12']))
   The area is 40041368848742.5  m^2
 
 Computing waypoints
@@ -60,11 +60,11 @@ intervals of 1000 km using
   >>> ds = 1000e3; n = int(math.ceil(l.s13 / ds))
   >>> for i in range(n + 1):
   ...   if i == 0:
-  ...     print "distance latitude longitude azimuth"
+  ...     print("distance latitude longitude azimuth")
   ...   s = min(ds * i, l.s13)
   ...   g = l.Position(s, Geodesic.STANDARD | Geodesic.LONG_UNROLL)
-  ...   print "{:.0f} {:.5f} {:.5f} {:.5f}".format(
-  ...     g['s12'], g['lat2'], g['lon2'], g['azi2'])
+  ...   print("{:.0f} {:.5f} {:.5f} {:.5f}".format(
+  ...     g['s12'], g['lat2'], g['lon2'], g['azi2']))
   ...
   distance latitude longitude azimuth
   0 40.10000 116.60000 42.91642
@@ -96,11 +96,11 @@ waypoints will be about 60 NM.
   >>> da = 1; n = int(math.ceil(l.a13 / da)); da = l.a13 / n
   >>> for i in range(n + 1):
   ...   if i == 0:
-  ...     print "latitude longitude"
+  ...     print("latitude longitude")
   ...   a = da * i
   ...   g = l.ArcPosition(a, Geodesic.LATITUDE |
   ...                     Geodesic.LONGITUDE | Geodesic.LONG_UNROLL)
-  ...   print "{:.5f} {:.5f}".format(g['lat2'], g['lon2'])
+  ...   print("{:.5f} {:.5f}".format(g['lat2'], g['lon2']))
   ...
   latitude longitude
   40.10000 116.60000
@@ -137,6 +137,6 @@ Measure the area of Antarctica using
   ...   p.AddPoint(pnt[0], pnt[1])
   ...
   >>> num, perim, area = p.Compute()
-  >>> print "Perimeter/area of Antarctica are {:.3f} m / {:.1f} m^2".format(
-  ...   perim, area)
+  >>> print("Perimeter/area of Antarctica are {:.3f} m / {:.1f} m^2".
+  ...   format(perim, area))
   Perimeter/area of Antarctica are 16831067.893 m / 13662703680020.1 m^2

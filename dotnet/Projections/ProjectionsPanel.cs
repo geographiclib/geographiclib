@@ -49,7 +49,7 @@ namespace Projections
             {
                 MessageBox.Show(xcpt.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            m_majorRadiusTextBox.Text = m_geodesic.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_geodesic.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_geodesic.Flattening.ToString();
             m_lat0TextBox.Text = m_lon0TextBox.Text = "0";
             m_projectionComboBox.SelectedIndex = 0;

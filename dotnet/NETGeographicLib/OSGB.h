@@ -162,7 +162,7 @@ namespace NETGeographicLib
          * 10<sup>9.48401603&minus;10</sup> m.  (The Airy 1830 value is returned
          * because the OSGB projection is based on this ellipsoid.)
          **********************************************************************/
-        static double MajorRadius();
+        static double EquatorialRadius();
 
         /**
          * @return \e f the inverse flattening of the Airy 1830 ellipsoid.

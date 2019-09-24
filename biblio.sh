@@ -32,8 +32,9 @@ cat <<'EOF'
       out of date; let me know if this happens.
     </p>
     <p>This bibliography was started on 2009-06-06 (at
-      <a href=" http://trac.osgeo.org/proj/wiki/GeodesicCalculations">
-        http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>) and
+      <a href="http://trac.osgeo.org/proj/wiki/GeodesicCalculations">
+        http://trac.osgeo.org/proj/wiki/GeodesicCalculations</a>, now
+      defunct) and
       moved to this site on 2011-02-01.  The last update was on
 EOF
 git log --date=short $1 | head -3 | tail -1 | tr -s ' ' '	' |
@@ -46,7 +47,10 @@ cat $1 |
 sed -e 's/\*/<li>/' -e 's/  *\[\[BR\]\]/ <br>/' -e 's/\[\[BR\]\]/<br>/' \
     -e "s%'''\([0-9][0-9]*\)'''%<b>\1</b>%g" \
     -e "s% ''% <i>%g" -e "s%\([^ ]\)''%\1</i>%g" \
-    -e 's%\(https\?\)://\([a-zA-Z][^ ]*\)%<a href="\1://\2">\1://\2</a>%' \
+    -e 's%\(https\?\)://\([a-zA-Z][^ ]*\)%<a href="\1://FIX1\2FIX2">\1://\2</a>%' \
+    -e 's/FIX1\([a-zA-Z][^ ]*\)"\([^ ]*\)FIX2/FIX1\1%22\2FIX2/g' \
+    -e 's/FIX1\([a-zA-Z][^ ]*\)"\([^ ]*\)FIX2/FIX1\1%22\2FIX2/g' \
+    -e 's/FIX[12]//g' \
     -e 's%(PDF \([^)]*\))%(<a href="https://geographiclib.sourceforge.io/geodesic-papers/\1">pdf</a>)%' \
     -e 's/&/\&amp;/g' \
     -e 's/\([0-9]\)--\([0-9]\)/\1\&ndash;\2/g' \

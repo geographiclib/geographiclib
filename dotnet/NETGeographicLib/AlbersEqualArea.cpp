@@ -170,8 +170,8 @@ void AlbersEqualArea::Reverse(double lon0, double x, double y,
 }
 
 //*****************************************************************************
-double AlbersEqualArea::MajorRadius::get()
-{ return m_pAlbersEqualArea->MajorRadius(); }
+double AlbersEqualArea::EquatorialRadius::get()
+{ return m_pAlbersEqualArea->EquatorialRadius(); }
 
 //*****************************************************************************
 double AlbersEqualArea::Flattening::get()

@@ -2,7 +2,7 @@
  * \file GARS.cpp
  * \brief Implementation for GeographicLib::GARS class
  *
- * Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -25,7 +25,8 @@ namespace GeographicLib {
       gars = "INVALID";
       return;
     }
-    lon = Math::AngNormalize(lon); // lon in [-180,180)
+    lon = Math::AngNormalize(lon);
+    if (lon == 180) lon = -180; // lon now in [-180,180)
     if (lat == 90) lat *= (1 - numeric_limits<real>::epsilon() / 2);
     prec = max(0, min(int(maxprec_), prec));
     int

@@ -116,8 +116,8 @@ void TransverseMercatorExact::Reverse(double lon0, double x, double y,
 }
 
 //*****************************************************************************
-double TransverseMercatorExact::MajorRadius::get()
-{ return m_pTransverseMercatorExact->MajorRadius(); }
+double TransverseMercatorExact::EquatorialRadius::get()
+{ return m_pTransverseMercatorExact->EquatorialRadius(); }
 
 //*****************************************************************************
 double TransverseMercatorExact::Flattening::get()

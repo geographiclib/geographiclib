@@ -42,7 +42,7 @@ namespace NETGeographicLib
    * A default constructor is provided that assumes WGS84 parameters and
    * a UPS scale factor.
    *
-   * The MajorRadius, Flattening, and CentralScale functions are
+   * The EquatorialRadius, Flattening, and CentralScale functions are
    * implemented as properties.
    **********************************************************************/
     public ref class PolarStereographic
@@ -154,7 +154,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e f the flattening of the ellipsoid.  This is the value used in

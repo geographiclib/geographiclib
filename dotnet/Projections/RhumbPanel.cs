@@ -82,7 +82,7 @@ namespace Projections
         {
             try
             {
-                Rhumb r = new Rhumb(NETGeographicLib.Constants.WGS84.MajorRadius, NETGeographicLib.Constants.WGS84.Flattening, true);
+                Rhumb r = new Rhumb(NETGeographicLib.Constants.WGS84.EquatorialRadius, NETGeographicLib.Constants.WGS84.Flattening, true);
                 double lat1 = 32.0, lon1 = -86.0, azi12 = 45.0, s12 = 5000.0;
                 double lat2, lon2, _s12, _azi12, Area, _Area;
                 r.Direct(lat1, lon1, azi12, s12, out lat2, out lon2);

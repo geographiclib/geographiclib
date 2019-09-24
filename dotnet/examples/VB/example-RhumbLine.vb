@@ -3,7 +3,7 @@ Module example_RhumbLine
     Sub Main()
         Try
             ' Print waypoints between JFK and SIN
-            Dim rhumb As Rhumb = New Rhumb(Constants.WGS84.MajorRadius, Constants.WGS84.Flattening, True)
+            Dim rhumb As Rhumb = New Rhumb(Constants.WGS84.EquatorialRadius, Constants.WGS84.Flattening, True)
             ' Alternatively: const Rhumb& rhumb = Rhumb::WGS84();
             Dim lat1 As Double = 40.64, lon1 = -73.779 ' JFK
             Dim lat2 As Double = 1.359, lon2 = 103.989 ' SIN

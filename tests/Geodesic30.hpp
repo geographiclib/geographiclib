@@ -2,7 +2,7 @@
  * \file Geodesic30.hpp
  * \brief Header for GeographicLib::Geodesic30 class
  *
- * Copyright (c) Charles Karney (2009-2011) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -798,7 +798,7 @@ namespace GeographicLib {
      * @return \e a the equatorial radius of the ellipsoid (meters).  This is
      *   the value used in the constructor.
      **********************************************************************/
-    real MajorRadius() const { return _a; }
+    real EquatorialRadius() const { return _a; }
 
     /**
      * @return \e f the  flattening of the ellipsoid.  This is the

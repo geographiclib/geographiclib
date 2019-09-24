@@ -2,7 +2,7 @@
  * \file Accumulator.hpp
  * \brief Header for GeographicLib::Accumulator class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -153,6 +153,16 @@ namespace GeographicLib {
       T d = _s; _s *= y;
       d = Math::fma(y, d, -_s); // the error in the first multiplication
       _t = Math::fma(y, _t, d); // add error to the second term
+      return *this;
+    }
+    /**
+     * Reduce accumulator to the range [-y/2, y/2].
+     *
+     * @param[in] y the modulus.
+     **********************************************************************/
+    Accumulator& remainder(T y) {
+      _s = Math::remainder(_s, y);
+      Add(0);                   // This renormalizes the result.
       return *this;
     }
     /**

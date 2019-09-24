@@ -24,10 +24,14 @@ function [s12, azi1, azi2, S12] = gedistance(lat1, lon1, lat2, lon2, ellipsoid)
 %   geoddistance solves the equivalent geodesic problem and usually this is
 %   preferable to using GEDISTANCE.
 %
+%   For more information, see
+%
+%     https://geographiclib.sourceforge.io/html/greatellipse.html
+%
 %   See also GEDOC, GERECKON, DEFAULTELLIPSOID, FLAT2ECC, GEODDISTANCE,
 %     GEODRECKON.
 
-% Copyright (c) Charles Karney (2014-2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2014-2019) <charles@karney.com>.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end

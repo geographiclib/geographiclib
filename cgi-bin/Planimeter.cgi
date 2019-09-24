@@ -3,7 +3,7 @@
 # Planimeter.cgi
 # cgi script for measuring the area of geodesic polygons
 #
-# Copyright (c) Charles Karney (2011-2015) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -155,8 +155,10 @@ cat <<EOF
       calculates the perimeter and area of a polygon whose edges are
       either geodesics or rhumb lines on the WGS84 ellipsoid.
       Counter-clockwise traversal of a polygon results in a positive
-      area.  Only simple (i.e., non-self-intersecting) polygons are
-      supported for the area computation.  There is no need to close the
+      area.  Arbitrarily complex polygons are allowed.  In the case of
+      self-intersecting polygons the area is accumulated
+      "algebraically", i.e., the areas of the 2 loops in a figure-8
+      polygon will partially cancel.  There is no need to close the
       polygon.  Polygons may include one or both poles.  In polyline
       mode,
       <a href="https://geographiclib.sourceforge.io/html/Planimeter.1.html">

@@ -2,7 +2,7 @@
  * \file MagneticModel.cpp
  * \brief Implementation for GeographicLib::MagneticModel class
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -22,7 +22,7 @@
 #endif
 
 #if !defined(GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME)
-#  define GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME "wmm2015"
+#  define GEOGRAPHICLIB_MAGNETIC_DEFAULT_NAME "wmm2015v2"
 #endif
 
 #if defined(_MSC_VER)
@@ -35,7 +35,7 @@ namespace GeographicLib {
   using namespace std;
 
   MagneticModel::MagneticModel(const std::string& name,const std::string& path,
-                               const Geocentric& earth)
+                               const Geocentric& earth, int Nmax, int Mmax)
     : _name(name)
     , _dir(path)
     , _description("NONE")
@@ -49,11 +49,19 @@ namespace GeographicLib {
     , _hmax(Math::NaN())
     , _Nmodels(1)
     , _Nconstants(0)
+    , _nmx(-1)
+    , _mmx(-1)
     , _norm(SphericalHarmonic::SCHMIDT)
     , _earth(earth)
   {
     if (_dir.empty())
       _dir = DefaultMagneticPath();
+    bool truncate = Nmax >= 0 || Mmax >= 0;
+    if (truncate) {
+      if (Nmax >= 0 && Mmax < 0) Mmax = Nmax;
+      if (Nmax < 0) Nmax = numeric_limits<int>::max();
+      if (Mmax < 0) Mmax = numeric_limits<int>::max();
+    }
     ReadMetadata(_name);
     _G.resize(_Nmodels + 1 + _Nconstants);
     _H.resize(_Nmodels + 1 + _Nconstants);
@@ -71,10 +79,14 @@ namespace GeographicLib {
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       for (int i = 0; i < _Nmodels + 1 + _Nconstants; ++i) {
         int N, M;
-        SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _G[i], _H[i]);
+        if (truncate) { N = Nmax; M = Mmax; }
+        SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _G[i], _H[i],
+                                           truncate);
         if (!(M < 0 || _G[i][0] == 0))
           throw GeographicErr("A degree 0 term is not permitted");
         _harm.push_back(SphericalHarmonic(_G[i], _H[i], N, N, M, _a, _norm));
+        _nmx = max(_nmx, _harm.back().Coefficients().nmx());
+        _mmx = max(_mmx, _harm.back().Coefficients().mmx());
       }
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);

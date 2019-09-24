@@ -2,7 +2,7 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -56,9 +56,10 @@
 //   1500     vc9   (2008)
 //   1600     vc10  (2010)
 //   1700     vc11  (2012)
-//   1800     vc12  (2013)
+//   1800     vc12  (2013) First version of VS to include enough C++11 support
 //   1900     vc14  (2015)
-//   1910+    vc15  (2017)
+//   191[0-9] vc15  (2017)
+//   192[0-9] vc16  (2019)
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
 #  else
 #    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 0
@@ -82,7 +83,7 @@
   GEOGRAPHICLIB_SHARED_LIB
 #  if GEOGRAPHICLIB_SHARED_LIB > 1
 #    error GEOGRAPHICLIB_SHARED_LIB must be 0 or 1
-#  elif defined(GeographicLib_EXPORTS)
+#  elif defined(GeographicLib_SHARED_EXPORTS)
 #    define GEOGRAPHICLIB_EXPORT __declspec(dllexport)
 #  else
 #    define GEOGRAPHICLIB_EXPORT __declspec(dllimport)

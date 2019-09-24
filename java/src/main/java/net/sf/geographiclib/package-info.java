@@ -240,9 +240,9 @@
  *         documentation</a>
  *     <li>
  *       Matlab/Octave (geodesic and some other routines):
- *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605">
+ *       <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
  *         Matlab Central package</a>,
- *       <a href="http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+ *       <a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
  *         documentation</a>
  *     <li>
  *       C# (.NET wrapper for complete C++ library):
@@ -266,11 +266,22 @@
  * <ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.50</a>
- *   (released 2018-mm-dd)
+ *   (released 2019-09-24)
  * <ul>
+ * <li>
+ *   {@link net.sf.geographiclib.PolygonArea} can now handle arbitrarily
+ *   complex polygons.  In the case of self-intersecting polygons the area is
+ *   accumulated "algebraically", e.g., the areas of the 2 loops in a figure-8
+ *   polygon will partially cancel.
+ * <li>
+ *   Fix two bugs in the computation of areas when some vertices are specified
+ *   by an added edge.
  * <li>
  *   Require Java 1.6 or later and so remove epsilon, min, hypot, log1p,
  *   copysign, cbrt from GeoMath.
+ * <li>
+ *   GeoMath.cbrt, GeoMath.atanh, and GeoMath.asinh preserve the sign of
+ *   &minus;0.
  * </ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.49</a>

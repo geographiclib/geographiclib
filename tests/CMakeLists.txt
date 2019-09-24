@@ -1,7 +1,7 @@
 # Build the test programs...
 
 set (TESTPROGRAMS
-  ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest)
+  ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect)
 
 # Check whether the C++11 random routines are available.
 check_cxx_source_compiles (
@@ -46,6 +46,21 @@ add_executable (GeodExact EXCLUDE_FROM_ALL GeodExact.cpp
 add_dependencies (testprograms GeodExact)
 target_link_libraries (GeodExact ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 set (TESTPROGRAMS ${TESTPROGRAMS} GeodExact)
+
+add_executable (reformat EXCLUDE_FROM_ALL reformat.cpp)
+if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+  # Add _d suffix for your debug versions of the tools
+  set_target_properties (GeodExact PROPERTIES
+    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+endif ()
+add_dependencies (testprograms reformat)
+set (TESTPROGRAMS ${TESTPROGRAMS} reformat)
+
+if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+  # Add _d suffix for your debug versions of the tools
+  set_target_properties (${TESTPROGRAMS} PROPERTIES
+    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+endif ()
 
 # Put all the tools into a folder in the IDE
 set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)

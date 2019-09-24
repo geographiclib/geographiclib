@@ -7,7 +7,7 @@ Module example_AlbersEqualArea
             Dim k1 As Double = 1  ' scale
             Dim lon0 As Double = -77 - 45 / 60.0 ' Central meridian
             ' Set up basic projection
-            Dim albers As AlbersEqualArea = New AlbersEqualArea(Constants.WGS84.MajorRadius,
+            Dim albers As AlbersEqualArea = New AlbersEqualArea(Constants.WGS84.EquatorialRadius,
                                                                 Constants.WGS84.Flattening,
                                                                 lat1, lat2, k1)
             ' Sample conversion from geodetic to Albers Equal Area

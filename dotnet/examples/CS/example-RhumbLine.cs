@@ -12,7 +12,7 @@ namespace example_RhumbLine
         {
           try {
             // Print waypoints between JFK and SIN
-            Rhumb rhumb = new Rhumb(Constants.WGS84.MajorRadius, Constants.WGS84.Flattening, true);
+            Rhumb rhumb = new Rhumb(Constants.WGS84.EquatorialRadius, Constants.WGS84.Flattening, true);
             // Alternatively: const Rhumb& rhumb = Rhumb::WGS84();
             double
               lat1 = 40.640, lon1 = -73.779, // JFK

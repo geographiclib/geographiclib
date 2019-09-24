@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -48,11 +48,8 @@ namespace GeographicLib {
     if (Math::isnan(lat) || Math::isnan(lon)) // Check if lat or lon is a NaN
       return INVALID;
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
-      int ilon = int(floor(fmod(lon, real(360))));
-      if (ilon >= 180)
-        ilon -= 360;
-      else if (ilon < -180)
-        ilon += 360;
+      int ilon = int(floor(Math::AngNormalize(lon)));
+      if (ilon == 180) ilon = -180; // ilon now in [-180,180)
       int zone = (ilon + 186)/6;
       int band = MGRS::LatitudeBand(lat);
       if (band == 7 && zone == 31 && ilon >= 3) // The Norway exception

@@ -13,7 +13,7 @@ namespace example_AlbersEqualArea
                     k1 = 1,                                   // scale
                     lon0 = -77 - 45/60.0;                     // Central meridian
                 // Set up basic projection
-                AlbersEqualArea albers = new AlbersEqualArea( Constants.WGS84.MajorRadius,
+                AlbersEqualArea albers = new AlbersEqualArea( Constants.WGS84.EquatorialRadius,
                                                               Constants.WGS84.Flattening,
                                                               lat1, lat2, k1);
                 {

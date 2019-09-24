@@ -74,7 +74,7 @@ namespace NETGeographicLib
    * <B>INTERFACE DIFFERENCES:</B><BR>
    * The following functions are implemented as properties:
    * Description, DateTime, GravityFile, GravityModelName,
-   * GravityModelDirectory, MajorRadius, MassConstant,
+   * GravityModelDirectory, EquatorialRadius, MassConstant,
    * ReferenceMassConstant, AngularVelocity, and Flattening.
    *
    * The Circle function accepts the "capabilities mask" as a
@@ -460,7 +460,7 @@ namespace NETGeographicLib
         /**
          * @return \e a the equatorial radius of the ellipsoid (meters).
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e GM the mass constant of the model (m<sup>3</sup>

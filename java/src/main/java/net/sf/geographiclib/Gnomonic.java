@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Gnomonic class
  *
- * Copyright (c) BMW Car IT GmbH (2014-2017) <sebastian.mattheis@bmw-carit.de>
+ * Copyright (c) BMW Car IT GmbH (2014-2019) <sebastian.mattheis@bmw-carit.de>
  * and licensed under the MIT/X11 License. For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -144,7 +144,7 @@ public class Gnomonic {
    */
   public Gnomonic(Geodesic earth) {
     _earth = earth;
-    _a = _earth.MajorRadius();
+    _a = _earth.EquatorialRadius();
     _f = _earth.Flattening();
   }
 
@@ -270,11 +270,18 @@ public class Gnomonic {
    * @return <i>a</i> the equatorial radius of the ellipsoid (meters).  This is
    *   the value inherited from the Geodesic object used in the constructor.
    **********************************************************************/
-  public double MajorRadius() { return _a; }
+  public double EquatorialRadius() { return _a; }
 
   /**
    * @return <i>f</i> the  flattening of the ellipsoid.  This is
    *   the value inherited from the Geodesic object used in the constructor.
    **********************************************************************/
   public double Flattening() { return _f; }
+
+  /**
+   * @deprecated An old name for {@link #EquatorialRadius()}.
+   * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
+   **********************************************************************/
+  // @Deprecated
+  public double MajorRadius() { return EquatorialRadius(); }
 }

@@ -47,9 +47,11 @@ If the B<-s> option is given, then the interpretation used is the one
 that results in a positive area; i.e., the area is positive and less
 than the total area of the ellipsoid.
 
-Only simple (i.e., non-self-intersecting) polygons are supported for the
-area computation.  Polygons may include one or both poles.  There is no
-need to close the polygon.
+Arbitrarily complex polygons are allowed.  In the case of
+self-intersecting polygons the area is accumulated "algebraically",
+e.g., the areas of the 2 loops in a figure-8 polygon will partially
+cancel.  Polygons may include one or both poles.  There is no need to
+close the polygon.
 
 =head1 OPTIONS
 

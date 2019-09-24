@@ -38,7 +38,6 @@ set_tests_properties (GeoConvert5 PROPERTIES WILL_FAIL ON)
 if (NOT (MSVC AND MSVC_VERSION MATCHES "1[78].."))
   # Check fix for DMS::Decode double rounding bug fixed on 2012-11-15
   # This test is known to fail for VC 11 and 12 bug reported 2013-01-10
-  # http://connect.microsoft.com/VisualStudio/feedback/details/776287
   # OK to skip this test for these compilers because this is a question
   # of accuracy of the least significant bit.  The bug is fixed in VC 14.
   #
@@ -466,6 +465,30 @@ add_test (NAME GeodSolve83 COMMAND GeodSolve
 set_tests_properties (GeodSolve83 PROPERTIES PASS_REGULAR_EXPRESSION
   "90\\.0* 0\\.0* 0\\.0* 90\\.0* 180\\.0* 180\\.0* 0\\.0* 0\\.0* 0\\.0* 1\\.0* 1\\.0* 127516405431022")
 
+# Tests for python implementation to check fix for range errors with
+# {fmod,sin,cos}(inf).
+add_test (NAME GeodSolve84 COMMAND GeodSolve
+  --input-string "0 0 90 inf")
+add_test (NAME GeodSolve85 COMMAND GeodSolve
+  --input-string "0 0 90 nan")
+add_test (NAME GeodSolve86 COMMAND GeodSolve
+  --input-string "0 0 inf 1000")
+add_test (NAME GeodSolve87 COMMAND GeodSolve
+  --input-string "0 0 nan 1000")
+add_test (NAME GeodSolve88 COMMAND GeodSolve
+  --input-string "0 inf 90 1000")
+add_test (NAME GeodSolve89 COMMAND GeodSolve
+  --input-string "0 nan 90 1000")
+add_test (NAME GeodSolve90 COMMAND GeodSolve
+  --input-string "inf 0 90 1000")
+add_test (NAME GeodSolve91 COMMAND GeodSolve
+  --input-string "nan 0 90 1000")
+set_tests_properties (GeodSolve84 GeodSolve85 GeodSolve86 GeodSolve87
+  GeodSolve91 PROPERTIES PASS_REGULAR_EXPRESSION "nan nan nan")
+set_tests_properties (GeodSolve88 GeodSolve89 PROPERTIES PASS_REGULAR_EXPRESSION
+  "0\\.0* nan 90\\.0*")
+set_tests_properties (GeodSolve90 PROPERTIES WILL_FAIL ON)
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
@@ -562,11 +585,11 @@ add_test (NAME Planimeter23 COMMAND Planimeter
 add_test (NAME Planimeter24 COMMAND Planimeter
   --input-string "${_t};${_t};${_t}" -r -s)
 set_tests_properties (Planimeter21 Planimeter22 PROPERTIES
-  PASS_REGULAR_EXPRESSION " 118301654599714\\.[234]") # 3*r
+  PASS_REGULAR_EXPRESSION " 118301654599714\\.[2-5]") # 3*r
 set_tests_properties (Planimeter23 PROPERTIES
-  PASS_REGULAR_EXPRESSION " -118301654599714\\.[234]") # -3*r
+  PASS_REGULAR_EXPRESSION " -118301654599714\\.[2-5]") # -3*r
 set_tests_properties (Planimeter24 PROPERTIES
-  PASS_REGULAR_EXPRESSION " 391763967124374\\.[0123]") # -3*r+a0
+  PASS_REGULAR_EXPRESSION " 391763967124374\\.[0-3]") # -3*r+a0
 add_test (NAME Planimeter25 COMMAND Planimeter
   --input-string "${_t};${_t};${_t};${_t}")
 add_test (NAME Planimeter26 COMMAND Planimeter
@@ -575,18 +598,21 @@ add_test (NAME Planimeter27 COMMAND Planimeter
   --input-string "${_t};${_t};${_t};${_t}" -r)
 add_test (NAME Planimeter28 COMMAND Planimeter
   --input-string "${_t};${_t};${_t};${_t}" -r -s)
-if (0)
-  # BUG (found 2018-02-32)! Currently (verion 1.49), these return 4*r-a0
-  # and -4*r+a0, resp.  Actually, the documentation says that only
-  # simple polygons are allowed.  So it's really just a misfeature.
-  # (But it should get fixed anyway.)
-  set_tests_properties (Planimeter25 Planimeter26 PROPERTIES
-    PASS_REGULAR_EXPRESSION " 157735539466285\\.[678]") # 4*r
-  set_tests_properties (Planimeter27 PROPERTIES
-    PASS_REGULAR_EXPRESSION " -157735539466285\\.[678]") # -4*r
-endif ()
+# BUG (found 2018-02-32)! In version 1.49, Planimeter2[56] and
+# Planimeter27 returned 4*r-a0 and -4*r+a0, resp.  Fixed in 1.50 to
+# return +/-4*r
+set_tests_properties (Planimeter25 Planimeter26 PROPERTIES
+  PASS_REGULAR_EXPRESSION " 157735539466285\\.[6-9]") # 4*r
+set_tests_properties (Planimeter27 PROPERTIES
+  PASS_REGULAR_EXPRESSION " -157735539466285\\.[6-9]") # -4*r
 set_tests_properties (Planimeter28 PROPERTIES
   PASS_REGULAR_EXPRESSION " 352330082257802\\.[5-9]") # -4*r+a0
+
+# Placeholder to implement check on AddEdge bug: AddPoint(0,0) +
+# AddEdge(90, 1000) + AddEdge(0, 1000) + AddEdge(-90, 0).  The area
+# should be 1e6.  Prior to the fix it was 1e6 - A/2, where A = ellipsoid
+# area.
+# add_test (NAME Planimeter29 COMMAND Planimeter ...)
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
 add_test (NAME ConicProj0 COMMAND ConicProj

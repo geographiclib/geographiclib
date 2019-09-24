@@ -65,7 +65,7 @@ namespace NETGeographicLib
    * gravity models.
    *
    * The following functions are implemented as properties:
-   * MajorRadius, MassConstant, AngularVelocity, Flattening,
+   * EquatorialRadius, MassConstant, AngularVelocity, Flattening,
    * EquatorialGravity, PolarGravity, GravityFlattening, SurfacePotential.
    **********************************************************************/
     public ref class NormalGravity
@@ -258,7 +258,7 @@ namespace NETGeographicLib
          * @return \e a the equatorial radius of the ellipsoid (meters).  This is
          *   the value used in the constructor.
          **********************************************************************/
-        property double MajorRadius { double get(); }
+        property double EquatorialRadius { double get(); }
 
         /**
          * @return \e GM the mass constant of the ellipsoid

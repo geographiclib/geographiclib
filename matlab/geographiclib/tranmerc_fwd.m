@@ -39,7 +39,7 @@ function [x, y, gam, k] = tranmerc_fwd(lat0, lon0, lat, lon, ellipsoid)
 %   See also PROJDOC, TRANMERC_INV, UTMUPS_FWD, UTMUPS_INV,
 %     DEFAULTELLIPSOID, FLAT2ECC.
 
-% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2018) <charles@karney.com>.
 
   narginchk(4, 5)
   if nargin < 5, ellipsoid = defaultellipsoid; end

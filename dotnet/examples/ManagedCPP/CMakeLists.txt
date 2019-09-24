@@ -12,7 +12,12 @@ foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
   add_executable (${EXAMPLE} EXCLUDE_FROM_ALL ${EXAMPLE_SOURCE})
   add_dependencies (${EXAMPLE} ${NETGEOGRAPHICLIB_LIBRARIES})
-  set_target_properties (${EXAMPLE} PROPERTIES COMPILE_FLAGS "/clr")
+  if (CMAKE_VERSION VERSION_LESS 3.12)
+    set_target_properties (${EXAMPLE} PROPERTIES COMPILE_FLAGS "/clr")
+  else ()
+    set_target_properties (${EXAMPLE}
+      PROPERTIES COMMON_LANGUAGE_RUNTIME "")
+  endif()
   # This is set up for Release builds only.  Change
   # Release/NETGeographic.dll to Debug/NETGeographic_d.dll for Debug
   # builds.  TODO: get this to work for Debug + Release.  Unfortunately

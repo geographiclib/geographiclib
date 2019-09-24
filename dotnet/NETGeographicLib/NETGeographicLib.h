@@ -176,7 +176,7 @@ namespace NETGeographicLib
         private:
             WGS72() {}
             // The equatorial radius in meters.
-            static const double m_MajorRadius = 6378135.0;
+            static const double m_EquatorialRadius = 6378135.0;
             // The flattening of the ellipsoid
             static const double m_Flattening = 1.0 / 298.26;
             // The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
@@ -187,7 +187,7 @@ namespace NETGeographicLib
             static const double m_J2 = 1.0826158e-3;
         public:
             //! The equatorial radius in meters.
-            static property double MajorRadius { double get() { return m_MajorRadius; } }
+            static property double EquatorialRadius { double get() { return m_EquatorialRadius; } }
             //! The flattening of the ellipsoid
             static property double Flattening { double get() { return m_Flattening; } }
             //! The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
@@ -206,7 +206,7 @@ namespace NETGeographicLib
         private:
             WGS84() {}
             // The equatorial radius in meters.
-            static const double m_MajorRadius = 6378137.0;
+            static const double m_EquatorialRadius = 6378137.0;
             // The flattening of the ellipsoid
             static const double m_Flattening = 1.0 / 298.257223563;
             // The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
@@ -219,7 +219,7 @@ namespace NETGeographicLib
             static const double m_J2 = 1.08263e-3;
         public:
             //! The equatorial radius in meters.
-            static property double MajorRadius { double get() { return m_MajorRadius; } }
+            static property double EquatorialRadius { double get() { return m_EquatorialRadius; } }
             //! The flattening of the ellipsoid
             static property double Flattening { double get() { return m_Flattening; } }
             //! The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
@@ -238,7 +238,7 @@ namespace NETGeographicLib
         private:
             GRS80() {}
             // The equatorial radius in meters.
-            static const double m_MajorRadius = 6378137.0;
+            static const double m_EquatorialRadius = 6378137.0;
             // The flattening of the ellipsoid
             static const double m_Flattening = 1.0 / 298.257222100882711;
             // The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.
@@ -249,7 +249,7 @@ namespace NETGeographicLib
             static const double m_J2 = 1.08263e-3;
         public:
             //! The equatorial radius in meters.
-            static property double MajorRadius { double get() { return m_MajorRadius; } }
+            static property double EquatorialRadius { double get() { return m_EquatorialRadius; } }
             //! The flattening of the ellipsoid
             static property double Flattening { double get() { return m_Flattening; } }
             //! The gravitational constant in meters<sup>3</sup>/second<sup>2</sup>.

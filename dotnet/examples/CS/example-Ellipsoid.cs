@@ -8,7 +8,7 @@ namespace example_Ellipsoid
         static void Main(string[] args)
         {
             try {
-                Ellipsoid wgs84 = new Ellipsoid( Constants.WGS84.MajorRadius,
+                Ellipsoid wgs84 = new Ellipsoid( Constants.WGS84.EquatorialRadius,
                                                  Constants.WGS84.Flattening);
                 // Alternatively: Ellipsoid wgs84 = new Ellipsoid();
                 Console.WriteLine( String.Format(

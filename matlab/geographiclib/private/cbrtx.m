@@ -13,5 +13,6 @@ function y = cbrtx(x)
   else
     y = abs(x).^(1/3);
     y(x < 0) = -y(x < 0);
+    y(x == 0) = x(x == 0);
   end
 end

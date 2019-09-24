@@ -246,7 +246,7 @@ int main(int argc, char* argv[]) {
     typedef Math::real real;
     real
       f = Utility::fract<real>(string(argv[1])),
-      sig = Utility::num<real>(string(argv[2]));
+      sig = Utility::val<real>(string(argv[2]));
     Geodesic g(1, f);
     GeodesicExact ge(1, f);
     GeodShort s(1, f);
@@ -258,8 +258,8 @@ int main(int argc, char* argv[]) {
         ge.Inverse(0, 0, 90, 0, m);
       else
         g.Inverse(0, 0, 90, 0, m);
-      norm = max(m, Math::pi()/2 * g.MajorRadius());
-      consist = min(m, Math::pi()/2 * g.MajorRadius()) /
+      norm = max(m, Math::pi()/2 * g.EquatorialRadius());
+      consist = min(m, Math::pi()/2 * g.EquatorialRadius()) /
         (Math::pi()/2);
     }
     unsigned seed = random_device()(); // Set seed from random_device

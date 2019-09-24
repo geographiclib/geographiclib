@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2018-mm-dd
+\date 2019-09-24
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -39,7 +39,7 @@ the script for displaying
 
 This library is <i>not</i> a general purpose projection library nor does
 it perform datum conversions; instead use
-<a href="http://proj.org">proj.4</a>.  On the other
+<a href="https://proj.org">PROJ</a>.  On the other
 hand, it does provide the core functionality offered by
 <a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>.
 
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2018-mm-dd),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2019-09-24),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -150,8 +150,8 @@ Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
 and the utilities have been tested with g++ 5.3.1 under Linux, with
 Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
-(2012), 12 (2013), 14 (2015), and 15 (2017) compiled for 32 bit and 64
-bit on Windows.
+(2012), 12 (2013), 14 (2015), 15 (2017), and 16 (2019) compiled for 32
+bit and 64 bit on Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -165,7 +165,7 @@ projection.
 The bulk of the testing has used geographically relevant values of the
 flattening.  Thus, you can expect close to full accuracy for &minus;0.01
 &le; \e f &le; 0.01 (but note that TransverseMercatorExact is restricted
-to \e f > 0).  However, reasonably accurate results can be expected if
+to \e f &gt; 0).  However, reasonably accurate results can be expected if
 &minus;0.1 &le; \e f &le; 0.1.  Outside this range, you should attempt
 to verify the accuracy of the routines independently.  Two types of
 problems may occur with larger values of <i>f</i>:
@@ -218,7 +218,7 @@ Then pick one of the first five options below:
 - \ref gnu.  This is a simple installation method that works with g++
   and GNU make on Linux and many Unix platforms.
 - \ref windows.  This is a simple installation method that works with
-  Visual Studio 2008 and 2010 under Windows.
+  Visual Studio 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.  (This method also
   installs the header files and the library for use by Visual Studio 14
@@ -240,9 +240,9 @@ make software maintenance simpler
   directory for compiling the code.  In the description here the
   directories are called BUILD and are located in the top-level of the
   source tree.  You might want to use a suffix to denote the type of
-  build, e.g., BUILD-vc11 for Visual Studio 11, or BUILD-shared for a
-  build which creates a shared library.  The advantages of out-of-source
-  builds are:
+  build, e.g., BUILD-vc14 for Visual Studio 14 (2015), or BUILD-shared
+  for a build which creates a shared library.  The advantages of
+  out-of-source builds are:
   - You don't mess up the source tree, so it's easy to "clean up".
     Indeed the source tree might be on a read-only file system.
   - Builds for multiple platforms or compilers don't interfere with each
@@ -258,11 +258,11 @@ make software maintenance simpler
 \section cmake Installation with cmake
 
 This is the recommended method of installation; however it requires that
-<a href="https://www.cmake.org">cmake</a> be installed on your system.
-This permits GeographicLib to be built either as a shared or a static
-library on a wide variety of systems.  cmake can also determine the
-capabilities of your system and adjust the compilation of the
-libraries and examples appropriately.
+<a href="https://www.cmake.org">cmake</a>, version 3.1.0 or later, be
+installed on your system.  This permits GeographicLib to be built either
+as a shared or a static library on a wide variety of systems.  cmake can
+also determine the capabilities of your system and adjust the
+compilation of the libraries and examples appropriately.
 
 cmake is available for most computer platforms.  On Linux systems cmake
 will typically one of the standard packages and can be installed by a
@@ -270,8 +270,7 @@ command like
   \verbatim
   yum install cmake \endverbatim
 (executed as root).  The minimum version of cmake supported for building
-GeographicLib is 2.8.4 (which was released on 2011-02-16).  (Actually,
-a few earlier versions will also work for non-Windows platforms.)
+GeographicLib is 3.1.0 (which was released on 2014-12-15).
 
 On other systems, download a binary installer from https://www.cmake.org
 click on download, and save and run the appropriate installer.  Run the
@@ -296,11 +295,13 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 11" -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10/GeographicLib-@PROJECT_VERSION@ ..
-  cmake -G "Visual Studio 12" -A x64 -D CMAKE_INSTALL_PREFIX=C:/pkg-vc11-x64/GeographicLib-@PROJECT_VERSION@ ..\endverbatim
-  The definitions of CMAKE_INSTALL_PREFIX are optional (see below).  The
-  settings given above are recommended to ensure that packages that use
-  GeographicLib use the version compiled with the right compiler.
+  cmake -G "Visual Studio 14" -A win32 -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" ..
+  cmake -G "Visual Studio 14" -A x64 -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" ..\endverbatim
+  The definitions of CMAKE_INSTALL_PREFIX point to system directories.
+  You might instead prefer to install to a user directory such as
+  <code>C:/Users/jsmith/projects/GeographicLib-@PROJECT_VERSION@</code>.
+  The settings given above are recommended to ensure that packages that
+  use GeographicLib use the version compiled with the right compiler.
   If you need to rerun cmake, use \verbatim
   cmake . \endverbatim
   possibly including some options via <code>-D</code> (see the next step).
@@ -312,10 +313,11 @@ Here are the steps to compile and install GeographicLib:
     convention.  If it is on ON (the Linux default), the installation
     is to a common directory, e.g., /usr/local.  If it is OFF (the
     Windows default), the installation directory contains the package
-    name, e.g., C:/pkg/GeographicLib-@PROJECT_VERSION@.  The installation
-    directories for the documentation, cmake configuration, Python and
-    MATLAB interfaces all depend on the variable with deeper paths
-    relative to CMAKE_INSTALL_PREFIX being used when it's ON:
+    name, e.g.,
+    <code>C:/Program Files/GeographicLib-@PROJECT_VERSION@</code>.  The
+    installation directories for the documentation, cmake configuration,
+    Python and MATLAB interfaces all depend on the variable with deeper
+    paths relative to CMAKE_INSTALL_PREFIX being used when it's ON:
     - cmake configuration: OFF cmake; ON: lib/cmake/GeographicLib;
     - documentation: OFF: doc/html; ON: share/doc/GeographicLib/html;
     - JavaScript interface: OFF: node_modules; ON: lib/node_modules;
@@ -323,11 +325,13 @@ Here are the steps to compile and install GeographicLib:
     - MATLAB interface: OFF: matlab; ON: share/matlab.
     .
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
-    on non-Windows systems, <code>C:/Program Files/GeographicLib</code>
+    on non-Windows systems, <code>C:/Program Files (x86)/GeographicLib</code>
     on Windows systems) specifies where the library will be installed.
-    For windows systems, it is recommended to use a prefix which
-    includes the compiler version, as shown above.  If you just want to
-    try the library to see if it suits your needs, pick, for example,
+    For Windows systems, you might want to use a prefix which includes
+    the compiler version, in order to keep the libraries built with
+    different versions of the compiler in distinct locations.  If you
+    just want to try the library to see if it suits your needs, pick,
+    for example,
     <code>CMAKE_INSTALL_PREFIX</code>=/tmp/geographic.
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
@@ -479,14 +483,14 @@ Here are the steps to compile and install GeographicLib:
 
 \section windows Installation on Windows
 
-This method requires Visual Studio 2008 or 2010.  This builds a static
+This method requires Visual Studio 2010.  This builds a static
 library and the utilities.  If you have some other version of Visual
 Studio, use cmake to create the necessary solution file, see \ref cmake.
 (cmake is needed to run the tests.)
 - Unpack the source, running \verbatim
   unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
 - Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
-  Visual Studio 2010 (for Visual Studio 2008, replace -vc10 by -vc9; for
+  Visual Studio 2010 (for
   Visual Studio Express 2010, replace -vc10 by -vc10x).
 - Pick the build type (e.g., Release), and select "Build Solution".
 - The library and the compiled examples are in the windows/Release.
@@ -506,10 +510,10 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 14 2015 (in either
-release or debug mode).  However, if you plan to use the library, it may
-be advisable to build it with the compiler you are using for your own
-code using either \ref cmake or \ref windows.
+provided; these can only be used by Visual Studio 14 2015 or later (2017
+or 2019) (in either release or debug mode).  However, if you plan to use
+the library, it may be advisable to build it with the compiler you are
+using for your own code using either \ref cmake or \ref windows.
 
 Download and run
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
@@ -519,8 +523,8 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
  - select the installation folder, by default
-   C:\\pkg-vc12-win32\\GeographicLib-@PROJECT_VERSION@ or
-   C:\\pkg-vc12-x64\\GeographicLib-@PROJECT_VERSION@,
+   C:\\Program Files\\GeographicLib-@PROJECT_VERSION@ or
+   C:\\Program Files (x86)\\GeographicLib-@PROJECT_VERSION@,
  - select the start menu folder,
  - and install.
  .
@@ -528,7 +532,8 @@ GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
 given in \ref cmake.)  The start menu will now include links to the
 documentation for the library and for the utilities (and a link for
 uninstalling the library).  If you ask for your PATH to be modified, it
-will include C:/pkg-vc12-{win32,x64}/GeographicLib-@PROJECT_VERSION@/bin
+will include
+<code>C:/Program Files{, (x86)}/GeographicLib-@PROJECT_VERSION@/bin</code>
 where the utilities are installed.  The headers and library are
 installed in the include/GeographicLib and lib folders.  The libraries
 were built using using Visual Studio 14 2015 in release and debug modes.
@@ -537,6 +542,8 @@ The utilities were linked against the release-mode shared library.
 <a href="NET/index.html">NETGeographicLib</a> library dlls (release and
 debug) are included with the binary installers; these are linked against
 the shared library for GeographicLib.
+
+Also included are the Python, JavaScript, and MATLAB interfaces.
 
 \subsection binaryinstosx MacOSX
 
@@ -563,7 +570,7 @@ under cygwin with, for example, \verbatim
   export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
   mkdir BUILD
   cd BUILD
-  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
+  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
   mingw32-make
   mingw32-make install \endverbatim
 If cmake complains that sh mustn't be in your path, invoke cmake with
@@ -571,7 +578,7 @@ If cmake complains that sh mustn't be in your path, invoke cmake with
   env PATH="$( echo $PATH | tr : '\n' |
   while read d; do test -f "$d/sh.exe" || echo -n "$d:"; done |
   sed 's/:$//' )" \
-  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX=C:/pkg-mingw/GeographicLib ..
+  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
 \endverbatim
 
 \section maintainer Maintainer tasks
@@ -615,13 +622,13 @@ Finally, \verbatim
   make package \endverbatim
 or building PACKAGE in Visual Studio will create a binary installer for
 GeographicLib.  For Windows, this requires in the installation of
-<a href="http://nsis.sourceforge.net">NSIS</a>.  On Windows, you should
+<a href="https://nsis.sourceforge.io">NSIS</a>.  On Windows, you should
 configure GeographicLib with <code>PACKAGE_DEBUG_LIBS</code>=ON, build both
 Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
 library included in the package.  For example, the 64-bit binary
 installer is created with \verbatim
-  cmake -G "Visual Studio 12" -A x64 \
+  cmake -G "Visual Studio 14" -A x64 \
     -D GEOGRAPHICLIB_LIB_TYPE=BOTH \
     -D PACKAGE_DEBUG_LIBS=ON \
     -D BUILD_NETGEOGRAPHICLIB=ON \
@@ -659,8 +666,15 @@ The following Fedora packages are required by
 - nodejs
 - maven
 .
-The following npm packages need to be installed \verbatim
-  npm install -g mocha jsdoc \endverbatim
+
+The following npm packages need to be installed (jshint is just for
+syntax checking) \verbatim
+  npm install -g mocha jsdoc jshint \endverbatim
+The following Fedora package is also useful for syntax checking python
+- pychecker
+.
+Installing the python package requires the following \verbatim
+  python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
 A recent version of mpreal.h needs to be downloaded from
 https://bitbucket.org/advanpix/mpreal and installed
 in the <code>include/</code> directory.  For all the tests to be run,
@@ -700,26 +714,25 @@ In order to use GeographicLib from C++ code, you will need to
   - Set the include paths and linking options "manually".
 - Building your code with cmake.  In brief, the necessary steps are:
   - include in your CMakeLists.txt files \verbatim
-    find_package (GeographicLib 1.34 REQUIRED)
-    include_directories (${GeographicLib_INCLUDE_DIRS})
-    add_definitions (${GeographicLib_DEFINITIONS})
+    find_package (GeographicLib REQUIRED)
     add_executable (program source1.cpp source2.cpp)
     target_link_libraries (program ${GeographicLib_LIBRARIES}) \endverbatim
-    If you're using cmake version 2.8.11 or later, you can omit the
-    <code>include_directories </code> and <code>add_definitions</code>
-    lines.
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
-    cmake -G "Visual Studio 12" -A x64 \
-      -D CMAKE_PREFIX_PATH=C:/pkg-vc10-x64 \
-      -D CMAKE_INSTALL_PREFIX=C:/pkg-vc10-x64/testgeographic \
+    cmake -G "Visual Studio 14" -A x64 \
+      -D CMAKE_PREFIX_PATH="C:/Program Files" \
+      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeographic" \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
     BUILD subdirectory).  Also, on Windows, make sure that the version
-    of Visual Sudio (12 in the example above) architecture (x64 in the
-    example above) matches that used to build GeographicLib.
+    of Visual Studio (14 in the example above) architecture (x64 in the
+    example above) is compatible with that used to build GeographicLib.
+    In this example, it's not necessary to specify
+    <code>CMAKE_PREFIX_PATH</code>, because <code>C:/Program
+    Files</code> is one of the system paths which is searched
+    automatically.
   - build your package.  On Linux and MacOS this usually involves just
     running make.  On Windows, you can load the solution file created by
     cmake into Visual Studio; alternatively, you can get cmake to run
@@ -770,11 +783,8 @@ In order to use GeographicLib from C++ code, you will need to
   - <code>GeographicLib_VERSION</code> = @PROJECT_VERSION@
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
-  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib
+  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib_SHARED
   - <code>GeographicLib_STATIC_LIBRARIES</code> = GeographicLib_STATIC
-  - <code>GeographicLib_DEFINITIONS</code> = one of the following two:
-  - <code>GeographicLib_SHARED_DEFINITIONS</code> = -DGEOGRAPHICLIB_SHARED_LIB=1
-  - <code>GeographicLib_STATIC_DEFINITIONS</code> = -DGEOGRAPHICLIB_SHARED_LIB=0
   - <code>GeographicLib_LIBRARY_DIRS</code>
   - <code>GeographicLib_BINARY_DIRS</code>
   - <code>GEOGRAPHICLIB_DATA</code> = value of this compile-time parameter
@@ -788,8 +798,7 @@ In order to use GeographicLib from C++ code, you will need to
     find_package (GeographicLib 1.34 REQUIRED COMPONENTS SHARED) \endverbatim
   causes only packages which include the shared library to be found.  If
   the package includes both versions of the library, then
-  <code>GeographicLib_LIBRARIES</code> and
-  <code>GeographicLib_DEFINITIONS</code> are set to the shared versions,
+  <code>GeographicLib_LIBRARIES</code> is set to the shared version,
   unless you include \verbatim
     set (GeographicLib_USE_STATIC_LIBS ON) \endverbatim
   <i>before</i> the find_package command.  You can check whether
@@ -813,7 +822,7 @@ In order to use GeographicLib from C++ code, you will need to
     With Visual Studio, specify the include directory in the IDE via,
     e.g.,
     \verbatim
-    C/C++ -> General -> Additional Include Directories = C:\pkg-vc10\GeographicLib\include
+    C/C++ -> General -> Additional Include Directories = C:\pkg-vc14-x64\GeographicLib\include
     \endverbatim
   - If using the shared (or static) library with Visual Studio, define
     the macro <code>GEOGRAPHICLIB_SHARED_LIB=1</code> (or
@@ -832,7 +841,7 @@ In order to use GeographicLib from C++ code, you will need to
     e.g., \verbatim
     Linker -> Input -> Additional Dependencies = Geographic-i.lib (for shared library)
     Linker -> Input -> Additional Dependencies = Geographic.lib (for static library)
-    Linker -> General -> Additional Library Directories = C:\pkg-vc10\Geographic\lib
+    Linker -> General -> Additional Library Directories = C:\pkg-vc14-x64\Geographic\lib
     \endverbatim
     Note that the library name is <b>Geographic</b> and not
     GeographicLib.  For the Debug version of your program on Windows
@@ -873,18 +882,14 @@ print out \verbatim
 Here is a complete CMakeList.txt files you can use to build this test
 code using the installed library: \verbatim
 project (geodesictest)
-cmake_minimum_required (VERSION 2.8.4)
+cmake_minimum_required (VERSION 3.1.0)
 
-find_package (GeographicLib 1.34 REQUIRED)
+find_package (GeographicLib REQUIRED)
 
 if (NOT MSVC)
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif ()
 
-if (CMAKE_VERSION VERSION_LESS 2.8.11)
-  include_directories (${GeographicLib_INCLUDE_DIRS})
-  add_definitions (${GeographicLib_DEFINITIONS})
-endif ()
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 
@@ -1237,8 +1242,8 @@ Here is a summary:
 - C (geodesic routines):
   <a href="C/index.html">
     documentation</a>, also included with recent versions of
-  <a href="http://proj.org">
-    proj.4</a>;
+  <a href="https://proj.org">
+    PROJ</a>;
 - Fortran (geodesic routines):
   <a href="Fortran/index.html">
     documentation</a>;
@@ -1260,7 +1265,7 @@ Here is a summary:
 - MATLAB/Octave (geodesic and some other routines):
   <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
     MATLAB Central package</a>,
-  <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m">
+  <a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
     documentation</a>;
 - C# (.NET wrapper for C++ library):
   <a href="NET/index.html">
@@ -1287,9 +1292,9 @@ direct and inverse geodesic problems and to compute polygonal areas are
 provided.
 
 The C library is also included as part of
-<a href="http://proj.org">proj.4</a> starting with
+<a href="https://proj.org">PROJ</a> starting with
 version 4.9.0, where it is used as the computational backend for
-<a href="https://github.com/OSGeo/proj.4/wiki/Mangeod">geod(1)</a>.
+<a href="https://proj.org/apps/geod.html">geod(1)</a>.
 
 For documentation, see
  - <a href="C/index.html">C library for geodesics</a>,
@@ -1314,7 +1319,7 @@ dependency \verbatim
   <dependency>
     <groupId>net.sf.geographiclib</groupId>
     <artifactId>GeographicLib-Java</artifactId>
-    <version>1.46</version>
+    <version>@PROJECT_VERSION@</version>
   </dependency>
   \endverbatim
 in your <code>pom.xml</code>.
@@ -1388,7 +1393,9 @@ self-contained and does not depend on the rest of GeographicLib.
 
 The library is available as an MATLAB Central package,
 <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
-    GeographicLib toolbox</a>.
+   GeographicLib toolbox</a>,
+<a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
+   documentation</a>.
 
 A summary of the routines is obtained by \verbatim
    help geographiclib \endverbatim
@@ -1788,22 +1795,13 @@ geoid height postings on grid of points with uniform spacing in latitude
 \e h &times; \e w, then latitude (resp. longitude) spacing is
 &minus;180&deg;/(\e h &minus; 1) (resp. 360&deg;/\e w), with the (0,0)
 pixel given the value at &phi; = 90&deg;, &lambda; = 0&deg;.  Models
-covering a restricted area will need to be "inserted" into a world-wide
+covering a limited area will need to be "inserted" into a world-wide
 grid before being accessible to the Geoid class.
 
 \section geoidinterp Interpolating the geoid data
 
 Geoid evaluates the geoid height using bilinear or cubic
-interpolation.  The gradient of the geoid height is obtained by
-differentiating the interpolated height and referencing the result to
-distance on the WGS84 ellipsoid.
-
-<b>WARNING</b>: Although Geoid computes the gradient of
-the geoid height, this is subject to large quantization errors as a
-result of the way that the geoid data is stored.  This is particularly
-acute for fine grids, at high latitudes, and for the easterly gradient.
-If you need to compute the direction of the acceleration due to gravity
-accurately, you should use GravityModel::Gravity.
+interpolation.
 
 The bilinear interpolation is based on the values at the 4 corners of
 the enclosing cell.  The interpolated height is a continuous function of
@@ -1827,9 +1825,9 @@ boundaries.  The over-constrained cubic fit slightly reduces the
 quantization errors on average.
 
 The algorithm for the least squares fit is taken from, F. H. Lesh,
-Multi-dimensional least-squares polynomial curve fitting, CACM 2, 29--30
-(1959).  This algorithm is not part of Geoid; instead it is implemented
-as
+<a href="https://doi.org/10.1145/368424.368443">Multi-dimensional
+least-squares polynomial curve fitting</a>, CACM 2, 29--30 (1959).
+This algorithm is not part of Geoid; instead it is implemented as
 <a href="https://en.wikipedia.org/wiki/Maxima_(software)">Maxima</a>
 code which is used to precompute the matrices to convert the function
 values on the stencil into the coefficients from the cubic polynomial.
@@ -2474,7 +2472,7 @@ g) \e A = 8.552&nbsp;&times;&nbsp;10<sup>&minus;11</sup> \e
 A&nbsp;m<sup>2</sup>/kg, where \e G is the gravitational constant, \e g
 is the earth's gravity, and \e A is the pressure of the atmosphere.  At
 sea level we have \e A = 101.3&nbsp;kPa, and &delta;\e g =
-8.7&minus;&times;&minus;10<sup>&minus;6</sup>&nbsp;m&nbsp;s<sup>&minus;2</sup>,
+8.7&nbsp;&times;&nbsp;10<sup>&minus;6</sup>&nbsp;m&nbsp;s<sup>&minus;2</sup>,
 approximately.  (In other words the effect is about 1&nbsp;part in a
 million; by way of comparison, buoyancy effects are about 100 times
 larger.)
@@ -2490,7 +2488,7 @@ point.  There are two ways to speed up this computation:
    point to about 92&nbsp;&mu;s (a reduction by a factor of over 800).
  - Compute the values on several circles of latitude in parallel.  One
    of the simplest ways of doing this is with
-   <a href="http://openmp.org"> OpenMP</a>; on an 8-processor system,
+   <a href="https://www.openmp.org"> OpenMP</a>; on an 8-processor system,
    this can speed up the computation by another factor of 8.
  .
 Both of these techniques are illustrated by the following code,
@@ -2744,19 +2742,19 @@ Similarly, \f$ U_q \f$ is generated in the oblate case by
 \begin{align}
 \rho_q &= \frac{a^2 b^3 \omega^2}G
    \frac{2E^2 - 3R^2}{6\pi E^5 \sqrt{E^2 - R^2} Q(E/b)}, \\
-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q(E/b)}, \\
-C_q &= -\frac{a^2 b^3 \omega^2}G \frac4{45 Q(E/b)}, \\
-C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q(E/b)}.
+A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45\,Q(E/b)}, \\
+C_q &= -\frac{a^2 b^3 \omega^2}G \frac4{45\,Q(E/b)}, \\
+C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45\,Q(E/b)}.
 \end{align}
 \f]
 The corresponding results for a prolate ellipsoid are
 \f[
 \begin{align}
 \rho_q' &= \frac{a^2 b^3 \omega^2}G
-   \frac{3Z^2 - E'^2}{12 E'^5 Q'(E'/a)}, \\
-A_q &= \frac{a^2 b^3 \omega^2}G \frac2{45 Q'(E'/a)}, \\
+   \frac{3Z^2 - E'^2}{12\,E'^5 Q'(E'/a)}, \\
+A_q &= \frac{a^2 b^3 \omega^2}G \frac2{45\,Q'(E'/a)}, \\
 C_q &= 0, \\
-C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45 Q'(E'/a)}.
+C_q-A_q &= -\frac{a^2 b^3 \omega^2}G \frac2{45\,Q'(E'/a)}.
 \end{align}
 \f]
 
@@ -3141,7 +3139,7 @@ keywords
    - <b>Epoch</b> (required), the time origin (in fractional years) for
      the first model.
    - <b>DeltaEpoch</b> (default 1), the interval between models in years
-     (only relevant for NumModels > 1).
+     (only relevant for NumModels &gt; 1).
    - <b>Normalization</b> (default schmidt), the normalization used for
      the associated Legendre functions (schmidt or full).
    - <b>ID</b> (required), 8 printable characters which serve as a
@@ -3177,7 +3175,7 @@ The coefficient file NAME.wmm.cof is a binary file in little endian
 order.  The first 8 bytes of this file must match the ID given in
 NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
 coefficients.  The first NumModels of these model the magnetic field at
-Epoch + \e i * DeltaEpoch for 0 &le; \e i < NumModels.  The last set of
+Epoch + \e i * DeltaEpoch for 0 &le; \e i &lt; NumModels.  The last set of
 coefficients model the rate of change of the magnetic field at Epoch +
 (NumModels &minus; 1) * DeltaEpoch.  The format for each set of coefficients
 is:
@@ -3800,7 +3798,7 @@ and
 \f]
 and \f$F(\phi, k)\f$, \f$E(\phi, k)\f$, \f$D(\phi, k)\f$, and
 \f$\Pi(\phi, \alpha^2, k)\f$, are incomplete elliptic integrals (see
-http://dlmf.nist.gov/19.2.ii).  The formula for \f$ s \f$ and the
+https://dlmf.nist.gov/19.2.ii).  The formula for \f$ s \f$ and the
 first expression for \f$ \lambda \f$ are given by Legendre (1811) and
 are the most common representation of geodesics in terms of elliptic
 integrals.  The second (equivalent) expression for \f$ \lambda \f$,
@@ -3808,7 +3806,7 @@ which was given by Cayley (1870), is useful in that the elliptic
 integral is relegated to a small correction term.  This form allows
 the longitude to be computed more accurately and is used in
 GeographicLib.  (The equivalence of the two expressions for \f$
-\lambda \f$ follows from http://dlmf.nist.gov/19.7.E8.)
+\lambda \f$ follows from https://dlmf.nist.gov/19.7.E8.)
 
 Nominally, GeodesicExact and GeodesicLineExact will give "exact" results
 for any value of the flattening.  However, the geographic latitude is a
@@ -3940,17 +3938,17 @@ with the quarter meridian distance given by
   M  = aE(e) = bE(ie') = (b^2/a)\Pi(e^2,e) = (a^2/b)\Pi(-e'^2,ie').
 \f]
 (Here \f$ E, F, \Pi \f$ are elliptic integrals defined in
-http://dlmf.nist.gov/19.2.ii.  \f$ \cal E, \mathrm{am}, \mathrm{sn},
+https://dlmf.nist.gov/19.2.ii.  \f$ \cal E, \mathrm{am}, \mathrm{sn},
 \mathrm{cn}, \mathrm{sd}, \mathrm{cd}, \mathrm{dn}, \mathrm{nd} \f$ are
-Jacobi elliptic functions defined in http://dlmf.nist.gov/22.2 and
-http://dlmf.nist.gov/22.16.)
+Jacobi elliptic functions defined in https://dlmf.nist.gov/22.2 and
+https://dlmf.nist.gov/22.16.)
 
 There are several considerations in the choice of independent variable
 for evaluate the meridian distance
 - The use of an imaginary modulus (namely, \f$ ie' \f$, above) is of no
   practical concern.  The integrals are real in this case and modern
   methods (GeographicLib uses the method given in
-  http://dlmf.nist.gov/19.36.i) for computing integrals handles this
+  https://dlmf.nist.gov/19.36.i) for computing integrals handles this
   case using just real arithmetic.
 - If the "natural" origin is the equator, choose one of \f$ \phi, \beta,
   u, v \f$ (this might be preferred in geodesy).  If it's the pole,
@@ -3986,7 +3984,7 @@ circle solution using Bessel's auxiliary sphere.  References:
  - B. R. Bowring, The Direct and Inverse Problems for Short Geodesic
    Lines on the Ellipsoid, Surveying and Mapping 41(2), 135--141 (1981).
  - R. H. Rapp,
-   <a href="http://hdl.handle.net/1811/24333">
+   <a href="https://hdl.handle.net/1811/24333">
    Geometric Geodesy, Part I</a>, Ohio State Univ. (1991), Sec. 6.5.
 
 Bowring considers the conformal mapping of the ellipsoid to a sphere of
@@ -4760,7 +4758,7 @@ geodesic and \f$K\f$ is the Gaussian curvature of the surface.  If the
 reference geodesic is closed, then this is a linear homogeneous
 differential equation with periodic coefficients.  In fact it's a
 special case of Hill's equation which can be treated using Floquet
-theory, see <a href="http://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
+theory, see <a href="https://dlmf.nist.gov/28.29">DLMF, &sect;28.29</a>.
 Using the notation of &sect;3 of
 <a href="https://doi.org/10.1007/s00190-012-0578-z"> Algorithms for
 geodesics</a>, the stability is determined by computing the reduced
@@ -4978,7 +4976,7 @@ e_c = \frac{\sqrt{b^2-c^2}}b, \\
 \f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
 \omega = \frac12\pi\f$ (the angle a normal at the umbilic point makes
 with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
-elliptic integral of the third kind, http://dlmf.nist.gov/19.2.E7.  This
+elliptic integral of the third kind, https://dlmf.nist.gov/19.2.E7.  This
 allows the projection to be numerically computed using
 EllipticFunction::Pi(real phi) const.
 
@@ -4993,7 +4991,7 @@ Nyrtsov, et al.,
 also expressed the projection in terms of elliptic integrals.
 However, their expressions don't allow the limits of ellipsoids of
 revolution to be readily recovered.  The relations
-http://dlmf.nist.gov/19.7.E5 can be used to put their results in the
+https://dlmf.nist.gov/19.7.E5 can be used to put their results in the
 form given here.
 
 \section jacobi-properties Properties of the projection
@@ -5029,7 +5027,7 @@ y\bigl(\tfrac12\pi\bigr) &=(1-e_c^2)\,\Pi(e_c^2, \sin\nu),
 \end{align}
 \f]
 where \f$\Pi(\alpha^2,k)\f$ is the complete elliptic integral of the
-third kind, http://dlmf.nist.gov/19.2.E8.
+third kind, https://dlmf.nist.gov/19.2.E8.
 
 In particular, if we substitute values appropriate for the earth,
 \f[
@@ -5076,7 +5074,7 @@ is
 Thus \f$\beta\f$ (resp. \f$\beta'\f$) is the parametric
 (resp. geographic) latitude and \f$\omega=\omega'\f$ is the longitude;
 the quantity \f$e_c\f$ is the eccentricity of the ellipsoid.
-Using http://dlmf.nist.gov/19.6.E12 and http://dlmf.nist.gov/19.2.E19
+Using https://dlmf.nist.gov/19.6.E12 and https://dlmf.nist.gov/19.2.E19
 the projection reduces to the normal Mercator projection for an oblate
 ellipsoid,
 \f[
@@ -5099,8 +5097,8 @@ is
 \f]
 Thus \f$\omega\f$ (resp. \f$\omega'\f$) now plays the role of the
 parametric (resp. geographic) latitude and while \f$\beta=\beta'\f$ is
-the longitude.  Using http://dlmf.nist.gov/19.6.E12
-http://dlmf.nist.gov/19.2.E19 and http://dlmf.nist.gov/19.2.E18 the
+the longitude.  Using https://dlmf.nist.gov/19.6.E12
+https://dlmf.nist.gov/19.2.E19 and https://dlmf.nist.gov/19.2.E18 the
 projection reduces to similar expressions with the roles of \f$\beta\f$
 and \f$\omega\f$ switched,
 \f[
@@ -5122,8 +5120,8 @@ non-uniform limit depending on the parameter \f$\nu\f$,
   Z &= b \sin\beta \sqrt{1 - \cos^2\nu\sin^2\omega}.
 \end{align}
 \f]
-Using http://dlmf.nist.gov/19.6.E13 the projection can be put in terms
-of the elliptic integral of the first kind, http://dlmf.nist.gov/19.2.E4
+Using https://dlmf.nist.gov/19.6.E13 the projection can be put in terms
+of the elliptic integral of the first kind, https://dlmf.nist.gov/19.2.E4
 \f[
 \begin{align}
 x &= F(\omega, \cos\nu), \\
@@ -5134,7 +5132,7 @@ k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}},
 Obtaining the limit of a sphere via an oblate (resp. prolate) ellipsoid
 corresponds to setting \f$\nu = \frac12\pi\f$ (resp. \f$\nu
 =0\f$).  In these limits, the elliptic integral reduces to elementary
-functions http://dlmf.nist.gov/19.6.E7 and http://dlmf.nist.gov/19.6.E8
+functions https://dlmf.nist.gov/19.6.E7 and https://dlmf.nist.gov/19.6.E8
 \f[
 \begin{align}
 F(\phi, 0) &= \phi, \\
@@ -5158,7 +5156,7 @@ name is usually associated with the particular choice,
 However, by varying \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be
 mapped into a rectangle with any aspect ratio, \f$K(\cos\nu) :
 K(\sin\nu)\f$, where \f$K(k)\f$ is the complete elliptic integral of
-the first find, http://dlmf.nist.gov/19.2.E8.
+the first find, https://dlmf.nist.gov/19.2.E8.
 
 \section jacobi-sphere Conformal mapping of an ellipsoid to a sphere
 
@@ -5367,14 +5365,13 @@ where the last relation is given by the defining equations for
 
 This provides a complete solution for rhumb lines.  This formulation
 entirely encapsulates the ellipsoidal shape of the earth via the
-auxiliary latitudes; thus in the Rhumb class, the ellipsoidal
+\ref auxlat; thus in the Rhumb class, the ellipsoidal
 generalization is handled by the Ellipsoid class where the auxiliary
 latitudes are defined.
 
 \section rhumblat Determining the auxiliary latitudes
 
-Here we brief develop the necessary formulas for the auxiliary
-latitudes.
+Here we brief develop the necessary formulas for the \ref auxlat.
 
 <b>Isometric latitude:</b> The equation for \f$\psi\f$ can be integrated
 to give
@@ -5436,9 +5433,9 @@ In terms of \f$\beta\f$, the rectifying latitude  is given by
 \f]
 where \f$e'=e/\sqrt{1-e^2}\f$ is the second eccentricity and \f$E(k)\f$
 and \f$E(\phi,k)\f$ are the complete and incomplete elliptic integrals
-of the second kind; see http://dlmf.nist.gov/19.2.ii.  These can be
+of the second kind; see https://dlmf.nist.gov/19.2.ii.  These can be
 evaluated accurately for arbitrary flattening using the method given in
-http://dlmf.nist.gov/19.36.i.  To find \f$\beta\f$ in terms of
+https://dlmf.nist.gov/19.36.i.  To find \f$\beta\f$ in terms of
 \f$\mu\f$, Newton's method can be used (noting that \f$dE(\phi,k)/d\phi
 = \sqrt{1 - k^2\sin^2\phi}\f$); for a starting guess use \f$\beta_0 =
 \mu\f$ (or use the first terms in the reverted series; see below).
@@ -5660,7 +5657,7 @@ limits the applicability of the method to \f$\left|f\right|\lt 0.01\f$.
 If we want to extend the method to arbitrary flattening we need to
 compute \f$\Delta[E](x,y;k)\f$.  The necessary relation is the "addition
 theorem" for the incomplete elliptic integral of the second kind given
-in http://dlmf.nist.gov/19.11.E2.  This can be converted in the
+in https://dlmf.nist.gov/19.11.E2.  This can be converted in the
 following divided difference formula
 \f[
 \Delta[E](x,y;k)
@@ -5819,7 +5816,7 @@ ellipses.
 
 References:
  - P. D. Thomas,
-   <a href="http://www.dtic.mil/docs/citations/AD0627893">
+   <a href="https://apps.dtic.mil/docs/citations/AD0627893">
    Mathematical Models for Navigation Systems</a>,
    TR-182 (U.S. Naval Oceanographic Office, 1965).
  - B. R. Bowring,
@@ -6265,12 +6262,12 @@ The contents of the file are as follows:
    lon = 90&deg;;
  - 1000 entries randomly distributed on lat in [&minus;89&deg;, 0&deg;],
    lon = (1 &minus; \e e) 90&deg;;
- - 1000 entries close to lat = 0&deg;, lon = 90&deg; (lat < 0&deg;, lon
+ - 1000 entries close to lat = 0&deg;, lon = 90&deg; (lat &lt; 0&deg;, lon
    &le; 90&deg;);
  - 1000 entries close to lat = 0&deg;, lon = (1 &minus; \e e) 90&deg;
-   (lat < 0&deg;, lon &le; (1 &minus; \e e) 90&deg;);
+   (lat &lt; 0&deg;, lon &le; (1 &minus; \e e) 90&deg;);
  .
-(a total of 287000 entries).  The entries for lat < 0&deg; and
+(a total of 287000 entries).  The entries for lat &lt; 0&deg; and
 lon in [(1 &minus; \e e) 90&deg;, 90&deg;] use the "extended"
 domain for the transverse Mercator projection explained in Sec. 5 of
 Karney (2011).  The first
@@ -6467,7 +6464,7 @@ the lines of latitude.)  This projection places the point latitude =
 \image html gauss-krueger-graticule-a.png "Fig. 1(b)"
 Fig. 1(b):
 The graticule for the Gauss-Kr&uuml;ger transverse Mercator projection.
-The equator lies on \e y = 0 for longitude < 81&deg;; beyond
+The equator lies on \e y = 0 for longitude &lt; 81&deg;; beyond
 this, it arcs up to meet \e y = 1.  Compare this with Lee, Fig. 45
 (upper), which shows the graticule for the International Ellipsoid.  Lee,
 Fig. 46, shows the graticule for the entire ellipsoid.  This projection
@@ -6476,7 +6473,7 @@ Fig. 46, shows the graticule for the entire ellipsoid.  This projection
 \image html thompson-tm-graticule-a.png "Fig. 1(c)"
 Fig. 1(c):
 The graticule for the Thompson transverse Mercator projection.  The
-equator lies on \e y = 0 for longitude < 81&deg;; at longitude =
+equator lies on \e y = 0 for longitude &lt; 81&deg;; at longitude =
 81&deg;, it turns by 120&deg; and heads for \e y = 1.
 Compare this with Lee, Fig. 43, which shows the graticule for the
 International Ellipsoid.  Lee, Fig. 44, shows the graticule for the
@@ -6529,7 +6526,7 @@ rectangular region shown
  .
 The coloring of the lines is the same as Fig. 3(a), except that latitude
 lines extended down to &minus;10&deg; and a red line has been added
-showing the line \e y = 0 for \e x > 1.71 in the Gauss-Kr&uuml;ger
+showing the line \e y = 0 for \e x &gt; 1.71 in the Gauss-Kr&uuml;ger
 projection (Fig. 3(a)).  The extended Thompson projection figure has
 reflection symmetry on all the four sides of Fig. 3(c).
 
@@ -6601,14 +6598,14 @@ Apply the double version of WGS84.Reverse to (\e x0, \e y0, \e z0) to
 compute the approximate geodetic coordinates (\e lat1, \e lon1, \e h1).
 Convert (\e lat1 &minus; \e lat0, \e lon1 &minus; \e lon0) to a
 distance, \e ds, on the surface of the ellipsoid and define \e err =
-hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| < 5000&nbsp;km, we
-have \e err < 7&nbsp;nm (7 nanometers).
+hypot(\e ds, \e h1 &minus; \e h0).  For |<i>h0</i>| &lt; 5000&nbsp;km, we
+have \e err &lt; 7&nbsp;nm (7 nanometers).
 
 This methodology is not very useful very far from the globe, because the
 absolute errors in the approximate geodetic height become large, or
 within 50&nbsp;km of the center of the earth, because of errors in
 computing the approximate geodetic latitude.  To illustrate the second
-issue, the maximum value of \e err for \e h0 < 0 is about 80&nbsp;mm.
+issue, the maximum value of \e err for \e h0 &lt; 0 is about 80&nbsp;mm.
 The error is maximum close to the circle given by geocentric coordinates
 satisfying hypot(\e x, \e y) = \e a <i>e</i><sup>2</sup> (=
 42.7&nbsp;km), \e z = 0.  (This is the center of meridional curvature
@@ -6621,21 +6618,21 @@ this, Reverse does quite well in this vicinity.
 
 To obtain a practical measure of the error for the general case we define
 - <i>err</i><sub>h</sub> = |\e h1 &minus; <i>h0</i>| / max(1, \e h0 / \e a)
-- for \e h0 > 0, <i>err</i><sub>out</sub> = \e ds
-- for \e h0 < 0, apply the long double version of WGS84.Forward to (\e
+- for \e h0 &gt; 0, <i>err</i><sub>out</sub> = \e ds
+- for \e h0 &lt; 0, apply the long double version of WGS84.Forward to (\e
   lat1, \e lon1, \e h1) to give (\e x1, \e y1, \e z1) and compute
   <i>err</i><sub>in</sub> = hypot(\e x1 &minus; \e x0, \e y1 &minus; \e
   y0, \e z1 &minus; \e z0).
 .
-We then find <i>err</i><sub>h</sub> < 8&nbsp;nm,
-<i>err</i><sub>out</sub> < 4&nbsp;nm, and <i>err</i><sub>in</sub> <
-7&nbsp;nm.  (1&nbsp;nm = 1 nanometer.)
+We then find <i>err</i><sub>h</sub> &lt; 8&nbsp;nm,
+<i>err</i><sub>out</sub> &lt; 4&nbsp;nm, and <i>err</i><sub>in</sub> <
+7&nbsp;nm (1&nbsp;nm = 1 nanometer).
 
 The testing has been confined to the WGS84 ellipsoid.  The method will
 work for all ellipsoids used in terrestrial geodesy.  However, the
 central region, which leads to multiple real roots for the cubic
 equation in Reverse, pokes outside the ellipsoid (at the poles) for
-ellipsoids with \e e > 1/sqrt(2); Reverse has not been analyzed for this
+ellipsoids with \e e &gt; 1/sqrt(2); Reverse has not been analyzed for this
 case.  Similarly ellipsoids which are very nearly spherical may yield
 inaccurate results due to underflow; in the other hand, the case of the
 sphere, \e f = 0, is treated specially and gives accurate results.
@@ -6679,7 +6676,8 @@ Six latitudes are used by GeographicLib:
 The last five of these are called <i>auxiliary latitudes</i>.  These
 quantities are all defined in the
 <a href="https://en.wikipedia.org/wiki/Latitude#Auxiliary_latitudes">
-Wikipedia article on latitudes</a>.
+Wikipedia article on latitudes</a>.  The Ellipsoid class contains
+methods for converting all of these and the geographic latitude.
 
 In addition there's the isometric latitude, &psi;, defined by &psi; =
 gd<sup>&minus;1</sup>&chi; = sinh<sup>&minus;1</sup>&nbsp;tan&chi; and
@@ -6707,7 +6705,7 @@ terms of trigonometric series.  This offers some advantages:
   <a href="https://en.wikipedia.org/wiki/Clenshaw_algorithm#Meridian_arc_length_on_the_ellipsoid">
   Clenshaw summation</a> is used;
 - provided that the flattening is sufficiently small, the result may be
-  more accurate.
+  more accurate (because the round-off errors are smaller).
 
 Here we give the complete matrix of relations between all six latitudes;
 there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  These
@@ -7378,13 +7376,13 @@ Here's what you should know:
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=4</code> gives quad
    precision (113-bit precision) via boost::multiprecision::float128;
    this requires:
-   - <a href="http://www.boost.org"> Boost</a>, version 1.54 or later,
+   - <a href="https://www.boost.org"> Boost</a>, version 1.64 or later,
    - the quadmath library (the package names are libquadmath
      and libquadmath-devel),
    - the use of g++.
  - Configuring with <code>-D GEOGRAPHICLIB_PRECISION=5</code> gives
    arbitrary precision via mpfr::mpreal; this requires:
-   - <a href="http://www.mpfr.org"> MPFR</a>, version 3.0 or later,
+   - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
      (version 3.6.5, dated 2016-12-19, or later),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
@@ -7616,8 +7614,7 @@ The following steps needed to be taken
        most 52 significant bits;
      - also needed to simplify one routine in GeodesicExact which took
        inordinately long (15 minutes) to compile using g++;
-     - but Visual Studio 12 then complained (with an <a
-       href="http://connect.microsoft.com/VisualStudio/feedback/details/920594">
+     - but Visual Studio 12 then complained (with an
        internal compiler error</a> presumably due to overly aggressive
        whole-file optimization); fixed by splitting one function into a
        separate file.
@@ -7654,72 +7651,138 @@ of the
 <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
 git repository for GeographicLib</a>.
 
- - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
-   (released 2018-mm-dd)
-   - Java implementation: require Java 1.6 or later and so remove
-     epsilon, min, hypot, log1p, copysign, cbrt from GeoMath.
-   - Fix bug in Rhumb class and
-     <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity which caused
-     incorrect area to be reported if an endpoint is at a pole.  Thanks
-     to Natalia Sabourova for reporting this.
-   - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
-     division by zero" messages from Octave.
-   - Fix bug in MATLAB routine mgrs_inv which resulted in incorrect
-     results for UPS zones with prec = -1.
-   - Fix bug in PolygonArea::AddEdge which caused the count of pole
-     encirclings to be wrong, sometimes resulting in an incorrect area
-     if a polygon vertex had longitude = 0; also fixed in C library.
-     TODO: Java, JS, Python.
-   - Improve code coverage of geodesic algorithms (C++ and C).  TODO:
-     Java, JS, Python, MATLAB, Fortran.
-   - TODO: PolygonArea: fix the range of the area more aggressively.
-   - TODO: Change templating in PolygonArea so that the AddPoint and
-     AddEdge methods are templated instead of the class itself.
-   - TODO: Add Math::remainder.
-   - TODO: cross ref aux latitude section in rhumb line page.
-   - TODO: generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
+\if SKIP
+ - TODO: Planned updates
+   - Change templating in PolygonArea so that the AddPoint and AddEdge
+     methods are templated instead of the class itself.  This would
+     allow a polygon to contain a mixture of geodesic and rhumb-line
+     edges.
+   - Generalize Geoid, UTMUPS, MGRS, GeoCoords to handle non-WGS84
      ellipsoids.
-   - TODO: start converting MajorRadius methods to EquatorialRadius.
-   - TODO: add GreatEllipse class?
-   - TODO: improve code coverage with geodesic tests.
-   - TODO: allow GravityModels to be truncated?
-   - TODO: document development environment for Windows: cmake + VS +
-     NSIS.
-   - TODO: fix installation path for binary installer.
-   - TODO: fix allowed results for GeodSolve59 test.
-   - TODO: fix dotnet CMakeLists.txt CMP0026 to match version in src.
-   - TODO: implement Geodesic + TM + PolarStereographic on Jets.
-   - TODO: update informentation on https://github.com/ngageoint/opensphere-asm
-   - TODO: document treatment of poles in RhumbSolve{,.cgi}.
-   - TODO: why is S12 = {nan,inf} returned with echo 0 0 90 {0,30} |
-     RhumbSolve -i.  The results should be S12 = {0,21050634712282}.
-   - TODO: Fix installation instructions (don't use make with Visual
-     Studio), maybe use less complicated install path (but at least make
-     sure install path is consistent with compiler.
-   - TODO: in example programs, document when additional data files are
-     needed.
-   - Turn off optimizations for the Intel compiler with causes incorrect
-     code to be generated.  Tested only for C and C++ on Linux.  The
-     changes should also work for Fortran and Windows.  TODO: move
-     affected code on Math.hpp to Math.cpp DONE: add build to
-     test-distribution.sh (FC=ifort CC=icc CXX=icpc cmake ...). TODO:
-     Add check of sign +0.0 in GeodSolve73 to all languages.
-     Cf. https://github.com/OSGeo/proj.4/issues/826
-    - C fixes (also make changes to C++ library)
-     - check nan->int conversions. TODO: repeat for other languages.
-       Cf. https://github.com/OSGeo/proj.4/issues/843
-     - TODO: Michael Hagerty optimization issue in sincosdx
-       https://github.com/OSGeo/proj.4/issues/831
-     - added parens from
-       https://github.com/OSGeo/proj.4/pull/860/files#diff-2
-     - initialize various variables to please CLang Static Analyzer
-       https://github.com/OSGeo/proj.4/commit/0692fc1
-   - TODO: Reference
-     https://github.com/megaserg/geographiclib-cython-bindings in
-     wrappers/python also on main page?
-   - TODO: Reference man page in source files for tools.
-   - TODO: add test "echo 0 0 90 inf | GeodSolve" to catch python not
-     handling sin(inf) properly.
+   - Add GreatEllipse class.
+   - Implement Geodesic + TM + PolarStereographic on Jets.
+   - Template versions of Gnomonic and AzimuthalEquidistant so that they
+     can use either Geodesic and GeodesicExact.  Use typedefs so that
+     Geodesic::Line points to GeodesicLine.
+   - Split DMS stuff from main JavaScript package.  Also move 'use
+     strict' into functions (to make jshint happy).
+   - Add C++ tests not dependent on utility programs.
+   - Add information on radius of convergence for aux latitude series.
+   - Require C++11 and C99(?) compiler support.  Mark Math::hypot et
+     al. deprecated.
+   - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
+     &gt; 1/sqrt(2).
+\endif
+
+ - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
+   (released 2019-09-24)
+   - BUG fixes:
+     - Java + JavaScript implementations of PolygonArea::TestEdge counted
+       the pole encirclings wrong.
+     - Fix typo in JavaScript implementation which affected unsigned
+       areas.
+     - Adding edges to a polygon counted pole encirclings inconsistent
+       with the way the adding point counted them.  This might have
+       caused an incorrect result if a polygon vertex had longitude = 0.
+       This affected all implementations except Fortran and MATLAB).
+     - GARS::Forward: fix BUG in handling of longitude = &plusmn;180&deg;.
+     - Fix bug in Rhumb class and
+       <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity which caused
+       incorrect area to be reported if an endpoint is at a pole.
+       Thanks to Natalia Sabourova for reporting this.
+     - Fix bug in MATLAB routine mgrs_inv which resulted in incorrect
+       results for UPS zones with prec = &minus;1.
+     - In geodreckon.m geoddistance.m, suppress (innocuous) "warning:
+       division by zero" messages from Octave.
+     - In python implementation, work around problems caused by sin(inf)
+       and fmod(inf) raising exceptions.
+     - Geoid class, fix the use of streamoff.
+   - The PolygonArea class, the
+     <a href="Planimeter.1.html">Planimeter</a> utility, and their
+     equivalents in C, Fortran, MATLAB, Java, JavaScript, Python, and
+     Maxima can now handle arbitrarily complex polygons.  In the case of
+     self-intersecting polygons the area is accumulated "algebraically",
+     e.g., the areas of the 2 loops in a figure-8 polygon will partially
+     cancel.
+   - Changes in gravity and magnetic model handling
+     - SphericalEngine::coeff::readcoeffs takes new optional argument
+       \e truncate.
+     - The constructors for GravityModel and MagneticModel allow the
+       maximum degree and order to be specified.  The array of
+       coefficients will then be truncated if necessary.
+     - GravityModel::Degree(), GravityModel::Order(),
+       MagneticModel::Degree(), MagneticModel::Order() return the
+       maximum degree and order of all the components of a GravityModel
+       or MagneticModel.
+     - <a href="Gravity.1.html">Gravity</a> and
+       <a href="MagneticField.1.html">MagneticField</a> utilities
+       accept -N and -M options to to allow the maximum degree and order
+       to be specified.
+   - The <a href="GeodSolve.1.html">GeodSolve</a> allows fractional
+     distances to be entered as fractions (with the <code>-F</code>
+     flag).
+   - MajorRadius() methods are now called EquatorialRadius() for the
+     C++, Java, and .NET libraries.  "Equatorial" is more descriptive in
+     the case of prolate ellipsoids.  MajorRadius() is retained for
+     backward compatibility for C++ and Java but is deprecated.
+   - Minimum version updates:
+     - CMake = 3.1.0, released 2014-12-15.
+     - Minimum g++ version = 4.8.0, released 2013-03-22.
+     - Visual Studio 10 2010 (haven't been able to check Visual Studio
+       2008 for a long time).
+     - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
+       require a C++11 compliant compiler.  This means that the minimum
+       version of Visual Studio will be Visual Studio 12 2013.
+     - Minimum boost version = 1.64 needed for GEOGRAPHICLIB_PRECISION =
+       4.
+     - Java = 1.6; this allows the removal of epsilon, min, hypot,
+       log1p, copysign, cbrt from GeoMath.
+   - CMake updates:
+     - Fine tune Visual Studio compatibility check in
+       find_package(GeographicLib); this allows GeographicLib compiled
+       with Visual Studio 14 2015 to be used with a project compiled
+       with Visual Studio 15 2017 and 16 2019.
+     - Suppress warnings with dotnet build.
+     - Change CMake target names and add an interface library (thanks to
+       Matthew Woehlke).
+     - Remove pre-3.1.0 cruft and update the documentation to remove the
+       need to call include_dirctories.
+     - Add _d suffix to example and test programs.
+     - Changer installation path for binary installer to the Windows
+       default.
+     - Add support for Intel compiler (for C++, C, Fortran).  This
+       entails supplying the <code>-fp-model precise</code> flag to
+       prevent the compiler from incorrectly simplying <code>(a + b) +
+       c</code> and <code>0.0 + x</code>.
+   - Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This
+     is now the default magnetic model for
+     <a href="MagneticField.1.html">MagneticField</a> (replacing wmm2015
+     which is now deprecated).  Coming in 2019-12: the wmm2020 model.
+   - The -f flag in the scripts geographiclib-get-geoids,
+     geographiclib-get-gravity, and geographiclib-get-magnetic, allows
+     you to load new models (not yet in the set defined by "all").  This
+     is in addition to its original role of allowing you to overwrite
+     existing models.
+   - Changes in math function support:
+     - Move some of the functionality from Math.hpp to Math.cpp to make
+       compilation of package which depend on GeographicLib less
+       sensitive to the current compiler environment.
+     - Add Math::remainder, Math::remquo, Math::round, and Math::lround.
+       Also add implementations of remainder, remquo to C
+       implementation.
+     - Math::cbrt, Math::atanh, and Math::asinh now preserve the sign of
+       &minus;0.  (Also: C, Java, JavaScript, Python, MATLAB.  Not
+       necessary: Fortran because sign is a built-in function.)
+     - JavaScript: fall back to Math.hypot, Math.cbrt, Math.log1p,
+       Math.atanh if they are available.
+   - When parsing DMS strings ignore various non-breaking spaces (C++
+     and JavaScript).
+   - Improve code coverage in the tests of geodesic algorithms (C++, C,
+     Java, JavaScript, Python, MATLAB, Fortran).
+   - Old deprecated NormalGravity::NormalGravity constructor removed.
+   - Additions to the documentation:
+     - add documentation links to ge{distance,reckon}.m;
+     - clarify which solution is returned for Geocentric::Reverse.
 
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
@@ -7903,7 +7966,7 @@ git repository for GeographicLib</a>.
        (instead of +0), however &minus;0 is still converted to +0.
    - Add -S and -T options to
      <a href="GeoConvert.1.html">GeoConvert(1)</a>.
-   - Add <a href="http://www.sphinx-doc.org/en/stable/">Sphinx</a>
+   - Add <a href="https://www.sphinx-doc.org/en/master/">Sphinx</a>
      documentation for Python package.
    - Samples of wrapping the C++ library, so it's accessible in other
      languages, are given in <code>wrapper/C</code>,
@@ -7955,7 +8018,7 @@ git repository for GeographicLib</a>.
      - work around Octave problem which causes mgrs_fwd to return
        garbage with prec = 10 or 11;
      - add geographiclib_test.m to run a test suite.
-   - Behavior of substituting 1/\e f for \e f if \e f > 1 is now
+   - Behavior of substituting 1/\e f for \e f if \e f &gt; 1 is now
      <b>deprecated</b>.  This behavior has been removed from the
      JavaScript, C, and Python implementations (it was never
      documented).  Maxima, MATLAB, and Fortran implementations never
@@ -8058,7 +8121,7 @@ git repository for GeographicLib</a>.
      - CassiniSoldner::Forward and cassini_fwd.m now returns the correct
        azimuth for points at the pole.
    - MATLAB-specific fixes:
-     - mgrs_fwd now treats treats prec > 11 as prec = 11;
+     - mgrs_fwd now treats treats prec &gt; 11 as prec = 11;
      - illegal letter combinations are now correctly detected by
        mgrs_inv;
      - fixed bug where mgrs_inv returned the wrong results for prec = 0
@@ -8397,9 +8460,9 @@ git repository for GeographicLib</a>.
      misinterpretation of the zone designator, consider calling
      EncodeZone with \e abbrev = false and GeoConvert with -l, so that
      north/south are used to denote the hemisphere.
-   - MGRS::Forward with \e prec = -1 will produce a grid
+   - MGRS::Forward with \e prec = &minus;1 will produce a grid
      zone designation.  Similarly MGRS::Reverse will
-     decode a grid zone designation (and return \e prec = -1).
+     decode a grid zone designation (and return \e prec = &minus;1).
    - Stop using the throw() declaration specification which is
      deprecated in C++11.
    - Add missing std:: qualifications to copy in LocalCartesion and
@@ -8646,7 +8709,7 @@ git repository for GeographicLib</a>.
    (released 2012-05-27)
    - Add Geohash and Ellipsoid classes.
    - FIX BUG in AlbersEqualArea for very prolate
-     ellipsoids (<i>b</i><sup>2</sup> > 2 <i>a</i><sup>2</sup>).
+     ellipsoids (<i>b</i><sup>2</sup> &gt; 2 <i>a</i><sup>2</sup>).
    - cmake changes:
      - optionally use PACKAGE_PATH and INSTALL_PATH to determine
        CMAKE_INSTALL_PREFIX;
@@ -9028,7 +9091,7 @@ git repository for GeographicLib</a>.
      Geocentric for consistency with
      the forthcoming paper on geodesics.
    - Increase order of series using in Geodesic to 6 (full
-     accuracy maintained for ellipsoid flattening < 0.01).
+     accuracy maintained for ellipsoid flattening &lt; 0.01).
    - Macro __NO_LONG_DOUBLE_MATH to disable use of long double.
    - Correct declaration of Math::isfinite to return a bool.
    - Changes in the \ref utilities,

@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2018) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -47,6 +47,7 @@ namespace GeographicLib {
   //   F. H. Lesh,
   //   Multi-dimensional least-squares polynomial curve fitting,
   //   CACM 2, 29-30 (1959).
+  //   https://doi.org/10.1145/368424.368443
   //
   // Here's the Maxima code to generate this matrix:
   //

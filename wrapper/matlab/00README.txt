@@ -1,6 +1,6 @@
 The Matlab Central Package
 
-  http://www.mathworks.com/matlabcentral/fileexchange/50605
+  https://www.mathworks.com/matlabcentral/fileexchange/50605
 
 provide a native Matlab/Octave implementation of a subset of
 GeographicLib.
@@ -18,7 +18,7 @@ smaller flattening.)
 
 For full details on how to write the interface code, see
 
-  http://www.mathworks.com/help/matlab/write-cc-mex-files.html
+  https://www.mathworks.com/help/matlab/write-cc-mex-files.html
 
 To compile the interface code, start Matlab or Octave and run, e.g.,
 

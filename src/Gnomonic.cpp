@@ -2,7 +2,7 @@
  * \file Gnomonic.cpp
  * \brief Implementation for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -23,7 +23,7 @@ namespace GeographicLib {
     : eps0_(numeric_limits<real>::epsilon())
     , eps_(real(0.01) * sqrt(eps0_))
     , _earth(earth)
-    , _a(_earth.MajorRadius())
+    , _a(_earth.EquatorialRadius())
     , _f(_earth.Flattening())
   {}
 
@@ -67,7 +67,7 @@ namespace GeographicLib {
         break;
       // If little, solve rho(s) = rho with drho(s)/ds = 1/M^2
       // else solve 1/rho(s) = 1/rho with d(1/rho(s))/ds = -1/m^2
-      real ds = little ? (m/M - rho) * M * M : (rho - M/m) * m * m;
+      real ds = little ? (m - rho * M) * M : (rho * m - M) * m;
       s -= ds;
       // Reversed test to allow escape with NaNs
       if (!(abs(ds) >= eps_ * _a))

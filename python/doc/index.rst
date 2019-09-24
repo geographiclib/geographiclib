@@ -45,8 +45,8 @@ and install it with
 
 .. code-block:: sh
 
-  tar xpfz geographiclib-1.49.tar.gz
-  cd geographiclib-1.49
+  tar xpfz geographiclib-1.50.tar.gz
+  cd geographiclib-1.50
   python setup.py install
 
 It's a good idea to run the unit tests to verify that the installation
@@ -89,14 +89,26 @@ GeographicLib in various languages
   `PyPI package <http://pypi.python.org/pypi/geographiclib>`_,
   `documentation <../python/index.html>`__
 * Matlab/Octave (geodesic and some other routines):
-  `Matlab Central package <http://www.mathworks.com/matlabcentral/fileexchange/50605>`_,
+  `Matlab Central package <https://www.mathworks.com/matlabcentral/fileexchange/50605>`_,
   `documentation
-  <http://www.mathworks.com/matlabcentral/fileexchange/50605/content/Contents.m>`__
+  <https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m>`__
 * C# (.NET wrapper for complete C++ library):
   `documentation <../NET/index.html>`__
 
 Change log
 ----------
+
+* Version 1.50 (released 2019-09-24)
+
+  * PolygonArea can now handle arbitrarily complex polygons.  In the
+    case of self-intersecting polygons the area is accumulated
+    "algebraically", e.g., the areas of the 2 loops in a figure-8
+    polygon will partially cancel.
+  * Fixed bug in counting pole encirclings when adding edges to a
+    polygon.
+  * Work around problems caused by sin(inf) and fmod(inf) raising
+    exceptions.
+  * Math.cbrt, Math.atanh, and Math.asinh now preserve the sign of −0.
 
 * Version 1.49 (released 2017-10-05)
 

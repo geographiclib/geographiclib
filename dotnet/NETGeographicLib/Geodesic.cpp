@@ -507,7 +507,7 @@ GeodesicLine^ Geodesic::GenDirectLine(double lat1, double lon1, double azi1,
 }
 
 //*****************************************************************************
-double Geodesic::MajorRadius::get() { return m_pGeodesic->MajorRadius(); }
+double Geodesic::EquatorialRadius::get() { return m_pGeodesic->EquatorialRadius(); }
 
 //*****************************************************************************
 double Geodesic::Flattening::get() { return m_pGeodesic->Flattening(); }

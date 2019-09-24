@@ -12,7 +12,7 @@
  *    https://doi.org/10.1007/s00190-012-0578-z
  *    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -28,7 +28,7 @@
    */
   p, g, m, a) {
 
-  var transit, transitdirect;
+  var transit, transitdirect, AreaReduceA, AreaReduceB;
   transit = function(lon1, lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
     // Otherwise return zero.
@@ -46,12 +46,60 @@
   // problem.
   transitdirect = function(lon1, lon2) {
     // We want to compute exactly
-    //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
+    //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
     // Since we only need the parity of the result we can use std::remquo but
     // this is buggy with g++ 4.8.3 and requires C++11.  So instead we do
     lon1 = lon1 % 720.0; lon2 = lon2 % 720.0;
-    return ( ((lon2 >= 0 && lon2 < 360) || lon2 < -360 ? 0 : 1) -
-             ((lon1 >= 0 && lon1 < 360) || lon1 < -360 ? 0 : 1) );
+    return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
+             ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
+  };
+
+  // Reduce Accumulator area
+  AreaReduceA = function(area, area0, crossings, reverse, sign) {
+    area.Remainder(area0);
+    if (crossings & 1)
+      area.Add( (area.Sum() < 0 ? 1 : -1) * area0/2 );
+    // area is with the clockwise sense.  If !reverse convert to
+    // counter-clockwise convention.
+    if (!reverse)
+      area.Negate();
+    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if (sign) {
+      if (area.Sum() > area0/2)
+        area.Add( -area0 );
+      else if (area.Sum() <= -area0/2)
+        area.Add( +area0 );
+    } else {
+      if (area.Sum() >= area0)
+        area.Add( -area0 );
+      else if (area.Sum() < 0)
+        area.Add( +area0 );
+    }
+    return 0 + area.Sum();
+  };
+
+  // Reduce double area
+  AreaReduceB = function(area, area0, crossings, reverse, sign) {
+    area = m.remainder(area, area0);
+    if (crossings & 1)
+      area += (area < 0 ? 1 : -1) * area0/2;
+    // area is with the clockwise sense.  If !reverse convert to
+    // counter-clockwise convention.
+    if (!reverse)
+      area *= -1;
+    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
+    if (sign) {
+      if (area > area0/2)
+        area -= area0;
+      else if (area <= -area0/2)
+        area += area0;
+    } else {
+      if (area >= area0)
+        area -= area0;
+      else if (area < 0)
+        area += area0;
+    }
+    return 0 + area;
   };
 
   /**
@@ -155,13 +203,16 @@
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
-   * @description If the object is a polygon (and not a polygon), the perimeter
+   * @description Arbitrarily complex polygons are allowed.  In the case of
+   *   self-intersecting polygons the area is accumulated "algebraically",
+   *   e.g., the areas of the 2 loops in a figure-8 polygon will partially
+   *   cancel.  If the object is a polygon (and not a polyline), the perimeter
    *   includes the length of a final edge connecting the current point to the
    *   initial point.  If the object is a polyline, then area is nan.  More
    *   points can be added to the polygon after this call.
    */
   p.PolygonArea.prototype.Compute = function(reverse, sign) {
-    var vals = {number: this.num}, t, tempsum, crossings;
+    var vals = {number: this.num}, t, tempsum;
     if (this.num < 2) {
       vals.perimeter = 0;
       if (!this.polyline)
@@ -177,26 +228,9 @@
     vals.perimeter = this._perimetersum.Sum(t.s12);
     tempsum = new a.Accumulator(this._areasum);
     tempsum.Add(t.S12);
-    crossings = this._crossings + transit(this.lon, this._lon0);
-    if (crossings & 1)
-      tempsum.Add( (tempsum.Sum() < 0 ? 1 : -1) * this._area0/2 );
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum.Negate();
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum.Sum() > this._area0/2)
-        tempsum.Add( -this._area0 );
-      else if (tempsum.Sum() <= -this._area0/2)
-        tempsum.Add( +this._area0 );
-    } else {
-      if (tempsum.Sum() >= this._area0)
-        tempsum.Add( -this._area0 );
-      else if (tempsum < 0)
-        tempsum.Add( -this._area0 );
-    }
-    vals.area = tempsum.Sum();
+    vals.area = AreaReduceA(tempsum, this._area0,
+                            this._crossings + transit(this.lon, this._lon0),
+                            reverse, sign);
     return vals;
   };
 
@@ -209,6 +243,7 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
+   *   area for the rest of the earth.
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
@@ -241,25 +276,7 @@
     if (this.polyline)
       return vals;
 
-    if (crossings & 1)
-      tempsum += (tempsum < 0 ? 1 : -1) * this._area0/2;
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum *= -1;
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum > this._area0/2)
-        tempsum -= this._area0;
-      else if (tempsum <= -this._area0/2)
-        tempsum += this._area0;
-    } else {
-      if (tempsum >= this._area0)
-        tempsum -= this._area0;
-      else if (tempsum < 0)
-        tempsum += this._area0;
-    }
-    vals.area = tempsum;
+    vals.area = AreaReduceB(tempsum, this._area0, crossings, reverse, sign);
     return vals;
   };
 
@@ -272,6 +289,7 @@
    *   counter-clockwise) traversal counts as a positive area.
    * @param {bool} sign if true then return a signed result for the area if the
    *   polygon is traversed in the "wrong" direction instead of returning the
+   *   area for the rest of the earth.
    * @returns {object} r where r.number is the number of vertices, r.perimeter
    *   is the perimeter (meters), and r.area (only returned if polyline is
    *   false) is the area (meters<sup>2</sup>).
@@ -290,30 +308,12 @@
     t = this._geod.Direct(this.lat, this.lon, azi, s, this._mask);
     tempsum += t.S12;
     crossings += transitdirect(this.lon, t.lon2);
+    crossings += transit(t.lon2, this._lon0);
     t = this._geod.Inverse(t.lat2, t.lon2, this._lat0, this._lon0, this._mask);
     vals.perimeter += t.s12;
     tempsum += t.S12;
-    crossings += transit(t.lon2, this._lon0);
 
-    if (crossings & 1)
-      tempsum += (tempsum < 0 ? 1 : -1) * this._area0/2;
-    // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
-    if (!reverse)
-      tempsum *= -1;
-    // If sign put area in (-area0/2, area0/2], else put area in [0, area0)
-    if (sign) {
-      if (tempsum > this._area0/2)
-        tempsum -= this._area0;
-      else if (tempsum <= -this._area0/2)
-        tempsum += this._area0;
-    } else {
-      if (tempsum >= this._area0)
-        tempsum -= this._area0;
-      else if (tempsum < 0)
-        tempsum += this._area0;
-    }
-    vals.area = tempsum;
+    vals.area = AreaReduceB(tempsum, this._area0, crossings, reverse, sign);
     return vals;
   };
 

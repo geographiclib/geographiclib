@@ -35,7 +35,7 @@ namespace Projections
             {
                 MessageBox.Show(xcpt.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            m_majorRadiusTextBox.Text = m_polar.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_polar.EquatorialRadius.ToString();
             m_flatteningTextBox.Text = m_polar.Flattening.ToString();
             m_scaleTextBox.Text = m_polar.CentralScale.ToString();
             m_functionComboBox.SelectedIndex = 0;
@@ -107,7 +107,7 @@ namespace Projections
             try
             {
                 double lat, lon, x, y, x1, y1, gamma, k;
-                PolarStereographic p = new PolarStereographic(m_polar.MajorRadius, m_polar.Flattening, m_polar.CentralScale);
+                PolarStereographic p = new PolarStereographic(m_polar.EquatorialRadius, m_polar.Flattening, m_polar.CentralScale);
                 p.SetScale(60.0, 1.0);
                 p = new PolarStereographic();
                 p.Forward(true, 32.0, -86.0, out x, out y, out gamma, out k);

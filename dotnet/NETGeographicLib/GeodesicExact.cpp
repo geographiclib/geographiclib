@@ -510,8 +510,8 @@ GeodesicLineExact^ GeodesicExact::GenDirectLine(double lat1, double lon1,
 }
 
 //*****************************************************************************
-double GeodesicExact::MajorRadius::get()
-{ return m_pGeodesicExact->MajorRadius(); }
+double GeodesicExact::EquatorialRadius::get()
+{ return m_pGeodesicExact->EquatorialRadius(); }
 
 //*****************************************************************************
 double GeodesicExact::Flattening::get()

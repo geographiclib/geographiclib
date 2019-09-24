@@ -2,8 +2,8 @@
  * \file SphericalHarmonic.hpp
  * \brief Header for GeographicLib::SphericalHarmonic class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -82,8 +82,8 @@ namespace GeographicLib {
        * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
        * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
        * function (also known as the Legendre function on the cut or the
-       * associated Legendre polynomial) http://dlmf.nist.gov/14.7.E10 and \e k
-       * = 1 for \e m = 0 and \e k = 2 otherwise.
+       * associated Legendre polynomial) https://dlmf.nist.gov/14.7.E10 and
+       * \e k = 1 for \e m = 0 and \e k = 2 otherwise.
        *
        * The mean squared value of
        * <i>P</i><sub><i>nm</i></sub><sup>full</sup>(cos&theta;)
@@ -104,8 +104,8 @@ namespace GeographicLib {
        * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z), where
        * <b>P</b><sub><i>n</i></sub><sup><i>m</i></sup>(\e z) is Ferrers
        * function (also known as the Legendre function on the cut or the
-       * associated Legendre polynomial) http://dlmf.nist.gov/14.7.E10 and \e k
-       * = 1 for \e m = 0 and \e k = 2 otherwise.
+       * associated Legendre polynomial) https://dlmf.nist.gov/14.7.E10 and
+       * \e k = 1 for \e m = 0 and \e k = 2 otherwise.
        *
        * The mean squared value of
        * <i>P</i><sub><i>nm</i></sub><sup>schmidt</sup>(cos&theta;)

@@ -8,7 +8,7 @@ namespace example_Geodesic
         static void Main(string[] args)
         {
             try {
-                Geodesic geod = new Geodesic( Constants.WGS84.MajorRadius,
+                Geodesic geod = new Geodesic( Constants.WGS84.EquatorialRadius,
                                               Constants.WGS84.Flattening );
                 // Alternatively: Geodesic geod = new Geodesic();
                 {

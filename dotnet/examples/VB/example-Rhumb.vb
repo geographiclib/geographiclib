@@ -3,7 +3,7 @@ Imports NETGeographicLib
 Module example_Rhumb
     Sub Main()
         Try
-            Dim rhumb As Rhumb = New Rhumb(Constants.WGS84.MajorRadius, Constants.WGS84.Flattening, True)
+            Dim rhumb As Rhumb = New Rhumb(Constants.WGS84.EquatorialRadius, Constants.WGS84.Flattening, True)
             ' Alternatively: const Rhumb& rhumb = Rhumb::WGS84();
 
             ' Sample direct calculation, travelling about NE from JFK

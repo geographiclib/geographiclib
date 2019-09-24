@@ -61,7 +61,7 @@ namespace Projections
             m_geoidFileNameTextBox.Text = dlg.FileName;
             m_dateTimeTextBox.Text = m_geoid.DateTime;
             m_descriptionTextBox.Text = m_geoid.Description;
-            m_majorRadiusTextBox.Text = m_geoid.MajorRadius.ToString();
+            m_majorRadiusTextBox.Text = m_geoid.EquatorialRadius.ToString();
             m_flatteningTtextBox.Text = m_geoid.Flattening.ToString();
         }
 

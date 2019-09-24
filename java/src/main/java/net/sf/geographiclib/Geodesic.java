@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Geodesic class
  *
- * Copyright (c) Charles Karney (2013-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -69,7 +69,7 @@ package net.sf.geographiclib;
  *   counter-clockwise, of the geodesic quadrilateral with corners
  *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
  *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
- *   simple geodesic polygon.
+ *   geodesic polygon.
  * </ul>
  * <p>
  * The quantities <i>m12</i>, <i>M12</i>, <i>M21</i> which all specify the
@@ -1185,7 +1185,7 @@ public class Geodesic {
    * @return <i>a</i> the equatorial radius of the ellipsoid (meters).  This is
    *   the value used in the constructor.
    **********************************************************************/
-  public double MajorRadius() { return _a; }
+  public double EquatorialRadius() { return _a; }
 
   /**
    * @return <i>f</i> the  flattening of the ellipsoid.  This is the
@@ -1199,6 +1199,13 @@ public class Geodesic {
    *   the sum of <i>S12</i> for each side of the polygon.
    **********************************************************************/
   public double EllipsoidArea() { return 4 * Math.PI * _c2; }
+
+  /**
+   * @deprecated An old name for {@link #EquatorialRadius()}.
+   * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
+   **********************************************************************/
+  // @Deprecated
+  public double MajorRadius() { return EquatorialRadius(); }
 
   /**
    * A global instantiation of Geodesic with the parameters for the WGS84

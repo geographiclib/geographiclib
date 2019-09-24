@@ -2,7 +2,7 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -41,7 +41,7 @@ namespace GeographicLib {
       // followed by 1752-09-14. We also assume that the year always begins
       // with January 1, whereas in reality it often was reckoned to begin in
       // March.
-      return 100 * (100 * y + m) + d >= 17520914; // or 15821004
+      return 100 * (100 * y + m) + d >= 17520914; // or 15821015
     }
     static bool gregorian(int s) {
       return s >= 639799;       // 1752-09-14
@@ -383,7 +383,7 @@ namespace GeographicLib {
      * \deprecated An old name for val<T>(s).
      **********************************************************************/
     template<typename T>
-      // GEOGRAPHICLIB_DEPRECATED("Use new Utility::val<T>(s)")
+      GEOGRAPHICLIB_DEPRECATED("Use Utility::val<T>(s)")
       static T num(const std::string& s) {
       return val<T>(s);
     }

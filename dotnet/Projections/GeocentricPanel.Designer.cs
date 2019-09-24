@@ -30,7 +30,7 @@ namespace Projections
         {
             this.components = new System.ComponentModel.Container();
             this.m_setButton = new System.Windows.Forms.Button();
-            this.m_majorRadiusTextBox = new System.Windows.Forms.TextBox();
+            this.m_equatorialRadiusTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.m_flatteningTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -77,19 +77,19 @@ namespace Projections
             this.m_setButton.UseVisualStyleBackColor = true;
             this.m_setButton.Click += new System.EventHandler(this.OnSetParameters);
             //
-            // m_majorRadiusTextBox
+            // m_equatorialRadiusTextBox
             //
-            this.m_majorRadiusTextBox.Location = new System.Drawing.Point(12, 42);
-            this.m_majorRadiusTextBox.Name = "m_majorRadiusTextBox";
-            this.m_majorRadiusTextBox.Size = new System.Drawing.Size(125, 20);
-            this.m_majorRadiusTextBox.TabIndex = 2;
+            this.m_equatorialRadiusTextBox.Location = new System.Drawing.Point(12, 42);
+            this.m_equatorialRadiusTextBox.Name = "m_equatorialRadiusTextBox";
+            this.m_equatorialRadiusTextBox.Size = new System.Drawing.Size(125, 20);
+            this.m_equatorialRadiusTextBox.TabIndex = 2;
             //
             // groupBox1
             //
             this.groupBox1.Controls.Add(this.m_setButton);
             this.groupBox1.Controls.Add(this.m_flatteningTextBox);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.m_majorRadiusTextBox);
+            this.groupBox1.Controls.Add(this.m_equatorialRadiusTextBox);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Location = new System.Drawing.Point(7, 7);
             this.groupBox1.Name = "groupBox1";
@@ -112,7 +112,7 @@ namespace Projections
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(109, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Major Radius (meters)";
+            this.label1.Text = "Equatorial Radius (meters)";
             //
             // label2
             //
@@ -391,7 +391,7 @@ namespace Projections
 
         private System.Windows.Forms.Button m_setButton;
         private System.Windows.Forms.ToolTip m_toolTips;
-        private System.Windows.Forms.TextBox m_majorRadiusTextBox;
+        private System.Windows.Forms.TextBox m_equatorialRadiusTextBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox m_flatteningTextBox;
         private System.Windows.Forms.Label label1;

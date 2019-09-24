@@ -5,8 +5,13 @@ file (GLOB SOURCES [A-Za-z]*.cpp)
 file (GLOB HEADERS [A-Za-z]*.h)
 
 add_library (${NETGEOGRAPHICLIB_LIBRARIES} SHARED ${SOURCES} ${HEADERS})
-set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES}
-  PROPERTIES COMPILE_FLAGS "/clr")
+if (CMAKE_VERSION VERSION_LESS 3.12)
+  set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES}
+    PROPERTIES COMPILE_FLAGS "/clr")
+else ()
+  set_target_properties (${NETGEOGRAPHICLIB_LIBRARIES}
+    PROPERTIES COMMON_LANGUAGE_RUNTIME "")
+endif()
 
 string (REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
 string (REPLACE "/EHsc" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -35,20 +40,9 @@ if (PACKAGE_DEBUG_LIBS)
     DESTINATION bin CONFIGURATIONS Release)
 endif ()
 
-if (NOT CMAKE_VERSION VERSION_LESS 3.0)
-  # Suppress 3.0 warnings about use of the LOCATION target property
-  cmake_policy (SET CMP0026 OLD)
-endif ()
-
 # Install pdb file.
-foreach (_c ${CMAKE_CONFIGURATION_TYPES})
-  string (TOUPPER ${_c} _C)
-  get_target_property (_P ${NETGEOGRAPHICLIB_LIBRARIES} LOCATION_${_C})
-  get_filename_component (_D ${_P} PATH)
-  get_filename_component (_N ${_P} NAME_WE)
-  set (_PDB ${_D}/${_N}.pdb)
-  install (FILES ${_PDB} DESTINATION bin CONFIGURATIONS ${_c} OPTIONAL)
-endforeach ()
+install (FILES $<TARGET_PDB_FILE:${NETGEOGRAPHICLIB_LIBRARIES}>
+  DESTINATION bin OPTIONAL)
 
 # Put all the library into a folder in the IDE
 set_property (TARGET ${NETGEOGRAPHICLIB_LIBRARIES} PROPERTY FOLDER library)

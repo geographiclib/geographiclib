@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Accumulator class
  *
- * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -110,4 +110,15 @@ public  class Accumulator {
    * Set <i>sum</i> = &minus;<i>sum</i>.
    **********************************************************************/
   public void Negate() { _s = -_s; _t = -_t; }
+  /**
+   * Take the remainder.
+   * <p>
+   * @param y the modulus
+   * <p>
+   * Put <i>sum</i> in the rangle [&minus;<i>y</i>, <i>y</i>].
+   **********************************************************************/
+  public void Remainder(double y) {
+    _s = GeoMath.remainder(_s, y);
+    Add(0.0);                   // renormalize
+  }
 }

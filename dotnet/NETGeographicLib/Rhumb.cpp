@@ -127,7 +127,7 @@ RhumbLine^ Rhumb::Line(double lat1, double lon1, double azi12)
 }
 
 //*****************************************************************************
-double Rhumb::MajorRadius::get() { return m_pRhumb->MajorRadius(); }
+double Rhumb::EquatorialRadius::get() { return m_pRhumb->EquatorialRadius(); }
 
 //*****************************************************************************
 double Rhumb::Flattening::get() { return m_pRhumb->Flattening(); }
@@ -225,9 +225,9 @@ double RhumbLine::Azimuth::get()
 }
 
 //*****************************************************************************
-double RhumbLine::MajorRadius::get()
+double RhumbLine::EquatorialRadius::get()
 {
-    return m_pRhumbLine->MajorRadius();
+    return m_pRhumbLine->EquatorialRadius();
 }
 
 //*****************************************************************************

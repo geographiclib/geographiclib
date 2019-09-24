@@ -2,7 +2,7 @@
  * \file SphericalEngine.hpp
  * \brief Header for GeographicLib::SphericalEngine class
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -130,7 +130,9 @@ namespace GeographicLib {
         , _Cnm(C.begin())
         , _Snm(S.begin())
       {
-        if (!(_Nx >= _nmx && _nmx >= _mmx && _mmx >= -1))
+        if (!((_Nx >= _nmx && _nmx >= _mmx && _mmx >= 0) ||
+              // If mmx = -1 then the sums are empty so require nmx = -1 also.
+              (_nmx == -1 && _mmx == -1)))
           throw GeographicErr("Bad indices for coeff");
         if (!(index(_nmx, _mmx) < int(C.size()) &&
               index(_nmx, _mmx) < int(S.size()) + (_Nx + 1)))
@@ -251,10 +253,14 @@ namespace GeographicLib {
        * Load coefficients from a binary stream.
        *
        * @param[in] stream the input stream.
-       * @param[out] N The maximum degree of the coefficients.
-       * @param[out] M The maximum order of the coefficients.
+       * @param[in,out] N The maximum degree of the coefficients.
+       * @param[in,out] M The maximum order of the coefficients.
        * @param[out] C The vector of cosine coefficients.
        * @param[out] S The vector of sine coefficients.
+       * @param[in] truncate if false (the default) then \e N and \e M are
+       *   determined by the values in the binary stream; otherwise, the input
+       *   values of \e N and \e M are used to truncate the coefficients read
+       *   from the stream at the given degree and order.
        * @exception GeographicErr if \e N and \e M do not satisfy \e N &ge;
        *   \e M &ge; &minus;1.
        * @exception GeographicErr if there's an error reading the data.
@@ -269,7 +275,8 @@ namespace GeographicLib {
        * point is assumed for the coefficients.
        **********************************************************************/
       static void readcoeffs(std::istream& stream, int& N, int& M,
-                             std::vector<real>& C, std::vector<real>& S);
+                             std::vector<real>& C, std::vector<real>& S,
+                             bool truncate = false);
     };
 
     /**

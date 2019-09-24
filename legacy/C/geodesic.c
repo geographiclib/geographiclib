@@ -18,16 +18,27 @@
  *
  * See the comments in geodesic.h for documentation.
  *
- * Copyright (c) Charles Karney (2012-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2019) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
 
 #include "geodesic.h"
 #include <math.h>
+#include <limits.h>
+#include <float.h>
 
 #if !defined(HAVE_C99_MATH)
+#if defined(PROJ_LIB)
+/* PROJ requires C99 so HAVE_C99_MATH is implicit */
+#define HAVE_C99_MATH 1
+#else
 #define HAVE_C99_MATH 0
+#endif
+#endif
+
+#if !defined(__cplusplus)
+#define nullptr 0
 #endif
 
 #define GEOGRAPHICLIB_GEODESIC_ORDER 6
@@ -56,21 +67,9 @@ static real epsilon, realmin, pi, degree, NaN,
 
 static void Init() {
   if (!init) {
-#if defined(__DBL_MANT_DIG__)
-    digits = __DBL_MANT_DIG__;
-#else
-    digits = 53;
-#endif
-#if defined(__DBL_EPSILON__)
-    epsilon = __DBL_EPSILON__;
-#else
-    epsilon = pow(0.5, digits - 1);
-#endif
-#if defined(__DBL_MIN__)
-    realmin = __DBL_MIN__;
-#else
-    realmin = pow(0.5, 1022);
-#endif
+    digits = DBL_MANT_DIG;
+    epsilon = DBL_EPSILON;
+    realmin = DBL_MIN;
 #if defined(M_PI)
     pi = M_PI;
 #else
@@ -113,13 +112,28 @@ enum captype {
   OUT_ALL  = 0x7F80U
 };
 
-static real sq(real x) { return x * x; }
 #if HAVE_C99_MATH
+#define hypotx hypot
+/* no need to redirect log1px, since it's only used by atanhx */
 #define atanhx atanh
 #define copysignx copysign
-#define hypotx hypot
 #define cbrtx cbrt
+#define remainderx remainder
+#define remquox remquo
 #else
+/* Replacements for C99 math functions */
+
+static real hypotx(real x, real y) {
+  x = fabs(x); y = fabs(y);
+  if (x < y) {
+    x /= y;                     /* y is nonzero */
+    return y * sqrt(1 + x * x);
+  } else {
+    y /= (x != 0 ? x : 1);
+    return x * sqrt(1 + y * y);
+  }
+}
+
 static real log1px(real x) {
   volatile real
     y = 1 + x,
@@ -134,21 +148,60 @@ static real log1px(real x) {
 static real atanhx(real x) {
   real y = fabs(x);             /* Enforce odd parity */
   y = log1px(2 * y/(1 - y))/2;
-  return x < 0 ? -y : y;
+  return x > 0 ? y : (x < 0 ? -y : x); /* atanh(-0.0) = -0.0 */
 }
 
 static real copysignx(real x, real y) {
+  /* 1/y trick to get the sign of -0.0 */
   return fabs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
 }
 
-static real hypotx(real x, real y)
-{ return sqrt(x * x + y * y); }
-
 static real cbrtx(real x) {
-  real y = pow(fabs(x), 1/(real)(3)); /* Return the real cube root */
-  return x < 0 ? -y : y;
+  real y = pow(fabs(x), 1/(real)(3));  /* Return the real cube root */
+  return x > 0 ? y : (x < 0 ? -y : x); /* cbrt(-0.0) = -0.0 */
 }
+
+static real remainderx(real x, real y) {
+  real z;
+  y = fabs(y);                 /* The result doesn't depend on the sign of y */
+  z = fmod(x, y);
+  if (z == 0)
+    /* This shouldn't be necessary.  However, before version 14 (2015),
+     * Visual Studio had problems dealing with -0.0.  Specifically
+     *   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
+     * python 2.7 on Windows 32-bit machines has the same problem. */
+    z = copysignx(z, x);
+  else if (2 * fabs(z) == y)
+    z -= fmod(x, 2 * y) - z;    /* Implement ties to even */
+  else if (2 * fabs(z) > y)
+    z += (z < 0 ? y : -y);      /* Fold remaining cases to (-y/2, y/2) */
+  return z;
+}
+
+static real remquox(real x, real y, int* n) {
+  real z = remainderx(x, y);
+  if (n) {
+    real
+      a = remainderx(x, 2 * y),
+      b = remainderx(x, 4 * y),
+      c = remainderx(x, 8 * y);
+    *n  = (a > z ? 1 : (a < z ? -1 : 0));
+    *n += (b > a ? 2 : (b < a ? -2 : 0));
+    *n += (c > b ? 4 : (c < b ? -4 : 0));
+    if (y < 0) *n *= -1;
+    if (y != 0) {
+      if (x/y > 0 && *n <= 0)
+        *n += 8;
+      else if (x/y < 0 && *n >= 0)
+        *n -= 8;
+    }
+  }
+  return z;
+}
+
 #endif
+
+static real sq(real x) { return x * x; }
 
 static real sumx(real u, real v, real* t) {
   volatile real s = u + v;
@@ -186,23 +239,8 @@ static void norm2(real* sinx, real* cosx) {
 }
 
 static real AngNormalize(real x) {
-#if HAVE_C99_MATH
-  x = remainder(x, (real)(360));
+  x = remainderx(x, (real)(360));
   return x != -180 ? x : 180;
-#else
-  real y = fmod(x, (real)(360));
-#if defined(_MSC_VER) && _MSC_VER < 1900
-  /*
-   * Before version 14 (2015), Visual Studio had problems dealing
-   * with -0.0.  Specifically
-   *   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
-   * sincosdx has a similar fix.
-   * python 2.7 on Windows 32-bit machines has the same problem.
-   */
-  if (x == 0) y = x;
-#endif
-  return y <= -180 ? y + 360 : (y <= 180 ? y : y - 360);
-#endif
 }
 
 static real LatFix(real x)
@@ -233,16 +271,7 @@ static void sincosdx(real x, real* sinx, real* cosx) {
   /* In order to minimize round-off errors, this function exactly reduces
    * the argument to the range [-45, 45] before converting it to radians. */
   real r, s, c; int q;
-#if HAVE_C99_MATH && !defined(__GNUC__)
-  /* Disable for gcc because of bug in glibc version < 2.22, see
-   * https://sourceware.org/bugzilla/show_bug.cgi?id=17569 */
-  r = remquo(x, (real)(90), &q);
-#else
-  r = fmod(x, (real)(360));
-  /* check for NaN */
-  q = r == r ? (int)(floor(r / 90 + (real)(0.5))) : 0;
-  r -= 90 * q;
-#endif
+  r = remquox(x, (real)(90), &q);
   /* now abs(r) <= 45 */
   r *= degree;
   /* Possibly could call the gnu extension sincos */
@@ -327,7 +356,7 @@ static real Lambda12(const struct geod_geodesic* g,
                      real* pssig1, real* pcsig1,
                      real* pssig2, real* pcsig2,
                      real* peps,
-                     real* pgomg12,
+                     real* pdomg12,
                      boolx diffp, real* pdlam12,
                      /* Scratch area of the right size */
                      real Ca[]);
@@ -346,6 +375,11 @@ static void acccopy(const real s[], real t[]);
 static void accadd(real s[], real y);
 static real accsum(const real s[], real y);
 static void accneg(real s[]);
+static void accrem(real s[], real y);
+static real areareduceA(real area[], real area0,
+                        int crossings, boolx reverse, boolx sign);
+static real areareduceB(real area, real area0,
+                        int crossings, boolx reverse, boolx sign);
 
 void geod_init(struct geod_geodesic* g, real a, real f) {
   if (!init) Init();
@@ -477,10 +511,10 @@ void geod_lineinit(struct geod_geodesicline* l,
 void geod_gendirectline(struct geod_geodesicline* l,
                         const struct geod_geodesic* g,
                         real lat1, real lon1, real azi1,
-                        unsigned flags, real a12_s12,
+                        unsigned flags, real s12_a12,
                         unsigned caps) {
   geod_lineinit(l, g, lat1, lon1, azi1, caps);
-  geod_gensetdistance(l, flags, a12_s12);
+  geod_gensetdistance(l, flags, s12_a12);
 }
 
 void geod_directline(struct geod_geodesicline* l,
@@ -503,13 +537,13 @@ real geod_genposition(const struct geod_geodesicline* l,
   real omg12, lam12, lon12;
   real ssig2, csig2, sbet2, cbet2, somg2, comg2, salp2, calp2, dn2;
   unsigned outmask =
-    (plat2 ? GEOD_LATITUDE : 0U) |
-    (plon2 ? GEOD_LONGITUDE : 0U) |
-    (pazi2 ? GEOD_AZIMUTH : 0U) |
-    (ps12 ? GEOD_DISTANCE : 0U) |
-    (pm12 ? GEOD_REDUCEDLENGTH : 0U) |
-    (pM12 || pM21 ? GEOD_GEODESICSCALE : 0U) |
-    (pS12 ? GEOD_AREA : 0U);
+    (plat2 ? GEOD_LATITUDE : GEOD_NONE) |
+    (plon2 ? GEOD_LONGITUDE : GEOD_NONE) |
+    (pazi2 ? GEOD_AZIMUTH : GEOD_NONE) |
+    (ps12 ? GEOD_DISTANCE : GEOD_NONE) |
+    (pm12 ? GEOD_REDUCEDLENGTH : GEOD_NONE) |
+    (pM12 || pM21 ? GEOD_GEODESICSCALE : GEOD_NONE) |
+    (pS12 ? GEOD_AREA : GEOD_NONE);
 
   outmask &= l->caps & OUT_ALL;
   if (!( TRUE /*Init()*/ &&
@@ -689,12 +723,14 @@ real geod_genposition(const struct geod_geodesicline* l,
 
 void geod_setdistance(struct geod_geodesicline* l, real s13) {
   l->s13 = s13;
-  l->a13 = geod_genposition(l, GEOD_NOFLAGS, l->s13, 0, 0, 0, 0, 0, 0, 0, 0);
+  l->a13 = geod_genposition(l, GEOD_NOFLAGS, l->s13, nullptr, nullptr, nullptr,
+                            nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
 static void geod_setarc(struct geod_geodesicline* l, real a13) {
   l->a13 = a13; l->s13 = NaN;
-  geod_genposition(l, GEOD_ARCMODE, l->a13, 0, 0, 0, &l->s13, 0, 0, 0, 0);
+  geod_genposition(l, GEOD_ARCMODE, l->a13, nullptr, nullptr, nullptr, &l->s13,
+                   nullptr, nullptr, nullptr, nullptr);
 }
 
 void geod_gensetdistance(struct geod_geodesicline* l,
@@ -706,7 +742,8 @@ void geod_gensetdistance(struct geod_geodesicline* l,
 
 void geod_position(const struct geod_geodesicline* l, real s12,
                    real* plat2, real* plon2, real* pazi2) {
-  geod_genposition(l, FALSE, s12, plat2, plon2, pazi2, 0, 0, 0, 0, 0);
+  geod_genposition(l, FALSE, s12, plat2, plon2, pazi2,
+                   nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
 real geod_gendirect(const struct geod_geodesic* g,
@@ -717,13 +754,13 @@ real geod_gendirect(const struct geod_geodesic* g,
                     real* pS12) {
   struct geod_geodesicline l;
   unsigned outmask =
-    (plat2 ? GEOD_LATITUDE : 0U) |
-    (plon2 ? GEOD_LONGITUDE : 0U) |
-    (pazi2 ? GEOD_AZIMUTH : 0U) |
-    (ps12 ? GEOD_DISTANCE : 0U) |
-    (pm12 ? GEOD_REDUCEDLENGTH : 0U) |
-    (pM12 || pM21 ? GEOD_GEODESICSCALE : 0U) |
-    (pS12 ? GEOD_AREA : 0U);
+    (plat2 ? GEOD_LATITUDE : GEOD_NONE) |
+    (plon2 ? GEOD_LONGITUDE : GEOD_NONE) |
+    (pazi2 ? GEOD_AZIMUTH : GEOD_NONE) |
+    (ps12 ? GEOD_DISTANCE : GEOD_NONE) |
+    (pm12 ? GEOD_REDUCEDLENGTH : GEOD_NONE) |
+    (pM12 || pM21 ? GEOD_GEODESICSCALE : GEOD_NONE) |
+    (pS12 ? GEOD_AREA : GEOD_NONE);
 
   geod_lineinit(&l, g, lat1, lon1, azi1,
                 /* Automatically supply GEOD_DISTANCE_IN if necessary */
@@ -738,7 +775,7 @@ void geod_direct(const struct geod_geodesic* g,
                  real s12,
                  real* plat2, real* plon2, real* pazi2) {
   geod_gendirect(g, lat1, lon1, azi1, GEOD_NOFLAGS, s12, plat2, plon2, pazi2,
-                 0, 0, 0, 0, 0);
+                 nullptr, nullptr, nullptr, nullptr, nullptr);
 }
 
 static real geod_geninverse_int(const struct geod_geodesic* g,
@@ -760,10 +797,10 @@ static real geod_geninverse_int(const struct geod_geodesic* g,
   real omg12 = 0, somg12 = 2, comg12 = 0;
 
   unsigned outmask =
-    (ps12 ? GEOD_DISTANCE : 0U) |
-    (pm12 ? GEOD_REDUCEDLENGTH : 0U) |
-    (pM12 || pM21 ? GEOD_GEODESICSCALE : 0U) |
-    (pS12 ? GEOD_AREA : 0U);
+    (ps12 ? GEOD_DISTANCE : GEOD_NONE) |
+    (pm12 ? GEOD_REDUCEDLENGTH : GEOD_NONE) |
+    (pM12 || pM21 ? GEOD_GEODESICSCALE : GEOD_NONE) |
+    (pS12 ? GEOD_AREA : GEOD_NONE);
 
   outmask &= OUT_ALL;
   /* Compute longitude difference (AngDiff does this carefully).  Result is
@@ -854,9 +891,9 @@ static real geod_geninverse_int(const struct geod_geodesic* g,
     sig12 = atan2(maxx((real)(0), csig1 * ssig2 - ssig1 * csig2),
                                   csig1 * csig2 + ssig1 * ssig2);
     Lengths(g, g->n, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-            cbet1, cbet2, &s12x, &m12x, 0,
-            (outmask & GEOD_GEODESICSCALE) ? &M12 : 0,
-            (outmask & GEOD_GEODESICSCALE) ? &M21 : 0,
+            cbet1, cbet2, &s12x, &m12x, nullptr,
+            (outmask & GEOD_GEODESICSCALE) ? &M12 : nullptr,
+            (outmask & GEOD_GEODESICSCALE) ? &M21 : nullptr,
             Ca);
     /* Add the check for sig12 since zero length geodesics might yield m12 <
      * 0.  Test case was
@@ -928,8 +965,9 @@ static real geod_geninverse_int(const struct geod_geodesic* g,
       unsigned numit = 0;
       /* Bracketing range */
       real salp1a = tiny, calp1a = 1, salp1b = tiny, calp1b = -1;
-      boolx tripn, tripb;
-      for (tripn = FALSE, tripb = FALSE; numit < maxit2; ++numit) {
+      boolx tripn = FALSE;
+      boolx tripb = FALSE;
+      for (; numit < maxit2; ++numit) {
         /* the WGS84 test set: mean = 1.47, sd = 1.25, max = 16
          * WGS84 and random input: mean = 2.85, sd = 0.60 */
         real dv = 0,
@@ -978,9 +1016,9 @@ static real geod_geninverse_int(const struct geod_geodesic* g,
                  fabs(salp1 - salp1b) + (calp1 - calp1b) < tolb);
       }
       Lengths(g, eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-              cbet1, cbet2, &s12x, &m12x, 0,
-              (outmask & GEOD_GEODESICSCALE) ? &M12 : 0,
-              (outmask & GEOD_GEODESICSCALE) ? &M21 : 0, Ca);
+              cbet1, cbet2, &s12x, &m12x, nullptr,
+              (outmask & GEOD_GEODESICSCALE) ? &M12 : nullptr,
+              (outmask & GEOD_GEODESICSCALE) ? &M21 : nullptr, Ca);
       m12x *= g->b;
       s12x *= g->b;
       a12 = sig12 / degree;
@@ -1110,9 +1148,9 @@ void geod_inverseline(struct geod_geodesicline* l,
                       real lat1, real lon1, real lat2, real lon2,
                       unsigned caps) {
   real salp1, calp1,
-    a12 = geod_geninverse_int(g, lat1, lon1, lat2, lon2, 0,
-                              &salp1, &calp1, 0, 0,
-                              0, 0, 0, 0),
+    a12 = geod_geninverse_int(g, lat1, lon1, lat2, lon2, nullptr,
+                              &salp1, &calp1, nullptr, nullptr,
+                              nullptr, nullptr, nullptr, nullptr),
     azi1 = atan2dx(salp1, calp1);
   caps = caps ? caps : GEOD_DISTANCE_IN | GEOD_LONGITUDE;
   /* Ensure that a12 can be converted to a distance */
@@ -1124,7 +1162,8 @@ void geod_inverseline(struct geod_geodesicline* l,
 void geod_inverse(const struct geod_geodesic* g,
                   real lat1, real lon1, real lat2, real lon2,
                   real* ps12, real* pazi1, real* pazi2) {
-  geod_geninverse(g, lat1, lon1, lat2, lon2, ps12, pazi1, pazi2, 0, 0, 0, 0);
+  geod_geninverse(g, lat1, lon1, lat2, lon2, ps12, pazi1, pazi2,
+                  nullptr, nullptr, nullptr, nullptr);
 }
 
 real SinCosSeries(boolx sinp, real sinx, real cosx, const real c[], int n) {
@@ -1287,22 +1326,7 @@ real InverseStart(const struct geod_geodesic* g,
   boolx shortline = cbet12 >= 0 && sbet12 < (real)(0.5) &&
     cbet2 * lam12 < (real)(0.5);
   real somg12, comg12, ssig12, csig12;
-#if defined(__GNUC__) && __GNUC__ == 4 &&       \
-  (__GNUC_MINOR__ < 6 || defined(__MINGW32__))
-  /* Volatile declaration needed to fix inverse cases
-   * 88.202499451857 0 -88.202499451857 179.981022032992859592
-   * 89.262080389218 0 -89.262080389218 179.992207982775375662
-   * 89.333123580033 0 -89.333123580032997687 179.99295812360148422
-   * which otherwise fail with g++ 4.4.4 x86 -O3 (Linux)
-   * and g++ 4.4.0 (mingw) and g++ 4.6.1 (tdm mingw). */
-  {
-    volatile real xx1 = sbet2 * cbet1;
-    volatile real xx2 = cbet2 * sbet1;
-    sbet12a = xx1 + xx2;
-  }
-#else
   sbet12a = sbet2 * cbet1 + cbet2 * sbet1;
-#endif
   if (shortline) {
     real sbetm2 = sq(sbet1 + sbet2), omg12;
     /* sin((bet1+bet2)/2)^2
@@ -1366,7 +1390,7 @@ real InverseStart(const struct geod_geodesic* g,
        * Inverse. */
       Lengths(g, g->n, pi + bet12a,
               sbet1, -cbet1, dn1, sbet2, cbet2, dn2,
-              cbet1, cbet2, 0, &m12b, &m0, 0, 0, Ca);
+              cbet1, cbet2, nullptr, &m12b, &m0, nullptr, nullptr, Ca);
       x = -1 + m12b / (cbet1 * cbet2 * m0 * pi);
       betscale = x < -(real)(0.01) ? sbet12a / x :
         -g->f * sq(cbet1) * pi;
@@ -1526,7 +1550,7 @@ real Lambda12(const struct geod_geodesic* g,
       dlam12 = - 2 * g->f1 * dn1 / sbet1;
     else {
       Lengths(g, eps, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
-              cbet1, cbet2, 0, &dlam12, 0, 0, 0, Ca);
+              cbet1, cbet2, nullptr, &dlam12, nullptr, nullptr, nullptr, Ca);
       dlam12 *= g->f1 / (calp2 * cbet2);
     }
   }
@@ -1814,23 +1838,18 @@ int transit(real lon1, real lon2) {
   /* Compute lon12 the same way as Geodesic::Inverse. */
   lon1 = AngNormalize(lon1);
   lon2 = AngNormalize(lon2);
-  lon12 = AngDiff(lon1, lon2, 0);
+  lon12 = AngDiff(lon1, lon2, nullptr);
   return lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
     (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
 }
 
 int transitdirect(real lon1, real lon2) {
-#if HAVE_C99_MATH
-  lon1 = remainder(lon1, (real)(720));
-  lon2 = remainder(lon2, (real)(720));
+  /* Compute exactly the parity of
+     int(ceil(lon2 / 360)) - int(ceil(lon1 / 360)) */
+  lon1 = remainderx(lon1, (real)(720));
+  lon2 = remainderx(lon2, (real)(720));
   return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
            (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
-#else
-  lon1 = fmod(lon1, (real)(720));
-  lon2 = fmod(lon2, (real)(720));
-  return ( ((lon2 <= 0 && lon2 > -360) || lon2 > 360 ? 1 : 0) -
-           ((lon1 <= 0 && lon1 > -360) || lon1 > 360 ? 1 : 0) );
-#endif
 }
 
 void accini(real s[]) {
@@ -1866,6 +1885,12 @@ void accneg(real s[]) {
   s[0] = -s[0]; s[1] = -s[1];
 }
 
+void accrem(real s[], real y) {
+  /* Reduce to [-y/2, y/2]. */
+  s[0] = remainderx(s[0], y);
+  accadd(s, (real)(0));
+}
+
 void geod_polygon_init(struct geod_polygon* p, boolx polylinep) {
   p->polyline = (polylinep != 0);
   geod_polygon_clear(p);
@@ -1888,7 +1913,8 @@ void geod_polygon_addpoint(const struct geod_geodesic* g,
   } else {
     real s12, S12 = 0;       /* Initialize S12 to stop Visual Studio warning */
     geod_geninverse(g, p->lat, p->lon, lat, lon,
-                    &s12, 0, 0, 0, 0, 0, p->polyline ? 0 : &S12);
+                    &s12, nullptr, nullptr, nullptr, nullptr, nullptr,
+                    p->polyline ? nullptr : &S12);
     accadd(p->P, s12);
     if (!p->polyline) {
       accadd(p->A, S12);
@@ -1907,8 +1933,9 @@ void geod_polygon_addedge(const struct geod_geodesic* g,
      * lon is to make CLang static analyzer happy. */
     real lat = 0, lon = 0, S12 = 0;
     geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
-                   &lat, &lon, 0,
-                   0, 0, 0, 0, p->polyline ? 0 : &S12);
+                   &lat, &lon, nullptr,
+                   nullptr, nullptr, nullptr, nullptr,
+                   p->polyline ? nullptr : &S12);
     accadd(p->P, s);
     if (!p->polyline) {
       accadd(p->A, S12);
@@ -1923,8 +1950,7 @@ unsigned geod_polygon_compute(const struct geod_geodesic* g,
                               const struct geod_polygon* p,
                               boolx reverse, boolx sign,
                               real* pA, real* pP) {
-  real s12, S12, t[2], area0;
-  int crossings;
+  real s12, S12, t[2];
   if (p->num < 2) {
     if (pP) *pP = 0;
     if (!p->polyline && pA) *pA = 0;
@@ -1935,31 +1961,13 @@ unsigned geod_polygon_compute(const struct geod_geodesic* g,
     return p->num;
   }
   geod_geninverse(g, p->lat, p->lon, p->lat0, p->lon0,
-                  &s12, 0, 0, 0, 0, 0, &S12);
+                  &s12, nullptr, nullptr, nullptr, nullptr, nullptr, &S12);
   if (pP) *pP = accsum(p->P, s12);
   acccopy(p->A, t);
   accadd(t, S12);
-  crossings = p->crossings + transit(p->lon, p->lon0);
-  area0 = 4 * pi * g->c2;
-  if (crossings & 1)
-    accadd(t, (t[0] < 0 ? 1 : -1) * area0/2);
-  /* area is with the clockwise sense.  If !reverse convert to
-   * counter-clockwise convention. */
-  if (!reverse)
-    accneg(t);
-  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
-  if (sign) {
-    if (t[0] > area0/2)
-      accadd(t, -area0);
-    else if (t[0] <= -area0/2)
-      accadd(t, +area0);
-  } else {
-    if (t[0] >= area0)
-      accadd(t, -area0);
-    else if (t[0] < 0)
-      accadd(t, +area0);
-  }
-  if (pA) *pA = 0 + t[0];
+  if (pA) *pA = areareduceA(t, 4 * pi * g->c2,
+                            p->crossings + transit(p->lon, p->lon0),
+                            reverse, sign);
   return p->num;
 }
 
@@ -1968,7 +1976,7 @@ unsigned geod_polygon_testpoint(const struct geod_geodesic* g,
                                 real lat, real lon,
                                 boolx reverse, boolx sign,
                                 real* pA, real* pP) {
-  real perimeter, tempsum, area0;
+  real perimeter, tempsum;
   int crossings, i;
   unsigned num = p->num + 1;
   if (num == 1) {
@@ -1984,7 +1992,8 @@ unsigned geod_polygon_testpoint(const struct geod_geodesic* g,
     geod_geninverse(g,
                     i == 0 ? p->lat  : lat, i == 0 ? p->lon  : lon,
                     i != 0 ? p->lat0 : lat, i != 0 ? p->lon0 : lon,
-                    &s12, 0, 0, 0, 0, 0, p->polyline ? 0 : &S12);
+                    &s12, nullptr, nullptr, nullptr, nullptr, nullptr,
+                    p->polyline ? nullptr : &S12);
     perimeter += s12;
     if (!p->polyline) {
       tempsum += S12;
@@ -1997,26 +2006,7 @@ unsigned geod_polygon_testpoint(const struct geod_geodesic* g,
   if (p->polyline)
     return num;
 
-  area0 = 4 * pi * g->c2;
-  if (crossings & 1)
-    tempsum += (tempsum < 0 ? 1 : -1) * area0/2;
-  /* area is with the clockwise sense.  If !reverse convert to
-   * counter-clockwise convention. */
-  if (!reverse)
-    tempsum *= -1;
-  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
-  if (sign) {
-    if (tempsum > area0/2)
-      tempsum -= area0;
-    else if (tempsum <= -area0/2)
-      tempsum += area0;
-  } else {
-    if (tempsum >= area0)
-      tempsum -= area0;
-    else if (tempsum < 0)
-      tempsum += area0;
-  }
-  if (pA) *pA = 0 + tempsum;
+  if (pA) *pA = areareduceB(tempsum, 4 * pi * g->c2, crossings, reverse, sign);
   return num;
 }
 
@@ -2025,7 +2015,7 @@ unsigned geod_polygon_testedge(const struct geod_geodesic* g,
                                real azi, real s,
                                boolx reverse, boolx sign,
                                real* pA, real* pP) {
-  real perimeter, tempsum, area0;
+  real perimeter, tempsum;
   int crossings;
   unsigned num = p->num + 1;
   if (num == 1) {               /* we don't have a starting point! */
@@ -2046,38 +2036,19 @@ unsigned geod_polygon_testedge(const struct geod_geodesic* g,
      * happy. */
     real lat = 0, lon = 0, s12, S12 = 0;
     geod_gendirect(g, p->lat, p->lon, azi, GEOD_LONG_UNROLL, s,
-                   &lat, &lon, 0,
-                   0, 0, 0, 0, &S12);
+                   &lat, &lon, nullptr,
+                   nullptr, nullptr, nullptr, nullptr, &S12);
     tempsum += S12;
     crossings += transitdirect(p->lon, lon);
     geod_geninverse(g, lat,  lon, p->lat0,  p->lon0,
-                    &s12, 0, 0, 0, 0, 0, &S12);
+                    &s12, nullptr, nullptr, nullptr, nullptr, nullptr, &S12);
     perimeter += s12;
     tempsum += S12;
     crossings += transit(lon, p->lon0);
   }
 
-  area0 = 4 * pi * g->c2;
-  if (crossings & 1)
-    tempsum += (tempsum < 0 ? 1 : -1) * area0/2;
-  /* area is with the clockwise sense.  If !reverse convert to
-   * counter-clockwise convention. */
-  if (!reverse)
-    tempsum *= -1;
-  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
-  if (sign) {
-    if (tempsum > area0/2)
-      tempsum -= area0;
-    else if (tempsum <= -area0/2)
-      tempsum += area0;
-  } else {
-    if (tempsum >= area0)
-      tempsum -= area0;
-    else if (tempsum < 0)
-      tempsum += area0;
-  }
   if (pP) *pP = perimeter;
-  if (pA) *pA = 0 + tempsum;
+  if (pA) *pA = areareduceB(tempsum, 4 * pi * g->c2, crossings, reverse, sign);
   return num;
 }
 
@@ -2090,6 +2061,54 @@ void geod_polygonarea(const struct geod_geodesic* g,
   for (i = 0; i < n; ++i)
     geod_polygon_addpoint(g, &p, lats[i], lons[i]);
   geod_polygon_compute(g, &p, FALSE, TRUE, pA, pP);
+}
+
+real areareduceA(real area[], real area0,
+                 int crossings, boolx reverse, boolx sign) {
+  accrem(area, area0);
+  if (crossings & 1)
+    accadd(area, (area[0] < 0 ? 1 : -1) * area0/2);
+  /* area is with the clockwise sense.  If !reverse convert to
+   * counter-clockwise convention. */
+  if (!reverse)
+    accneg(area);
+  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
+  if (sign) {
+    if (area[0] > area0/2)
+      accadd(area, -area0);
+    else if (area[0] <= -area0/2)
+      accadd(area, +area0);
+  } else {
+    if (area[0] >= area0)
+      accadd(area, -area0);
+    else if (area[0] < 0)
+      accadd(area, +area0);
+  }
+  return 0 + area[0];
+}
+
+real areareduceB(real area, real area0,
+                 int crossings, boolx reverse, boolx sign) {
+  area = remainderx(area, area0);
+    if (crossings & 1)
+    area += (area < 0 ? 1 : -1) * area0/2;
+  /* area is with the clockwise sense.  If !reverse convert to
+   * counter-clockwise convention. */
+  if (!reverse)
+    area *= -1;
+  /* If sign put area in (-area0/2, area0/2], else put area in [0, area0) */
+  if (sign) {
+    if (area > area0/2)
+      area -= area0;
+    else if (area <= -area0/2)
+      area += area0;
+  } else {
+    if (area >= area0)
+      area -= area0;
+    else if (area < 0)
+      area += area0;
+  }
+  return 0 + area;
 }
 
 /** @endcond */

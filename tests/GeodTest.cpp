@@ -134,16 +134,16 @@ void GeodError(const test& tgeod,
                tlat1, tlon1, tazi1, tm12b,
                tM12, tM21, tS12b);
   tS12b -= tgeod.EllipsoidArea() * (tazi1-azi1)/720;
-  err[0] = max(dist(tgeod.MajorRadius(), tgeod.Flattening(),
+  err[0] = max(dist(tgeod.EquatorialRadius(), tgeod.Flattening(),
                     lat2, lon2, tlat2, tlon2),
-               dist(tgeod.MajorRadius(), tgeod.Flattening(),
+               dist(tgeod.EquatorialRadius(), tgeod.Flattening(),
                     lat1, lon1, tlat1, tlon1));
   err[1] = max(abs(azidiff(lat2, lon2, tlon2, azi2, tazi2)),
                abs(azidiff(lat1, lon1, tlon1, azi1, tazi1))) *
-    tgeod.MajorRadius();
+    tgeod.EquatorialRadius();
   err[2] = max(abs(tm12a - m12), abs(tm12b + m12));
   if (!Math::isnan(S12))
-    err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / tgeod.MajorRadius();
+    err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / tgeod.EquatorialRadius();
 
   /* ta12 = */ tgeod.Inverse(lat1, lon1, lat2, lon2,
                              ts12, tazi1, tazi2, tm12a,
@@ -157,30 +157,30 @@ void GeodError(const test& tgeod,
                  max(abs(angdiff(azi1, tazi2)), abs(angdiff(azi2, tazi1))) *
                  Math::degree() * abs(m12));
   // m12 and S12 are very sensitive with the inverse problem near conjugacy
-  if (!(s12 > tgeod.MajorRadius() && m12 < 10e3)) {
+  if (!(s12 > tgeod.EquatorialRadius() && m12 < 10e3)) {
     err[2] = max(err[2], abs(tm12a - m12));
     if (!Math::isnan(S12))
-      err[6] = max(err[6], abs(tS12a - S12) / tgeod.MajorRadius());
+      err[6] = max(err[6], abs(tS12a - S12) / tgeod.EquatorialRadius());
   }
-  if (s12 > tgeod.MajorRadius()) {
+  if (s12 > tgeod.EquatorialRadius()) {
     tgeod.Direct(lat1, lon1, tazi1,   ts12/2, rlat2, rlon2, razi2, rm12);
     tgeod.Direct(lat2, lon2, tazi2, - ts12/2, rlat1, rlon1, razi1, rm12);
-    err[5] = dist(tgeod.MajorRadius(), tgeod.Flattening(),
+    err[5] = dist(tgeod.EquatorialRadius(), tgeod.Flattening(),
                   rlat1, rlon1, rlat2, rlon2);
   } else {
     tgeod.Direct(lat1, lon1, tazi1,
-                 ts12 + tgeod.MajorRadius(),
+                 ts12 + tgeod.EquatorialRadius(),
                  rlat2, rlon2, razi2, rm12);
-    tgeod.Direct(lat2, lon2, tazi2, tgeod.MajorRadius(),
+    tgeod.Direct(lat2, lon2, tazi2, tgeod.EquatorialRadius(),
                  rlat1, rlon1, razi1, rm12);
-    err[5] = dist(tgeod.MajorRadius(), tgeod.Flattening(),
+    err[5] = dist(tgeod.EquatorialRadius(), tgeod.Flattening(),
                   rlat1, rlon1, rlat2, rlon2);
-    tgeod.Direct(lat1, lon1, tazi1, - tgeod.MajorRadius(),
+    tgeod.Direct(lat1, lon1, tazi1, - tgeod.EquatorialRadius(),
                  rlat2, rlon2, razi2, rm12);
     tgeod.Direct(lat2, lon2, tazi2,
-                 - ts12 - tgeod.MajorRadius(),
+                 - ts12 - tgeod.EquatorialRadius(),
                  rlat1, rlon1, razi1, rm12);
-    err[5] = max(err[5], dist(tgeod.MajorRadius(), tgeod.Flattening(),
+    err[5] = max(err[5], dist(tgeod.EquatorialRadius(), tgeod.Flattening(),
                               rlat1, rlon1, rlat2, rlon2));
   }
 }

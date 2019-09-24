@@ -41,7 +41,7 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
 %
 %   See also GEODDOC, GEODRECKON, GEODAREA, DEFAULTELLIPSOID, FLAT2ECC.
 
-% Copyright (c) Charles Karney (2012-2017) <charles@karney.com>.
+% Copyright (c) Charles Karney (2012-2019) <charles@karney.com>.
 %
 % This is a straightforward transcription of the C++ implementation in
 % GeographicLib and the C++ source should be consulted for additional
@@ -268,6 +268,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
     salp0 = salp1 .* cbet1; calp0 = hypot(calp1, salp1 .* sbet1);
     ssig1 = sbet1; csig1 = calp1 .* cbet1;
     ssig2 = sbet2; csig2 = calp2 .* cbet2;
+    % Stop complaints from norm2 for equatorial geodesics
+    csig1(calp0 == 0) = 1; csig2(calp0 == 0) = 1;
     k2 = calp0.^2 * ep2;
     epsi = k2 ./ (2 * (1 + sqrt(1 + k2)) + k2);
     A4 = (a^2 * e2) * calp0 .* salp0;

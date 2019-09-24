@@ -172,8 +172,8 @@ double LocalCartesian::HeightOrigin::get()
 { return m_pLocalCartesian->HeightOrigin(); }
 
 //*****************************************************************************
-double LocalCartesian::MajorRadius::get()
-{ return m_pLocalCartesian->MajorRadius(); }
+double LocalCartesian::EquatorialRadius::get()
+{ return m_pLocalCartesian->EquatorialRadius(); }
 
 //*****************************************************************************
 double LocalCartesian::Flattening::get()

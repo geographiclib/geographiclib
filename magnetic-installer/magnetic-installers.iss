@@ -6,10 +6,6 @@
 #define NAME "DUMMY"
 #endif
 
-#ifndef PREFIX
-#define PREFIX "DUMMY"
-#endif
-
 #ifndef MAGNETICDIR
 #define MAGNETICDIR "DUMMY"
 #endif

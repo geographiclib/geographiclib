@@ -30,7 +30,7 @@ function mgrs = mgrs_fwd(x, y, zone, isnorth, prec)
 %
 %   See also MGRS_INV, UTMUPS_FWD.
 
-% Copyright (c) Charles Karney (2015) <charles@karney.com>.
+% Copyright (c) Charles Karney (2015-2018) <charles@karney.com>.
 
   narginchk(4, 5)
   if nargin < 5, prec = 5; end
