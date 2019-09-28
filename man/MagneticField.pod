@@ -58,7 +58,7 @@ The WGS84 ellipsoid is used, I<a> = 6378137 m, I<f> = 1/298.257223563.
 
 =item B<-n> I<name>
 
-use magnetic field model I<name> instead of the default C<wmm2015v2>.  See
+use magnetic field model I<name> instead of the default C<wmm2020>.  See
 L</MODELS>.
 
 =item B<-d> I<dir>
@@ -173,6 +173,9 @@ following models
       main magnetic field for the period 2015-2020.  See
       https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
     wmm2015, a deprecated version of wmm2015v2
+    wmm2020, the World Magnetic Model 2020, which approximates the
+      main magnetic field for the period 2020-2025.  See
+      https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
     igrf11, the International Geomagnetic Reference Field (11th
       generation), which approximates the main magnetic field for
       the period 1900-2015.  See
@@ -196,7 +199,7 @@ These models approximate the magnetic field due to the earth's core and
 the ionosphere, the magnetosphere, nearby magnetized materials,
 electrical machinery, etc.
 
-By default, the C<wmm2015v2> magnetic model is used.  This may changed by
+By default, the C<wmm2020> magnetic model is used.  This may changed by
 setting the environment variable C<GEOGRAPHICLIB_MAGNETIC_NAME> or with
 the B<-n> option.
 
@@ -217,7 +220,7 @@ L<https://geographiclib.sourceforge.io/html/magnetic.html#magneticinst>.
 
 =item B<GEOGRAPHICLIB_MAGNETIC_NAME>
 
-Override the compile-time default magnetic name of C<wmm2015v2>.  The
+Override the compile-time default magnetic name of C<wmm2020>.  The
 B<-h> option reports the value of B<GEOGRAPHICLIB_MAGNETIC_NAME>, if
 defined, otherwise it reports the compile-time value.  If the B<-n>
 I<name> option is used, then I<name> takes precedence.
@@ -252,9 +255,10 @@ way.
 
 =head1 EXAMPLES
 
-The magnetic field from WMM2015v2 in Timbuktu on 2016-01-01
+The magnetic field from WMM2020 in Timbuktu on 2020-01-01
 
-    echo 2016-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
+    * WMM2020-FIX *
+    echo 2020-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
     => -2.10 12.14 33877.0 33854.2 -1242.7 7289.6 34652.4
        0.12 -0.04 26.1 28.8 72.4 -21.3 21.0
 

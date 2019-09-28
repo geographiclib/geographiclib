@@ -40,6 +40,9 @@ namespace NETGeographicLib
    * - WMM2015v2:
    *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
    *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015v2COF.zip
+   * - WMM2020: * WMM2020-FIX *
+   *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+   *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2020/WMM2020COF.zip
    * - IGRF11:
    *   - http://ngdc.noaa.gov/IAGA/vmod/igrf.html
    *   - http://ngdc.noaa.gov/IAGA/vmod/igrf11coeffs.txt
@@ -362,7 +365,7 @@ namespace NETGeographicLib
          * @return the default name for the magnetic model.
          *
          * This is the value of the environment variable
-         * GEOGRAPHICLIB_MAGNETIC_NAME, if set, otherwise, it is "wmm2015v2".
+         * GEOGRAPHICLIB_MAGNETIC_NAME, if set, otherwise, it is "wmm2020".
          * The MagneticModel class does not use this function; it is just
          * provided as a convenience for a calling program when constructing a
          * MagneticModel object.

@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2019-09-24
+\date 2019-mm-dd
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -23,7 +23,7 @@ The documentation for other versions is available at
 GeographicLib is a small set of <a href="annotated.html">C++
 classes</a> for performing conversions between geographic, UTM, UPS,
 MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
-EGM2008), geoid height and geomagnetic field (e.g., WMM2015)
+EGM2008), geoid height and geomagnetic field (e.g., WMM2020)
 calculations, and for solving geodesic problems.  The emphasis is on
 returning accurate results with errors close to round-off (about 5--15
 nanometers).  Accurate algorithms for \ref geodesic and \ref
@@ -2906,10 +2906,15 @@ The supported models are
    <a href="https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2010</a>, which approximates the main magnetic field
    for the period 2010--2015.
- - <b>wmm2015</b>, the
+ - <b>wmm2015v2</b>, the
    <a href="https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2015</a>, which approximates the main magnetic field
    for the period 2015--2020.
+ - <b>wmm2015</b>, a deprecated version of wmm2015v2.
+ - <b>wmm2020</b>, the
+   <a href="https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
+   Magnetic Model 2020</a>, which approximates the main magnetic field
+   for the period 2020--2025.
  - <b>igrf11</b>, the
    <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
@@ -2977,6 +2982,34 @@ These magnetic models are available for download:
  link</a> (300)</center>
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2015.zip">
+ link</a> (2)</center>
+<tr>
+ <td>wmm2015v2
+ <td><center>12</center>
+ <td><center>2015--2020</center>
+ <td><center>3</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2015v2.tar.bz2">
+ link</a> (2)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2015v2.exe">
+ link</a> (300)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2015v2.zip">
+ link</a> (2)</center>
+<tr>
+ <td>wmm2020
+ <td><center>12</center>
+ <td><center>2020--2025</center>
+ <td><center>3</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2020.tar.bz2">
+ link</a> (2)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2020.exe">
+ link</a> (300)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2020.zip">
  link</a> (2)</center>
 <tr>
  <td>igrf11
@@ -3050,14 +3083,15 @@ These magnetic models are available for download:
  link</a> (2750)</center>
 </table>
 </center>
-The "size" column is the size of the uncompressed data.
+The "size" column is the size of the uncompressed data.  <b>N.B.</b>, the
+wmm2015 is <b>deprecated</b>; use wmm2015v2 instead.
 
 For Linux and Unix systems, GeographicLib provides a shell script
 geographiclib-get-magnetic (typically installed in /usr/local/sbin)
 which automates the process of downloading and installing the magnetic
 models.  For example
 \verbatim
-   geographiclib-get-magnetic all  # install wmm2010, wmm2015, igrf11, igrf12, emm2010, emm2015, emm2017
+   geographiclib-get-magnetic all  # install all available models
    geographiclib-get-magnetic -h   # for help
 \endverbatim
 This script should be run as a user with write access to the
@@ -3078,7 +3112,7 @@ Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
 \verbatim
    mkdir -p /usr/local/share/GeographicLib
-   tar xofjC wmm2015.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC wmm2020.tar.bz2 /usr/local/share/GeographicLib
    tar xofjC emm2010.tar.bz2 /usr/local/share/GeographicLib
    etc.
 \endverbatim
@@ -3124,7 +3158,7 @@ keywords
  - keywords that affect the field calculation, namely:
    - <b>Radius</b> (required), the normalizing radius of the model in
      meters.
-   - <b>NumModels</b> (default 1), the number of models.  WMM2015
+   - <b>NumModels</b> (default 1), the number of models.  WMM2015v2
      consists of a single model giving the magnetic field and its time
      variation at 2015.  IGRF12 consists of 24 models for 1900 thru 2015
      at 5 year intervals.  The time variation is given only for the last
@@ -4240,12 +4274,12 @@ the vantage-point tree described by
 - J. K. Uhlmann,
   <a href="https://doi.org/10.1016/0020-0190(91)90074-r">
   Satisfying general proximity/similarity queries with metric trees</a>,
-  Information Processing Letters 40 175&ndash;179 (1991).
+  Information Processing Letters 40 175--179 (1991).
 - P. N. Yianilos,
   <a href="http://pnylab.com/pny/papers/vptree/vptree/">
   Data structures and algorithms for nearest neighbor search in general
   metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
-  (SIAM, 1993). pp. 311&ndash;321.
+  (SIAM, 1993). pp. 311--321.
 
 Given a set of points \e x, \e y, \e z, &hellip;, in some space and a
 distance function \e d satisfying the metric conditions,
@@ -7673,6 +7707,14 @@ git repository for GeographicLib</a>.
    - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
      &gt; 1/sqrt(2).
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
+   (released 2019-mm-dd)
+   - Add the World Magnetic Model 2020, wmm2020, covering the period
+     2020--2025.  This is now the model returned by
+     MagneticModel::DefaultMagneticName and is default magnetic model
+     for <a href="MagneticField.1.html">MagneticField</a> (replacing
+     wmm2015v2 which is only valid thru the end of 2019).
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2019-09-24)
