@@ -661,6 +661,7 @@ The following Fedora packages are required by
 - ccache
 - doxygen
 - boost-devel
+- mpfr-devel
 - octave
 - python2-sphinx
 - nodejs
@@ -7715,6 +7716,7 @@ git repository for GeographicLib</a>.
      MagneticModel::DefaultMagneticName and is default magnetic model
      for <a href="MagneticField.1.html">MagneticField</a> (replacing
      wmm2015v2 which is only valid thru the end of 2019).
+   - Include float instantiations of templated Math functions.
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2019-09-24)

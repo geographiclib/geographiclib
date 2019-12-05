@@ -431,10 +431,11 @@ namespace GeographicLib {
      *   T.
      * @return object of type T
      *
-     * \note The msys shell under Windows converts arguments which look
-     * like pathnames into their Windows equivalents.  As a result the argument
+     * \note The msys shell under Windows converts arguments which look like
+     * pathnames into their Windows equivalents.  As a result the argument
      * "-1/300" gets mangled into something unrecognizable.  A workaround is to
-     * use a floating point number in the numerator, i.e., "-1.0/300".
+     * use a floating point number in the numerator, i.e., "-1.0/300".  (Recent
+     * versions of the msys shell appear \e not to have this problem.)
      **********************************************************************/
     template<typename T> static T fract(const std::string& s) {
       std::string::size_type delim = s.find('/');
