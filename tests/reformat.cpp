@@ -285,9 +285,9 @@ int main(int argc, char* argv[]) {
       // https://www.ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015v2COF.zip
       // wmm2015v2 coefficients are in WMM2015v2COF/WMM.COF
       //
-      // Download WMM2020COF.zip * WMM2020-FIX *
+      // Download WMM2020COF.zip
       // http://ngdc.noaa.gov/geomag/WMM/WMM_coeff.shtml
-      // wmm2015 coefficients are in WMM2020COF/WMM.COF
+      // wmm2020 coefficients are in WMM2020COF/WMM.COF
       //
       // igrf12 coefficients
       // http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
@@ -298,7 +298,7 @@ int main(int argc, char* argv[]) {
       fout.write(id.c_str(), 8);
       std::string filename = model == "wmm2015" ? "WMM2015COF/WMM.COF"
         : (model == "wmm2015v2" ? "WMM2015v2COF/WMM.COF"
-           : (model == "wmm2020" ? "WMM2020/WMM.COF"
+           : (model == "wmm2020" ? "WMM2020COF/WMM.COF"
               : "geomag70_linux-2015/IGRF12.COF"));
       std::ifstream fin(filename.c_str());
       std::string ss;
@@ -349,7 +349,8 @@ int main(int argc, char* argv[]) {
         }
         if (!std::getline(fin, ss))
           ss = "";
-        if (model == "wmm2015" || model == "wmm2015v2") {
+        if (model == "wmm2015" || model == "wmm2015v2" ||
+            model == "wmm2020") {
           if (ss.size() && ss[0] == '9')
             ss = "";
           if (ss.size() == 0) {

@@ -257,10 +257,9 @@ way.
 
 The magnetic field from WMM2020 in Timbuktu on 2020-01-01
 
-    * WMM2020-FIX *
     echo 2020-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
-    => -2.10 12.14 33877.0 33854.2 -1242.7 7289.6 34652.4
-       0.12 -0.04 26.1 28.8 72.4 -21.3 21.0
+    => -1.60 12.00 33973.5 33960.3 -948.1 7223.0 34732.8
+       0.13 -0.02 21.8 23.9 77.9 -8.4 19.5
 
 The first two numbers returned are the declination and inclination of
 the field.  The second line gives the annual change.
