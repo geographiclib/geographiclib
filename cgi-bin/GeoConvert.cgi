@@ -205,8 +205,9 @@ cat <<EOF
           38SMB4488 (at 1 km precision).
           <ul>
             <li>
-              When an MGRS coordinate is read, it is treated as the
-              <em>center</em> of the grid square.
+              When an MGRS coordinate is read, a representative point
+              within the grid square, namely, the <em>center</em>, is
+              returned.
             <li>
               The MGRS easting and northing are obtained
               by <em>truncation</em> to the requested precision

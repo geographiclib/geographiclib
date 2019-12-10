@@ -3085,7 +3085,7 @@ These magnetic models are available for download:
 </table>
 </center>
 The "size" column is the size of the uncompressed data.  <b>N.B.</b>, the
-wmm2015 is <b>deprecated</b>; use wmm2015v2 instead.
+wmm2015 model is <b>deprecated</b>; use wmm2015v2 instead.
 
 For Linux and Unix systems, GeographicLib provides a shell script
 geographiclib-get-magnetic (typically installed in /usr/local/sbin)

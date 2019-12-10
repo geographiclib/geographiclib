@@ -290,14 +290,18 @@ file C<input.txt> should just contain the plain coordinates.
 
 =head1 MGRS
 
-MGRS coordinates represent a square patch of the earth, thus C<38SMB4488>
-is in zone C<38n> with 444km E<lt>= I<easting> E<lt> 445km and 3688km E<lt>=
-I<northing> E<lt> 3689km.  Consistent with this representation,
-coordinates are I<truncated> (instead of I<rounded>) to the requested
-precision.  Similarly, on input an MGRS coordinate represents the
+MGRS coordinates represent a square patch of the earth, thus
+C<38SMB4488> is in zone C<38n> with 444km E<lt>= I<easting> E<lt>
+445km and 3688km E<lt>= I<northing> E<lt> 3689km.  Consistent with
+this representation, coordinates are I<truncated> (instead of
+I<rounded>) to the requested precision.  When an MGRS coordinate is
+provided as input, B<GeoConvert> treats this as a representative point
+within the square.  By default, this representative point is the
 I<center> of the square (C<38n 444500 3688500> in the example above).
-However, if the B<-n> option is given then the south-west corner of the
-square is returned instead (C<38n 444000 3688000> in the example above).
+(This leads to a stable conversion between MGRS and geographic
+coordinates.)  However, if the B<-n> option is given then the
+south-west corner of the square is returned instead (C<38n 444000
+3688000> in the example above).
 
 =head1 ZONE
 
