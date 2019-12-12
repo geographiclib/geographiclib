@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2019-mm-dd
+\date 2019-12-13
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -130,7 +130,7 @@ The goals of GeographicLib are:
  - Completeness.  For each of the projections included, an attempt is
    made to provide a complete solution.  For example,
    Geodesic::Inverse works for anti-podal points.
-   Similarly, Geocentric.Reverse will return accurate
+   Similarly, Geocentric::Reverse will return accurate
    geodetic coordinates even for points close to the center of the
    earth.
  - C++ interface.  For the projection methods, this allows encapsulation
@@ -3008,7 +3008,7 @@ These magnetic models are available for download:
  link</a> (2)</center>
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2020.exe">
- link</a> (300)</center>
+ link</a> (1390)</center>
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2020.zip">
  link</a> (2)</center>
@@ -3159,9 +3159,9 @@ keywords
  - keywords that affect the field calculation, namely:
    - <b>Radius</b> (required), the normalizing radius of the model in
      meters.
-   - <b>NumModels</b> (default 1), the number of models.  WMM2015v2
+   - <b>NumModels</b> (default 1), the number of models.  WMM2020
      consists of a single model giving the magnetic field and its time
-     variation at 2015.  IGRF12 consists of 24 models for 1900 thru 2015
+     variation at 2020.  IGRF12 consists of 24 models for 1900 thru 2015
      at 5 year intervals.  The time variation is given only for the last
      model to allow extrapolation beyond 2015.  For dates prior to 2015,
      linear interpolation is used.
@@ -7710,13 +7710,19 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
-   (released 2019-mm-dd)
+   (released 2019-12-13)
    - Add the World Magnetic Model 2020, wmm2020, covering the period
      2020--2025.  This is now the model returned by
      MagneticModel::DefaultMagneticName and is default magnetic model
      for <a href="MagneticField.1.html">MagneticField</a> (replacing
      wmm2015v2 which is only valid thru the end of 2019).
-   - Include float instantiations of templated Math functions.
+   - Include float instantiations of those templated Math functions
+     which migrated to Math.cpp in version 1.50.
+   - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
+     require a C++11 compliant compiler.  This means that the minimum
+     version of Visual Studio will be Visual Studio 12 2013.  (This
+     repeats the warning given with version 1.50.  It didn't apply to
+     this version because this is a minor update.)
 
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2019-09-24)

@@ -6,7 +6,22 @@ For more information, see
 
 The current version of the library is 1.50.1
 
-Changes between 1.50.1 (released 2019-mm-dd) and 1.50 versions:
+Changes between 1.50.1 (released 2019-12-13) and 1.50 versions:
+
+  * Add the World Magnetic Model 2020, wmm2020, covering the period
+    2020-2025.  This is now the model returned by
+    MagneticModel::DefaultMagneticName and is default magnetic model
+    for MagneticField (replacing wmm2015v2 which is only valid thru
+    the end of 2019).
+
+  * Include float instantiations of those templated Math functions
+    which migrated to Math.cpp in version 1.50.
+
+  * WARNING: The next version of GeographicLib will require a C++11
+    compliant compiler.  This means that the minimum version of Visual
+    Studio will be Visual Studio 12 2013.  (This repeats the warning
+    given with version 1.50.  It didn't apply to this version because
+    this is a minor update.)
 
 Changes between 1.50 (released 2019-09-24) and 1.49 versions:
 

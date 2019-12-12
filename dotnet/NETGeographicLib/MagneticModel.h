@@ -40,7 +40,7 @@ namespace NETGeographicLib
    * - WMM2015v2:
    *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
    *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2015/WMM2015v2COF.zip
-   * - WMM2020: * WMM2020-FIX *
+   * - WMM2020:
    *   - http://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
    *   - http://ngdc.noaa.gov/geomag/WMM/data/WMM2020/WMM2020COF.zip
    * - IGRF11:
