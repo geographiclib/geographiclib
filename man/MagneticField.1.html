@@ -48,7 +48,7 @@
 <dt id="n-name"><b>-n</b> <i>name</i></dt>
 <dd>
 
-<p>use magnetic field model <i>name</i> instead of the default <code>wmm2015v2</code>. See <a href="#MODELS">&quot;MODELS&quot;</a>.</p>
+<p>use magnetic field model <i>name</i> instead of the default <code>wmm2020</code>. See <a href="#MODELS">&quot;MODELS&quot;</a>.</p>
 
 </dd>
 <dt id="d-dir"><b>-d</b> <i>dir</i></dt>
@@ -178,6 +178,9 @@
       main magnetic field for the period 2015-2020.  See
       https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
     wmm2015, a deprecated version of wmm2015v2
+    wmm2020, the World Magnetic Model 2020, which approximates the
+      main magnetic field for the period 2020-2025.  See
+      https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
     igrf11, the International Geomagnetic Reference Field (11th
       generation), which approximates the main magnetic field for
       the period 1900-2015.  See
@@ -198,7 +201,7 @@
 
 <p>These models approximate the magnetic field due to the earth&#39;s core and (in the case of emm20xx) its crust. They neglect magnetic fields due to the ionosphere, the magnetosphere, nearby magnetized materials, electrical machinery, etc.</p>
 
-<p>By default, the <code>wmm2015v2</code> magnetic model is used. This may changed by setting the environment variable <code>GEOGRAPHICLIB_MAGNETIC_NAME</code> or with the <b>-n</b> option.</p>
+<p>By default, the <code>wmm2020</code> magnetic model is used. This may changed by setting the environment variable <code>GEOGRAPHICLIB_MAGNETIC_NAME</code> or with the <b>-n</b> option.</p>
 
 <p>The magnetic models will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GEOGRAPHICLIB_MAGNETIC_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default magnetic path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
 
@@ -211,7 +214,7 @@
 <dt id="GEOGRAPHICLIB_MAGNETIC_NAME"><b>GEOGRAPHICLIB_MAGNETIC_NAME</b></dt>
 <dd>
 
-<p>Override the compile-time default magnetic name of <code>wmm2015v2</code>. The <b>-h</b> option reports the value of <b>GEOGRAPHICLIB_MAGNETIC_NAME</b>, if defined, otherwise it reports the compile-time value. If the <b>-n</b> <i>name</i> option is used, then <i>name</i> takes precedence.</p>
+<p>Override the compile-time default magnetic name of <code>wmm2020</code>. The <b>-h</b> option reports the value of <b>GEOGRAPHICLIB_MAGNETIC_NAME</b>, if defined, otherwise it reports the compile-time value. If the <b>-n</b> <i>name</i> option is used, then <i>name</i> takes precedence.</p>
 
 </dd>
 <dt id="GEOGRAPHICLIB_MAGNETIC_PATH"><b>GEOGRAPHICLIB_MAGNETIC_PATH</b></dt>
@@ -234,11 +237,11 @@
 
 <h1 id="EXAMPLES">EXAMPLES</h1>
 
-<p>The magnetic field from WMM2015v2 in Timbuktu on 2016-01-01</p>
+<p>The magnetic field from WMM2020 in Timbuktu on 2020-01-01</p>
 
-<pre><code>    echo 2016-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
-    =&gt; -2.10 12.14 33877.0 33854.2 -1242.7 7289.6 34652.4
-       0.12 -0.04 26.1 28.8 72.4 -21.3 21.0</code></pre>
+<pre><code>    echo 2020-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
+    =&gt; -1.60 12.00 33973.5 33960.3 -948.1 7223.0 34732.8
+       0.13 -0.02 21.8 23.9 77.9 -8.4 19.5</code></pre>
 
 <p>The first two numbers returned are the declination and inclination of the field. The second line gives the annual change.</p>
 

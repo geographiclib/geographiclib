@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoConvert --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/1.50/GeoConvert.1.html\n";
+"    https://geographiclib.sourceforge.io/1.50.1/GeoConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -247,11 +247,14 @@ int usage(int retval, bool brief) {
 "       MGRS coordinates represent a square patch of the earth, thus\n"
 "       \"38SMB4488\" is in zone \"38n\" with 444km <= easting < 445km and 3688km\n"
 "       <= northing < 3689km.  Consistent with this representation, coordinates\n"
-"       are truncated (instead of rounded) to the requested precision.\n"
-"       Similarly, on input an MGRS coordinate represents the center of the\n"
-"       square (\"38n 444500 3688500\" in the example above).  However, if the -n\n"
-"       option is given then the south-west corner of the square is returned\n"
-"       instead (\"38n 444000 3688000\" in the example above).\n"
+"       are truncated (instead of rounded) to the requested precision.  When an\n"
+"       MGRS coordinate is provided as input, GeoConvert treats this as a\n"
+"       representative point within the square.  By default, this\n"
+"       representative point is the center of the square (\"38n 444500 3688500\"\n"
+"       in the example above).  (This leads to a stable conversion between MGRS\n"
+"       and geographic coordinates.)  However, if the -n option is given then\n"
+"       the south-west corner of the square is returned instead (\"38n 444000\n"
+"       3688000\" in the example above).\n"
 "\n"
 "ZONE\n"
 "       If the input is geographic, GeoConvert uses the standard rules of\n"

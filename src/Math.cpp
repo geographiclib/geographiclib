@@ -420,177 +420,51 @@ namespace GeographicLib {
 
   /// \cond SKIP
   // Instantiate
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::hypot<Math::real>(Math::real, Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::expm1<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::log1p<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::asinh<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::atanh<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::cbrt<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::remainder<Math::real>(Math::real, Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::remquo<Math::real>(Math::real, Math::real, int*);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::round<Math::real>(Math::real);
-  template long       GEOGRAPHICLIB_EXPORT
-  Math::lround<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::copysign<Math::real>(Math::real, Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::fma<Math::real>(Math::real, Math::real, Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::sum<Math::real>(Math::real, Math::real, Math::real&);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::AngRound<Math::real>(Math::real);
-  template void       GEOGRAPHICLIB_EXPORT
-  Math::sincosd<Math::real>(Math::real, Math::real&, Math::real&);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::sind<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::cosd<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::tand<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::atan2d<Math::real>(Math::real, Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::atand<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::eatanhe<Math::real>(Math::real, Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::taupf<Math::real>(Math::real, Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::tauf<Math::real>(Math::real, Math::real);
-  template bool       GEOGRAPHICLIB_EXPORT
-  Math::isfinite<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::NaN<Math::real>();
-  template bool       GEOGRAPHICLIB_EXPORT
-  Math::isnan<Math::real>(Math::real);
-  template Math::real GEOGRAPHICLIB_EXPORT
-  Math::infinity<Math::real>();
-#if GEOGRAPHICLIB_PRECISION != 2
-  // Always have double versions available
-  template double GEOGRAPHICLIB_EXPORT
-  Math::hypot<double>(double, double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::expm1<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::log1p<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::asinh<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::atanh<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::cbrt<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::remainder<double>(double, double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::remquo<double>(double, double, int*);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::round<double>(double);
-  template long   GEOGRAPHICLIB_EXPORT
-  Math::lround<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::copysign<double>(double, double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::fma<double>(double, double, double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::sum<double>(double, double, double&);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::AngRound<double>(double);
-  template void   GEOGRAPHICLIB_EXPORT
-  Math::sincosd<double>(double, double&, double&);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::sind<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::cosd<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::tand<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::atan2d<double>(double, double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::atand<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::eatanhe<double>(double, double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::taupf<double>(double, double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::tauf<double>(double, double);
-  template bool   GEOGRAPHICLIB_EXPORT
-  Math::isfinite<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::NaN<double>();
-  template bool   GEOGRAPHICLIB_EXPORT
-  Math::isnan<double>(double);
-  template double GEOGRAPHICLIB_EXPORT
-  Math::infinity<double>();
+#define GEOGRAPHICLIB_MATH_INSTANTIATE(T)                               \
+  template T    GEOGRAPHICLIB_EXPORT Math::hypot    <T>(T, T);          \
+  template T    GEOGRAPHICLIB_EXPORT Math::expm1    <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::log1p    <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::asinh    <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::atanh    <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::cbrt     <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::remainder<T>(T, T);          \
+  template T    GEOGRAPHICLIB_EXPORT Math::remquo   <T>(T, T, int*);    \
+  template T    GEOGRAPHICLIB_EXPORT Math::round    <T>(T);             \
+  template long GEOGRAPHICLIB_EXPORT Math::lround   <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::copysign <T>(T, T);          \
+  template T    GEOGRAPHICLIB_EXPORT Math::fma      <T>(T, T, T);       \
+  template T    GEOGRAPHICLIB_EXPORT Math::sum      <T>(T, T, T&);      \
+  template T    GEOGRAPHICLIB_EXPORT Math::AngRound <T>(T);             \
+  template void GEOGRAPHICLIB_EXPORT Math::sincosd  <T>(T, T&, T&);     \
+  template T    GEOGRAPHICLIB_EXPORT Math::sind     <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::cosd     <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::tand     <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::atan2d   <T>(T, T);          \
+  template T    GEOGRAPHICLIB_EXPORT Math::atand    <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::eatanhe  <T>(T, T);          \
+  template T    GEOGRAPHICLIB_EXPORT Math::taupf    <T>(T, T);          \
+  template T    GEOGRAPHICLIB_EXPORT Math::tauf     <T>(T, T);          \
+  template bool GEOGRAPHICLIB_EXPORT Math::isfinite <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::NaN      <T>();              \
+  template bool GEOGRAPHICLIB_EXPORT Math::isnan    <T>(T);             \
+  template T    GEOGRAPHICLIB_EXPORT Math::infinity <T>();
+
+  // Instantiate with the standard floating type
+  GEOGRAPHICLIB_MATH_INSTANTIATE(float)
+  GEOGRAPHICLIB_MATH_INSTANTIATE(double)
+#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
+  // Instantiate if long double is distinct from double
+  GEOGRAPHICLIB_MATH_INSTANTIATE(long double)
 #endif
-#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE && GEOGRAPHICLIB_PRECISION != 3
-  // And always have long double versions available (as long as long double is
-  // a really different from double).
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::hypot<long double>(long double, long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::expm1<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::log1p<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::asinh<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::atanh<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::cbrt<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::remainder<long double>(long double, long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::remquo<long double>(long double, long double, int*);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::round<long double>(long double);
-  template long        GEOGRAPHICLIB_EXPORT
-  Math::lround<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::copysign<long double>(long double, long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::fma<long double>(long double, long double, long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::sum<long double>(long double, long double, long double&);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::AngRound<long double>(long double);
-  template void        GEOGRAPHICLIB_EXPORT
-  Math::sincosd<long double>(long double, long double&, long double&);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::sind<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::cosd<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::tand<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::atan2d<long double>(long double, long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::atand<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::eatanhe<long double>(long double, long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::taupf<long double>(long double, long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::tauf<long double>(long double, long double);
-  template bool        GEOGRAPHICLIB_EXPORT
-  Math::isfinite<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::NaN<long double>();
-  template bool        GEOGRAPHICLIB_EXPORT
-  Math::isnan<long double>(long double);
-  template long double GEOGRAPHICLIB_EXPORT
-  Math::infinity<long double>();
+#if GEOGRAPHICLIB_PRECISION > 3
+  // Instantiate with the high precision type
+  GEOGRAPHICLIB_MATH_INSTANTIATE(Math::real)
 #endif
+
+#undef GEOGRAPHICLIB_MATH_INSTANTIATE
+
   // Also we need int versions for Utility::nummatch
-  template int GEOGRAPHICLIB_EXPORT Math::NaN<int>();
+  template int GEOGRAPHICLIB_EXPORT Math::NaN     <int>();
   template int GEOGRAPHICLIB_EXPORT Math::infinity<int>();
   /// \endcond
 

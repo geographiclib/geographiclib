@@ -267,7 +267,7 @@
 
 <h1 id="MGRS">MGRS</h1>
 
-<p>MGRS coordinates represent a square patch of the earth, thus <code>38SMB4488</code> is in zone <code>38n</code> with 444km &lt;= <i>easting</i> &lt; 445km and 3688km &lt;= <i>northing</i> &lt; 3689km. Consistent with this representation, coordinates are <i>truncated</i> (instead of <i>rounded</i>) to the requested precision. Similarly, on input an MGRS coordinate represents the <i>center</i> of the square (<code>38n 444500 3688500</code> in the example above). However, if the <b>-n</b> option is given then the south-west corner of the square is returned instead (<code>38n 444000 3688000</code> in the example above).</p>
+<p>MGRS coordinates represent a square patch of the earth, thus <code>38SMB4488</code> is in zone <code>38n</code> with 444km &lt;= <i>easting</i> &lt; 445km and 3688km &lt;= <i>northing</i> &lt; 3689km. Consistent with this representation, coordinates are <i>truncated</i> (instead of <i>rounded</i>) to the requested precision. When an MGRS coordinate is provided as input, <b>GeoConvert</b> treats this as a representative point within the square. By default, this representative point is the <i>center</i> of the square (<code>38n 444500 3688500</code> in the example above). (This leads to a stable conversion between MGRS and geographic coordinates.) However, if the <b>-n</b> option is given then the south-west corner of the square is returned instead (<code>38n 444000 3688000</code> in the example above).</p>
 
 <h1 id="ZONE">ZONE</h1>
 

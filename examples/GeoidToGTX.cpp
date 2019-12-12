@@ -3,7 +3,7 @@
 // machine using OpenMP.
 //
 // For the format of gtx files, see
-// http://vdatum.noaa.gov/dev/gtx_info.html#dev_gtx_binary
+// https://vdatum.noaa.gov/docs/gtx_info.html#dev_gtx_binary
 //
 // data is binary big-endian:
 //   south latitude edge (degrees double)
