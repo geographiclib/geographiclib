@@ -125,7 +125,7 @@
  *
  * <h3>Using maven to build and run {@code Inverse.java}</h3>
  * The sample code includes a {@code pom.xml} which specifies
- * GeographicLib-Jave as a dependency.  You can build and install this
+ * GeographicLib-Java as a dependency.  You can build and install this
  * dependency by running (in the main java directory) <pre>
  * mvn install </pre>
  * Alternatively, you can let maven download it from Maven Central.  You can

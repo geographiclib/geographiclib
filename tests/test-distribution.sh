@@ -76,7 +76,9 @@ umask 0022
 #   java/pom.xml java/*/pom.xml
 #   java/src/main/java/net/sf/geographiclib/package-info.java (date +
 #   update change log)
-#   (remember to remove SNAPSHOT from version number of lib)
+#   (remember to remove SNAPSHOT from version number of lib in test programs)
+# probably should deploy a SNAPSHOT version of the lib to grease the
+# wheels
 
 # maxima
 #   maxima/geodesic.mac
@@ -89,7 +91,7 @@ umask 0022
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.50
+VERSION=1.50.1
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
@@ -564,6 +566,7 @@ git push --tags
 #   dir = /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
 #   branch = geographiclib/$VERSION
 #   file = Formula/geographiclib.rb
+#   brew upgrade geographiclib
 #   commit message = geographiclib $VERSION
 # upload matlab packages
 # update binaries for cgi applications

@@ -3,7 +3,7 @@ project (GeographicLib)
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
 set (PROJECT_VERSION_MINOR 50)
-set (PROJECT_VERSION_PATCH 0)
+set (PROJECT_VERSION_PATCH 1)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 19)
-set (LIBVERSION_BUILD 19.0.0)
+set (LIBVERSION_BUILD 19.0.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -371,17 +371,6 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     if (Boost_FOUND)
       include_directories ("${Boost_INCLUDE_DIRS}")
       set (HIGHPREC_LIBRARIES quadmath)
-      if (NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
-        # Enable Q suffix for quad precision in g++ 4.8 and later
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fext-numeric-literals")
-      endif ()
-      # Boost uses std::auto_ptr which is deprecated in C++11.  Suppress
-      # ensuing warnings.  See also
-      # https://svn.boost.org/trac/boost/ticket/11411
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
-      # Suppress the warnings that boost can spew out, e.g.,
-      #   "typedef 'boost_concept_check905' locally defined but not used"
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs")
     endif ()
   endif ()
   if (NOT HIGHPREC_LIBRARIES)

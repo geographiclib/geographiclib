@@ -17,7 +17,10 @@ if (CXX11_RANDOM)
   set (TESTPROGRAMS ${TESTPROGRAMS} GeodShort NormalTest)
 endif ()
 
-if (Boost_FOUND)
+if (Boost_FOUND AND NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
+  # Skip LevelEllipsoid for quad precision because of compiler errors
+  # with boost 1.69 and g++ 9.2.1 (Fedora 30).  Problem reported as
+  # https://github.com/boostorg/odeint/issues/40
   set (TESTPROGRAMS ${TESTPROGRAMS} LevelEllipsoid)
   include_directories ("${Boost_INCLUDE_DIRS}")
   if (APPLE)
