@@ -567,7 +567,7 @@ same compiler (and optimization flags) as Qt.
 If you are using the mingw compiler on Windows for Qt, then you need to
 build GeographicLib with mingw.  You can accomplish this with cmake
 under cygwin with, for example, \verbatim
-  export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
+  export PATH="`cygpath c:/QtSDK/mingw/bin`:$PATH"
   mkdir BUILD
   cd BUILD
   cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
