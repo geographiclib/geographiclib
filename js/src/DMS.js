@@ -73,20 +73,41 @@ GeographicLib.DMS = {};
         v = 0, i = 0, mi, pi, vals,
         ind1 = d.NONE, ind2, p, pa, pb;
     dmsa = dmsa
-      .replace(/\u2212/g, '-')  // U+2212 minus sign
-      .replace(/\u00b0/g, 'd')  // U+00b0 degree symbol
-      .replace(/\u00ba/g, 'd')  // U+00ba alt symbol
-      .replace(/\u2070/g, 'd')  // U+2070 sup zero
-      .replace(/\u02da/g, 'd')  // U+02da ring above
+      .replace(/\u00b0/g, 'd' ) // U+00b0 degree symbol
+      .replace(/\u00ba/g, 'd' ) // U+00ba alt symbol
+      .replace(/\u2070/g, 'd' ) // U+2070 sup zero
+      .replace(/\u02da/g, 'd' ) // U+02da ring above
+      .replace(/\u2218/g, 'd' ) // U+2218 compose function
+      .replace(/\*/g    , 'd' ) // GRiD symbol for degree
+
+      .replace(/`/g     , 'd' ) // grave accent
       .replace(/\u2032/g, '\'') // U+2032 prime
+      .replace(/\u2035/g, '\'') // U+2035 back prime
       .replace(/\u00b4/g, '\'') // U+00b4 acute accent
+      .replace(/\u2018/g, '\'') // U+2018 left single quote
       .replace(/\u2019/g, '\'') // U+2019 right single quote
-      .replace(/\u2033/g, '"')  // U+2033 double prime
-      .replace(/\u201d/g, '"')  // U+201d right double quote
-      .replace(/\u00a0/g, '')   // U+00a0 non-breaking space
-      .replace(/\u202f/g, '')   // U+202f narrow space
-      .replace(/\u2007/g, '')   // U+2007 figure space
-      .replace(/''/g, '"')      // '' -> "
+      .replace(/\u201b/g, '\'') // U+201b reversed-9 single quote
+
+      .replace(/\u2033/g, '"' ) // U+2033 double prime
+      .replace(/\u02dd/g, '"' ) // U+02dd double acute accent
+      .replace(/\u201c/g, '"' ) // U+201d left double quote
+      .replace(/\u201d/g, '"' ) // U+201d right double quote
+      .replace(/\u201f/g, '"' ) // U+201f reversed-9 double quote
+
+      .replace(/\u2010/g, '-' ) // U+2010 dash
+      .replace(/\u2011/g, '-' ) // U+2011 non-breaking hyphen
+      .replace(/\u2013/g, '-' ) // U+2013 en dash
+      .replace(/\u2014/g, '-' ) // U+2014 em dash
+      .replace(/\u2212/g, '-' ) // U+2212 minus sign
+
+      .replace(/\u00a0/g, ''  ) // U+00a0 non-breaking space
+      .replace(/\u2007/g, ''  ) // U+2007 figure space
+      .replace(/\u2009/g, ''  ) // U+2009 thin space
+      .replace(/\u200a/g, ''  ) // U+200a hair space
+      .replace(/\u202f/g, ''  ) // U+202f narrow space
+
+      .replace(/''/g,     '"' ) // '' -> "
+
       .trim();
 
     end = dmsa.length;

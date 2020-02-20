@@ -26,25 +26,94 @@ namespace GeographicLib {
   const char* const DMS::components_[] = {"degrees", "minutes", "seconds"};
 
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
+    // Here's a table of the allowed characters
+
+    // S unicode   dec  UTF-8      descripton
+
+    // DEGREE
+    // d U+0064    100  64         d
+    // D U+0044     68  44         D
+    // ° U+00b0    176  c2 b0      degree symbol
+    // º U+00ba    186  c2 ba      alt symbol
+    // ⁰ U+2070   8304  e2 81 b0   sup zero
+    // ˚ U+02da    730  cb 9a      ring above
+    // ∘ U+2218   8728  e2 88 98   compose function
+    // * U+002a     42  2a         GRiD symbol for degrees
+
+    // MINUTES
+    // ' U+0027     39  27         apostrophe
+    // ` U+0060     96  60         grave accent
+    // ′ U+2032   8242  e2 80 b2   prime
+    // ‵ U+2035   8245  e2 80 b5   back prime
+    // ´ U+00b4    180  c2 b4      acute accent
+    // ‘ U+2018   8216  e2 80 98   left single quote
+    // ’ U+2019   8217  e2 80 99   right single quote
+    // ‛ U+201b   8219  e2 80 9b   reversed-9 single quote
+
+    // SECONDS
+    // " U+0022     34  22         quotation mark
+    // ″ U+2033   8243  e2 80 b3   double prime
+    // ˝ U+02dd    733  cb 9d      double acute accent
+    // “ U+201c   8220  e2 80 9c   left double quote
+    // ” U+201d   8221  e2 80 9d   right double quote
+    // ‟ U+201f   8223  e2 80 9f   reversed-9 double quote
+
+    // MINUS
+    // - U+002d     45  2d         hyphen
+    // ‐ U+2010   8208  e2 80 90   dash
+    // ‑ U+2011   8209  e2 80 91   non-breaking hyphen
+    // – U+2013   8211  e2 80 93   en dash
+    // — U+2014   8212  e2 80 94   em dash
+    // − U+2212   8722  e2 88 92   minus sign
+
+    // IGNORED
+    //   U+00a0    160  c2 a0      non-breaking space
+    //   U+2007   8199  e2 80 87   figure space | |
+    //   U+2009   8201  e2 80 89   thin space   | |
+    //   U+200a   8202  e2 80 8a   hair space   | |
+    //   U+202f   8239  e2 80 af   narrow space | |
+    // « U+00ab    171  c2 ab      left guillemot (for cgi-bin)
+    // » U+00bb    187  c2 bb      right guillemot (for cgi-bin)
+
     string dmsa = dms;
-    replace(dmsa, "\xe2\x88\x92", '-');  // U+2212 minus sign
-    replace(dmsa, "\xc2\xb0", 'd');      // U+00b0 degree symbol
-    replace(dmsa, "\xb0", 'd');          // 0xb0 bare degree symbol
-    replace(dmsa, "\xc2\xba", 'd');      // U+00ba alt symbol
-    replace(dmsa, "\xba", 'd');          // 0xba bare alt symbol
-    replace(dmsa, "\xe2\x81\xb0", 'd');  // U+2070 sup zero
-    replace(dmsa, "\xcb\x9a", 'd');      // U+02da ring above
+    replace(dmsa, "\xc2\xb0",     'd' ); // U+00b0 degree symbol
+    replace(dmsa, "\xc2\xba",     'd' ); // U+00ba alt symbol
+    replace(dmsa, "\xe2\x81\xb0", 'd' ); // U+2070 sup zero
+    replace(dmsa, "\xcb\x9a",     'd' ); // U+02da ring above
+    replace(dmsa, "\xe2\x88\x98", 'd' ); // U+2218 compose function
+
     replace(dmsa, "\xe2\x80\xb2", '\''); // U+2032 prime
-    replace(dmsa, "\xc2\xb4", '\'');     // U+00b4 acute accent
-    replace(dmsa, "\xb4", '\'');         // 0xb4 bare acute accent
+    replace(dmsa, "\xe2\x80\xb5", '\''); // U+2035 back prime
+    replace(dmsa, "\xc2\xb4",     '\''); // U+00b4 acute accent
+    replace(dmsa, "\xe2\x80\x98", '\''); // U+2018 left single quote
     replace(dmsa, "\xe2\x80\x99", '\''); // U+2019 right single quote
-    replace(dmsa, "\xe2\x80\xb3", '"');  // U+2033 double prime
-    replace(dmsa, "\xe2\x80\x9d", '"');  // U+201d right double quote
-    replace(dmsa, "\xc2\xa0", '\0');     // U+00a0 non-breaking space
-    replace(dmsa, "\xa0", '\0');         // 0xa0 bare non-breaking space
-    replace(dmsa, "\xe2\x80\xaf", '\0'); // U+202f narrow space
+    replace(dmsa, "\xe2\x80\x9b", '\''); // U+201b reversed-9 single quote
+
+    replace(dmsa, "\xe2\x80\xb3", '"' ); // U+2033 double prime
+    replace(dmsa, "\xcb\x9d",     '"' ); // U+02dd double acute accent
+    replace(dmsa, "\xe2\x80\x9c", '"' ); // U+201c left double quote
+    replace(dmsa, "\xe2\x80\x9d", '"' ); // U+201d right double quote
+    replace(dmsa, "\xe2\x80\x9f", '"' ); // U+201f reversed-9 double quote
+
+    replace(dmsa, "\xe2\x80\x90", '-' ); // U+2010 dash
+    replace(dmsa, "\xe2\x80\x91", '-' ); // U+2011 non-breaking hyphen
+    replace(dmsa, "\xe2\x80\x93", '-' ); // U+2013 en dash
+    replace(dmsa, "\xe2\x80\x94", '-' ); // U+2014 em dash
+    replace(dmsa, "\xe2\x88\x92", '-' ); // U+2212 minus sign
+
+    replace(dmsa, "\xc2\xa0",     '\0'); // U+00a0 non-breaking space
     replace(dmsa, "\xe2\x80\x87", '\0'); // U+2007 figure space
-    replace(dmsa, "''", '"');            // '' -> "
+    replace(dmsa, "\xe2\x80\x89", '\0'); // U+2007 thin space
+    replace(dmsa, "\xe2\x80\x8a", '\0'); // U+200a hair space
+    replace(dmsa, "\xe2\x80\xaf", '\0'); // U+202f narrow space
+
+    replace(dmsa, "\xb0",         'd' ); // 0xb0 bare degree symbol
+    replace(dmsa, "\xba",         'd' ); // 0xba bare alt symbol
+    replace(dmsa, "*",            'd' ); // GRiD symbol for degree
+    replace(dmsa, "`",            '\''); // grave accent
+    replace(dmsa, "\xb4",         '\''); // 0xb4 bare acute accent
+    replace(dmsa, "\xa0",         '\0'); // 0xa0 bare non-breaking space
+    replace(dmsa, "''",           '"' ); // '' -> "
     string::size_type
       beg = 0,
       end = unsigned(dmsa.size());
@@ -82,7 +151,7 @@ namespace GeographicLib {
     return v;
   }
 
-  Math::real DMS::InternalDecode(const std::string& dmsa, flag& ind) {
+  Math::real DMS::InternalDecode(const string& dmsa, flag& ind) {
     string errormsg;
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
@@ -253,7 +322,7 @@ namespace GeographicLib {
     return val;
   }
 
-  void DMS::DecodeLatLon(const std::string& stra, const std::string& strb,
+  void DMS::DecodeLatLon(const string& stra, const string& strb,
                          real& lat, real& lon,
                          bool longfirst) {
     real a, b;
@@ -282,7 +351,7 @@ namespace GeographicLib {
     lon = lon1;
   }
 
-  Math::real DMS::DecodeAngle(const std::string& angstr) {
+  Math::real DMS::DecodeAngle(const string& angstr) {
     flag ind;
     real ang = Decode(angstr, ind);
     if (ind != NONE)
@@ -291,7 +360,7 @@ namespace GeographicLib {
     return ang;
   }
 
-  Math::real DMS::DecodeAzimuth(const std::string& azistr) {
+  Math::real DMS::DecodeAzimuth(const string& azistr) {
     flag ind;
     real azi = Decode(azistr, ind);
     if (ind == LATITUDE)
