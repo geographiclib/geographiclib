@@ -146,7 +146,7 @@ namespace GeographicLib {
     Forward(zone, northp, x, y, lat, prec, mgrs);
   }
 
-  void MGRS::Reverse(const std::string& mgrs,
+  void MGRS::Reverse(const string& mgrs,
                      int& zone, bool& northp, real& x, real& y,
                      int& prec, bool centerp) {
     int

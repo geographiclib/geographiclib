@@ -19,8 +19,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  bool Utility::ParseLine(const std::string& line,
-                          std::string& key, std::string& val) {
+  bool Utility::ParseLine(const string& line, string& key, string& val) {
     const char* spaces = " \t\n\v\f\r";
     string::size_type n0 = line.find_first_not_of(spaces);
     if (n0 == string::npos)

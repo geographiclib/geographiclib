@@ -105,7 +105,7 @@ namespace GeographicLib {
 
   void GeoCoords::UTMUPSString(int zone, bool northp,
                                real easting, real northing, int prec,
-                               bool abbrev, std::string& utm) {
+                               bool abbrev, string& utm) {
     ostringstream os;
     prec = max(-5, min(9 + Math::extra_digits(), prec));
     // Need extra real because, since C++11, pow(float, int) returns double

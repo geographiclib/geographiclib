@@ -265,7 +265,7 @@ namespace GeographicLib {
     real* b2 = bb;
     if (n > 0) b1[0] = b1[3] = c[n];
     for (int j = n - 1; j > 0; --j) { // j = n-1 .. 1
-      std::swap(b1, b2);
+      swap(b1, b2);
       // b1 = A * b2 - b1 + c[j] * I
       b1[0] = a[0] * b2[0] + a[1] * b2[2] - b1[0] + c[j];
       b1[1] = a[0] * b2[1] + a[1] * b2[3] - b1[1];

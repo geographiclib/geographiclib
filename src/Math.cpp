@@ -26,9 +26,9 @@ namespace GeographicLib {
 
   int Math::digits() {
 #if GEOGRAPHICLIB_PRECISION != 5
-    return std::numeric_limits<real>::digits;
+    return numeric_limits<real>::digits;
 #else
-    return std::numeric_limits<real>::digits();
+    return numeric_limits<real>::digits();
 #endif
   }
 
@@ -43,16 +43,16 @@ namespace GeographicLib {
 
   int Math::digits10() {
 #if GEOGRAPHICLIB_PRECISION != 5
-    return std::numeric_limits<real>::digits10;
+    return numeric_limits<real>::digits10;
 #else
-    return std::numeric_limits<real>::digits10();
+    return numeric_limits<real>::digits10();
 #endif
   }
 
   int Math::extra_digits() {
     return
-      digits10() > std::numeric_limits<double>::digits10 ?
-      digits10() - std::numeric_limits<double>::digits10 : 0;
+      digits10() > numeric_limits<double>::digits10 ?
+      digits10() - numeric_limits<double>::digits10 : 0;
   }
 
   template<typename T> T Math::hypot(T x, T y) {
@@ -60,7 +60,7 @@ namespace GeographicLib {
     using std::hypot; return hypot(x, y);
 #else
     x = abs(x); y = abs(y);
-    if (x < y) std::swap(x, y); // Now x >= y >= 0
+    if (x < y) swap(x, y); // Now x >= y >= 0
     y /= (x != 0 ? x : 1);
     return x * sqrt(1 + y * y);
     // For an alternative (square-root free) method see
@@ -210,7 +210,7 @@ namespace GeographicLib {
     using std::lround; return lround(x);
 #else
     // Default value for overflow + NaN + (x == LONG_MIN)
-    long r = std::numeric_limits<long>::min();
+    long r = numeric_limits<long>::min();
     x = round(x);
     if (abs(x) < -T(r))       // Assume T(LONG_MIN) is exact
       r = long(x);
@@ -301,7 +301,7 @@ namespace GeographicLib {
   }
 
   template<typename T> T Math::tand(T x) {
-    static const T overflow = 1 / sq(std::numeric_limits<T>::epsilon());
+    static const T overflow = 1 / sq(numeric_limits<T>::epsilon());
     T s, c;
     sincosd(x, s, c);
     return c != 0 ? s / c : (s < 0 ? -overflow : overflow);
@@ -313,7 +313,7 @@ namespace GeographicLib {
     // converting it to degrees and mapping the result to the correct
     // quadrant.
     int q = 0;
-    if (abs(y) > abs(x)) { std::swap(x, y); q = 2; }
+    if (abs(y) > abs(x)) { swap(x, y); q = 2; }
     if (x < 0) { x = -x; ++q; }
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
     T ang = atan2(y, x) / degree<T>();
@@ -374,27 +374,27 @@ namespace GeographicLib {
       using std::isfinite; return isfinite(x);
 #else
 #if defined(_MSC_VER)
-      return abs(x) <= (std::numeric_limits<T>::max)();
+      return abs(x) <= (numeric_limits<T>::max)();
 #else
       // There's a problem using MPFR C++ 3.6.3 and g++ -std=c++14 (reported on
-      // 2015-05-04) with the parens around std::numeric_limits<T>::max.  Of
+      // 2015-05-04) with the parens around numeric_limits<T>::max.  Of
       // course, these parens are only needed to deal with Windows stupidly
       // defining max as a macro.  So don't insert the parens on non-Windows
       // platforms.
-      return abs(x) <= std::numeric_limits<T>::max();
+      return abs(x) <= numeric_limits<T>::max();
 #endif
 #endif
     }
 
     template<typename T> T Math::NaN() {
 #if defined(_MSC_VER)
-      return std::numeric_limits<T>::has_quiet_NaN ?
-        std::numeric_limits<T>::quiet_NaN() :
-        (std::numeric_limits<T>::max)();
+      return numeric_limits<T>::has_quiet_NaN ?
+        numeric_limits<T>::quiet_NaN() :
+        (numeric_limits<T>::max)();
 #else
-      return std::numeric_limits<T>::has_quiet_NaN ?
-        std::numeric_limits<T>::quiet_NaN() :
-        std::numeric_limits<T>::max();
+      return numeric_limits<T>::has_quiet_NaN ?
+        numeric_limits<T>::quiet_NaN() :
+        numeric_limits<T>::max();
 #endif
     }
 
@@ -408,13 +408,13 @@ namespace GeographicLib {
 
   template<typename T> T Math::infinity() {
 #if defined(_MSC_VER)
-      return std::numeric_limits<T>::has_infinity ?
-        std::numeric_limits<T>::infinity() :
-        (std::numeric_limits<T>::max)();
+      return numeric_limits<T>::has_infinity ?
+        numeric_limits<T>::infinity() :
+        (numeric_limits<T>::max)();
 #else
-      return std::numeric_limits<T>::has_infinity ?
-        std::numeric_limits<T>::infinity() :
-        std::numeric_limits<T>::max();
+      return numeric_limits<T>::has_infinity ?
+        numeric_limits<T>::infinity() :
+        numeric_limits<T>::max();
 #endif
     }
 

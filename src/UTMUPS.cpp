@@ -202,7 +202,7 @@ namespace GeographicLib {
     return;
   }
 
-  void UTMUPS::DecodeZone(const std::string& zonestr, int& zone, bool& northp)
+  void UTMUPS::DecodeZone(const string& zonestr, int& zone, bool& northp)
   {
     unsigned zlen = unsigned(zonestr.size());
     if (zlen == 0)
@@ -233,8 +233,8 @@ namespace GeographicLib {
                           + Utility::str(zone1));
 
     string hemi(zonestr, q - c);
-    for (std::string::iterator p = hemi.begin(); p != hemi.end(); ++p)
-      *p = char(std::tolower(*p));
+    for (string::iterator p = hemi.begin(); p != hemi.end(); ++p)
+      *p = char(tolower(*p));
     if (q == c && (hemi == "inv" || hemi == "invalid")) {
       zone = INVALID;
       northp = false;
@@ -248,7 +248,7 @@ namespace GeographicLib {
     northp = northp1;
   }
 
-  std::string UTMUPS::EncodeZone(int zone, bool northp, bool abbrev) {
+  string UTMUPS::EncodeZone(int zone, bool northp, bool abbrev) {
     if (zone == INVALID)
       return string(abbrev ? "inv" : "invalid");
     if (!(zone >= MINZONE && zone <= MAXZONE))

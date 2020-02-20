@@ -91,7 +91,7 @@ namespace GeographicLib {
     //         asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
     // Overflow value s.t. atan(overflow) = pi/2
     static const real
-      overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
+      overflow = 1 / Math::sq(numeric_limits<real>::epsilon());
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),

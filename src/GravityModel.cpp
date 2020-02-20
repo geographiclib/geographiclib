@@ -131,7 +131,7 @@ namespace GeographicLib {
                                      SphericalHarmonic1::normalization(_norm));
   }
 
-  void GravityModel::ReadMetadata(const std::string& name) {
+  void GravityModel::ReadMetadata(const string& name) {
     const char* spaces = " \t\n\v\f\r";
     _filename = _dir + "/" + name + ".egm";
     ifstream metastr(_filename.c_str());
@@ -353,7 +353,7 @@ namespace GeographicLib {
                          CircularEngine());
   }
 
-  std::string GravityModel::DefaultGravityPath() {
+  string GravityModel::DefaultGravityPath() {
     string path;
     char* gravitypath = getenv("GEOGRAPHICLIB_GRAVITY_PATH");
     if (gravitypath)
@@ -366,7 +366,7 @@ namespace GeographicLib {
     return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/gravity";
   }
 
-  std::string GravityModel::DefaultGravityName() {
+  string GravityModel::DefaultGravityName() {
     string name;
     char* gravityname = getenv("GEOGRAPHICLIB_GRAVITY_NAME");
     if (gravityname)

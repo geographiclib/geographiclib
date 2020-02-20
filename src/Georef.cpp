@@ -19,7 +19,7 @@ namespace GeographicLib {
   const char* const Georef::lattile_ = "ABCDEFGHJKLM";
   const char* const Georef::degrees_ = "ABCDEFGHJKLMNPQ";
 
-  void Georef::Forward(real lat, real lon, int prec, std::string& georef) {
+  void Georef::Forward(real lat, real lon, int prec, string& georef) {
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
@@ -60,8 +60,8 @@ namespace GeographicLib {
     copy(georef1, georef1 + baselen_ + 2 * prec, georef.begin());
   }
 
-  void Georef::Reverse(const std::string& georef, real& lat, real& lon,
-                        int& prec, bool centerp) {
+  void Georef::Reverse(const string& georef, real& lat, real& lon,
+                       int& prec, bool centerp) {
     int len = int(georef.length());
     if (len >= 3 &&
         toupper(georef[0]) == 'I' &&

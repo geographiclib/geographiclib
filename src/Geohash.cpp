@@ -17,7 +17,7 @@ namespace GeographicLib {
   const char* const Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
   const char* const Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
-  void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
+  void Geohash::Forward(real lat, real lon, int len, string& geohash) {
     static const real shift = ldexp(real(1), 45);
     static const real loneps = 180 / shift;
     static const real lateps =  90 / shift;
@@ -57,7 +57,7 @@ namespace GeographicLib {
     copy(geohash1, geohash1 + len, geohash.begin());
   }
 
-  void Geohash::Reverse(const std::string& geohash, real& lat, real& lon,
+  void Geohash::Reverse(const string& geohash, real& lat, real& lon,
                         int& len, bool centerp) {
     static const real shift = ldexp(real(1), 45);
     static const real loneps = 180 / shift;

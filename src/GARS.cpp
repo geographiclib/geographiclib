@@ -17,7 +17,7 @@ namespace GeographicLib {
   const char* const GARS::digits_ = "0123456789";
   const char* const GARS::letters_ = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 
-  void GARS::Forward(real lat, real lon, int prec, std::string& gars) {
+  void GARS::Forward(real lat, real lon, int prec, string& gars) {
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
@@ -55,8 +55,8 @@ namespace GeographicLib {
     copy(gars1, gars1 + baselen_ + prec, gars.begin());
   }
 
-  void GARS::Reverse(const std::string& gars, real& lat, real& lon,
-                        int& prec, bool centerp) {
+  void GARS::Reverse(const string& gars, real& lat, real& lon,
+                     int& prec, bool centerp) {
     int len = int(gars.length());
     if (len >= 3 &&
         toupper(gars[0]) == 'I' &&

@@ -34,7 +34,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  MagneticModel::MagneticModel(const std::string& name,const std::string& path,
+  MagneticModel::MagneticModel(const std::string& name, const std::string& path,
                                const Geocentric& earth, int Nmax, int Mmax)
     : _name(name)
     , _dir(path)
@@ -95,7 +95,7 @@ namespace GeographicLib {
     }
   }
 
-  void MagneticModel::ReadMetadata(const std::string& name) {
+  void MagneticModel::ReadMetadata(const string& name) {
     const char* spaces = " \t\n\v\f\r";
     _filename = _dir + "/" + name + ".wmm";
     ifstream metastr(_filename.c_str());
@@ -257,7 +257,7 @@ namespace GeographicLib {
     It = (F != 0 ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree();
   }
 
-  std::string MagneticModel::DefaultMagneticPath() {
+  string MagneticModel::DefaultMagneticPath() {
     string path;
     char* magneticpath = getenv("GEOGRAPHICLIB_MAGNETIC_PATH");
     if (magneticpath)
@@ -270,7 +270,7 @@ namespace GeographicLib {
     return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/magnetic";
   }
 
-  std::string MagneticModel::DefaultMagneticName() {
+  string MagneticModel::DefaultMagneticName() {
     string name;
     char* magneticname = getenv("GEOGRAPHICLIB_MAGNETIC_NAME");
     if (magneticname)

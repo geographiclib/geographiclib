@@ -384,9 +384,9 @@ namespace GeographicLib {
       root[l] = sqrt(real(l));
   }
 
-  void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,
-                                          std::vector<real>& C,
-                                          std::vector<real>& S,
+  void SphericalEngine::coeff::readcoeffs(istream& stream, int& N, int& M,
+                                          vector<real>& C,
+                                          vector<real>& S,
                                           bool truncate) {
     if (truncate) {
       if (!((N >= M && M >= 0) || (N == -1 && M == -1)))
@@ -409,22 +409,22 @@ namespace GeographicLib {
                 SphericalEngine::coeff::Csize(N0, M )) * sizeof(double);
     if (N == N0) {
       Utility::readarray<double, real, false>(stream, C);
-      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
       Utility::readarray<double, real, false>(stream, S);
-      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
     } else {
       for (int m = 0, k = 0; m <= M; ++m) {
         Utility::readarray<double, real, false>(stream, &C[k], N + 1 - m);
         stream.seekg((N0 - N) * sizeof(double), ios::cur);
         k += N + 1 - m;
       }
-      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
       for (int m = 1, k = 0; m <= M; ++m) {
         Utility::readarray<double, real, false>(stream, &S[k], N + 1 - m);
         stream.seekg((N0 - N) * sizeof(double), ios::cur);
         k += N + 1 - m;
       }
-      if (skip) stream.seekg(std::ios::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
     }
     return;
   }

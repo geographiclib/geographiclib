@@ -49,13 +49,13 @@ else ()
 endif ()
 
 if (GEOGRAPHICLIB_SHARED_LIB)
-  target_include_directories (${PROJECT_SHARED_LIBRARIES} INTERFACE
+  target_include_directories (${PROJECT_SHARED_LIBRARIES} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
 endif ()
 if (GEOGRAPHICLIB_STATIC_LIB)
-  target_include_directories (${PROJECT_STATIC_LIBRARIES} INTERFACE
+  target_include_directories (${PROJECT_STATIC_LIBRARIES} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
