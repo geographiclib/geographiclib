@@ -341,9 +341,7 @@ else ()
   add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=0)
 endif ()
 
-# Set the include directories.  Look in ${PROJECT_BINARY_DIR}/include
-# first because that's where Config.h will be
-include_directories ("${PROJECT_BINARY_DIR}/include" include)
+# Include directories are specified via target_include_directories in src.
 
 if (USE_BOOST_FOR_EXAMPLES)
   # quad precision numbers appeared in Boost 1.54.  Various
@@ -369,7 +367,6 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CXX11_MATH)
     if (Boost_FOUND)
-      include_directories ("${Boost_INCLUDE_DIRS}")
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()
   endif ()

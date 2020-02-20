@@ -96,14 +96,14 @@ BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
     DEVELSOURCE=$HOME/geographiclib
-    WINDEVELSOURCE=/w/geographiclib
+    WINDEVELSOURCE=u:/geographiclib
     WINDOWSBUILD=/var/tmp
 else
     DEVELSOURCE=/u/geographiclib
-    WINDEVELSOURCE=/w/geographiclib
+    WINDEVELSOURCE=u:/geographiclib
     WINDOWSBUILD=/u/temp
 fi
-WINDOWSBUILDWIN=w:/temp
+WINDOWSBUILDWIN=u:/temp
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
 NUMCPUS=4
@@ -192,11 +192,11 @@ for ver in 14 15 16; do
 	    echo "#! /bin/sh -exv"
 	    echo echo ========== cmake $pkg ==========
 	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo rm -rf c:/scratch/\$b w:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo rm -rf c:/scratch/\$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'unset GEOGRAPHICLIB_DATA'
 	    echo 'mkdir -p c:/scratch/$b'
 	    echo 'cd c:/scratch/$b'
-	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=w:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
+	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
 	    echo cmake --build . --config Debug   --target ALL_BUILD
 	    echo cmake --build . --config Debug   --target RUN_TESTS
 	    echo cmake --build . --config Debug   --target INSTALL

@@ -265,7 +265,7 @@ also determine the capabilities of your system and adjust the
 compilation of the libraries and examples appropriately.
 
 cmake is available for most computer platforms.  On Linux systems cmake
-will typically one of the standard packages and can be installed by a
+will typically be one of the standard packages and can be installed by a
 command like
   \verbatim
   yum install cmake \endverbatim

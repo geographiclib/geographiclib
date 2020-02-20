@@ -48,11 +48,15 @@ if (COMMON_INSTALL_PATH)
   # Install under lib${LIB_SUFFIX} so that 32-bit and 64-bit packages
   # can be installed on a single machine.
   set (INSTALL_CMAKE_DIR "lib${LIB_SUFFIX}/cmake/${PROJECT_NAME}")
-  set (PROJECT_ROOT_DIR "../../..")
 else ()
   set (INSTALL_CMAKE_DIR "cmake")
-  set (PROJECT_ROOT_DIR "..")
 endif ()
+# Find root of install tree relative to INSTALL_CMAKE_DIR
+file (RELATIVE_PATH PROJECT_ROOT_DIR
+  "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}" "${CMAKE_INSTALL_PREFIX}")
+# strip trailing slash
+get_filename_component (PROJECT_ROOT_DIR "${PROJECT_ROOT_DIR}/." PATH)
+
 # @PROJECT_INCLUDE_DIRS@ is not used in the install tree; reset
 # it to prevent the source and build paths appearing in the installed
 # config files
