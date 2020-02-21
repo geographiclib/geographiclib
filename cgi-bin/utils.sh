@@ -5,10 +5,10 @@ lookuprawkey () {
     echo "$QUERY" | tr '&' '\n' | grep "^$KEY=" | tail -1 | cut -f2- -d=
 }
 
-# Decode raw value translating %XX, CR-LF to LF, and converting , to
-# space
+# Decode raw value translating + to space, interpreting %XX, and
+# changing CR-LF to LF.
 decodevalue () {
-    echo "$1" | sed \
+    echo "$1" | tr -s '+' ' ' | sed \
         -e 's/\\/%5C/g' \
         -e 's/%0[dD]%0[aA]/%0A/g' \
         -e 's/%\([0-9a-fA-F][0-9a-fA-F]\)/\\x\1/g' -e s/%/%%/g |
@@ -19,7 +19,8 @@ decodevalue () {
 # symbols, following conversions in DMS.cpp.  Add left/right guillemot
 # symbols (used to quote examples) to the list of removed symbols.
 
-# Add
+# THIS NEEDS TO BE REORGANIZED AND MADE CONSISTENT WITH DMS.cpp
+
 # %A0 -> nothing (non-breaking space)
 # [%C2]%B0 [%C2]%BA %81%8B %E2%81%B0 %26%238304%3B (&#8304;) -> d
 # %26%23730%3B (&#730;) -> d

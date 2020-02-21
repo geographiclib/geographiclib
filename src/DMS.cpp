@@ -141,7 +141,7 @@ namespace GeographicLib {
       if (ind1 == NONE)
         ind1 = ind2;
       else if (!(ind2 == NONE || ind1 == ind2))
-        throw GeographicErr("Incompatible hemisphere specifies in " +
+        throw GeographicErr("Incompatible hemisphere specifier in " +
                             dmsa.substr(beg, pb - beg));
     }
     if (i == 0)
