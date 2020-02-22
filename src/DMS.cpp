@@ -46,32 +46,45 @@ namespace GeographicLib {
     // ′ U+2032   8242  e2 80 b2   prime
     // ‵ U+2035   8245  e2 80 b5   back prime
     // ´ U+00b4    180  c2 b4      acute accent
-    // ‘ U+2018   8216  e2 80 98   left single quote
-    // ’ U+2019   8217  e2 80 99   right single quote
+    // ‘ U+2018   8216  e2 80 98   left single quote (also ext ASCII 0x91)
+    // ’ U+2019   8217  e2 80 99   right single quote (also ext ASCII 0x92)
     // ‛ U+201b   8219  e2 80 9b   reversed-9 single quote
+    // ʹ U+02b9    697  ca b9      modifier letter prime
+    // ˊ U+02ca    714  cb 8a      modifier letter acute accent
+    // ˋ U+02cb    715  cb 8b      modifier letter grave accent
 
     // SECONDS
     // " U+0022     34  22         quotation mark
     // ″ U+2033   8243  e2 80 b3   double prime
+    // ‶ U+2036   8246  e2 80 b6   reversed double prime
     // ˝ U+02dd    733  cb 9d      double acute accent
-    // “ U+201c   8220  e2 80 9c   left double quote
-    // ” U+201d   8221  e2 80 9d   right double quote
+    // “ U+201c   8220  e2 80 9c   left double quote (also ext ASCII 0x93)
+    // ” U+201d   8221  e2 80 9d   right double quote (also ext ASCII 0x94)
     // ‟ U+201f   8223  e2 80 9f   reversed-9 double quote
+    // ʺ U+02ba    698  ca ba      modifier letter double prime
+
+    // PLUS
+    // + U+002b     43  2b         plus sign
+    // ➕ U+2795  10133  e2 9e 95   heavy plus
+    //   U+2064   8292  e2 81 a4   invisible plus |⁤|
 
     // MINUS
     // - U+002d     45  2d         hyphen
     // ‐ U+2010   8208  e2 80 90   dash
     // ‑ U+2011   8209  e2 80 91   non-breaking hyphen
-    // – U+2013   8211  e2 80 93   en dash
-    // — U+2014   8212  e2 80 94   em dash
+    // – U+2013   8211  e2 80 93   en dash (also ext ASCII 0x96)
+    // — U+2014   8212  e2 80 94   em dash (also ext ASCII 0x97)
     // − U+2212   8722  e2 88 92   minus sign
+    // ➖ U+2796  10134  e2 9e 96   heavy minus
 
     // IGNORED
     //   U+00a0    160  c2 a0      non-breaking space
     //   U+2007   8199  e2 80 87   figure space | |
     //   U+2009   8201  e2 80 89   thin space   | |
     //   U+200a   8202  e2 80 8a   hair space   | |
+    //   U+200b   8203  e2 80 8b   invisible space |​|
     //   U+202f   8239  e2 80 af   narrow space | |
+    //   U+2063   8291  e2 81 a3   invisible separator |⁣|
     // « U+00ab    171  c2 ab      left guillemot (for cgi-bin)
     // » U+00bb    187  c2 bb      right guillemot (for cgi-bin)
 
@@ -88,30 +101,48 @@ namespace GeographicLib {
     replace(dmsa, "\xe2\x80\x98", '\''); // U+2018 left single quote
     replace(dmsa, "\xe2\x80\x99", '\''); // U+2019 right single quote
     replace(dmsa, "\xe2\x80\x9b", '\''); // U+201b reversed-9 single quote
+    replace(dmsa, "\xca\xb9",     '\''); // U+02b9 modifier letter prime
+    replace(dmsa, "\xcb\x8a",     '\''); // U+02ca modifier letter acute accent
+    replace(dmsa, "\xcb\x8b",     '\''); // U+02cb modifier letter grave accent
 
     replace(dmsa, "\xe2\x80\xb3", '"' ); // U+2033 double prime
+    replace(dmsa, "\xe2\x80\xb6", '"' ); // U+2036 reversed double prime
     replace(dmsa, "\xcb\x9d",     '"' ); // U+02dd double acute accent
     replace(dmsa, "\xe2\x80\x9c", '"' ); // U+201c left double quote
     replace(dmsa, "\xe2\x80\x9d", '"' ); // U+201d right double quote
     replace(dmsa, "\xe2\x80\x9f", '"' ); // U+201f reversed-9 double quote
+    replace(dmsa, "\xca\xba",     '"' ); // U+02ba modifier letter double prime
+
+    replace(dmsa, "\xe2\x9e\x95", '+' ); // U+2795 heavy plus
+    replace(dmsa, "\xe2\x81\xa4", '+' ); // U+2064 invisible plus
 
     replace(dmsa, "\xe2\x80\x90", '-' ); // U+2010 dash
     replace(dmsa, "\xe2\x80\x91", '-' ); // U+2011 non-breaking hyphen
     replace(dmsa, "\xe2\x80\x93", '-' ); // U+2013 en dash
     replace(dmsa, "\xe2\x80\x94", '-' ); // U+2014 em dash
     replace(dmsa, "\xe2\x88\x92", '-' ); // U+2212 minus sign
+    replace(dmsa, "\xe2\x9e\x96", '-' ); // U+2796 heavy minus
 
     replace(dmsa, "\xc2\xa0",     '\0'); // U+00a0 non-breaking space
     replace(dmsa, "\xe2\x80\x87", '\0'); // U+2007 figure space
     replace(dmsa, "\xe2\x80\x89", '\0'); // U+2007 thin space
     replace(dmsa, "\xe2\x80\x8a", '\0'); // U+200a hair space
+    replace(dmsa, "\xe2\x80\x8b", '\0'); // U+200b invisible space
     replace(dmsa, "\xe2\x80\xaf", '\0'); // U+202f narrow space
+    replace(dmsa, "\xe2\x81\xa3", '\0'); // U+2063 invisible separator
 
     replace(dmsa, "\xb0",         'd' ); // 0xb0 bare degree symbol
     replace(dmsa, "\xba",         'd' ); // 0xba bare alt symbol
     replace(dmsa, "*",            'd' ); // GRiD symbol for degree
     replace(dmsa, "`",            '\''); // grave accent
     replace(dmsa, "\xb4",         '\''); // 0xb4 bare acute accent
+    // Don't implement these alternatives; they are only relevant for cgi-bin
+    // replace(dmsa, "\x91",      '\''); // 0x91 ext ASCII left single quote
+    // replace(dmsa, "\x92",      '\''); // 0x92 ext ASCII right single quote
+    // replace(dmsa, "\x93",      '"' ); // 0x93 ext ASCII left double quote
+    // replace(dmsa, "\x94",      '"' ); // 0x94 ext ASCII right double quote
+    // replace(dmsa, "\x96",      '-' ); // 0x96 ext ASCII en dash
+    // replace(dmsa, "\x97",      '-' ); // 0x97 ext ASCII em dash
     replace(dmsa, "\xa0",         '\0'); // 0xa0 bare non-breaking space
     replace(dmsa, "''",           '"' ); // '' -> "
     string::size_type
