@@ -154,16 +154,15 @@ namespace GeographicLib {
                                     real x, real y, real z, real a,
                                     real& gradx, real& grady, real& gradz)
     {
-    GEOGRAPHICLIB_STATIC_ASSERT(L > 0, "L must be positive");
-    GEOGRAPHICLIB_STATIC_ASSERT(norm == FULL || norm == SCHMIDT,
-                                "Unknown normalization");
+    static_assert(L > 0, "L must be positive");
+    static_assert(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
-      p = Math::hypot(x, y),
+      p = hypot(x, y),
       cl = p != 0 ? x / p : 1,  // cos(lambda); at pole, pick lambda = 0
       sl = p != 0 ? y / p : 0,  // sin(lambda)
-      r = Math::hypot(z, p),
+      r = hypot(z, p),
       t = r != 0 ? z / r : 0,   // cos(theta); at origin, pick theta = pi/2
       u = r != 0 ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;
@@ -298,13 +297,12 @@ namespace GeographicLib {
   CircularEngine SphericalEngine::Circle(const coeff c[], const real f[],
                                          real p, real z, real a) {
 
-    GEOGRAPHICLIB_STATIC_ASSERT(L > 0, "L must be positive");
-    GEOGRAPHICLIB_STATIC_ASSERT(norm == FULL || norm == SCHMIDT,
-                                "Unknown normalization");
+    static_assert(L > 0, "L must be positive");
+    static_assert(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
-      r = Math::hypot(z, p),
+      r = hypot(z, p),
       t = r != 0 ? z / r : 0,   // cos(theta); at origin, pick theta = pi/2
       u = r != 0 ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;

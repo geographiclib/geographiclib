@@ -404,7 +404,7 @@ namespace GeographicLib {
                      char dmssep) {
     // Assume check on range of input angle has been made by calling
     // routine (which might be able to offer a better diagnostic).
-    if (!Math::isfinite(angle))
+    if (!isfinite(angle))
       return angle < 0 ? string("-inf") :
         (angle > 0 ? string("inf") : string("nan"));
 

@@ -226,6 +226,15 @@ endif ()
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
+# We require C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+if (GEOGRAPHICLIB_PRECISION EQUAL 4)
+  set(CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
+else ()
+  set(CMAKE_CXX_EXTENSIONS OFF) # Otherwise stick with the standard
+endif ()
+
 # Make the compiler more picky.
 include (CheckCXXCompilerFlag)
 if (MSVC)
@@ -240,35 +249,6 @@ else ()
   endif ()
   set (CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
-  # g++ 6.0 defaults to -std=gnu++14
-  if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
-        NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-      # but Boost 1.60 quadmath needs c++14 and not gnu++14
-      # OR GEOGRAPHICLIB_PRECISION EQUAL 4
-      # This exception is no longer needed with Boost 1.66
-      )
-    # check for C++11 support.  This flag is *not* propagated to clients
-    # that use GeographicLib.  However, this is of no consequence.  When
-    # the client code is being compiled (and the GeographicLib headers
-    # being included), work-alike substitutions are used.
-    # The only "deprecated" flag included here is "0x" to activate C++11
-    # with old versions of g++.
-    # Note: C++11 (actually gnu++14) support is turned on by default in
-    # g++ 6.1 and later.
-    # Don't include 17 for Intel.
-    foreach (_F 14 11 0x)
-      set (CXX11_FLAG "-std=c++${_F}")
-      set (_T CXX11TEST${_F})
-      check_cxx_compiler_flag (${CXX11_FLAG} ${_T})
-      if (${_T})
-        break ()
-      endif ()
-      unset (CXX11_FLAG)
-    endforeach ()
-    if (CXX11_FLAG)
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX11_FLAG}")
-    endif ()
-  endif ()
 endif ()
 if (DEVELOPER OR CONVERT_WARNINGS_TO_ERRORS)
   if (MSVC)
@@ -321,7 +301,7 @@ int main() {
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
 else ()
-  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=0)
+  message (ERROR "Missing C++11 math functions")
 endif ()
 
 # Check whether the C++11 static_assert macro is available.  This flag
@@ -338,7 +318,7 @@ int main() {
 if (CXX11_STATIC_ASSERT)
   add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=1)
 else ()
-  add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=0)
+  message (ERROR "Missing C++11 static_assert")
 endif ()
 
 # Include directories are specified via target_include_directories in src.
@@ -348,7 +328,7 @@ if (USE_BOOST_FOR_EXAMPLES)
   # workarounds stopped being needed with Boost 1.64.
   find_package (Boost 1.64 COMPONENTS serialization)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CXX11_MATH)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     find_package (Boost 1.64)
   endif ()
 endif ()
@@ -365,7 +345,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CXX11_MATH)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if (Boost_FOUND)
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()
@@ -375,51 +355,49 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
-  if (CXX11_MATH)
-    # Install MPFR C++ version 3.6.5 (2016-12-19) or later from
-    # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
-    # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
-    # to abide by the terms of this license.
-    #
-    # For Linux, use system versions of mpfr and gmp.  For Apple, use
-    # brew install mpfr.  Recent versions of mpfr (3.0 or later) work
-    # fine.  For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
-    # the MPFR C++ site and unpack in the top-level directory.  The
-    # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
-    # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
-    # abide by the terms of this license.
-    #
-    # Need Visual Studio 12 2013 or later, g++ 4.5 or later; not sure
-    # about clang.
-    if (WIN32)
-      if (MSVC AND NOT MSVC_VERSION LESS 1800)
-        if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-          set (_ARCH x64)
-        else ()
-          set (_ARCH Win32)
-        endif ()
-        include_directories (mpfr_mpir_x86_x64_msvc2010/mpfr
-          mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
-        # These are C libraries so it's OK to use release versions for
-        # debug builds.  Also these work for later versions of Visual
-        # Studio (specifically version 12).
-        link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
-          mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
-        set (HIGHPREC_LIBRARIES mpfr mpir)
-        # Suppress the myriad of "conditional expression is constant"
-        # warnings
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
+  # Install MPFR C++ version 3.6.5 (2016-12-19) or later from
+  # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
+  # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
+  # to abide by the terms of this license.
+  #
+  # For Linux, use system versions of mpfr and gmp.  For Apple, use
+  # brew install mpfr.  Recent versions of mpfr (3.0 or later) work
+  # fine.  For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
+  # the MPFR C++ site and unpack in the top-level directory.  The
+  # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
+  # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
+  # abide by the terms of this license.
+  #
+  # Need Visual Studio 12 2013 or later, g++ 4.5 or later; not sure
+  # about clang.
+  if (WIN32)
+    if (MSVC AND NOT MSVC_VERSION LESS 1800)
+      if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set (_ARCH x64)
+      else ()
+        set (_ARCH Win32)
       endif ()
-    else ()
-      if (APPLE)
-        include_directories (/usr/local/include)
-        link_directories (/usr/local/lib)
-      endif ()
-      # g++ before 4.5 doesn't work (no explicit cast operator)
-      if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
-            CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.5))
-        set (HIGHPREC_LIBRARIES mpfr gmp)
-      endif ()
+      include_directories (mpfr_mpir_x86_x64_msvc2010/mpfr
+        mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
+      # These are C libraries so it's OK to use release versions for
+      # debug builds.  Also these work for later versions of Visual
+      # Studio (specifically version 12).
+      link_directories (mpfr_mpir_x86_x64_msvc2010/mpfr/dll/${_ARCH}/Release
+        mpfr_mpir_x86_x64_msvc2010/mpir/dll/${_ARCH}/Release)
+      set (HIGHPREC_LIBRARIES mpfr mpir)
+      # Suppress the myriad of "conditional expression is constant"
+      # warnings
+      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4127")
+    endif ()
+  else ()
+    if (APPLE)
+      include_directories (/usr/local/include)
+      link_directories (/usr/local/lib)
+    endif ()
+    # g++ before 4.5 doesn't work (no explicit cast operator)
+    if (NOT (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
+          CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.5))
+      set (HIGHPREC_LIBRARIES mpfr gmp)
     endif ()
   endif ()
   if (NOT HIGHPREC_LIBRARIES)

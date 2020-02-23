@@ -23,7 +23,7 @@ namespace GeographicLib {
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (Math::isnan(lat) || Math::isnan(lon)) {
+    if (isnan(lat) || isnan(lon)) {
       georef = "INVALID";
       return;
     }
@@ -33,8 +33,8 @@ namespace GeographicLib {
     if (prec == 1) ++prec;      // Disallow prec = 1
     // The C++ standard mandates 64 bits for long long.  But
     // check, to make sure.
-    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 45,
-                                "long long not wide enough to store 21600e9");
+    static_assert(numeric_limits<long long>::digits >= 45,
+                  "long long not wide enough to store 21600e9");
     const long long m = 60000000000LL;
     long long
       x = (long long)(floor(lon * real(m))) - lonorig_ * m,

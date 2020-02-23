@@ -209,8 +209,7 @@ namespace GeographicLib {
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
-    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(pixel_t) == pixel_size_,
-                                "pixel_t has the wrong size");
+    static_assert(sizeof(pixel_t) == pixel_size_, "pixel_t has the wrong size");
     if (_dir.empty())
       _dir = DefaultGeoidPath();
     _filename = _dir + "/" + _name + (pixel_size_ != 4 ? ".pgm" : ".pgm4");
@@ -306,7 +305,7 @@ namespace GeographicLib {
 
   Math::real Geoid::height(real lat, real lon) const {
     lat = Math::LatFix(lat);
-    if (Math::isnan(lat) || Math::isnan(lon)) {
+    if (isnan(lat) || isnan(lon)) {
       return Math::NaN();
     }
     lon = Math::AngNormalize(lon);

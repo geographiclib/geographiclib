@@ -292,7 +292,8 @@ namespace GeographicLib {
      * an overload of str<T> which deals with inf and nan.
      **********************************************************************/
     static std::string str(Math::real x, int p = -1) {
-      if (!Math::isfinite(x))
+      using std::isfinite;
+      if (!isfinite(x))
         return x < 0 ? std::string("-inf") :
           (x > 0 ? std::string("inf") : std::string("nan"));
       std::ostringstream s;

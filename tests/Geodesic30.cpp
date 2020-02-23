@@ -66,14 +66,14 @@ namespace GeographicLib {
     , _b(_a * _f1)
     , _c2((Math::sq(_a) + Math::sq(_b) *
            (_e2 == 0 ? 1 :
-            (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
+            (_e2 > 0 ? atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short"
     , _etol2(10 * tol2_ / max(real(0.1), sqrt(abs(_e2))))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Major radius is not positive");
-    if (!(Math::isfinite(_b) && _b > 0))
+    if (!(isfinite(_b) && _b > 0))
       throw GeographicErr("Minor radius is not positive");
     A3coeff();
     C3coeff();
@@ -360,7 +360,7 @@ namespace GeographicLib {
       real
         // From Lambda12: sin(alp1) * cos(bet1) = sin(alp0)
         salp0 = salp1 * cbet1,
-        calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
+        calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
       real alp12;
       if (calp0 != 0 && salp0 != 0) {
         real
@@ -507,7 +507,7 @@ namespace GeographicLib {
         // of the way the T is used in definition of u.
         T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
         // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
-        real T = Math::cbrt(T3); // T = r * t
+        real T = cbrt(T3); // T = r * t
         // T can be zero; but then r2 / T -> 0.
         u += T + (T != 0 ? r2 / T : 0);
       } else {
@@ -580,7 +580,7 @@ namespace GeographicLib {
       sbet12a - cbet2 * sbet1 * Math::sq(somg12) / (1 - comg12);
 
     real
-      ssig12 = Math::hypot(salp1, calp1),
+      ssig12 = hypot(salp1, calp1),
       csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
 
     if (shortline && ssig12 < _etol2) {
@@ -709,7 +709,7 @@ namespace GeographicLib {
     real
       // sin(alp1) * cos(bet1) = sin(alp0)
       salp0 = salp1 * cbet1,
-      calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
+      calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
 
     real somg1, comg1, somg2, comg2, omg12, lam12;
     // tan(bet1) = tan(sig1) * cos(alp1)
@@ -836,7 +836,7 @@ namespace GeographicLib {
         real(1125899906842624.L))/real(4503599627370496.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nA1_ == 30, "Bad value of nA1_");
+      static_assert(nA1_ == 30, "Bad value of nA1_");
       t = 0;
     }
     return (t + eps) / (1 - eps);
@@ -1016,7 +1016,7 @@ namespace GeographicLib {
       c[30] = -real(125280277081421.L)*d/real(2161727821137838080.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nC1_ == 30, "Bad value of nC1_");
+      static_assert(nC1_ == 30, "Bad value of nC1_");
     }
   }
 
@@ -1351,7 +1351,7 @@ namespace GeographicLib {
         real(182929433787470496587153418485760.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nC1p_ == 30, "Bad value of nC1p_");
+      static_assert(nC1p_ == 30, "Bad value of nC1p_");
     }
   }
 
@@ -1374,7 +1374,7 @@ namespace GeographicLib {
         real(1125899906842624.L))/real(4503599627370496.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nA2_ == 30, "Bad value of nA2_");
+      static_assert(nA2_ == 30, "Bad value of nA2_");
       t = 0;
     }
     return t * (1 - eps) - eps;
@@ -1569,7 +1569,7 @@ namespace GeographicLib {
       c[30] = real(7391536347803839.L)*d/real(2161727821137838080.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nC2_ == 30, "Bad value of nC2_");
+      static_assert(nC2_ == 30, "Bad value of nC2_");
     }
   }
 
@@ -1676,7 +1676,7 @@ namespace GeographicLib {
       _A3x[29] = -real(1676397495375.L)/real(2251799813685248.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nA3_ == 30, "Bad value of nA3_");
+      static_assert(nA3_ == 30, "Bad value of nA3_");
     }
   }
 
@@ -3221,7 +3221,7 @@ namespace GeographicLib {
       _C3x[434] = real(125280277081421.L)/real(1044835113549955072.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nC3_ == 30, "Bad value of nC3_");
+      static_assert(nC3_ == 30, "Bad value of nC3_");
     }
   }
 
@@ -6161,7 +6161,7 @@ namespace GeographicLib {
       _C4x[464] = 1/real(12769026871558087949280.L);
       break;
     default:
-      GEOGRAPHICLIB_STATIC_ASSERT(nC4_ == 30, "Bad value of nC4_");
+      static_assert(nC4_ == 30, "Bad value of nC4_");
     }
   }
 

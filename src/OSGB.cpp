@@ -37,7 +37,7 @@ namespace GeographicLib {
       throw GeographicErr("OSGB precision " + Utility::str(prec)
                           + " not in [0, "
                           + Utility::str(int(maxprec_)) + "]");
-    if (Math::isnan(x) || Math::isnan(y)) {
+    if (isnan(x) || isnan(y)) {
       gridref = "INVALID";
       return;
     }

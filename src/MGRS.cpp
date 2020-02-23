@@ -42,7 +42,7 @@ namespace GeographicLib {
     // 7 = ceil(log_2(90))
     static const real angeps = ldexp(real(1), -(Math::digits() - 7));
     if (zone == UTMUPS::INVALID ||
-        Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {
+        isnan(x) || isnan(y) || isnan(lat)) {
       mgrs = "INVALID";
       return;
     }
@@ -69,8 +69,8 @@ namespace GeographicLib {
     }
     // The C++ standard mandates 64 bits for long long.  But
     // check, to make sure.
-    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 44,
-                                "long long not wide enough to store 10e12");
+    static_assert(numeric_limits<long long>::digits >= 44,
+                  "long long not wide enough to store 10e12");
     long long
       ix = (long long)(floor(x * mult_)),
       iy = (long long)(floor(y * mult_)),

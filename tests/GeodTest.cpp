@@ -87,8 +87,7 @@ Math::real dist(Math::real a, Math::real f,
       lam0 = lon0 * Math::degree(),
       lam1 = lon1 * Math::degree();
     return (a / (1 - f)) *
-      Math::hypot
-      (r0 * cos(lam0) - r1 * cos(lam1), r0 * sin(lam0) - r1 * sin(lam1));
+      hypot(r0 * cos(lam0) - r1 * cos(lam1), r0 * sin(lam0) - r1 * sin(lam1));
   } else {
     // Otherwise use cylindrical formula
     Math::real
@@ -105,7 +104,7 @@ Math::real dist(Math::real a, Math::real f,
       dlat = lat1 - lat0;
     dlat *= degreeLat;
     dlon *= degreeLon;
-    return Math::hypot(dlat, dlon);
+    return hypot(dlat, dlon);
   }
 }
 
@@ -142,7 +141,7 @@ void GeodError(const test& tgeod,
                abs(azidiff(lat1, lon1, tlon1, azi1, tazi1))) *
     tgeod.EquatorialRadius();
   err[2] = max(abs(tm12a - m12), abs(tm12b + m12));
-  if (!Math::isnan(S12))
+  if (!isnan(S12))
     err[6] = max(abs(tS12a - S12), abs(tS12b + S12)) / tgeod.EquatorialRadius();
 
   /* ta12 = */ tgeod.Inverse(lat1, lon1, lat2, lon2,
@@ -159,7 +158,7 @@ void GeodError(const test& tgeod,
   // m12 and S12 are very sensitive with the inverse problem near conjugacy
   if (!(s12 > tgeod.EquatorialRadius() && m12 < 10e3)) {
     err[2] = max(err[2], abs(tm12a - m12));
-    if (!Math::isnan(S12))
+    if (!isnan(S12))
       err[6] = max(err[6], abs(tS12a - S12) / tgeod.EquatorialRadius());
   }
   if (s12 > tgeod.EquatorialRadius()) {
@@ -481,7 +480,7 @@ int main(int argc, char* argv[]) {
            s12l, a12l, m12l, S12l,
            erra);
         for (unsigned i = 0; i < NUMERR; ++i) {
-          if (Math::isfinite(err[i]) && !(erra[i] <= err[i])) {
+          if (isfinite(err[i]) && !(erra[i] <= err[i])) {
             err[i] = erra[i];
             errind[i] = cnt;
           }

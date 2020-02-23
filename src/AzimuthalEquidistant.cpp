@@ -32,7 +32,7 @@ namespace GeographicLib {
                                      real& azi, real& rk) const {
     real
       azi0 = Math::atan2d(x, y),
-      s = Math::hypot(x, y);
+      s = hypot(x, y);
     real sig, m;
     sig = _earth.Direct(lat0, lon0, azi0, s, lat, lon, azi, m);
     rk = !(sig <= eps_) ? m / s : 1;

@@ -28,7 +28,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
-  using std::cos; using std::sin; using std::sqrt;
+  using std::cos; using std::sin; using std::sqrt; using std::hypot;
   typedef Math::real real;
   real
     phi = real(lat0) * Math::degree(),
@@ -42,7 +42,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
   return a * Math::degree() *
-    Math::hypot(real(Math::extended(lat1) - lat0) * hlat, real(dlon) * hlon);
+    hypot(real(Math::extended(lat1) - lat0) * hlat, real(dlon) * hlon);
 }
 
 int usage(int retval) {
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
     const Geodesic geod(a, f);
     Math::extended lat0l, lon0l, x0l, y0l, gam0l, k0l;
     while (std::cin >> lat0l >> lon0l >> x0l >> y0l >> gam0l >> k0l) {
-      using std::abs; using std::sin;
+      using std::abs; using std::sin; using std::hypot;
       real
         lat0 = real(lat0l),
         lon0 = real(lon0l),
@@ -178,8 +178,8 @@ int main(int argc, char* argv[]) {
         tm.Forward(0, lat0, lon0, x, y, gam, k);
       } else
         tme.Forward(0, lat0, lon0, x, y, gam, k);
-      errf = real(Math::hypot(Math::extended(x) - x0l,
-                              Math::extended(y) - y0l)) / k0;
+      errf = real(hypot(Math::extended(x) - x0l,
+                        Math::extended(y) - y0l)) / k0;
       errgf = real(abs(Math::extended(gam) - gam0));
       errkf = real(abs(Math::extended(k) - k0));
       if (series) {

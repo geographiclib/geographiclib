@@ -121,9 +121,9 @@ namespace GeographicLib {
 #else
 #error "Bad value for GEOGRAPHICLIB_RHUMBAREA_ORDER"
 #endif
-    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(coeff) / sizeof(real) ==
-                                ((maxpow_ + 1) * (maxpow_ + 4))/2,
-                                "Coefficient array size mismatch for Rhumb");
+    static_assert(sizeof(coeff) / sizeof(real) ==
+                  ((maxpow_ + 1) * (maxpow_ + 4))/2,
+                  "Coefficient array size mismatch for Rhumb");
     real d = 1;
     int o = 0;
     for (int l = 0; l <= maxpow_; ++l) {
@@ -153,7 +153,7 @@ namespace GeographicLib {
       psi1 = _ell.IsometricLatitude(lat1),
       psi2 = _ell.IsometricLatitude(lat2),
       psi12 = psi2 - psi1,
-      h = Math::hypot(lon12, psi12);
+      h = hypot(lon12, psi12);
     if (outmask & AZIMUTH)
       azi12 = Math::atan2d(lon12, psi12);
     if (outmask & DISTANCE) {

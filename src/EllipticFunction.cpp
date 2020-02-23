@@ -84,13 +84,13 @@ namespace GeographicLib {
              // https://dlmf.nist.gov/19.2.E18
              atan(sqrt((y - x) / x)) / sqrt(y - x) :
              ( x == y ? 1 / sqrt(y) :
-               Math::asinh( y > 0 ?
-                            // https://dlmf.nist.gov/19.2.E19
-                            // atanh(sqrt((x - y) / x))
-                            sqrt((x - y) / y) :
-                            // https://dlmf.nist.gov/19.2.E20
-                            // atanh(sqrt(x / (x - y)))
-                            sqrt(-x / y) ) / sqrt(x - y) ) );
+               asinh( y > 0 ?
+                      // https://dlmf.nist.gov/19.2.E19
+                      // atanh(sqrt((x - y) / x))
+                      sqrt((x - y) / y) :
+                      // https://dlmf.nist.gov/19.2.E20
+                      // atanh(sqrt(x / (x - y)))
+                      sqrt(-x / y) ) / sqrt(x - y) ) );
   }
 
   Math::real EllipticFunction::RG(real x, real y, real z) {
@@ -375,7 +375,7 @@ namespace GeographicLib {
     // Enforce usual trig-like symmetries
     if (cn < 0)
       fi = 2 * K() - fi;
-    return Math::copysign(fi, sn);
+    return copysign(fi, sn);
   }
 
   Math::real EllipticFunction::E(real sn, real cn, real dn) const {
@@ -398,7 +398,7 @@ namespace GeographicLib {
     // Enforce usual trig-like symmetries
     if (cn < 0)
       ei = 2 * E() - ei;
-    return Math::copysign(ei, sn);
+    return copysign(ei, sn);
   }
 
   Math::real EllipticFunction::D(real sn, real cn, real dn) const {
@@ -410,7 +410,7 @@ namespace GeographicLib {
     // Enforce usual trig-like symmetries
     if (cn < 0)
       di = 2 * D() - di;
-    return Math::copysign(di, sn);
+    return copysign(di, sn);
   }
 
   Math::real EllipticFunction::Pi(real sn, real cn, real dn) const {
@@ -425,7 +425,7 @@ namespace GeographicLib {
     // Enforce usual trig-like symmetries
     if (cn < 0)
       pii = 2 * Pi() - pii;
-    return Math::copysign(pii, sn);
+    return copysign(pii, sn);
   }
 
   Math::real EllipticFunction::G(real sn, real cn, real dn) const {
@@ -438,7 +438,7 @@ namespace GeographicLib {
     // Enforce usual trig-like symmetries
     if (cn < 0)
       gi = 2 * G() - gi;
-    return Math::copysign(gi, sn);
+    return copysign(gi, sn);
   }
 
   Math::real EllipticFunction::H(real sn, real cn, real dn) const {
@@ -452,7 +452,7 @@ namespace GeographicLib {
     // Enforce usual trig-like symmetries
     if (cn < 0)
       hi = 2 * H() - hi;
-    return Math::copysign(hi, sn);
+    return copysign(hi, sn);
   }
 
   Math::real EllipticFunction::deltaF(real sn, real cn, real dn) const {

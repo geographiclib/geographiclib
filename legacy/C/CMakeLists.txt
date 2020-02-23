@@ -8,6 +8,11 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
+# We require C99
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
 # Make the compiler more picky.
 if (MSVC)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")

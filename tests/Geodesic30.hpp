@@ -164,7 +164,8 @@ namespace GeographicLib {
       return x < 0 ? -y : y;
     }
     static inline void SinCosNorm(real& sinx, real& cosx) {
-      real r = Math::hypot(sinx, cosx);
+      using std::hypot;
+      real r = hypot(sinx, cosx);
       sinx /= r;
       cosx /= r;
     }

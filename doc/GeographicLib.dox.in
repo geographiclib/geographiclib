@@ -7711,6 +7711,12 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-mm-dd)
+   - More symbols allowed with DMS decoding in C++, JS, and cgi-bin
+     packages.  See DMS::Decode.
+   - Fix bug in cgi-bin argument processing which causes "+" to be
+     misinterpreted.
+   - C++11 compiler required for C++ library.  C99 compiler required for
+     C library.
 
  - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
    (released 2019-12-13)

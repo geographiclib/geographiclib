@@ -65,12 +65,12 @@ namespace GeographicLib {
     os << fixed << setprecision(prec);
     real a = longfirst ? _long : _lat;
     real b = longfirst ? _lat : _long;
-    if (!Math::isnan(a))
+    if (!isnan(a))
       os << a;
     else
       os << "nan";
     os << " ";
-    if (!Math::isnan(b))
+    if (!isnan(b))
       os << b;
     else
       os << "nan";
@@ -111,13 +111,13 @@ namespace GeographicLib {
     // Need extra real because, since C++11, pow(float, int) returns double
     real scale = prec < 0 ? real(pow(real(10), -prec)) : real(1);
     os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
-    if (Math::isfinite(easting)) {
+    if (isfinite(easting)) {
       os << " " << Utility::str(easting / scale, max(0, prec));
       if (prec < 0 && abs(easting / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else
       os << " nan";
-    if (Math::isfinite(northing)) {
+    if (isfinite(northing)) {
       os << " " << Utility::str(northing / scale, max(0, prec));
       if (prec < 0 && abs(northing / scale) > real(0.5))
         os << setw(-prec) << 0;
@@ -163,7 +163,7 @@ namespace GeographicLib {
 
   void GeoCoords::FixHemisphere() {
     if (_lat == 0 || (_northp && _lat >= 0) || (!_northp && _lat < 0) ||
-        Math::isnan(_lat))
+        isnan(_lat))
       // Allow either hemisphere for equator
       return;
     if (_zone != UTMUPS::UPS) {

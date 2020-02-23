@@ -184,7 +184,9 @@ namespace GeographicLib {
      * course.)
      *
      * Here is the list of Unicode symbols supported for degrees, minutes,
-     * seconds, and the sign:
+     * seconds, and the plus and minus signs; various symbols denoting variants
+     * of a space, which may separate the components of a DMS string, are
+     * removed:
      * - degrees:
      *   - d, D lower and upper case letters
      *   - U+00b0 degree symbol (&deg;)

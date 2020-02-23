@@ -218,9 +218,10 @@ int main(int argc, const char* const argv[]) {
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     int retval = 0;
     try {
+      using std::isfinite;
       const MagneticModel m(model, dir, Geocentric::WGS84(), Nmax, Mmax);
       if ((timeset || circle)
-          && (!Math::isfinite(time) ||
+          && (!isfinite(time) ||
               time < m.MinTime() - tguard ||
               time > m.MaxTime() + tguard))
         throw GeographicErr("Time " + Utility::str(time) +
@@ -228,7 +229,7 @@ int main(int argc, const char* const argv[]) {
                             Utility::str(m.MinTime()) + "," +
                             Utility::str(m.MaxTime()) + "]");
       if (circle
-          && (!Math::isfinite(h) ||
+          && (!isfinite(h) ||
               h < m.MinHeight() - hguard ||
               h > m.MaxHeight() + hguard))
         throw GeographicErr("Height " + Utility::str(h/1000) +

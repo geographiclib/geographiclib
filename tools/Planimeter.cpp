@@ -174,8 +174,9 @@ int main(int argc, const char* const argv[]) {
       bool endpoly = s.empty();
       if (!endpoly) {
         try {
+          using std::isnan;
           p.Reset(s, true, longfirst);
-          if (Math::isnan(p.Latitude()) || Math::isnan(p.Longitude()))
+          if (isnan(p.Latitude()) || isnan(p.Longitude()))
             endpoly = true;
         }
         catch (const GeographicErr&) {

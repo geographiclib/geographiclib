@@ -71,9 +71,10 @@ namespace GeographicLib {
       , _h(h)
       , _Z(Z)
       , _Px(P)
-      , _invR(1 / Math::hypot(_Px, _Z))
-      , _cpsi(_Px * _invR)
-      , _spsi(_Z * _invR)
+  // ** FIX ME **
+  //      , _invR(using std::hypot; 1 / hypot(_Px, _Z))
+  //      , _cpsi(_Px * _invR)
+  //      , _spsi(_Z * _invR)
       , _cphi(cphi)
       , _sphi(sphi)
       , _amodel(amodel)
@@ -86,7 +87,12 @@ namespace GeographicLib {
       , _gravitational(gravitational)
       , _disturbing(disturbing)
       , _correction(correction)
-    {}
+    {
+      using std::hypot;
+      _invR = 1 / hypot(_Px, _Z);
+      _cpsi = _Px * _invR;
+      _spsi = _Z * _invR;
+    }
 
     friend class GravityModel; // GravityModel calls the private constructor
     Math::real W(real slam, real clam,

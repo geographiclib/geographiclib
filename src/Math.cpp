@@ -19,9 +19,8 @@ namespace GeographicLib {
   using namespace std;
 
   void Math::dummy() {
-    GEOGRAPHICLIB_STATIC_ASSERT(GEOGRAPHICLIB_PRECISION >= 1 &&
-                                GEOGRAPHICLIB_PRECISION <= 5,
-                                "Bad value of precision");
+    static_assert(GEOGRAPHICLIB_PRECISION >= 1 && GEOGRAPHICLIB_PRECISION <= 5,
+                  "Bad value of precision");
   }
 
   int Math::digits() {
@@ -56,174 +55,51 @@ namespace GeographicLib {
   }
 
   template<typename T> T Math::hypot(T x, T y) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::hypot; return hypot(x, y);
-#else
-    x = abs(x); y = abs(y);
-    if (x < y) swap(x, y); // Now x >= y >= 0
-    y /= (x != 0 ? x : 1);
-    return x * sqrt(1 + y * y);
-    // For an alternative (square-root free) method see
-    // C. Moler and D. Morrision (1983) https://doi.org/10.1147/rd.276.0577
-    // and A. A. Dubrulle (1983) https://doi.org/10.1147/rd.276.0582
-#endif
   }
 
   template<typename T> T Math::expm1(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::expm1; return expm1(x);
-#else
-    GEOGRAPHICLIB_VOLATILE T
-      y = exp(x),
-      z = y - 1;
-    // The reasoning here is similar to that for log1p.  The expression
-    // mathematically reduces to exp(x) - 1, and the factor z/log(y) = (y -
-    // 1)/log(y) is a slowly varying quantity near y = 1 and is accurately
-    // computed.
-    return abs(x) > 1 ? z : (z == 0 ? x : x * z / log(y));
-#endif
   }
 
   template<typename T> T Math::log1p(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::log1p; return log1p(x);
-#else
-    GEOGRAPHICLIB_VOLATILE T
-      y = 1 + x,
-      z = y - 1;
-    // Here's the explanation for this magic: y = 1 + z, exactly, and z
-    // approx x, thus log(y)/z (which is nearly constant near z = 0) returns
-    // a good approximation to the true log(1 + x)/x.  The multiplication x *
-    // (log(y)/z) introduces little additional error.
-    return z == 0 ? x : x * log(y) / z;
-#endif
   }
 
   template<typename T> T Math::asinh(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::asinh; return asinh(x);
-#else
-    T y = abs(x); // Enforce odd parity
-    y = log1p(y * (1 + y/(hypot(T(1), y) + 1)));
-    return x > 0 ? y : (x < 0 ? -y : x); // asinh(-0.0) = -0.0
-#endif
   }
 
   template<typename T> T Math::atanh(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::atanh; return atanh(x);
-#else
-    T y = abs(x); // Enforce odd parity
-    y = log1p(2 * y/(1 - y))/2;
-    return x > 0 ? y : (x < 0 ? -y : x); // atanh(-0.0) = -0.0
-#endif
   }
 
   template<typename T> T Math::copysign(T x, T y) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::copysign; return copysign(x, y);
-#else
-    // NaN counts as positive
-    return abs(x) * (y < 0 || (y == 0 && 1/y < 0) ? -1 : 1);
-#endif
   }
 
   template<typename T> T Math::cbrt(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::cbrt; return cbrt(x);
-#else
-    T y = pow(abs(x), 1/T(3)); // Return the real cube root
-    return x > 0 ? y : (x < 0 ? -y : x); // cbrt(-0.0) = -0.0
-#endif
   }
 
   template<typename T> T Math::remainder(T x, T y) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::remainder; return remainder(x, y);
-#else
-    y = abs(y);               // The result doesn't depend on the sign of y
-    T z = fmod(x, y);
-    if (z == 0)
-      // This shouldn't be necessary.  However, before version 14 (2015),
-      // Visual Studio had problems dealing with -0.0.  Specifically
-      //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
-      // python 2.7 on Windows 32-bit machines has the same problem.
-      z = copysign(z, x);
-    else if (2 * abs(z) == y)
-      z -= fmod(x, 2 * y) - z; // Implement ties to even
-    else if (2 * abs(z) > y)
-      z += (z < 0 ? y : -y);  // Fold remaining cases to (-y/2, y/2)
-    return z;
-#endif
   }
 
   template<typename T> T Math::remquo(T x, T y, int* n) {
-    // boost::math::remquo doesn't handle nans correctly
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION <= 3
     using std::remquo; return remquo(x, y, n);
-#else
-    T z = remainder(x, y);
-    if (n) {
-      T
-        a = remainder(x, 2 * y),
-        b = remainder(x, 4 * y),
-        c = remainder(x, 8 * y);
-      *n  = (a > z ? 1 : (a < z ? -1 : 0));
-      *n += (b > a ? 2 : (b < a ? -2 : 0));
-      *n += (c > b ? 4 : (c < b ? -4 : 0));
-      if (y < 0) *n *= -1;
-      if (y != 0) {
-        if (x/y > 0 && *n <= 0)
-          *n += 8;
-        else if (x/y < 0 && *n >= 0)
-          *n -= 8;
-      }
-    }
-    return z;
-#endif
   }
 
   template<typename T> T Math::round(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::round; return round(x);
-#else
-    // The handling of corner cases is copied from boost; see
-    //   https://github.com/boostorg/math/pull/8
-    // with improvements to return -0 when appropriate.
-    if      (0 < x && x <  T(0.5))
-      return +T(0);
-    else if (0 > x && x > -T(0.5))
-      return -T(0);
-    else if   (x > 0) {
-      T t = ceil(x);
-      return t - x > T(0.5) ? t - 1 : t;
-    } else if (x < 0) {
-      T t = floor(x);
-      return x - t > T(0.5) ? t + 1 : t;
-    } else                    // +/-0 and NaN
-      return x;               // Retain sign of 0
-#endif
   }
 
   template<typename T> long Math::lround(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH && GEOGRAPHICLIB_PRECISION != 5
     using std::lround; return lround(x);
-#else
-    // Default value for overflow + NaN + (x == LONG_MIN)
-    long r = numeric_limits<long>::min();
-    x = round(x);
-    if (abs(x) < -T(r))       // Assume T(LONG_MIN) is exact
-      r = long(x);
-    return r;
-#endif
   }
 
   template<typename T> T Math::fma(T x, T y, T z) {
-#if GEOGRAPHICLIB_CXX11_MATH
     using std::fma; return fma(x, y, z);
-#else
-    return x * y + z;
-#endif
   }
 
   template<typename T> T Math::sum(T u, T v, T& t) {
@@ -250,6 +126,7 @@ namespace GeographicLib {
   template<typename T> void Math::sincosd(T x, T& sinx, T& cosx) {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
+    using std::remquo;
     T r; int q;
     // N.B. the implementation of remquo in glibc pre 2.22 were buggy.  See
     // https://sourceware.org/bugzilla/show_bug.cgi?id=17569
@@ -279,6 +156,7 @@ namespace GeographicLib {
 
   template<typename T> T Math::sind(T x) {
     // See sincosd
+    using std::remquo;
     T r; int q;
     r = remquo(x, T(90), &q); // now abs(r) <= 45
     r *= degree<T>();
@@ -291,6 +169,7 @@ namespace GeographicLib {
 
   template<typename T> T Math::cosd(T x) {
     // See sincosd
+    using std::remquo;
     T r; int q;
     r = remquo(x, T(90), &q); // now abs(r) <= 45
     r *= degree<T>();
@@ -335,16 +214,19 @@ namespace GeographicLib {
   { return atan2d(x, T(1)); }
 
   template<typename T> T Math::eatanhe(T x, T es)  {
+    using std::atanh;
     return es > T(0) ? es * atanh(es * x) : -es * atan(es * x);
   }
 
   template<typename T> T Math::taupf(T tau, T es) {
+    using std::hypot;
     T tau1 = hypot(T(1), tau),
       sig = sinh( eatanhe(tau / tau1, es ) );
     return hypot(T(1), sig) * tau - sig * tau1;
   }
 
   template<typename T> T Math::tauf(T taup, T es) {
+    using std::hypot;
     const int numit = 5;
     const T tol = sqrt(numeric_limits<T>::epsilon()) / T(10);
     T e2m = T(1) - sq(es),
@@ -370,20 +252,7 @@ namespace GeographicLib {
   }
 
     template<typename T> bool Math::isfinite(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
       using std::isfinite; return isfinite(x);
-#else
-#if defined(_MSC_VER)
-      return abs(x) <= (numeric_limits<T>::max)();
-#else
-      // There's a problem using MPFR C++ 3.6.3 and g++ -std=c++14 (reported on
-      // 2015-05-04) with the parens around numeric_limits<T>::max.  Of
-      // course, these parens are only needed to deal with Windows stupidly
-      // defining max as a macro.  So don't insert the parens on non-Windows
-      // platforms.
-      return abs(x) <= numeric_limits<T>::max();
-#endif
-#endif
     }
 
     template<typename T> T Math::NaN() {
@@ -399,11 +268,7 @@ namespace GeographicLib {
     }
 
     template<typename T> bool Math::isnan(T x) {
-#if GEOGRAPHICLIB_CXX11_MATH
       using std::isnan; return isnan(x);
-#else
-      return x != x;
-#endif
     }
 
   template<typename T> T Math::infinity() {

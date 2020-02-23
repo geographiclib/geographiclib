@@ -206,9 +206,10 @@ int main(int argc, const char* const argv[]) {
     }
     int retval = 0;
     try {
+      using std::isfinite;
       const GravityModel g(model, dir, Nmax, Mmax);
       if (circle) {
-        if (!Math::isfinite(h))
+        if (!isfinite(h))
           throw GeographicErr("Bad height");
         else if (mode == UNDULATION && h != 0)
           throw GeographicErr("Height should be zero for geoid undulations");

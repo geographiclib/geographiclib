@@ -48,7 +48,7 @@ namespace GeographicLib {
                          real& lat, real& lon, real& azi, real& rk) const {
     real
       azi0 = Math::atan2d(x, y),
-      rho = Math::hypot(x, y),
+      rho = hypot(x, y),
       s = _a * atan(rho/_a);
     bool little = rho <= _a;
     if (!little)

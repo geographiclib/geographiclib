@@ -91,11 +91,12 @@ namespace GeographicLib {
       // Require x >= -1.  Best to call with alt, s.t. x >= 0; this results in
       // a call to atan, instead of asin, or to asinh, instead of atanh.
       using std::sqrt; using std::abs; using std::atan; using std::asin;
+      using std::asinh; using std::atanh;
       real z = sqrt(abs(x));
       return x == 0 ? 1 :
         (alt ?
-         (!(x < 0) ? Math::asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x)) :
-         (!(x < 0) ? atan(z) : Math::atanh(z)) / z);
+         (!(x < 0) ? asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x)) :
+         (!(x < 0) ? atan(z) : atanh(z)) / z);
     }
     static real atan7series(real x);
     static real atan5series(real x);

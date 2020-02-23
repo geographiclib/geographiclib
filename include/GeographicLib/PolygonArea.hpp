@@ -96,13 +96,17 @@ namespace GeographicLib {
     static int transitdirect(real lon1, real lon2) {
       // Compute exactly the parity of
       //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
-      lon1 = Math::remainder(lon1, real(720));
-      lon2 = Math::remainder(lon2, real(720));
+      using std::remainder;
+      lon1 = remainder(lon1, real(720));
+      lon2 = remainder(lon2, real(720));
       return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
                (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
     }
     void Remainder(Accumulator<>& a) const { a.remainder(_area0); }
-    void Remainder(real& a) const { a = Math::remainder(a, _area0); }
+    void Remainder(real& a) const {
+      using std::remainder;
+      a = remainder(a, _area0);
+    }
     template <typename T>
     void AreaReduce(T& area, int crossings, bool reverse, bool sign) const;
   public:

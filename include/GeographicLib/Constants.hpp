@@ -66,17 +66,8 @@
 #  endif
 #endif
 
-/**
- * @relates GeographicLib::Constants
- * A compile-time assert.  Use C++11 static_assert, if available.
- **********************************************************************/
-#if !defined(GEOGRAPHICLIB_STATIC_ASSERT)
-#  if GEOGRAPHICLIB_HAS_STATIC_ASSERT
-#    define GEOGRAPHICLIB_STATIC_ASSERT static_assert
-#  else
-#    define GEOGRAPHICLIB_STATIC_ASSERT(cond,reason) \
-            { enum{ GEOGRAPHICLIB_STATIC_ASSERT_ENUM = 1/int(cond) }; }
-#  endif
+#if !GEOGRAPHICLIB_HAS_STATIC_ASSERT
+#  error Compiler is required to support static_assert
 #endif
 
 #if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
