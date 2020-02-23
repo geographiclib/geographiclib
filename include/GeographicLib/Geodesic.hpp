@@ -958,8 +958,8 @@ namespace GeographicLib {
     { return 4 * Math::pi() * _c2; }
 
     /**
-      * \deprecated An old name for EquatorialRadius().
-      **********************************************************************/
+     * \deprecated An old name for EquatorialRadius().
+     **********************************************************************/
     // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
