@@ -65,12 +65,12 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 50, patch: 0 };
+  c.version = { major: 1, minor: 51, patch: 0 };
   /**
    * @constant
    * @summary version string
    */
-  c.version_string = "1.50";
+  c.version_string = "1.51";
 })(GeographicLib.Constants);
 
 (function(

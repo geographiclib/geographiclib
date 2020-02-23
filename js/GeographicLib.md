@@ -1,6 +1,6 @@
 ## Geodesic routines from GeographicLib
 
-This documentation applies to version 1.50.
+This documentation applies to version 1.51.
 
 The documentation for other versions is available
 at <tt>https://geographiclib.sourceforge.io/m.nn/js</tt> for versions
@@ -108,6 +108,8 @@ Two examples of this library in use are
     documentation}.
 
 ### Change log
+
+* Version 1.51 (released 2020-mm-dd)
 
 * Version 1.50 (released 2019-09-24)
   * PolygonArea can now handle arbitrarily complex polygons.  In the

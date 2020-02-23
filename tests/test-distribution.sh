@@ -91,7 +91,7 @@ umask 0022
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.50.1
+VERSION=1.51
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
