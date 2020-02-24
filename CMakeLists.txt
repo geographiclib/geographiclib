@@ -283,7 +283,7 @@ else ()
   if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
       CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
     # Flags for CMAKE_CXX_STANDARD are added here by default
-    set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x")
+    set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++11")
   endif ()
 endif ()
 # Check whether the C++11 math function: std::expm1, std::atanh,
