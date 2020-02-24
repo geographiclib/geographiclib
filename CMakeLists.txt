@@ -301,7 +301,7 @@ int main() {
 if (CXX11_MATH)
   add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
 else ()
-  message (ERROR "Missing C++11 math functions")
+  message (FATAL_ERROR "Missing C++11 math functions")
 endif ()
 
 # Check whether the C++11 static_assert macro is available.  This flag
@@ -318,7 +318,7 @@ int main() {
 if (CXX11_STATIC_ASSERT)
   add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=1)
 else ()
-  message (ERROR "Missing C++11 static_assert")
+  message (FATAL_ERROR "Missing C++11 static_assert")
 endif ()
 
 # Include directories are specified via target_include_directories in src.

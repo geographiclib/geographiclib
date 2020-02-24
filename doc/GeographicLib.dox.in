@@ -7703,10 +7703,10 @@ git repository for GeographicLib</a>.
      strict' into functions (to make jshint happy).
    - Add C++ tests not dependent on utility programs.
    - Add information on radius of convergence for aux latitude series.
-   - Require C++11 and C99(?) compiler support.  Mark Math::hypot et
-     al. deprecated.
    - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
      &gt; 1/sqrt(2).
+   - Check Visual Studo "code analysis" results (from Analize VS
+     menu).  Probably an awful lot of false positives.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
