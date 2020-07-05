@@ -232,7 +232,7 @@ namespace GeographicLib {
         string commentid, key;
         if (!(is >> commentid >> key) || commentid != "#")
           continue;
-        if (key == "Description" || key =="DateTime") {
+        if (key == "Description" || key == "DateTime") {
           string::size_type p =
             s.find_first_not_of(" \t", unsigned(is.tellg()));
           if (p != string::npos)

@@ -276,7 +276,8 @@ int main(int argc, char* argv[]) {
         }
       }
     } else if (model == "wmm2015" || model == "wmm2015v2" ||
-               model == "wmm2020" || model == "igrf12") {
+               model == "wmm2020" || model == "igrf12" ||
+               model == "igrf13") {
       // Download WMM2015COF.zip
       // http://ngdc.noaa.gov/geomag/WMM/WMM_coeff.shtml
       // wmm2015 coefficients are in WMM2015COF/WMM.COF
@@ -291,15 +292,21 @@ int main(int argc, char* argv[]) {
       //
       // igrf12 coefficients
       // http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
-      // igrf12 coefficients are in geomag70_linux/IGRF11.COF
+      // igrf12 coefficients are in geomag70_linux/IGRF12.COF
+      //
+      // igrf13 coefficients
+      // https://www.ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
+      // igrf13 coefficients are in geomag70_linux/IGRF13.COF
       std::string id = model == "wmm2015" ? "WMM2015A" :
         (model == "wmm2015v2" ?  "WMM2015B" :
-         (model == "wmm2020" ? "WMM2020A" : "IGRF12-A"));
+         (model == "wmm2020" ? "WMM2020A" :
+          (model == "igrf12" ? "IGRF12-A" : "IGRF13-A")));
       fout.write(id.c_str(), 8);
       std::string filename = model == "wmm2015" ? "WMM2015COF/WMM.COF"
         : (model == "wmm2015v2" ? "WMM2015v2COF/WMM.COF"
            : (model == "wmm2020" ? "WMM2020COF/WMM.COF"
-              : "geomag70_linux-2015/IGRF12.COF"));
+              : (model == "igrf12" ? "geomag70_linux-2015/IGRF12.COF"
+                 : "geomag70_linux-2020/IGRF13.COF")));
       std::ifstream fin(filename.c_str());
       std::string ss;
       bool start = true;
@@ -370,7 +377,7 @@ int main(int argc, char* argv[]) {
           }
         }
       }
-    }  else if (model == "egm2008" || model == "egm96" || model == "egm84"
+    } else if (model == "egm2008" || model == "egm96" || model == "egm84"
                || model == "wgs84") {
       std::string id = model == "egm2008" ? "EGM2008A" :
         (model == "egm96" ? "EGM1996A" :

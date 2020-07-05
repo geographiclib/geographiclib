@@ -9,6 +9,9 @@
    by A. Motte
    (Adee, New York, 1848), pp. 405--409.[[BR]]
    https://books.google.com/books?id=KaAIAAAAIAAJ&pg=PA405
+ * J. Picard,[[BR]]
+   ''Mesure de la Terre [Measuring the Earth]'' (1650).[[BR]]
+   https://books.google.com/books?id=1COZ-ZexeWYC
  * Jac. Bernoulli,[[BR]]
    ''Solutio sex problematum fraternorum [Solution of six problems posed by
    my brother]'',
@@ -63,6 +66,18 @@
    Hydrostatic Principles]''
    (Durand, Paris, 1743).[[BR]]
    https://books.google.com/books?id=X6wWAAAAQAAJ
+ * P. L. Maupertuis,[[BR]]
+   ''La Figure de la Terre déterminée par les Observations de MM. de
+   Maupertius, Calariaut, Camus, le Monnier, Outhier, et Celsius [The
+   Figure of the Earth determined by the Observations of ...]'', (Paris,
+   1738).[[BR]]
+   https://books.google.com/books?id=caCpNBzVBSYC
+ * P. L. Maupertuis, A. C. Clairaut, C. É. L. Camus, and
+   P. C. le Monnier,[[BR]]
+   ''Dégré du Méridien entre Paris et Amiens par la Mesure de M. Picard
+   [The meridian degree between Paris and Amiens according to the method
+   of J. Picard]'', (Paris, 1740).[[BR]]
+   https://books.google.com/books?id=xCLrDACWLNEC
  * L. Euler,[[BR]]
    ''Methodus inveniendi lineas curvas maximi minimive proprietate
    gaudentes [A method for finding curved lines enjoying properties of
@@ -1639,6 +1654,16 @@
    Solving Problems of Spheroidal Geodesy]''
    (Nedra, Moscow, 1980), 287 pp.[[BR]]
    https://doi.org/10.5281/zenodo.495726
+ * B. R. Bowring,[[BR]]
+   ''The Direct and Inverse Problems for Short Geodesic Lines on the
+   Ellipsoid'',
+   Surveying and Mapping '''41'''(2), 135--141 (1981).[[BR]
+   https://books.google.com/books?id=eEI4AAAAIAAJ&pg=PA135
+ * B. K. Meade,[[BR]]
+   ''Comments on Formulas for the Solution of Direct and Inverse Problems
+   on Reference Ellipsoids Using Pocket Calculators'',
+   Surveying and Mapping '''41'''(1), 35--41 (1981).[[BR]]
+   https://books.google.com/books?id=eEI4AAAAIAAJ&pg=PA35
  * J. P. Snyder,[[BR]]
    ''Map projections: a working manual'',
    Professional Paper 1395 (US Geological Survey, 1987).[[BR]]

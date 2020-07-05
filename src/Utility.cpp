@@ -21,26 +21,19 @@ namespace GeographicLib {
 
   bool Utility::ParseLine(const string& line, string& key, string& val) {
     const char* spaces = " \t\n\v\f\r";
-    string::size_type n0 = line.find_first_not_of(spaces);
-    if (n0 == string::npos)
-      return false;             // Blank line
-    string::size_type n1 = line.find_first_of('#', n0);
-    if (n0 == n1)
-      return false;             // Only a comment
-    val = line.substr(n0, n1 == string::npos ? n1 : n1 - n0);
-    n0 = val.find_first_of(spaces);
-    key = val.substr(0, n0);
-    if (n0 == string::npos) {
+    key = "";
+    string::size_type n = line.find('#');
+    val = trim(line.substr(0, n));
+    if (val.empty())
+      return false;
+    n = val.find("=");
+    if (n == string::npos) n = val.find_first_of(spaces);
+    key = val.substr(0, n);
+    if (key.empty()) {
       val = "";
-      return true;
+      return false;
     }
-    n0 = val.find_first_not_of(spaces, n0);
-    if (n0 == string::npos) {
-      val = "";
-      return true;
-    }
-    n1 = val.find_last_not_of(spaces);
-    val = val.substr(n0, n1 + 1 - n0);
+    val = trim(val.substr(n + 1));
     return true;
   }
 

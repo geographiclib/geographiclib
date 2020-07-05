@@ -2,7 +2,7 @@
 #
 # Download magnetic models for use by GeographicLib::MagneticModel.
 #
-# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -30,6 +30,7 @@ table:
   wmm2020    12    2020-2025      2       3
   igrf11     13    1900-2015      7      25
   igrf12     13    1900-2020      7      26
+  igrf13     13    1900-2025      7      28
   emm2010   739    2010-2015    3700    4400
   emm2015   729    2000-2020     660    4300
   emm2017   790    2000-2022    1740    5050
@@ -38,7 +39,7 @@ The size columns give the download and installed sizes of the datasets.
 In addition you can specify
 
   all = all of the supported magnetic models
-  minimal = wmm2020 igrf12
+  minimal = wmm2020 igrf13
 
 -p parentdir (default $DEFAULTDIR) specifies where the
 datasets should be stored.  The "Default $NAME path" listed when running
@@ -128,6 +129,7 @@ emm2015
 emm2017
 igrf11
 igrf12
+igrf13
 EOF
 
 while test $# -gt 0; do
@@ -139,7 +141,7 @@ while test $# -gt 0; do
 		cat $TEMP/all
 		;;
 	    minimal )
-		echo wmm2020; echo igrf12
+		echo wmm2020; echo igrf13
 		;;
 	    * )
 		if test -n "$FORCE"; then

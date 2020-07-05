@@ -677,7 +677,7 @@ The following Fedora package is also useful for syntax checking python
 Installing the python package requires the following \verbatim
   python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
 A recent version of mpreal.h needs to be downloaded from
-https://bitbucket.org/advanpix/mpreal and installed
+https://github.com/advanpix/mpreal and installed
 in the <code>include/</code> directory.  For all the tests to be run,
 the following datasets need to be installed
 - geoid models: egm96-5
@@ -2924,6 +2924,10 @@ The supported models are
    <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (12th generation)</a>, which approximates
    the main magnetic field for the period 1900--2020.
+ - <b>igrf13</b>, the
+   <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   Geomagnetic Reference Field (13th generation)</a>, which approximates
+   the main magnetic field for the period 1900--2025.
  - <b>emm2010</b>, the
    <a href="https://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
@@ -3037,6 +3041,20 @@ These magnetic models are available for download:
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
  link</a> (310)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
+ link</a> (8)</center>
+<tr>
+ <td>igrf13
+ <td><center>13</center>
+ <td><center>1900--2025</center>
+ <td><center>28</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.tar.bz2">
+ link</a> (7)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
+ link</a> (1420)</center>
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
  link</a> (8)</center>
@@ -7419,7 +7437,7 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires:
    - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-     (version 3.6.5, dated 2016-12-19, or later),
+     (version 3.6.7, dated 2020-06-27, or later),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
      or later, Visual Studio 12 2013 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -7717,6 +7735,13 @@ git repository for GeographicLib</a>.
      misinterpreted.
    - C++11 compiler required for C++ library.  C99 compiler required for
      C library.
+   - Minimum version updates:
+     - CMake = 3.7.0, released 2016-11-11.  Bug in find_package for
+       cmake 3.4 and 3.5.
+   - Change in behavior of Utility::ParseLine to allow KEY = VAL.
+   - Add International Geomagnetic Reference Field (13th generation),
+     igrf13, which approximates the main magnetic field of the earth for
+     the period 1900--2025.
 
  - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
    (released 2019-12-13)
@@ -8312,8 +8337,8 @@ git repository for GeographicLib</a>.
      the end points is at a pole.  Thanks to Thomas Murray for reporting
      this.
    - Add International Geomagnetic Reference Field (12th generation),
-     which approximates the main magnetic field of the earth for the
-     period 1900--2020.
+     igrf12, which approximates the main magnetic field of the earth for
+     the period 1900--2020.
    - Split information about \ref jacobi to a separate section and
      include more material.
 

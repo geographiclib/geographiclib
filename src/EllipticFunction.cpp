@@ -554,7 +554,7 @@ namespace GeographicLib {
         dn = Delta(sn, cn),
         err = (E(sn, cn, dn) - x)/dn;
       phi -= err;
-      if (abs(err) < tolJAC)
+      if (!(abs(err) > tolJAC))
         break;
     }
     return n * Math::pi() + phi;

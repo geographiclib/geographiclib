@@ -47,7 +47,7 @@ set (LIBVERSION_BUILD 19.0.2)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
-cmake_minimum_required (VERSION 3.1.0) # This version was released 2014-12-15
+cmake_minimum_required (VERSION 3.7.0) # This version was released 2016-11-11
 
 # User-settable variables
 
@@ -227,12 +227,12 @@ include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
 # We require C++11
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 if (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  set(CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
+  set (CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
 else ()
-  set(CMAKE_CXX_EXTENSIONS OFF) # Otherwise stick with the standard
+  set (CMAKE_CXX_EXTENSIONS OFF) # Otherwise stick with the standard
 endif ()
 
 # Make the compiler more picky.

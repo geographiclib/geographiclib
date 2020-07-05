@@ -615,19 +615,21 @@ namespace GeographicLib {
     }
 
     /**
-     * Parse a KEY VALUE line.
+     * Parse a KEY [=] VALUE line.
      *
      * @param[in] line the input line.
-     * @param[out] key the key.
-     * @param[out] val the value.
+     * @param[out] key the KEY.
+     * @param[out] val the VALUE.
      * @exception std::bad_alloc if memory for the internal strings can't be
      *   allocated.
      * @return whether a key was found.
      *
-     * A # character and everything after it are discarded.  If the result is
-     * just white space, the routine returns false (and \e key and \e val are
-     * not set).  Otherwise the first token is taken to be the key and the rest
-     * of the line (trimmed of leading and trailing white space) is the value.
+     * A "#" character and everything after it are discarded and the result
+     * trimmed of leading and trailing white space.  If the result contains a
+     * "=" then this is used to separate \e key and \e val.  Otherwise the
+     * first white space is used as the separator.  In both cases, \e key and
+     * \e val are trimmed of leading and trailing white space.  If \e key is
+     * empty, then \e val is set to "" and false is returned.
      **********************************************************************/
     static bool ParseLine(const std::string& line,
                           std::string& key, std::string& val);
@@ -666,13 +668,15 @@ namespace GeographicLib {
     std::string t(trim(s));
     if (t.empty()) return false;
     bool x;
-    std::istringstream is(t);
-    if (is >> x) {
-      int pos = int(is.tellg()); // Returns -1 at end of string?
-      if (!(pos < 0 || pos == int(t.size())))
-        throw GeographicErr("Extra text " + t.substr(pos) +
-                            " at end of " + t);
-      return x;
+    {
+      std::istringstream is(t);
+      if (is >> x) {
+        int pos = int(is.tellg()); // Returns -1 at end of string?
+        if (!(pos < 0 || pos == int(t.size())))
+          throw GeographicErr("Extra text " + t.substr(pos) +
+                              " at end of " + t);
+        return x;
+      }
     }
     for (std::string::iterator p = t.begin(); p != t.end(); ++p)
       *p = char(std::tolower(*p));

@@ -7,7 +7,7 @@ test -f "$INNO" || INNO="c:/Program Files (x86)/Inno Setup 6/ISCC.exe"
 MAGNETICDIR=..
 (
 cat <<EOF
-wmm2020 WMM2020
+igrf13  IGRF13
 EOF
 ) | while read prefix name; do
     "$INNO" magnetic-installers.iss \
@@ -27,4 +27,5 @@ emm2015 EMM2015
 emm2017 EMM2017
 wmm2015v2 WMM2015v2
 wmm2020 WMM2020
+igrf13  IGRF13
 EOF

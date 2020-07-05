@@ -6,7 +6,7 @@ function [x, y, gam, k] = polarst_fwd(isnorth, lat, lon, ellipsoid)
 %
 %   performs the forward polar stereographic projection of points (lat,lon)
 %   to (x,y) using the north (south) as the center of projection depending
-%   on whether isnortp is 1 (0).  These input arguments can be scalars or
+%   on whether isnorth is 1 (0).  These input arguments can be scalars or
 %   arrays of equal size.  The ellipsoid vector is of the form [a, e],
 %   where a is the equatorial radius in meters, e is the eccentricity.  If
 %   ellipsoid is omitted, the WGS84 ellipsoid (more precisely, the value
