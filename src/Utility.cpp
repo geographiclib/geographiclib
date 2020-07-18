@@ -8,6 +8,7 @@
  **********************************************************************/
 
 #include <cstdlib>
+#include <iostream>
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)
@@ -19,22 +20,23 @@ namespace GeographicLib {
 
   using namespace std;
 
-  bool Utility::ParseLine(const string& line, string& key, string& val) {
-    const char* spaces = " \t\n\v\f\r";
-    key = "";
+  bool Utility::ParseLine(const std::string& line,
+                          std::string& key, std::string& value,
+                          char delim) {
+    key.clear(); value.clear();
     string::size_type n = line.find('#');
-    val = trim(line.substr(0, n));
-    if (val.empty())
-      return false;
-    n = val.find("=");
-    if (n == string::npos) n = val.find_first_of(spaces);
-    key = val.substr(0, n);
-    if (key.empty()) {
-      val = "";
-      return false;
-    }
-    val = trim(val.substr(n + 1));
+    string linea = trim(line.substr(0, n));
+    if (linea.empty()) return false;
+    n = delim ? linea.find(delim) : linea.find_first_of(" \t\n\v\f\r");      //
+    key = trim(linea.substr(0, n));
+    if (key.empty()) return false;
+    if (n != string::npos) value = trim(linea.substr(n + 1));
     return true;
+  }
+
+  bool Utility::ParseLine(const std::string& line,
+                          std::string& key, std::string& value) {
+    return ParseLine(line, key, value, '\0');
   }
 
   int Utility::set_digits(int ndigits) {

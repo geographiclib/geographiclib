@@ -7725,6 +7725,12 @@ git repository for GeographicLib</a>.
      &gt; 1/sqrt(2).
    - Check Visual Studo "code analysis" results (from Analize VS
      menu).  Probably an awful lot of false positives.
+   - Fix cmake files so that they play nice with vcpkg
+     - Allow only some components to be built.
+     - Allow tools, cmake install directories, etc., to be set.
+     - Compute relative paths from bin to lib directories.
+     - Install dll in tools directory.
+     - Use BUILD_SHARED_LIBS instead of GEOGRAPHICLIB_LIB_TYPE
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
@@ -7738,7 +7744,7 @@ git repository for GeographicLib</a>.
    - Minimum version updates:
      - CMake = 3.7.0, released 2016-11-11.  Bug in find_package for
        cmake 3.4 and 3.5.
-   - Change in behavior of Utility::ParseLine to allow KEY = VAL.
+   - New form of Utility::ParseLine to allow KEY = VAL.
    - Add International Geomagnetic Reference Field (13th generation),
      igrf13, which approximates the main magnetic field of the earth for
      the period 1900--2025.

@@ -25,7 +25,7 @@ endforeach ()
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # Add _d suffix for your debug versions of the tools
   set_target_properties (${TOOLS} PROPERTIES
-    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+    DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
 endif ()
 
 if (APPLE)

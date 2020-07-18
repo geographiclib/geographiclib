@@ -619,20 +619,41 @@ namespace GeographicLib {
      *
      * @param[in] line the input line.
      * @param[out] key the KEY.
-     * @param[out] val the VALUE.
+     * @param[out] value the VALUE.
+     * @param[in] delim delimiter to separate KEY and VALUE, if NULL use first
+     *   space character.
      * @exception std::bad_alloc if memory for the internal strings can't be
      *   allocated.
      * @return whether a key was found.
      *
      * A "#" character and everything after it are discarded and the result
-     * trimmed of leading and trailing white space.  If the result contains a
-     * "=" then this is used to separate \e key and \e val.  Otherwise the
-     * first white space is used as the separator.  In both cases, \e key and
-     * \e val are trimmed of leading and trailing white space.  If \e key is
-     * empty, then \e val is set to "" and false is returned.
+     * trimmed of leading and trailing white space.  Use the delimiter
+     * character (or, if it is NULL, the first white space) to separate \e key
+     * and \e value.  \e key and \e value are trimmed of leading and trailing
+     * white space.  If \e key is empty, then \e value is set to "" and false
+     * is returned.
      **********************************************************************/
     static bool ParseLine(const std::string& line,
-                          std::string& key, std::string& val);
+                          std::string& key, std::string& value,
+                          char delim);
+
+    /**
+     * Parse a KEY VALUE line.
+     *
+     * @param[in] line the input line.
+     * @param[out] key the KEY.
+     * @param[out] value the VALUE.
+     * @exception std::bad_alloc if memory for the internal strings can't be
+     *   allocated.
+     * @return whether a key was found.
+     *
+     * \note This is a transition routine.  At some point \e delim will be made
+     * an optional argument in the previous version of ParseLine and this
+     * version will be removed.
+     **********************************************************************/
+
+    static bool ParseLine(const std::string& line,
+                          std::string& key, std::string& value);
 
     /**
      * Set the binary precision of a real number.
