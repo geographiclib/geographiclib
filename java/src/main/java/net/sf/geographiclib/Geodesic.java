@@ -234,107 +234,6 @@ public class Geodesic {
   private static final double tolb_ = tol0_ * tol2_;
   private static final double xthresh_ = 1000 * tol2_;
 
-  // The definitions of A3_coeff2, C3_coeff, and C4_coeff2 need to come early
-  // in this file.  If they are placed immediately before the functions that
-  // use them, A3coeff, etc., then there's a problem running the tests (unless
-  // the static part of the declaration is dropped).  Unlike A1m1f, A3coeff,
-  // etc., are not static functions; maybe there's an issue with them accessing
-  // the static arrays.  However, it's not clear why this would be affected by
-  // reordering the file.
-
-  private static final double A3_coeff2[] = {
-    // A3, coeff of eps^5, polynomial in n of order 0
-    -3, 128,
-    // A3, coeff of eps^4, polynomial in n of order 1
-    -2, -3, 64,
-    // A3, coeff of eps^3, polynomial in n of order 2
-    -1, -3, -1, 16,
-    // A3, coeff of eps^2, polynomial in n of order 2
-    3, -1, -2, 8,
-    // A3, coeff of eps^1, polynomial in n of order 1
-    1, -1, 2,
-    // A3, coeff of eps^0, polynomial in n of order 0
-    1, 1,
-  };
-
-  private static final double C3_coeff2[] = {
-    // C3[1], coeff of eps^5, polynomial in n of order 0
-    3, 128,
-    // C3[1], coeff of eps^4, polynomial in n of order 1
-    2, 5, 128,
-    // C3[1], coeff of eps^3, polynomial in n of order 2
-    -1, 3, 3, 64,
-    // C3[1], coeff of eps^2, polynomial in n of order 2
-    -1, 0, 1, 8,
-    // C3[1], coeff of eps^1, polynomial in n of order 1
-    -1, 1, 4,
-    // C3[2], coeff of eps^5, polynomial in n of order 0
-    5, 256,
-    // C3[2], coeff of eps^4, polynomial in n of order 1
-    1, 3, 128,
-    // C3[2], coeff of eps^3, polynomial in n of order 2
-    -3, -2, 3, 64,
-    // C3[2], coeff of eps^2, polynomial in n of order 2
-    1, -3, 2, 32,
-    // C3[3], coeff of eps^5, polynomial in n of order 0
-    7, 512,
-    // C3[3], coeff of eps^4, polynomial in n of order 1
-    -10, 9, 384,
-    // C3[3], coeff of eps^3, polynomial in n of order 2
-    5, -9, 5, 192,
-    // C3[4], coeff of eps^5, polynomial in n of order 0
-    7, 512,
-    // C3[4], coeff of eps^4, polynomial in n of order 1
-    -14, 7, 512,
-    // C3[5], coeff of eps^5, polynomial in n of order 0
-    21, 2560,
-  };
-
-  private static final double C4_coeff2[] = {
-    // C4[0], coeff of eps^5, polynomial in n of order 0
-    97, 15015,
-    // C4[0], coeff of eps^4, polynomial in n of order 1
-    1088, 156, 45045,
-    // C4[0], coeff of eps^3, polynomial in n of order 2
-    -224, -4784, 1573, 45045,
-    // C4[0], coeff of eps^2, polynomial in n of order 3
-    -10656, 14144, -4576, -858, 45045,
-    // C4[0], coeff of eps^1, polynomial in n of order 4
-    64, 624, -4576, 6864, -3003, 15015,
-    // C4[0], coeff of eps^0, polynomial in n of order 5
-    100, 208, 572, 3432, -12012, 30030, 45045,
-    // C4[1], coeff of eps^5, polynomial in n of order 0
-    1, 9009,
-    // C4[1], coeff of eps^4, polynomial in n of order 1
-    -2944, 468, 135135,
-    // C4[1], coeff of eps^3, polynomial in n of order 2
-    5792, 1040, -1287, 135135,
-    // C4[1], coeff of eps^2, polynomial in n of order 3
-    5952, -11648, 9152, -2574, 135135,
-    // C4[1], coeff of eps^1, polynomial in n of order 4
-    -64, -624, 4576, -6864, 3003, 135135,
-    // C4[2], coeff of eps^5, polynomial in n of order 0
-    8, 10725,
-    // C4[2], coeff of eps^4, polynomial in n of order 1
-    1856, -936, 225225,
-    // C4[2], coeff of eps^3, polynomial in n of order 2
-    -8448, 4992, -1144, 225225,
-    // C4[2], coeff of eps^2, polynomial in n of order 3
-    -1440, 4160, -4576, 1716, 225225,
-    // C4[3], coeff of eps^5, polynomial in n of order 0
-    -136, 63063,
-    // C4[3], coeff of eps^4, polynomial in n of order 1
-    1024, -208, 105105,
-    // C4[3], coeff of eps^3, polynomial in n of order 2
-    3584, -3328, 1144, 315315,
-    // C4[4], coeff of eps^5, polynomial in n of order 0
-    -128, 135135,
-    // C4[4], coeff of eps^4, polynomial in n of order 1
-    -2560, 832, 405405,
-    // C4[5], coeff of eps^5, polynomial in n of order 0
-    128, 99099,
-  };
-
   protected double _a, _f, _f1, _e2, _ep2, _b, _c2;
   private double _n, _etol2;
   private double _A3x[], _C3x[], _C4x[];
@@ -1780,117 +1679,107 @@ public class Geodesic {
     }
   }
 
-  private static final double A1m1f_coeff[] = {
-    // (1-eps)*A1-1, polynomial in eps2 of order 3
-    1, 4, 64, 0, 256,
-  };
-
   // The scale factor A1-1 = mean value of (d/dsigma)I1 - 1
   protected static double A1m1f(double eps) {
+    final double coeff[] = {
+      // (1-eps)*A1-1, polynomial in eps2 of order 3
+      1, 4, 64, 0, 256,
+    };
     int m = nA1_/2;
-    double t = GeoMath.polyval(m, A1m1f_coeff, 0, GeoMath.sq(eps)) /
-      A1m1f_coeff[m + 1];
+    double t = GeoMath.polyval(m, coeff, 0, GeoMath.sq(eps)) / coeff[m + 1];
     return (t + eps) / (1 - eps);
   }
 
-  private static final double C1f_coeff[] = {
-    // C1[1]/eps^1, polynomial in eps2 of order 2
-    -1, 6, -16, 32,
-    // C1[2]/eps^2, polynomial in eps2 of order 2
-    -9, 64, -128, 2048,
-    // C1[3]/eps^3, polynomial in eps2 of order 1
-    9, -16, 768,
-    // C1[4]/eps^4, polynomial in eps2 of order 1
-    3, -5, 512,
-    // C1[5]/eps^5, polynomial in eps2 of order 0
-    -7, 1280,
-    // C1[6]/eps^6, polynomial in eps2 of order 0
-    -7, 2048,
-  };
-
   // The coefficients C1[l] in the Fourier expansion of B1
   protected static void C1f(double eps, double c[]) {
+    final double coeff[] = {
+      // C1[1]/eps^1, polynomial in eps2 of order 2
+      -1, 6, -16, 32,
+      // C1[2]/eps^2, polynomial in eps2 of order 2
+      -9, 64, -128, 2048,
+      // C1[3]/eps^3, polynomial in eps2 of order 1
+      9, -16, 768,
+      // C1[4]/eps^4, polynomial in eps2 of order 1
+      3, -5, 512,
+      // C1[5]/eps^5, polynomial in eps2 of order 0
+      -7, 1280,
+      // C1[6]/eps^6, polynomial in eps2 of order 0
+      -7, 2048,
+    };
     double
       eps2 = GeoMath.sq(eps),
       d = eps;
     int o = 0;
     for (int l = 1; l <= nC1_; ++l) { // l is index of C1p[l]
       int m = (nC1_ - l) / 2;         // order of polynomial in eps^2
-      c[l] = d * GeoMath.polyval(m, C1f_coeff, o, eps2) /
-        C1f_coeff[o + m + 1];
+      c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];
       o += m + 2;
       d *= eps;
     }
   }
 
-  private static final double C1pf_coeff[] = {
-    // C1p[1]/eps^1, polynomial in eps2 of order 2
-    205, -432, 768, 1536,
-    // C1p[2]/eps^2, polynomial in eps2 of order 2
-    4005, -4736, 3840, 12288,
-    // C1p[3]/eps^3, polynomial in eps2 of order 1
-    -225, 116, 384,
-    // C1p[4]/eps^4, polynomial in eps2 of order 1
-    -7173, 2695, 7680,
-    // C1p[5]/eps^5, polynomial in eps2 of order 0
-    3467, 7680,
-    // C1p[6]/eps^6, polynomial in eps2 of order 0
-    38081, 61440,
-  };
-
   // The coefficients C1p[l] in the Fourier expansion of B1p
   protected static void C1pf(double eps, double c[]) {
+    final double coeff[] = {
+      // C1p[1]/eps^1, polynomial in eps2 of order 2
+      205, -432, 768, 1536,
+      // C1p[2]/eps^2, polynomial in eps2 of order 2
+      4005, -4736, 3840, 12288,
+      // C1p[3]/eps^3, polynomial in eps2 of order 1
+      -225, 116, 384,
+      // C1p[4]/eps^4, polynomial in eps2 of order 1
+      -7173, 2695, 7680,
+      // C1p[5]/eps^5, polynomial in eps2 of order 0
+      3467, 7680,
+      // C1p[6]/eps^6, polynomial in eps2 of order 0
+      38081, 61440,
+    };
     double
       eps2 = GeoMath.sq(eps),
       d = eps;
     int o = 0;
     for (int l = 1; l <= nC1p_; ++l) { // l is index of C1p[l]
       int m = (nC1p_ - l) / 2;         // order of polynomial in eps^2
-      c[l] = d * GeoMath.polyval(m, C1pf_coeff, o, eps2) /
-        C1pf_coeff[o + m + 1];
+      c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];
       o += m + 2;
       d *= eps;
     }
   }
 
-  private static final double A2m1f_coeff[] = {
-    // (eps+1)*A2-1, polynomial in eps2 of order 3
-    -11, -28, -192, 0, 256,
-  };
-
   // The scale factor A2-1 = mean value of (d/dsigma)I2 - 1
   protected static double A2m1f(double eps) {
+    final double coeff[] = {
+      // (eps+1)*A2-1, polynomial in eps2 of order 3
+      -11, -28, -192, 0, 256,
+    };
     int m = nA2_/2;
-    double t = GeoMath.polyval(m, A2m1f_coeff, 0, GeoMath.sq(eps)) /
-      A2m1f_coeff[m + 1];
+    double t = GeoMath.polyval(m, coeff, 0, GeoMath.sq(eps)) / coeff[m + 1];
     return (t - eps) / (1 + eps);
   }
 
-  private static final double C2f_coeff[] = {
-    // C2[1]/eps^1, polynomial in eps2 of order 2
-    1, 2, 16, 32,
-    // C2[2]/eps^2, polynomial in eps2 of order 2
-    35, 64, 384, 2048,
-    // C2[3]/eps^3, polynomial in eps2 of order 1
-    15, 80, 768,
-    // C2[4]/eps^4, polynomial in eps2 of order 1
-    7, 35, 512,
-    // C2[5]/eps^5, polynomial in eps2 of order 0
-    63, 1280,
-    // C2[6]/eps^6, polynomial in eps2 of order 0
-    77, 2048,
-  };
-
   // The coefficients C2[l] in the Fourier expansion of B2
   protected static void C2f(double eps, double c[]) {
+    final double coeff[] = {
+      // C2[1]/eps^1, polynomial in eps2 of order 2
+      1, 2, 16, 32,
+      // C2[2]/eps^2, polynomial in eps2 of order 2
+      35, 64, 384, 2048,
+      // C2[3]/eps^3, polynomial in eps2 of order 1
+      15, 80, 768,
+      // C2[4]/eps^4, polynomial in eps2 of order 1
+      7, 35, 512,
+      // C2[5]/eps^5, polynomial in eps2 of order 0
+      63, 1280,
+      // C2[6]/eps^6, polynomial in eps2 of order 0
+      77, 2048,
+    };
     double
       eps2 = GeoMath.sq(eps),
       d = eps;
     int o = 0;
     for (int l = 1; l <= nC2_; ++l) { // l is index of C2[l]
       int m = (nC2_ - l) / 2;         // order of polynomial in eps^2
-      c[l] = d * GeoMath.polyval(m, C2f_coeff, o, eps2) /
-        C2f_coeff[o + m + 1];
+      c[l] = d * GeoMath.polyval(m, coeff, o, eps2) / coeff[o + m + 1];
       o += m + 2;
       d *= eps;
     }
@@ -1898,38 +1787,122 @@ public class Geodesic {
 
   // The scale factor A3 = mean value of (d/dsigma)I3
   protected void A3coeff() {
-    // Definition of A3_coeff2 moved to near the beginning of the file
+    final double coeff[] = {
+      // A3, coeff of eps^5, polynomial in n of order 0
+      -3, 128,
+      // A3, coeff of eps^4, polynomial in n of order 1
+      -2, -3, 64,
+      // A3, coeff of eps^3, polynomial in n of order 2
+      -1, -3, -1, 16,
+      // A3, coeff of eps^2, polynomial in n of order 2
+      3, -1, -2, 8,
+      // A3, coeff of eps^1, polynomial in n of order 1
+      1, -1, 2,
+      // A3, coeff of eps^0, polynomial in n of order 0
+      1, 1,
+    };
     int o = 0, k = 0;
     for (int j = nA3_ - 1; j >= 0; --j) { // coeff of eps^j
       int m = Math.min(nA3_ - j - 1, j);  // order of polynomial in n
-      _A3x[k++] = GeoMath.polyval(m, A3_coeff2, o, _n) /
-        A3_coeff2[o + m + 1];
+      _A3x[k++] = GeoMath.polyval(m, coeff, o, _n) / coeff[o + m + 1];
       o += m + 2;
     }
   }
 
   // The coefficients C3[l] in the Fourier expansion of B3
   protected void C3coeff() {
-    // Definition of C3_coeff2 moved to near the beginning of the file
+    final double coeff[] = {
+      // C3[1], coeff of eps^5, polynomial in n of order 0
+      3, 128,
+      // C3[1], coeff of eps^4, polynomial in n of order 1
+      2, 5, 128,
+      // C3[1], coeff of eps^3, polynomial in n of order 2
+      -1, 3, 3, 64,
+      // C3[1], coeff of eps^2, polynomial in n of order 2
+      -1, 0, 1, 8,
+      // C3[1], coeff of eps^1, polynomial in n of order 1
+      -1, 1, 4,
+      // C3[2], coeff of eps^5, polynomial in n of order 0
+      5, 256,
+      // C3[2], coeff of eps^4, polynomial in n of order 1
+      1, 3, 128,
+      // C3[2], coeff of eps^3, polynomial in n of order 2
+      -3, -2, 3, 64,
+      // C3[2], coeff of eps^2, polynomial in n of order 2
+      1, -3, 2, 32,
+      // C3[3], coeff of eps^5, polynomial in n of order 0
+      7, 512,
+      // C3[3], coeff of eps^4, polynomial in n of order 1
+      -10, 9, 384,
+      // C3[3], coeff of eps^3, polynomial in n of order 2
+      5, -9, 5, 192,
+      // C3[4], coeff of eps^5, polynomial in n of order 0
+      7, 512,
+      // C3[4], coeff of eps^4, polynomial in n of order 1
+      -14, 7, 512,
+      // C3[5], coeff of eps^5, polynomial in n of order 0
+      21, 2560,
+    };
     int o = 0, k = 0;
     for (int l = 1; l < nC3_; ++l) {        // l is index of C3[l]
       for (int j = nC3_ - 1; j >= l; --j) { // coeff of eps^j
         int m = Math.min(nC3_ - j - 1, j);  // order of polynomial in n
-        _C3x[k++] = GeoMath.polyval(m, C3_coeff2, o, _n) /
-          C3_coeff2[o + m + 1];
+        _C3x[k++] = GeoMath.polyval(m, coeff, o, _n) / coeff[o + m + 1];
         o += m + 2;
       }
     }
   }
 
   protected void C4coeff() {
-    // Definition of C4_coeff2 moved to near the beginning of the file
+    final double coeff[] = {
+      // C4[0], coeff of eps^5, polynomial in n of order 0
+      97, 15015,
+      // C4[0], coeff of eps^4, polynomial in n of order 1
+      1088, 156, 45045,
+      // C4[0], coeff of eps^3, polynomial in n of order 2
+      -224, -4784, 1573, 45045,
+      // C4[0], coeff of eps^2, polynomial in n of order 3
+      -10656, 14144, -4576, -858, 45045,
+      // C4[0], coeff of eps^1, polynomial in n of order 4
+      64, 624, -4576, 6864, -3003, 15015,
+      // C4[0], coeff of eps^0, polynomial in n of order 5
+      100, 208, 572, 3432, -12012, 30030, 45045,
+      // C4[1], coeff of eps^5, polynomial in n of order 0
+      1, 9009,
+      // C4[1], coeff of eps^4, polynomial in n of order 1
+      -2944, 468, 135135,
+      // C4[1], coeff of eps^3, polynomial in n of order 2
+      5792, 1040, -1287, 135135,
+      // C4[1], coeff of eps^2, polynomial in n of order 3
+      5952, -11648, 9152, -2574, 135135,
+      // C4[1], coeff of eps^1, polynomial in n of order 4
+      -64, -624, 4576, -6864, 3003, 135135,
+      // C4[2], coeff of eps^5, polynomial in n of order 0
+      8, 10725,
+      // C4[2], coeff of eps^4, polynomial in n of order 1
+      1856, -936, 225225,
+      // C4[2], coeff of eps^3, polynomial in n of order 2
+      -8448, 4992, -1144, 225225,
+      // C4[2], coeff of eps^2, polynomial in n of order 3
+      -1440, 4160, -4576, 1716, 225225,
+      // C4[3], coeff of eps^5, polynomial in n of order 0
+      -136, 63063,
+      // C4[3], coeff of eps^4, polynomial in n of order 1
+      1024, -208, 105105,
+      // C4[3], coeff of eps^3, polynomial in n of order 2
+      3584, -3328, 1144, 315315,
+      // C4[4], coeff of eps^5, polynomial in n of order 0
+      -128, 135135,
+      // C4[4], coeff of eps^4, polynomial in n of order 1
+      -2560, 832, 405405,
+      // C4[5], coeff of eps^5, polynomial in n of order 0
+      128, 99099,
+    };
     int o = 0, k = 0;
     for (int l = 0; l < nC4_; ++l) {        // l is index of C4[l]
       for (int j = nC4_ - 1; j >= l; --j) { // coeff of eps^j
         int m = nC4_ - j - 1;               // order of polynomial in n
-        _C4x[k++] = GeoMath.polyval(m, C4_coeff2, o, _n) /
-          C4_coeff2[o + m + 1];
+        _C4x[k++] = GeoMath.polyval(m, coeff, o, _n) / coeff[o + m + 1];
         o += m + 2;
       }
     }
