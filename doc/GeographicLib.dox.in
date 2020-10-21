@@ -148,10 +148,10 @@ The goals of GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with g++ 5.3.1 under Linux, with
-Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
-(2012), 12 (2013), 14 (2015), 15 (2017), and 16 (2019) compiled for 32
-bit and 64 bit on Windows.
+and the utilities have been tested with C++11 compliant versions of g++
+under Linux, with Apple LLVM 7.0.2 under Mac OS X, and with MS Visual
+Studio 14 (2015), 15 (2017), and 16 (2019) compiled for 32 bit and 64
+bit on Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -195,11 +195,10 @@ Forward to \ref install.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
-GeographicLib has been developed under Linux with the g++ compiler
-(versions 4.0 and later), under Mac OS X with Xcode (version 8.2), and
-under Windows with Visual Studio 2010 and later.  Earlier versions were
-tested also under Visual Studio 2005 and 2008 and under Solaris.  It
-should compile on a wide range of other systems.  First download either
+GeographicLib has been developed under Linux with the g++ compiler,
+under Mac OS X with Xcode, and under Windows with Visual Studio 2015 and
+later.  It should compile on any systems with a C++11 compliant
+compiler.  First download either
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
 GeographicLib-@PROJECT_VERSION@.tar.gz</a> or
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
@@ -217,12 +216,8 @@ Then pick one of the first five options below:
   including Linux and Mac OS X.
 - \ref gnu.  This is a simple installation method that works with g++
   and GNU make on Linux and many Unix platforms.
-- \ref windows.  This is a simple installation method that works with
-  Visual Studio 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
-  the \ref utilities supplied with GeographicLib.  (This method also
-  installs the header files and the library for use by Visual Studio 14
-  2015.)
+  the \ref utilities supplied with GeographicLib.
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
   programs.
 - \ref maintainer.  This describes addition tasks of interest only to
@@ -481,27 +476,6 @@ Here are the steps to compile and install GeographicLib:
   <code>PREFIX</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
-\section windows Installation on Windows
-
-This method requires Visual Studio 2010.  This builds a static
-library and the utilities.  If you have some other version of Visual
-Studio, use cmake to create the necessary solution file, see \ref cmake.
-(cmake is needed to run the tests.)
-- Unpack the source, running \verbatim
-  unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
-- Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
-  Visual Studio 2010 (for
-  Visual Studio Express 2010, replace -vc10 by -vc10x).
-- Pick the build type (e.g., Release), and select "Build Solution".
-- The library and the compiled examples are in the windows/Release.
-- Copy the library windows/Release/GeographicLib.lib and the headers in
-  include/GeographicLib somewhere convenient.  The headers should remain
-  in a directory named GeographicLib.  For documentation, open
-  <a href="index.html">doc/html/index.html</a> in a web browser.
-
-The Visual Studio 10 solution also contains projects to build
-<a href="NET/index.html">NETGeographicLib</a> and the C# example project.
-
 \section binaryinst Using a binary installer
 
 Binary installers are available for some platforms
@@ -513,7 +487,7 @@ The header files and static and shared versions of library are also
 provided; these can only be used by Visual Studio 14 2015 or later (2017
 or 2019) (in either release or debug mode).  However, if you plan to use
 the library, it may be advisable to build it with the compiler you are
-using for your own code using either \ref cmake or \ref windows.
+using for your own code using \ref cmake.
 
 Download and run
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
@@ -2031,6 +2005,8 @@ The supported models are
  - <b>egm2008</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
    Earth Gravity Model 2008</a>, which includes terms up to degree 2190.
+   See also <a href="https://doi.org/10.1029/2011JB008916"> Pavlis et
+   al. (2012)</a>
  - <b>wgs84</b>, the
    <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal

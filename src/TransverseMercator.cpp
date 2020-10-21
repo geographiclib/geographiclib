@@ -47,7 +47,7 @@ namespace GeographicLib {
     , _f(f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
-    , _es((f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) ) )
       // See, for example, Lee (1976), p 100.

@@ -219,16 +219,21 @@ namespace GeographicLib {
   }
 
   template<typename T> T Math::taupf(T tau, T es) {
-    using std::hypot;
-    T tau1 = hypot(T(1), tau),
-      sig = sinh( eatanhe(tau / tau1, es ) );
-    return hypot(T(1), sig) * tau - sig * tau1;
+    // Need this test, otherwise tau = +/-inf gives taup = nan.
+    using std::isfinite; using std::hypot;
+    if (isfinite(tau)) {
+      T tau1 = hypot(T(1), tau),
+        sig = sinh( eatanhe(tau / tau1, es ) );
+      return hypot(T(1), sig) * tau - sig * tau1;
+    } else
+      return tau;
   }
 
   template<typename T> T Math::tauf(T taup, T es) {
     using std::hypot;
-    const int numit = 5;
-    const T tol = sqrt(numeric_limits<T>::epsilon()) / T(10);
+    static const int numit = 5;
+    static const T tol = sqrt(numeric_limits<T>::epsilon()) / 10;
+    static const T taumax = 2 / sqrt(numeric_limits<T>::epsilon());
     T e2m = T(1) - sq(es),
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
       // tau = taup/_e2m as a starting guess.  (This starting guess is the
@@ -237,9 +242,15 @@ namespace GeographicLib {
       // 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau = taup
       // is used the mean number of iterations increases to 1.99 (2 iterations
       // are needed except near tau = 0).
-      tau = taup/e2m,
+      //
+      // For large tau, taup = exp(-es*atanh(es)) * tau.  Use this as for the
+      // initial guess for |taup| > 40 (approx |phi| > 89deg).  Then for
+      // sufficiently large tau (such that sqrt(1+tau^2) = |tau|), we can exit
+      // with the intial guess and avoid overflow problems.
+      tau = abs(taup) > 70 ? taup * exp(eatanhe(T(1), es)) : taup/e2m,
       stol = tol * max(T(1), abs(taup));
-    // min iterations = 1, max iterations = 2; mean = 1.94
+    if (!(abs(tau) < taumax)) return tau; // handles +/-inf and nan
+    // min iterations = 1, max iterations = 2; mean = 1.95
     for (int i = 0; i < numit || GEOGRAPHICLIB_PANIC; ++i) {
       T taupa = taupf(tau, es),
         dtau = (taup - taupa) * (1 + e2m * sq(tau)) /

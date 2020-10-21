@@ -187,7 +187,7 @@ two ways:
 - you have installed %GeographicLib using one of the binary installers (see
   \ref binaryinstwin "Using a binary installer for Windows" in the
   %GeographicLib documentation).  In this case, you are restricted to using
-  Visual Studio 10.
+  Visual Studio 14.
 
 The minimum version of cmake for use with NETGeographicLib
 is 3.1.0 or later.  In order to build an application that uses NETGeographicLib
@@ -237,13 +237,10 @@ endif () \endverbatim
 The typical invocation of cmake is \verbatim
 mkdir BUILD
 cd BUILD
-cmake -G "Visual Studio 10" -D CMAKE_PREFIX_PATH=C:/pkg-vc10 ..
+cmake -G "Visual Studio 14" -D CMAKE_PREFIX_PATH=C:/pkg-vc14 ..
 cmake --build . --config Release \endverbatim
 The version of Visual Studio should match that used to build
-NETGeographicLib.  <b>NOTE:</b> With Visual Studio 10, this results in
-warnings such as \verbatim
-warning C4945: 'ExtensionAttribute' : cannot import symbol from ... \endverbatim
-which can be safely(?) ignored.
+NETGeographicLib.
 
 Running the example with \verbatim
 Release\geodesictest.exe  \endverbatim
