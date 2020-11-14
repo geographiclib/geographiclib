@@ -303,9 +303,7 @@ int main() {
              std::round(3.5)) +
          std::isfinite(4.0) + std::isnan(0.0) + int(std::lround(-3.5));
 }\n" CXX11_MATH)
-if (CXX11_MATH)
-  add_definitions (-DGEOGRAPHICLIB_CXX11_MATH=1)
-else ()
+if (NOT CXX11_MATH)
   message (FATAL_ERROR "Missing C++11 math functions")
 endif ()
 

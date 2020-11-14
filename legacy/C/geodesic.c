@@ -28,15 +28,6 @@
 #include <limits.h>
 #include <float.h>
 
-#if !defined(HAVE_C99_MATH)
-#if defined(PROJ_LIB)
-/* PROJ requires C99 so HAVE_C99_MATH is implicit */
-#define HAVE_C99_MATH 1
-#else
-#define HAVE_C99_MATH 0
-#endif
-#endif
-
 #if !defined(__cplusplus)
 #define nullptr 0
 #endif
@@ -88,15 +79,7 @@ static void Init() {
     tolb = tol0 * tol2;
     xthresh = 1000 * tol2;
     degree = pi/180;
-#if defined(NAN)
-    NaN = NAN;                  /* NAN is defined in C99 */
-#else
-    {
-      real minus1 = -1;
-      /* cppcheck-suppress wrongmathcall */
-      NaN = sqrt(minus1);
-    }
-#endif
+    NaN = nan("0");
     init = 1;
   }
 }
@@ -111,10 +94,6 @@ enum captype {
   CAP_ALL  = 0x1FU,
   OUT_ALL  = 0x7F80U
 };
-
-#if !HAVE_C99_MATH
-#    error Compiler is required to support C99 math functions
-#endif
 
 static real sq(real x) { return x * x; }
 
@@ -461,9 +440,8 @@ real geod_genposition(const struct geod_geodesicline* l,
     (pS12 ? GEOD_AREA : GEOD_NONE);
 
   outmask &= l->caps & OUT_ALL;
-  if (!( TRUE /*Init()*/ &&
-         (flags & GEOD_ARCMODE || (l->caps & (GEOD_DISTANCE_IN & OUT_ALL))) ))
-    /* Uninitialized or impossible distance calculation requested */
+  if (!( (flags & GEOD_ARCMODE || (l->caps & (GEOD_DISTANCE_IN & OUT_ALL))) ))
+    /* Impossible distance calculation requested */
     return NaN;
 
   if (flags & GEOD_ARCMODE) {

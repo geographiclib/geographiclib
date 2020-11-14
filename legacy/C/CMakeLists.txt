@@ -54,10 +54,8 @@ int main() {
                cbrt(8.0) + remainder(100.0, 90.0) +
                remquo(100.0, 90.0, &q));
 }\n" C99_MATH)
-if (C99_MATH)
-  add_definitions (-DHAVE_C99_MATH=1)
-else ()
-  add_definitions (-DHAVE_C99_MATH=0)
+if (NOT C99_MATH)
+  message (FATAL_ERROR "Missing C99 math functions")
 endif ()
 
 if (CONVERT_WARNINGS_TO_ERRORS)

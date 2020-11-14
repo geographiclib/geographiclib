@@ -158,7 +158,7 @@
                       GEODESIC_VERSION_PATCH)
 
 #if !defined(GEOD_DLL)
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && defined(PROJ_MSVC_DLL_EXPORT)
 #define GEOD_DLL __declspec(dllexport)
 #elif defined(__GNUC__)
 #define GEOD_DLL __attribute__ ((visibility("default")))
@@ -476,7 +476,7 @@ extern "C" {
 
   /**
    * Initialize a geod_geodesicline object in terms of the direct geodesic
-   * problem spacified in terms of either distance or arc length.
+   * problem specified in terms of either distance or arc length.
    *
    * @param[out] l a pointer to the object to be initialized.
    * @param[in] g a pointer to the geod_geodesic object specifying the
