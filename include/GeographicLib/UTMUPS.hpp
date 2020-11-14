@@ -417,7 +417,7 @@ namespace GeographicLib {
     /**
      * \deprecated An old name for EquatorialRadius().
      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 

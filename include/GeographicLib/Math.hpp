@@ -212,7 +212,7 @@ namespace GeographicLib {
      * \deprecated Use std::hypot(x, y).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::hypot(x, y)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::hypot(x, y)")
       static T hypot(T x, T y);
 
     /**
@@ -225,7 +225,7 @@ namespace GeographicLib {
      * \deprecated Use std::expm1(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::expm1(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::expm1(x)")
       static T expm1(T x);
 
     /**
@@ -238,7 +238,7 @@ namespace GeographicLib {
      * \deprecated Use std::log1p(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::log1p(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::log1p(x)")
       static T log1p(T x);
 
     /**
@@ -251,7 +251,7 @@ namespace GeographicLib {
      * \deprecated Use std::asinh(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::asinh(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::asinh(x)")
       static T asinh(T x);
 
     /**
@@ -264,7 +264,7 @@ namespace GeographicLib {
      * \deprecated Use std::atanh(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::atanh(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::atanh(x)")
       static T atanh(T x);
 
     /**
@@ -281,7 +281,7 @@ namespace GeographicLib {
      * \deprecated Use std::copysign(x, y).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::copysign(x, y)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::copysign(x, y)")
       static T copysign(T x, T y);
 
     /**
@@ -294,7 +294,7 @@ namespace GeographicLib {
      * \deprecated Use std::cbrt(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::cbrt(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::cbrt(x)")
       static T cbrt(T x);
 
     /**
@@ -308,7 +308,7 @@ namespace GeographicLib {
      * \deprecated Use std::remainder(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::remainder(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::remainder(x)")
       static T remainder(T x, T y);
 
     /**
@@ -323,7 +323,7 @@ namespace GeographicLib {
      * \deprecated Use std::remquo(x, y, n).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::remquo(x, y, n)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::remquo(x, y, n)")
       static T remquo(T x, T y, int* n);
 
     /**
@@ -336,7 +336,7 @@ namespace GeographicLib {
      * \deprecated Use std::round(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::round(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::round(x)")
       static T round(T x);
 
     /**
@@ -352,7 +352,7 @@ namespace GeographicLib {
      * \deprecated Use std::lround(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::lround(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::lround(x)")
       static long lround(T x);
 
     /**
@@ -372,7 +372,7 @@ namespace GeographicLib {
      * \deprecated Use std::fma(x, y, z).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::fma(x, y, z)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::fma(x, y, z)")
       static T fma(T x, T y, T z);
 
     /**
@@ -642,7 +642,7 @@ namespace GeographicLib {
      * \deprecated Use std::isfinite(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::isfinite(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::isfinite(x)")
       static bool isfinite(T x);
 
     /**
@@ -668,7 +668,7 @@ namespace GeographicLib {
      * \deprecated Use std::isnan(x).
      **********************************************************************/
     template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::isnan(x)")
+      // GEOGRAPHICLIB_DEPRECATED("Use std::isnan(x)")
       static bool isnan(T x);
 
     /**

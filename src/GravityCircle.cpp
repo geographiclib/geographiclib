@@ -16,6 +16,38 @@ namespace GeographicLib {
 
   using namespace std;
 
+  GravityCircle::GravityCircle(mask caps, real a, real f, real lat, real h,
+                               real Z, real P, real cphi, real sphi,
+                               real amodel, real GMmodel,
+                               real dzonal0, real corrmult,
+                               real gamma0, real gamma, real frot,
+                               const CircularEngine& gravitational,
+                               const CircularEngine& disturbing,
+                               const CircularEngine& correction)
+    : _caps(caps)
+    , _a(a)
+    , _f(f)
+    , _lat(Math::LatFix(lat))
+    , _h(h)
+    , _Z(Z)
+    , _Px(P)
+    , _invR(1 / hypot(_Px, _Z))
+    , _cpsi(_Px * _invR)
+    , _spsi(_Z * _invR)
+    , _cphi(cphi)
+    , _sphi(sphi)
+    , _amodel(amodel)
+    , _GMmodel(GMmodel)
+    , _dzonal0(dzonal0)
+    , _corrmult(corrmult)
+    , _gamma0(gamma0)
+    , _gamma(gamma)
+    , _frot(frot)
+    , _gravitational(gravitational)
+    , _disturbing(disturbing)
+    , _correction(correction)
+    {}
+
   Math::real GravityCircle::Gravity(real lon,
                                     real& gx, real& gy, real& gz) const {
     real slam, clam, M[Geocentric::dim2_];

@@ -59,40 +59,12 @@ namespace GeographicLib {
 
     GravityCircle(mask caps, real a, real f, real lat, real h,
                   real Z, real P, real cphi, real sphi,
-                  real amodel, real GMmodel, real dzonal0, real corrmult,
+                  real amodel, real GMmodel,
+                  real dzonal0, real corrmult,
                   real gamma0, real gamma, real frot,
                   const CircularEngine& gravitational,
                   const CircularEngine& disturbing,
-                  const CircularEngine& correction)
-      : _caps(caps)
-      , _a(a)
-      , _f(f)
-      , _lat(Math::LatFix(lat))
-      , _h(h)
-      , _Z(Z)
-      , _Px(P)
-  // ** FIX ME **
-  //      , _invR(using std::hypot; 1 / hypot(_Px, _Z))
-  //      , _cpsi(_Px * _invR)
-  //      , _spsi(_Z * _invR)
-      , _cphi(cphi)
-      , _sphi(sphi)
-      , _amodel(amodel)
-      , _GMmodel(GMmodel)
-      , _dzonal0(dzonal0)
-      , _corrmult(corrmult)
-      , _gamma0(gamma0)
-      , _gamma(gamma)
-      , _frot(frot)
-      , _gravitational(gravitational)
-      , _disturbing(disturbing)
-      , _correction(correction)
-    {
-      using std::hypot;
-      _invR = 1 / hypot(_Px, _Z);
-      _cpsi = _Px * _invR;
-      _spsi = _Z * _invR;
-    }
+                  const CircularEngine& correction);
 
     friend class GravityModel; // GravityModel calls the private constructor
     Math::real W(real slam, real clam,
@@ -305,7 +277,7 @@ namespace GeographicLib {
     /**
      * \deprecated An old name for EquatorialRadius().
      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };

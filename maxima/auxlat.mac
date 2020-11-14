@@ -54,7 +54,7 @@ maxpow time(s)
 Require that expr(var1) = var1 to order eps^0.  This throws in a
 trigreduce to convert to multiple angle trig functions.
 */
-maxpow:8$
+maxpow:6$
 reverta(expr,var1,var2,eps,pow):=block([tauacc:1,sigacc:0,dsig],
   dsig:ratdisrep(taylor(expr-var1,eps,0,pow)),
   dsig:subst([var1=var2],dsig),
@@ -251,14 +251,29 @@ texa(i,j,pow):=block([x:j,y:i,v:tt[i,j],s:"\\",sn:"\\sin "],
     if nterm > 1 then str:concat(str,"\\bigr)"),
     str:concat(str,sn,2*k,x)),
   print(str)),
-print(concat(if v[pow+1][1] < 0 then "-" else "+","\\ldots\\\\")))$
+print(concat(if length(v)>pow and [pow+1][1] < 0 then "-"
+else "+","\\ldots\\\\")),
+'done)$
 cf(i,j):= (
   print(concat("<p>&",i,";&nbsp;&minus;&nbsp;&",j,";:<br><tt><small>")),
   for x in tt[i,j] do block([str:"&nbsp;&nbsp;&nbsp;["],
     for i:1 thru length(x) do
     str:concat(str,string(x[i]),if i<length(x) then ", " else "]<br>"),
     print(str)),
-  print("</small></tt>"))$
+  print("</small></tt>"),
+  'done)$
+printfrac(x):=if denom(x)=1
+then if x<2^31 then string(x) else concat(string(x), ".0")
+else concat(num(x), if abs(num(x))<2^31 then "" else ".0","/",denom(x),".0")$
+cc(i,j):= (
+  print(concat("double coeff_",i,"_",j,"[] = {")),
+  for x in tt[i,j] do block([str:"  "],
+    for i:1 thru length(x) do
+    str:concat(str,printfrac(x[i]),
+    if i<length(x) then ", " else if length(x)>1 then "," else ""),
+    print(str)),
+  print("};"),
+  'done)$
 
 disptex(ll,pow):=
 block([linel:1000],
@@ -267,14 +282,18 @@ block([linel:1000],
   for xx in ll do (texa(xx[1],xx[2],pow),texa(xx[2],xx[1],pow)),
   print("\\end{align}"),
   print("\\f]"))$
-dispcoeffs(ll):=
+disphtml(ll):=
 block([linel:1000],
   for xx in ll do (cf(xx[1],xx[2]),cf(xx[2],xx[1])))$
+dispcpp(ll):=
+block([linel:1000],
+  for xx in ll do (cc(xx[1],xx[2]),cc(xx[2],xx[1])))$
 dispall():=(
   print(""),
   disptex(ll1,4),
   print(""),
   disptex(ll2,3),
   print(""),
-  dispcoeffs(append(ll1,ll2)),
-  print(""))$
+  disphtml(append(ll1,ll2)),
+  print(""),
+  dispcpp(append(ll1,ll2)))$

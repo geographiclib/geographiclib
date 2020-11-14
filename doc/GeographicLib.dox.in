@@ -7717,6 +7717,11 @@ git repository for GeographicLib</a>.
      misinterpreted.
    - C++11 compiler required for C++ library.  C99 compiler required for
      C library.
+   - The workaround implementations for C++11 routines (Math::hypot,
+     Math::expm1, Math::log1p, Math::asinh, Math::atanh, Math::copysign,
+     Math::cbrt, Math::remainder, Math::remquo, Math::round,
+     Math::lround, Math::fma, Math::isfinite, and Math::isnan) are now
+     deprecated.  Just use the versions in the std:: namespace instead.
    - Minimum version updates:
      - CMake = 3.7.0, released 2016-11-11.  Bug in find_package for
        cmake 3.4 and 3.5.

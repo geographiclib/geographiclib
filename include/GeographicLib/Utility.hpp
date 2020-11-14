@@ -459,7 +459,7 @@ namespace GeographicLib {
      * intended that \e s should not contain any lower case letters.
      **********************************************************************/
     static int lookup(const std::string& s, char c) {
-      std::string::size_type r = s.find(char(toupper(c)));
+      std::string::size_type r = s.find(char(std::toupper(c)));
       return r == std::string::npos ? -1 : int(r);
     }
 
@@ -475,7 +475,7 @@ namespace GeographicLib {
      * intended that \e s should not contain any lower case letters.
      **********************************************************************/
     static int lookup(const char* s, char c) {
-      const char* p = std::strchr(s, toupper(c));
+      const char* p = std::strchr(s, std::toupper(c));
       return p != NULL ? int(p - s) : -1;
     }
 
