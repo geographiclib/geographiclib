@@ -41,7 +41,7 @@
 
   <properties>
     <basedir>.</basedir>
-    <java.version>1.6</java.version>
+    <java.version>1.7</java.version>
     <surefire-plugin.version>2.9</surefire-plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
@@ -85,6 +85,7 @@
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>${maven-javadoc.version}</version>
             <configuration>
+              <source>8</source>
               <show>public</show>
               <nohelp>true</nohelp>
             </configuration>

@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.PolygonArea class
  *
- * Copyright (c) Charles Karney (2013-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -77,7 +77,9 @@ public class PolygonArea {
     // Compute lon12 the same way as Geodesic.Inverse.
     lon1 = GeoMath.AngNormalize(lon1);
     lon2 = GeoMath.AngNormalize(lon2);
-    double lon12 = GeoMath.AngDiff(lon1, lon2).first;
+    Pair p = new Pair();
+    GeoMath.AngDiff(p, lon1, lon2);
+    double lon12 = p.first;
     int cross =
       lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
       (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
@@ -398,6 +400,6 @@ public class PolygonArea {
    * @deprecated An old name for {@link #EquatorialRadius()}.
    * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
    **********************************************************************/
-  // @Deprecated
+  @Deprecated
   public double MajorRadius() { return EquatorialRadius(); }
 }

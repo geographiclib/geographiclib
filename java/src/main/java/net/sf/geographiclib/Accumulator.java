@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Accumulator class
  *
- * Copyright (c) Charles Karney (2013-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -22,7 +22,7 @@ package net.sf.geographiclib;
  * In the documentation of the member functions, <i>sum</i> stands for the
  * value currently held in the accumulator.
  ***********************************************************************/
-public  class Accumulator {
+public class Accumulator {
   // _s + _t accumulators for the sum.
   private double _s, _t;
   /**
@@ -57,32 +57,35 @@ public  class Accumulator {
    * @return <i>sum</i> + <i>y</i>.
    **********************************************************************/
   public double Sum(double y) {
-    Accumulator a = new Accumulator(this);
-    a.Add(y);
-    return a._s;
+    Pair p = new Pair();
+    AddInternal(p, _s, _t, y);
+    return p.first;
   }
   /**
-   * Add a number to the accumulator.
+   * Internal version of Add, p = [s, t] + y
    * <p>
-   * @param y set <i>sum</i> += <i>y</i>.
+   * @param s the larger part of the accumulator.
+   * @param t the smaller part of the accumulator.
+   * @param y the addend.
+   * @param p output Pair(<i>s</i>, <i>t</i>) with the result.
    **********************************************************************/
-  public void Add(double y) {
+  public static void AddInternal(Pair p, double s, double t, double y) {
     // Here's Shewchuk's solution...
     double u;                       // hold exact sum as [s, t, u]
     // Accumulate starting at least significant end
-    { Pair r = GeoMath.sum(y, _t); y = r.first; u = r.second; }
-    { Pair r = GeoMath.sum(y, _s); _s = r.first; _t = r.second; }
-    // Start is _s, _t decreasing and non-adjacent.  Sum is now (s + t + u)
+    GeoMath.sum(p, y, t); y = p.first; u = p.second;
+    GeoMath.sum(p, y, s); s = p.first; t = p.second;
+    // Start is s, t decreasing and non-adjacent.  Sum is now (s + t + u)
     // exactly with s, t, u non-adjacent and in decreasing order (except for
     // possible zeros).  The following code tries to normalize the result.
-    // Ideally, we want _s = round(s+t+u) and _u = round(s+t+u - _s).  The
+    // Ideally, we want s = round(s+t+u) and u = round(s+t+u - s).  The
     // following does an approximate job (and maintains the decreasing
     // non-adjacent property).  Here are two "failures" using 3-bit floats:
     //
-    // Case 1: _s is not equal to round(s+t+u) -- off by 1 ulp
+    // Case 1: s is not equal to round(s+t+u) -- off by 1 ulp
     // [12, -1] - 8 -> [4, 0, -1] -> [4, -1] = 3 should be [3, 0] = 3
     //
-    // Case 2: _s+_t is not as close to s+t+u as it shold be
+    // Case 2: s+t is not as close to s+t+u as it shold be
     // [64, 5] + 4 -> [64, 8, 1] -> [64,  8] = 72 (off by 1)
     //                    should be [80, -7] = 73 (exact)
     //
@@ -93,16 +96,28 @@ public  class Accumulator {
     // additional possible error of 1 ulp in the reported sum.
     //
     // Incidentally, the "ideal" representation described above is not
-    // canonical, because _s = round(_s + _t) may not be true.  For example,
+    // canonical, because s = round(s + t) may not be true.  For example,
     // with 3-bit floats:
     //
     // [128, 16] + 1 -> [160, -16] -- 160 = round(145).
     // But [160, 0] - 16 -> [128, 16] -- 128 = round(144).
     //
-    if (_s == 0)              // This implies t == 0,
-      _s = u;                 // so result is u
+    if (s == 0)                 // This implies t == 0,
+      s = u;                    // so result is u
     else
-      _t += u;                // otherwise just accumulate u to t.
+      t += u;                   // otherwise just accumulate u to t.
+    p.first = s; p.second = t;
+  }
+
+  /**
+   * Add a number to the accumulator.
+   * <p>
+   * @param y set <i>sum</i> += <i>y</i>.
+   **********************************************************************/
+  public void Add(double y) {
+    Pair p = new Pair();
+    AddInternal(p, _s, _t, y);
+    _s = p.first; _t = p.second;
   }
   /**
    * Negate an accumulator.

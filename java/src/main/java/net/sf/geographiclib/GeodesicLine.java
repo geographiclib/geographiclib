@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeodesicLine class
  *
- * Copyright (c) Charles Karney (2013-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -179,16 +179,17 @@ public class GeodesicLine {
                       int caps) {
     azi1 = GeoMath.AngNormalize(azi1);
     double salp1, calp1;
+    Pair p = new Pair();
     // Guard against underflow in salp0
-    { Pair p = GeoMath.sincosd(GeoMath.AngRound(azi1));
-      salp1 = p.first; calp1 = p.second; }
-    LineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
+    GeoMath.sincosd(p, GeoMath.AngRound(azi1));
+    salp1 = p.first; calp1 = p.second;
+    LineInit(g, lat1, lon1, azi1, salp1, calp1, caps, p);
   }
 
   private void LineInit(Geodesic g,
                         double lat1, double lon1,
                         double azi1, double salp1, double calp1,
-                        int caps) {
+                        int caps, Pair p) {
     _a = g._a;
     _f = g._f;
     _b = g._b;
@@ -202,11 +203,11 @@ public class GeodesicLine {
     _lon1 = lon1;
     _azi1 = azi1; _salp1 = salp1; _calp1 = calp1;
     double cbet1, sbet1;
-    { Pair p = GeoMath.sincosd(GeoMath.AngRound(_lat1));
-      sbet1 = _f1 * p.first; cbet1 = p.second; }
+    GeoMath.sincosd(p, GeoMath.AngRound(_lat1));
+    sbet1 = _f1 * p.first; cbet1 = p.second;
     // Ensure cbet1 = +epsilon at poles
-    { Pair p = GeoMath.norm(sbet1, cbet1);
-      sbet1 = p.first; cbet1 = Math.max(Geodesic.tiny_, p.second); }
+    GeoMath.norm(p, sbet1, cbet1);
+    sbet1 = p.first; cbet1 = Math.max(Geodesic.tiny_, p.second);
     _dn1 = Math.sqrt(1 + g._ep2 * GeoMath.sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -225,8 +226,8 @@ public class GeodesicLine {
     // With alp0 = 0, omg1 = 0 for alp1 = 0, omg1 = pi for alp1 = pi.
     _ssig1 = sbet1; _somg1 = _salp0 * sbet1;
     _csig1 = _comg1 = sbet1 != 0 || _calp1 != 0 ? cbet1 * _calp1 : 1;
-    { Pair p = GeoMath.norm(_ssig1, _csig1);
-      _ssig1 = p.first; _csig1 = p.second; } // sig1 in (-pi, pi]
+    GeoMath.norm(p, _ssig1, _csig1);
+    _ssig1 = p.first; _csig1 = p.second; // sig1 in (-pi, pi]
     // GeoMath.norm(_somg1, _comg1); -- don't need to normalize!
 
     _k2 = GeoMath.sq(_calp0) * g._ep2;
@@ -277,7 +278,8 @@ public class GeodesicLine {
                          double lat1, double lon1,
                          double azi1, double salp1, double calp1,
                          int caps, boolean arcmode, double s13_a13) {
-    LineInit(g, lat1, lon1, azi1, salp1, calp1, caps);
+    Pair p = new Pair();
+    LineInit(g, lat1, lon1, azi1, salp1, calp1, caps, p);
     GenSetDistance(arcmode, s13_a13);
   }
 
@@ -440,8 +442,8 @@ public class GeodesicLine {
       // Interpret s12_a12 as spherical arc length
       r.a12 = s12_a12;
       sig12 = Math.toRadians(s12_a12);
-      { Pair p = GeoMath.sincosd(s12_a12);
-        ssig12 = p.first; csig12 = p.second; }
+      Pair p = new Pair();
+      GeoMath.sincosd(p, s12_a12); ssig12 = p.first; csig12 = p.second;
     } else {
       // Interpret s12_a12 as distance
       r.s12 = s12_a12;
@@ -747,6 +749,6 @@ public class GeodesicLine {
    * @deprecated An old name for {@link #EquatorialRadius()}.
    * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
    **********************************************************************/
-  // @Deprecated
+  @Deprecated
   public double MajorRadius() { return EquatorialRadius(); }
 }
