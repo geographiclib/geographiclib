@@ -1518,20 +1518,20 @@
    in ''Selected Works'', Vol 1 (Geodezizdat, Moscow, 1953),
    pp. 23--49.[[BR]]
    https://geographiclib.sourceforge.io/geodesic-papers/krasovsky02.pdf [[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
+   https://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
  * F. N. Krasovsky,[[BR]]
    ''Obzor i rezultaty sovremennykh gradusnykh izmereniy [Review and
    results of modern arc measurements]'',
    Geodezist, No. 6-12 (1936),
    in ''Selected Works'', Vol 1 (Geodezizdat, Moscow, 1953),
    pp. 82--178.[[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
+   https://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
  * F. N. Krasovsky,[[BR]]
    ''Rukovodstvo po Vysshei Geodezii [Guide to Higher Geodesy]'',
    Part 2 (Geodezizdat, Moscow, 1942), 560 pp.,
    in ''Selected Works'', Vol 4 (Geodezizdat, Moscow, 1955),
    pp. 4--549.[[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-ivmgeodezizdat1955.pdf
+   https://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-ivmgeodezizdat1955.pdf
  * J. H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
@@ -1648,7 +1648,7 @@
  * V. P. Morozov,[[BR]]
    ''Kurs Sferoidicheskoy Geodezii [A Course in Spheroidal Geodesy]''
    (2nd edition, Nedra, Moscow, 1979) 296 pp.[[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-morozov-vpkurs-sferoidicheskoy-geodeziimnedra1979.pdf
+   https://www.geokniga.org/bookfiles/geokniga-morozov-vpkurs-sferoidicheskoy-geodeziimnedra1979.pdf
  * N. A. Bespalov,[[BR]]
    ''Metody Resheniya Zadach Sferoidicheskoy Geodezii [Methods for
    Solving Problems of Spheroidal Geodesy]''
@@ -1717,7 +1717,7 @@
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]
-   http://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
+   https://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
    [[BR]] https://doi.org/10.1179/003962609X451663
  * Y. C. Lee,[[BR]]
    ''The accuracy analysis of methods to solve the geodetic inverse

@@ -45,7 +45,7 @@ version 4.9.0, where it is used as the computational backend for
 Instructions for how to use the library via proj.4 are given below.
 
 Licensed under the
-<a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
+<a href="https://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
 <a href="https://geographiclib.sourceforge.io/html/LICENSE.txt">LICENSE.txt</a>.
 
 \section doc-c Library documentation
@@ -157,7 +157,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
     <a href="../Fortran/index.html">
       documentation</a>;
   - Java (geodesic routines):
-    <a href="http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
+    <a href="https://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
       Maven Central package</a>,
     <a href="../java/index.html">
       documentation</a>;
@@ -167,7 +167,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
     <a href="../js/index.html">
       documentation</a>;
   - Python (geodesic routines):
-    <a href="http://pypi.python.org/pypi/geographiclib">
+    <a href="https://pypi.python.org/pypi/geographiclib">
       PyPI package</a>,
     <a href="../python/index.html">
       documentation</a>;
