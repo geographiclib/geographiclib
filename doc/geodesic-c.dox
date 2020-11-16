@@ -24,11 +24,7 @@ This is a C implementation of the geodesic algorithms from
 is a self-contained library (requiring only the standard C math library)
 which makes it easy to do geodesic computations for an ellipsoid of
 revolution in a C program.  It is included with version 4.9.0 of
-<a href="https://proj.org">PROJ</a> and later.
-It uses ANSI C as described in B. W. Kernigan and D. M. Ritchie, The C
-Programming Language, 2nd Ed. (Prentice Hall, 1988), and so should
-compile correctly with just about any C compiler.  However, the C99 math
-functions are used if they are available.
+<a href="https://proj.org">PROJ</a> and later.  It uses ANSI C99.
 
 \section download-c Downloading the source
 
@@ -193,6 +189,8 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 
  - <a href="https://geographiclib.sourceforge.io/1.51/C">Version 1.51</a>
    (released 2020-mm-dd)
+   - C99 is now required, so there's no need for private implementations
+     of various routines now defined in <code>math.h</code>.
 
  - <a href="https://geographiclib.sourceforge.io/1.50/C">Version 1.50</a>
    (released 2019-09-22)
