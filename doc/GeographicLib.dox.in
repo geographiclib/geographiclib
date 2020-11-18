@@ -6754,15 +6754,21 @@ Here, the expansions are in terms of the third flattening <i>n</i> =
 (<i>a</i>&nbsp;&minus;&nbsp;<i>b</i>)/(<i>a</i>&nbsp;+&nbsp;<i>b</i>).
 This choice of expansion parameter results in expansions in which half
 the coefficients vanish for all relations between &phi;, &beta;,
-&theta;, and &mu;.  In addition, the expansions converge for
-<i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).  These expansions were
-obtained with the the maxima code, <a href="auxlat.mac">auxlat.mac</a>.
+&theta;, and &mu;.  In addition, the expansions converge for |<i>n</i>|
+&lt; 1 or <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).  These expansions
+were obtained with the the maxima code, <a
+href="auxlat.mac">auxlat.mac</a>.
 
 Adams (1921) uses the eccentricity squared <i>e</i><sup>2</sup> as the
 expansion parameter, but the resulting series only converge for
-<i>b</i>/<i>a</i> &isin; (0,&nbsp;&radic;2).  In addition, it is shown
-in \ref auxlaterror, that the errors when the series are truncated are
-much worse than for the corresponding series in \e n.
+|<i>e</i><sup>2</sup>| &lt; 1 or <i>b</i>/<i>a</i> &isin;
+(0,&nbsp;&radic;2).  In addition, it is shown in \ref auxlaterror, that
+the errors when the series are truncated are much worse than for the
+corresponding series in \e n.
+
+\b NOTE: The assertions about convergence above are too optimistic.
+Some of the series do indeed converge for |<i>n</i>| &lt; 1.  However
+others have a smaller radius of convergence.  More on this later&hellip;
 
 \section auxlatformula Series approximations for conversions
 
@@ -7711,24 +7717,27 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-mm-dd)
+   - C++11 compiler required for C++ library.  As a consequence:
+     - The workaround implementations for C++11 routines (Math::hypot,
+       Math::expm1, Math::log1p, Math::asinh, Math::atanh,
+       Math::copysign, Math::cbrt, Math::remainder, Math::remquo,
+       Math::round, Math::lround, Math::fma, Math::isfinite, and
+       Math::isnan) are now deprecated.  Just use the versions in the
+       std:: namespace instead.
+     - SphericalEngine class, fix the namespace for using streamoff.
+   - C99 compiler required for C library.
+   - Reduce memory footprint in Java implementation.
+   - New form of Utility::ParseLine to allow the syntax "KEY = VAL".
+   - Add International Geomagnetic Reference Field (13th generation),
+     igrf13, which approximates the main magnetic field of the earth for
+     the period 1900--2025.
    - More symbols allowed with DMS decoding in C++, JS, and cgi-bin
      packages.  See DMS::Decode.
    - Fix bug in cgi-bin argument processing which causes "+" to be
      misinterpreted.
-   - C++11 compiler required for C++ library.  C99 compiler required for
-     C library.
-   - The workaround implementations for C++11 routines (Math::hypot,
-     Math::expm1, Math::log1p, Math::asinh, Math::atanh, Math::copysign,
-     Math::cbrt, Math::remainder, Math::remquo, Math::round,
-     Math::lround, Math::fma, Math::isfinite, and Math::isnan) are now
-     deprecated.  Just use the versions in the std:: namespace instead.
-   - Minimum version updates:
-     - CMake = 3.7.0, released 2016-11-11.  Bug in find_package for
-       cmake 3.4 and 3.5.
-   - New form of Utility::ParseLine to allow KEY = VAL.
-   - Add International Geomagnetic Reference Field (13th generation),
-     igrf13, which approximates the main magnetic field of the earth for
-     the period 1900--2025.
+   - Required minium version of CMake is now 3.7.0 (released
+     2016-11-11).  (This is to work around a bug in find_package for
+     cmake 3.4 and 3.5.)
 
  - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
    (released 2019-12-13)

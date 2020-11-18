@@ -168,28 +168,20 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return &pi;.
      **********************************************************************/
-    template<typename T> static T pi() {
+    template<typename T = real> static T pi() {
       using std::atan2;
       static const T pi = atan2(T(0), T(-1));
       return pi;
     }
-    /**
-     * A synonym for pi<real>().
-     **********************************************************************/
-    static real pi() { return pi<real>(); }
 
     /**
      * @tparam T the type of the returned value.
      * @return the number of radians in a degree.
      **********************************************************************/
-    template<typename T> static T degree() {
+    template<typename T = real> static T degree() {
       static const T degree = pi<T>() / 180;
       return degree;
     }
-    /**
-     * A synonym for degree<real>().
-     **********************************************************************/
-    static real degree() { return degree<real>(); }
 
     /**
      * Square a number.
@@ -651,12 +643,7 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
-    template<typename T> static T NaN();
-
-    /**
-     * A synonym for NaN<real>().
-     **********************************************************************/
-    static real NaN() { return NaN<real>(); }
+    template<typename T = real> static T NaN();
 
     /**
      * Test for NaN.
@@ -677,12 +664,7 @@ namespace GeographicLib {
      * @tparam T the type of the returned value.
      * @return infinity if available, otherwise return the max real.
      **********************************************************************/
-    template<typename T> static T infinity();
-
-    /**
-     * A synonym for infinity<real>().
-     **********************************************************************/
-    static real infinity() { return infinity<real>(); }
+    template<typename T = real> static T infinity();
 
     /**
      * Swap the bytes of a quantity

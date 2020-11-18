@@ -54,7 +54,7 @@ maxpow time(s)
 Require that expr(var1) = var1 to order eps^0.  This throws in a
 trigreduce to convert to multiple angle trig functions.
 */
-maxpow:6$
+maxpow:8$
 reverta(expr,var1,var2,eps,pow):=block([tauacc:1,sigacc:0,dsig],
   dsig:ratdisrep(taylor(expr-var1,eps,0,pow)),
   dsig:subst([var1=var2],dsig),
@@ -219,6 +219,7 @@ ll2:[
 [xi,mu],
 [xi,chi]]$
 
+kill(tt)$
 tt[i,j]:=if i=j then [] else
 block([v:tx[i,j],x:j,l:[]],
   for i:1 thru maxpow do block([l1:[],c:coeff(v,sin(2*i*x))],
@@ -262,9 +263,11 @@ cf(i,j):= (
     print(str)),
   print("</small></tt>"),
   'done)$
-printfrac(x):=if denom(x)=1
-then if x<2^31 then string(x) else concat(string(x), ".0")
-else concat(num(x), if abs(num(x))<2^31 then "" else ".0","/",denom(x),".0")$
+printfrac(x):=block([n:num(x),d:denom(x),sn,sd,m:2^31],
+  sn:string(n), sd:concat("/",string(d)),
+  if abs(n)>=m then sn:concat(sn,".0"),
+  if d = 1 then sd:"" else (if d>=m or abs(n)<m then sd:concat(sd,".0")),
+  concat(sn,sd))$
 cc(i,j):= (
   print(concat("double coeff_",i,"_",j,"[] = {")),
   for x in tt[i,j] do block([str:"  "],
