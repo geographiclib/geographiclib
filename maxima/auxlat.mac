@@ -1,7 +1,7 @@
 /*
 Compute series expansions for the auxiliary latitudes.
 
-Copyright (c) Charles Karney (2014-2019) <charles@karney.com> and
+Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and
 licensed under the MIT/X11 License.  For more information, see
 https://geographiclib.sourceforge.io/
 
@@ -219,6 +219,7 @@ ll2:[
 [xi,mu],
 [xi,chi]]$
 
+kill(tt)$
 tt[i,j]:=if i=j then [] else
 block([v:tx[i,j],x:j,l:[]],
   for i:1 thru maxpow do block([l1:[],c:coeff(v,sin(2*i*x))],
@@ -251,14 +252,31 @@ texa(i,j,pow):=block([x:j,y:i,v:tt[i,j],s:"\\",sn:"\\sin "],
     if nterm > 1 then str:concat(str,"\\bigr)"),
     str:concat(str,sn,2*k,x)),
   print(str)),
-print(concat(if v[pow+1][1] < 0 then "-" else "+","\\ldots\\\\")))$
+print(concat(if length(v)>pow and [pow+1][1] < 0 then "-"
+else "+","\\ldots\\\\")),
+'done)$
 cf(i,j):= (
   print(concat("<p>&",i,";&nbsp;&minus;&nbsp;&",j,";:<br><tt><small>")),
   for x in tt[i,j] do block([str:"&nbsp;&nbsp;&nbsp;["],
     for i:1 thru length(x) do
     str:concat(str,string(x[i]),if i<length(x) then ", " else "]<br>"),
     print(str)),
-  print("</small></tt>"))$
+  print("</small></tt>"),
+  'done)$
+printfrac(x):=block([n:num(x),d:denom(x),sn,sd,m:2^31],
+  sn:string(n), sd:concat("/",string(d)),
+  if abs(n)>=m then sn:concat(sn,".0"),
+  if d = 1 then sd:"" else (if d>=m or abs(n)<m then sd:concat(sd,".0")),
+  concat(sn,sd))$
+cc(i,j):= (
+  print(concat("double coeff_",i,"_",j,"[] = {")),
+  for x in tt[i,j] do block([str:"  "],
+    for i:1 thru length(x) do
+    str:concat(str,printfrac(x[i]),
+    if i<length(x) then ", " else if length(x)>1 then "," else ""),
+    print(str)),
+  print("};"),
+  'done)$
 
 disptex(ll,pow):=
 block([linel:1000],
@@ -267,14 +285,18 @@ block([linel:1000],
   for xx in ll do (texa(xx[1],xx[2],pow),texa(xx[2],xx[1],pow)),
   print("\\end{align}"),
   print("\\f]"))$
-dispcoeffs(ll):=
+disphtml(ll):=
 block([linel:1000],
   for xx in ll do (cf(xx[1],xx[2]),cf(xx[2],xx[1])))$
+dispcpp(ll):=
+block([linel:1000],
+  for xx in ll do (cc(xx[1],xx[2]),cc(xx[2],xx[1])))$
 dispall():=(
   print(""),
   disptex(ll1,4),
   print(""),
   disptex(ll2,3),
   print(""),
-  dispcoeffs(append(ll1,ll2)),
-  print(""))$
+  disphtml(append(ll1,ll2)),
+  print(""),
+  dispcpp(append(ll1,ll2)))$

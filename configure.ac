@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[1.50.1],[charles@karney.com])
+AC_INIT([GeographicLib],[1.51],[charles@karney.com])
 AC_CANONICAL_SYSTEM
 AC_PREREQ(2.61)
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -9,8 +9,8 @@ AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
 
 GEOGRAPHICLIB_VERSION_MAJOR=1
-GEOGRAPHICLIB_VERSION_MINOR=50
-GEOGRAPHICLIB_VERSION_PATCH=1
+GEOGRAPHICLIB_VERSION_MINOR=51
+GEOGRAPHICLIB_VERSION_PATCH=0
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
         [$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MINOR],
@@ -34,9 +34,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=19
-LT_REVISION=1
-LT_AGE=0
+LT_CURRENT=20
+LT_REVISION=0
+LT_AGE=1
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
@@ -46,6 +46,7 @@ AC_PROG_CPP
 AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_PROG_CXX
+AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
 AC_PROG_LIBTOOL
 AC_LANG_CPLUSPLUS
 
@@ -55,11 +56,6 @@ AC_TYPE_LONG_DOUBLE
 # Check endianness
 AC_C_BIGENDIAN
 
-# Check flags for C++11
-AX_CHECK_COMPILE_FLAG([-std=c++11],
-        [CXXFLAGS="$CXXFLAGS -std=c++11"],
-        [AX_CHECK_COMPILE_FLAG([-std=c++0x],
-                [CXXFLAGS="$CXXFLAGS -std=c++0x"])])
 # Check flag for accurate arithmetic with Intel compiler.  This is
 # needed to stop the compiler from ignoring parentheses in expressions
 # like (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
@@ -67,21 +63,6 @@ AX_CHECK_COMPILE_FLAG([-std=c++11],
 AX_CHECK_COMPILE_FLAG([-fp-model precise -diag-disable=11074,11076],
         [CXXFLAGS="$CXXFLAGS -fp-model precise -diag-disable=11074,11076"],,
         [-Werror])
-# Check for C++11 math functions
-AC_MSG_CHECKING([for C++11 math functions])
-AC_LINK_IFELSE([AC_LANG_PROGRAM(
-        [#include <cmath>],
-        [int q;
-         return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
-                    std::log1p(2.0) + std::asinh(10.0) +
-                    std::atanh(0.8) + std::cbrt(8.0) +
-                    std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
-                    std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0)) +
-                    std::isfinite(4.0) + std::isnan(0.0);])],
-        [AC_MSG_RESULT([yes]);
-         CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=1"],
-        [AC_MSG_RESULT([no]);
-         CXXFLAGS="$CXXFLAGS -DGEOGRAPHICLIB_CXX11_MATH=0"])
 
 # Check for doxygen.  Version 1.8.7 or later needed for &hellip;
 AC_CHECK_PROGS([DOXYGEN], [doxygen])

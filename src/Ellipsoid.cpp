@@ -2,7 +2,7 @@
  * \file Ellipsoid.cpp
  * \brief Implementation for GeographicLib::Ellipsoid class
  *
- * Copyright (c) Charles Karney (2012-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -41,7 +41,7 @@ namespace GeographicLib {
     return 4 * Math::pi() *
       ((Math::sq(_a) + Math::sq(_b) *
         (_e2 == 0 ? 1 :
-         (_e2 > 0 ? Math::atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
+         (_e2 > 0 ? atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
          sqrt(abs(_e2))))/2);
   }
 
@@ -82,7 +82,7 @@ namespace GeographicLib {
   { return Math::atand(Math::tauf(Math::tand(Math::LatFix(chi)), _es)); }
 
   Math::real Ellipsoid::IsometricLatitude(real phi) const
-  { return Math::asinh(Math::taupf(Math::tand(Math::LatFix(phi)), _es)) /
+  { return asinh(Math::taupf(Math::tand(Math::LatFix(phi)), _es)) /
       Math::degree(); }
 
   Math::real Ellipsoid::InverseIsometricLatitude(real psi) const
@@ -91,14 +91,14 @@ namespace GeographicLib {
   Math::real Ellipsoid::CircleRadius(real phi) const {
     return abs(phi) == 90 ? 0 :
       // a * cos(beta)
-      _a / Math::hypot(real(1), _f1 * Math::tand(Math::LatFix(phi)));
+      _a / hypot(real(1), _f1 * Math::tand(Math::LatFix(phi)));
   }
 
   Math::real Ellipsoid::CircleHeight(real phi) const {
     real tbeta = _f1 * Math::tand(phi);
     // b * sin(beta)
-    return _b * tbeta / Math::hypot(real(1),
-                                    _f1 * Math::tand(Math::LatFix(phi)));
+    return _b * tbeta / hypot(real(1),
+                              _f1 * Math::tand(Math::LatFix(phi)));
   }
 
   Math::real Ellipsoid::MeridianDistance(real phi) const

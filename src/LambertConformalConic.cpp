@@ -2,7 +2,7 @@
  * \file LambertConformalConic.cpp
  * \brief Implementation for GeographicLib::LambertConformalConic class
  *
- * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -24,11 +24,11 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    if (!(Math::isfinite(_f) && _f < 1))
+    if (!(isfinite(_f) && _f < 1))
       throw GeographicErr("Polar semi-axis is not positive");
-    if (!(Math::isfinite(k0) && k0 > 0))
+    if (!(isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90d, 90d]");
@@ -49,11 +49,11 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    if (!(Math::isfinite(_f) && _f < 1))
+    if (!(isfinite(_f) && _f < 1))
       throw GeographicErr("Polar semi-axis is not positive");
-    if (!(Math::isfinite(k1) && k1 > 0))
+    if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
@@ -78,11 +78,11 @@ namespace GeographicLib {
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    if (!(Math::isfinite(_f) && _f < 1))
+    if (!(isfinite(_f) && _f < 1))
       throw GeographicErr("Polar semi-axis is not positive");
-    if (!(Math::isfinite(k1) && k1 > 0))
+    if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
@@ -103,9 +103,9 @@ namespace GeographicLib {
                                    real sphi2, real cphi2, real k1) {
     {
       real r;
-      r = Math::hypot(sphi1, cphi1);
+      r = hypot(sphi1, cphi1);
       sphi1 /= r; cphi1 /= r;
-      r = Math::hypot(sphi2, cphi2);
+      r = hypot(sphi2, cphi2);
       sphi2 /= r; cphi2 /= r;
     }
     bool polar = (cphi1 == 0);
@@ -148,7 +148,7 @@ namespace GeographicLib {
       scphi2 = 1/cphi2,
       xi2 = Math::eatanhe(sphi2, _es), shxi2 = sinh(xi2), chxi2 = hyp(shxi2),
       tchi2 = chxi2 * tphi2 - shxi2 * scphi2, scchi2 = hyp(tchi2),
-      psi1 = Math::asinh(tchi1);
+      psi1 = asinh(tchi1);
     if (tphi2 - tphi1 != 0) {
       // Db(tphi2, tphi1)
       real num = Dlog1p(Math::sq(tbet2)/(1 + scbet2),
@@ -268,7 +268,7 @@ namespace GeographicLib {
         _nc = sqrt(max(real(0), t) * (1 + _n));
       }
       {
-        real r = Math::hypot(_n, _nc);
+        real r = hypot(_n, _nc);
         _n /= r;
         _nc /= r;
       }
@@ -284,10 +284,10 @@ namespace GeographicLib {
     _scbet0 = hyp(_fm * tphi0);
     real shxi0 = sinh(Math::eatanhe(_n, _es));
     _tchi0 = tphi0 * hyp(shxi0) - shxi0 * hyp(tphi0); _scchi0 = hyp(_tchi0);
-    _psi0 = Math::asinh(_tchi0);
+    _psi0 = asinh(_tchi0);
 
     _lat0 = atan(_sign * tphi0) / Math::degree();
-    _t0nm1 = Math::expm1(- _n * _psi0); // Snyder's t0^n - 1
+    _t0nm1 = expm1(- _n * _psi0); // Snyder's t0^n - 1
     // a * k1 * m1/t1^n = a * k1 * m2/t2^n = a * k1 * n * (Snyder's F)
     // = a * k1 / (scbet1 * exp(-n * psi1))
     _scale = _a * k1 / scbet1 *
@@ -311,7 +311,7 @@ namespace GeographicLib {
         tphi = sphi/cphi,
         scphi = 1/cphi, shxi = sinh(Math::eatanhe(sphi, _es)),
         tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
-        psi = Math::asinh(tchi),
+        psi = asinh(tchi),
         dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0);
       _drhomax = - _scale * (2 * _nc < 1 && dpsi != 0 ?
                              (exp(Math::sq(_nc)/(1 + _n) * psi ) *
@@ -350,7 +350,7 @@ namespace GeographicLib {
       tphi = sphi/cphi, scbet = hyp(_fm * tphi),
       scphi = 1/cphi, shxi = sinh(Math::eatanhe(sphi, _es)),
       tchi = hyp(shxi) * tphi - shxi * scphi, scchi = hyp(tchi),
-      psi = Math::asinh(tchi),
+      psi = asinh(tchi),
       theta = _n * lam, stheta = sin(theta), ctheta = cos(theta),
       dpsi = Dasinh(tchi, _tchi0, scchi, _scchi0) * (tchi - _tchi0),
       drho = - _scale * (2 * _nc < 1 && dpsi != 0 ?
@@ -389,9 +389,9 @@ namespace GeographicLib {
     real
       // Guard against 0 * inf in computation of ny
       nx = _n * x, ny = _n != 0 ? _n * y : 0, y1 = _nrho0 - ny,
-      den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
+      den = hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
       // isfinite test is to avoid inf/inf
-      drho = ((den != 0 && Math::isfinite(den))
+      drho = ((den != 0 && isfinite(den))
               ? (x*nx + y * (ny - 2*_nrho0)) / den
               : den);
     drho = min(drho, _drhomax);
@@ -419,7 +419,7 @@ namespace GeographicLib {
       real
         tn = tnm1 + 1 == 0 ? epsx_ : tnm1 + 1,
         sh = sinh( -Math::sq(_nc)/(_n * (1 + _n)) *
-                   (2 * tn > 1 ? Math::log1p(tnm1) : log(tn)) );
+                   (2 * tn > 1 ? log1p(tnm1) : log(tn)) );
       tchi = sh * (tn + 1/tn)/2 - hyp(sh) * (tnm1 * (tn + 1)/tn)/2;
     }
 
@@ -439,7 +439,7 @@ namespace GeographicLib {
   }
 
   void LambertConformalConic::SetScale(real lat, real k) {
-    if (!(Math::isfinite(k) && k > 0))
+    if (!(isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) <= 90))
       throw GeographicErr("Latitude for SetScale not in [-90d, 90d]");

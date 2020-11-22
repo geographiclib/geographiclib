@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.GeoMath class
  *
- * Copyright (c) Charles Karney (2013-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -45,14 +45,14 @@ public class GeoMath {
   /**
    * Normalize a sine cosine pair.
    * <p>
+   * @param p return parameter for normalized quantities with sinx<sup>2</sup>
+   *   + cosx<sup>2</sup> = 1.
    * @param sinx the sine.
    * @param cosx the cosine.
-   * @return a Pair of normalized quantities with sinx<sup>2</sup> +
-   *   cosx<sup>2</sup> = 1.
    **********************************************************************/
-  public static Pair norm(double sinx, double cosx) {
+  public static void norm(Pair p, double sinx, double cosx) {
     double r = Math.hypot(sinx, cosx);
-    return new Pair(sinx/r, cosx/r);
+    p.first = sinx/r; p.second = cosx/r;
   }
 
   /**
@@ -60,12 +60,12 @@ public class GeoMath {
    * <p>
    * @param u the first number in the sum.
    * @param v the second number in the sum.
-   * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = round(<i>u</i> +
+   * @param p output Pair(<i>s</i>, <i>t</i>) with <i>s</i> = round(<i>u</i> +
    *   <i>v</i>) and <i>t</i> = <i>u</i> + <i>v</i> - <i>s</i>.
    * <p>
    * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
    **********************************************************************/
-  public static Pair sum(double u, double v) {
+  public static void sum(Pair p, double u, double v) {
     double s = u + v;
     double up = s - v;
     double vpp = s - up;
@@ -74,7 +74,7 @@ public class GeoMath {
     double t = -(up + vpp);
     // u + v =       s      + t
     //       = round(u + v) + t
-    return new Pair(s, t);
+    p.first = s; p.second = t;
   }
 
   /**
@@ -85,7 +85,7 @@ public class GeoMath {
    * @param s starting index for the array.
    * @param x the variable.
    * @return the value of the polynomial.
-   *
+   * <p>
    * Evaluate <i>y</i> = &sum;<sub><i>n</i>=0..<i>N</i></sub>
    * <i>p</i><sub><i>s</i>+<i>n</i></sub>
    * <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.  Return 0 if <i>N</i> &lt; 0.
@@ -164,7 +164,7 @@ public class GeoMath {
    * <p>
    * @param x the first angle in degrees.
    * @param y the second angle in degrees.
-   * @return Pair(<i>d</i>, <i>e</i>) with <i>d</i> being the rounded
+   * @param p output Pair(<i>d</i>, <i>e</i>) with <i>d</i> being the rounded
    *   difference and <i>e</i> being the error.
    * <p>
    * The computes <i>z</i> = <i>y</i> &minus; <i>x</i> exactly, reduced to
@@ -173,26 +173,23 @@ public class GeoMath {
    * <i>e</i> is the truncation error.  If <i>d</i> = &minus;180, then <i>e</i>
    * &gt; 0; If <i>d</i> = 180, then <i>e</i> &le; 0.
    **********************************************************************/
-  public static Pair AngDiff(double x, double y) {
-    double d, t;
-    {
-      Pair r = sum(AngNormalize(-x), AngNormalize(y));
-      d = AngNormalize(r.first); t = r.second;
-    }
-    return sum(d == 180 && t > 0 ? -180 : d, t);
+  public static void AngDiff(Pair p, double x, double y) {
+    sum(p, AngNormalize(-x), AngNormalize(y));
+    double d = AngNormalize(p.first), t = p.second;
+    sum(p, d == 180 && t > 0 ? -180 : d, t);
   }
 
   /**
    * Evaluate the sine and cosine function with the argument in degrees
    *
-   * @param x in degrees.
-   * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = sin(<i>x</i>) and
+   * @param p return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = sin(<i>x</i>) and
    *   <i>c</i> = cos(<i>x</i>).
-   *
+   * @param x in degrees.
+   * <p>
    * The results obey exactly the elementary properties of the trigonometric
    * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
    **********************************************************************/
-  public static Pair sincosd(double x) {
+  public static void sincosd(Pair p, double x) {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
     double r; int q;
@@ -211,7 +208,7 @@ public class GeoMath {
     default: sinx = -c; cosx =  s; break; // case 3
     }
     if (x != 0) { sinx += 0.0; cosx += 0.0; }
-    return new Pair(sinx, cosx);
+    p.first = sinx; p.second = cosx;
   }
 
   /**
@@ -220,7 +217,7 @@ public class GeoMath {
    * @param y the sine of the angle
    * @param x the cosine of the angle
    * @return atan2(<i>y</i>, <i>x</i>) in degrees.
-   *
+   * <p>
    * The result is in the range (&minus;180&deg; 180&deg;].  N.B.,
    * atan2d(&plusmn;0, &minus;1) = +180&deg;; atan2d(&minus;&epsilon;,
    * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
@@ -259,6 +256,72 @@ public class GeoMath {
   public static boolean isfinite(double x) {
     return Math.abs(x) <= Double.MAX_VALUE;
   }
+
+  /**
+   * Normalize a sine cosine pair.
+   * <p>
+   * @param sinx the sine.
+   * @param cosx the cosine.
+   * @return a Pair of normalized quantities with sinx<sup>2</sup> +
+   *   cosx<sup>2</sup> = 1.
+   *
+   * @deprecated Use {@link #sincosd(Pair, double)} instead.
+   **********************************************************************/
+  // @Deprecated
+  public static Pair norm(double sinx, double cosx)
+  { Pair p = new Pair(); norm(p, sinx, cosx); return p; }
+
+  /**
+   * The error-free sum of two numbers.
+   * <p>
+   * @param u the first number in the sum.
+   * @param v the second number in the sum.
+   * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = round(<i>u</i> +
+   *   <i>v</i>) and <i>t</i> = <i>u</i> + <i>v</i> - <i>s</i>.
+   * <p>
+   * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
+   *
+   * @deprecated Use {@link #sincosd(Pair, double)} instead.
+   **********************************************************************/
+  // @Deprecated
+  public static Pair sum(double u, double v)
+  { Pair p = new Pair(); sum(p, u, v); return p; }
+
+  /**
+   * The exact difference of two angles reduced to (&minus;180&deg;, 180&deg;].
+   * <p>
+   * @param x the first angle in degrees.
+   * @param y the second angle in degrees.
+   * @return Pair(<i>d</i>, <i>e</i>) with <i>d</i> being the rounded
+   *   difference and <i>e</i> being the error.
+   * <p>
+   * The computes <i>z</i> = <i>y</i> &minus; <i>x</i> exactly, reduced to
+   * (&minus;180&deg;, 180&deg;]; and then sets <i>z</i> = <i>d</i> + <i>e</i>
+   * where <i>d</i> is the nearest representable number to <i>z</i> and
+   * <i>e</i> is the truncation error.  If <i>d</i> = &minus;180, then <i>e</i>
+   * &gt; 0; If <i>d</i> = 180, then <i>e</i> &le; 0.
+   *
+   * @deprecated Use {@link #sincosd(Pair, double)} instead.
+   **********************************************************************/
+  // @Deprecated
+  public static Pair AngDiff(double x, double y)
+  { Pair p = new Pair(); AngDiff(p, x, y); return p; }
+
+  /**
+   * Evaluate the sine and cosine function with the argument in degrees
+   *
+   * @param x in degrees.
+   * @return Pair(<i>s</i>, <i>t</i>) with <i>s</i> = sin(<i>x</i>) and
+   *   <i>c</i> = cos(<i>x</i>).
+   * <p>
+   * The results obey exactly the elementary properties of the trigonometric
+   * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
+   *
+   * @deprecated Use {@link #sincosd(Pair, double)} instead.
+   **********************************************************************/
+  // @Deprecated
+  public static Pair sincosd(double x)
+  { Pair p = new Pair(); sincosd(p, x); return p; }
 
   private GeoMath() {}
 }

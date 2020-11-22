@@ -2,7 +2,7 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -415,9 +415,9 @@ namespace GeographicLib {
     { return Constants::WGS84_f(); }
 
     /**
-      * \deprecated An old name for EquatorialRadius().
-      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+     * \deprecated An old name for EquatorialRadius().
+     **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 

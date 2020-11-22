@@ -2,7 +2,8 @@
  * Implementation of the net.sf.geographiclib.Gnomonic class
  *
  * Copyright (c) BMW Car IT GmbH (2014-2019) <sebastian.mattheis@bmw-carit.de>
- * and licensed under the MIT/X11 License. For more information, see
+ * and Charles Karney (2020) <charles@karney.com>∑ and licensed and licensed
+ * under the MIT/X11 License. For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 package net.sf.geographiclib;
@@ -182,7 +183,8 @@ public class Gnomonic {
 
     if (inv.M12 > 0) {
       double rho = inv.m12 / inv.M12;
-      Pair p = GeoMath.sincosd(inv.azi1);
+      Pair p = new Pair();
+      GeoMath.sincosd(p, inv.azi1);
       fwd.x = rho * p.first;
       fwd.y = rho * p.second;
     }
@@ -282,6 +284,6 @@ public class Gnomonic {
    * @deprecated An old name for {@link #EquatorialRadius()}.
    * @return <i>a</i> the equatorial radius of the ellipsoid (meters).
    **********************************************************************/
-  // @Deprecated
+  @Deprecated
   public double MajorRadius() { return EquatorialRadius(); }
 }

@@ -2,7 +2,7 @@
  * \file MagneticCircle.hpp
  * \brief Header for GeographicLib::MagneticCircle class
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -173,9 +173,9 @@ namespace GeographicLib {
     { return Init() ? _t : Math::NaN(); }
 
     /**
-      * \deprecated An old name for EquatorialRadius().
-      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+     * \deprecated An old name for EquatorialRadius().
+     **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };

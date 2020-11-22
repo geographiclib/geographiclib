@@ -12,6 +12,9 @@
 /* patch number */
 #undef GEOGRAPHICLIB_VERSION_PATCH
 
+/* define if the compiler supports basic C++11 syntax */
+#undef HAVE_CXX11
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 

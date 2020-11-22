@@ -2,7 +2,7 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -292,7 +292,8 @@ namespace GeographicLib {
      * an overload of str<T> which deals with inf and nan.
      **********************************************************************/
     static std::string str(Math::real x, int p = -1) {
-      if (!Math::isfinite(x))
+      using std::isfinite;
+      if (!isfinite(x))
         return x < 0 ? std::string("-inf") :
           (x > 0 ? std::string("inf") : std::string("nan"));
       std::ostringstream s;
@@ -458,7 +459,7 @@ namespace GeographicLib {
      * intended that \e s should not contain any lower case letters.
      **********************************************************************/
     static int lookup(const std::string& s, char c) {
-      std::string::size_type r = s.find(char(toupper(c)));
+      std::string::size_type r = s.find(char(std::toupper(c)));
       return r == std::string::npos ? -1 : int(r);
     }
 
@@ -474,7 +475,7 @@ namespace GeographicLib {
      * intended that \e s should not contain any lower case letters.
      **********************************************************************/
     static int lookup(const char* s, char c) {
-      const char* p = std::strchr(s, toupper(c));
+      const char* p = std::strchr(s, std::toupper(c));
       return p != NULL ? int(p - s) : -1;
     }
 
@@ -614,22 +615,45 @@ namespace GeographicLib {
     }
 
     /**
-     * Parse a KEY VALUE line.
+     * Parse a KEY [=] VALUE line.
      *
      * @param[in] line the input line.
-     * @param[out] key the key.
-     * @param[out] val the value.
+     * @param[out] key the KEY.
+     * @param[out] value the VALUE.
+     * @param[in] delim delimiter to separate KEY and VALUE, if NULL use first
+     *   space character.
      * @exception std::bad_alloc if memory for the internal strings can't be
      *   allocated.
      * @return whether a key was found.
      *
-     * A # character and everything after it are discarded.  If the result is
-     * just white space, the routine returns false (and \e key and \e val are
-     * not set).  Otherwise the first token is taken to be the key and the rest
-     * of the line (trimmed of leading and trailing white space) is the value.
+     * A "#" character and everything after it are discarded and the result
+     * trimmed of leading and trailing white space.  Use the delimiter
+     * character (or, if it is NULL, the first white space) to separate \e key
+     * and \e value.  \e key and \e value are trimmed of leading and trailing
+     * white space.  If \e key is empty, then \e value is set to "" and false
+     * is returned.
      **********************************************************************/
     static bool ParseLine(const std::string& line,
-                          std::string& key, std::string& val);
+                          std::string& key, std::string& value,
+                          char delim);
+
+    /**
+     * Parse a KEY VALUE line.
+     *
+     * @param[in] line the input line.
+     * @param[out] key the KEY.
+     * @param[out] value the VALUE.
+     * @exception std::bad_alloc if memory for the internal strings can't be
+     *   allocated.
+     * @return whether a key was found.
+     *
+     * \note This is a transition routine.  At some point \e delim will be made
+     * an optional argument in the previous version of ParseLine and this
+     * version will be removed.
+     **********************************************************************/
+
+    static bool ParseLine(const std::string& line,
+                          std::string& key, std::string& value);
 
     /**
      * Set the binary precision of a real number.
@@ -665,13 +689,15 @@ namespace GeographicLib {
     std::string t(trim(s));
     if (t.empty()) return false;
     bool x;
-    std::istringstream is(t);
-    if (is >> x) {
-      int pos = int(is.tellg()); // Returns -1 at end of string?
-      if (!(pos < 0 || pos == int(t.size())))
-        throw GeographicErr("Extra text " + t.substr(pos) +
-                            " at end of " + t);
-      return x;
+    {
+      std::istringstream is(t);
+      if (is >> x) {
+        int pos = int(is.tellg()); // Returns -1 at end of string?
+        if (!(pos < 0 || pos == int(t.size())))
+          throw GeographicErr("Extra text " + t.substr(pos) +
+                              " at end of " + t);
+        return x;
+      }
     }
     for (std::string::iterator p = t.begin(); p != t.end(); ++p)
       *p = char(std::tolower(*p));

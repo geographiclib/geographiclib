@@ -3,7 +3,7 @@
  * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
  * JavaScript.
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -38,7 +38,7 @@
  *   {@link module:GeographicLib/Accumulator.Accumulator Accumulator} class)
  *   for summing the contributions to the area of a polygon.
  */
-"use strict";
+
 var GeographicLib = {};
 GeographicLib.Constants = {};
 GeographicLib.Math = {};
@@ -50,6 +50,7 @@ GeographicLib.Accumulator = {};
    * @description Define constants defining the version and WGS84 parameters.
    */
   c) {
+  "use strict";
 
   /**
    * @constant
@@ -65,12 +66,12 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 50, patch: 0 };
+  c.version = { major: 1, minor: 51, patch: 0 };
   /**
    * @constant
    * @summary version string
    */
-  c.version_string = "1.50";
+  c.version_string = "1.51";
 })(GeographicLib.Constants);
 
 (function(
@@ -80,6 +81,7 @@ GeographicLib.Accumulator = {};
    *   internal use).
    */
   m) {
+  "use strict";
 
   /**
    * @summary The number of digits of precision in floating-point numbers.
@@ -340,6 +342,7 @@ GeographicLib.Accumulator = {};
    *   (mainly for internal use).
    */
   a, m) {
+  "use strict";
 
   /**
    * @class

@@ -2,7 +2,7 @@
  * \file GravityModel.cpp
  * \brief Implementation for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -131,7 +131,7 @@ namespace GeographicLib {
                                      SphericalHarmonic1::normalization(_norm));
   }
 
-  void GravityModel::ReadMetadata(const std::string& name) {
+  void GravityModel::ReadMetadata(const string& name) {
     const char* spaces = " \t\n\v\f\r";
     _filename = _dir + "/" + name + ".egm";
     ifstream metastr(_filename.c_str());
@@ -194,20 +194,20 @@ namespace GeographicLib {
       // else unrecognized keywords are skipped
     }
     // Check values
-    if (!(Math::isfinite(_amodel) && _amodel > 0))
+    if (!(isfinite(_amodel) && _amodel > 0))
       throw GeographicErr("Model radius must be positive");
-    if (!(Math::isfinite(_GMmodel) && _GMmodel > 0))
+    if (!(isfinite(_GMmodel) && _GMmodel > 0))
       throw GeographicErr("Model mass constant must be positive");
-    if (!(Math::isfinite(_corrmult) && _corrmult > 0))
+    if (!(isfinite(_corrmult) && _corrmult > 0))
       throw GeographicErr("Correction multiplier must be positive");
-    if (!(Math::isfinite(_zeta0)))
+    if (!(isfinite(_zeta0)))
       throw GeographicErr("Height offset must be finite");
     if (int(_id.size()) != idlength_)
       throw GeographicErr("Invalid ID");
-    if (Math::isfinite(f) && Math::isfinite(J2))
+    if (isfinite(f) && isfinite(J2))
       throw GeographicErr("Cannot specify both f and J2");
     _earth = NormalGravity(a, GM, omega,
-                           Math::isfinite(f) ? f : J2, Math::isfinite(f));
+                           isfinite(f) ? f : J2, isfinite(f));
   }
 
   Math::real GravityModel::InternalT(real X, real Y, real Z,
@@ -219,7 +219,7 @@ namespace GeographicLib {
     if (_dzonal0 == 0)
       // No need to do the correction
       correct = false;
-    real T, invR = correct ? 1 / Math::hypot(Math::hypot(X, Y), Z) : 1;
+    real T, invR = correct ? 1 / hypot(hypot(X, Y), Z) : 1;
     if (gradp) {
       // initial values to suppress warnings
       deltaX = deltaY = deltaZ = 0;
@@ -269,8 +269,8 @@ namespace GeographicLib {
       deltax, deltay, deltaz,
       T = InternalT(X, Y, Z, deltax, deltay, deltaz, true, false),
       clam = M[3], slam = -M[0],
-      P = Math::hypot(X, Y),
-      R = Math::hypot(P, Z),
+      P = hypot(X, Y),
+      R = hypot(P, Z),
       // psi is geocentric latitude
       cpsi = R != 0 ? P / R : M[7],
       spsi = R != 0 ? Z / R : M[8];
@@ -282,7 +282,7 @@ namespace GeographicLib {
     Dg01 = - deltaz - 2 * T / R;
     real gammaX, gammaY, gammaZ;
     _earth.U(X, Y, Z, gammaX, gammaY, gammaZ);
-    real gamma = Math::hypot( Math::hypot(gammaX, gammaY), gammaZ);
+    real gamma = hypot( hypot(gammaX, gammaY), gammaZ);
     xi  = -(deltay/gamma) / Math::degree();
     eta = -(deltax/gamma) / Math::degree();
   }
@@ -295,7 +295,7 @@ namespace GeographicLib {
       gamma0 = _earth.SurfaceGravity(lat),
       dummy,
       T = InternalT(X, Y, Z, dummy, dummy, dummy, false, false),
-      invR = 1 / Math::hypot(Math::hypot(X, Y), Z),
+      invR = 1 / hypot(hypot(X, Y), Z),
       correction = _corrmult * _correction(invR * X, invR * Y, invR * Z);
     // _zeta0 has been included in _correction
     return T/gamma0 + correction;
@@ -327,13 +327,13 @@ namespace GeographicLib {
     _earth.Earth().IntForward(lat, 0, h, X, Y, Z, M);
     // Y = 0, cphi = M[7], sphi = M[8];
     real
-      invR = 1 / Math::hypot(X, Z),
+      invR = 1 / hypot(X, Z),
       gamma0 = (caps & CAP_GAMMA0 ?_earth.SurfaceGravity(lat)
                 : Math::NaN()),
       fx, fy, fz, gamma;
     if (caps & CAP_GAMMA) {
       _earth.U(X, Y, Z, fx, fy, fz); // fy = 0
-      gamma = Math::hypot(fx, fz);
+      gamma = hypot(fx, fz);
     } else
       gamma = Math::NaN();
     _earth.Phi(X, Y, fx, fy);
@@ -353,7 +353,7 @@ namespace GeographicLib {
                          CircularEngine());
   }
 
-  std::string GravityModel::DefaultGravityPath() {
+  string GravityModel::DefaultGravityPath() {
     string path;
     char* gravitypath = getenv("GEOGRAPHICLIB_GRAVITY_PATH");
     if (gravitypath)
@@ -366,7 +366,7 @@ namespace GeographicLib {
     return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/gravity";
   }
 
-  std::string GravityModel::DefaultGravityName() {
+  string GravityModel::DefaultGravityName() {
     string name;
     char* gravityname = getenv("GEOGRAPHICLIB_GRAVITY_NAME");
     if (gravityname)

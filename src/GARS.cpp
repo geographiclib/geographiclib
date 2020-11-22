@@ -2,7 +2,7 @@
  * \file GARS.cpp
  * \brief Implementation for GeographicLib::GARS class
  *
- * Copyright (c) Charles Karney (2015-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -17,11 +17,12 @@ namespace GeographicLib {
   const char* const GARS::digits_ = "0123456789";
   const char* const GARS::letters_ = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 
-  void GARS::Forward(real lat, real lon, int prec, std::string& gars) {
+  void GARS::Forward(real lat, real lon, int prec, string& gars) {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (Math::isnan(lat) || Math::isnan(lon)) {
+    if (isnan(lat) || isnan(lon)) {
       gars = "INVALID";
       return;
     }
@@ -55,8 +56,8 @@ namespace GeographicLib {
     copy(gars1, gars1 + baselen_ + prec, gars.begin());
   }
 
-  void GARS::Reverse(const std::string& gars, real& lat, real& lon,
-                        int& prec, bool centerp) {
+  void GARS::Reverse(const string& gars, real& lat, real& lon,
+                     int& prec, bool centerp) {
     int len = int(gars.length());
     if (len >= 3 &&
         toupper(gars[0]) == 'I' &&

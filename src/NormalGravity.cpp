@@ -2,7 +2,7 @@
  * \file NormalGravity.cpp
  * \brief Implementation for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -21,19 +21,19 @@ namespace GeographicLib {
   void NormalGravity::Initialize(real a, real GM, real omega, real f_J2,
                                  bool geometricp) {
     _a = a;
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     _GM = GM;
-    if (!Math::isfinite(_GM))
+    if (!isfinite(_GM))
       throw GeographicErr("Gravitational constant is not finite");
     _omega = omega;
     _omega2 = Math::sq(_omega);
     _aomega2 = Math::sq(_omega * _a);
-    if (!(Math::isfinite(_omega2) && Math::isfinite(_aomega2)))
+    if (!(isfinite(_omega2) && isfinite(_aomega2)))
       throw GeographicErr("Rotation velocity is not finite");
     _f = geometricp ? f_J2 : J2ToFlattening(_a, _GM, _omega, f_J2);
     _b = _a * (1 - _f);
-    if (!(Math::isfinite(_b) && _b > 0))
+    if (!(isfinite(_b) && _b > 0))
       throw GeographicErr("Polar semi-axis is not positive");
     _J2 = geometricp ? FlatteningToJ2(_a, _GM, _omega, f_J2) : f_J2;
     _e2 = _f * (2 - _f);
@@ -168,10 +168,10 @@ namespace GeographicLib {
   {
     // See H+M, Sec 6-2
     real
-      p = Math::hypot(X, Y),
+      p = hypot(X, Y),
       clam = p != 0 ? X/p : 1,
       slam = p != 0 ? Y/p : 0,
-      r = Math::hypot(p, Z);
+      r = hypot(p, Z);
     if (_f < 0) swap(p, Z);
     real
       Q = Math::sq(r) - Math::sq(_E),
@@ -180,17 +180,17 @@ namespace GeographicLib {
       // This is H+M, Eq 6-8a, but generalized to deal with Q negative
       // accurately.
       u = sqrt((Q >= 0 ? (Q + disc) : t2 / (disc - Q)) / 2),
-      uE = Math::hypot(u, _E),
+      uE = hypot(u, _E),
       // H+M, Eq 6-8b
-      sbet = u != 0 ? Z * uE : Math::copysign(sqrt(-Q), Z),
+      sbet = u != 0 ? Z * uE : copysign(sqrt(-Q), Z),
       cbet = u != 0 ? p * u : p,
-      s = Math::hypot(cbet, sbet);
+      s = hypot(cbet, sbet);
     sbet = s != 0 ? sbet/s : 1;
     cbet = s != 0 ? cbet/s : 0;
     real
       z = _E/u,
       z2 = Math::sq(z),
-      den = Math::hypot(u, _E * sbet);
+      den = hypot(u, _E * sbet);
     if (_f < 0) {
       swap(sbet, cbet);
       swap(u, uE);
@@ -258,9 +258,9 @@ namespace GeographicLib {
     real
       K = 2 * Math::sq(a * omega) * a / (15 * GM),
       J0 = (1 - 4 * K / Math::pi()) / 3;
-    if (!(GM > 0 && Math::isfinite(K) && K >= 0))
+    if (!(GM > 0 && isfinite(K) && K >= 0))
       return Math::NaN();
-    if (!(Math::isfinite(J2) && J2 <= J0)) return Math::NaN();
+    if (!(isfinite(J2) && J2 <= J0)) return Math::NaN();
     if (J2 == J0) return 1;
     // Solve e2 - f1 * f2 * K / Q0 - 3 * J2 = 0 for J2 close to J0;
     // subst e2 = ep2/(1+ep2), f2 = 1/(1+ep2), f1 = 1/sqrt(1+ep2), J2 = J0-dJ2,

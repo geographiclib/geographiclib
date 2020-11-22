@@ -2,7 +2,7 @@
  * \file MGRS.cpp
  * \brief Implementation for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -38,11 +38,12 @@ namespace GeographicLib {
 
   void MGRS::Forward(int zone, bool northp, real x, real y, real lat,
                      int prec, std::string& mgrs) {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
     // 7 = ceil(log_2(90))
     static const real angeps = ldexp(real(1), -(Math::digits() - 7));
     if (zone == UTMUPS::INVALID ||
-        Math::isnan(x) || Math::isnan(y) || Math::isnan(lat)) {
+        isnan(x) || isnan(y) || isnan(lat)) {
       mgrs = "INVALID";
       return;
     }
@@ -69,8 +70,8 @@ namespace GeographicLib {
     }
     // The C++ standard mandates 64 bits for long long.  But
     // check, to make sure.
-    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 44,
-                                "long long not wide enough to store 10e12");
+    static_assert(numeric_limits<long long>::digits >= 44,
+                  "long long not wide enough to store 10e12");
     long long
       ix = (long long)(floor(x * mult_)),
       iy = (long long)(floor(y * mult_)),
@@ -146,7 +147,7 @@ namespace GeographicLib {
     Forward(zone, northp, x, y, lat, prec, mgrs);
   }
 
-  void MGRS::Reverse(const std::string& mgrs,
+  void MGRS::Reverse(const string& mgrs,
                      int& zone, bool& northp, real& x, real& y,
                      int& prec, bool centerp) {
     int

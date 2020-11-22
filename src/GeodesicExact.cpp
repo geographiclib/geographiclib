@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -68,7 +68,7 @@ namespace GeographicLib {
       // ellipsoids.
     , _c2((Math::sq(_a) + Math::sq(_b) *
            (_f == 0 ? 1 :
-            (_f > 0 ? Math::asinh(sqrt(_ep2)) : atan(sqrt(-_e2))) /
+            (_f > 0 ? asinh(sqrt(_ep2)) : atan(sqrt(-_e2))) /
             sqrt(abs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short".  Using the auxiliary sphere
       // solution with dnm computed at (bet1 + bet2) / 2, the relative error in
@@ -83,9 +83,9 @@ namespace GeographicLib {
     , _etol2(real(0.1) * tol2_ /
              sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    if (!(Math::isfinite(_b) && _b > 0))
+    if (!(isfinite(_b) && _b > 0))
       throw GeographicErr("Polar semi-axis is not positive");
     C4coeff();
   }
@@ -442,7 +442,7 @@ namespace GeographicLib {
       real
         // From Lambda12: sin(alp1) * cos(bet1) = sin(alp0)
         salp0 = salp1 * cbet1,
-        calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
+        calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
       real alp12;
       if (calp0 != 0 && salp0 != 0) {
         real
@@ -620,7 +620,7 @@ namespace GeographicLib {
         // of the way the T is used in definition of u.
         T3 += T3 < 0 ? -sqrt(disc) : sqrt(disc); // T3 = (r * t)^3
         // N.B. cbrt always returns the real root.  cbrt(-8) = -2.
-        real T = Math::cbrt(T3); // T = r * t
+        real T = cbrt(T3); // T = r * t
         // T can be zero; but then r2 / T -> 0.
         u += T + (T != 0 ? r2 / T : 0);
       } else {
@@ -685,7 +685,7 @@ namespace GeographicLib {
       sbet12a - cbet2 * sbet1 * Math::sq(somg12) / (1 - comg12);
 
     real
-      ssig12 = Math::hypot(salp1, calp1),
+      ssig12 = hypot(salp1, calp1),
       csig12 = sbet1 * sbet2 + cbet1 * cbet2 * comg12;
 
     if (shortline && ssig12 < _etol2) {
@@ -821,7 +821,7 @@ namespace GeographicLib {
     real
       // sin(alp1) * cos(bet1) = sin(alp0)
       salp0 = salp1 * cbet1,
-      calp0 = Math::hypot(calp1, salp1 * sbet1); // calp0 > 0
+      calp0 = hypot(calp1, salp1 * sbet1); // calp0 > 0
 
     real somg1, comg1, somg2, comg2, somg12, comg12, cchi1, cchi2, lam12;
     // tan(bet1) = tan(sig1) * cos(alp1)

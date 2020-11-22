@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
  * classes
  *
- * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -121,9 +121,9 @@ namespace GeographicLib {
 #else
 #error "Bad value for GEOGRAPHICLIB_RHUMBAREA_ORDER"
 #endif
-    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(coeff) / sizeof(real) ==
-                                ((maxpow_ + 1) * (maxpow_ + 4))/2,
-                                "Coefficient array size mismatch for Rhumb");
+    static_assert(sizeof(coeff) / sizeof(real) ==
+                  ((maxpow_ + 1) * (maxpow_ + 4))/2,
+                  "Coefficient array size mismatch for Rhumb");
     real d = 1;
     int o = 0;
     for (int l = 0; l <= maxpow_; ++l) {
@@ -153,7 +153,7 @@ namespace GeographicLib {
       psi1 = _ell.IsometricLatitude(lat1),
       psi2 = _ell.IsometricLatitude(lat2),
       psi12 = psi2 - psi1,
-      h = Math::hypot(lon12, psi12);
+      h = hypot(lon12, psi12);
     if (outmask & AZIMUTH)
       azi12 = Math::atan2d(lon12, psi12);
     if (outmask & DISTANCE) {
@@ -265,7 +265,7 @@ namespace GeographicLib {
     real* b2 = bb;
     if (n > 0) b1[0] = b1[3] = c[n];
     for (int j = n - 1; j > 0; --j) { // j = n-1 .. 1
-      std::swap(b1, b2);
+      swap(b1, b2);
       // b1 = A * b2 - b1 + c[j] * I
       b1[0] = a[0] * b2[0] + a[1] * b2[2] - b1[0] + c[j];
       b1[1] = a[0] * b2[1] + a[1] * b2[3] - b1[1];

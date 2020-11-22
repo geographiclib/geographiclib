@@ -2,7 +2,7 @@
  * \file MagneticModel.cpp
  * \brief Implementation for GeographicLib::MagneticModel class
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -34,7 +34,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  MagneticModel::MagneticModel(const std::string& name,const std::string& path,
+  MagneticModel::MagneticModel(const std::string& name, const std::string& path,
                                const Geocentric& earth, int Nmax, int Mmax)
     : _name(name)
     , _dir(path)
@@ -95,7 +95,7 @@ namespace GeographicLib {
     }
   }
 
-  void MagneticModel::ReadMetadata(const std::string& name) {
+  void MagneticModel::ReadMetadata(const string& name) {
     const char* spaces = " \t\n\v\f\r";
     _filename = _dir + "/" + name + ".wmm";
     ifstream metastr(_filename.c_str());
@@ -160,7 +160,7 @@ namespace GeographicLib {
       // else unrecognized keywords are skipped
     }
     // Check values
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Reference radius must be positive");
     if (!(_t0 > 0))
       throw GeographicErr("Epoch time not defined");
@@ -247,17 +247,17 @@ namespace GeographicLib {
                                       real& H, real& F, real& D, real& I,
                                       real& Ht, real& Ft,
                                       real& Dt, real& It) {
-    H = Math::hypot(Bx, By);
-    Ht = H != 0 ? (Bx * Bxt + By * Byt) / H : Math::hypot(Bxt, Byt);
+    H = hypot(Bx, By);
+    Ht = H != 0 ? (Bx * Bxt + By * Byt) / H : hypot(Bxt, Byt);
     D = H != 0 ? Math::atan2d(Bx, By) : Math::atan2d(Bxt, Byt);
     Dt = (H != 0 ? (By * Bxt - Bx * Byt) / Math::sq(H) : 0) / Math::degree();
-    F = Math::hypot(H, Bz);
-    Ft = F != 0 ? (H * Ht + Bz * Bzt) / F : Math::hypot(Ht, Bzt);
+    F = hypot(H, Bz);
+    Ft = F != 0 ? (H * Ht + Bz * Bzt) / F : hypot(Ht, Bzt);
     I = F != 0 ? Math::atan2d(-Bz, H) : Math::atan2d(-Bzt, Ht);
     It = (F != 0 ? (Bz * Ht - H * Bzt) / Math::sq(F) : 0) / Math::degree();
   }
 
-  std::string MagneticModel::DefaultMagneticPath() {
+  string MagneticModel::DefaultMagneticPath() {
     string path;
     char* magneticpath = getenv("GEOGRAPHICLIB_MAGNETIC_PATH");
     if (magneticpath)
@@ -270,7 +270,7 @@ namespace GeographicLib {
     return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/magnetic";
   }
 
-  std::string MagneticModel::DefaultMagneticName() {
+  string MagneticModel::DefaultMagneticName() {
     string name;
     char* magneticname = getenv("GEOGRAPHICLIB_MAGNETIC_NAME");
     if (magneticname)

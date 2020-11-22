@@ -2,7 +2,7 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -90,7 +90,7 @@ namespace GeographicLib {
     //   http://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf
 
     static real Dlog(real x, real y) {
-      using std::sqrt;
+      using std::sqrt; using std::asinh;
       real t = x - y;
       // Change
       //
@@ -104,7 +104,7 @@ namespace GeographicLib {
       // routine is invoked with positive x and y, so no need to guard against
       // taking the sqrt of a negative quantity.  This fixes bogus results for
       // the area being returning when an endpoint is at a pole.
-      return t != 0 ? 2 * Math::asinh(t / (2 * sqrt(x*y))) / t : 1 / x;
+      return t != 0 ? 2 * asinh(t / (2 * sqrt(x*y))) / t : 1 / x;
     }
     // N.B., x and y are in degrees
     static real Dtan(real x, real y) {
@@ -137,10 +137,11 @@ namespace GeographicLib {
       return sinh((x + y) / 2) * (d != 0 ? sinh(d) / d : 1);
     }
     static real Dasinh(real x, real y) {
+      using std::asinh; using std::hypot;
       real d = x - y,
-        hx = Math::hypot(real(1), x), hy = Math::hypot(real(1), y);
+        hx = hypot(real(1), x), hy = hypot(real(1), y);
       return d != 0 ?
-        Math::asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) : x*hy - y*hx) / d :
+        asinh(x*y > 0 ? d * (x + y) / (x*hy + y*hx) : x*hy - y*hx) / d :
         1 / hx;
     }
     static real Dgd(real x, real y) {
@@ -429,9 +430,9 @@ namespace GeographicLib {
     Math::real EllipsoidArea() const { return _ell.Area(); }
 
     /**
-      * \deprecated An old name for EquatorialRadius().
-      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+     * \deprecated An old name for EquatorialRadius().
+     **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 

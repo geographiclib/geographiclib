@@ -107,12 +107,12 @@
  * twice about restructuring the internals of the C code since this may make
  * porting fixes from the C++ code more difficult.
  *
- * Copyright (c) Charles Karney (2012-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
  * This library was distributed with
- * <a href="../index.html">GeographicLib</a> 1.50.
+ * <a href="../index.html">GeographicLib</a> 1.51.
  **********************************************************************/
 
 #if !defined(GEODESIC_H)
@@ -127,7 +127,7 @@
  * The minor version of the geodesic library.  (This tracks the version of
  * GeographicLib.)
  **********************************************************************/
-#define GEODESIC_VERSION_MINOR 50
+#define GEODESIC_VERSION_MINOR 51
 /**
  * The patch level of the geodesic library.  (This tracks the version of
  * GeographicLib.)
@@ -158,7 +158,7 @@
                       GEODESIC_VERSION_PATCH)
 
 #if !defined(GEOD_DLL)
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && defined(PROJ_MSVC_DLL_EXPORT)
 #define GEOD_DLL __declspec(dllexport)
 #elif defined(__GNUC__)
 #define GEOD_DLL __attribute__ ((visibility("default")))
@@ -476,7 +476,7 @@ extern "C" {
 
   /**
    * Initialize a geod_geodesicline object in terms of the direct geodesic
-   * problem spacified in terms of either distance or arc length.
+   * problem specified in terms of either distance or arc length.
    *
    * @param[out] l a pointer to the object to be initialized.
    * @param[in] g a pointer to the geod_geodesic object specifying the

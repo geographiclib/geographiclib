@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "TRANSVERSEMERCATORPROJ 1"
-.TH TRANSVERSEMERCATORPROJ 1 "2019-12-12" "GeographicLib 1.50.1" "GeographicLib Utilities"
+.TH TRANSVERSEMERCATORPROJ 1 "2020-11-22" "GeographicLib 1.51" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -175,7 +175,8 @@ use the sixth-order Krueger series approximation to the transverse
 Mercator projection instead of the exact projection.
 .IP "\fB\-t\fR" 4
 .IX Item "-t"
-use the exact algorithm with the \*(L"\s-1EXTENDED DOMAIN\*(R"\s0.
+use the exact algorithm with the \*(L"\s-1EXTENDED DOMAIN\*(R"\s0; this is the
+default.
 .IP "\fB\-l\fR \fIlon0\fR" 4
 .IX Item "-l lon0"
 specify the longitude of origin \fIlon0\fR (degrees, default 0).
@@ -243,13 +244,14 @@ file name of \*(L"\-\*(R" stands for standard output.
 .SH "EXTENDED DOMAIN"
 .IX Header "EXTENDED DOMAIN"
 The exact transverse Mercator projection has a \fIbranch point\fR on the
-equator at longitudes (relative to \fIlon0\fR) of +/\- (1 \- \fIe\fR) 90, where
-\&\fIe\fR is the eccentricity of the ellipsoid.  The standard convention for
-handling this branch point is to map positive (negative) latitudes into
-positive (negative) northings \fIy\fR; i.e., a branch cut is placed on the
-equator.  With the \fIextended\fR domain, the northern sheet of the
-projection is extended into the south hemisphere by pushing the branch
-cut south from the branch points.  See the reference below for details.
+equator at longitudes (relative to \fIlon0\fR) of +/\- (1 \- \fIe\fR) 90 =
+82.636..., where \fIe\fR is the eccentricity of the ellipsoid.  The
+standard convention for handling this branch point is to map positive
+(negative) latitudes into positive (negative) northings \fIy\fR; i.e., a
+branch cut is placed on the equator.  With the \fIextended\fR domain, the
+northern sheet of the projection is extended into the south hemisphere
+by pushing the branch cut south from the branch points.  See the
+reference below for details.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .Vb 4

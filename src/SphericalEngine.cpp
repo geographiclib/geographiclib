@@ -2,7 +2,7 @@
  * \file SphericalEngine.cpp
  * \brief Implementation for GeographicLib::SphericalEngine class
  *
- * Copyright (c) Charles Karney (2011-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -154,16 +154,15 @@ namespace GeographicLib {
                                     real x, real y, real z, real a,
                                     real& gradx, real& grady, real& gradz)
     {
-    GEOGRAPHICLIB_STATIC_ASSERT(L > 0, "L must be positive");
-    GEOGRAPHICLIB_STATIC_ASSERT(norm == FULL || norm == SCHMIDT,
-                                "Unknown normalization");
+    static_assert(L > 0, "L must be positive");
+    static_assert(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
-      p = Math::hypot(x, y),
+      p = hypot(x, y),
       cl = p != 0 ? x / p : 1,  // cos(lambda); at pole, pick lambda = 0
       sl = p != 0 ? y / p : 0,  // sin(lambda)
-      r = Math::hypot(z, p),
+      r = hypot(z, p),
       t = r != 0 ? z / r : 0,   // cos(theta); at origin, pick theta = pi/2
       u = r != 0 ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;
@@ -298,13 +297,12 @@ namespace GeographicLib {
   CircularEngine SphericalEngine::Circle(const coeff c[], const real f[],
                                          real p, real z, real a) {
 
-    GEOGRAPHICLIB_STATIC_ASSERT(L > 0, "L must be positive");
-    GEOGRAPHICLIB_STATIC_ASSERT(norm == FULL || norm == SCHMIDT,
-                                "Unknown normalization");
+    static_assert(L > 0, "L must be positive");
+    static_assert(norm == FULL || norm == SCHMIDT, "Unknown normalization");
     int N = c[0].nmx(), M = c[0].mmx();
 
     real
-      r = Math::hypot(z, p),
+      r = hypot(z, p),
       t = r != 0 ? z / r : 0,   // cos(theta); at origin, pick theta = pi/2
       u = r != 0 ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;
@@ -384,9 +382,9 @@ namespace GeographicLib {
       root[l] = sqrt(real(l));
   }
 
-  void SphericalEngine::coeff::readcoeffs(std::istream& stream, int& N, int& M,
-                                          std::vector<real>& C,
-                                          std::vector<real>& S,
+  void SphericalEngine::coeff::readcoeffs(istream& stream, int& N, int& M,
+                                          vector<real>& C,
+                                          vector<real>& S,
                                           bool truncate) {
     if (truncate) {
       if (!((N >= M && M >= 0) || (N == -1 && M == -1)))
@@ -409,22 +407,22 @@ namespace GeographicLib {
                 SphericalEngine::coeff::Csize(N0, M )) * sizeof(double);
     if (N == N0) {
       Utility::readarray<double, real, false>(stream, C);
-      if (skip) stream.seekg(std::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
       Utility::readarray<double, real, false>(stream, S);
-      if (skip) stream.seekg(std::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
     } else {
       for (int m = 0, k = 0; m <= M; ++m) {
         Utility::readarray<double, real, false>(stream, &C[k], N + 1 - m);
         stream.seekg((N0 - N) * sizeof(double), ios::cur);
         k += N + 1 - m;
       }
-      if (skip) stream.seekg(std::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
       for (int m = 1, k = 0; m <= M; ++m) {
         Utility::readarray<double, real, false>(stream, &S[k], N + 1 - m);
         stream.seekg((N0 - N) * sizeof(double), ios::cur);
         k += N + 1 - m;
       }
-      if (skip) stream.seekg(std::streamoff(skip), ios::cur);
+      if (skip) stream.seekg(streamoff(skip), ios::cur);
     }
     return;
   }

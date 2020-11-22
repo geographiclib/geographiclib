@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -65,13 +65,13 @@ namespace GeographicLib {
     , _Eu(_mu)
     , _Ev(_mv)
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(_f > 0))
       throw GeographicErr("Flattening is not positive");
     if (!(_f < 1))
       throw GeographicErr("Polar semi-axis is not positive");
-    if (!(Math::isfinite(_k0) && _k0 > 0))
+    if (!(isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
   }
 
@@ -91,16 +91,16 @@ namespace GeographicLib {
     //         asinh(_e * snu / sqrt(_mu * cnu^2 + _mv * cnv^2))
     // Overflow value s.t. atan(overflow) = pi/2
     static const real
-      overflow = 1 / Math::sq(std::numeric_limits<real>::epsilon());
+      overflow = 1 / Math::sq(numeric_limits<real>::epsilon());
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
       t1 = (d1 != 0 ? snu * dnv / d1 : (snu < 0 ? -overflow : overflow)),
-      t2 = (d2 != 0 ? sinh( _e * Math::asinh(_e * snu / d2) ) :
+      t2 = (d2 != 0 ? sinh( _e * asinh(_e * snu / d2) ) :
             (snu < 0 ? -overflow : overflow));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)
-    taup = t1 * Math::hypot(real(1), t2) - t2 * Math::hypot(real(1), t1);
+    taup = t1 * hypot(real(1), t2) - t2 * hypot(real(1), t1);
     lam = (d1 != 0 && d2 != 0) ?
       atan2(dnu * snv, cnu * cnv) - _e * atan2(_e * cnu * snv, dnu * cnv) :
       0;
@@ -137,7 +137,7 @@ namespace GeographicLib {
       real
         psix = 1 - psi / _e,
         lamx = (Math::pi()/2 - lam) / _e;
-      u = Math::asinh(sin(lamx) / Math::hypot(cos(lamx), sinh(psix))) *
+      u = asinh(sin(lamx) / hypot(cos(lamx), sinh(psix))) *
         (1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
       u = _Eu.K() - u;
@@ -157,7 +157,7 @@ namespace GeographicLib {
       // arg(zeta - zeta0) = [-90, 180]
       real
         dlam = lam - (1 - _e) * Math::pi()/2,
-        rad = Math::hypot(psi, dlam),
+        rad = hypot(psi, dlam),
         // atan2(dlam-psi, psi+dlam) + 45d gives arg(zeta - zeta0) in range
         // [-135, 225).  Subtracting 180 (since multiplier is negative) makes
         // range [-315, 45).  Multiplying by 1/3 (for cube root) gives range
@@ -166,7 +166,7 @@ namespace GeographicLib {
         ang = atan2(dlam-psi, psi+dlam) - real(0.75) * Math::pi();
       // Error using this guess is about 0.21 * (rad/e)^(5/3)
       retval = rad < _e * taytol_;
-      rad = Math::cbrt(3 / (_mv * _e) * rad);
+      rad = cbrt(3 / (_mv * _e) * rad);
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();
@@ -174,7 +174,7 @@ namespace GeographicLib {
       // Use spherical TM, Lee 12.6 -- writing atanh(sin(lam) / cosh(psi)) =
       // asinh(sin(lam) / hypot(cos(lam), sinh(psi))).  This takes care of the
       // log singularity at zeta = Eu.K() (corresponding to the north pole)
-      v = Math::asinh(sin(lam) / Math::hypot(cos(lam), sinh(psi)));
+      v = asinh(sin(lam) / hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
       u *= _Eu.K() / (Math::pi()/2);
@@ -187,8 +187,8 @@ namespace GeographicLib {
   void TransverseMercatorExact::zetainv(real taup, real lam,
                                         real& u, real& v) const  {
     real
-      psi = Math::asinh(taup),
-      scal = 1/Math::hypot(real(1), taup);
+      psi = asinh(taup),
+      scal = 1/hypot(real(1), taup);
     if (zetainv0(psi, lam, u, v))
       return;
     real stol2 = tol2_ / Math::sq(max(psi, real(1)));
@@ -273,13 +273,13 @@ namespace GeographicLib {
       // mapping arg = [-pi/2, -pi/6] to [-pi/2, pi/2]
       real
         deta = eta - _Ev.KE(),
-        rad = Math::hypot(xi, deta),
+        rad = hypot(xi, deta),
         // Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
         // discussion in zetainv0 on the cut for ang.
         ang = atan2(deta-xi, xi+deta) - real(0.75) * Math::pi();
       // Error using this guess is about 0.068 * rad^(5/3)
       retval = rad < 2 * taytol_;
-      rad = Math::cbrt(3 / _mv * rad);
+      rad = cbrt(3 / _mv * rad);
       ang /= 3;
       u = rad * cos(ang);
       v = rad * sin(ang) + _Ev.K();

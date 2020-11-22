@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -176,33 +176,67 @@ namespace GeographicLib {
      * <code>(7.0E) + (+1)</code>, yielding the same result as
      * <code>8.0E</code>.
      *
-     * \note At present, all the string handling in the C++
-     * implementation %GeographicLib is with 8-bit characters.  The support for
-     * unicode symbols for degrees, minutes, and seconds is therefore via the
+     * \note At present, all the string handling in the C++ implementation of
+     * %GeographicLib is with 8-bit characters.  The support for unicode
+     * symbols for degrees, minutes, and seconds is therefore via the
      * <a href="https://en.wikipedia.org/wiki/UTF-8">UTF-8</a> encoding.  (The
      * JavaScript implementation of this class uses unicode natively, of
      * course.)
      *
      * Here is the list of Unicode symbols supported for degrees, minutes,
-     * seconds, and the sign:
+     * seconds, and the plus and minus signs; various symbols denoting variants
+     * of a space, which may separate the components of a DMS string, are
+     * removed:
      * - degrees:
      *   - d, D lower and upper case letters
      *   - U+00b0 degree symbol (&deg;)
-     *   - U+00ba masculine ordinal indicator
-     *   - U+2070 superscript zero
-     *   - U+02da ring above
+     *   - U+00ba masculine ordinal indicator (&ordm;)
+     *   - U+2070 superscript zero (⁰)
+     *   - U+02da ring above (˚)
+     *   - U+2218 compose function (∘)
+     *   - * the <a href="https://grid.nga.mil">GRiD</a> symbol for degrees
      * - minutes:
      *   - ' apostrophe
+     *   - ` grave accent
      *   - U+2032 prime (&prime;)
-     *   - U+00b4 acute accent
+     *   - U+2035 back prime (‵)
+     *   - U+00b4 acute accent (&acute;)
+     *   - U+2018 left single quote (&lsquo;)
      *   - U+2019 right single quote (&rsquo;)
+     *   - U+201b reversed-9 single quote (‛)
+     *   - U+02b9 modifier letter prime (ʹ)
+     *   - U+02ca modifier letter acute accent (ˊ)
+     *   - U+02cb modifier letter grave accent (ˋ)
      * - seconds:
      *   - &quot; quotation mark
      *   - U+2033 double prime (&Prime;)
+     *   - U+2036 reversed double prime (‶)
+     *   + U+02dd double acute accent (˝)
+     *   - U+201c left double quote (&ldquo;)
      *   - U+201d right double quote (&rdquo;)
+     *   - U+201f reversed-9 double quote (‟)
+     *   - U+02ba modifier letter double prime (ʺ)
      *   - '&nbsp;' any two consecutive symbols for minutes
-     * - leading sign:
+     * - plus sign:
+     *   - + plus
+     *   - U+2795 heavy plus (➕)
+     *   - U+2064 invisible plus (|⁤|)
+     * - minus sign:
+     *   - - hyphen
+     *   - U+2010 dash (‐)
+     *   - U+2011 non-breaking hyphen (‑)
+     *   - U+2013 en dash (&ndash;)
+     *   - U+2014 em dash (&mdash;)
      *   - U+2212 minus sign (&minus;)
+     *   - U+2796 heavy minus (➖)
+     * - ignored spaces:
+     *   - U+00a0 non-breaking space
+     *   - U+2007 figure space (| |)
+     *   - U+2009 thin space (|&thinsp;|)
+     *   - U+200a hair space ( | |)
+     *   - U+200b invisible space (|​|)
+     *   - U+202f narrow space ( | |)
+     *   - U+2063 invisible separator (|⁣|)
      * .
      * The codes with a leading zero byte, e.g., U+00b0, are accepted in their
      * UTF-8 coded form 0xc2 0xb0 and as a single byte 0xb0.

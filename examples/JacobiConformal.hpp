@@ -5,7 +5,7 @@
  * <b>NOTE:</b> This is just sample code.  It is not part of GeographicLib
  * itself.
  *
- * Copyright (c) Charles Karney (2014-2015) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -42,8 +42,10 @@ namespace GeographicLib {
     typedef Math::real real;
     real _a, _b, _c, _ab2, _bc2, _ac2;
     EllipticFunction _ex, _ey;
-    static void norm(real& x, real& y)
-    { real z = Math::hypot(x, y); x /= z; y /= z; }
+    static void norm(real& x, real& y) {
+      using std::hypot;
+      real z = hypot(x, y); x /= z; y /= z;
+    }
   public:
     /**
      * Constructor for a trixial ellipsoid with semi-axes.
@@ -66,7 +68,8 @@ namespace GeographicLib {
       , _ey(_bc2 / _ac2 * Math::sq(_a / _b), +_bc2 / Math::sq(_b),
             _ab2 / _ac2 * Math::sq(_c / _b), Math::sq(_c / _b))
     {
-      if (!(Math::isfinite(_a) && _a >= _b && _b >= _c && _c > 0))
+      using std::isfinite;
+      if (!(isfinite(_a) && _a >= _b && _b >= _c && _c > 0))
         throw GeographicErr("JacobiConformal: axes are not in order");
       if (!(_a > _c))
         throw GeographicErr
@@ -98,10 +101,11 @@ namespace GeographicLib {
             +(_b - _c) * (_b + _c) / Math::sq(_b),
             _ab2 / _ac2 * Math::sq(_c / _b), Math::sq(_c / _b))
     {
-      if (!(Math::isfinite(_a) && _a >= _b && _b >= _c && _c > 0 &&
+      using std::isfinite;
+      if (!(isfinite(_a) && _a >= _b && _b >= _c && _c > 0 &&
             ab >= 0 && bc >= 0))
         throw GeographicErr("JacobiConformal: axes are not in order");
-      if (!(ab + bc > 0 && Math::isfinite(_ac2)))
+      if (!(ab + bc > 0 && isfinite(_ac2)))
         throw GeographicErr("JacobiConformal: ab + bc must be positive");
     }
     /**

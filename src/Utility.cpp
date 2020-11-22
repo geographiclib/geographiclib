@@ -2,8 +2,8 @@
  * \file Utility.cpp
  * \brief Implementation for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -20,29 +20,22 @@ namespace GeographicLib {
   using namespace std;
 
   bool Utility::ParseLine(const std::string& line,
-                          std::string& key, std::string& val) {
-    const char* spaces = " \t\n\v\f\r";
-    string::size_type n0 = line.find_first_not_of(spaces);
-    if (n0 == string::npos)
-      return false;             // Blank line
-    string::size_type n1 = line.find_first_of('#', n0);
-    if (n0 == n1)
-      return false;             // Only a comment
-    val = line.substr(n0, n1 == string::npos ? n1 : n1 - n0);
-    n0 = val.find_first_of(spaces);
-    key = val.substr(0, n0);
-    if (n0 == string::npos) {
-      val = "";
-      return true;
-    }
-    n0 = val.find_first_not_of(spaces, n0);
-    if (n0 == string::npos) {
-      val = "";
-      return true;
-    }
-    n1 = val.find_last_not_of(spaces);
-    val = val.substr(n0, n1 + 1 - n0);
+                          std::string& key, std::string& value,
+                          char delim) {
+    key.clear(); value.clear();
+    string::size_type n = line.find('#');
+    string linea = trim(line.substr(0, n));
+    if (linea.empty()) return false;
+    n = delim ? linea.find(delim) : linea.find_first_of(" \t\n\v\f\r");      //
+    key = trim(linea.substr(0, n));
+    if (key.empty()) return false;
+    if (n != string::npos) value = trim(linea.substr(n + 1));
     return true;
+  }
+
+  bool Utility::ParseLine(const std::string& line,
+                          std::string& key, std::string& value) {
+    return ParseLine(line, key, value, '\0');
   }
 
   int Utility::set_digits(int ndigits) {

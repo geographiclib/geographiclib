@@ -2,7 +2,7 @@
  * \file Georef.cpp
  * \brief Implementation for GeographicLib::Georef class
  *
- * Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -19,11 +19,12 @@ namespace GeographicLib {
   const char* const Georef::lattile_ = "ABCDEFGHJKLM";
   const char* const Georef::degrees_ = "ABCDEFGHJKLMNPQ";
 
-  void Georef::Forward(real lat, real lon, int prec, std::string& georef) {
+  void Georef::Forward(real lat, real lon, int prec, string& georef) {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (Math::isnan(lat) || Math::isnan(lon)) {
+    if (isnan(lat) || isnan(lon)) {
       georef = "INVALID";
       return;
     }
@@ -33,8 +34,8 @@ namespace GeographicLib {
     if (prec == 1) ++prec;      // Disallow prec = 1
     // The C++ standard mandates 64 bits for long long.  But
     // check, to make sure.
-    GEOGRAPHICLIB_STATIC_ASSERT(numeric_limits<long long>::digits >= 45,
-                                "long long not wide enough to store 21600e9");
+    static_assert(numeric_limits<long long>::digits >= 45,
+                  "long long not wide enough to store 21600e9");
     const long long m = 60000000000LL;
     long long
       x = (long long)(floor(lon * real(m))) - lonorig_ * m,
@@ -60,8 +61,8 @@ namespace GeographicLib {
     copy(georef1, georef1 + baselen_ + 2 * prec, georef.begin());
   }
 
-  void Georef::Reverse(const std::string& georef, real& lat, real& lon,
-                        int& prec, bool centerp) {
+  void Georef::Reverse(const string& georef, real& lat, real& lon,
+                       int& prec, bool centerp) {
     int len = int(georef.length());
     if (len >= 3 &&
         toupper(georef[0]) == 'I' &&

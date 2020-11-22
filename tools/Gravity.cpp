@@ -2,7 +2,7 @@
  * \file Gravity.cpp
  * \brief Command line utility for evaluating gravity fields
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -206,9 +206,10 @@ int main(int argc, const char* const argv[]) {
     }
     int retval = 0;
     try {
+      using std::isfinite;
       const GravityModel g(model, dir, Nmax, Mmax);
       if (circle) {
-        if (!Math::isfinite(h))
+        if (!isfinite(h))
           throw GeographicErr("Bad height");
         else if (mode == UNDULATION && h != 0)
           throw GeographicErr("Height should be zero for geoid undulations");

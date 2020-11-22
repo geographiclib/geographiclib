@@ -2,7 +2,7 @@
  * \file MagneticField.cpp
  * \brief Command line utility for evaluating magnetic fields
  *
- * Copyright (c) Charles Karney (2011-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -218,9 +218,10 @@ int main(int argc, const char* const argv[]) {
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     int retval = 0;
     try {
+      using std::isfinite;
       const MagneticModel m(model, dir, Geocentric::WGS84(), Nmax, Mmax);
       if ((timeset || circle)
-          && (!Math::isfinite(time) ||
+          && (!isfinite(time) ||
               time < m.MinTime() - tguard ||
               time > m.MaxTime() + tguard))
         throw GeographicErr("Time " + Utility::str(time) +
@@ -228,7 +229,7 @@ int main(int argc, const char* const argv[]) {
                             Utility::str(m.MinTime()) + "," +
                             Utility::str(m.MaxTime()) + "]");
       if (circle
-          && (!Math::isfinite(h) ||
+          && (!isfinite(h) ||
               h < m.MinHeight() - hguard ||
               h > m.MaxHeight() + hguard))
         throw GeographicErr("Height " + Utility::str(h/1000) +
