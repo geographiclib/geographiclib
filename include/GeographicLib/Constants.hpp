@@ -36,14 +36,6 @@
                            GEOGRAPHICLIB_VERSION_MINOR, \
                            GEOGRAPHICLIB_VERSION_PATCH)
 
-/**
- * @relates GeographicLib::Constants
- * Is the C++11 static_assert available?
- **********************************************************************/
-#if !defined(GEOGRAPHICLIB_HAS_STATIC_ASSERT)
-#  if __cplusplus >= 201103 || defined(__GXX_EXPERIMENTAL_CXX0X__)
-#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
-#  elif defined(_MSC_VER) && _MSC_VER >= 1600
 // For reference, here is a table of Visual Studio and _MSC_VER
 // correspondences:
 //
@@ -60,15 +52,6 @@
 //   1900     vc14  (2015)
 //   191[0-9] vc15  (2017)
 //   192[0-9] vc16  (2019)
-#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 1
-#  else
-#    define GEOGRAPHICLIB_HAS_STATIC_ASSERT 0
-#  endif
-#endif
-
-#if !GEOGRAPHICLIB_HAS_STATIC_ASSERT
-#  error Compiler is required to support static_assert
-#endif
 
 #if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
   GEOGRAPHICLIB_SHARED_LIB

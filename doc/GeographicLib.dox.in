@@ -7750,7 +7750,7 @@ git repository for GeographicLib</a>.
      which migrated to Math.cpp in version 1.50.
    - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
      require a C++11 compliant compiler.  This means that the minimum
-     version of Visual Studio will be Visual Studio 12 2013.  (This
+     version of Visual Studio will be Visual Studio 12 2015.  (This
      repeats the warning given with version 1.50.  It didn't apply to
      this version because this is a minor update.)
 
@@ -7812,7 +7812,7 @@ git repository for GeographicLib</a>.
        2008 for a long time).
      - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
        require a C++11 compliant compiler.  This means that the minimum
-       version of Visual Studio will be Visual Studio 12 2013.
+       version of Visual Studio will be Visual Studio 14 2015.
      - Minimum boost version = 1.64 needed for GEOGRAPHICLIB_PRECISION =
        4.
      - Java = 1.6; this allows the removal of epsilon, min, hypot,
