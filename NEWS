@@ -4,7 +4,40 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 1.50.1
+The current version of the library is 1.51
+
+Changes between 1.51 (released 2020-11-22) and 1.50.1 versions:
+
+   * C++11 compiler required for C++ library.  As a consequence:
+     + The workaround implementations for C++11 routines (Math::hypot,
+       Math::expm1, Math::log1p, Math::asinh, Math::atanh,
+       Math::copysign, Math::cbrt, Math::remainder, Math::remquo,
+       Math::round, Math::lround, Math::fma, Math::isfinite, and
+       Math::isnan) are now deprecated.  Just use the versions in the
+       std:: namespace instead.
+     + SphericalEngine class, fix the namespace for using streamoff.
+     + Some templated functions, e.g., Math::degree(), now have default
+       template parameters, T = Math::real.
+
+   * C99 compiler required for C library.
+
+   * Reduce memory footprint in Java implementation.
+
+   * New form of Utility::ParseLine to allow the syntax "KEY = VAL".
+
+   * Add International Geomagnetic Reference Field (13th generation),
+     igrf13, which approximates the main magnetic field of the earth for
+     the period 1900-2025.
+
+   * More symbols allowed with DMS decoding in C++, JS, and cgi-bin
+     packages; see DMS::Decode.
+
+   * Fix bug in cgi-bin argument processing which causes "+" to be
+     misinterpreted.
+
+   * Required minium version of CMake is now 3.7.0 (released
+     2016-11-11).  This is to work around a bug in find_package for
+     cmake 3.4 and 3.5.
 
 Changes between 1.50.1 (released 2019-12-13) and 1.50 versions:
 

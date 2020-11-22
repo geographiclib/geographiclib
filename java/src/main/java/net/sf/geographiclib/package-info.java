@@ -266,7 +266,7 @@
  * <ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.51</a>
- *   (released 2020-mm-dd)
+ *   (released 2020-11-22)
  * <ul>
  * <li>
  *   In order to reduce the amount of memory allocation and garbage collection,

@@ -188,7 +188,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.51/C">Version 1.51</a>
-   (released 2020-mm-dd)
+   (released 2020-11-22)
    - C99 is now required, so there's no need for private implementations
      of various routines now defined in <code>math.h</code>.
 

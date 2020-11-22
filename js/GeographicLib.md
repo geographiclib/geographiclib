@@ -109,7 +109,8 @@ Two examples of this library in use are
 
 ### Change log
 
-* Version 1.51 (released 2020-mm-dd)
+* Version 1.51 (released 2020-11-22)
+  * More symbols allowed with DMS decodings.
 
 * Version 1.50 (released 2019-09-24)
   * PolygonArea can now handle arbitrarily complex polygons.  In the

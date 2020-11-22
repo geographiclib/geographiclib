@@ -38,7 +38,7 @@
  *   {@link module:GeographicLib/Accumulator.Accumulator Accumulator} class)
  *   for summing the contributions to the area of a polygon.
  */
-"use strict";
+
 var GeographicLib = {};
 GeographicLib.Constants = {};
 GeographicLib.Math = {};
@@ -50,6 +50,7 @@ GeographicLib.Accumulator = {};
    * @description Define constants defining the version and WGS84 parameters.
    */
   c) {
+  "use strict";
 
   /**
    * @constant
@@ -80,6 +81,7 @@ GeographicLib.Accumulator = {};
    *   internal use).
    */
   m) {
+  "use strict";
 
   /**
    * @summary The number of digits of precision in floating-point numbers.
@@ -340,6 +342,7 @@ GeographicLib.Accumulator = {};
    *   (mainly for internal use).
    */
   a, m) {
+  "use strict";
 
   /**
    * @class

@@ -32,6 +32,7 @@ GeographicLib.DMS = {};
    *     - SECOND.
    */
   d) {
+  "use strict";
 
   var lookup, zerofill, internalDecode, numMatch,
       hemispheres_ = "SNWE",

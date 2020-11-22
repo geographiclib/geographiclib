@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2020-mm-dd
+\date 2020-11-22
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -7716,7 +7716,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
-   (released 2020-mm-dd)
+   (released 2020-11-22)
    - C++11 compiler required for C++ library.  As a consequence:
      - The workaround implementations for C++11 routines (Math::hypot,
        Math::expm1, Math::log1p, Math::asinh, Math::atanh,
@@ -7725,6 +7725,8 @@ git repository for GeographicLib</a>.
        Math::isnan) are now deprecated.  Just use the versions in the
        std:: namespace instead.
      - SphericalEngine class, fix the namespace for using streamoff.
+     - Some templated functions, e.g., Math::degree(), now have default
+       template parameters, T = Math::real.
    - C99 compiler required for C library.
    - Reduce memory footprint in Java implementation.
    - New form of Utility::ParseLine to allow the syntax "KEY = VAL".
@@ -7732,12 +7734,12 @@ git repository for GeographicLib</a>.
      igrf13, which approximates the main magnetic field of the earth for
      the period 1900--2025.
    - More symbols allowed with DMS decoding in C++, JS, and cgi-bin
-     packages.  See DMS::Decode.
+     packages; see DMS::Decode.
    - Fix bug in cgi-bin argument processing which causes "+" to be
      misinterpreted.
    - Required minium version of CMake is now 3.7.0 (released
-     2016-11-11).  (This is to work around a bug in find_package for
-     cmake 3.4 and 3.5.)
+     2016-11-11).  This is to work around a bug in find_package for
+     cmake 3.4 and 3.5.
 
  - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
    (released 2019-12-13)

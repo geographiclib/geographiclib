@@ -65,8 +65,8 @@ umask 0022
 #   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
 #   doc/geodesic-c.dox (date + update change log)
 # PROJ integration
-#   geodesic.[hc], geodtest.c (renamed to geodtest.cpp)
-#   plus man/man1/geod.1 man/man3/geodesic.3
+#   geodesic.[hc], geodtest.c (renamed to src/tests/geodtest.cpp)
+#   plus docs/source/apps/geod.rst
 
 # Fortran
 #   legacy/Fortran/geodesic.for comment + geover
@@ -568,8 +568,8 @@ git push --tags
 #   file = Formula/geographiclib.rb
 #   brew upgrade geographiclib
 #   commit message = geographiclib $VERSION
-# update vcpkg TODO
-# update conda-forge TODO
+# TODO update vcpkg git@github.com:microsoft/vcpkg.git
+# TODO update conda-forge
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open

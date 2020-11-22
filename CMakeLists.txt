@@ -312,9 +312,7 @@ int main() {
   static_assert(true, \"static assert test\");
   return 0;
 }\n" CXX11_STATIC_ASSERT)
-if (CXX11_STATIC_ASSERT)
-  add_definitions (-DGEOGRAPHICLIB_HAS_STATIC_ASSERT=1)
-else ()
+if (NOT CXX11_STATIC_ASSERT)
   message (FATAL_ERROR "Missing C++11 static_assert")
 endif ()
 
