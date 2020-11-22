@@ -283,14 +283,11 @@ else ()
   if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
       CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
     # Flags for CMAKE_CXX_STANDARD are added here by default
-    set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++11")
+    set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x")
   endif ()
 endif ()
-# Check whether the C++11 math function: std::expm1, std::atanh,
-# etc. are available.  This flag is *not* propagated to clients that use
-# GeographicLib.  However, this is of no consequence.  When the client
-# code is being compiled (and the GeographicLib headers being included),
-# work-alike substitutions are used.
+# Check whether the C++11 math functions: std::expm1, std::atanh,
+# etc. are available.  These functions are required.
 check_cxx_source_compiles (
   "#include <cmath>
 int main() {
@@ -307,11 +304,8 @@ if (NOT CXX11_MATH)
   message (FATAL_ERROR "Missing C++11 math functions")
 endif ()
 
-# Check whether the C++11 static_assert macro is available.  This flag
-# is *not* propagated to clients that use GeographicLib.  However, this
-# is of no consequence.  When the client code is being compiled (and the
-# GeographicLib headers being included), a work-alike substitution is
-# used.
+# Check whether the C++11 static_assert macro is available.  This
+# capability is required.
 check_cxx_source_compiles (
   "#include <cmath>
 int main() {

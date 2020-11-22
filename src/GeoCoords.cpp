@@ -60,6 +60,7 @@ namespace GeographicLib {
   }
 
   string GeoCoords::GeoRepresentation(int prec, bool longfirst) const {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     prec = max(0, min(9 + Math::extra_digits(), prec) + 5);
     ostringstream os;
     os << fixed << setprecision(prec);
@@ -162,6 +163,7 @@ namespace GeographicLib {
   }
 
   void GeoCoords::FixHemisphere() {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (_lat == 0 || (_northp && _lat >= 0) || (!_northp && _lat < 0) ||
         isnan(_lat))
       // Allow either hemisphere for equator

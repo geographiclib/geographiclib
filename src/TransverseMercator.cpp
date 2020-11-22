@@ -34,7 +34,6 @@
  * (The series accurate to 12th order is given in \ref tmseries.)
  **********************************************************************/
 
-#include <iostream>
 #include <complex>
 #include <GeographicLib/TransverseMercator.hpp>
 

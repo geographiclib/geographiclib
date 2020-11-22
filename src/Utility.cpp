@@ -8,7 +8,6 @@
  **********************************************************************/
 
 #include <cstdlib>
-#include <iostream>
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)

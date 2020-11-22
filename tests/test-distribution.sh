@@ -568,6 +568,8 @@ git push --tags
 #   file = Formula/geographiclib.rb
 #   brew upgrade geographiclib
 #   commit message = geographiclib $VERSION
+# update vcpkg TODO
+# update conda-forge TODO
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open
