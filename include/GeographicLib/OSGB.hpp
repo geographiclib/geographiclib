@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -238,9 +238,9 @@ namespace GeographicLib {
     static Math::real FalseEasting() { return real(400000); }
 
     /**
-      * \deprecated An old name for EquatorialRadius().
-      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+     * \deprecated An old name for EquatorialRadius().
+     **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 

@@ -2,7 +2,7 @@
  * \file AlbersEqualArea.cpp
  * \brief Implementation for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -33,11 +33,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    if (!(Math::isfinite(_f) && _f < 1))
+    if (!(isfinite(_f) && _f < 1))
       throw GeographicErr("Polar semi-axis is not positive");
-    if (!(Math::isfinite(k0) && k0 > 0))
+    if (!(isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90d, 90d]");
@@ -62,11 +62,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    if (!(Math::isfinite(_f) && _f < 1))
+    if (!(isfinite(_f) && _f < 1))
       throw GeographicErr("Polar semi-axis is not positive");
-    if (!(Math::isfinite(k1) && k1 > 0))
+    if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(stdlat1) <= 90))
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
@@ -96,11 +96,11 @@ namespace GeographicLib {
     , _qZ(1 + _e2m * atanhee(real(1)))
     , _qx(_qZ / ( 2 * _e2m ))
   {
-    if (!(Math::isfinite(_a) && _a > 0))
+    if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    if (!(Math::isfinite(_f) && _f < 1))
+    if (!(isfinite(_f) && _f < 1))
       throw GeographicErr("Polar semi-axis is not positive");
-    if (!(Math::isfinite(k1) && k1 > 0))
+    if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(coslat1 >= 0))
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
@@ -120,9 +120,9 @@ namespace GeographicLib {
                              real sphi2, real cphi2, real k1) {
     {
       real r;
-      r = Math::hypot(sphi1, cphi1);
+      r = hypot(sphi1, cphi1);
       sphi1 /= r; cphi1 /= r;
-      r = Math::hypot(sphi2, cphi2);
+      r = hypot(sphi2, cphi2);
       sphi2 /= r; cphi2 /= r;
     }
     bool polar = (cphi1 == 0);
@@ -357,7 +357,7 @@ namespace GeographicLib {
       }
     } else {
       real xs = sqrt(abs(x));
-      s = (x > 0 ? Math::atanh(xs) : atan(xs)) / xs - 1;
+      s = (x > 0 ? atanh(xs) : atan(xs)) / xs - 1;
     }
     return s;
   }
@@ -414,7 +414,7 @@ namespace GeographicLib {
     y *= _sign;
     real
       nx = _k0 * _n0 * x, ny = _k0 * _n0 * y, y1 =  _nrho0 - ny,
-      den = Math::hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
+      den = hypot(nx, y1) + _nrho0, // 0 implies origin with polar aspect
       drho = den != 0 ? (_k0*x*nx - 2*_k0*y*_nrho0 + _k0*y*ny) / den : 0,
       // dsxia = scxi0 * dsxi
       dsxia = - _scxi0 * (2 * _nrho0 + _n0 * drho) * drho /
@@ -431,7 +431,7 @@ namespace GeographicLib {
   }
 
   void AlbersEqualArea::SetScale(real lat, real k) {
-    if (!(Math::isfinite(k) && k > 0))
+    if (!(isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
     if (!(abs(lat) < 90))
       throw GeographicErr("Latitude for SetScale not in (-90d, 90d)");

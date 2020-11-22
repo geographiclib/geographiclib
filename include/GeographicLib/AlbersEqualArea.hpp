@@ -2,7 +2,7 @@
  * \file AlbersEqualArea.hpp
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -66,13 +66,16 @@ namespace GeographicLib {
     real _n0, _m02, _nrho0, _k2, _txi0, _scxi0, _sxi0;
     static const int numit_ = 5;   // Newton iterations in Reverse
     static const int numit0_ = 20; // Newton iterations in Init
-    static real hyp(real x) { return Math::hypot(real(1), x); }
+    static real hyp(real x) {
+      using std::hypot;
+      return hypot(real(1), x);
+    }
     // atanh(      e   * x)/      e   if f > 0
     // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
     // x                              if f = 0
     real atanhee(real x) const {
-      using std::atan2; using std::abs;
-      return _f > 0 ? Math::atanh(_e * x)/_e :
+      using std::atan2; using std::abs; using std::atanh;
+      return _f > 0 ? atanh(_e * x)/_e :
         // We only invoke atanhee in txif for positive latitude.  Then x is
         // only negative for very prolate ellipsoids (_b/_a >= sqrt(2)) and we
         // still need to return a positive result in this case; hence the need
@@ -285,9 +288,9 @@ namespace GeographicLib {
     Math::real CentralScale() const { return _k0; }
 
     /**
-      * \deprecated An old name for EquatorialRadius().
-      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+     * \deprecated An old name for EquatorialRadius().
+     **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 

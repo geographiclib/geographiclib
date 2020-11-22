@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -41,11 +41,12 @@ namespace GeographicLib {
       MGRS::maxutmNrow_ * MGRS::tile_ };
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (!(setzone >= MINPSEUDOZONE && setzone <= MAXZONE))
       throw GeographicErr("Illegal zone requested " + Utility::str(setzone));
     if (setzone >= MINZONE || setzone == INVALID)
       return setzone;
-    if (Math::isnan(lat) || Math::isnan(lon)) // Check if lat or lon is a NaN
+    if (isnan(lat) || isnan(lon)) // Check if lat or lon is a NaN
       return INVALID;
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
       int ilon = int(floor(Math::AngNormalize(lon)));
@@ -118,7 +119,8 @@ namespace GeographicLib {
   void UTMUPS::Reverse(int zone, bool northp, real x, real y,
                        real& lat, real& lon, real& gamma, real& k,
                        bool mgrslimits) {
-    if (zone == INVALID || Math::isnan(x) || Math::isnan(y)) {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
+    if (zone == INVALID || isnan(x) || isnan(y)) {
       lat = lon = gamma = k = Math::NaN();
       return;
     }
@@ -202,7 +204,7 @@ namespace GeographicLib {
     return;
   }
 
-  void UTMUPS::DecodeZone(const std::string& zonestr, int& zone, bool& northp)
+  void UTMUPS::DecodeZone(const string& zonestr, int& zone, bool& northp)
   {
     unsigned zlen = unsigned(zonestr.size());
     if (zlen == 0)
@@ -233,8 +235,8 @@ namespace GeographicLib {
                           + Utility::str(zone1));
 
     string hemi(zonestr, q - c);
-    for (std::string::iterator p = hemi.begin(); p != hemi.end(); ++p)
-      *p = char(std::tolower(*p));
+    for (string::iterator p = hemi.begin(); p != hemi.end(); ++p)
+      *p = char(tolower(*p));
     if (q == c && (hemi == "inv" || hemi == "invalid")) {
       zone = INVALID;
       northp = false;
@@ -248,7 +250,7 @@ namespace GeographicLib {
     northp = northp1;
   }
 
-  std::string UTMUPS::EncodeZone(int zone, bool northp, bool abbrev) {
+  string UTMUPS::EncodeZone(int zone, bool northp, bool abbrev) {
     if (zone == INVALID)
       return string(abbrev ? "inv" : "invalid");
     if (!(zone >= MINZONE && zone <= MAXZONE))

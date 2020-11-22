@@ -22,7 +22,7 @@ For full details on how to write the interface code, see
 
 To compile the interface code, start Matlab or Octave and run, e.g.,
 
-  mex -setup
+  mex -setup C++
   help geographiclibinterface
   geographiclibinterface
   help geodesicinverse
@@ -32,10 +32,7 @@ To compile the interface code, start Matlab or Octave and run, e.g.,
      5.1199e+01   1.0782e+02   5.5518e+06
 
 The first command allows you to select the compiler to use (which should
-be the same as that used to compile GeographicLib). On Mac OSX and
-Matlab R2014b, the setup command is
-
-  mex -setup C++
+be the same as that used to compile GeographicLib).
 
 These routines just offer a simple interface to the corresponding C++
 class. Use the help function to get documentation,

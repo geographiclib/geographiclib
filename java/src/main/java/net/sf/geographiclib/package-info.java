@@ -1,19 +1,19 @@
 /**
- * <h1>Geodesic routines from GeographicLib implemented in Java</h1>
+ * <h2>Geodesic routines from GeographicLib implemented in Java</h2>
  * @author Charles F. F. Karney (charles@karney.com)
- * @version 1.50
+ * @version 1.51
  *
  * <p>
  * The documentation for other versions is available at
- * <tt>https://geographiclib.sourceforge.io/m.nn/java</tt> for versions numbers
- * <tt>m.nn</tt> &ge; 1.31.
+ * <code>https://geographiclib.sourceforge.io/m.nn/java</code> for versions
+ * numbers <code>m.nn</code> &ge; 1.31.
  * <p>
  * Licensed under the
- * <a href="http://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
+ * <a href="https://www.opensource.org/licenses/MIT">MIT/X11 License</a>; see
  * <a href="https://geographiclib.sourceforge.io/html/LICENSE.txt">
  * LICENSE.txt</a>.
  *
- * <h2>Abstract</h2>
+ * <h3>Abstract</h3>
  * <p>
  * GeographicLib-Java is a Java implementation of the geodesic algorithms from
  * <a href="https://geographiclib.sourceforge.io">GeographicLib</a>.  This is a
@@ -21,40 +21,40 @@
  * an ellipsoid of revolution in a Java program.  It requires Java version 1.2
  * or later.
  *
- * <h2>Downloading</h2>
+ * <h3>Downloading</h3>
  * <p>
  * Download either the source or the pre-built package as follows:
  *
- * <h3>Obtaining the source</h3>
+ * <h4>Obtaining the source</h4>
  * GeographicLib-Java is part of GeographicLib which available for download at
  * <ul>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.tar.gz">
- *   GeographicLib-1.50.tar.gz</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.51.tar.gz">
+ *   GeographicLib-1.51.tar.gz</a>
  * <li>
- *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.zip">
- *   GeographicLib-1.50.zip</a>
+ *   <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.51.zip">
+ *   GeographicLib-1.51.zip</a>
  * </ul>
  * <p>
  * as either a compressed tar file (tar.gz) or a zip file.  After unpacking
- * the source, the Java library can be found in GeographicLib-1.50/java.  (This
+ * the source, the Java library can be found in GeographicLib-1.51/java.  (This
  * library is completely independent from the rest of GeodegraphicLib.)  The
  * library consists of the files in the src/main/java/net/sf/geographiclib
  * subdirectory.
  *
- * <h3>The pre-built package</h3>
+ * <h4>The pre-built package</h4>
  * GeographicLib-Java is available as a pre-built package on Maven Central
  * (thanks to Chris Bennight for help on this deployment).  So, if you use
- * <a href="http://maven.apache.org/">maven</a> to build your code, you just
+ * <a href="https://maven.apache.org/">maven</a> to build your code, you just
  * need to include the dependency <pre>{@code
  *   <dependency>
  *     <groupId>net.sf.geographiclib</groupId>
  *     <artifactId>GeographicLib-Java</artifactId>
- *     <version>1.50</version>
+ *     <version>1.51</version>
  *   </dependency> }</pre>
  * in your {@code pom.xml}.
  *
- * <h2>Sample programs</h2>
+ * <h3>Sample programs</h3>
  * <p>
  * Included with the source are 3 small test programs
  * <ul>
@@ -93,15 +93,15 @@
  *   }
  * }}</pre>
  *
- * <h2>Compiling and running a sample program</h2>
+ * <h3>Compiling and running a sample program</h3>
  * <p>
  * Three difference ways of compiling and running {@code Inverse.java} are
  * given.  These differ in the degree to which they utilize
- * <a href="http://maven.apache.org/">maven</a> to manage your Java code and
+ * <a href="https://maven.apache.org/">maven</a> to manage your Java code and
  * its dependencies.  (Thanks to Skip Breidbach for supplying the maven
  * support.)
  *
- * <h3>Without using maven</h3>
+ * <h4>Without using maven</h4>
  * Compile and run as follows <pre>
  * cd inverse/src/main/java
  * javac -cp .:../../../../src/main/java Inverse.java
@@ -111,19 +111,19 @@
  * javac -cp .;../../../../src/main/java Inverse.java
  * echo -30 0 29.5 179.5 | java -cp .;../../../../src/main/java Inverse </pre>
  *
- * <h3>Using maven to package GeographicLib</h3>
- * Use <a href="http://maven.apache.org/">maven</a> to create a jar file by
+ * <h4>Using maven to package GeographicLib</h4>
+ * Use <a href="https://maven.apache.org/">maven</a> to create a jar file by
  * running (in the main java directory) <pre>
  * mvn package </pre>
  * (Your first run of maven may take a long time, because it needs to download
  * some additional packages to your local repository.)  Then compile and run
  * Inverse.java with <pre>
  * cd inverse/src/main/java
- * javac -cp .:../../../../target/GeographicLib-Java-1.50.jar Inverse.java
+ * javac -cp .:../../../../target/GeographicLib-Java-1.51.jar Inverse.java
  * echo -30 0 29.5 179.5 |
- *   java -cp .:../../../../target/GeographicLib-Java-1.50.jar Inverse </pre>
+ *   java -cp .:../../../../target/GeographicLib-Java-1.51.jar Inverse </pre>
  *
- * <h3>Using maven to build and run {@code Inverse.java}</h3>
+ * <h4>Using maven to build and run {@code Inverse.java}</h4>
  * The sample code includes a {@code pom.xml} which specifies
  * GeographicLib-Java as a dependency.  You can build and install this
  * dependency by running (in the main java directory) <pre>
@@ -134,7 +134,7 @@
  * mvn compile
  * echo -30 0 29.5 179.5 | mvn -q exec:java </pre>
  *
- * <h2>Using the library</h2>
+ * <h3>Using the library</h3>
  * <ul>
  * <li>
  *   Put <pre>
@@ -159,16 +159,16 @@
  *   results of the geodesic calculations;
  * <li>
  *   {@link net.sf.geographiclib.GeodesicMask}, the constants that let you
- *   specify the variables to return in {@link
- *   net.sf.geographiclib.GeodesicData} and the capabilities of a {@link
- *   net.sf.geographiclib.GeodesicLine};
+ *   specify the variables to return in
+ *   {@link net.sf.geographiclib.GeodesicData} and the capabilities of a
+ *   {@link net.sf.geographiclib.GeodesicLine};
  * <li>
  *   {@link net.sf.geographiclib.Constants}, the parameters for the WGS84
  *   ellipsoid;
  * <li>
  *   {@link net.sf.geographiclib.PolygonArea}, a class to compute the
- *   perimeter and area of a geodesic polygon (returned as a {@link
- *   net.sf.geographiclib.PolygonResult}).
+ *   perimeter and area of a geodesic polygon (returned as a
+ *   {@link net.sf.geographiclib.PolygonResult}).
  * </ul>
  * <p>
  * The documentation is generated using javadoc when
@@ -177,7 +177,7 @@
  * <a href="https://geographiclib.sourceforge.io/html/java/index.html">
  * https://geographiclib.sourceforge.io/html/java/index.html</a>.
  *
- * <h2>External links</h2>
+ * <h3>External links</h3>
  * <ul>
  * <li>
  *   These algorithms are derived in C. F. F. Karney,
@@ -222,7 +222,7 @@
  *         documentation</a>
  *     <li>
  *       Java (geodesic routines):
- *       <a href="http://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
+ *       <a href="https://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
  *         Maven Central package</a>,
  *       <a href="https://geographiclib.sourceforge.io/html/java/">
  *         documentation</a>
@@ -234,7 +234,7 @@
  *         documentation</a>
  *     <li>
  *       Python (geodesic routines):
- *       <a href="http://pypi.python.org/pypi/geographiclib">
+ *       <a href="https://pypi.python.org/pypi/geographiclib">
  *         PyPI package</a>,
  *       <a href="https://geographiclib.sourceforge.io/html/python/">
  *         documentation</a>
@@ -262,8 +262,27 @@
  *   Geodesics on an ellipsoid</a>
  * </ul>
  *
- * <h2>Change log</h2>
+ * <h3>Change log</h3>
  * <ul>
+ * <li>
+ *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.51</a>
+ *   (released 2020-11-22)
+ * <ul>
+ * <li>
+ *   In order to reduce the amount of memory allocation and garbage collection,
+ *   introduce versions of GeoMath.norm, GeoMath.sum, GeoMath.AngDiff, and
+ *   GeoMath.sincosd, which take a {@link net.sf.geographiclib.Pair} as a
+ *   parameter instead of returning a new {@link net.sf.geographiclib.Pair}.
+ *   The previous versions are deprecated.
+ * <li>
+ *   Geodesic.MajorRadius() is now called
+ *   {@link net.sf.geographiclib.Geodesic#EquatorialRadius()} and similarly for
+ *   {@link net.sf.geographiclib.GeodesicLine},
+ *   {@link net.sf.geographiclib.Gnomonic}, and
+ *   {@link net.sf.geographiclib.PolygonArea}.
+ * <li>
+ *   Update to Java 1.7 or later to support testing on Mac OSX.
+ * </ul>
  * <li>
  *   <a href="https://geographiclib.sourceforge.io/1.47/java">Version 1.50</a>
  *   (released 2019-09-24)

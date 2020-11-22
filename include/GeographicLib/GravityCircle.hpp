@@ -2,7 +2,7 @@
  * \file GravityCircle.hpp
  * \brief Header for GeographicLib::GravityCircle class
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -59,34 +59,12 @@ namespace GeographicLib {
 
     GravityCircle(mask caps, real a, real f, real lat, real h,
                   real Z, real P, real cphi, real sphi,
-                  real amodel, real GMmodel, real dzonal0, real corrmult,
+                  real amodel, real GMmodel,
+                  real dzonal0, real corrmult,
                   real gamma0, real gamma, real frot,
                   const CircularEngine& gravitational,
                   const CircularEngine& disturbing,
-                  const CircularEngine& correction)
-      : _caps(caps)
-      , _a(a)
-      , _f(f)
-      , _lat(Math::LatFix(lat))
-      , _h(h)
-      , _Z(Z)
-      , _Px(P)
-      , _invR(1 / Math::hypot(_Px, _Z))
-      , _cpsi(_Px * _invR)
-      , _spsi(_Z * _invR)
-      , _cphi(cphi)
-      , _sphi(sphi)
-      , _amodel(amodel)
-      , _GMmodel(GMmodel)
-      , _dzonal0(dzonal0)
-      , _corrmult(corrmult)
-      , _gamma0(gamma0)
-      , _gamma(gamma)
-      , _frot(frot)
-      , _gravitational(gravitational)
-      , _disturbing(disturbing)
-      , _correction(correction)
-    {}
+                  const CircularEngine& correction);
 
     friend class GravityModel; // GravityModel calls the private constructor
     Math::real W(real slam, real clam,
@@ -297,9 +275,9 @@ namespace GeographicLib {
     }
 
     /**
-      * \deprecated An old name for EquatorialRadius().
-      **********************************************************************/
-    // GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
+     * \deprecated An old name for EquatorialRadius().
+     **********************************************************************/
+    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
     Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };

@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -209,8 +209,7 @@ namespace GeographicLib {
     , _eps( sqrt(numeric_limits<real>::epsilon()) )
     , _threadsafe(false)        // Set after cache is read
   {
-    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(pixel_t) == pixel_size_,
-                                "pixel_t has the wrong size");
+    static_assert(sizeof(pixel_t) == pixel_size_, "pixel_t has the wrong size");
     if (_dir.empty())
       _dir = DefaultGeoidPath();
     _filename = _dir + "/" + _name + (pixel_size_ != 4 ? ".pgm" : ".pgm4");
@@ -233,7 +232,7 @@ namespace GeographicLib {
         string commentid, key;
         if (!(is >> commentid >> key) || commentid != "#")
           continue;
-        if (key == "Description" || key =="DateTime") {
+        if (key == "Description" || key == "DateTime") {
           string::size_type p =
             s.find_first_not_of(" \t", unsigned(is.tellg()));
           if (p != string::npos)
@@ -305,8 +304,9 @@ namespace GeographicLib {
   }
 
   Math::real Geoid::height(real lat, real lon) const {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     lat = Math::LatFix(lat);
-    if (Math::isnan(lat) || Math::isnan(lon)) {
+    if (isnan(lat) || isnan(lon)) {
       return Math::NaN();
     }
     lon = Math::AngNormalize(lon);
@@ -486,7 +486,7 @@ namespace GeographicLib {
     }
   }
 
-  std::string Geoid::DefaultGeoidPath() {
+  string Geoid::DefaultGeoidPath() {
     string path;
     char* geoidpath = getenv("GEOGRAPHICLIB_GEOID_PATH");
     if (geoidpath)
@@ -499,7 +499,7 @@ namespace GeographicLib {
     return (!path.empty() ? path : string(GEOGRAPHICLIB_DATA)) + "/geoids";
   }
 
-  std::string Geoid::DefaultGeoidName() {
+  string Geoid::DefaultGeoidName() {
     string name;
     char* geoidname = getenv("GEOGRAPHICLIB_GEOID_NAME");
     if (geoidname)

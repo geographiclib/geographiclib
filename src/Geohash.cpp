@@ -2,7 +2,7 @@
  * \file Geohash.cpp
  * \brief Implementation for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2012-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -17,14 +17,15 @@ namespace GeographicLib {
   const char* const Geohash::lcdigits_ = "0123456789bcdefghjkmnpqrstuvwxyz";
   const char* const Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
-  void Geohash::Forward(real lat, real lon, int len, std::string& geohash) {
+  void Geohash::Forward(real lat, real lon, int len, string& geohash) {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     static const real shift = ldexp(real(1), 45);
     static const real loneps = 180 / shift;
     static const real lateps =  90 / shift;
     if (abs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    if (Math::isnan(lat) || Math::isnan(lon)) {
+    if (isnan(lat) || isnan(lon)) {
       geohash = "invalid";
       return;
     }
@@ -57,7 +58,7 @@ namespace GeographicLib {
     copy(geohash1, geohash1 + len, geohash.begin());
   }
 
-  void Geohash::Reverse(const std::string& geohash, real& lat, real& lon,
+  void Geohash::Reverse(const string& geohash, real& lat, real& lon,
                         int& len, bool centerp) {
     static const real shift = ldexp(real(1), 45);
     static const real loneps = 180 / shift;

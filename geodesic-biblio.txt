@@ -9,6 +9,9 @@
    by A. Motte
    (Adee, New York, 1848), pp. 405--409.[[BR]]
    https://books.google.com/books?id=KaAIAAAAIAAJ&pg=PA405
+ * J. Picard,[[BR]]
+   ''Mesure de la Terre [Measuring the Earth]'' (1650).[[BR]]
+   https://books.google.com/books?id=1COZ-ZexeWYC
  * Jac. Bernoulli,[[BR]]
    ''Solutio sex problematum fraternorum [Solution of six problems posed by
    my brother]'',
@@ -63,6 +66,18 @@
    Hydrostatic Principles]''
    (Durand, Paris, 1743).[[BR]]
    https://books.google.com/books?id=X6wWAAAAQAAJ
+ * P. L. Maupertuis,[[BR]]
+   ''La Figure de la Terre déterminée par les Observations de MM. de
+   Maupertius, Calariaut, Camus, le Monnier, Outhier, et Celsius [The
+   Figure of the Earth determined by the Observations of ...]'', (Paris,
+   1738).[[BR]]
+   https://books.google.com/books?id=caCpNBzVBSYC
+ * P. L. Maupertuis, A. C. Clairaut, C. É. L. Camus, and
+   P. C. le Monnier,[[BR]]
+   ''Dégré du Méridien entre Paris et Amiens par la Mesure de M. Picard
+   [The meridian degree between Paris and Amiens according to the method
+   of J. Picard]'', (Paris, 1740).[[BR]]
+   https://books.google.com/books?id=xCLrDACWLNEC
  * L. Euler,[[BR]]
    ''Methodus inveniendi lineas curvas maximi minimive proprietate
    gaudentes [A method for finding curved lines enjoying properties of
@@ -1503,20 +1518,20 @@
    in ''Selected Works'', Vol 1 (Geodezizdat, Moscow, 1953),
    pp. 23--49.[[BR]]
    https://geographiclib.sourceforge.io/geodesic-papers/krasovsky02.pdf [[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
+   https://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
  * F. N. Krasovsky,[[BR]]
    ''Obzor i rezultaty sovremennykh gradusnykh izmereniy [Review and
    results of modern arc measurements]'',
    Geodezist, No. 6-12 (1936),
    in ''Selected Works'', Vol 1 (Geodezizdat, Moscow, 1953),
    pp. 82--178.[[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
+   https://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-imgeodezizdat1953.pdf
  * F. N. Krasovsky,[[BR]]
    ''Rukovodstvo po Vysshei Geodezii [Guide to Higher Geodesy]'',
    Part 2 (Geodezizdat, Moscow, 1942), 560 pp.,
    in ''Selected Works'', Vol 4 (Geodezizdat, Moscow, 1955),
    pp. 4--549.[[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-ivmgeodezizdat1955.pdf
+   https://www.geokniga.org/bookfiles/geokniga-krasovskiy-fnizbrannye-sochineniyav-4-h-tomahtom-ivmgeodezizdat1955.pdf
  * J. H. Poincaré,[[BR]]
    ''Sur les lignes géodésiques des surfaces convexes
    [Geodesics lines on convex surfaces]'',
@@ -1633,12 +1648,22 @@
  * V. P. Morozov,[[BR]]
    ''Kurs Sferoidicheskoy Geodezii [A Course in Spheroidal Geodesy]''
    (2nd edition, Nedra, Moscow, 1979) 296 pp.[[BR]]
-   http://www.geokniga.org/bookfiles/geokniga-morozov-vpkurs-sferoidicheskoy-geodeziimnedra1979.pdf
+   https://www.geokniga.org/bookfiles/geokniga-morozov-vpkurs-sferoidicheskoy-geodeziimnedra1979.pdf
  * N. A. Bespalov,[[BR]]
    ''Metody Resheniya Zadach Sferoidicheskoy Geodezii [Methods for
    Solving Problems of Spheroidal Geodesy]''
    (Nedra, Moscow, 1980), 287 pp.[[BR]]
    https://doi.org/10.5281/zenodo.495726
+ * B. R. Bowring,[[BR]]
+   ''The Direct and Inverse Problems for Short Geodesic Lines on the
+   Ellipsoid'',
+   Surveying and Mapping '''41'''(2), 135--141 (1981).[[BR]
+   https://books.google.com/books?id=eEI4AAAAIAAJ&pg=PA135
+ * B. K. Meade,[[BR]]
+   ''Comments on Formulas for the Solution of Direct and Inverse Problems
+   on Reference Ellipsoids Using Pocket Calculators'',
+   Surveying and Mapping '''41'''(1), 35--41 (1981).[[BR]]
+   https://books.google.com/books?id=eEI4AAAAIAAJ&pg=PA35
  * J. P. Snyder,[[BR]]
    ''Map projections: a working manual'',
    Professional Paper 1395 (US Geological Survey, 1987).[[BR]]
@@ -1692,7 +1717,7 @@
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]
-   http://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
+   https://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
    [[BR]] https://doi.org/10.1179/003962609X451663
  * Y. C. Lee,[[BR]]
    ''The accuracy analysis of methods to solve the geodetic inverse

@@ -42,7 +42,8 @@ Mercator projection instead of the exact projection.
 
 =item B<-t>
 
-use the exact algorithm with the L</EXTENDED DOMAIN>.
+use the exact algorithm with the L</EXTENDED DOMAIN>; this is the
+default.
 
 =item B<-l> I<lon0>
 
@@ -127,13 +128,14 @@ file name of "-" stands for standard output.
 =head1 EXTENDED DOMAIN
 
 The exact transverse Mercator projection has a I<branch point> on the
-equator at longitudes (relative to I<lon0>) of +/- (1 - I<e>) 90, where
-I<e> is the eccentricity of the ellipsoid.  The standard convention for
-handling this branch point is to map positive (negative) latitudes into
-positive (negative) northings I<y>; i.e., a branch cut is placed on the
-equator.  With the I<extended> domain, the northern sheet of the
-projection is extended into the south hemisphere by pushing the branch
-cut south from the branch points.  See the reference below for details.
+equator at longitudes (relative to I<lon0>) of +/- (1 - I<e>) 90 =
+82.636..., where I<e> is the eccentricity of the ellipsoid.  The
+standard convention for handling this branch point is to map positive
+(negative) latitudes into positive (negative) northings I<y>; i.e., a
+branch cut is placed on the equator.  With the I<extended> domain, the
+northern sheet of the projection is extended into the south hemisphere
+by pushing the branch cut south from the branch points.  See the
+reference below for details.
 
 =head1 EXAMPLES
 

@@ -2,7 +2,7 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -174,8 +174,9 @@ int main(int argc, const char* const argv[]) {
       bool endpoly = s.empty();
       if (!endpoly) {
         try {
+          using std::isnan;
           p.Reset(s, true, longfirst);
-          if (Math::isnan(p.Latitude()) || Math::isnan(p.Longitude()))
+          if (isnan(p.Latitude()) || isnan(p.Longitude()))
             endpoly = true;
         }
         catch (const GeographicErr&) {

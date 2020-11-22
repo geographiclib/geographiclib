@@ -2,7 +2,7 @@
  * \file GeodesicExactC4.cpp
  * \brief Implementation for GeographicLib::GeodesicExact::rawC4coeff
  *
- * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -7287,9 +7287,9 @@ namespace GeographicLib {
 #else
 #error "Bad value for GEOGRAPHICLIB_GEODESICEXACT_ORDER"
 #endif
-    GEOGRAPHICLIB_STATIC_ASSERT(sizeof(coeff) / sizeof(real) ==
-                                (nC4_ * (nC4_ + 1) * (nC4_ + 5)) / 6,
-                                "Coefficient array size mismatch in C4coeff");
+    static_assert(sizeof(coeff) / sizeof(real) ==
+                  (nC4_ * (nC4_ + 1) * (nC4_ + 5)) / 6,
+                  "Coefficient array size mismatch in C4coeff");
     int o = 0, k = 0;
     for (int l = 0; l < nC4_; ++l) {        // l is index of C4[l]
       for (int j = nC4_ - 1; j >= l; --j) { // coeff of eps^j

@@ -41,12 +41,11 @@ Math::real atanzz(Math::real x, bool alt) {
   //
   // Require x >= -1.  Best to call with alt, s.t. x >= 0; this results in
   // a call to atan, instead of asin, or to asinh, instead of atanh.
-  using std::sqrt; using std::abs; using std::atan; using std::asin;
   Math::real z = sqrt(abs(x));
   return x == 0 ? 1 :
     (alt
-     ? (!(x < 0) ? Math::asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x))
-     : (!(x < 0) ? atan(z) : Math::atanh(z)) / z);
+     ? (!(x < 0) ? asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x))
+     : (!(x < 0) ? atan(z) : atanh(z)) / z);
 }
 
 // Copied from NormalGravity (w/o the series expansion)
@@ -74,7 +73,7 @@ int main() {
       Math::real f = 1/Math::real(5);
       NormalGravity g(a, GM, omega, f, true);
       Math::real gX, gY, gZ, U, X = Math::real(5)/10, Y = 0,
-        R = Math::hypot(X, Y),
+        R = hypot(X, Y),
         b = a*(1-f),  E2 = abs(a*a - b*b), E = sqrt(E2);
       U = g.V0(X, Y, 0, gX, gY, gZ);
       cout << U << " " << gX << " " << gY << " " << gZ << "\n";
@@ -95,7 +94,7 @@ int main() {
       cout << U << " " << gX << " " << gY << " " << gZ << "\n";
       U = g.V0(eps, Y, Z, gX, gY, gZ);
       cout << U << " " << gX << " " << gY << " " << gZ << "\n";
-      cout << "-R*gR = " << eps*Math::hypot(gX, gY) << " "
+      cout << "-R*gR = " << eps*hypot(gX, gY) << " "
            << 2*(GM/(2*E) + Math::sq(a*b*omega)*b /
                  (E2*E2*E*Qf(Math::sq(E/a), true)) *
                  (3*Z*Z - E2)/12) << "\n";
@@ -105,7 +104,7 @@ int main() {
       NormalGravity g(a, GM, omega, f, true);
       Math::real gX, gY, gZ, U,
         X = Math::real(1)/10, Z = Math::real(4)/10, Y = 0,
-        b = a*(1-f), R = Math::hypot(X, Z), beta = atan2(Z, X);
+        b = a*(1-f), R = hypot(X, Z), beta = atan2(Z, X);
       U = g.V0(X, Y, Z, gX, gY, gZ);
       cout << U << " " << gX << " " << gY << " " << gZ << "\n";
       cout << "U = " << GM/R + Math::sq(a*b*omega)*b/(R*R*R) *

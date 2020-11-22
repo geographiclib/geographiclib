@@ -37,8 +37,9 @@ public:
 
 inline LineDistance::LineDistance(const point& a, const point& b)
   : _a(a), _b(b) {
+  using std::hypot;
   real dx = _b[0] - _a[0], dy = _b[1] - _a[1];
-  _l = Math::hypot(dx, dy);
+  _l = hypot(dx, dy);
   if (_l > std::numeric_limits<real>::epsilon()) {
   _nx = dx / _l; _ny = dy / _l;
   } else {
@@ -47,14 +48,14 @@ inline LineDistance::LineDistance(const point& a, const point& b)
 }
 
 inline real LineDistance::Distance(const point& p) const {
-  using std::abs;
+  using std::abs; using std::hypot;
   real x = p[0] - _a[0], y = p[1] - _a[1];
   if (_l != 0) {
     real X = x * _nx + y * _ny, Y = abs(x * _ny - y * _nx);
     X = X < 0 ? -X : (X > _l ? X - _l : 0);
-    return X != 0 ? Math::hypot(X, Y) : Y;
+    return X != 0 ? hypot(X, Y) : Y;
   } else
-    return Math::hypot(x, y);
+    return hypot(x, y);
 }
 
 inline real LineDistance::Displacement(const point& p) const {
@@ -63,11 +64,12 @@ inline real LineDistance::Displacement(const point& p) const {
 }
 
 inline void LineSimplifier::Simplify(std::vector<point>& p, real thresh) {
+  using std::isnan;
   unsigned n = p.size();
   InternalSimplify(p, 0, n-1, thresh);
   unsigned i = 0, j = 0;
   while (i < n) {               // Squeeze out nans
-    if (!Math::isnan(p[i][0])) { p[j] = p[i]; ++j; }
+    if (!isnan(p[i][0])) { p[j] = p[i]; ++j; }
     ++i;
   }
   p.resize(j);

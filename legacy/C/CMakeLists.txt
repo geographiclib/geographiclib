@@ -8,6 +8,11 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set (CMAKE_BUILD_TYPE Release)
 endif ()
 
+# We require C99
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
 # Make the compiler more picky.
 if (MSVC)
   set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
@@ -49,10 +54,8 @@ int main() {
                cbrt(8.0) + remainder(100.0, 90.0) +
                remquo(100.0, 90.0, &q));
 }\n" C99_MATH)
-if (C99_MATH)
-  add_definitions (-DHAVE_C99_MATH=1)
-else ()
-  add_definitions (-DHAVE_C99_MATH=0)
+if (NOT C99_MATH)
+  message (FATAL_ERROR "Missing C99 math functions")
 endif ()
 
 if (CONVERT_WARNINGS_TO_ERRORS)

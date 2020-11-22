@@ -2,7 +2,7 @@
  * \file NearestNeighbor.hpp
  * \brief Header for GeographicLib::NearestNeighbor class
  *
- * Copyright (c) Charles Karney (2016-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2016-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -19,7 +19,7 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
-// Only for GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr
+// Only for GeographicLib::GeographicErr
 #include <GeographicLib/Constants.hpp>
 
 #if defined(GEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION) && \
@@ -72,10 +72,9 @@ namespace GeographicLib {
    *
    * \note This is a "header-only" implementation and, as such, depends in a
    * minimal way on the rest of GeographicLib (the only dependency is through
-   * the use of GEOGRAPHICLIB_STATIC_ASSERT and GeographicLib::GeographicErr
-   * for handling compile-time and run-time exceptions).  Therefore, it is easy
-   * to extract this class from the rest of GeographicLib and use it as a
-   * stand-alone facility.
+   * the use of GeographicLib::GeographicErr for handling compile-time and
+   * run-time exceptions).  Therefore, it is easy to extract this class from
+   * the rest of GeographicLib and use it as a stand-alone facility.
    *
    * The \e dist_t type must support numeric_limits queries (specifically:
    * is_signed, is_integer, max(), digits).
@@ -170,8 +169,8 @@ namespace GeographicLib {
      **********************************************************************/
     void Initialize(const std::vector<pos_t>& pts, const distfun_t& dist,
                     int bucket = 4) {
-      GEOGRAPHICLIB_STATIC_ASSERT(std::numeric_limits<dist_t>::is_signed,
-                                  "dist_t must be a signed type");
+      static_assert(std::numeric_limits<dist_t>::is_signed,
+                    "dist_t must be a signed type");
       if (!( 0 <= bucket && bucket <= maxbucket ))
         throw GeographicLib::GeographicErr
           ("bucket must lie in [0, 2 + 4*sizeof(dist_t)/sizeof(int)]");

@@ -2,7 +2,7 @@
  * \file ConicTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2018) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -31,7 +31,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
   typedef Math::real real;
-  using std::cos; using std::sin; using std::sqrt;
+  using std::cos; using std::sin; using std::sqrt; using std::hypot;
   real
     phi = lat0 * Math::degree(),
     e2 = f * (2 - f),
@@ -44,7 +44,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
   return a * Math::degree() *
-    Math::hypot((lat1 - lat0) * hlat, dlon * hlon);
+    hypot((lat1 - lat0) * hlat, dlon * hlon);
 }
 
 class TestData {
@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
             alb.Forward(real(0), real(lat), real(lon), xa, ya, gammaa, ka);
           else
             lcc.Forward(real(0), real(lat), real(lon), xa, ya, gammaa, ka);
-          real errf = real(Math::hypot(real(xa) - x, real(ya) - y));
+          real errf = real(hypot(real(xa) - x, real(ya) - y));
           if (lambert)
             errf /= real(k);
           real errkf = real(abs(real(ka) - k)/k);

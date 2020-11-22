@@ -30,6 +30,7 @@ GeographicLib.PolygonArea = {};
    *   {@link module:GeographicLib/Geodesic.Geodesic Geodesic} class.
    */
   g, l, p, m, c) {
+  "use strict";
 
   var GEOGRAPHICLIB_GEODESIC_ORDER = 6,
       nA1_ = GEOGRAPHICLIB_GEODESIC_ORDER,

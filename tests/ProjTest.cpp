@@ -2,7 +2,7 @@
  * \file ProjTest.cpp
  * \brief Command line utility for testing transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -128,7 +128,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat0, GeographicLib::Math::real lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
-  using std::cos; using std::sin; using std::sqrt;
+  using std::cos; using std::sin; using std::sqrt; using std::hypot;
   typedef Math::real real;
   real
     phi = lat0 * Math::degree(),
@@ -142,7 +142,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
   if (dlon >= 180) dlon -= 360;
   else if (dlon < -180) dlon += 360;
   return a * Math::degree() *
-    Math::hypot((lat1 - lat0) * hlat, dlon * hlon);
+    hypot((lat1 - lat0) * hlat, dlon * hlon);
 }
 
 int usage(int retval) {
@@ -204,28 +204,30 @@ int main(int argc, char* argv[]) {
       lat2 = proj.lat2();
       type = lcc;
     } else if (proj.proj() == "Mercator") {
+      using std::isfinite;
       fe = proj.fe();
       fn = proj.fn();
       k1 = proj.k0();
-      if (!Math::isfinite(k1))
+      if (!isfinite(k1))
         k1 = 1;
       lon0 = proj.lon0();
       lat0 = 0;
       lat1 = proj.latts();
-      if (!Math::isfinite(lat1))
+      if (!isfinite(lat1))
         lat1 = 0;
       lat2 = -lat1;
       type = lcc;
     } else if (proj.proj() == "Polar Stereographic") {
+      using std::isfinite;
       fe = proj.fe();
       fn = proj.fn();
       lon0 = proj.lonfp();
       lat0 = 90;
       k1 = proj.k0();
-      if (!Math::isfinite(k1))
+      if (!isfinite(k1))
         k1 = 1;
       real latts = proj.latts();
-      if (Math::isfinite(latts)) {
+      if (isfinite(latts)) {
         if (latts < 0)
           lat0 = -lat0;
         LambertConformalConic tx(a, f, lat0, 1);
@@ -261,7 +263,7 @@ int main(int argc, char* argv[]) {
     real maxerrx = 0, maxerry = 0, maxerr = 0, maxerrk = 0, maxerrr = 0;
     std::cout << std::fixed << std::setprecision(7);
     while (geo.Next(lata, lona) && proj.Next(xa, ya)) {
-      using std::abs;
+      using std::abs; using std::hypot;
       ++count;
       // Suppress bogus uninitialized warnings for lat and lon
       real lat = 0, lon = 0, x, y, xx, yy;
@@ -310,7 +312,7 @@ int main(int argc, char* argv[]) {
       real
         errx = abs(x - xa),
         erry = abs(y - ya),
-        err = Math::hypot(errx, erry),
+        err = hypot(errx, erry),
         errk = err/std::max(real(1),k);
       std::ostringstream sx, sxa, sy, sya;
       sx << std::fixed << std::setprecision(6) << x;

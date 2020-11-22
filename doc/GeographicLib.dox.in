@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2019-12-13
+\date 2020-11-22
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -148,10 +148,10 @@ The goals of GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with g++ 5.3.1 under Linux, with
-Apple LLVM 7.0.2 under Mac OS X, and with MS Visual Studio 10 (2010), 11
-(2012), 12 (2013), 14 (2015), 15 (2017), and 16 (2019) compiled for 32
-bit and 64 bit on Windows.
+and the utilities have been tested with C++11 compliant versions of g++
+under Linux, with Apple LLVM 7.0.2 under Mac OS X, and with MS Visual
+Studio 14 (2015), 15 (2017), and 16 (2019) compiled for 32 bit and 64
+bit on Windows.
 
 MATLAB, JavaScript, and Python interfaces are provided to portions of
 GeographicLib; see \ref other.
@@ -195,11 +195,10 @@ Forward to \ref install.  Up to \ref contents.
 Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
-GeographicLib has been developed under Linux with the g++ compiler
-(versions 4.0 and later), under Mac OS X with Xcode (version 8.2), and
-under Windows with Visual Studio 2010 and later.  Earlier versions were
-tested also under Visual Studio 2005 and 2008 and under Solaris.  It
-should compile on a wide range of other systems.  First download either
+GeographicLib has been developed under Linux with the g++ compiler,
+under Mac OS X with Xcode, and under Windows with Visual Studio 2015 and
+later.  It should compile on any systems with a C++11 compliant
+compiler.  First download either
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
 GeographicLib-@PROJECT_VERSION@.tar.gz</a> or
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
@@ -217,12 +216,8 @@ Then pick one of the first five options below:
   including Linux and Mac OS X.
 - \ref gnu.  This is a simple installation method that works with g++
   and GNU make on Linux and many Unix platforms.
-- \ref windows.  This is a simple installation method that works with
-  Visual Studio 2010 under Windows.
 - \ref binaryinst.  Use this installation method if you only need to use
-  the \ref utilities supplied with GeographicLib.  (This method also
-  installs the header files and the library for use by Visual Studio 14
-  2015.)
+  the \ref utilities supplied with GeographicLib.
 - \ref qt.  How to compile GeographicLib so that it can be used by Qt
   programs.
 - \ref maintainer.  This describes addition tasks of interest only to
@@ -265,7 +260,7 @@ also determine the capabilities of your system and adjust the
 compilation of the libraries and examples appropriately.
 
 cmake is available for most computer platforms.  On Linux systems cmake
-will typically one of the standard packages and can be installed by a
+will typically be one of the standard packages and can be installed by a
 command like
   \verbatim
   yum install cmake \endverbatim
@@ -481,27 +476,6 @@ Here are the steps to compile and install GeographicLib:
   <code>PREFIX</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
-\section windows Installation on Windows
-
-This method requires Visual Studio 2010.  This builds a static
-library and the utilities.  If you have some other version of Visual
-Studio, use cmake to create the necessary solution file, see \ref cmake.
-(cmake is needed to run the tests.)
-- Unpack the source, running \verbatim
-  unzip -q GeographicLib-@PROJECT_VERSION@.zip \endverbatim
-- Open GeographicLib-@PROJECT_VERSION@/windows/GeographicLib-vc10.sln in
-  Visual Studio 2010 (for
-  Visual Studio Express 2010, replace -vc10 by -vc10x).
-- Pick the build type (e.g., Release), and select "Build Solution".
-- The library and the compiled examples are in the windows/Release.
-- Copy the library windows/Release/GeographicLib.lib and the headers in
-  include/GeographicLib somewhere convenient.  The headers should remain
-  in a directory named GeographicLib.  For documentation, open
-  <a href="index.html">doc/html/index.html</a> in a web browser.
-
-The Visual Studio 10 solution also contains projects to build
-<a href="NET/index.html">NETGeographicLib</a> and the C# example project.
-
 \section binaryinst Using a binary installer
 
 Binary installers are available for some platforms
@@ -513,7 +487,7 @@ The header files and static and shared versions of library are also
 provided; these can only be used by Visual Studio 14 2015 or later (2017
 or 2019) (in either release or debug mode).  However, if you plan to use
 the library, it may be advisable to build it with the compiler you are
-using for your own code using either \ref cmake or \ref windows.
+using for your own code using \ref cmake.
 
 Download and run
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
@@ -567,7 +541,7 @@ same compiler (and optimization flags) as Qt.
 If you are using the mingw compiler on Windows for Qt, then you need to
 build GeographicLib with mingw.  You can accomplish this with cmake
 under cygwin with, for example, \verbatim
-  export PATH="`cygpath -m c:/QtSDK/mingw/bin`:$PATH"
+  export PATH="`cygpath c:/QtSDK/mingw/bin`:$PATH"
   mkdir BUILD
   cd BUILD
   cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
@@ -677,7 +651,7 @@ The following Fedora package is also useful for syntax checking python
 Installing the python package requires the following \verbatim
   python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
 A recent version of mpreal.h needs to be downloaded from
-https://bitbucket.org/advanpix/mpreal and installed
+https://github.com/advanpix/mpreal and installed
 in the <code>include/</code> directory.  For all the tests to be run,
 the following datasets need to be installed
 - geoid models: egm96-5
@@ -2031,6 +2005,8 @@ The supported models are
  - <b>egm2008</b>, the
    <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
    Earth Gravity Model 2008</a>, which includes terms up to degree 2190.
+   See also <a href="https://doi.org/10.1029/2011JB008916"> Pavlis et
+   al. (2012)</a>
  - <b>wgs84</b>, the
    <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
@@ -2924,6 +2900,10 @@ The supported models are
    <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (12th generation)</a>, which approximates
    the main magnetic field for the period 1900--2020.
+ - <b>igrf13</b>, the
+   <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
+   Geomagnetic Reference Field (13th generation)</a>, which approximates
+   the main magnetic field for the period 1900--2025.
  - <b>emm2010</b>, the
    <a href="https://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
@@ -3037,6 +3017,20 @@ These magnetic models are available for download:
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
  link</a> (310)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
+ link</a> (8)</center>
+<tr>
+ <td>igrf13
+ <td><center>13</center>
+ <td><center>1900--2025</center>
+ <td><center>28</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.tar.bz2">
+ link</a> (7)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
+ link</a> (1420)</center>
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
  link</a> (8)</center>
@@ -6760,15 +6754,21 @@ Here, the expansions are in terms of the third flattening <i>n</i> =
 (<i>a</i>&nbsp;&minus;&nbsp;<i>b</i>)/(<i>a</i>&nbsp;+&nbsp;<i>b</i>).
 This choice of expansion parameter results in expansions in which half
 the coefficients vanish for all relations between &phi;, &beta;,
-&theta;, and &mu;.  In addition, the expansions converge for
-<i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).  These expansions were
-obtained with the the maxima code, <a href="auxlat.mac">auxlat.mac</a>.
+&theta;, and &mu;.  In addition, the expansions converge for |<i>n</i>|
+&lt; 1 or <i>b</i>/<i>a</i> &isin; (0,&nbsp;&infin;).  These expansions
+were obtained with the the maxima code, <a
+href="auxlat.mac">auxlat.mac</a>.
 
 Adams (1921) uses the eccentricity squared <i>e</i><sup>2</sup> as the
 expansion parameter, but the resulting series only converge for
-<i>b</i>/<i>a</i> &isin; (0,&nbsp;&radic;2).  In addition, it is shown
-in \ref auxlaterror, that the errors when the series are truncated are
-much worse than for the corresponding series in \e n.
+|<i>e</i><sup>2</sup>| &lt; 1 or <i>b</i>/<i>a</i> &isin;
+(0,&nbsp;&radic;2).  In addition, it is shown in \ref auxlaterror, that
+the errors when the series are truncated are much worse than for the
+corresponding series in \e n.
+
+\b NOTE: The assertions about convergence above are too optimistic.
+Some of the series do indeed converge for |<i>n</i>| &lt; 1.  However
+others have a smaller radius of convergence.  More on this later&hellip;
 
 \section auxlatformula Series approximations for conversions
 
@@ -7419,7 +7419,7 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires:
    - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-     (version 3.6.5, dated 2016-12-19, or later),
+     (version 3.6.7, dated 2020-06-27, or later),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
      or later, Visual Studio 12 2013 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -7703,11 +7703,43 @@ git repository for GeographicLib</a>.
      strict' into functions (to make jshint happy).
    - Add C++ tests not dependent on utility programs.
    - Add information on radius of convergence for aux latitude series.
-   - Require C++11 and C99(?) compiler support.  Mark Math::hypot et
-     al. deprecated.
    - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
      &gt; 1/sqrt(2).
+   - Check Visual Studo "code analysis" results (from Analize VS
+     menu).  Probably an awful lot of false positives.
+   - Fix cmake files so that they play nice with vcpkg
+     - Allow only some components to be built.
+     - Allow tools, cmake install directories, etc., to be set.
+     - Compute relative paths from bin to lib directories.
+     - Install dll in tools directory.
+     - Use BUILD_SHARED_LIBS instead of GEOGRAPHICLIB_LIB_TYPE
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
+   (released 2020-11-22)
+   - C++11 compiler required for C++ library.  As a consequence:
+     - The workaround implementations for C++11 routines (Math::hypot,
+       Math::expm1, Math::log1p, Math::asinh, Math::atanh,
+       Math::copysign, Math::cbrt, Math::remainder, Math::remquo,
+       Math::round, Math::lround, Math::fma, Math::isfinite, and
+       Math::isnan) are now deprecated.  Just use the versions in the
+       std:: namespace instead.
+     - SphericalEngine class, fix the namespace for using streamoff.
+     - Some templated functions, e.g., Math::degree(), now have default
+       template parameters, T = Math::real.
+   - C99 compiler required for C library.
+   - Reduce memory footprint in Java implementation.
+   - New form of Utility::ParseLine to allow the syntax "KEY = VAL".
+   - Add International Geomagnetic Reference Field (13th generation),
+     igrf13, which approximates the main magnetic field of the earth for
+     the period 1900--2025.
+   - More symbols allowed with DMS decoding in C++, JS, and cgi-bin
+     packages; see DMS::Decode.
+   - Fix bug in cgi-bin argument processing which causes "+" to be
+     misinterpreted.
+   - Required minium version of CMake is now 3.7.0 (released
+     2016-11-11).  This is to work around a bug in find_package for
+     cmake 3.4 and 3.5.
 
  - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
    (released 2019-12-13)
@@ -7720,7 +7752,7 @@ git repository for GeographicLib</a>.
      which migrated to Math.cpp in version 1.50.
    - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
      require a C++11 compliant compiler.  This means that the minimum
-     version of Visual Studio will be Visual Studio 12 2013.  (This
+     version of Visual Studio will be Visual Studio 12 2015.  (This
      repeats the warning given with version 1.50.  It didn't apply to
      this version because this is a minor update.)
 
@@ -7782,7 +7814,7 @@ git repository for GeographicLib</a>.
        2008 for a long time).
      - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
        require a C++11 compliant compiler.  This means that the minimum
-       version of Visual Studio will be Visual Studio 12 2013.
+       version of Visual Studio will be Visual Studio 14 2015.
      - Minimum boost version = 1.64 needed for GEOGRAPHICLIB_PRECISION =
        4.
      - Java = 1.6; this allows the removal of epsilon, min, hypot,
@@ -8303,8 +8335,8 @@ git repository for GeographicLib</a>.
      the end points is at a pole.  Thanks to Thomas Murray for reporting
      this.
    - Add International Geomagnetic Reference Field (12th generation),
-     which approximates the main magnetic field of the earth for the
-     period 1900--2020.
+     igrf12, which approximates the main magnetic field of the earth for
+     the period 1900--2020.
    - Split information about \ref jacobi to a separate section and
      include more material.
 

@@ -75,6 +75,7 @@ var geod = GeographicLib.Geodesic.WGS84,
 })(GeographicLib.Geodesic);
 
 function formatpoint(lat, lon, azi, dmsformat, prec) {
+  "use strict";
   var trail;
   prec += 5;
   if (dmsformat) {
@@ -92,6 +93,7 @@ function formatpoint(lat, lon, azi, dmsformat, prec) {
 };
 
 function GeodesicInverse(input, dmsformat, prec) {
+  "use strict";
   var result = {},
       t, p1, p2;
   try {
@@ -128,6 +130,7 @@ function GeodesicInverse(input, dmsformat, prec) {
 };
 
 function GeodesicDirect(input, dmsformat, prec) {
+  "use strict";
   var result = {},
       t, p1, azi1, s12;
   try {
@@ -165,6 +168,7 @@ function GeodesicDirect(input, dmsformat, prec) {
 };
 
 function GeodesicInversePath(input, dmsformat, prec) {
+  "use strict";
   var result = {},
       t, p1, p2, ds12, maxnum, i;
   try {
@@ -192,6 +196,7 @@ function GeodesicInversePath(input, dmsformat, prec) {
 };
 
 function GeodesicArea(input, polyline) {
+  "use strict";
   var result = {},
       t, i, pos;
   try {
