@@ -91,7 +91,7 @@ umask 0022
 # use: cd js; jshint src
 
 DATE=`date +%F`
-VERSION=1.51
+VERSION=1.52
 BRANCH=devel
 TEMP=/scratch/geographiclib-dist
 if test `hostname` = petrel.petrel.org; then
@@ -568,7 +568,12 @@ git push --tags
 #   file = Formula/geographiclib.rb
 #   brew upgrade geographiclib
 #   commit message = geographiclib $VERSION
-# TODO update vcpkg git@github.com:microsoft/vcpkg.git
+# update vcpkg git@github.com:microsoft/vcpkg.git
+#   dir = ports/geographiclib
+#   ./vcpkg install 'geographiclib[tools]'
+#   binaries in installed/x64-linux/tools/geographiclib
+#   libs in installed/x64-linux/{include,lib,debug/lib}
+#   commit message = [geographiclib] Update to version $VERSION
 # TODO update conda-forge
 # upload matlab packages
 # update binaries for cgi applications

@@ -7699,20 +7699,22 @@ git repository for GeographicLib</a>.
    - Template versions of Gnomonic and AzimuthalEquidistant so that they
      can use either Geodesic and GeodesicExact.  Use typedefs so that
      Geodesic::Line points to GeodesicLine.
-   - Split DMS stuff from main JavaScript package.  Also move 'use
-     strict' into functions (to make jshint happy).
+   - Split DMS stuff from main JavaScript package.
    - Add C++ tests not dependent on utility programs.
    - Add information on radius of convergence for aux latitude series.
    - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
      &gt; 1/sqrt(2).
    - Check Visual Studo "code analysis" results (from Analize VS
      menu).  Probably an awful lot of false positives.
-   - Fix cmake files so that they play nice with vcpkg
+   - Fix cmake files so that they play nice with vcpkg:
      - Allow only some components to be built.
      - Allow tools, cmake install directories, etc., to be set.
      - Compute relative paths from bin to lib directories.
      - Install dll in tools directory.
-     - Use BUILD_SHARED_LIBS instead of GEOGRAPHICLIB_LIB_TYPE
+     - Use BUILD_SHARED_LIBS instead of GEOGRAPHICLIB_LIB_TYPE.
+     - Maybe segregate more tasks into a MAINTAINER mode.
+   - Add Geocentric interface to MagneticModel?  See sourceforge request
+     from Marcelo Banik de Padua.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>

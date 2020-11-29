@@ -48,8 +48,8 @@
 //   1500     vc9   (2008)
 //   1600     vc10  (2010)
 //   1700     vc11  (2012)
-//   1800     vc12  (2013) First version of VS to include enough C++11 support
-//   1900     vc14  (2015)
+//   1800     vc12  (2013)
+//   1900     vc14  (2015) First version of VS to include enough C++11 support
 //   191[0-9] vc15  (2017)
 //   192[0-9] vc16  (2019)
 
