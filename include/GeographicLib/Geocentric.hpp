@@ -78,7 +78,7 @@ namespace GeographicLib {
     real _a, _f, _e2, _e2m, _e2a, _e4a, _maxrad;
     static void Rotation(real sphi, real cphi, real slam, real clam,
                          real M[dim2_]);
-    static void Rotate(real M[dim2_], real x, real y, real z,
+    static void Rotate(const real M[dim2_], real x, real y, real z,
                        real& X, real& Y, real& Z) {
       // Perform [X,Y,Z]^t = M.[x,y,z]^t
       // (typically local cartesian to geocentric)
@@ -86,7 +86,7 @@ namespace GeographicLib {
       Y = M[3] * x + M[4] * y + M[5] * z;
       Z = M[6] * x + M[7] * y + M[8] * z;
     }
-    static void Unrotate(real M[dim2_], real X, real Y, real Z,
+    static void Unrotate(const real M[dim2_], real X, real Y, real Z,
                          real& x, real& y, real& z)  {
       // Perform [x,y,z]^t = M^t.[X,Y,Z]^t
       // (typically geocentric to local cartesian)
