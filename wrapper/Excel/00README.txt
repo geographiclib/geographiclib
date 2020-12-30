@@ -19,7 +19,7 @@ functions you will see exposed in Excel.
 
 Here are the step-by-step instructions for compiling and using the
 sample routines given here (which solve the direct and inverse geodesic
-problems):
+problems and the corresponding rhumb line problems):
 
 (1) Install binary distribution for GeographicLib (either 64-bit or
 32-bit to match your version of Excel).
@@ -53,12 +53,13 @@ probably something like
 
   C:\Program Files\Microsoft Office\root\Office16
 
+and you will probably need administrator privileges to do the copy.
 If it's in "Program Files (x86)", then you have a 32-bit version of
 Excel and you need to compile your interface routines in 32-bit by
 specitying "-A win32" when you first run cmake.
 
 (5) Open the Excel workbook within which you would like to use the
-geodesic routines.
+geodesic and rhumb routines.
 
 Type Alt-F11 to open Excel's Visual Basic editor.
 
@@ -69,7 +70,7 @@ Browse to Geodesic.bas, select it and click Open
 
 Save your Workbook as Excel Macro-Enabled Workbook (*.xlsm)
 
-(6) You will now have 6 new functions available:
+(6) You will now have 10 new functions available:
 
 Solve the direct geodesic problem for
   lat2: geodesic_direct_lat2(lat1, lon1, azi1, s12)
@@ -80,6 +81,14 @@ Solve the inverse geodesic problem for
   s12: geodesic_inverse_s12(lat1, lon1, lat2, lon2)
   azi1: geodesic_inverse_azi1(lat1, lon1, lat2, lon2)
   azi2: geodesic_inverse_azi2(lat1, lon1, lat2, lon2)
+
+Solve the direct rhumb problem for
+  lat2: rhumb_direct_lat2(lat1, lon1, azi12, s12)
+  lon2: rhumb_direct_lon2(lat1, lon1, azi12, s12)
+
+Solve the inverse rhumb problem for
+  s12: rhumb_inverse_s12(lat1, lon1, lat2, lon2)
+  azi12: rhumb_inverse_azi12(lat1, lon1, lat2, lon2)
 
 Latitudes, longitudes, and azimuths are in degrees.  Distances are in
 meters.
