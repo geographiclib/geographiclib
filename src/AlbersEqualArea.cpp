@@ -343,12 +343,14 @@ namespace GeographicLib {
     return tphi;
   }
 
-  // return atanh(sqrt(x))/sqrt(x) - 1 = y/3 + y^2/5 + y^3/7 + ...
+  // return atanh(sqrt(x))/sqrt(x) - 1 = x/3 + x^2/5 + x^3/7 + ...
   // typical x < e^2 = 2*f
   Math::real AlbersEqualArea::atanhxm1(real x) {
     real s = 0;
     if (abs(x) < real(0.5)) {
       real os = -1, y = 1, k = 1;
+      // FIX.  Estimate max number of iterations?  Maybe follow the example of
+      // NormalGravity::atan7series
       while (os != s) {
         os = s;
         y *= x;                 // y = x^n
@@ -364,21 +366,45 @@ namespace GeographicLib {
 
   // return (Datanhee(1,y) - Datanhee(1,x))/(y-x)
   Math::real AlbersEqualArea::DDatanhee(real x, real y) const {
-    real s = 0;
-    if (_e2 * (abs(x) + abs(y)) < real(0.5)) {
+    // Need to rethink this...
+    //
+    // The series in e2 is
+    //   sum( c[l] * e2^*l, l, 1, N)
+    // where
+    //   c[l] = sum( x^i * y^j; i >= 0, j >= 0, i+j < 2*l) / (2*l + 1)
+    //        = ( (x-y) - (1-y) * x^(2*l+1) + (1-x) * y^(2*l+1) ) /
+    //          ( (2*l+1) * (x-y) * (1-y) * (1-x) )
+    // For x = y = 1, c[l] = l
+    //
+    // The general solution will work as long as one of x or y is far from 1.
+    // So only use the series of both x and y are close to one.  In the limit
+    // x,y -> 1,
+    //
+    //   DDatanhee -> e2/(1-e2)^2 = sum(l * e2^l, l, 1, inf)
+    //
+    // So form a series for DDatanhee - e2/(1-e2)^2 and express in terms of
+    // dx=1-x and dy = 1-y.
+    real s = 0,
+      // small parameter for series approx
+      q = abs(_e2) * max(real(1), abs(x) + abs(y));
+    if (q < real(0.5)) {
       real os = -1, z = 1, k = 1, t = 0, c = 0, en = 1;
+      // FIX.  Estimate max number of iterations?
       while (os != s) {
         os = s;
         t = y * t + z; c += t; z *= x;
         t = y * t + z; c += t; z *= x;
         k += 2; en *= _e2;
         // Here en[l] = e2^l, k[l] = 2*l + 1,
-        // c[l] = sum( x^i * y^j; i >= 0, j >= 0, i+j < 2*l)
+        // c[l] = sum( x^i * y^j; i >= 0, j >= 0, i+j < 2*l) / (2*l + 1)
+        // Taylor expansion is
+        // s = sum( c[l] * e2^l, l, 1, N)
         s += en * c / k;
       }
-      // Taylor expansion is
-      // s = sum( c[l] * e2^l / (2*l + 1), l, 1, N)
     } else
+      // Rearrange difference.  In this form the case x == y is handled OK.
+      // This function is called with x = sphi1, y = sphi2, and phi1 <= phi2.
+      // So x = 1 means that phi1 = phi2 = 90 and this is handled separately.
       s = (Datanhee(1, y) - Datanhee(x, y))/(1 - x);
     return s;
   }

@@ -637,7 +637,7 @@ The following Fedora packages are required by
 - boost-devel
 - mpfr-devel
 - octave
-- python2-sphinx
+- python3-sphinx
 - nodejs
 - maven
 .
@@ -646,6 +646,7 @@ The following npm packages need to be installed (jshint is just for
 syntax checking) \verbatim
   npm install -g mocha jsdoc jshint \endverbatim
 The following Fedora package is also useful for syntax checking python
+(no longer available? use pylint instead?)
 - pychecker
 .
 Installing the python package requires the following \verbatim
@@ -1746,11 +1747,13 @@ compatible with the requirement that the data can be randomly accessed.
 In particular gdal_translate can be used to convert the pgm files to
 compressed tiff files with
 \verbatim
-gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 \
-   -co TILED=YES -co BLOCKXSIZE=256 -co BLOCKYSIZE=256 \
+gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 -co TILED=YES \
+   –a_offset -108 -a_scale 0.003 \
    egmyy-g.pgm egmyy-g.tif
 \endverbatim
-The resulting files sizes are
+(The <code>-a_offset</code> and <code>-a_scale</code> options were
+introduced in gdal_translate version 2.3.)  The resulting files sizes
+are
 \verbatim
                   pgm      tif
     egm84-30      0.6 MB   0.5 MB
@@ -7715,7 +7718,17 @@ git repository for GeographicLib</a>.
      - Maybe segregate more tasks into a MAINTAINER mode.
    - Add Geocentric interface to MagneticModel?  See sourceforge request
      from Marcelo Banik de Padua.
+   - Make AlbersEqualArea::atanhxm1 and AlbersEqualArea::DDatanhee more
+     robust.
+   - Fix exact in Rhumb (not used?)
+   - Declare Rhumb copy constructor "= default".
+   - Use C++11 "= delete" idiom to delete copy assignment and copy
+     constructors.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
+   (released 2021-mm-dd)
+   - Add example of calling GeographicLib from Excel.
 
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)
