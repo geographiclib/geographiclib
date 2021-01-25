@@ -52,4 +52,3 @@ ${INSTALL_MSG}")
       PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
   endif ()
 endif ()
-

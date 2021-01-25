@@ -90,11 +90,12 @@ umask 0022
 #   js/GeographicLib.md (date + update change log)
 # use: cd js; jshint src
 
+START=`date +%s`
 DATE=`date +%F`
 VERSION=1.52
 BRANCH=devel
-TEMP=/scratch/geographiclib-dist
-if test `hostname` = petrel.petrel.org; then
+TEMP=/home/scratch/geographiclib-dist
+if test `hostname` = petrel; then
     DEVELSOURCE=$HOME/geographiclib
     WINDEVELSOURCE=u:/geographiclib
     WINDOWSBUILD=/var/tmp
@@ -581,3 +582,5 @@ git push --tags
 EOF
 echo cat $TEMP/tasks.txt
 cat $TEMP/tasks.txt
+END=`date +%s`
+echo Elapsed time $((END-START)) secs

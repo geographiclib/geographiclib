@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2020-11-22
+\date 2021-mm-dd
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2019-09-24),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2021-mm-dd),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -638,6 +638,7 @@ The following Fedora packages are required by
 - boost-devel
 - mpfr-devel
 - octave
+- python2
 - python3-sphinx
 - nodejs
 - maven
@@ -7725,6 +7726,7 @@ git repository for GeographicLib</a>.
    - Declare Rhumb copy constructor "= default".
    - Use C++11 "= delete" idiom to delete copy assignment and copy
      constructors.
+   - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
