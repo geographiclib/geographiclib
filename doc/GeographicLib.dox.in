@@ -253,7 +253,7 @@ make software maintenance simpler
 \section cmake Installation with cmake
 
 This is the recommended method of installation; however it requires that
-<a href="https://www.cmake.org">cmake</a>, version 3.1.0 or later, be
+<a href="https://www.cmake.org">cmake</a>, version 3.7.0 or later, be
 installed on your system.  This permits GeographicLib to be built either
 as a shared or a static library on a wide variety of systems.  cmake can
 also determine the capabilities of your system and adjust the
@@ -290,8 +290,12 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 14" -A win32 -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" ..
-  cmake -G "Visual Studio 14" -A x64 -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" ..\endverbatim
+  cmake -G "Visual Studio 14" -A win32 \
+    -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" \
+    ..
+  cmake -G "Visual Studio 14" -A x64 \
+    -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" \
+    ..\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX point to system directories.
   You might instead prefer to install to a user directory such as
   <code>C:/Users/jsmith/projects/GeographicLib-@PROJECT_VERSION@</code>.
@@ -372,7 +376,7 @@ Here are the steps to compile and install GeographicLib:
     -# quad precision (113-bit precision).
     -# arbitrary precision.
     .
-    See \ref highprec for addition information about the last two
+    See \ref highprec for additional information about the last two
     values.  Nearly all the testing has been carried out with doubles
     and that's the recommended configuration.  In particular you should
     avoid "installing" the library with a precision different from
@@ -422,6 +426,14 @@ Here are the steps to compile and install GeographicLib:
   PREFIX/share/doc/GeographicLib/html/index.html</a>, if
   COMMON_INSTALL_PATH is ON, or <a href="index.html">
   PREFIX/doc/index.html</a>, otherwise.
+- With cmake 3.13 and later, cmake can create the build directory for
+  you.  This allows you to configure and run the build on Windows with
+  \verbatim
+  cmake -G "Visual Studio 14" -A x64 -S . -B BUILD
+  cmake --build BUILD --config Release --target ALL_BUILD \endverbatim
+  or on Linux with \verbatim
+  cmake -S . -B BUILD
+  make -C BUILD -j4 \endverbatim
 
 \section autoconf Installation using the autoconfigure tools
 
@@ -700,7 +712,7 @@ In order to use GeographicLib from C++ code, you will need to
     cd BUILD
     cmake -G "Visual Studio 14" -A x64 \
       -D CMAKE_PREFIX_PATH="C:/Program Files" \
-      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeographic" \
+      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
@@ -718,6 +730,18 @@ In order to use GeographicLib from C++ code, you will need to
     cmake --build . --config Release --target ALL_BUILD \endverbatim
     You might also want to install your package (using "make install" or
     build the "INSTALL" target with the command above).
+  - With cmake 3.13 and later, cmake can create the build directory for
+    you.  This allows you to configure and run the build on Windows with
+    \verbatim
+    cmake -G "Visual Studio 14" -A x64 \
+      -D CMAKE_PREFIX_PATH="C:/Program Files" \
+      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
+      -S . -B BUILD
+    cmake --build BUILD --config Release --target ALL_BUILD \endverbatim
+    or on Linux with \verbatim
+    cmake -D CMAKE_INSTALL_PREFIX="/tmp/testgeog" \
+      -S . -B BUILD
+    make -C BUILD -j4 \endverbatim
   .
   The most import step is the find_package command.  The cmake
   documentation describes the locations searched by find_package (the

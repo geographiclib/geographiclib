@@ -120,33 +120,32 @@ mkdir $TEMP/gitr # For release branch
 (cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 cd $TEMP/gita/geographiclib
 sh autogen.sh
-mkdir BUILD
-cd BUILD
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON ..
-make dist
-cp GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
-make doc
+cmake -S . -B BUILD \
+      -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON
+make -C BUILD dist
+cp BUILD/GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
+make -C BUILD doc
 (
-    cd ../java
+    cd java
     mvn -q package -P release
     rsync -a target/apidocs/ ../BUILD/doc/html/java/
 )
 (
-    cd ../python
+    cd python
     python2 -m unittest -v geographiclib.test.test_geodesic
     python3 -m unittest -v geographiclib.test.test_geodesic
 )
 (
-    cd ../matlab/geographiclib
+    cd matlab/geographiclib
     octave --no-gui --no-window-system --eval geographiclib_test
 )
 (
-   cd js/geographiclib
-   npm test
+    cd BUILD/js/geographiclib
+    npm test
 )
-rsync -a --delete doc/html/ $WEBDIST/htdocs/$VERSION-pre/
+rsync -a --delete BUILD/doc/html/ $WEBDIST/htdocs/$VERSION-pre/
 mkdir -p $TEMP/js
-cp -p js/*.js js/*.html $TEMP/js/
+cp -p BUILD/js/*.js BUILD/js/*.html $TEMP/js/
 JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
 mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
 ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
@@ -155,12 +154,12 @@ ln -s geographiclib-$JS_VERSION.min.js $TEMP/js/geographiclib.min.js
 rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
 
 mkdir $TEMP/rel{a,b,c,x,y}
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake + mvn
-tar xfpzC GeographicLib-$VERSION.tar.gz $TEMP/relx
+tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
+tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
+tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake+mvn
+tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
-unzip -qq -d $WINDOWSBUILD GeographicLib-$VERSION.zip
+unzip -qq -d $WINDOWSBUILD BUILD/GeographicLib-$VERSION.zip
 
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
@@ -176,7 +175,7 @@ for v in 2019 2017 2015; do
 done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
-cp $TEMP/gita/geographiclib/pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
+cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
 # for ver in 10 11 12 14 15 16; do
 for ver in 14 15 16; do
@@ -188,47 +187,41 @@ for ver in 14 15 16; do
 	# update documentation examples if VS version for binary
 	# installer changes.
 	test "$ver" = 14 && installer=y
-	mkdir $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg
 	(
 	    echo "#! /bin/sh -exv"
 	    echo echo ========== cmake $pkg ==========
-	    echo 'b=geog-`pwd | sed s%.*/%%`'
-	    echo rm -rf c:/scratch/\$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo b=c:/scratch/geog-$pkg
+	    echo rm -rf \$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'unset GEOGRAPHICLIB_DATA'
-	    echo 'mkdir -p c:/scratch/$b'
-	    echo 'cd c:/scratch/$b'
-	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION
-	    echo cmake --build . --config Debug   --target ALL_BUILD
-	    echo cmake --build . --config Debug   --target RUN_TESTS
-	    echo cmake --build . --config Debug   --target INSTALL
-	    echo cmake --build . --config Release --target ALL_BUILD
-	    echo cmake --build . --config Release --target exampleprograms
-	    echo cmake --build . --config Release --target netexamples
-	    echo cmake --build . --config Release --target RUN_TESTS
-	    echo cmake --build . --config Release --target INSTALL
-	    echo cmake --build . --config Release --target PACKAGE
+	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
+	    echo cmake --build \$b --config Debug   --target ALL_BUILD
+	    echo cmake --build \$b --config Debug   --target RUN_TESTS
+	    echo cmake --build \$b --config Debug   --target INSTALL
+	    echo cmake --build \$b --config Release --target ALL_BUILD
+	    echo cmake --build \$b --config Release --target exampleprograms
+	    echo cmake --build \$b --config Release --target netexamples
+	    echo cmake --build \$b --config Release --target RUN_TESTS
+	    echo cmake --build \$b --config Release --target INSTALL
+	    echo cmake --build \$b --config Release --target PACKAGE
 	    test "$installer" &&
-		echo cp GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ || true
-	    echo 'b=geogc-`pwd | sed s%.*/%%`'
-	    echo rm -rf c:/scratch/\$b
-	    echo 'mkdir -p c:/scratch/$b'
-	    echo 'cd c:/scratch/$b'
-	    echo cmake -G \"$gen\" -A $arch -D CONVERT_WARNINGS_TO_ERRORS=ON $WINDOWSBUILDWIN/GeographicLib-$VERSION/legacy/C
-	    echo cmake --build . --config Debug   --target ALL_BUILD
-	    echo cmake --build . --config Debug   --target RUN_TESTS
-	    echo cmake --build . --config Release --target ALL_BUILD
-	    echo cmake --build . --config Release --target RUN_TESTS
-	) > $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
-	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-$pkg/build
+		echo cp \$b/GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ ||
+		    true
+	    echo bc=c:/scratch/geog-$pkg
+	    echo rm -rf \$bc
+	    echo cmake -G \"$gen\" -A $arch -D CONVERT_WARNINGS_TO_ERRORS=ON -S legacy/C -B \$bc
+	    echo cmake --build \$bc --config Debug   --target ALL_BUILD
+	    echo cmake --build \$bc --config Debug   --target RUN_TESTS
+	    echo cmake --build \$bc --config Release --target ALL_BUILD
+	    echo cmake --build \$bc --config Release --target RUN_TESTS
+	) > $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
+	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
     done
 done
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 #! /bin/sh
 (
-    # Queue vs2015 build first for the binary installers
-    for d in BUILD-vc14* BUILD-vc*; do
-	test -f $d/build.done && continue
-	(cd $d; ./build; touch build.done)
+    for d in build-*; do
+        ./$d
     done
     ./mvn-build
 ) >& build.log
@@ -279,42 +272,32 @@ cd $TEMP/instb
 find . -type f | sort -u > ../files.b
 
 cd $TEMP/relc/GeographicLib-$VERSION
-mkdir BUILD
-cd BUILD
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc ..
-make -j$NUMCPUS all
-make test
-make -j$NUMCPUS exampleprograms
-make install
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
+make -C BUILD -j$NUMCPUS all
+make -C BUILD test
+make -C BUILD -j$NUMCPUS exampleprograms
+make -C BUILD install
 (
     cd $TEMP/instc/lib/node_modules/geographiclib
     mocha
 )
 
-mkdir ../BUILD-system
-cd ../BUILD-system
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
-make -j$NUMCPUS all
-make test
-cd ..
+cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
+make -C BUILD-system -j$NUMCPUS all
+make -C BUILD-system test
 
 if test "$HAVEINTEL"; then
-    mkdir ../BUILD-intel
-    cd ../BUILD-intel
-    env FC=ifort CC=icc CXX=icpc cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON ..
-    make -j$NUMCPUS all
-    make test
-    make -j$NUMCPUS exampleprograms
-    cd ..
+    env FC=ifort CC=icc CXX=icpc cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
+    make -C BUILD-intel -j$NUMCPUS all
+    make -C BUILD-intel test
+    make -C BUILD-intel -j$NUMCPUS exampleprograms
 fi
 
 # mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
-cd $TEMP/gita/geographiclib/tests/sandbox
-mkdir BUILD
-cd BUILD
-cmake -D CMAKE_PREFIX_PATH=$TEMP/instc ..
-make
+cd $TEMP/gita/geographiclib/
+cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
+make -C tests/sandbox/BUILD
 
 cd $TEMP/instc/share/matlab/geographiclib
 mkdir $TEMP/matlab
@@ -329,42 +312,33 @@ VERSION=$VERSION DATE=$DATE ROOT=$TEMP/matlab \
        sh $DEVELSOURCE/tests/matlab-toolbox-config.sh
 
 cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
+cd $TEMP/legacy
 for l in C Fortran; do
     (
-	mkdir $TEMP/legacy/$l/BUILD
-	cd $TEMP/legacy/$l/BUILD
-	cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
-	make -j$NUMCPUS all
-	make test
+	cmake -D CONVERT_WARNINGS_TO_ERRORS=ON -S $l -B $l/BUILD
+	make -C $l/BUILD -j$NUMCPUS all
+	make -C $l/BUILD test
 	test $l = Fortran && continue
 	if test "$HAVEINTEL"; then
-	    mkdir $TEMP/legacy/$l/BUILD-intel
-	    cd $TEMP/legacy/$l/BUILD-intel
 	    env FC=ifort CC=icc CXX=icpc \
-		cmake -D CONVERT_WARNINGS_TO_ERRORS=ON ..
-	    make -j$NUMCPUS all
-	    make test
+		cmake -D CONVERT_WARNINGS_TO_ERRORS=ON -S $l -B $l/BUILD-intel
+	    make -C $l/BUILD-intel -j$NUMCPUS all
+	    make -C $l/BUILD-intel test
 	fi
     )
 done
 
 cd $TEMP/gita/geographiclib
-(
-    cd BUILD
-    make -j$NUMCPUS testprograms
-)
+make -C BUILD -j$NUMCPUS testprograms
 cp $DEVELSOURCE/include/mpreal.h include/
 for p in 1 3 4 5; do
     mkdir BUILD-$p
-    (
-	cd BUILD-$p
-	cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p ..
-	make -j$NUMCPUS all
-	if test $p -ne 1; then
-	    make test
-	fi
-	make -j$NUMCPUS testprograms
-    )
+    cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
+    make -C BUILD-$p -j$NUMCPUS all
+    if test $p -ne 1; then
+	make -C BUILD-$p test
+    fi
+    make -C BUILD-$p -j$NUMCPUS testprograms
 done
 
 cd $TEMP/instc
@@ -429,7 +403,8 @@ EOF
 for i in a b c f; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
-    g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib -L$TEMP/inst$i/lib -lGeographic
+    g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib \
+	-L$TEMP/inst$i/lib -lGeographic
     ./testprogram$i
 done
 
