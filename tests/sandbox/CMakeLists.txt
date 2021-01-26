@@ -10,4 +10,5 @@ endif ()
 find_package (GeographicLib 1.39 REQUIRED)
 
 add_executable (example example-Geodesic.cpp)
+message(STATUS "GeographicLib_LIBRARIES: ${GeographicLib_LIBRARIES}")
 target_link_libraries (example ${GeographicLib_LIBRARIES})

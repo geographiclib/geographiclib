@@ -785,8 +785,8 @@ In order to use GeographicLib from C++ code, you will need to
   - <code>GeographicLib_VERSION</code> = @PROJECT_VERSION@
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
-  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib_SHARED
-  - <code>GeographicLib_STATIC_LIBRARIES</code> = GeographicLib_STATIC
+  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib::GeographicLib_SHARED
+  - <code>GeographicLib_STATIC_LIBRARIES</code> = GeographicLib::GeographicLib_STATIC
   - <code>GeographicLib_LIBRARY_DIRS</code>
   - <code>GeographicLib_BINARY_DIRS</code>
   - <code>GEOGRAPHICLIB_DATA</code> = value of this compile-time parameter
@@ -7750,12 +7750,12 @@ git repository for GeographicLib</a>.
    - Declare Rhumb copy constructor "= default".
    - Use C++11 "= delete" idiom to delete copy assignment and copy
      constructors.
-   - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-mm-dd)
    - Add example of calling GeographicLib from Excel.
+   - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
    .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)
