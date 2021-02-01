@@ -4,6 +4,7 @@
   "description":
   "JavaScript implementation of geodesic routines in GeographicLib",
   "main": "geographiclib.js",
+  "types": "types/geographiclib.d.ts",
   "scripts": {
     "test": "mocha"
   },
