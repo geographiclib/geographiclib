@@ -72,9 +72,16 @@ namespace GeographicLib {
     // check, to make sure.
     static_assert(numeric_limits<long long>::digits >= 44,
                   "long long not wide enough to store 10e12");
+    // Guard against floor(x * mult_) being computed incorrectly on some
+    // platforms.  The problem occurs when x * mult_ is held in extended
+    // precision and floor is inlined.  This causes tests GeoConvert1[678] to
+    // fail.  Problem reported and diagnosed by Thorkil Naur with g++ 10.2.0
+    // under Cygwin.
+    GEOGRAPHICLIB_VOLATILE real xx = x * mult_;
+    GEOGRAPHICLIB_VOLATILE real yy = y * mult_;
     long long
-      ix = (long long)(floor(x * mult_)),
-      iy = (long long)(floor(y * mult_)),
+      ix = (long long)(floor(xx)),
+      iy = (long long)(floor(yy)),
       m = (long long)(mult_) * (long long)(tile_);
     int xh = int(ix / m), yh = int(iy / m);
     if (utmp) {

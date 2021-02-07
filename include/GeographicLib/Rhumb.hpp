@@ -63,7 +63,7 @@ namespace GeographicLib {
    * \include example-Rhumb.cpp
    **********************************************************************/
 
-  class  GEOGRAPHICLIB_EXPORT Rhumb {
+  class GEOGRAPHICLIB_EXPORT Rhumb {
   private:
     typedef Math::real real;
     friend class RhumbLine;
@@ -461,7 +461,7 @@ namespace GeographicLib {
    * \include example-RhumbLine.cpp
    **********************************************************************/
 
-  class  GEOGRAPHICLIB_EXPORT RhumbLine {
+  class GEOGRAPHICLIB_EXPORT RhumbLine {
   private:
     typedef Math::real real;
     friend class Rhumb;
