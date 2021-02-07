@@ -478,7 +478,7 @@ Here are the steps to compile and install GeographicLib:
   If your machine using big endian ordering, then insert \code
   #define GEOGRAPHICLIB_WORDS_BIGENDIAN 1 \endcode
 - Build and install the software: \verbatim
-  make             # compile the library and the examples
+  make             # compile the library and the tools
   make install     # as root \endverbatim
   The installation is in directories under /usr/local.  You
   can specify a different installation directory with, for example,

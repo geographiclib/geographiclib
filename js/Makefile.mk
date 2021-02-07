@@ -21,7 +21,6 @@ geographiclib.min.js: HEADER.js $(JSSCRIPTS)
 clean:
 	rm -f geographiclib.js geographiclib.min.js *.html
 
-PREFIX = /usr/local
 DEST = $(PREFIX)/lib/node_modules/geographiclib
 INSTALL = install -b
 

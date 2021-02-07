@@ -25,7 +25,6 @@ LIBPATH = ../src
 # INCLUDEPATH = $(PREFIX)/include
 # LIBPATH = $(PREFIX)/lib
 
-PREFIX = /usr/local
 GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
 CC = g++ -g
