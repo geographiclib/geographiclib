@@ -84,7 +84,12 @@ class Math(object):
 
   def norm(x, y):
     """Private: Normalize a two-vector."""
-    r = math.hypot(x, y)
+    r = (math.sqrt(Math.sq(x) + Math.sq(y))
+         # hypot is inaccurate for 3.[89].  Problem reported by agdhruv
+         # https://github.com/geopy/geopy/issues/466 ; see
+         # https://bugs.python.org/issue43088
+         if (3, 8) <= sys.version_info < (3, 10)
+         else math.hypot(x, y))
     return x/r, y/r
   norm = staticmethod(norm)
 

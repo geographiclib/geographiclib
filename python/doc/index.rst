@@ -45,8 +45,8 @@ and install it with
 
 .. code-block:: sh
 
-  tar xpfz geographiclib-1.50.tar.gz
-  cd geographiclib-1.50
+  tar xpfz geographiclib-1.52.tar.gz
+  cd geographiclib-1.52
   python setup.py install
 
 It's a good idea to run the unit tests to verify that the installation
@@ -97,6 +97,10 @@ GeographicLib in various languages
 
 Change log
 ----------
+
+* Version 1.52 (released 2021-mm-dd)
+
+  * Work around inaccurate math.hypot for python 3.[89]
 
 * Version 1.50 (released 2019-09-24)
 

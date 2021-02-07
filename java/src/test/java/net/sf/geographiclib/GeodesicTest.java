@@ -652,6 +652,18 @@ public class GeodesicTest {
   }
 
   @Test
+  public void GeodSolve92() {
+    // Check fix for inaccurate hypot with python 3.[89].  Problem reported
+    // by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+    // https://bugs.python.org/issue43088
+    GeodesicData inv = Geodesic.WGS84.Inverse(37.757540000000006, -122.47018,
+                                              37.75754,           -122.470177);
+    assertEquals(inv.azi1, 89.99999923, 1e-7  );
+    assertEquals(inv.azi2, 90.00000106, 1e-7  );
+    assertEquals(inv.s12,   0.264,      0.5e-3);
+  }
+
+  @Test
   public void Planimeter0() {
     // Check fix for pole-encircling bug found 2011-03-16
     double pa[][] = {{89, 0}, {89, 90}, {89, 180}, {89, 270}};

@@ -7756,6 +7756,7 @@ git repository for GeographicLib</a>.
    (released 2021-mm-dd)
    - Add example of calling GeographicLib from Excel.
    - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
+   - Work around inaccuracies in hypot routines in Python and JavaScript.
    .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)

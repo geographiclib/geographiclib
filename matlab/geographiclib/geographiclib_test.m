@@ -36,6 +36,7 @@ function geographiclib_test
   i = GeodSolve78; if i, n=n+1; fprintf('GeodSolve78 fail: %d\n', i); end
   i = GeodSolve80; if i, n=n+1; fprintf('GeodSolve80 fail: %d\n', i); end
   i = GeodSolve84; if i, n=n+1; fprintf('GeodSolve84 fail: %d\n', i); end
+  i = GeodSolve92; if i, n=n+1; fprintf('GeodSolve92 fail: %d\n', i); end
   i = Planimeter0 ; if i, n=n+1; fprintf('Planimeter0  fail: %d\n', i); end
   i = Planimeter5 ; if i, n=n+1; fprintf('Planimeter5  fail: %d\n', i); end
   i = Planimeter6 ; if i, n=n+1; fprintf('Planimeter6  fail: %d\n', i); end
@@ -599,6 +600,18 @@ function n = GeodSolve84
   n = n + assertNaN(lat2);
   n = n + assertNaN(lon2);
   n = n + assertNaN(azi2);
+end
+
+function n = GeodSolve92
+% Check fix for inaccurate hypot with python 3.[89].  Problem reported
+% by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+% https://bugs.python.org/issue43088
+  n = 0;
+  [s12, azi1, azi2] = geoddistance(37.757540000000006, -122.47018, ...
+                                   37.75754,           -122.470177);
+  n = n + assertEquals(azi1, 89.99999923, 1e-7  );
+  n = n + assertEquals(azi2, 90.00000106, 1e-7  );
+  n = n + assertEquals(s12,   0.264,      0.5e-3);
 end
 
 function n = Planimeter0

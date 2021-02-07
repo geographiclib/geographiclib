@@ -1029,6 +1029,32 @@
       return
       end
 
+      integer function tstg92()
+* Check fix for inaccurate hypot with python 3.[89].  Problem reported
+* by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+* https://bugs.python.org/issue43088
+      double precision azi1, azi2, s12, a12, m12, MM12, MM21, SS12
+      double precision a, f
+      integer r, assert, omask
+      include 'geodesic.inc'
+
+* WGS84 values
+      a = 6378137d0
+      f = 1/298.257223563d0
+      omask = 0
+      r = 0
+      call invers(a, f,
+     +    37.757540000000006d0, -122.47018d0,
+     +    37.75754d0,           -122.470177d0,
+     +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)
+      r = r + assert(azi1, 89.99999923d0, 1d-7  )
+      r = r + assert(azi2, 90.00000106d0, 1d-7  )
+      r = r + assert(s12,   0.264d0,      0.5d-3)
+
+      tstg92 = r
+      return
+      end
+
       integer function tstp0()
 * Check fix for pole-encircling bug found 2011-03-16
       double precision lata(4), lona(4)
@@ -1260,7 +1286,7 @@
      +    tstg0, tstg1, tstg2, tstg5, tstg6, tstg9, tstg10, tstg11,
      +    tstg12, tstg14, tstg15, tstg17, tstg26, tstg28, tstg33,
      +    tstg55, tstg59, tstg61, tstg73, tstg74, tstg76, tstg78,
-     +    tstg80, tstg84,
+     +    tstg80, tstg84, tstg92,
      +    tstp0, tstp5, tstp6, tstp12, tstp13, tstp15, tstp19, tstp21
 
       n = 0
@@ -1398,6 +1424,11 @@
       if (i .gt. 0) then
         n = n + 1
         print *, 'tstg84 fail:', i
+      end if
+      i = tstg92()
+      if (i .gt. 0) then
+        n = n + 1
+        print *, 'tstg92 fail:', i
       end if
       i = tstp0()
       if (i .gt. 0) then

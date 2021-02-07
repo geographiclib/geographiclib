@@ -536,6 +536,16 @@ class GeodSolveTest(unittest.TestCase):
     self.assertTrue(Math.isnan(dir["lon2"]))
     self.assertTrue(Math.isnan(dir["azi2"]))
 
+  def test_GeodSolve92(self):
+    # Check fix for inaccurate hypot with python 3.[89].  Problem reported
+    # by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+    # https://bugs.python.org/issue43088
+    inv = Geodesic.WGS84.Inverse(37.757540000000006, -122.47018,
+                                 37.75754,           -122.470177)
+    self.assertAlmostEqual(inv["azi1"], 89.99999923, delta = 1e-7  )
+    self.assertAlmostEqual(inv["azi2"], 90.00000106, delta = 1e-7  )
+    self.assertAlmostEqual(inv["s12"],   0.264,      delta = 0.5e-3)
+
 class PlanimeterTest(unittest.TestCase):
 
   polygon = Geodesic.WGS84.Polygon(False)

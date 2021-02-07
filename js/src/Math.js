@@ -66,12 +66,12 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 51, patch: 0 };
+  c.version = { major: 1, minor: 52, patch: 0 };
   /**
    * @constant
    * @summary version string
    */
-  c.version_string = "1.51";
+  c.version_string = "1.52";
 })(GeographicLib.Constants);
 
 (function(
@@ -112,13 +112,7 @@ GeographicLib.Accumulator = {};
    * @param {number} y the second side.
    * @returns {number} the hypotenuse.
    */
-  m.hypot = Math.hypot || function(x, y) {
-    var a, b;
-    x = Math.abs(x);
-    y = Math.abs(y);
-    a = Math.max(x, y); b = Math.min(x, y) / (a ? a : 1);
-    return a * Math.sqrt(1 + b * b);
-  };
+  m.hypot = function(x, y) { return Math.sqrt(x*x + y*y); };
 
   /**
    * @summary Cube root function.

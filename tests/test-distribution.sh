@@ -11,11 +11,6 @@
 # Built version ready to install in /usr/local in
 # relc/GeographicLib-$VERSION/BUILD-system
 #
-# python update
-# in gita/geographiclib/python ...
-# python setup.py sdist --formats gztar,zip upload
-# [or: python setup.py sdist --formats gztar,zip register upload]
-#
 # gita - check out from git, create package with cmake
 # gitb - check out from git, create package with autoconf
 # gitr - new release branch
@@ -47,7 +42,7 @@ umask 0022
 #   python/setup.py
 #   python/geographiclib/__init__.py
 #   python/doc/index.rst (date + update change log)
-#   python/README.rst
+#   python/README.md
 # use: cd python; pychecker geographiclib/*.py
 
 # MATLAB
@@ -496,6 +491,12 @@ python3 setup.py sdist bdist_wheel
 python3 -m twine upload dist/*
 # installs in /usr/local/lib/python3.7/site-packages/geographiclib
 cd; sudo python3 -m pip install --upgrade geographiclib
+
+#MAYBE THIS IS DEFUNCT?
+# python update
+# in gita/geographiclib/python ...
+# python setup.py sdist --formats gztar,zip upload
+# [or: python setup.py sdist --formats gztar,zip register upload]
 
 # java release -- authentication via ~/.m2/settings.xml; this gets signed too
 # (multiple ~4 times!).

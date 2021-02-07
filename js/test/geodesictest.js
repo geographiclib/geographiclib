@@ -621,6 +621,18 @@ describe("GeographicLib", function() {
       assert(isNaN(dir.azi2));
     });
 
+    it("GeodSolve92", function() {
+      // Check fix for inaccurate hypot with python 3.[89].  Problem reported
+      // by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+      // https://bugs.python.org/issue43088
+      var geod = g.WGS84,
+          inv = geod.Inverse(37.757540000000006, -122.47018,
+                             37.75754,           -122.470177);
+      assert.approx(inv.azi1, 89.99999923, 1e-7  );
+      assert.approx(inv.azi2, 90.00000106, 1e-7  );
+      assert.approx(inv.s12,   0.264,      0.5e-3);
+    });
+
   });
 
   describe("Planimeter", function () {

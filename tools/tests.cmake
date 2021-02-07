@@ -487,6 +487,16 @@ set_tests_properties (GeodSolve88 GeodSolve89 PROPERTIES PASS_REGULAR_EXPRESSION
   "0\\.0* nan 90\\.0*")
 set_tests_properties (GeodSolve90 PROPERTIES WILL_FAIL ON)
 
+# Check fix for inaccurate hypot with python 3.[89].  Problem reported
+# by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+# https://bugs.python.org/issue43088
+add_test (NAME GeodSolve92 COMMAND GeodSolve
+  -i --input-string "37.757540000000006 -122.47018 37.75754 -122.470177")
+add_test (NAME GeodSolve93 COMMAND GeodSolve
+  -i --input-string "37.757540000000006 -122.47018 37.75754 -122.470177" -E)
+set_tests_properties (GeodSolve92 GeodSolve93 PROPERTIES PASS_REGULAR_EXPRESSION
+  "89\\.9999992. 90\\.000001[01]. 0\\.264")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
