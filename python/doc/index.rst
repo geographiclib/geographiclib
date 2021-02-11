@@ -101,6 +101,8 @@ Change log
 * Version 1.52 (released 2021-mm-dd)
 
   * Work around inaccurate math.hypot for python 3.[89]
+  * Be more aggressive in preventing negative s12 and m12 for short
+    lines.
 
 * Version 1.50 (released 2019-09-24)
 

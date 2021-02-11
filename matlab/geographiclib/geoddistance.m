@@ -153,7 +153,8 @@ function [s12, azi1, azi2, S12, m12, M12, M21, a12] = geoddistance ...
                 ssig1(m), csig1(m), dn1(m), ssig2(m), csig2(m), dn2(m), ...
                 cbet1(m), cbet2(m), bitor(1+2, lengthmask), ep2);
     m = m & (sig12 < 1 | m12 >= 0);
-    g = m & sig12 < 3 * tiny;
+    g = m & (sig12 < 3 * tiny | ...
+             (sig12 < 2 * tol0 & (s12 < 0 | m12 < 0)));
     sig12(g) = 0; s12(g) = 0; m12(g) = 0;
     m12(m) = m12(m) * b;
     s12(m) = s12(m) * b;

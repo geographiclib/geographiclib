@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in Fortran
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.50
+\version 1.52
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/Fortran</tt> for versions numbers
@@ -29,10 +29,10 @@ compile correctly with just about any Fortran compiler.
 \section download-for Downloading the source
 
 The Fortran library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.tar.gz">
-  GeographicLib-1.50.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.50.zip">
-  GeographicLib-1.50.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.52.tar.gz">
+  GeographicLib-1.52.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.52.zip">
+  GeographicLib-1.52.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the Fortran library can be found in the directory
@@ -173,6 +173,10 @@ and are therefore in the public domain.
   Geodesics on an ellipsoid</a>.
 
 \section changes-for Change log
+
+ - <a href="https://geographiclib.sourceforge.io/1.52/Fortran">Version 1.52</a>
+   (released 2021-mm-dd)
+   - Be more aggressive in preventing negative s12 and m12 for short lines.
 
  - <a href="https://geographiclib.sourceforge.io/1.50/Fortran">Version 1.50</a>
    (released 2019-09-24)

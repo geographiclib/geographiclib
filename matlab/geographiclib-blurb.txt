@@ -1,5 +1,5 @@
 GeographicLib toolbox
-Version 1.50 2019-09-19
+Version 1.52 2021-mm-dd
 
 This toolbox provides native MATLAB implementations of a subset of the
 C++ library, GeographicLib.  Key components of this toolbox are
@@ -32,13 +32,13 @@ sharing of code (via a common private directory).
 
 Extensive documentation on the C++ library is available at
 
-  https://geographiclib.sourceforge.io/1.50
+  https://geographiclib.sourceforge.io/1.52
 
 Geoid lookup requires the installation of one or more geoid models.
 Instructions for this are given in
 
-  https://geographiclib.sourceforge.io/1.50/geoid.html#geoidinst
+  https://geographiclib.sourceforge.io/1.52/geoid.html#geoidinst
 
 A change log for this package is available at
 
-  https://geographiclib.sourceforge.io/1.50/changes.html
+  https://geographiclib.sourceforge.io/1.52/changes.html

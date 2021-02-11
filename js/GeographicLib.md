@@ -111,6 +111,7 @@ Two examples of this library in use are
 
 * Version 1.52 (released 2020-mm-dd)
   * Work around inaccuracy in Math.hypot (see the GeodSolve92 test).
+  * Be more aggressive in preventing negative s12 and m12 for short lines.
 
 * Version 1.51 (released 2020-11-22)
   * More symbols allowed with DMS decodings.

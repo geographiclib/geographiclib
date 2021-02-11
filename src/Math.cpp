@@ -127,7 +127,7 @@ namespace GeographicLib {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
     using std::remquo;
-    T r; int q;
+    T r; int q = 0;
     // N.B. the implementation of remquo in glibc pre 2.22 were buggy.  See
     // https://sourceware.org/bugzilla/show_bug.cgi?id=17569
     // This was fixed in version 2.22 on 2015-08-05

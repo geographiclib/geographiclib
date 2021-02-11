@@ -942,7 +942,9 @@ GeographicLib.PolygonArea = {};
       // which is not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
         // Need at least 2, to handle 90 0 90 180
-        if (sig12 < 3 * g.tiny_)
+        if (sig12 < 3 * g.tiny_ ||
+            // Prevent negative s12 or m12 for short lines
+            (sig12 < 2 * tol0_ && (s12x < 0 || m12x < 0)))
           sig12 = m12x = s12x = 0;
         m12x *= this._b;
         s12x *= this._b;

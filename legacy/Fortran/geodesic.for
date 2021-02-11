@@ -113,12 +113,12 @@
 *! restructuring the internals of the Fortran code since this may make
 *! porting fixes from the C++ code more difficult.
 *!
-*! Copyright (c) Charles Karney (2012-2019) <charles@karney.com> and
+*! Copyright (c) Charles Karney (2012-2021) <charles@karney.com> and
 *! licensed under the MIT/X11 License.  For more information, see
 *! https://geographiclib.sourceforge.io/
 *!
 *! This library was distributed with
-*! <a href="../index.html">GeographicLib</a> 1.50.
+*! <a href="../index.html">GeographicLib</a> 1.52.
 
 *> Solve the direct geodesic problem
 *!
@@ -718,7 +718,10 @@
 * In fact, we will have sig12 > pi/2 for meridional geodesic which is
 * not a shortest path.
         if (sig12 .lt. 1 .or. m12x .ge. 0) then
-          if (sig12 .lt. 3 * tiny) then
+          if (sig12 .lt. 3 * tiny .or.
+     +        (sig12 .lt. 2 * tol0 .and.
+     +        (s12x .lt. 0 .or. m12x .lt. 0))) then
+* Prevent negative s12 or m12 for short lines
             sig12 = 0
             m12x = 0
             s12x = 0
@@ -1040,7 +1043,7 @@
       integer major, minor, patch
 
       major = 1
-      minor = 50
+      minor = 52
       patch = 0
 
       return

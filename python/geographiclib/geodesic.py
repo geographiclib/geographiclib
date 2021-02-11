@@ -810,7 +810,9 @@ class Geodesic(object):
       # In fact, we will have sig12 > pi/2 for meridional geodesic which is
       # not a shortest path.
       if sig12 < 1 or m12x >= 0:
-        if sig12 < 3 * Geodesic.tiny_:
+        if (sig12 < 3 * Geodesic.tiny_ or
+            # Prevent negative s12 or m12 for short lines
+            (sig12 < 2 * Geodesic.tol0_ and (s12x < 0 or m12x < 0))):
           sig12 = m12x = s12x = 0.0
         m12x *= self._b
         s12x *= self._b
