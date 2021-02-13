@@ -47,4 +47,4 @@ console.log("The position is (" +
 ## Authors
 
 * algorithms + js code: Charles Karney (charles@karney.com)
-* node.js port: Yurij Mikhalevich (0@39.yt)
+* node.js port: Yurij Mikhalevich (yurij@mikhalevi.ch)

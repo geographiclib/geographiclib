@@ -7746,10 +7746,6 @@ git repository for GeographicLib</a>.
      from Marcelo Banik de Padua.
    - Make AlbersEqualArea::atanhxm1 and AlbersEqualArea::DDatanhee more
      robust.
-   - Fix exact in Rhumb (not used?)
-   - Declare Rhumb copy constructor "= default".
-   - Use C++11 "= delete" idiom to delete copy assignment and copy
-     constructors.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
@@ -7760,6 +7756,10 @@ git repository for GeographicLib</a>.
    - Geodesic routines: be more aggressive in preventing negative s12
      and m12 for short lines (all languages).
    - Initialize reference argument to remquo (C++ and C).
+   - Get ready to retire unused _exact in RhumbLine.
+   - Declare RhumbLine copy constructor "= default".
+   - Use C++11 "= delete" idiom to delete copy assignment and copy
+     constructors in RhumbLine, Geoid, GravityModel, MagneticModel.
    .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)

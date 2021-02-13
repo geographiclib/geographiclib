@@ -466,7 +466,7 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class Rhumb;
     const Rhumb& _rh;
-    bool _exact;
+    bool _exact;                // TODO: RhumbLine::_exact is unused; retire
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1, _r1;
     // copy assignment not allowed
     RhumbLine& operator=(const RhumbLine&) = delete;

@@ -88,8 +88,10 @@ namespace GeographicLib {
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const;
     void ReadMetadata(const std::string& name);
-    MagneticModel(const MagneticModel&); // copy constructor not allowed
-    MagneticModel& operator=(const MagneticModel&); // nor copy assignment
+    // copy constructor not allowed
+    MagneticModel(const MagneticModel&) = delete;
+    // nor copy assignment
+    MagneticModel& operator=(const MagneticModel&) = delete;
   public:
 
     /** \name Setting up the magnetic model

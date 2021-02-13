@@ -99,8 +99,9 @@ namespace GeographicLib {
     Math::real InternalT(real X, real Y, real Z,
                          real& deltaX, real& deltaY, real& deltaZ,
                          bool gradp, bool correct) const;
-    GravityModel(const GravityModel&); // copy constructor not allowed
-    GravityModel& operator=(const GravityModel&); // nor copy assignment
+    GravityModel(const GravityModel&) = delete; // copy constructor not allowed
+    // nor copy assignment
+    GravityModel& operator=(const GravityModel&) = delete;
 
     enum captype {
       CAP_NONE   = 0U,

@@ -167,8 +167,8 @@ namespace GeographicLib {
       }
     }
     real height(real lat, real lon) const;
-    Geoid(const Geoid&);            // copy constructor not allowed
-    Geoid& operator=(const Geoid&); // copy assignment not allowed
+    Geoid(const Geoid&) = delete;            // copy constructor not allowed
+    Geoid& operator=(const Geoid&) = delete; // copy assignment not allowed
   public:
 
     /**
