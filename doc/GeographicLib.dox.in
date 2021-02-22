@@ -7763,7 +7763,14 @@ git repository for GeographicLib</a>.
      constructors in RhumbLine, Geoid, GravityModel, MagneticModel.
    - Fix bug in AlbersEqualArea for extreme prolate ellipsoids (plus
      general cleanup in the code).
-  .
+   - Fix MGRS::Forward to work around aggressive optimization leading to
+     incorrect rounding.
+   - Fix plain makefiles, Makefile.mk, so that PREFIX is handled
+     properly.
+   - Add MagneticModel::FieldGeocentric and
+     MagneticCircle::FieldGeocentric to return the field in geocentric
+     coordinates (thanks to Marcelo Banik de Padua).
+   .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)
    - C++11 compiler required for C++ library.  As a consequence:

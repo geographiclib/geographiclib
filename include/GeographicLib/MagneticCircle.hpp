@@ -2,7 +2,7 @@
  * \file MagneticCircle.hpp
  * \brief Header for GeographicLib::MagneticCircle class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -86,6 +86,10 @@ namespace GeographicLib {
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const;
 
+    void FieldGeocentric(real slam, real clam,
+                         real& BX, real& BY, real& BZ,
+                         real& BXt, real& BYt, real& BZt) const;
+
     friend class MagneticModel; // MagneticModel calls the private constructor
 
   public:
@@ -134,6 +138,21 @@ namespace GeographicLib {
                     real& Bxt, real& Byt, real& Bzt) const {
       Field(lon, true, Bx, By, Bz, Bxt, Byt, Bzt);
     }
+
+    /**
+     * Evaluate the components of the geomagnetic field and their time
+     * derivatives at a particular longitude.
+     *
+     * @param[in] lon longitude of the point (degrees).
+     * @param[out] BX the \e X component of the magnetic field (nT).
+     * @param[out] BY the \e Y component of the magnetic field (nT).
+     * @param[out] BZ the \e Z component of the magnetic field (nT).
+     * @param[out] BXt the rate of change of \e BX (nT/yr).
+     * @param[out] BYt the rate of change of \e BY (nT/yr).
+     * @param[out] BZt the rate of change of \e BZ (nT/yr).
+     **********************************************************************/
+    void FieldGeocentric(real lon, real& BX, real& BY, real& BZ,
+                         real& BXt, real& BYt, real& BZt) const;
     ///@}
 
     /** \name Inspector functions
