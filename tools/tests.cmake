@@ -657,6 +657,10 @@ add_test (NAME ConicProj7 COMMAND ConicProj
   -r -c 90 90 --input-string "0 -1e150")
 set_tests_properties (ConicProj7 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-90\\.0+ -?0\\.00[0-9]+ ")
+add_test (NAME ConicProj8 COMMAND ConicProj
+  -r -c 90 90 --input-string "0 -inf")
+set_tests_properties (ConicProj8 PROPERTIES PASS_REGULAR_EXPRESSION
+  "^-90\\.0+ -?0\\.00[0-9]+ ")
 # Check fix to infinite loop in AlbersEqualArea with e^2 < -1 (f < 1-sqrt(2))
 # Fixed 2021-02-22.
 add_test (NAME ConicProj9 COMMAND ConicProj
