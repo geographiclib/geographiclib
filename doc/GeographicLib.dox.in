@@ -7746,6 +7746,7 @@ git repository for GeographicLib</a>.
      from Marcelo Banik de Padua.
    - Make AlbersEqualArea::atanhxm1 and AlbersEqualArea::DDatanhee more
      robust.
+   - Document realistic errors for polygon areas.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
@@ -7760,7 +7761,9 @@ git repository for GeographicLib</a>.
    - Declare RhumbLine copy constructor "= default".
    - Use C++11 "= delete" idiom to delete copy assignment and copy
      constructors in RhumbLine, Geoid, GravityModel, MagneticModel.
-   .
+   - Fix bug in AlbersEqualArea for extreme prolate ellipsoids (plus
+     general cleanup in the code).
+  .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)
    - C++11 compiler required for C++ library.  As a consequence:
