@@ -719,7 +719,7 @@
 * not a shortest path.
         if (sig12 .lt. 1 .or. m12x .ge. 0) then
           if (sig12 .lt. 3 * tiny .or.
-     +        (sig12 .lt. 2 * tol0 .and.
+     +        (sig12 .lt. tol0 .and.
      +        (s12x .lt. 0 .or. m12x .lt. 0))) then
 * Prevent negative s12 or m12 for short lines
             sig12 = 0

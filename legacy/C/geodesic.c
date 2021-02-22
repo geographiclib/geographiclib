@@ -18,7 +18,7 @@
  *
  * See the comments in geodesic.h for documentation.
  *
- * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -799,7 +799,7 @@ static real geod_geninverse_int(const struct geod_geodesic* g,
       /* Need at least 2, to handle 90 0 90 180 */
       if (sig12 < 3 * tiny ||
           // Prevent negative s12 or m12 for short lines
-          (sig12 < 2 * tol0 && (s12x < 0 || m12x < 0)))
+          (sig12 < tol0 && (s12x < 0 || m12x < 0)))
         sig12 = m12x = s12x = 0;
       m12x *= g->b;
       s12x *= g->b;
@@ -870,7 +870,6 @@ static real geod_geninverse_int(const struct geod_geodesic* g,
                         slam12, clam12,
                         &salp2, &calp2, &sig12, &ssig1, &csig1, &ssig2, &csig2,
                         &eps, &domg12, numit < maxit1, &dv, Ca);
-        /* 2 * tol0 is approximately 1 ulp for a number in [0, pi]. */
         /* Reversed test to allow escape with NaNs */
         if (tripb || !(fabs(v) >= (tripn ? 8 : 1) * tol0)) break;
         /* Update bracketing values */

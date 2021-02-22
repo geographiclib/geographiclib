@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -286,7 +286,7 @@ namespace GeographicLib {
         // Need at least 2, to handle 90 0 90 180
         if (sig12 < 3 * tiny_ ||
             // Prevent negative s12 or m12 for short lines
-            (sig12 < 2 * tol0_ && (s12x < 0 || m12x < 0)))
+            (sig12 < tol0_ && (s12x < 0 || m12x < 0)))
           sig12 = m12x = s12x = 0;
         m12x *= _b;
         s12x *= _b;

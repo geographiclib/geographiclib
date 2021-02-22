@@ -12,7 +12,7 @@
  *    https://doi.org/10.1007/s00190-012-0578-z
  *    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
  *
- * Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -944,7 +944,7 @@ GeographicLib.PolygonArea = {};
         // Need at least 2, to handle 90 0 90 180
         if (sig12 < 3 * g.tiny_ ||
             // Prevent negative s12 or m12 for short lines
-            (sig12 < 2 * tol0_ && (s12x < 0 || m12x < 0)))
+            (sig12 < tol0_ && (s12x < 0 || m12x < 0)))
           sig12 = m12x = s12x = 0;
         m12x *= this._b;
         s12x *= this._b;
@@ -1026,7 +1026,6 @@ GeographicLib.PolygonArea = {};
           domg12 = nvals.domg12;
           dv = nvals.dlam12;
 
-          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           // Reversed test to allow escape with NaNs
           if (tripb || !(Math.abs(v) >= (tripn ? 8 : 1) * tol0_))
             break;
