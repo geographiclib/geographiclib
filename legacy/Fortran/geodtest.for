@@ -952,6 +952,9 @@
       r = r + assert(MM12, 1d0, 1d-15)
       r = r + assert(MM21, 1d0, 1d-15)
       r = r + assert(SS12, 0d0, 1d-10)
+      r = r + assert(sign(1d0, a12), 1d0, 0d0)
+      r = r + assert(sign(1d0, s12), 1d0, 0d0)
+      r = r + assert(sign(1d0, m12), 1d0, 0d0)
 
       call invers(a, f, 90d0, 0d0, 90d0, 180d0,
      +    s12, azi1, azi2, omask, a12, m12, MM12, MM21, SS12)

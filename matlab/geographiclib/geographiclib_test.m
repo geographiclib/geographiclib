@@ -551,6 +551,9 @@ function n = GeodSolve80
   n = n + assertEquals(M12, 1, 1e-15);
   n = n + assertEquals(M21, 1, 1e-15);
   n = n + assertEquals(S12, 0, 1e-10);
+  n = n + assertEquals(copysignx(1, a12), 1, 0);
+  n = n + assertEquals(copysignx(1, s12), 1, 0);
+  n = n + assertEquals(copysignx(1, m12), 1, 0);
 
   [s12, azi1, azi2, S12, m12, M12, M21, a12] = ...
       geoddistance(90, 0, 90, 180);

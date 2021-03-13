@@ -595,6 +595,9 @@ public class GeodesicTest {
     assertEquals(inv.M12, 1, 1e-15);
     assertEquals(inv.M21, 1, 1e-15);
     assertEquals(inv.S12, 0, 1e-10);
+    assertTrue(Math.copySign(1, inv.a12) > 0);
+    assertTrue(Math.copySign(1, inv.s12) > 0);
+    assertTrue(Math.copySign(1, inv.m12) > 0);
 
     inv = Geodesic.WGS84.Inverse(90, 0, 90, 180, GeodesicMask.ALL);
     assertEquals(inv.a12, 0, 1e-13);

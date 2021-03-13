@@ -2853,9 +2853,9 @@ The solution for the normal gravity is well defined for arbitrary
 \f$ M \f$, \f$ \omega \f$, \f$ a > 0\f$, and \f$ f < 1 \f$.  (Note that
 arbitrary oblate and prolate ellipsoids are possible, although
 hydrostatic equilibrium would not result in a prolate ellipsoid.)
-However, if is much easier to measure the dynamical form factor
+However, it is much easier to measure the dynamical form factor
 \f$ J_2 \f$ (from the motion of artificial satellites) than the
-flattening \f$ f \f$.  (Note too that \f$ GM \f$ is also typically
+flattening \f$ f \f$.  (Note too that \f$ GM \f$ is typically
 measured from from satellite or astronomical observations and so it
 includes the mass of the atmosphere.)
 

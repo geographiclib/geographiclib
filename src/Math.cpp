@@ -157,7 +157,7 @@ namespace GeographicLib {
   template<typename T> T Math::sind(T x) {
     // See sincosd
     using std::remquo;
-    T r; int q;
+    T r; int q = 0;
     r = remquo(x, T(90), &q); // now abs(r) <= 45
     r *= degree<T>();
     unsigned p = unsigned(q);
@@ -170,7 +170,7 @@ namespace GeographicLib {
   template<typename T> T Math::cosd(T x) {
     // See sincosd
     using std::remquo;
-    T r; int q;
+    T r; int q = 0;
     r = remquo(x, T(90), &q); // now abs(r) <= 45
     r *= degree<T>();
     unsigned p = unsigned(q + 1);

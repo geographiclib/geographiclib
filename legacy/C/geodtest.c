@@ -737,6 +737,9 @@ static int GeodSolve80() {
   result += checkEquals(M12, 1, 1e-15);
   result += checkEquals(M21, 1, 1e-15);
   result += checkEquals(S12, 0, 1e-10);
+  result += 1/a12 > 0 ? 0 : 1;
+  result += 1/s12 > 0 ? 0 : 1;
+  result += 1/m12 > 0 ? 0 : 1;
 
   a12 = geod_geninverse(&g, 90, 0, 90, 180,
                         &s12, &azi1, &azi2, &m12, &M12, &M21, &S12);

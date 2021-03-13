@@ -291,7 +291,7 @@ endif ()
 check_cxx_source_compiles (
   "#include <cmath>
 int main() {
-  int q;
+  int q = 0;
   return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
              std::log1p(2.0) + std::asinh(10.0) +
              std::atanh(0.8) + std::cbrt(8.0) +

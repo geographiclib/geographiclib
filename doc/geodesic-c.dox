@@ -188,7 +188,7 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
 \section changes-c Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.52/C">Version 1.52</a>
-   (released 2021-mm-dd)
+   (released 2021-03-13)
    - Be more aggressive in preventing negative s12 and m12 for short lines.
    - Initialize reference argument to remquo.
 

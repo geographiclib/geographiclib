@@ -566,6 +566,9 @@ describe("GeographicLib", function() {
       assert.approx(inv.M12, 1, 1e-15);
       assert.approx(inv.M21, 1, 1e-15);
       assert.approx(inv.S12, 0, 1e-10);
+      assert.ok(m.copysign(1, inv.a12) > 0);
+      assert.ok(m.copysign(1, inv.s12) > 0);
+      assert.ok(m.copysign(1, inv.m12) > 0);
 
       inv = geod.Inverse(90, 0, 90, 180, g.ALL);
       assert.approx(inv.a12, 0, 1e-13);

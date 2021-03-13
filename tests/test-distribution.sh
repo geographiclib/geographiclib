@@ -61,7 +61,7 @@ umask 0022
 #   doc/geodesic-c.dox (date + update change log)
 # PROJ integration
 #   geodesic.[hc], geodtest.c (renamed to src/tests/geodtest.cpp)
-#   plus docs/source/apps/geod.rst
+#   plus docs/source/geodesic.rst docs/source/apps/geod.rst
 
 # Fortran
 #   legacy/Fortran/geodesic.for comment + geover

@@ -484,6 +484,9 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(inv["M12"], 1, delta = 1e-15)
     self.assertAlmostEqual(inv["M21"], 1, delta = 1e-15)
     self.assertAlmostEqual(inv["S12"], 0, delta = 1e-10)
+    self.assertTrue(Math.copysign(1, inv["a12"]) > 0)
+    self.assertTrue(Math.copysign(1, inv["s12"]) > 0)
+    self.assertTrue(Math.copysign(1, inv["m12"]) > 0)
 
     inv = Geodesic.WGS84.Inverse(90, 0, 90, 180, Geodesic.ALL)
     self.assertAlmostEqual(inv["a12"], 0, delta = 1e-13)
