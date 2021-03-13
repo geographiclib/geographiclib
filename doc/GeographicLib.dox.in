@@ -7753,7 +7753,8 @@ git repository for GeographicLib</a>.
    (released 2021-mm-dd)
    - Add example of calling GeographicLib from Excel.
    - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
-   - Work around inaccuracies in hypot routines in Python and JavaScript.
+   - Work around inaccuracies in hypot routines in Visual Studo 2015,
+     Python, and JavaScript.
    - Geodesic routines: be more aggressive in preventing negative s12
      and m12 for short lines (all languages).
    - Initialize reference argument to remquo (C++ and C).
@@ -7808,7 +7809,7 @@ git repository for GeographicLib</a>.
      which migrated to Math.cpp in version 1.50.
    - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
      require a C++11 compliant compiler.  This means that the minimum
-     version of Visual Studio will be Visual Studio 12 2015.  (This
+     version of Visual Studio will be Visual Studio 14 2015.  (This
      repeats the warning given with version 1.50.  It didn't apply to
      this version because this is a minor update.)
    .

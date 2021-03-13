@@ -186,7 +186,8 @@ for ver in 14 15 16; do
 	    echo "#! /bin/sh -exv"
 	    echo echo ========== cmake $pkg ==========
 	    echo b=c:/scratch/geog-$pkg
-	    echo rm -rf \$b u:/pkg-$pkg/GeographicLib-$VERSION/\*
+	    echo bc=c:/scratch/geogc-$pkg
+	    echo rm -rf \$b \$bc u:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'unset GEOGRAPHICLIB_DATA'
 	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
 	    echo cmake --build \$b --config Debug   --target ALL_BUILD
@@ -201,8 +202,6 @@ for ver in 14 15 16; do
 	    test "$installer" &&
 		echo cp \$b/GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ ||
 		    true
-	    echo bc=c:/scratch/geog-$pkg
-	    echo rm -rf \$bc
 	    echo cmake -G \"$gen\" -A $arch -D CONVERT_WARNINGS_TO_ERRORS=ON -S legacy/C -B \$bc
 	    echo cmake --build \$bc --config Debug   --target ALL_BUILD
 	    echo cmake --build \$bc --config Debug   --target RUN_TESTS

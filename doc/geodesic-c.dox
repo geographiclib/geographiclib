@@ -191,6 +191,8 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
    (released 2021-03-13)
    - Be more aggressive in preventing negative s12 and m12 for short lines.
    - Initialize reference argument to remquo.
+   - Work around inaccurate implementation of hypot with Visual Studio
+     2015.
 
  - <a href="https://geographiclib.sourceforge.io/1.51/C">Version 1.51</a>
    (released 2020-11-22)

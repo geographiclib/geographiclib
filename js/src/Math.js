@@ -112,7 +112,10 @@ GeographicLib.Accumulator = {};
    * @param {number} y the second side.
    * @returns {number} the hypotenuse.
    */
-  m.hypot = function(x, y) { return Math.sqrt(x*x + y*y); };
+  m.hypot = function(x, y) {
+    // Built in Math.hypot give incorrect results from GeodSolve92.
+    return Math.sqrt(x*x + y*y);
+  };
 
   /**
    * @summary Cube root function.

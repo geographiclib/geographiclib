@@ -353,7 +353,14 @@ namespace GeographicLib {
      * @param[in,out] y on output set to <i>y</i>/hypot(<i>x</i>, <i>y</i>).
      **********************************************************************/
     template<typename T> static void norm(T& x, T& y) {
-      using std::hypot; T h = hypot(x, y); x /= h; y /= h;
+#if defined(_MSC_VER) && _MSC_VER <= 1900
+      // Visual Studio 2015 (32-bit) has inaccurate hypot, the same as in some
+      // versions of python https://bugs.python.org/issue43088
+      using std::sqrt; T h = sqrt(x * x + y * y);
+#else
+      using std::hypot; T h = hypot(x, y);
+#endif
+      x /= h; y /= h;
     }
 
     /**
