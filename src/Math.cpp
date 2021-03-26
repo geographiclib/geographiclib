@@ -135,15 +135,6 @@ namespace GeographicLib {
     r *= degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
-#if defined(_MSC_VER) && _MSC_VER < 1900
-    // Before version 14 (2015), Visual Studio had problems dealing
-    // with -0.0.  Specifically
-    //   VC 10,11,12 and 32-bit compile: fmod(-0.0, 360.0) -> +0.0
-    //   VC 12       and 64-bit compile:  sin(-0.0)        -> +0.0
-    // AngNormalize has a similar fix.
-    // python 2.7 on Windows 32-bit machines has the same problem.
-    if (x == 0) s = x;
-#endif
     switch (unsigned(q) & 3U) {
     case 0U: sinx =  s; cosx =  c; break;
     case 1U: sinx =  c; cosx = -s; break;

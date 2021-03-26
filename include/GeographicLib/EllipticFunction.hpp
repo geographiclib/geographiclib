@@ -2,7 +2,7 @@
  * \file EllipticFunction.hpp
  * \brief Header for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/

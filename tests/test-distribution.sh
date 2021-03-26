@@ -550,7 +550,8 @@ git push --tags
 #   binaries in installed/x64-linux/tools/geographiclib
 #   libs in installed/x64-linux/{include,lib,debug/lib}
 #   commit message = [geographiclib] Update to version $VERSION
-# TODO update conda-forge
+# update conda-forge
+#   url = git@github.com:conda-forge/geographiclib-cpp-feedstock.git
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open

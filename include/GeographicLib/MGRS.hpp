@@ -26,15 +26,15 @@ namespace GeographicLib {
    *
    * MGRS is defined in Chapter 3 of
    * - J. W. Hager, L. L. Fry, S. S. Jacks, D. R. Hill,
-   *   <a href="http://earth-info.nga.mil/GandG/publications/tm8358.1/pdf/TM8358_1.pdf">
+   *   <a href="https://web.archive.org/web/20161214054445/http://earth-info.nga.mil/GandG/publications/tm8358.1/pdf/TM8358_1.pdf">
    *   Datums, Ellipsoids, Grids, and Grid Reference Systems</a>,
    *   Defense Mapping Agency, Technical Manual TM8358.1 (1990).
    * .
    * This document has been updated by the two NGA documents
-   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_STND_0037_2_0_0_GRIDS/NGA.STND.0037_2.0.0_GRIDS.pdf">
+   * - <a href="https://earth-info.nga.mil/coordsys/coord-download.php?file=website/NGA.STND.0037_2.0.0_GRIDS.pdf">
    *   Universal Grids and Grid Reference Systems</a>,
    *   NGA.STND.0037_2.0.0_GRIDS (2014).
-   * - <a href="http://earth-info.nga.mil/GandG/publications/NGA_SIG_0012_2_0_0_UTMUPS/NGA.SIG.0012_2.0.0_UTMUPS.pdf">
+   * - <a href="https://earth-info.nga.mil/coordsys/coord-download.php?file=website/NGA.SIG.0012_2.0.0_UTMUPS.pdf">
    *   The Universal Grids and the Transverse Mercator and Polar Stereographic
    *   Map Projections</a>, NGA.SIG.0012_2.0.0_UTMUPS (2014).
    *
@@ -61,7 +61,7 @@ namespace GeographicLib {
    *   class.
    *
    * The <a href="http://www.nga.mil">NGA</a> software package
-   * <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a>
+   * <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_geotrans">geotrans</a>
    * also provides conversions to and from MGRS.  Version 3.0 (and earlier)
    * suffers from some drawbacks:
    * - Inconsistent rules are used to determine the whether a particular MGRS

@@ -1464,11 +1464,11 @@ is only 1&nbsp;mm.
 The geoid is usually approximated by an "earth gravity model" (EGM).
 The models published by the NGA are:
 - <b>EGM84</b>:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
+  https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84
 - <b>EGM96</b>:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+  https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96
 - <b>EGM2008</b>:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+  https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008
 .
 Geoid offers a uniform way to handle all 3 geoids at a variety of grid
 resolutions.  (In contrast, the software tools that NGA offers are
@@ -1706,7 +1706,7 @@ egm96-5 are
 \verbatim
    # Geoid file in PGM format for the GeographicLib::Geoid class
    # Description WGS84 EGM96, 5-minute grid
-   # URL http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+   # URL https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96
    # DateTime 2009-08-29 18:45:03
    # MaxBilinearError 0.140
    # RMSBilinearError 0.005
@@ -2026,18 +2026,18 @@ Go to
 
 The supported models are
  - <b>egm84</b>, the
-   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
+   <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84">
    Earth Gravity Model 1984</a>, which includes terms up to degree 180.
  - <b>egm96</b>, the
-   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
+   <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96">
    Earth Gravity Model 1996</a>, which includes terms up to degree 360.
  - <b>egm2008</b>, the
-   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
+   <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008">
    Earth Gravity Model 2008</a>, which includes terms up to degree 2190.
    See also <a href="https://doi.org/10.1029/2011JB008916"> Pavlis et
    al. (2012)</a>
  - <b>wgs84</b>, the
-   <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
+   <a href="https://web.archive.org/web/20161214054445/http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
    gravitational field for the reference ellipsoid.  This includes the
    zonal coefficients up to order 20.  Usually NormalGravity::WGS84()
@@ -2300,7 +2300,7 @@ EGMF-1
 Name            egm2008
 Publisher       National Geospatial Intelligence Agency
 Description     Earth Gravity Model 2008
-URL             http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+URL             https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008
 ReleaseDate     2008-06-01
 ConversionDate  2011-11-19
 DataVersion     1
@@ -2461,7 +2461,7 @@ non-zero.
 
 All of the supported models use WGS84 for the reference ellipsoid.  This
 has (see
-<a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf">
+<a href="https://web.archive.org/web/20161214054445/https://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf">
 TR8350.2</a>, table 3.1)
  - \e a = 6378137 m
  - \e f = 1/298.257223563
@@ -2501,10 +2501,10 @@ Both of these techniques are illustrated by the following code,
 which computes a table of geoid heights on
 a regular grid and writes on the result in a
 <a href="https://vdatum.noaa.gov/docs/gtx_info.html#dev_gtx_binary">.gtx</a>
-file.  On an 8-processor Intel 2.66 GHz machine using OpenMP
-(-DHAVE_OPENMP=1), it takes about 40 minutes of elapsed time to compute
+file.  On an 8-processor Intel 3.0 GHz machine using OpenMP
+(-DHAVE_OPENMP=1), it takes about 10 minutes of elapsed time to compute
 the geoid height for EGM2008 on a 1' grid.  (Without these
-optimizations, the computation would have taken about 200 days!)
+optimizations, the computation would have taken about 50 days!)
 \include GeoidToGTX.cpp
 
 cmake will add in support for OpenMP for
@@ -7742,11 +7742,45 @@ git repository for GeographicLib</a>.
      - Install dll in tools directory.
      - Use BUILD_SHARED_LIBS instead of GEOGRAPHICLIB_LIB_TYPE.
      - Maybe segregate more tasks into a MAINTAINER mode.
-   - Add Geocentric interface to MagneticModel?  See sourceforge request
-     from Marcelo Banik de Padua.
-   - Make AlbersEqualArea::atanhxm1 and AlbersEqualArea::DDatanhee more
-     robust.
-   - Document realistic errors for polygon areas.
+   - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
+     class for conversions via the series?
+   - Update all links to earth-info.nga.mil:
+     cgi-bin/GeoidEval.cgi
+     doc/GeographicLib.dox.in
+     dotnet/NETGeographicLib/GARS.h
+     dotnet/NETGeographicLib/Geoid.h
+     dotnet/NETGeographicLib/Georef.h
+     dotnet/NETGeographicLib/MGRS.h
+     dotnet/NETGeographicLib/UTMUPS.h
+     include/GeographicLib/GARS.hpp
+     include/GeographicLib/Geoid.hpp
+     include/GeographicLib/Georef.hpp
+     include/GeographicLib/MGRS.hpp
+     include/GeographicLib/UTMUPS.hpp
+     man/GeoidEval.pod
+     man/Gravity.pod
+     index.html
+   - Document realistic errors for polygon areas:
+     10^7 approximately regular polygons, WGS84 ellipsoid
+     uniformly distributed centers
+     number of vertices logarithmically distributed in [3, 300]
+     uniformly distributed orientations
+     center to vertex distance logarithmically distributed in [0.1 m, 9e6 m]
+     max error are
+     double:
+       perimeter: 200 nm
+       area:
+         0.0013 m^2 for perimeter < 10 km
+         0.0070 m^2 for perimeter < 100 km
+         0.070 m^2 for perimeter < 1000 km
+         0.11 m^2 for all perimeters
+     long double:
+       perimeter: 200 pm
+       area:
+         0.7 mm^2 for perim < 10 km
+         3.2 mm^2 for perimeter < 100 km
+         21 mm^2 for perimeter < 1000 km
+         45 mm^2 for all perimeters
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>

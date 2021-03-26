@@ -360,7 +360,9 @@ namespace GeographicLib {
       //   y2 = y1 + 1e-16
       // the test
       //   hypot(x, y2) >= hypot(x, y1)
-      // fails.  See also
+      // fails.  Reported 2021-03-14:
+      //   https://developercommunity.visualstudio.com/t/1369259
+      // See also:
       //   https://bugs.python.org/issue43088
       using std::sqrt; T h = sqrt(x * x + y * y);
 #else

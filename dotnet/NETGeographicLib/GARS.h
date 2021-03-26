@@ -19,7 +19,7 @@ namespace NETGeographicLib
    *
    * The Global Area Reference System is described in
    * - https://en.wikipedia.org/wiki/Global_Area_Reference_System
-   * - http://earth-info.nga.mil/GandG/coordsys/grids/gars.html
+   * - https://earth-info.nga.mil/index.php?dir=coordsys&action=coordsys#tab_gars
    * .
    * It provides a compact string representation of a geographic area
    * (expressed as latitude and longitude).  The classes Georef and Geohash
