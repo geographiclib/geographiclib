@@ -290,10 +290,10 @@ GeographicLib.Accumulator = {};
     // Possibly could call the gnu extension sincos
     s = Math.sin(r); c = Math.cos(r);
     switch (q & 3) {
-      case 0:  sinx =  s; cosx =  c; break;
-      case 1:  sinx =  c; cosx = -s; break;
-      case 2:  sinx = -s; cosx = -c; break;
-      default: sinx = -c; cosx =  s; break; // case 3
+    case 0:  sinx =  s; cosx =  c; break;
+    case 1:  sinx =  c; cosx = -s; break;
+    case 2:  sinx = -s; cosx = -c; break;
+    default: sinx = -c; cosx =  s; break; // case 3
     }
     if (x !== 0) { sinx += 0; cosx += 0; }
     return {s: sinx, c: cosx};
@@ -323,9 +323,10 @@ GeographicLib.Accumulator = {};
       //   case 0: ang = 0 + ang; break;
       //
       // and handle mpfr as in AngRound.
-      case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
-      case 2: ang =  90 - ang; break;
-      case 3: ang = -90 + ang; break;
+    case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
+    case 2: ang =  90 - ang; break;
+    case 3: ang = -90 + ang; break;
+    default: break;
     }
     return ang;
   };

@@ -231,6 +231,7 @@ namespace GeographicLib {
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
       case SCHMIDT:
+      default:                  // To avoid compiler warnings
         v = SphericalEngine::Value<false, SphericalEngine::SCHMIDT, 1>
           (_c, f, x, y, z, _a, dummy, dummy, dummy);
         break;
@@ -264,6 +265,7 @@ namespace GeographicLib {
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
       case SCHMIDT:
+      default:                  // To avoid compiler warnings
         v = SphericalEngine::Value<true, SphericalEngine::SCHMIDT, 1>
           (_c, f, x, y, z, _a, gradx, grady, gradz);
         break;
