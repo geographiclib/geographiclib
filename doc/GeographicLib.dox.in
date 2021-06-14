@@ -665,9 +665,10 @@ The following Fedora package is also useful for syntax checking python
 .
 Installing the python package requires the following \verbatim
   python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
-A recent version of mpreal.h needs to be downloaded from
-https://github.com/advanpix/mpreal and installed
-in the <code>include/</code> directory.  For all the tests to be run,
+mpreal.h, version 3.6.8 or later, needs to be downloaded from
+https://github.com/advanpix/mpreal and installed in the
+<code>include/</code> directory.  (Version 3.6.8 requires also the fixes
+given in pull requests #8 and #10.)  For all the tests to be run,
 the following datasets need to be installed
 - geoid models: egm96-5
 - magnetic models: wmm2010 emm2015
@@ -7448,7 +7449,8 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires:
    - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-     (version 3.6.7, dated 2020-06-27, or later),
+     (version 3.6.8, dated 2020-10-29, or later; version 3.6.8 also
+     requires the fixes given in pull requests #8 and #10),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
      or later, Visual Studio 12 2013 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -7744,22 +7746,7 @@ git repository for GeographicLib</a>.
      - Maybe segregate more tasks into a MAINTAINER mode.
    - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
      class for conversions via the series?
-   - Update all links to earth-info.nga.mil:
-     cgi-bin/GeoidEval.cgi
-     doc/GeographicLib.dox.in
-     dotnet/NETGeographicLib/GARS.h
-     dotnet/NETGeographicLib/Geoid.h
-     dotnet/NETGeographicLib/Georef.h
-     dotnet/NETGeographicLib/MGRS.h
-     dotnet/NETGeographicLib/UTMUPS.h
-     include/GeographicLib/GARS.hpp
-     include/GeographicLib/Geoid.hpp
-     include/GeographicLib/Georef.hpp
-     include/GeographicLib/MGRS.hpp
-     include/GeographicLib/UTMUPS.hpp
-     man/GeoidEval.pod
-     man/Gravity.pod
-     index.html
+   - Include pointer to excel wrapper code in main body of documentation.
    - Document realistic errors for polygon areas:
      10^7 approximately regular polygons, WGS84 ellipsoid
      uniformly distributed centers
@@ -7785,7 +7772,8 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-mm-dd)
-   - Add example of calling GeographicLib from Excel.
+   - Add example of calling GeographicLib from Excel. TODO include in
+     main body.
    - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
    - Work around inaccuracies in hypot routines in Visual Studio
      (win32), Python, and JavaScript.
