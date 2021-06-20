@@ -7747,27 +7747,6 @@ git repository for GeographicLib</a>.
    - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
      class for conversions via the series?
    - Include pointer to excel wrapper code in main body of documentation.
-   - Document realistic errors for polygon areas:
-     10^7 approximately regular polygons, WGS84 ellipsoid
-     uniformly distributed centers
-     number of vertices logarithmically distributed in [3, 300]
-     uniformly distributed orientations
-     center to vertex distance logarithmically distributed in [0.1 m, 9e6 m]
-     max error are
-     double:
-       perimeter: 200 nm
-       area:
-         0.0013 m^2 for perimeter < 10 km
-         0.0070 m^2 for perimeter < 100 km
-         0.070 m^2 for perimeter < 1000 km
-         0.11 m^2 for all perimeters
-     long double:
-       perimeter: 200 pm
-       area:
-         0.7 mm^2 for perim < 10 km
-         3.2 mm^2 for perimeter < 100 km
-         21 mm^2 for perimeter < 1000 km
-         45 mm^2 for all perimeters
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
@@ -7793,6 +7772,8 @@ git repository for GeographicLib</a>.
    - Add MagneticModel::FieldGeocentric and
      MagneticCircle::FieldGeocentric to return the field in geocentric
      coordinates (thanks to Marcelo Banik de Padua).
+   - Document realistic errors for PolygonAreaT and
+     <a href="Planimeter.1.html">Planimeter</a>.
    .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)

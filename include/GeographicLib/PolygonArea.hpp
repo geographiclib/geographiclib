@@ -2,7 +2,7 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -55,6 +55,34 @@ namespace GeographicLib {
    * GeodesicExact, and Rhumb.  GeographicLib::PolygonArea,
    * GeographicLib::PolygonAreaExact, and GeographicLib::PolygonAreaRhumb are
    * typedefs for these cases.
+   *
+   * For GeographicLib::PolygonArea (edges defined by Geodesic), an upper bound
+   * on the error is about 0.1 m<sup>2</sup> per vertex.  However this is a
+   * wildly pessimistic estimate in most cases.  A more realistic estimate of
+   * the error is given by a test involving 10<sup>7</sup> approximately
+   * regular polygons on the WGS84 ellipsoid.  The centers and the orientations
+   * of the polygons were uniformly distributed, the number of vertices was
+   * log-uniformly distributed in [3, 300], and the center to vertex distance
+   * log-uniformly distributed in [0.1 m, 9000 km].
+   *
+   * Using double precision (the standard precision for GeographicLib), the
+   * maximum error in the perimeter was 200 nm, and the maximum error in the
+   * area was<pre>
+   *     0.0013 m^2 for perimeter < 10 km
+   *     0.0070 m^2 for perimeter < 100 km
+   *     0.070 m^2 for perimeter < 1000 km
+   *     0.11 m^2 for all perimeters
+   * </pre>
+   * The errors are given in terms of the perimeter, because it is expected
+   * that the errors depend mainly on the number of edges and the edge lengths.
+   *
+   * Using long doubles (GEOGRPAHICLIB_PRECISION = 3), the maximum error in the
+   * perimeter was 200 pm, and the maximum error in the area was<pre>
+   *     0.7 mm^2 for perim < 10 km
+   *     3.2 mm^2 for perimeter < 100 km
+   *     21 mm^2 for perimeter < 1000 km
+   *     45 mm^2 for all perimeters
+   * </pre>
    *
    * @tparam GeodType the geodesic class to use.
    *
