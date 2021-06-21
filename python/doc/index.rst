@@ -98,7 +98,7 @@ GeographicLib in various languages
 Change log
 ----------
 
-* Version 1.52 (released 2021-mm-dd)
+* Version 1.52 (released 2021-06-22)
 
   * Work around inaccurate math.hypot for python 3.[89]
   * Be more aggressive in preventing negative s12 and m12 for short

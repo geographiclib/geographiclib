@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2021-mm-dd
+\date 2021-06-22
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2021-mm-dd),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2021-06-22),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -660,8 +660,7 @@ The following npm packages need to be installed (jshint is just for
 syntax checking) \verbatim
   npm install -g mocha jsdoc jshint \endverbatim
 The following Fedora package is also useful for syntax checking python
-(no longer available? use pylint instead?)
-- pychecker
+- pylint
 .
 Installing the python package requires the following \verbatim
   python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
@@ -7759,7 +7758,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
-   (released 2021-mm-dd)
+   (released 2021-06-22)
    - Add MagneticModel::FieldGeocentric and
      MagneticCircle::FieldGeocentric to return the field in geocentric
      coordinates (thanks to Marcelo Banik de Padua).

@@ -43,7 +43,7 @@ umask 0022
 #   python/geographiclib/__init__.py
 #   python/doc/index.rst (date + update change log)
 #   python/README.md
-# use: cd python; pychecker geographiclib/*.py
+# use: cd python; pylint geographiclib/*.py (need to reduce noise!)
 
 # MATLAB
 #   matlab/geographiclib/Contents.m version (multiple places) + date

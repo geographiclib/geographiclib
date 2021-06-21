@@ -176,7 +176,7 @@ and are therefore in the public domain.
 \section changes-for Change log
 
  - <a href="https://geographiclib.sourceforge.io/1.52/Fortran">Version 1.52</a>
-   (released 2021-mm-dd)
+   (released 2021-06-22)
    - Be more aggressive in preventing negative s12 and m12 for short lines.
 
  - <a href="https://geographiclib.sourceforge.io/1.50/Fortran">Version 1.50</a>

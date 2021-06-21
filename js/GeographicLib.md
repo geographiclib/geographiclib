@@ -109,7 +109,7 @@ Two examples of this library in use are
 
 ### Change log
 
-* Version 1.52 (released 2020-mm-dd)
+* Version 1.52 (released 2020-06-22)
   * Work around inaccuracy in Math.hypot (see the GeodSolve92 test).
   * Be more aggressive in preventing negative s12 and m12 for short lines.
 
