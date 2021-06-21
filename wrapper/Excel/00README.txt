@@ -3,7 +3,7 @@ You can call GeographicLib functions from Excel.  Thanks to
   Thomas Warner <warnerta@gmail.com>
 
 for showing me how.  This prescription has only been tested for Excel
-running on a Window machine.  Please let me know if you figure out how
+running on a Windows machine.  Please let me know if you figure out how
 to get this working on MacOS versions of Excel.
 
 Here's the overview

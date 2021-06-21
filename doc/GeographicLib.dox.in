@@ -1282,6 +1282,7 @@ Some more details are available in the following sections
 - \ref matlab.
 - \ref dotnet.
 - \ref maxima.
+- \ref excel.
 
 \section c-fortran C and Fortran implementation
 
@@ -1439,6 +1440,15 @@ bigfloat arithmetic together with series extended to high order or
 solutions in terms of elliptic integrals (<a href="ellint.mac">
 ellint.mac</a>).  These files contain brief instructions on how to use
 them.
+
+\section excel Excel wrapper
+
+There is no implementation of the functionality GeographicLib in Visual
+Basic which would be callable from Excel.  However, it <i>is</i>
+possible to call the C++ library from Visual Basic.  The directory
+<code>wrapper/Excel</code> contains an illustration which allows
+geodesics and rhumb lines to be computed in Excel.  At present this
+works only on Windows systems.
 
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
@@ -7746,34 +7756,40 @@ git repository for GeographicLib</a>.
      - Maybe segregate more tasks into a MAINTAINER mode.
    - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
      class for conversions via the series?
-   - Include pointer to excel wrapper code in main body of documentation.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-mm-dd)
-   - Add example of calling GeographicLib from Excel. TODO include in
-     main body.
-   - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
-   - Work around inaccuracies in hypot routines in Visual Studio
-     (win32), Python, and JavaScript.
-   - Geodesic routines: be more aggressive in preventing negative s12
-     and m12 for short lines (all languages).
-   - Initialize reference argument to remquo (C++ and C).
-   - Get ready to retire unused _exact in RhumbLine.
-   - Declare RhumbLine copy constructor "= default".
-   - Use C++11 "= delete" idiom to delete copy assignment and copy
-     constructors in RhumbLine, Geoid, GravityModel, MagneticModel.
-   - Fix bug in AlbersEqualArea for extreme prolate ellipsoids (plus
-     general cleanup in the code).
-   - Fix MGRS::Forward to work around aggressive optimization leading to
-     incorrect rounding.
-   - Fix plain makefiles, Makefile.mk, so that PREFIX is handled
-     properly.
    - Add MagneticModel::FieldGeocentric and
      MagneticCircle::FieldGeocentric to return the field in geocentric
      coordinates (thanks to Marcelo Banik de Padua).
    - Document realistic errors for PolygonAreaT and
      <a href="Planimeter.1.html">Planimeter</a>.
+   - Geodesic routines: be more aggressive in preventing negative \e s12
+     and \e m12 for short lines (all languages).
+   - Fix bug in AlbersEqualArea for extreme prolate ellipsoids (plus
+     general cleanup in the code).
+   - Thanks to Thomas Warner, a sample of wrapping the C++ library, so
+     it's accessible in Excel, is given in <code>wrapper/Excel</code>.
+   - Minor changes
+     - Work around inaccuracies in hypot routines in Visual Studio
+       (win32), Python, and JavaScript.
+     - Initialize reference argument to remquo (C++ and C).
+     - Get ready to retire unused _exact in RhumbLine.
+     - Declare RhumbLine copy constructor "= default".
+     - Use C++11 "= delete" idiom to delete copy assignment and copy
+       constructors in RhumbLine, Geoid, GravityModel, MagneticModel.
+     - Fix MGRS::Forward to work around aggressive optimization leading to
+       incorrect rounding.
+     - Fix plain makefiles, Makefile.mk, so that PREFIX is handled
+       properly.
+     - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
+   - <b>NOTE:</b> In the next version (tentatively 2.0), I plan to split
+     up the git repository and the packaging of GeographicLib into
+     separate entities for each language.  This will simplify
+     development and deployment of the library.
+   - <b>WARNING:</b> The .NET version of GeographicLib will not be
+     supported in the next version.
    .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)
