@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2020-11-22
+\date 2021-06-22
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2019-09-24),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2021-06-22),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -253,7 +253,7 @@ make software maintenance simpler
 \section cmake Installation with cmake
 
 This is the recommended method of installation; however it requires that
-<a href="https://www.cmake.org">cmake</a>, version 3.1.0 or later, be
+<a href="https://www.cmake.org">cmake</a>, version 3.7.0 or later, be
 installed on your system.  This permits GeographicLib to be built either
 as a shared or a static library on a wide variety of systems.  cmake can
 also determine the capabilities of your system and adjust the
@@ -290,8 +290,12 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 14" -A win32 -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" ..
-  cmake -G "Visual Studio 14" -A x64 -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" ..\endverbatim
+  cmake -G "Visual Studio 14" -A win32 \
+    -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" \
+    ..
+  cmake -G "Visual Studio 14" -A x64 \
+    -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" \
+    ..\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX point to system directories.
   You might instead prefer to install to a user directory such as
   <code>C:/Users/jsmith/projects/GeographicLib-@PROJECT_VERSION@</code>.
@@ -372,7 +376,7 @@ Here are the steps to compile and install GeographicLib:
     -# quad precision (113-bit precision).
     -# arbitrary precision.
     .
-    See \ref highprec for addition information about the last two
+    See \ref highprec for additional information about the last two
     values.  Nearly all the testing has been carried out with doubles
     and that's the recommended configuration.  In particular you should
     avoid "installing" the library with a precision different from
@@ -387,6 +391,7 @@ Here are the steps to compile and install GeographicLib:
     ON, then compiler warnings are treated as errors.  (This happens
     also if you are a "developer", i.e., if the file
     <code>tests/CMakeLists.txt</code> is present.)
+  .
 - Build and install the software.  In non-IDE environments, run
   \verbatim
   make         # compile the library and utilities
@@ -421,6 +426,14 @@ Here are the steps to compile and install GeographicLib:
   PREFIX/share/doc/GeographicLib/html/index.html</a>, if
   COMMON_INSTALL_PATH is ON, or <a href="index.html">
   PREFIX/doc/index.html</a>, otherwise.
+- With cmake 3.13 and later, cmake can create the build directory for
+  you.  This allows you to configure and run the build on Windows with
+  \verbatim
+  cmake -G "Visual Studio 14" -A x64 -S . -B BUILD
+  cmake --build BUILD --config Release --target ALL_BUILD \endverbatim
+  or on Linux with \verbatim
+  cmake -S . -B BUILD
+  make -C BUILD -j4 \endverbatim
 
 \section autoconf Installation using the autoconfigure tools
 
@@ -465,7 +478,7 @@ Here are the steps to compile and install GeographicLib:
   If your machine using big endian ordering, then insert \code
   #define GEOGRAPHICLIB_WORDS_BIGENDIAN 1 \endcode
 - Build and install the software: \verbatim
-  make             # compile the library and the examples
+  make             # compile the library and the tools
   make install     # as root \endverbatim
   The installation is in directories under /usr/local.  You
   can specify a different installation directory with, for example,
@@ -637,7 +650,8 @@ The following Fedora packages are required by
 - boost-devel
 - mpfr-devel
 - octave
-- python2-sphinx
+- python2
+- python3-sphinx
 - nodejs
 - maven
 .
@@ -646,13 +660,14 @@ The following npm packages need to be installed (jshint is just for
 syntax checking) \verbatim
   npm install -g mocha jsdoc jshint \endverbatim
 The following Fedora package is also useful for syntax checking python
-- pychecker
+- pylint
 .
 Installing the python package requires the following \verbatim
   python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
-A recent version of mpreal.h needs to be downloaded from
-https://github.com/advanpix/mpreal and installed
-in the <code>include/</code> directory.  For all the tests to be run,
+mpreal.h, version 3.6.8 or later, needs to be downloaded from
+https://github.com/advanpix/mpreal and installed in the
+<code>include/</code> directory.  (Version 3.6.8 requires also the fixes
+given in pull requests #8 and #10.)  For all the tests to be run,
 the following datasets need to be installed
 - geoid models: egm96-5
 - magnetic models: wmm2010 emm2015
@@ -697,7 +712,7 @@ In order to use GeographicLib from C++ code, you will need to
     cd BUILD
     cmake -G "Visual Studio 14" -A x64 \
       -D CMAKE_PREFIX_PATH="C:/Program Files" \
-      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeographic" \
+      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
@@ -715,6 +730,18 @@ In order to use GeographicLib from C++ code, you will need to
     cmake --build . --config Release --target ALL_BUILD \endverbatim
     You might also want to install your package (using "make install" or
     build the "INSTALL" target with the command above).
+  - With cmake 3.13 and later, cmake can create the build directory for
+    you.  This allows you to configure and run the build on Windows with
+    \verbatim
+    cmake -G "Visual Studio 14" -A x64 \
+      -D CMAKE_PREFIX_PATH="C:/Program Files" \
+      -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
+      -S . -B BUILD
+    cmake --build BUILD --config Release --target ALL_BUILD \endverbatim
+    or on Linux with \verbatim
+    cmake -D CMAKE_INSTALL_PREFIX="/tmp/testgeog" \
+      -S . -B BUILD
+    make -C BUILD -j4 \endverbatim
   .
   The most import step is the find_package command.  The cmake
   documentation describes the locations searched by find_package (the
@@ -758,8 +785,8 @@ In order to use GeographicLib from C++ code, you will need to
   - <code>GeographicLib_VERSION</code> = @PROJECT_VERSION@
   - <code>GeographicLib_INCLUDE_DIRS</code>
   - <code>GeographicLib_LIBRARIES</code> = one of the following two:
-  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib_SHARED
-  - <code>GeographicLib_STATIC_LIBRARIES</code> = GeographicLib_STATIC
+  - <code>GeographicLib_SHARED_LIBRARIES</code> = GeographicLib::GeographicLib_SHARED
+  - <code>GeographicLib_STATIC_LIBRARIES</code> = GeographicLib::GeographicLib_STATIC
   - <code>GeographicLib_LIBRARY_DIRS</code>
   - <code>GeographicLib_BINARY_DIRS</code>
   - <code>GEOGRAPHICLIB_DATA</code> = value of this compile-time parameter
@@ -1254,6 +1281,7 @@ Some more details are available in the following sections
 - \ref matlab.
 - \ref dotnet.
 - \ref maxima.
+- \ref excel.
 
 \section c-fortran C and Fortran implementation
 
@@ -1412,6 +1440,15 @@ solutions in terms of elliptic integrals (<a href="ellint.mac">
 ellint.mac</a>).  These files contain brief instructions on how to use
 them.
 
+\section excel Excel wrapper
+
+There is no implementation of the functionality GeographicLib in Visual
+Basic which would be callable from Excel.  However, it <i>is</i>
+possible to call the C++ library from Visual Basic.  The directory
+<code>wrapper/Excel</code> contains an illustration which allows
+geodesics and rhumb lines to be computed in Excel.  At present this
+works only on Windows systems.
+
 <center>
 Back to \ref organization.  Forward to \ref geoid.  Up to \ref contents.
 </center>
@@ -1437,11 +1474,11 @@ is only 1&nbsp;mm.
 The geoid is usually approximated by an "earth gravity model" (EGM).
 The models published by the NGA are:
 - <b>EGM84</b>:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
+  https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84
 - <b>EGM96</b>:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+  https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96
 - <b>EGM2008</b>:
-  http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+  https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008
 .
 Geoid offers a uniform way to handle all 3 geoids at a variety of grid
 resolutions.  (In contrast, the software tools that NGA offers are
@@ -1679,7 +1716,7 @@ egm96-5 are
 \verbatim
    # Geoid file in PGM format for the GeographicLib::Geoid class
    # Description WGS84 EGM96, 5-minute grid
-   # URL http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+   # URL https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96
    # DateTime 2009-08-29 18:45:03
    # MaxBilinearError 0.140
    # RMSBilinearError 0.005
@@ -1746,11 +1783,13 @@ compatible with the requirement that the data can be randomly accessed.
 In particular gdal_translate can be used to convert the pgm files to
 compressed tiff files with
 \verbatim
-gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 \
-   -co TILED=YES -co BLOCKXSIZE=256 -co BLOCKYSIZE=256 \
+gdal_translate -co COMPRESS=LZW -co PREDICTOR=2 -co TILED=YES \
+   –a_offset -108 -a_scale 0.003 \
    egmyy-g.pgm egmyy-g.tif
 \endverbatim
-The resulting files sizes are
+(The <code>-a_offset</code> and <code>-a_scale</code> options were
+introduced in gdal_translate version 2.3.)  The resulting files sizes
+are
 \verbatim
                   pgm      tif
     egm84-30      0.6 MB   0.5 MB
@@ -1997,18 +2036,18 @@ Go to
 
 The supported models are
  - <b>egm84</b>, the
-   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
+   <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84">
    Earth Gravity Model 1984</a>, which includes terms up to degree 180.
  - <b>egm96</b>, the
-   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
+   <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96">
    Earth Gravity Model 1996</a>, which includes terms up to degree 360.
  - <b>egm2008</b>, the
-   <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
+   <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008">
    Earth Gravity Model 2008</a>, which includes terms up to degree 2190.
    See also <a href="https://doi.org/10.1029/2011JB008916"> Pavlis et
    al. (2012)</a>
  - <b>wgs84</b>, the
-   <a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
+   <a href="https://web.archive.org/web/20161214054445/http://earth-info.nga.mil/GandG/publications/tr8350.2/tr8350_2.html">
    WGS84 Reference Ellipsoid</a>.  This is just reproduces the normal
    gravitational field for the reference ellipsoid.  This includes the
    zonal coefficients up to order 20.  Usually NormalGravity::WGS84()
@@ -2271,7 +2310,7 @@ EGMF-1
 Name            egm2008
 Publisher       National Geospatial Intelligence Agency
 Description     Earth Gravity Model 2008
-URL             http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+URL             https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008
 ReleaseDate     2008-06-01
 ConversionDate  2011-11-19
 DataVersion     1
@@ -2432,7 +2471,7 @@ non-zero.
 
 All of the supported models use WGS84 for the reference ellipsoid.  This
 has (see
-<a href="http://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf">
+<a href="https://web.archive.org/web/20161214054445/https://earth-info.nga.mil/GandG/publications/tr8350.2/wgs84fin.pdf">
 TR8350.2</a>, table 3.1)
  - \e a = 6378137 m
  - \e f = 1/298.257223563
@@ -2472,10 +2511,10 @@ Both of these techniques are illustrated by the following code,
 which computes a table of geoid heights on
 a regular grid and writes on the result in a
 <a href="https://vdatum.noaa.gov/docs/gtx_info.html#dev_gtx_binary">.gtx</a>
-file.  On an 8-processor Intel 2.66 GHz machine using OpenMP
-(-DHAVE_OPENMP=1), it takes about 40 minutes of elapsed time to compute
+file.  On an 8-processor Intel 3.0 GHz machine using OpenMP
+(-DHAVE_OPENMP=1), it takes about 10 minutes of elapsed time to compute
 the geoid height for EGM2008 on a 1' grid.  (Without these
-optimizations, the computation would have taken about 200 days!)
+optimizations, the computation would have taken about 50 days!)
 \include GeoidToGTX.cpp
 
 cmake will add in support for OpenMP for
@@ -2824,9 +2863,9 @@ The solution for the normal gravity is well defined for arbitrary
 \f$ M \f$, \f$ \omega \f$, \f$ a > 0\f$, and \f$ f < 1 \f$.  (Note that
 arbitrary oblate and prolate ellipsoids are possible, although
 hydrostatic equilibrium would not result in a prolate ellipsoid.)
-However, if is much easier to measure the dynamical form factor
+However, it is much easier to measure the dynamical form factor
 \f$ J_2 \f$ (from the motion of artificial satellites) than the
-flattening \f$ f \f$.  (Note too that \f$ GM \f$ is also typically
+flattening \f$ f \f$.  (Note too that \f$ GM \f$ is typically
 measured from from satellite or astronomical observations and so it
 includes the mass of the atmosphere.)
 
@@ -3026,13 +3065,13 @@ These magnetic models are available for download:
  <td><center>1900--2025</center>
  <td><center>28</center>
  <td><center>
- <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.tar.bz2">
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf13.tar.bz2">
  link</a> (7)</center>
  <td><center>
- <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.exe">
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf13.exe">
  link</a> (1420)</center>
  <td><center>
- <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf12.zip">
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf13.zip">
  link</a> (8)</center>
 <tr>
  <td>emm2010
@@ -7419,7 +7458,8 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires:
    - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-     (version 3.6.7, dated 2020-06-27, or later),
+     (version 3.6.8, dated 2020-10-29, or later; version 3.6.8 also
+     requires the fixes given in pull requests #8 and #10),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
      or later, Visual Studio 12 2013 or later).
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
@@ -7699,22 +7739,57 @@ git repository for GeographicLib</a>.
    - Template versions of Gnomonic and AzimuthalEquidistant so that they
      can use either Geodesic and GeodesicExact.  Use typedefs so that
      Geodesic::Line points to GeodesicLine.
-   - Split DMS stuff from main JavaScript package.  Also move 'use
-     strict' into functions (to make jshint happy).
+   - Split DMS stuff from main JavaScript package.
    - Add C++ tests not dependent on utility programs.
    - Add information on radius of convergence for aux latitude series.
    - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
      &gt; 1/sqrt(2).
    - Check Visual Studo "code analysis" results (from Analize VS
      menu).  Probably an awful lot of false positives.
-   - Fix cmake files so that they play nice with vcpkg
+   - Fix cmake files so that they play nice with vcpkg:
      - Allow only some components to be built.
      - Allow tools, cmake install directories, etc., to be set.
      - Compute relative paths from bin to lib directories.
      - Install dll in tools directory.
-     - Use BUILD_SHARED_LIBS instead of GEOGRAPHICLIB_LIB_TYPE
+     - Use BUILD_SHARED_LIBS instead of GEOGRAPHICLIB_LIB_TYPE.
+     - Maybe segregate more tasks into a MAINTAINER mode.
+   - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
+     class for conversions via the series?
 \endif
 
+ - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
+   (released 2021-06-22)
+   - Add MagneticModel::FieldGeocentric and
+     MagneticCircle::FieldGeocentric to return the field in geocentric
+     coordinates (thanks to Marcelo Banik de Padua).
+   - Document realistic errors for PolygonAreaT and
+     <a href="Planimeter.1.html">Planimeter</a>.
+   - Geodesic routines: be more aggressive in preventing negative \e s12
+     and \e m12 for short lines (all languages).
+   - Fix bug in AlbersEqualArea for extreme prolate ellipsoids (plus
+     general cleanup in the code).
+   - Thanks to Thomas Warner, a sample of wrapping the C++ library, so
+     it's accessible in Excel, is given in <code>wrapper/Excel</code>.
+   - Minor changes
+     - Work around inaccuracies in hypot routines in Visual Studio
+       (win32), Python, and JavaScript.
+     - Initialize reference argument to remquo (C++ and C).
+     - Get ready to retire unused _exact in RhumbLine.
+     - Declare RhumbLine copy constructor "= default".
+     - Use C++11 "= delete" idiom to delete copy assignment and copy
+       constructors in RhumbLine, Geoid, GravityModel, MagneticModel.
+     - Fix MGRS::Forward to work around aggressive optimization leading to
+       incorrect rounding.
+     - Fix plain makefiles, Makefile.mk, so that PREFIX is handled
+       properly.
+     - Make cmake's GeographicLib_LIBRARIES point to namespace versions.
+   - <b>NOTE:</b> In the next version (tentatively 2.0), I plan to split
+     up the git repository and the packaging of GeographicLib into
+     separate entities for each language.  This will simplify
+     development and deployment of the library.
+   - <b>WARNING:</b> The .NET version of GeographicLib will not be
+     supported in the next version.
+   .
  - <a href="https://geographiclib.sourceforge.io/1.51">Version 1.51</a>
    (released 2020-11-22)
    - C++11 compiler required for C++ library.  As a consequence:
@@ -7740,7 +7815,7 @@ git repository for GeographicLib</a>.
    - Required minium version of CMake is now 3.7.0 (released
      2016-11-11).  This is to work around a bug in find_package for
      cmake 3.4 and 3.5.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.50.1">Version 1.50.1</a>
    (released 2019-12-13)
    - Add the World Magnetic Model 2020, wmm2020, covering the period
@@ -7752,10 +7827,10 @@ git repository for GeographicLib</a>.
      which migrated to Math.cpp in version 1.50.
    - <b>WARNING:</b> The <i>next</i> version of GeographicLib will
      require a C++11 compliant compiler.  This means that the minimum
-     version of Visual Studio will be Visual Studio 12 2015.  (This
+     version of Visual Studio will be Visual Studio 14 2015.  (This
      repeats the warning given with version 1.50.  It didn't apply to
      this version because this is a minor update.)
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.50">Version 1.50</a>
    (released 2019-09-24)
    - BUG fixes:
@@ -7865,7 +7940,7 @@ git repository for GeographicLib</a>.
    - Additions to the documentation:
      - add documentation links to ge{distance,reckon}.m;
      - clarify which solution is returned for Geocentric::Reverse.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.49">Version 1.49</a>
    (released 2017-10-05)
    - Add the Enhanced Magnetic Model 2017, emm2017.  This is valid for
@@ -7888,7 +7963,7 @@ git repository for GeographicLib</a>.
    - Fix warnings about implicit conversions of doubles to bools in C++,
      C, and JavaScript packages.
    - Binary installers for Windows now use Visual Studio 14 2015.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.48">Version 1.48</a>
    (released 2017-04-09)
    - The "official" URL for GeographicLib is now
@@ -7924,7 +7999,7 @@ git repository for GeographicLib</a>.
      - don't add flag for C++11 for g++ 6.0 (since it's not needed).
    - Fix compiler warnings with Visual Studio 2017 and for the C
      library.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.47">Version 1.47</a>
    (released 2017-02-15)
    - Add NearestNeighbor class.
@@ -7967,7 +8042,7 @@ git repository for GeographicLib</a>.
        installers;
      - fix clang compiler warnings in GeodesicExactC4 and
        TransverseMercator.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.46">Version 1.46</a>
    (released 2016-02-15)
    - The following BUGS have been fixed:
@@ -8060,7 +8135,7 @@ git repository for GeographicLib</a>.
      your system:
      - Windows: ${CMAKE_INSTALL_PREFIX}/doc/scripts
      - Others: ${CMAKE_INSTALL_PREFIX}/share/doc/GeographicLib/scripts
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.45">Version 1.45</a>
    (released 2015-09-30)
    - Fix BUG in solution of inverse geodesic caused by misbehavior of
@@ -8116,7 +8191,7 @@ git repository for GeographicLib</a>.
      - add geod_polygon_clear to C library;
      - turn illegal latitudes into NaNs for Fortran library;
      - add test suites for the C and Fortran libraries.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.44">Version 1.44</a>
    (released 2015-08-14)
    - Various changes to improve accuracy, e.g., by minimizing round-off
@@ -8214,7 +8289,7 @@ git repository for GeographicLib</a>.
    - Add Accumulator<T>::operator*=(T y).
    - Geohash uses "invalid" instead of "nan" when the latitude or
      longitude is a nan.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.43">Version 1.43</a>
    (released 2015-05-23)
    - Add the Enhanced Magnetic Model 2015, emm2015.  This is valid for
@@ -8280,7 +8355,7 @@ git repository for GeographicLib</a>.
      the following directories from your system:
      - ${CMAKE_INSTALL_PREFIX}/share/cmake/GeographicLib*
      - ${CMAKE_INSTALL_PREFIX}/libexec/GeographicLib/matlab
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.42">Version 1.42</a>
    (released 2015-04-28)
    - DMS::Decode allows a single addition or subtraction operation,
@@ -8327,7 +8402,7 @@ git repository for GeographicLib</a>.
    - Work around the boost-quadmath bug with setprecision(0).
    - Deprecate use of Visual Studio 2005 "-vc8" project files in the
      windows directory.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.41">Version 1.41</a>
    (released 2015-03-09)
    - Fix bug in Rhumb::Inverse (with \e exact = true) and related
@@ -8339,7 +8414,7 @@ git repository for GeographicLib</a>.
      the period 1900--2020.
    - Split information about \ref jacobi to a separate section and
      include more material.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.40">Version 1.40</a>
    (released 2014-12-18)
    - Add the World Magnetic Model 2015, wmm2015.  This is now the
@@ -8368,7 +8443,7 @@ git repository for GeographicLib</a>.
        in DMS (this feature was introduced in version 1.13).
    - The MATLAB function, geographiclibinterface, which compiles the
      wrapper routines for MATLAB now works with MATLAB on a Mac.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.39">Version 1.39</a>
    (released 2014-11-11)
    - GeographicLib usually normalizes longitudes to the range
@@ -8420,7 +8495,7 @@ git repository for GeographicLib</a>.
    - Utility::date(const std::string&, int&, int&, int&) and hence the
      <a href="MagneticField.1.html">MagneticField</a> utility accepts
      the string "now" as a legal time (meaning today).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.38">Version 1.38</a>
    (released 2014-10-02)
    - On MacOSX, the installed package is relocatable (for cmake version
@@ -8434,7 +8509,7 @@ git repository for GeographicLib</a>.
    - MATLAB/Octave routines for great ellipses added; see \ref
      greatellipse.
    - Provide man pages for geographiclib-get-{geoids,gravity,magnetic}.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.37">Version 1.37</a>
    (released 2014-08-08)
    - Add \ref highprec.
@@ -8511,7 +8586,7 @@ git repository for GeographicLib</a>.
      - add macros <code>GEOGRAPHICLIB_VERSION</code> and
        <code>GEOGRAPHICLIB_VERSION_NUM</code>;
      - add solution and project files for Visual Studio Express 2010.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.36">Version 1.36</a>
    (released 2014-05-13)
    - Changes to comply with NGA's prohibition of the use of the
@@ -8549,7 +8624,7 @@ git repository for GeographicLib</a>.
      deprecated in C++11.
    - Add missing std:: qualifications to copy in LocalCartesion and
      Geocentric headers (bug found by Clemens).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.35">Version 1.35</a>
    (released 2014-03-13)
    - Fix blunder in UTMUPS::EncodeEPSG (found by Ben
@@ -8569,7 +8644,7 @@ git repository for GeographicLib</a>.
      - fix tests with multi-line output;
      - this release includes a file, pom.xml, which is used by an
        experimental build system (based on maven) at SRI.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.34">Version 1.34</a>
    (released 2013-12-11)
    - Many changes in cmake support:
@@ -8603,7 +8678,7 @@ git repository for GeographicLib</a>.
    - The Geod utility has been removed; the same functionality lives on
      with <a href="GeodSolve.1.html">GeodSolve</a> (introduced in
      version 1.30).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.33">Version 1.33</a>
    (released 2013-10-08)
    - Add <a href="NET/index.html">NETGeographic .NET wrapper library</a>
@@ -8613,13 +8688,13 @@ git repository for GeographicLib</a>.
    - Defer some of the initialization of OSGB to when it
      is first called.
    - Fix bug in autoconf builds under MacOS.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.32">Version 1.32</a>
    (released 2013-07-12)
    - Generalize C interface for polygon areas to allow vertices to be
      specified incrementally.
    - Fix way flags for C++11 support are determined.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.31">Version 1.31</a>
    (released 2013-07-01)
    - Changes breaking binary compatibility (source compatibility is
@@ -8669,7 +8744,7 @@ git repository for GeographicLib</a>.
      Rollins).
    - Fixes to the way the MATLAB interface routines are built (thanks to
      Phil Miller and Chris F.).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.30">Version 1.30</a>
    (released 2013-02-27)
    - Changes to geodesic routines:
@@ -8678,13 +8753,13 @@ git repository for GeographicLib</a>.
        <a href="GeodSolve.1.html">GeodSolve</a>;
      - allow addition of polygon edges in PolygonArea;
      - add full Maxima implementation of geodesic algorithms.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.29">Version 1.29</a>
    (released 2013-01-16)
    - Changes to allow compilation with libc++ (courtesy of Kal Conley).
    - Add description of \ref triaxial to documentation.
    - Update journal reference for "Algorithms for geodesics".
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.28">Version 1.28</a>
    (released 2012-12-11)
    - Changes to geodesic routines:
@@ -8697,7 +8772,7 @@ git repository for GeographicLib</a>.
      - remove unneeded special code for geodesics which start at a pole;
      - include polygon area routine in C and Fortran implementations;
      - add doxygen documentation for C and Fortran libraries.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.27">Version 1.27</a>
    (released 2012-11-29)
    - Changes to geodesic routines:
@@ -8713,13 +8788,13 @@ git repository for GeographicLib</a>.
    - Fix DMS::Decode double rounding BUG.
    - On MacOSX platforms with the cmake configuration, universal
      binaries are built.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.26">Version 1.26</a>
    (released 2012-10-22)
    - Replace the series used for geodesic areas by one with better
      convergence (this only makes an appreciable difference if
      |<i>f</i>| &gt; 1/150).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.25">Version 1.25</a>
    (released 2012-10-16)
    - Changes to geodesic calculations:
@@ -8745,7 +8820,7 @@ git repository for GeographicLib</a>.
      - upgrade to automake 1.11.6 to fix the "make distcheck" security
        vulnerability; see
        https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2012-3386
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.24">Version 1.24</a>
    (released 2012-09-22)
    - Allow the specification of the hemisphere in UTM coordinates in
@@ -8763,7 +8838,7 @@ git repository for GeographicLib</a>.
    - Fix building under cygwin.
    - Document restrictions on \e f in \ref intro.
    - Fix Python interface to work with version 2.6.x.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.23">Version 1.23</a>
    (released 2012-07-17)
    - Documentation changes:
@@ -8786,7 +8861,7 @@ git repository for GeographicLib</a>.
    - Fix programming blunder in LambertConformalConic::Forward
      (incorrect results were returned if the tangent latitude was
      negative).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.22">Version 1.22</a>
    (released 2012-05-27)
    - Add Geohash and Ellipsoid classes.
@@ -8804,7 +8879,7 @@ git repository for GeographicLib</a>.
      - default setting of GEOGRAPHICLIB_DATA does not depend on
        CMAKE_INSTALL_PREFIX;
      - add a cmake configuration for build tree.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.21">Version 1.21</a>
    (released 2012-04-25)
    - Support colon-separated DMS output:
@@ -8823,7 +8898,7 @@ git repository for GeographicLib</a>.
      - simplify the configuration of doxygen;
      - allow the MATLAB compiler to be specified with the
        MATLAB_COMPILER option.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.20">Version 1.20</a>
    (released 2012-03-23)
    - cmake tweaks:
@@ -8834,7 +8909,7 @@ git repository for GeographicLib</a>.
    - Fix SphericalEngine to deal with aggressive iterator
      checking by Visual Studio.
    - Fix transcription BUG is Geodesic.js.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.19">Version 1.19</a>
    (released 2012-03-13)
    - Slight improvement in Geodesic::Inverse for very
@@ -8844,14 +8919,14 @@ git repository for GeographicLib</a>.
      utilities.
    - Add installer for 64-bit Windows; the compiled MATLAB interface is
      supplied with the Windows 64-bit installer only.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.18">Version 1.18</a>
    (released 2012-02-18)
    - Improve documentation on configuration with cmake.
    - cmake's find_package ensures that the compiler versions match on Windows.
    - Improve documentation on compiling MATLAB interface.
    - Binary installer for Windows installs under C:/pkg-vc10 by default.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.17">Version 1.17</a>
    (released 2012-01-21)
    - Work around optimization BUG in Geodesic::Inverse
@@ -8860,7 +8935,7 @@ git repository for GeographicLib</a>.
    - Fix missing include file in SphericalHarmonic2.
    - Add simple examples of usage for each class.
    - Add internal documentation to the cmake configuration files.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.16">Version 1.16</a>
    (released 2011-12-07)
    - Add calculation of the earth's gravitational field:
@@ -8894,7 +8969,7 @@ git repository for GeographicLib</a>.
      - add -c option to <a href="MagneticField.1.html">MagneticField</a>;
      - default height to zero in
        <a href="MagneticField.1.html">MagneticField</a>.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.15">Version 1.15</a>
    (released 2011-11-08)
    - Add calculation of the earth's magnetic field:
@@ -8917,7 +8992,7 @@ git repository for GeographicLib</a>.
    - For the Python package, include manifest and readme files; don't
      install setup.py for non-Windows systems.
    - Include Doxygen tag file in distribution as doc/html/Geographic.tag.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.14">Version 1.14</a>
    (released 2011-09-30)
    - Ensure that geographiclib-config.cmake is relocatable.
@@ -8932,7 +9007,7 @@ git repository for GeographicLib</a>.
        https://pypi.python.org/pypi/geographiclib
    - Supply a minimal Qt qmake project file for library
      src/Geographic.pro.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.13">Version 1.13</a>
    (released 2011-08-13)
    - Changes to I/O:
@@ -8961,7 +9036,7 @@ git repository for GeographicLib</a>.
      - building with cmake creates and installs
        geographiclib-config.cmake;
      - better support for building a shared library under Windows.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.12">Version 1.12</a>
    (released 2011-07-21)
    - Change license to MIT/X11.
@@ -8973,7 +9048,7 @@ git repository for GeographicLib</a>.
      value (incompatible change).
    - A couple of code changes to enable compilation with Visual
      Studio 2003.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.11">Version 1.11</a>
    (released 2011-06-27)
    - Changes to <a href="Planimeter.1.html">Planimeter</a>:
@@ -9000,7 +9075,7 @@ git repository for GeographicLib</a>.
      - most classes have a Flattening() member function;
      - InverseFlattening() has been deprecated (and now returns inf for a
        sphere, instead of 0).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.10">Version 1.10</a>
    (released 2011-06-11)
    - Improvements to MATLAB/Octave interface:
@@ -9013,7 +9088,7 @@ git repository for GeographicLib</a>.
      - autoconf did not install Config.h;
      - cmake installed in man/man1 instead of share/man/man1;
      - cmake did not set the rpath on the tools.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.9">Version 1.9</a>
    (released 2011-05-28)
    - FIX BUG in area returned by
@@ -9041,7 +9116,7 @@ git repository for GeographicLib</a>.
    - Reverse the initial sense of the -s option for
      <a href="Planimeter.1.html"> Planimeter</a>.
    - Migrate source from subversion to git.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.8">Version 1.8</a>
    (released 2011-02-22)
    - Optionally return rotation matrix from Geocentric and
@@ -9061,7 +9136,7 @@ git repository for GeographicLib</a>.
        document the single hyphen versions).
    - Remove documentation that duplicates papers on transverse Mercator
      and geodesics.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.7">Version 1.7</a>
    (released 2010-12-21)
    - FIX BUG in scale returned by LambertConformalConic::Reverse.
@@ -9072,12 +9147,12 @@ git repository for GeographicLib</a>.
    - Use cell arrays for MGRS strings in MATLAB.
    - Add solution/project files for Visual Studio 2010 (32-bit only).
    - Use C++11 static_assert and math functions, if available.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.6">Version 1.6</a>
    (released 2010-11-23)
    - FIX BUG introduced in Geoid in version 1.5 (found by
      Dave Edwards).
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.5">Version 1.5</a>
    (released 2010-11-19)
    - Improve area calculations for small polygons.
@@ -9103,7 +9178,7 @@ git repository for GeographicLib</a>.
      - add Math::epi() and Math::edegree().
      - fixes to compile under cygwin;
      - tweak expression used to find latitude from conformal latitude.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.4">Version 1.4</a>
    (released 2010-09-12)
    - Changes to Geodesic and GeodesicLine:
@@ -9134,7 +9209,7 @@ git repository for GeographicLib</a>.
    - Add overloaded Forward and Reverse functions to the projection
      classes which don't return the convergence (or azimuth) and scale.
    - Document function parameters and return values consistently.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.3">Version 1.3</a>
    (released 2010-07-21)
    - Add Gnomonic, the ellipsoid generalization of the
@@ -9154,7 +9229,7 @@ git repository for GeographicLib</a>.
    - Add EllipticFunction::E(real).
    - Update references to Geotrans in MGRS documentation.
    - Speed up tmseries.mac.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.2">Version 1.2</a>
    (released 2010-05-21)
    - FIX BUGS in Geodesic,
@@ -9186,7 +9261,7 @@ git repository for GeographicLib</a>.
        formats used by <a href="GeoConvert.1.html">GeoConvert</a>;
      - <a href="CartConvert.1.html">CartConvert</a> allows the ellipsoid
        to be specified with -e.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.1">Version 1.1</a>
    (released 2010-02-09)
    - FIX BUG (introduced in 2009-03) in EllipticFunction::E(sn,cn,dn).
@@ -9194,7 +9269,7 @@ git repository for GeographicLib</a>.
      TransverseMercatorExact.
    - Code and documentation changes for consistency with
      <a  href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>
-
+   .
  - <a href="https://geographiclib.sourceforge.io/1.0">Version 1.0</a>
    (released 2010-01-07)
    - Add autoconf configuration files.
@@ -9218,7 +9293,7 @@ git repository for GeographicLib</a>.
      - Include sufficient edge data to allow heights to be returned for
        cached area without disk reads;
      - Add inspector functions to query the extent of the cache.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-11">Version 2009-11</a>
    (released 2009-11-03)
    - Allow specification of "closest UTM zone" in UTMUPS
@@ -9233,7 +9308,7 @@ git repository for GeographicLib</a>.
      - Include more information in some error messages.
      - Improve accuracy of inverse hyperbolic functions.
      - Fix the way Math functions handle different precisions.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-10">Version 2009-10</a>
    (released 2009-10-18)
   - Change web site to https://geographiclib.sourceforge.io
@@ -9255,12 +9330,12 @@ git repository for GeographicLib</a>.
       UTMUPS::Reverse to enforce stricter MGRS limits on eastings and
       northings.
     - Add 64-bit targets in Visual Studio project files.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-09">Version 2009-09</a>
    (released 2009-09-01)
    - Add Geoid and
      <a href="GeoidEval.1.html">GeoidEval</a> utility.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-08">Version 2009-08</a>
    (released 2009-08-14)
    - Add CassiniSoldner class and
@@ -9270,17 +9345,17 @@ git repository for GeographicLib</a>.
    - INCOMPATIBLE CHANGE: AzimuthalEquidistant now returns the reciprocal
      of the azimuthal scale instead of the reduced length.
    - Add -n option to <a href="GeoConvert.1.html">GeoConvert</a>.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-07">Version 2009-07</a>
    (released 2009-07-16)
    - Speed up the series inversion code in tmseries.mac and geod.mac.
    - Reference Borkowski in section on \ref geocentric.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-06">Version 2009-06</a>
    (released 2009-06-01)
    - Add routines to decode and encode zone+hemisphere to UTMUPS.
    - Clean up code in Geodesic.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-05">Version 2009-05</a>
    (released 2009-05-01)
    - Improvements to Geodesic:
@@ -9296,7 +9371,7 @@ git repository for GeographicLib</a>.
    - <a href="CartConvert.1.html">CartConvert</a> checks its inputs more
      carefully.
    - Remove reference to defunct Constants.cpp from GeographicLib.vcproj.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-04">Version 2009-04</a>
    (released 2009-04-01)
    - Use compile-time constants to select the order of series in
@@ -9314,7 +9389,7 @@ git repository for GeographicLib</a>.
      - works with both oblate and prolate ellipsoids,
      - add -a, -e, -b options to the <a href="GeodSolve.1.html">Geod</a>
        utility.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-03">Version 2009-03</a>
    (released 2009-03-01)
    - Add Geodesic and the
@@ -9326,7 +9401,7 @@ git repository for GeographicLib</a>.
    - Rename ECEF to Geocentric, ECEFConvert
      to <a href="CartConvert.1.html">CartConvert</a>.
    - Use inline functions to define constant doubles in Constants.hpp.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-02">Version 2009-02</a>
    (released 2009-01-30)
    - Fix documentation of constructors (flattening &rarr; inverse
@@ -9335,7 +9410,7 @@ git repository for GeographicLib</a>.
    - Add ECEF and LocalCartesian classes
      and the ECEFConvert utility.
    - Gather the documentation on the \ref utilities onto one page.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/2009-01">Version 2009-01</a>
    (released 2009-01-12)
    - First proper release of library.
@@ -9348,7 +9423,7 @@ git repository for GeographicLib</a>.
      - Improved method of computing scale and convergence.
    - Documentation on transverse Mercator projection.
    - Add MGRS, UTMUPS, etc.
-
+   .
  - Version 2008-09
    - Ad hoc posting of information on the transverse Mercator projection.
 

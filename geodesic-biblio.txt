@@ -1717,7 +1717,7 @@
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]
-   https://earth-info.nga.mil/GandG/publications/An_Integral_for_Geodesic_Length_ePrint.pdf
+   https://earth-info.nga.mil/coordsys/coord-download.php?file=website/An_Integral_for_Geodesic_Length_ePrint.pdf
    [[BR]] https://doi.org/10.1179/003962609X451663
  * Y. C. Lee,[[BR]]
    ''The accuracy analysis of methods to solve the geodetic inverse
@@ -1767,6 +1767,7 @@
    J. Navigation '''67'''(5), 825--844 (2014);[[BR]]
    Publisher's notice: J. Navigation '''68'''(1), 215--216 (2015);[[BR]]
    Errata: J. Navigation '''68'''(1), 217--218 (2015).[[BR]]
+   https://pdfs.semanticscholar.org/26be/980911266944a579278c95c1559bc441cd46.pdf [[BR]]
    https://doi.org/10.1017/S0373463314000228 [[BR]]
    https://doi.org/10.1017/S0373463314000745 [[BR]]
    https://doi.org/10.1017/S0373463314000733

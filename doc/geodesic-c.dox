@@ -11,7 +11,7 @@
 /**
 \mainpage Geodesic routines implemented in C
 \author Charles F. F. Karney (charles@karney.com)
-\version 1.51
+\version 1.52
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/m.nn/C</tt> for versions numbers
@@ -29,10 +29,10 @@ revolution in a C program.  It is included with version 4.9.0 of
 \section download-c Downloading the source
 
 The C library is part of %GeographicLib which available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.51.tar.gz">
-  GeographicLib-1.51.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.51.zip">
-  GeographicLib-1.51.zip</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.52.tar.gz">
+  GeographicLib-1.52.tar.gz</a>
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-1.52.zip">
+  GeographicLib-1.52.zip</a>
 .
 as either a compressed tar file (tar.gz) or a zip file.  After unpacking
 the source, the C library can be found in the directory <tt>legacy/C</tt>.
@@ -186,6 +186,13 @@ echo 30 0 29.5 179.5 | ./inverse \endverbatim
   Geodesics on an ellipsoid</a>.
 
 \section changes-c Change log
+
+ - <a href="https://geographiclib.sourceforge.io/1.52/C">Version 1.52</a>
+   (released 2021-03-13)
+   - Be more aggressive in preventing negative s12 and m12 for short lines.
+   - Initialize reference argument to remquo.
+   - Work around inaccurate implementation of hypot with Visual Studio
+     (win32).
 
  - <a href="https://geographiclib.sourceforge.io/1.51/C">Version 1.51</a>
    (released 2020-11-22)

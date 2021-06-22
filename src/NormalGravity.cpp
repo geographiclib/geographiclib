@@ -2,7 +2,7 @@
  * \file NormalGravity.cpp
  * \brief Implementation for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -85,8 +85,7 @@ namespace GeographicLib {
     //   = (atan(sqrt(x))/sqrt(x)-(1-x/3+x^2/5)) / x^3 (x > 0)
     //   = (atanh(sqrt(-x))/sqrt(-x)-(1-x/3+x^2/5)) / x^3 (x < 0)
     // require abs(x) < 1/2, but better to restrict calls to abs(x) < 1/4
-    static const real lg2eps_ =
-      -log(numeric_limits<real>::epsilon() / 2) / log(real(2));
+    static const real lg2eps_ = -log2(numeric_limits<real>::epsilon() / 2);
     int e;
     frexp(x, &e);
     e = max(-e, 1);             // Here's where abs(x) < 1/2 is assumed
@@ -95,7 +94,7 @@ namespace GeographicLib {
     // a stronger condition is x^n < epsilon/2
     // taking log2 of both sides, a stronger condition is n*(-e) < -lg2eps;
     // or n*e > lg2eps or n > ceiling(lg2eps/e)
-    int n = int(ceil(lg2eps_ / e));
+    int n = x == 0 ? 1 : int(ceil(lg2eps_ / e));
     Math::real v = 0;
     while (n--)                 // iterating from n-1 down to 0
       v = - x * v - 1/Math::real(2*n + 7);

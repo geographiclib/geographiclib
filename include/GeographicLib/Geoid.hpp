@@ -2,7 +2,7 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -40,11 +40,11 @@ namespace GeographicLib {
    * EGM96, or EGM2008 by bilinear or cubic interpolation into a rectangular
    * grid of data.  These geoid models are documented in
    * - EGM84:
-   *   http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html
+   *   https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84
    * - EGM96:
-   *   http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html
+   *   https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96
    * - EGM2008:
-   *   http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008
+   *   https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008
    *
    * The geoids are defined in terms of spherical harmonics.  However in order
    * to provide a quick and flexible method of evaluating the geoid heights,
@@ -167,8 +167,8 @@ namespace GeographicLib {
       }
     }
     real height(real lat, real lon) const;
-    Geoid(const Geoid&);            // copy constructor not allowed
-    Geoid& operator=(const Geoid&); // copy assignment not allowed
+    Geoid(const Geoid&) = delete;            // copy constructor not allowed
+    Geoid& operator=(const Geoid&) = delete; // copy assignment not allowed
   public:
 
     /**

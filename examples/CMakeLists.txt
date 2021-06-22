@@ -34,7 +34,7 @@ endif ()
 
 find_package (OpenMP QUIET)
 
-if (OPENMP_FOUND)
+if (OPENMP_FOUND OR OpenMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES
     COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
   if (NOT WIN32)

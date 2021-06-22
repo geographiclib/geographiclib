@@ -19,7 +19,7 @@ namespace NETGeographicLib
    *
    * MGRS is defined in Chapter 3 of
    * - J. W. Hager, L. L. Fry, S. S. Jacks, D. R. Hill,
-   *   <a href="http://earth-info.nga.mil/GandG/publications/tm8358.1/pdf/TM8358_1.pdf">
+   *   <a href="https://web.archive.org/web/20161214054445/http://earth-info.nga.mil/GandG/publications/tm8358.1/pdf/TM8358_1.pdf">
 
    *   Datums, Ellipsoids, Grids, and Grid Reference Systems</a>,
    *   Defense Mapping Agency, Technical Manual TM8358.1 (1990).
@@ -42,7 +42,7 @@ namespace NETGeographicLib
    *   class.
    *
    * The <a href="http://www.nga.mil">NGA</a> software package
-   * <a href="http://earth-info.nga.mil/GandG/geotrans/index.html">geotrans</a>
+   * <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_geotrans">geotrans</a>
    * also provides conversions to and from MGRS.  Version 3.0 (and earlier)
    * suffers from some drawbacks:
    * - Inconsistent rules are used to determine the whether a particular MGRS

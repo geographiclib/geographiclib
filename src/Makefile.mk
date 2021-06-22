@@ -5,7 +5,6 @@ all: $(LIBRARY)
 
 INCLUDEPATH = ../include
 
-PREFIX = /usr/local
 GEOGRAPHICLIB_DATA = $(PREFIX)/share/GeographicLib
 
 MODULES = Accumulator \

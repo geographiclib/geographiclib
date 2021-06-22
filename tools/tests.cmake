@@ -487,6 +487,16 @@ set_tests_properties (GeodSolve88 GeodSolve89 PROPERTIES PASS_REGULAR_EXPRESSION
   "0\\.0* nan 90\\.0*")
 set_tests_properties (GeodSolve90 PROPERTIES WILL_FAIL ON)
 
+# Check fix for inaccurate hypot with python 3.[89].  Problem reported
+# by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+# https://bugs.python.org/issue43088
+add_test (NAME GeodSolve92 COMMAND GeodSolve
+  -i --input-string "37.757540000000006 -122.47018 37.75754 -122.470177")
+add_test (NAME GeodSolve93 COMMAND GeodSolve
+  -i --input-string "37.757540000000006 -122.47018 37.75754 -122.470177" -E)
+set_tests_properties (GeodSolve92 GeodSolve93 PROPERTIES PASS_REGULAR_EXPRESSION
+  "89\\.9999992. 90\\.000001[01]. 0\\.264")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
@@ -651,6 +661,12 @@ add_test (NAME ConicProj8 COMMAND ConicProj
   -r -c 90 90 --input-string "0 -inf")
 set_tests_properties (ConicProj8 PROPERTIES PASS_REGULAR_EXPRESSION
   "^-90\\.0+ -?0\\.00[0-9]+ ")
+# Check fix to infinite loop in AlbersEqualArea with e^2 < -1 (f < 1-sqrt(2))
+# Fixed 2021-02-22.
+add_test (NAME ConicProj9 COMMAND ConicProj
+  -a -10 40 -e 6.4e6 -0.5 -p 0 --input-string "85 10")
+set_tests_properties (ConicProj9 PROPERTIES TIMEOUT 3
+  PASS_REGULAR_EXPRESSION "^609861 7566522 ")
 
 add_test (NAME CartConvert0 COMMAND CartConvert
   -e 6.4e6 1/100 -r --input-string "10e3 0 1e3")

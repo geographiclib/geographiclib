@@ -274,7 +274,11 @@ namespace NETGeographicLib
          * @return the zone corresponding to the input (return 0 for UPS).
          **********************************************************************/
         property int Zone { int get(); }
+        ///@}
 
+       /** \name Setting and querying the alternate zone
+        **********************************************************************/
+       ///@{
         /**
          * Gets/Sets the current alternate zone (0 = UPS).
          * @exception GeographicErr if \e zone cannot be used for this location.
@@ -290,7 +294,6 @@ namespace NETGeographicLib
             int get();
             void set( int zone );
         }
-        ///@}
 
         /**
          * @return easting (meters) for alternate zone.

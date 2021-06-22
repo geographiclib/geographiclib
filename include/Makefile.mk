@@ -41,7 +41,6 @@ EXTRAHEADERS = Constants \
 	SphericalHarmonic1 \
 	SphericalHarmonic2
 
-PREFIX = /usr/local
 LIBNAME = GeographicLib
 HEADERS = $(LIBNAME)/Config.h \
 	$(patsubst %,$(LIBNAME)/%.hpp,$(EXTRAHEADERS) $(MODULES))

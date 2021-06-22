@@ -3,7 +3,7 @@
 # Planimeter.cgi
 # cgi script for measuring the area of geodesic polygons
 #
-# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -181,9 +181,9 @@ cat <<EOF
       causes the reading of vertices to be stopped.
     </p>
     <p>
-      The result for the perimeter is accurate to about 15&nbsp;nm per
-      vertex.  The result for the area is accurate to about
-      0.1&nbsp;m<sup>2</sup> per vertex.
+      For moderately complex polygons, the perimeter is accurate to
+      about 200&nbsp;nm and the area is accurate to about
+      0.1&nbsp;m<sup>2</sup>.
     </p>
     <p>
       <a href="https://geographiclib.sourceforge.io/html/Planimeter.1.html">

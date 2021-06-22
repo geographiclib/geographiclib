@@ -22,7 +22,7 @@
 import setuptools
 
 name = "geographiclib"
-version = "1.50"
+version = "1.52"
 
 with open("README.md", "r") as fh:
     long_description = fh.read()

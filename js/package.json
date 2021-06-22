@@ -1,9 +1,10 @@
 {
   "name": "geographiclib",
-  "version": "1.51.0",
+  "version": "1.52.0",
   "description":
   "JavaScript implementation of geodesic routines in GeographicLib",
   "main": "geographiclib.js",
+  "types": "types/geographiclib.d.ts",
   "scripts": {
     "test": "mocha"
   },
@@ -27,7 +28,7 @@
   },
   "author": "Charles Karney <charles@karney.com>",
   "contributors": [
-    "Yurij Mikhalevich <0@39.yt>"
+    "Yurij Mikhalevich <yurij@mikhalevi.ch>"
   ],
   "license": "MIT",
   "bugs": {

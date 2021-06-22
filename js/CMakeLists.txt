@@ -119,6 +119,7 @@ add_custom_target (javascript ALL DEPENDS ${JS_TARGETS})
 file (COPY ../LICENSE.txt package.json README.md ${JS_TARGETS}
   DESTINATION geographiclib)
 file (COPY ${JSSCRIPTS} DESTINATION geographiclib/src)
+file (COPY types/geographiclib.d.ts DESTINATION geographiclib/types)
 file (COPY test/geodesictest.js DESTINATION geographiclib/test)
 
 if (COMMON_INSTALL_PATH)
@@ -131,4 +132,5 @@ endif ()
 install (FILES ../LICENSE.txt package.json README.md ${JS_TARGETS}
   DESTINATION ${INSTALL_JS_DIR})
 install (FILES ${JSSCRIPTS} DESTINATION ${INSTALL_JS_DIR}/src)
+install (FILES types/geographiclib.d.ts DESTINATION ${INSTALL_JS_DIR}/types)
 install (FILES test/geodesictest.js DESTINATION ${INSTALL_JS_DIR}/test)

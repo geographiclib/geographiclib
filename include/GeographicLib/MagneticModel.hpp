@@ -2,7 +2,7 @@
  * \file MagneticModel.hpp
  * \brief Header for GeographicLib::MagneticModel class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -88,8 +88,10 @@ namespace GeographicLib {
                real& Bx, real& By, real& Bz,
                real& Bxt, real& Byt, real& Bzt) const;
     void ReadMetadata(const std::string& name);
-    MagneticModel(const MagneticModel&); // copy constructor not allowed
-    MagneticModel& operator=(const MagneticModel&); // nor copy assignment
+    // copy constructor not allowed
+    MagneticModel(const MagneticModel&) = delete;
+    // nor copy assignment
+    MagneticModel& operator=(const MagneticModel&) = delete;
   public:
 
     /** \name Setting up the magnetic model
@@ -200,6 +202,24 @@ namespace GeographicLib {
      * will be substantially faster, especially for high-degree models.
      **********************************************************************/
     MagneticCircle Circle(real t, real lat, real h) const;
+
+    /**
+     * Compute the magnetic field in geocentric coordinate.
+     *
+     * @param[in] t the time (years).
+     * @param[in] X geocentric coordinate (meters).
+     * @param[in] Y geocentric coordinate (meters).
+     * @param[in] Z geocentric coordinate (meters).
+     * @param[out] BX the \e X component of the magnetic field (nT).
+     * @param[out] BY the \e Y component of the magnetic field (nT).
+     * @param[out] BZ the \e Z component of the magnetic field (nT).
+     * @param[out] BXt the rate of change of \e BX (nT/yr).
+     * @param[out] BYt the rate of change of \e BY (nT/yr).
+     * @param[out] BZt the rate of change of \e BZ (nT/yr).
+     **********************************************************************/
+    void FieldGeocentric(real t, real X, real Y, real Z,
+                         real& BX, real& BY, real& BZ,
+                         real& BXt, real& BYt, real& BZt) const;
 
     /**
      * Compute various quantities dependent on the magnetic field.

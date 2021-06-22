@@ -243,6 +243,7 @@ public class GeoMath {
     case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
     case 2: ang =  90 - ang; break;
     case 3: ang = -90 + ang; break;
+    default: break;
     }
     return ang;
   }

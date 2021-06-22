@@ -718,6 +718,8 @@ namespace GeographicLib {
     case 'y':
       if (t == "y" || t == "yes") return true;
       break;
+    default:
+      break;
     }
     throw GeographicErr("Cannot decode " + t + " as a bool");
   }

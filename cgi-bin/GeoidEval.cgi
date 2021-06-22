@@ -3,7 +3,7 @@
 # GeoidEval.cgi
 # cgi script for geoid height evaluations
 #
-# Copyright (c) Charles Karney (2011-2014) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -93,9 +93,9 @@ cat <<EOF
 <font size="4"><pre>
     lat lon = $POSITION1 `convertdeg "$POSITION2"`
     geoid heights (m)
-        <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">EGM2008</a> = $F`encodevalue "$HEIGHT2008"`$G
-        <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">EGM96</a>   = $F`encodevalue "$HEIGHT96"`$G
-        <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">EGM84</a>   = $F`encodevalue "$HEIGHT84"`$G</pre></font>
+        <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008">EGM2008</a> = $F`encodevalue "$HEIGHT2008"`$G
+        <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96">EGM96</a>   = $F`encodevalue "$HEIGHT96"`$G
+        <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84">EGM84</a>   = $F`encodevalue "$HEIGHT84"`$G</pre></font>
       </p>
     </form>
     <hr>
@@ -105,11 +105,11 @@ cat <<EOF
       computes the height of the geoid above the WGS84 ellipsoid
       using interpolation in a grid of values for the earth
       gravity models,
-      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html">
+      <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84">
         EGM84</a>, or
-      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html">
+      <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96">
         EGM96</a>,
-      <a href="http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008">
+      <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008">
             EGM2008</a>.
       The RMS error in the interpolated height is about 1&nbsp;mm.
       Give the position in terms of latitude and longitude, for example

@@ -260,17 +260,17 @@ models published by the NGA are:
 =item B<EGM84>
 
 An earth gravity model published by the NGA in 1984,
-L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html>.
+L<https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84>.
 
 =item B<EGM96>
 
 An earth gravity model published by the NGA in 1996,
-L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html>.
+L<https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96>.
 
 =item B<EGM2008>
 
 An earth gravity model published by the NGA in 2008,
-L<http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008>.
+L<https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008>.
 
 =item B<WGS84>
 

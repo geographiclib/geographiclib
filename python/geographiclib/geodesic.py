@@ -72,7 +72,7 @@ The public attributes for this class are
 #    https://doi.org/10.1007/s00190-012-0578-z
 #    Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
 #
-# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and licensed
+# Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
 # under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 ######################################################################
@@ -810,7 +810,9 @@ class Geodesic(object):
       # In fact, we will have sig12 > pi/2 for meridional geodesic which is
       # not a shortest path.
       if sig12 < 1 or m12x >= 0:
-        if sig12 < 3 * Geodesic.tiny_:
+        if (sig12 < 3 * Geodesic.tiny_ or
+            # Prevent negative s12 or m12 for short lines
+            (sig12 < Geodesic.tol0_ and (s12x < 0 or m12x < 0))):
           sig12 = m12x = s12x = 0.0
         m12x *= self._b
         s12x *= self._b
@@ -881,7 +883,6 @@ class Geodesic(object):
              sbet1, cbet1, dn1, sbet2, cbet2, dn2,
              salp1, calp1, slam12, clam12, numit < Geodesic.maxit1_,
              C1a, C2a, C3a)
-          # 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           # Reversed test to allow escape with NaNs
           if tripb or not (abs(v) >= (8 if tripn else 1) * Geodesic.tol0_):
             break

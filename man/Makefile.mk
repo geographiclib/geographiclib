@@ -14,8 +14,6 @@ MANPAGES = $(addsuffix .1,$(PROGRAMS))
 USAGE = $(addsuffix .usage,$(PROGRAMS))
 HTMLMAN = $(addsuffix .1.html,$(PROGRAMS))
 
-PREFIX = /usr/local
-
 DEST = $(PREFIX)/share/man/man1
 
 all: $(MANPAGES) $(USAGE) $(HTMLMAN)
