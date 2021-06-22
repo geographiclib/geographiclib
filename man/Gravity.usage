@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Gravity --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/1.51/Gravity.1.html\n";
+"    https://geographiclib.sourceforge.io/1.52/Gravity.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -144,11 +144,11 @@ int usage(int retval, bool brief) {
 "       Gravity computes the gravity field using one of the following models\n"
 "\n"
 "           egm84, earth gravity model 1984.  See\n"
-"             http://earth-info.nga.mil/GandG/wgs84/gravitymod/wgs84_180/wgs84_180.html\n"
+"             https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm84\n"
 "           egm96, earth gravity model 1996.  See\n"
-"             http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm96/egm96.html\n"
+"             https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm96\n"
 "           egm2008, earth gravity model 2008.  See\n"
-"             http://earth-info.nga.mil/GandG/wgs84/gravitymod/egm2008\n"
+"             https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008\n"
 "           wgs84, world geodetic system 1984.  This returns the normal\n"
 "             gravity for the WGS84 ellipsoid.\n"
 "           grs80, geodetic reference system 1980.  This returns the normal\n"

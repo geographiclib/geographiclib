@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
  * classes
  *
- * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -329,9 +329,9 @@ namespace GeographicLib {
   }
 
   RhumbLine::RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,
-                       bool exact)
+                       bool /* exact */)
     : _rh(rh)
-    , _exact(exact)
+    , _exact(true)              // TODO: RhumbLine::_exact is unused; retire
     , _lat1(Math::LatFix(lat1))
     , _lon1(lon1)
     , _azi12(Math::AngNormalize(azi12))
@@ -350,7 +350,7 @@ namespace GeographicLib {
       mu12 = s12 * _calp * 90 / _rh._ell.QuarterMeridian(),
       mu2 = _mu1 + mu12;
     real psi2, lat2x, lon2x;
-    if (abs(mu2) <= 90) {
+    if (abs(mu2) <= 90 && _exact) { // TODO: dummy use of _exact; retire
       if (_calp != 0) {
         lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
         real psi12 = _rh.DRectifyingToIsometric(  mu2 * Math::degree(),

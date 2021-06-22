@@ -3,7 +3,7 @@
  * Transcription of Math.hpp, Constants.hpp, and Accumulator.hpp into
  * JavaScript.
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  */
@@ -66,12 +66,12 @@ GeographicLib.Accumulator = {};
    * @property {number} minor the minor version number.
    * @property {number} patch the patch number.
    */
-  c.version = { major: 1, minor: 51, patch: 0 };
+  c.version = { major: 1, minor: 52, patch: 0 };
   /**
    * @constant
    * @summary version string
    */
-  c.version_string = "1.51";
+  c.version_string = "1.52";
 })(GeographicLib.Constants);
 
 (function(
@@ -112,12 +112,9 @@ GeographicLib.Accumulator = {};
    * @param {number} y the second side.
    * @returns {number} the hypotenuse.
    */
-  m.hypot = Math.hypot || function(x, y) {
-    var a, b;
-    x = Math.abs(x);
-    y = Math.abs(y);
-    a = Math.max(x, y); b = Math.min(x, y) / (a ? a : 1);
-    return a * Math.sqrt(1 + b * b);
+  m.hypot = function(x, y) {
+    // Built in Math.hypot give incorrect results from GeodSolve92.
+    return Math.sqrt(x*x + y*y);
   };
 
   /**
@@ -293,10 +290,10 @@ GeographicLib.Accumulator = {};
     // Possibly could call the gnu extension sincos
     s = Math.sin(r); c = Math.cos(r);
     switch (q & 3) {
-      case 0:  sinx =  s; cosx =  c; break;
-      case 1:  sinx =  c; cosx = -s; break;
-      case 2:  sinx = -s; cosx = -c; break;
-      default: sinx = -c; cosx =  s; break; // case 3
+    case 0:  sinx =  s; cosx =  c; break;
+    case 1:  sinx =  c; cosx = -s; break;
+    case 2:  sinx = -s; cosx = -c; break;
+    default: sinx = -c; cosx =  s; break; // case 3
     }
     if (x !== 0) { sinx += 0; cosx += 0; }
     return {s: sinx, c: cosx};
@@ -326,9 +323,10 @@ GeographicLib.Accumulator = {};
       //   case 0: ang = 0 + ang; break;
       //
       // and handle mpfr as in AngRound.
-      case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
-      case 2: ang =  90 - ang; break;
-      case 3: ang = -90 + ang; break;
+    case 1: ang = (y >= 0 ? 180 : -180) - ang; break;
+    case 2: ang =  90 - ang; break;
+    case 3: ang = -90 + ang; break;
+    default: break;
     }
     return ang;
   };

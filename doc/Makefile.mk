@@ -10,7 +10,6 @@ html/index.html: index.html.in utilities.html.in
 	sed -e "s%@PROJECT_VERSION@%$(VERSION)%g" \
 	index.html.in > html/index.html
 
-PREFIX = /usr/local
 DEST = $(PREFIX)/share/doc/GeographicLib
 DOCDEST = $(DEST)/html
 INSTALL = install -b

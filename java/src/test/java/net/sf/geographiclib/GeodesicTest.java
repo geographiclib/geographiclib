@@ -595,6 +595,9 @@ public class GeodesicTest {
     assertEquals(inv.M12, 1, 1e-15);
     assertEquals(inv.M21, 1, 1e-15);
     assertEquals(inv.S12, 0, 1e-10);
+    assertTrue(Math.copySign(1, inv.a12) > 0);
+    assertTrue(Math.copySign(1, inv.s12) > 0);
+    assertTrue(Math.copySign(1, inv.m12) > 0);
 
     inv = Geodesic.WGS84.Inverse(90, 0, 90, 180, GeodesicMask.ALL);
     assertEquals(inv.a12, 0, 1e-13);
@@ -649,6 +652,18 @@ public class GeodesicTest {
     assertTrue(isNaN(dir.lat2));
     assertTrue(isNaN(dir.lon2));
     assertTrue(isNaN(dir.azi2));
+  }
+
+  @Test
+  public void GeodSolve92() {
+    // Check fix for inaccurate hypot with python 3.[89].  Problem reported
+    // by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+    // https://bugs.python.org/issue43088
+    GeodesicData inv = Geodesic.WGS84.Inverse(37.757540000000006, -122.47018,
+                                              37.75754,           -122.470177);
+    assertEquals(inv.azi1, 89.99999923, 1e-7  );
+    assertEquals(inv.azi2, 90.00000106, 1e-7  );
+    assertEquals(inv.s12,   0.264,      0.5e-3);
   }
 
   @Test

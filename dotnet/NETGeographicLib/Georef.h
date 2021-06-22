@@ -17,7 +17,7 @@ namespace NETGeographicLib
    *
    * The World Geographic Reference System is described in
    * - https://en.wikipedia.org/wiki/Georef
-   * - http://earth-info.nga.mil/GandG/coordsys/grids/georef.pdf
+   * - https://web.archive.org/web/20161214054445/http://earth-info.nga.mil/GandG/coordsys/grids/georef.pdf
    * .
    * It provides a compact string representation of a geographic area
    * (expressed as latitude and longitude).  The classes GARS and Geohash

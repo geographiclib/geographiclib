@@ -402,6 +402,7 @@ namespace NETGeographicLib
 
         /** \name Incomplete integrals in terms of Jacobi elliptic functions.
          **********************************************************************/
+        ///@{
         /**
          * The incomplete integral of the first kind in terms of Jacobi elliptic
          * functions.

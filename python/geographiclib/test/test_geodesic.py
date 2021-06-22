@@ -484,6 +484,9 @@ class GeodSolveTest(unittest.TestCase):
     self.assertAlmostEqual(inv["M12"], 1, delta = 1e-15)
     self.assertAlmostEqual(inv["M21"], 1, delta = 1e-15)
     self.assertAlmostEqual(inv["S12"], 0, delta = 1e-10)
+    self.assertTrue(Math.copysign(1, inv["a12"]) > 0)
+    self.assertTrue(Math.copysign(1, inv["s12"]) > 0)
+    self.assertTrue(Math.copysign(1, inv["m12"]) > 0)
 
     inv = Geodesic.WGS84.Inverse(90, 0, 90, 180, Geodesic.ALL)
     self.assertAlmostEqual(inv["a12"], 0, delta = 1e-13)
@@ -535,6 +538,16 @@ class GeodSolveTest(unittest.TestCase):
     self.assertTrue(Math.isnan(dir["lat2"]))
     self.assertTrue(Math.isnan(dir["lon2"]))
     self.assertTrue(Math.isnan(dir["azi2"]))
+
+  def test_GeodSolve92(self):
+    # Check fix for inaccurate hypot with python 3.[89].  Problem reported
+    # by agdhruv https://github.com/geopy/geopy/issues/466 ; see
+    # https://bugs.python.org/issue43088
+    inv = Geodesic.WGS84.Inverse(37.757540000000006, -122.47018,
+                                 37.75754,           -122.470177)
+    self.assertAlmostEqual(inv["azi1"], 89.99999923, delta = 1e-7  )
+    self.assertAlmostEqual(inv["azi2"], 90.00000106, delta = 1e-7  )
+    self.assertAlmostEqual(inv["s12"],   0.264,      delta = 0.5e-3)
 
 class PlanimeterTest(unittest.TestCase):
 

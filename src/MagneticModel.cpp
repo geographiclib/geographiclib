@@ -2,7 +2,7 @@
  * \file MagneticModel.cpp
  * \brief Implementation for GeographicLib::MagneticModel class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -182,43 +182,52 @@ namespace GeographicLib {
     }
   }
 
-  void MagneticModel::Field(real t, real lat, real lon, real h, bool diffp,
-                            real& Bx, real& By, real& Bz,
-                            real& Bxt, real& Byt, real& Bzt) const {
+  void MagneticModel::FieldGeocentric(real t, real X, real Y, real Z,
+                                      real& BX, real& BY, real& BZ,
+                                      real& BXt, real& BYt, real& BZt) const {
     t -= _t0;
     int n = max(min(int(floor(t / _dt0)), _Nmodels - 1), 0);
     bool interpolate = n + 1 < _Nmodels;
     t -= n * _dt0;
+    // Components in geocentric basis
+    // initial values to suppress warning
+    real BXc = 0, BYc = 0, BZc = 0;
+    _harm[n](X, Y, Z, BX, BY, BZ);
+    _harm[n + 1](X, Y, Z, BXt, BYt, BZt);
+    if (_Nconstants)
+      _harm[_Nmodels + 1](X, Y, Z, BXc, BYc, BZc);
+    if (interpolate) {
+      // Convert to a time derivative
+      BXt = (BXt - BX) / _dt0;
+      BYt = (BYt - BY) / _dt0;
+      BZt = (BZt - BZ) / _dt0;
+    }
+    BX += t * BXt + BXc;
+    BY += t * BYt + BYc;
+    BZ += t * BZt + BZc;
+
+    BXt = BXt * - _a;
+    BYt = BYt * - _a;
+    BZt = BZt * - _a;
+
+    BX *= - _a;
+    BY *= - _a;
+    BZ *= - _a;
+  }
+
+  void MagneticModel::Field(real t, real lat, real lon, real h, bool diffp,
+                            real& Bx, real& By, real& Bz,
+                            real& Bxt, real& Byt, real& Bzt) const {
     real X, Y, Z;
     real M[Geocentric::dim2_];
     _earth.IntForward(lat, lon, h, X, Y, Z, M);
     // Components in geocentric basis
     // initial values to suppress warning
-    real BX0 = 0, BY0 = 0, BZ0 = 0, BX1 = 0, BY1 = 0, BZ1 = 0;
-    real BXc = 0, BYc = 0, BZc = 0;
-    _harm[n](X, Y, Z, BX0, BY0, BZ0);
-    _harm[n + 1](X, Y, Z, BX1, BY1, BZ1);
-    if (_Nconstants)
-      _harm[_Nmodels + 1](X, Y, Z, BXc, BYc, BZc);
-    if (interpolate) {
-      // Convert to a time derivative
-      BX1 = (BX1 - BX0) / _dt0;
-      BY1 = (BY1 - BY0) / _dt0;
-      BZ1 = (BZ1 - BZ0) / _dt0;
-    }
-    BX0 += t * BX1 + BXc;
-    BY0 += t * BY1 + BYc;
-    BZ0 += t * BZ1 + BZc;
-    if (diffp) {
-      Geocentric::Unrotate(M, BX1, BY1, BZ1, Bxt, Byt, Bzt);
-      Bxt *= - _a;
-      Byt *= - _a;
-      Bzt *= - _a;
-    }
-    Geocentric::Unrotate(M, BX0, BY0, BZ0, Bx, By, Bz);
-    Bx *= - _a;
-    By *= - _a;
-    Bz *= - _a;
+    real BX = 0, BY = 0, BZ = 0, BXt = 0, BYt = 0, BZt = 0;
+    FieldGeocentric(t, X, Y, Z, BX, BY, BZ, BXt, BYt, BZt);
+    if (diffp)
+      Geocentric::Unrotate(M, BXt, BYt, BZt, Bxt, Byt, Bzt);
+    Geocentric::Unrotate(M, BX, BY, BZ, Bx, By, Bz);
   }
 
   MagneticCircle MagneticModel::Circle(real t, real lat, real h) const {

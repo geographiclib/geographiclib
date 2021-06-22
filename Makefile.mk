@@ -1,5 +1,6 @@
 MAKEFILE := $(lastword $(MAKEFILE_LIST))
 MAKE := $(MAKE) -f $(MAKEFILE)
+PREFIX = /usr/local
 SUBDIRS = src man tools doc js
 ALLDIRS = include $(SUBDIRS) maxima matlab python cmake
 

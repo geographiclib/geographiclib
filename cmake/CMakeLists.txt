@@ -28,17 +28,29 @@ endif ()
 set (PROJECT_ROOT_DIR "${PROJECT_BINARY_DIR}")
 set (PROJECT_INCLUDE_DIRS
   "${PROJECT_BINARY_DIR}/include" "${PROJECT_SOURCE_DIR}/include")
+
+if (PROJECT_STATIC_LIBRARIES)
+  set (CONFIG_STATIC_LIBRARIES "${PROJECT_NAME}::${PROJECT_STATIC_LIBRARIES}")
+else ()
+  set (CONFIG_STATIC_LIBRARIES)
+endif ()
+if (PROJECT_SHARED_LIBRARIES)
+  set (CONFIG_SHARED_LIBRARIES "${PROJECT_NAME}::${PROJECT_SHARED_LIBRARIES}")
+else ()
+  set (CONFIG_SHARED_LIBRARIES)
+endif ()
+
 configure_file (project-config.cmake.in
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config.cmake" @ONLY)
 configure_file (project-config-version.cmake.in
   "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-config-version.cmake" @ONLY)
 export (TARGETS
   ${PROJECT_ALL_LIBRARIES} ${TOOLS}
-  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
+  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-legacy-targets.cmake")
 export (TARGETS
   ${PROJECT_ALL_LIBRARIES} ${TOOLS}
   NAMESPACE ${PROJECT_NAME}::
-  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-namespace-targets.cmake")
+  FILE "${PROJECT_BINARY_DIR}/${PROJECT_NAME_LOWER}-targets.cmake")
 
 # geographiclib-config.cmake for the install tree.  It's installed in
 # ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
@@ -75,11 +87,11 @@ install (FILES
 # Make information about the cmake targets (the library and the tools)
 # available.
 install (EXPORT targets
-  FILE ${PROJECT_NAME_LOWER}-targets.cmake
+  FILE ${PROJECT_NAME_LOWER}-legacy-targets.cmake
   DESTINATION "${INSTALL_CMAKE_DIR}")
 install (EXPORT targets
   NAMESPACE ${PROJECT_NAME}::
-  FILE ${PROJECT_NAME_LOWER}-namespace-targets.cmake
+  FILE ${PROJECT_NAME_LOWER}-targets.cmake
   DESTINATION "${INSTALL_CMAKE_DIR}")
 
 if (MSVC AND PACKAGE_DEBUG_LIBS)

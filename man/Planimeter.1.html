@@ -177,6 +177,17 @@
    }
    &#39; | Planimeter | cut -f3 -d&#39; &#39;</code></pre>
 
+<h1 id="ACCURACY">ACCURACY</h1>
+
+<p>Using the <b>-G</b> option (the default), the accuracy was estimated by computing the error in the area for 10^7 approximately regular polygons on the WGS84 ellipsoid. The centers and the orientations of the polygons were uniformly distributed, the number of vertices was log-uniformly distributed in [3, 300], and the center to vertex distance log-uniformly distributed in [0.1 m, 9000 km].</p>
+
+<p>The maximum error in the perimeter was 200 nm, and the maximum error in the area was</p>
+
+<pre><code>   0.0013 m^2 for perimeter &lt; 10 km
+   0.0070 m^2 for perimeter &lt; 100 km
+   0.070 m^2 for perimeter &lt; 1000 km
+   0.11 m^2 for all perimeters</code></pre>
+
 <h1 id="SEE-ALSO">SEE ALSO</h1>
 
 <p>GeoConvert(1), GeodSolve(1).</p>

@@ -12,6 +12,7 @@ JSSCRIPTS = \
 	$(srcdir)/src/GeodesicLine.js \
 	$(srcdir)/src/PolygonArea.js \
 	$(srcdir)/src/DMS.js
+TYPESSCRIPTS = $(srcdir)/types/geographiclib.d.ts
 TESTSCRIPTS = $(srcdir)/test/geodesictest.js
 
 all: geographiclib.js geographiclib.min.js $(SAMPLES)
@@ -40,5 +41,7 @@ install: all
 		$(srcdir)/package.json $(jsdir)
 	$(INSTALL) -d $(jsdir)/src
 	$(INSTALL) -m 644 $(JSSCRIPTS) $(jsdir)/src
+	$(INSTALL) -d $(jsdir)/types
+	$(INSTALL) -m 644 $(TYPESSCRIPTS) $(jsdir)/types
 	$(INSTALL) -d $(jsdir)/test
 	$(INSTALL) -m 644 $(TESTSCRIPTS) $(jsdir)/test

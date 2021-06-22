@@ -4,7 +4,46 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 1.51
+The current version of the library is 1.52
+
+Changes between 1.52 (released 2021-06-22) and 1.51 versions:
+
+   * Add MagneticModel::FieldGeocentric and
+     MagneticCircle::FieldGeocentric to return the field in geocentric
+     coordinates (thanks to Marcelo Banik de Padua).
+
+   * Document realistic errors for PolygonAreaT and Planimeter.
+
+   * Geodesic routines: be more aggressive in preventing negative s12
+     and m12 for short lines (all languages).
+
+   * Fix bug in AlbersEqualArea for extreme prolate ellipsoids (plus
+     general cleanup in the code).
+
+   * Thanks to Thomas Warner, a sample of wrapping the C++ library, so
+     it's accessible in Excel, is given in wrapper/Excel.
+
+   * Minor changes
+     + Work around inaccuracies in hypot routines in Visual Studio
+       (win32), Python, and JavaScript.
+     + Initialize reference argument to remquo (C++ and C).
+     + Get ready to retire unused _exact in RhumbLine.
+     + Declare RhumbLine copy constructor "= default".
+     + Use C++11 "= delete" idiom to delete copy assignment and copy
+       constructors in RhumbLine, Geoid, GravityModel, MagneticModel.
+     + Fix MGRS::Forward to work around aggressive optimization leading to
+       incorrect rounding.
+     + Fix plain makefiles, Makefile.mk, so that PREFIX is handled
+       properly.
+     + Make cmake's GeographicLib_LIBRARIES point to namespace versions.
+
+   * NOTE: In the next version (tentatively 2.0), I plan to split up
+     the git repository and the packaging of GeographicLib into
+     separate entities for each language.  This will simplify
+     development and deployment of the library.
+
+   * WARNING: The .NET version of GeographicLib will not be supported
+     in the next version.
 
 Changes between 1.51 (released 2020-11-22) and 1.50.1 versions:
 

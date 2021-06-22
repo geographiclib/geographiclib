@@ -2,7 +2,7 @@
  * \file GravityModel.hpp
  * \brief Header for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -99,8 +99,9 @@ namespace GeographicLib {
     Math::real InternalT(real X, real Y, real Z,
                          real& deltaX, real& deltaY, real& deltaZ,
                          bool gradp, bool correct) const;
-    GravityModel(const GravityModel&); // copy constructor not allowed
-    GravityModel& operator=(const GravityModel&); // nor copy assignment
+    GravityModel(const GravityModel&) = delete; // copy constructor not allowed
+    // nor copy assignment
+    GravityModel& operator=(const GravityModel&) = delete;
 
     enum captype {
       CAP_NONE   = 0U,

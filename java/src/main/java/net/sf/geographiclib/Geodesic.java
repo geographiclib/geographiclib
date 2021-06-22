@@ -1,7 +1,7 @@
 /**
  * Implementation of the net.sf.geographiclib.Geodesic class
  *
- * Copyright (c) Charles Karney (2013-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2013-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -759,7 +759,9 @@ public class Geodesic {
       // not a shortest path.
       if (sig12 < 1 || m12x >= 0) {
         // Need at least 2, to handle 90 0 90 180
-        if (sig12 < 3 * tiny_)
+        if (sig12 < 3 * tiny_ ||
+            // Prevent negative s12 or m12 for short lines
+            (sig12 < tol0_ && (s12x < 0 || m12x < 0)))
           sig12 = m12x = s12x = 0;
         m12x *= _b;
         s12x *= _b;
@@ -842,7 +844,6 @@ public class Geodesic {
           ssig2 = w.ssig2; csig2 = w.csig2;
           eps = w.eps; domg12 = w.domg12;
           dV = w.dlam12;
-          // 2 * tol0 is approximately 1 ulp for a number in [0, pi].
           // Reversed test to allow escape with NaNs
           if (tripb || !(Math.abs(V) >= (tripn ? 8 : 1) * tol0_)) break;
           // Update bracketing values

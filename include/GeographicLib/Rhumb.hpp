@@ -2,7 +2,7 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -63,7 +63,7 @@ namespace GeographicLib {
    * \include example-Rhumb.cpp
    **********************************************************************/
 
-  class  GEOGRAPHICLIB_EXPORT Rhumb {
+  class GEOGRAPHICLIB_EXPORT Rhumb {
   private:
     typedef Math::real real;
     friend class RhumbLine;
@@ -461,18 +461,22 @@ namespace GeographicLib {
    * \include example-RhumbLine.cpp
    **********************************************************************/
 
-  class  GEOGRAPHICLIB_EXPORT RhumbLine {
+  class GEOGRAPHICLIB_EXPORT RhumbLine {
   private:
     typedef Math::real real;
     friend class Rhumb;
     const Rhumb& _rh;
-    bool _exact;
+    bool _exact;                // TODO: RhumbLine::_exact is unused; retire
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1, _r1;
-    RhumbLine& operator=(const RhumbLine&); // copy assignment not allowed
+    // copy assignment not allowed
+    RhumbLine& operator=(const RhumbLine&) = delete;
     RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,
               bool exact);
   public:
-
+    /**
+     * Construction is via default copy constructor.
+     **********************************************************************/
+    RhumbLine(const RhumbLine&) = default;
     /**
      * This is a duplication of Rhumb::mask.
      **********************************************************************/

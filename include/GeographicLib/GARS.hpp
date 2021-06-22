@@ -2,7 +2,7 @@
  * \file GARS.hpp
  * \brief Header for GeographicLib::GARS class
  *
- * Copyright (c) Charles Karney (2015-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2021) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -25,7 +25,7 @@ namespace GeographicLib {
    *
    * The Global Area Reference System is described in
    * - https://en.wikipedia.org/wiki/Global_Area_Reference_System
-   * - http://earth-info.nga.mil/GandG/coordsys/grids/gars.html
+   * - https://earth-info.nga.mil/index.php?dir=coordsys&action=coordsys#tab_gars
    * .
    * It provides a compact string representation of a geographic area
    * (expressed as latitude and longitude).  The classes Georef and Geohash

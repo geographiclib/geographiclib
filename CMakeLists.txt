@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 51)
+set (PROJECT_VERSION_MINOR 52)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -43,7 +43,7 @@ endif ()
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 19)
-set (LIBVERSION_BUILD 19.1.0)
+set (LIBVERSION_BUILD 19.2.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -291,7 +291,7 @@ endif ()
 check_cxx_source_compiles (
   "#include <cmath>
 int main() {
-  int q;
+  int q = 0;
   return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
              std::log1p(2.0) + std::asinh(10.0) +
              std::atanh(0.8) + std::cbrt(8.0) +
