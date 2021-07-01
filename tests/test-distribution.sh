@@ -87,7 +87,7 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=1.52
+VERSION=2.0
 BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
@@ -542,16 +542,18 @@ git push --tags
 #   dir = /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
 #   branch = geographiclib/$VERSION
 #   file = Formula/geographiclib.rb
-#   brew upgrade geographiclib
+#   brew install --build-from-source geographiclib
 #   commit message = geographiclib $VERSION
 # update vcpkg git@github.com:microsoft/vcpkg.git
 #   dir = ports/geographiclib
 #   ./vcpkg install 'geographiclib[tools]'
 #   binaries in installed/x64-linux/tools/geographiclib
 #   libs in installed/x64-linux/{include,lib,debug/lib}
+#   ./vcpkg x-add-version geographiclib
 #   commit message = [geographiclib] Update to version $VERSION
 # update conda-forge
 #   url = git@github.com:conda-forge/geographiclib-cpp-feedstock.git
+#   conda build recipe
 # upload matlab packages
 # update binaries for cgi applications
 # trigger build on build-open
