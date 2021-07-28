@@ -497,6 +497,14 @@ add_test (NAME GeodSolve93 COMMAND GeodSolve
 set_tests_properties (GeodSolve92 GeodSolve93 PROPERTIES PASS_REGULAR_EXPRESSION
   "89\\.9999992. 90\\.000001[01]. 0\\.264")
 
+# Check fix for lat2 = nan being treated as lat2 = 0 (bug found 2021-07-26)
+add_test (NAME GeodSolve94 COMMAND GeodSolve
+  -i --input-string "0 0 nan 90")
+add_test (NAME GeodSolve95 COMMAND GeodSolve
+  -i --input-string "0 0 nan 90" -E)
+set_tests_properties (GeodSolve94 GeodSolve95 PROPERTIES PASS_REGULAR_EXPRESSION
+  "nan nan nan")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

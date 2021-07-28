@@ -172,6 +172,7 @@ namespace GeographicLib {
     // Compute longitude difference (AngDiff does this carefully).  Result is
     // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
     // east-going and meridional geodesics.
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     real lon12s, lon12 = Math::AngDiff(lon1, lon2, lon12s);
     // Make longitude difference positive.
     int lonsign = lon12 >= 0 ? 1 : -1;
@@ -192,7 +193,7 @@ namespace GeographicLib {
     lat2 = Math::AngRound(Math::LatFix(lat2));
     // Swap points so that point with higher (abs) latitude is point 1
     // If one latitude is a nan, then it becomes lat1.
-    int swapp = abs(lat1) < abs(lat2) ? -1 : 1;
+    int swapp = abs(lat1) < abs(lat2) || isnan(lat2) ? -1 : 1;
     if (swapp < 0) {
       lonsign *= -1;
       swap(lat1, lat2);
