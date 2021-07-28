@@ -6,10 +6,8 @@ BUILD*/
 *.[oa]
 *.BAK
 *.bak
-*.class
 *.exe
 *.gz
-*.pyc
 *.so
 *.so.*
 *.tmp
@@ -35,7 +33,6 @@ TAGS
 /scratch/
 /testdata/
 stamp-h1
-/matlab-distrib/
 /mpfr_mpir_x86_x64_msvc2010/
 CMakeCache.txt
 CMakeFiles

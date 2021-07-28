@@ -84,10 +84,7 @@ src/Makefile
 include/Makefile
 tools/Makefile
 doc/Makefile
-js/Makefile
 man/Makefile
-matlab/Makefile
-python/Makefile
 cmake/Makefile
 examples/Makefile
 ])

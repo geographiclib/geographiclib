@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # tar.gz and zip distrib files copied to $DEVELSOURCE
-# html documentation rsync'ed to $WEBDIST/htdocs/$VERSION-pre/
+# html documentation rsync'ed to $WEBDIST/htdocs/C++/$VERSION-pre/
 #
 # Windows version ready to build in
 # $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10{,-x64}
@@ -102,7 +102,7 @@ fi
 WINDOWSBUILDWIN=u:/temp
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web-alt/geographiclib-web
-mkdir -p $WEBDIST/htdocs/scripts
+mkdir -p $WEBDIST/htdocs/C++
 NUMCPUS=4
 HAVEINTEL=
 
@@ -121,33 +121,7 @@ cmake -S . -B BUILD \
 make -C BUILD dist
 cp BUILD/GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make -C BUILD doc
-(
-    cd java
-    mvn -q package -P release
-    rsync -a target/apidocs/ ../BUILD/doc/html/java/
-)
-(
-    cd python
-    python2 -m unittest -v geographiclib.test.test_geodesic
-    python3 -m unittest -v geographiclib.test.test_geodesic
-)
-(
-    cd matlab/geographiclib
-    octave --no-gui --no-window-system --eval geographiclib_test
-)
-(
-    cd BUILD/js/geographiclib
-    npm test
-)
-rsync -a --delete BUILD/doc/html/ $WEBDIST/htdocs/$VERSION-pre/
-mkdir -p $TEMP/js
-cp -p BUILD/js/*.js BUILD/js/*.html $TEMP/js/
-JS_VERSION=`grep Version: $TEMP/js/geographiclib.js | cut -f2 -d: | tr -d ' '`
-mv $TEMP/js/geographiclib.js $TEMP/js/geographiclib-$JS_VERSION.js
-ln -s geographiclib-$JS_VERSION.js $TEMP/js/geographiclib.js
-mv $TEMP/js/geographiclib.min.js $TEMP/js/geographiclib-$JS_VERSION.min.js
-ln -s geographiclib-$JS_VERSION.min.js $TEMP/js/geographiclib.min.js
-rsync -a --delete $TEMP/js/ $WEBDIST/htdocs/scripts/test/
+rsync -a --delete BUILD/doc/html/ $WEBDIST/htdocs/C++/$VERSION-pre/
 
 mkdir $TEMP/rel{a,b,c,x,y}
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
@@ -187,7 +161,6 @@ for ver in 14 15 16; do
 	    echo "#! /bin/sh -exv"
 	    echo echo ========== cmake $pkg ==========
 	    echo b=c:/scratch/geog-$pkg
-	    echo bc=c:/scratch/geogc-$pkg
 	    echo rm -rf \$b \$bc u:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'unset GEOGRAPHICLIB_DATA'
 	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
@@ -203,11 +176,6 @@ for ver in 14 15 16; do
 	    test "$installer" &&
 		echo cp \$b/GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ ||
 		    true
-	    echo cmake -G \"$gen\" -A $arch -D CONVERT_WARNINGS_TO_ERRORS=ON -S legacy/C -B \$bc
-	    echo cmake --build \$bc --config Debug   --target ALL_BUILD
-	    echo cmake --build \$bc --config Debug   --target RUN_TESTS
-	    echo cmake --build \$bc --config Release --target ALL_BUILD
-	    echo cmake --build \$bc --config Release --target RUN_TESTS
 	) > $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
 	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
     done
@@ -225,7 +193,7 @@ chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
 
 cd $TEMP/gitr/geographiclib
 git checkout release
-git config user.email karney@users.sourceforge.net
+git config user.email charles@karney.com
 find . -type f | grep -v '/\.git' | xargs rm
 tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
 (
@@ -237,8 +205,10 @@ tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
     done
 )
 rm -rf GeographicLib-$VERSION
-find * -type d -empty | xargs -r rmdir
-find * -type d -empty | xargs -r rmdir
+rm java/.gitignore
+for ((i=0; i<7; ++i)); do
+    find * -type d -empty | xargs -r rmdir
+done
 
 cd $TEMP/rela/GeographicLib-$VERSION
 make -j$NUMCPUS
@@ -272,10 +242,6 @@ make -C BUILD -j$NUMCPUS all
 make -C BUILD test
 make -C BUILD -j$NUMCPUS exampleprograms
 make -C BUILD install
-(
-    cd $TEMP/instc/lib/node_modules/geographiclib
-    mocha
-)
 
 cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
 make -C BUILD-system -j$NUMCPUS all
@@ -293,35 +259,6 @@ fi
 cd $TEMP/gita/geographiclib/
 cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
 make -C tests/sandbox/BUILD
-
-cd $TEMP/instc/share/matlab/geographiclib
-mkdir $TEMP/matlab
-cp -pr $TEMP/instc/share/matlab/geographiclib $TEMP/matlab
-cd $TEMP/matlab/geographiclib
-rm -f $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip
-zip $DEVELSOURCE/geographiclib_toolbox_$VERSION.zip *.m private/*.m
-cd $TEMP/matlab
-cp -p $TEMP/gita/geographiclib/geodesic.png .
-cp -p $TEMP/gita/geographiclib/matlab/geographiclib-blurb.txt .
-VERSION=$VERSION DATE=$DATE ROOT=$TEMP/matlab \
-       sh $DEVELSOURCE/tests/matlab-toolbox-config.sh
-
-cp -pr $TEMP/relc/GeographicLib-$VERSION/legacy $TEMP/
-cd $TEMP/legacy
-for l in C Fortran; do
-    (
-	cmake -D CONVERT_WARNINGS_TO_ERRORS=ON -S $l -B $l/BUILD
-	make -C $l/BUILD -j$NUMCPUS all
-	make -C $l/BUILD test
-	test $l = Fortran && continue
-	if test "$HAVEINTEL"; then
-	    env FC=ifort CC=icc CXX=icpc \
-		cmake -D CONVERT_WARNINGS_TO_ERRORS=ON -S $l -B $l/BUILD-intel
-	    make -C $l/BUILD-intel -j$NUMCPUS all
-	    make -C $l/BUILD-intel test
-	fi
-    )
-done
 
 cd $TEMP/gita/geographiclib
 make -C BUILD -j$NUMCPUS testprograms
@@ -465,13 +402,13 @@ cd $TEMP/relx/GeographicLib-$VERSION
 cat $TEMP/badfiles.txt
 cat > $TEMP/tasks.txt <<EOF
 # deploy documentation
-test -d $WEBDIST/htdocs/$VERSION-pre &&
-rm -rf $WEBDIST/htdocs/$VERSION &&
-mv $WEBDIST/htdocs/$VERSION{-pre,} &&
+test -d $WEBDIST/htdocs/C++/$VERSION-pre &&
+rm -rf $WEBDIST/htdocs/C++/$VERSION &&
+mv $WEBDIST/htdocs/C++/$VERSION{-pre,} &&
 make -C $DEVELSOURCE -f makefile-admin distrib-doc
 
-rm $WEBDIST/htdocs/html &&
-ln -s $VERSION $WEBDIST/htdocs/html &&
+rm -f $WEBDIST/htdocs/C++/latest &&
+ln -s $VERSION $WEBDIST/htdocs/C++/latest &&
 make -C $DEVELSOURCE -f makefile-admin distrib-doc
 
 # deploy release packages
@@ -482,42 +419,6 @@ make -C $DEVELSOURCE -f makefile-admin distrib-files
 
 # install built version
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
-
-# python release -- authentication via ~/.pypirc
-# New method in
-# https://packaging.python.org/tutorials/packaging-projects/#uploading-your-project-to-pypi
-cd $TEMP/gita/geographiclib/python
-python3 setup.py sdist bdist_wheel
-python3 -m twine upload dist/*
-# installs in /usr/local/lib/python3.7/site-packages/geographiclib
-cd; sudo python3 -m pip install --upgrade geographiclib
-
-#MAYBE THIS IS DEFUNCT?
-# python update
-# in gita/geographiclib/python ...
-# python setup.py sdist --formats gztar,zip upload
-# [or: python setup.py sdist --formats gztar,zip register upload]
-
-# java release -- authentication via ~/.m2/settings.xml; this gets signed too
-# (multiple ~4 times!).
-cd $TEMP/gita/geographiclib/java
-mvn clean deploy -P release
-
-# javascript release
-# authenticate via .npmrc; _auth value is
-#   echo -n cffk:PASSWORD | openssl base64
-# decode with
-#   echo AUTHSTRING | openssl base64 -d
-cd $TEMP/gita/geographiclib/BUILD/js && npm publish geographiclib
-make -C $DEVELSOURCE -f makefile-admin distrib-js
-make -C $DEVELSOURCE -f makefile-admin install-js
-# also update devel branch of node-geographiclib from ??
-# git@github.com:yurijmikhalevich/node-geographiclib.git
-$TEMP/gita/geographiclib/BUILD/js/geographiclib
-
-# matlab toolbox
-chmod 644 $DEVELSOURCE/geographiclib_toolbox_$VERSION.*
-mv $DEVELSOURCE/geographiclib_toolbox_$VERSION.* $DEVELSOURCE/matlab-distrib
 
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib

@@ -7,11 +7,10 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc js include matlab python cmake examples
+SUBDIRS = src man tools doc include cmake examples
 
 EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md \
-	Makefile.mk CMakeLists.txt windows maxima doc legacy java js dotnet \
-	wrapper
+	Makefile.mk CMakeLists.txt maxima doc wrapper
 
 # Install the pkg-config file; the directory is set using
 # PKG_INSTALLDIR in configure.ac.
