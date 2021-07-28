@@ -35,7 +35,7 @@ namespace GeographicLib {
    * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
    * the two end points.  (The azimuth is the heading measured clockwise from
    * north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes you
-   * beyond point 2 not back to point 1.)  In the figure below, latitude if
+   * beyond point 2 not back to point 1.)  In the figure below, latitude is
    * labeled &phi;, longitude &lambda; (with &lambda;<sub>12</sub> =
    * &lambda;<sub>2</sub> &minus; &lambda;<sub>1</sub>), and azimuth &alpha;.
    *
