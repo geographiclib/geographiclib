@@ -1985,7 +1985,7 @@ This is about 11 MB (compressed).  This test set consists of a set of
 500000 geographic coordinates together with the corresponding geoid
 heights according to various earth gravity models.
 
-Each line of the test set gives 6 space delimited numbers
+Each line of the test set gives 5 space delimited numbers
  - latitude (degrees, exact)
  - longitude (degrees, exact)
  - EGM84 height (meters, accurate to 1 &mu;m)
