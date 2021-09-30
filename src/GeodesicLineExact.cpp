@@ -95,7 +95,7 @@ namespace GeographicLib {
     }
 
     if (_caps & CAP_D) {
-      _D0 = _E.D() / (Math::pi() / 2);
+      _D0fix = _E.D() / (Math::pi() / 2);
       _D1 = _E.deltaD(_ssig1, _csig1, _dn1);
     }
 
@@ -218,7 +218,7 @@ namespace GeographicLib {
       azi2 = Math::atan2d(salp2, calp2);
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
-      real J12 = _k2 * _D0 * (sig12 + (_E.deltaD(ssig2, csig2, dn2) - _D1));
+      real J12 = _k2 * _D0fix * (sig12 + (_E.deltaD(ssig2, csig2, dn2) - _D1));
       if (outmask & REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
