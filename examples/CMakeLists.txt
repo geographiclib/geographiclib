@@ -4,7 +4,53 @@
 # obvious blunders.
 if (GEOGRAPHICLIB_PRECISION EQUAL 2)
   # These examples all assume real = double
-  file (GLOB EXAMPLE_SOURCES example-*.cpp)
+  set (EXAMPLE_SOURCES
+    example-Accumulator.cpp
+    example-AlbersEqualArea.cpp
+    example-AzimuthalEquidistant.cpp
+    example-CassiniSoldner.cpp
+    example-CircularEngine.cpp
+    example-Constants.cpp
+    example-DMS.cpp
+    example-Ellipsoid.cpp
+    example-EllipticFunction.cpp
+    example-GARS.cpp
+    example-GeoCoords.cpp
+    example-Geocentric.cpp
+    example-Geodesic.cpp
+    example-Geodesic-small.cpp
+    example-GeodesicExact.cpp
+    example-GeodesicLine.cpp
+    example-GeodesicLineExact.cpp
+    example-GeographicErr.cpp
+    example-Geohash.cpp
+    example-Geoid.cpp
+    example-Georef.cpp
+    example-Gnomonic.cpp
+    example-GravityCircle.cpp
+    example-GravityModel.cpp
+    example-LambertConformalConic.cpp
+    example-LocalCartesian.cpp
+    example-MGRS.cpp
+    example-MagneticCircle.cpp
+    example-MagneticModel.cpp
+    example-Math.cpp
+    example-NearestNeighbor.cpp
+    example-NormalGravity.cpp
+    example-OSGB.cpp
+    example-PolarStereographic.cpp
+    example-PolygonArea.cpp
+    example-Rhumb.cpp
+    example-RhumbLine.cpp
+    example-SphericalEngine.cpp
+    example-SphericalHarmonic.cpp
+    example-SphericalHarmonic1.cpp
+    example-SphericalHarmonic2.cpp
+    example-TransverseMercator.cpp
+    example-TransverseMercatorExact.cpp
+    example-UTMUPS.cpp
+    example-Utility.cpp
+    )
   if (USE_BOOST_FOR_EXAMPLES AND Boost_FOUND)
     add_definitions (-DGEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION=1)
     include_directories ("${Boost_INCLUDE_DIRS}")

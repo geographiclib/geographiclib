@@ -1,10 +1,91 @@
 # Build the library...
 
 # Include all the .cpp files in the library.
-file (GLOB SOURCES [A-Za-z]*.cpp)
-file (GLOB HEADERS
+set (SOURCES
+  Accumulator.cpp
+  AlbersEqualArea.cpp
+  AzimuthalEquidistant.cpp
+  CassiniSoldner.cpp
+  CircularEngine.cpp
+  DMS.cpp
+  Ellipsoid.cpp
+  EllipticFunction.cpp
+  GARS.cpp
+  GeoCoords.cpp
+  Geocentric.cpp
+  Geodesic.cpp
+  GeodesicExact.cpp
+  GeodesicLine.cpp
+  GeodesicLineExact.cpp
+  Geohash.cpp
+  Geoid.cpp
+  Georef.cpp
+  Gnomonic.cpp
+  GravityCircle.cpp
+  GravityModel.cpp
+  LambertConformalConic.cpp
+  LocalCartesian.cpp
+  MGRS.cpp
+  MagneticCircle.cpp
+  MagneticModel.cpp
+  Math.cpp
+  NormalGravity.cpp
+  OSGB.cpp
+  PolarStereographic.cpp
+  PolygonArea.cpp
+  Rhumb.cpp
+  SphericalEngine.cpp
+  TransverseMercator.cpp
+  TransverseMercatorExact.cpp
+  UTMUPS.cpp
+  Utility.cpp
+  )
+
+set (HEADERS
   ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
-  ../include/GeographicLib/[A-Za-z]*.hpp)
+  ../include/GeographicLib/Accumulator.hpp
+  ../include/GeographicLib/AlbersEqualArea.hpp
+  ../include/GeographicLib/AzimuthalEquidistant.hpp
+  ../include/GeographicLib/CassiniSoldner.hpp
+  ../include/GeographicLib/CircularEngine.hpp
+  ../include/GeographicLib/Constants.hpp
+  ../include/GeographicLib/DMS.hpp
+  ../include/GeographicLib/Ellipsoid.hpp
+  ../include/GeographicLib/EllipticFunction.hpp
+  ../include/GeographicLib/GARS.hpp
+  ../include/GeographicLib/GeoCoords.hpp
+  ../include/GeographicLib/Geocentric.hpp
+  ../include/GeographicLib/Geodesic.hpp
+  ../include/GeographicLib/GeodesicExact.hpp
+  ../include/GeographicLib/GeodesicLine.hpp
+  ../include/GeographicLib/GeodesicLineExact.hpp
+  ../include/GeographicLib/Geohash.hpp
+  ../include/GeographicLib/Geoid.hpp
+  ../include/GeographicLib/Georef.hpp
+  ../include/GeographicLib/Gnomonic.hpp
+  ../include/GeographicLib/GravityCircle.hpp
+  ../include/GeographicLib/GravityModel.hpp
+  ../include/GeographicLib/LambertConformalConic.hpp
+  ../include/GeographicLib/LocalCartesian.hpp
+  ../include/GeographicLib/MGRS.hpp
+  ../include/GeographicLib/MagneticCircle.hpp
+  ../include/GeographicLib/MagneticModel.hpp
+  ../include/GeographicLib/Math.hpp
+  ../include/GeographicLib/NearestNeighbor.hpp
+  ../include/GeographicLib/NormalGravity.hpp
+  ../include/GeographicLib/OSGB.hpp
+  ../include/GeographicLib/PolarStereographic.hpp
+  ../include/GeographicLib/PolygonArea.hpp
+  ../include/GeographicLib/Rhumb.hpp
+  ../include/GeographicLib/SphericalEngine.hpp
+  ../include/GeographicLib/SphericalHarmonic.hpp
+  ../include/GeographicLib/SphericalHarmonic1.hpp
+  ../include/GeographicLib/SphericalHarmonic2.hpp
+  ../include/GeographicLib/TransverseMercator.hpp
+  ../include/GeographicLib/TransverseMercatorExact.hpp
+  ../include/GeographicLib/UTMUPS.hpp
+  ../include/GeographicLib/Utility.hpp
+  )
 
 # Define the library and specify whether it is shared or not.
 if (GEOGRAPHICLIB_SHARED_LIB)
