@@ -132,7 +132,7 @@ namespace GeographicLib {
       // definite integral.  So don't bother computing it.  It won't be used
       // when invoking SinCosSeries.
       if (l)
-        _R[l] = d * Math::polyval(m, coeff + o, _ell._n) / coeff[o + m + 1];
+        _rR[l] = d * Math::polyval(m, coeff + o, _ell._n) / coeff[o + m + 1];
       o += m + 2;
       d *= _ell._n;
     }
@@ -325,7 +325,7 @@ namespace GeographicLib {
 
   Math::real Rhumb::MeanSinXi(real psix, real psiy) const {
     return Dlog(cosh(psix), cosh(psiy)) * Dcosh(psix, psiy)
-      + SinCosSeries(false, gd(psix), gd(psiy), _R, maxpow_) * Dgd(psix, psiy);
+      + SinCosSeries(false, gd(psix), gd(psiy), _rR, maxpow_) * Dgd(psix, psiy);
   }
 
   RhumbLine::RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,

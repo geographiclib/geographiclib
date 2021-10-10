@@ -62,8 +62,8 @@ namespace GeographicLib {
     , _mv(1 - _mu)              // 1 - e^2
     , _e(sqrt(_mu))
     , _extendp(extendp)
-    , _Eu(_mu)
-    , _Ev(_mv)
+    , _eEu(_mu)
+    , _eEv(_mv)
   {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
@@ -140,8 +140,8 @@ namespace GeographicLib {
       u = asinh(sin(lamx) / hypot(cos(lamx), sinh(psix))) *
         (1 + _mu/2);
       v = atan2(cos(lamx), sinh(psix)) * (1 + _mu/2);
-      u = _Eu.K() - u;
-      v = _Ev.K() - v;
+      u = _eEu.K() - u;
+      v = _eEv.K() - v;
     } else if (psi < _e * Math::pi()/2 &&
                lam > (1 - 2 * _e) * Math::pi()/2) {
       // At w = w0 = i * Ev.K(), we have
@@ -169,7 +169,7 @@ namespace GeographicLib {
       rad = cbrt(3 / (_mv * _e) * rad);
       ang /= 3;
       u = rad * cos(ang);
-      v = rad * sin(ang) + _Ev.K();
+      v = rad * sin(ang) + _eEv.K();
     } else {
       // Use spherical TM, Lee 12.6 -- writing atanh(sin(lam) / cosh(psi)) =
       // asinh(sin(lam) / hypot(cos(lam), sinh(psi))).  This takes care of the
@@ -177,8 +177,8 @@ namespace GeographicLib {
       v = asinh(sin(lam) / hypot(cos(lam), sinh(psi)));
       u = atan2(sinh(psi), cos(lam));
       // But scale to put 90,0 on the right place
-      u *= _Eu.K() / (Math::pi()/2);
-      v *= _Eu.K() / (Math::pi()/2);
+      u *= _eEu.K() / (Math::pi()/2);
+      v *= _eEu.K() / (Math::pi()/2);
     }
     return retval;
   }
@@ -195,8 +195,8 @@ namespace GeographicLib {
     // min iterations = 2, max iterations = 6; mean = 4.0
     for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
-      _Eu.sncndn(u, snu, cnu, dnu);
-      _Ev.sncndn(v, snv, cnv, dnv);
+      _eEu.sncndn(u, snu, cnu, dnu);
+      _eEv.sncndn(v, snv, cnv, dnv);
       real tau1, lam1, du1, dv1;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau1, lam1);
       dwdzeta(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
@@ -222,8 +222,8 @@ namespace GeographicLib {
     // Lee 55.4 writing
     // dnu^2 + dnv^2 - 1 = _mu * cnu^2 + _mv * cnv^2
     real d = _mu * Math::sq(cnu) + _mv * Math::sq(cnv);
-    xi = _Eu.E(snu, cnu, dnu) - _mu * snu * cnu * dnu / d;
-    eta = v - _Ev.E(snv, cnv, dnv) + _mv * snv * cnv * dnv / d;
+    xi = _eEu.E(snu, cnu, dnu) - _mu * snu * cnu * dnu / d;
+    eta = v - _eEv.E(snv, cnv, dnv) + _mv * snv * cnv * dnv / d;
   }
 
   void TransverseMercatorExact::dwdsigma(real /*u*/,
@@ -245,20 +245,20 @@ namespace GeographicLib {
   bool TransverseMercatorExact::sigmainv0(real xi, real eta,
                                           real& u, real& v) const {
     bool retval = false;
-    if (eta > real(1.25) * _Ev.KE() ||
-        (xi < -real(0.25) * _Eu.E() && xi < eta - _Ev.KE())) {
+    if (eta > real(1.25) * _eEv.KE() ||
+        (xi < -real(0.25) * _eEu.E() && xi < eta - _eEv.KE())) {
       // sigma as a simple pole at w = w0 = Eu.K() + i * Ev.K() and sigma is
       // approximated by
       //
       // sigma = (Eu.E() + i * Ev.KE()) + 1/(w - w0)
       real
-        x = xi - _Eu.E(),
-        y = eta - _Ev.KE(),
+        x = xi - _eEu.E(),
+        y = eta - _eEv.KE(),
         r2 = Math::sq(x) + Math::sq(y);
-      u = _Eu.K() + x/r2;
-      v = _Ev.K() - y/r2;
-    } else if ((eta > real(0.75) * _Ev.KE() && xi < real(0.25) * _Eu.E())
-               || eta > _Ev.KE()) {
+      u = _eEu.K() + x/r2;
+      v = _eEv.K() - y/r2;
+    } else if ((eta > real(0.75) * _eEv.KE() && xi < real(0.25) * _eEu.E())
+               || eta > _eEv.KE()) {
       // At w = w0 = i * Ev.K(), we have
       //
       //     sigma = sigma0 = i * Ev.KE()
@@ -272,7 +272,7 @@ namespace GeographicLib {
       // arg(sigma - sigma0) = [-pi/2, pi/2]
       // mapping arg = [-pi/2, -pi/6] to [-pi/2, pi/2]
       real
-        deta = eta - _Ev.KE(),
+        deta = eta - _eEv.KE(),
         rad = hypot(xi, deta),
         // Map the range [-90, 180] in sigma space to [-90, 0] in w space.  See
         // discussion in zetainv0 on the cut for ang.
@@ -282,11 +282,11 @@ namespace GeographicLib {
       rad = cbrt(3 / _mv * rad);
       ang /= 3;
       u = rad * cos(ang);
-      v = rad * sin(ang) + _Ev.K();
+      v = rad * sin(ang) + _eEv.K();
     } else {
       // Else use w = sigma * Eu.K/Eu.E (which is correct in the limit _e -> 0)
-      u = xi * _Eu.K()/_Eu.E();
-      v = eta * _Eu.K()/_Eu.E();
+      u = xi * _eEu.K()/_eEu.E();
+      v = eta * _eEu.K()/_eEu.E();
     }
     return retval;
   }
@@ -299,8 +299,8 @@ namespace GeographicLib {
     // min iterations = 2, max iterations = 7; mean = 3.9
     for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
-      _Eu.sncndn(u, snu, cnu, dnu);
-      _Ev.sncndn(v, snv, cnv, dnv);
+      _eEu.sncndn(u, snu, cnu, dnu);
+      _eEv.sncndn(v, snv, cnv, dnv);
       real xi1, eta1, du1, dv1;
       sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi1, eta1);
       dwdsigma(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
@@ -369,23 +369,23 @@ namespace GeographicLib {
     // u,v = coordinates for the Thompson TM, Lee 54
     real u, v;
     if (lat == 90) {
-      u = _Eu.K();
+      u = _eEu.K();
       v = 0;
     } else if (lat == 0 && lon == 90 * (1 - _e)) {
       u = 0;
-      v = _Ev.K();
+      v = _eEv.K();
     } else
       // tau = tan(phi), taup = sinh(psi)
       zetainv(Math::taupf(tau, _e), lam, u, v);
 
     real snu, cnu, dnu, snv, cnv, dnv;
-    _Eu.sncndn(u, snu, cnu, dnu);
-    _Ev.sncndn(v, snv, cnv, dnv);
+    _eEu.sncndn(u, snu, cnu, dnu);
+    _eEv.sncndn(v, snv, cnv, dnv);
 
     real xi, eta;
     sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi, eta);
     if (backside)
-      xi = 2 * _Eu.E() - xi;
+      xi = 2 * _eEu.E() - xi;
     y = xi * _a * _k0 * latsign;
     x = eta * _a * _k0 * lonsign;
 
@@ -418,23 +418,23 @@ namespace GeographicLib {
       lonsign = !_extendp && x < 0 ? -1 : 1;
     xi *= latsign;
     eta *= lonsign;
-    bool backside = !_extendp && xi > _Eu.E();
+    bool backside = !_extendp && xi > _eEu.E();
     if (backside)
-      xi = 2 * _Eu.E()- xi;
+      xi = 2 * _eEu.E()- xi;
 
     // u,v = coordinates for the Thompson TM, Lee 54
     real u, v;
-    if (xi == 0 && eta == _Ev.KE()) {
+    if (xi == 0 && eta == _eEv.KE()) {
       u = 0;
-      v = _Ev.K();
+      v = _eEv.K();
     } else
       sigmainv(xi, eta, u, v);
 
     real snu, cnu, dnu, snv, cnv, dnv;
-    _Eu.sncndn(u, snu, cnu, dnu);
-    _Ev.sncndn(v, snv, cnv, dnv);
+    _eEu.sncndn(u, snu, cnu, dnu);
+    _eEv.sncndn(v, snv, cnv, dnv);
     real phi, lam, tau;
-    if (v != 0 || u != _Eu.K()) {
+    if (v != 0 || u != _eEu.K()) {
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);
       tau = Math::tauf(tau, _e);
       phi = atan(tau);

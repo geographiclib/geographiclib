@@ -890,7 +890,7 @@ namespace GeographicLib {
 
   Math::real Geodesic::A3f(real eps) const {
     // Evaluate A3
-    return Math::polyval(nA3_ - 1, _A3x, eps);
+    return Math::polyval(nA3_ - 1, _aA3x, eps);
   }
 
   void Geodesic::C3f(real eps, real c[]) const {
@@ -901,7 +901,7 @@ namespace GeographicLib {
     for (int l = 1; l < nC3_; ++l) { // l is index of C3[l]
       int m = nC3_ - l - 1;          // order of polynomial in eps
       mult *= eps;
-      c[l] = mult * Math::polyval(m, _C3x + o, eps);
+      c[l] = mult * Math::polyval(m, _cC3x + o, eps);
       o += m + 1;
     }
     // Post condition: o == nC3x_
@@ -914,7 +914,7 @@ namespace GeographicLib {
     int o = 0;
     for (int l = 0; l < nC4_; ++l) { // l is index of C4[l]
       int m = nC4_ - l - 1;          // order of polynomial in eps
-      c[l] = mult * Math::polyval(m, _C4x + o, eps);
+      c[l] = mult * Math::polyval(m, _cC4x + o, eps);
       o += m + 1;
       mult *= eps;
     }
@@ -1424,7 +1424,7 @@ namespace GeographicLib {
     int o = 0, k = 0;
     for (int j = nA3_ - 1; j >= 0; --j) { // coeff of eps^j
       int m = min(nA3_ - j - 1, j);       // order of polynomial in n
-      _A3x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
+      _aA3x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
       o += m + 2;
     }
     // Post condition: o == sizeof(coeff) / sizeof(real) && k == nA3x_
@@ -1629,7 +1629,7 @@ namespace GeographicLib {
     for (int l = 1; l < nC3_; ++l) {        // l is index of C3[l]
       for (int j = nC3_ - 1; j >= l; --j) { // coeff of eps^j
         int m = min(nC3_ - j - 1, j);       // order of polynomial in n
-        _C3x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
+        _cC3x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
         o += m + 2;
       }
     }
@@ -1898,7 +1898,7 @@ namespace GeographicLib {
     for (int l = 0; l < nC4_; ++l) {        // l is index of C4[l]
       for (int j = nC4_ - 1; j >= l; --j) { // coeff of eps^j
         int m = nC4_ - j - 1;               // order of polynomial in n
-        _C4x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
+        _cC4x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
         o += m + 2;
       }
     }

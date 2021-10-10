@@ -86,11 +86,11 @@ namespace GeographicLib {
     friend class GravityCircle;
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
-    real _amodel, _GMmodel, _zeta0, _corrmult;
+    real _amodel, _gGMmodel, _zeta0, _corrmult;
     int _nmx, _mmx;
     SphericalHarmonic::normalization _norm;
     NormalGravity _earth;
-    std::vector<real> _Cx, _Sx, _CC, _CS, _zonal;
+    std::vector<real> _cCx, _sSx, _cCC, _cCS, _zonal;
     real _dzonal0;              // A left over contribution to _zonal.
     SphericalHarmonic _gravitational;
     SphericalHarmonic1 _disturbing;
@@ -478,7 +478,7 @@ namespace GeographicLib {
      *   constant and \e M the mass of the earth (usually including the mass of
      *   the earth's atmosphere).
      **********************************************************************/
-    Math::real MassConstant() const { return _GMmodel; }
+    Math::real MassConstant() const { return _gGMmodel; }
 
     /**
      * @return \e GM the mass constant of the ReferenceEllipsoid()

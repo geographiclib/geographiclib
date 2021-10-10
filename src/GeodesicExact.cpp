@@ -906,7 +906,7 @@ namespace GeographicLib {
     int o = 0;
     for (int l = 0; l < nC4_; ++l) { // l is index of C4[l]
       int m = nC4_ - l - 1;          // order of polynomial in eps
-      c[l] = mult * Math::polyval(m, _C4x + o, eps);
+      c[l] = mult * Math::polyval(m, _cC4x + o, eps);
       o += m + 1;
       mult *= eps;
     }

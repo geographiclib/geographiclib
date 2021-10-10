@@ -23,38 +23,38 @@ namespace GeographicLib {
     _a = a;
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
-    _GM = GM;
-    if (!isfinite(_GM))
+    _gGM = GM;
+    if (!isfinite(_gGM))
       throw GeographicErr("Gravitational constant is not finite");
     _omega = omega;
     _omega2 = Math::sq(_omega);
     _aomega2 = Math::sq(_omega * _a);
     if (!(isfinite(_omega2) && isfinite(_aomega2)))
       throw GeographicErr("Rotation velocity is not finite");
-    _f = geometricp ? f_J2 : J2ToFlattening(_a, _GM, _omega, f_J2);
+    _f = geometricp ? f_J2 : J2ToFlattening(_a, _gGM, _omega, f_J2);
     _b = _a * (1 - _f);
     if (!(isfinite(_b) && _b > 0))
       throw GeographicErr("Polar semi-axis is not positive");
-    _J2 = geometricp ? FlatteningToJ2(_a, _GM, _omega, f_J2) : f_J2;
+    _jJ2 = geometricp ? FlatteningToJ2(_a, _gGM, _omega, f_J2) : f_J2;
     _e2 = _f * (2 - _f);
     _ep2 = _e2 / (1 - _e2);
     real ex2 = _f < 0 ? -_e2 : _ep2;
-    _Q0 = Qf(ex2, _f < 0);
+    _qQ0 = Qf(ex2, _f < 0);
     _earth = Geocentric(_a, _f);
-    _E = _a * sqrt(abs(_e2));   // H+M, Eq 2-54
+    _eE = _a * sqrt(abs(_e2));  // H+M, Eq 2-54
     // H+M, Eq 2-61
-    _U0 = _GM * atanzz(ex2, _f < 0) / _b + _aomega2 / 3;
-    real P = Hf(ex2, _f < 0) / (6 * _Q0);
+    _uU0 = _gGM * atanzz(ex2, _f < 0) / _b + _aomega2 / 3;
+    real P = Hf(ex2, _f < 0) / (6 * _qQ0);
     // H+M, Eq 2-73
-    _gammae = _GM / (_a * _b) - (1 + P) * _a * _omega2;
+    _gammae = _gGM / (_a * _b) - (1 + P) * _a * _omega2;
     // H+M, Eq 2-74
-    _gammap = _GM / (_a * _a) + 2 * P * _b * _omega2;
+    _gammap = _gGM / (_a * _a) + 2 * P * _b * _omega2;
     // k = gammae * (b * gammap / (a * gammae) - 1)
     //   = (b * gammap - a * gammae) / a
-    _k = -_e2 * _GM / (_a * _b) +
+    _k = -_e2 * _gGM / (_a * _b) +
       _omega2 * (P * (_a + 2 * _b * (1 - _f)) + _a);
     // f* = (gammap - gammae) / gammae
-    _fstar = (-_f * _GM / (_a * _b) + _omega2 * (P * (_a + 2 * _b) + _a)) /
+    _fstar = (-_f * _gGM / (_a * _b) + _omega2 * (P * (_a + 2 * _b) + _a)) /
       _gammae;
   }
 
@@ -145,7 +145,7 @@ namespace GeographicLib {
   }
 
   Math::real NormalGravity::Jn(int n) const {
-    // Note Jn(0) = -1; Jn(2) = _J2; Jn(odd) = 0
+    // Note Jn(0) = -1; Jn(2) = _jJ2; Jn(odd) = 0
     if (n & 1 || n < 0)
       return 0;
     n /= 2;
@@ -153,7 +153,7 @@ namespace GeographicLib {
     for (int j = n; j--;)
       e2n *= -_e2;
     return                      // H+M, Eq 2-92
-      -3 * e2n * ((1 - n) + 5 * n * _J2 / _e2) / ((2 * n + 1) * (2 * n + 3));
+      -3 * e2n * ((1 - n) + 5 * n * _jJ2 / _e2) / ((2 * n + 1) * (2 * n + 3));
   }
 
   Math::real NormalGravity::SurfaceGravity(real lat) const {
@@ -173,13 +173,13 @@ namespace GeographicLib {
       r = hypot(p, Z);
     if (_f < 0) swap(p, Z);
     real
-      Q = Math::sq(r) - Math::sq(_E),
-      t2 = Math::sq(2 * _E * Z),
+      Q = Math::sq(r) - Math::sq(_eE),
+      t2 = Math::sq(2 * _eE * Z),
       disc = sqrt(Math::sq(Q) + t2),
       // This is H+M, Eq 6-8a, but generalized to deal with Q negative
       // accurately.
       u = sqrt((Q >= 0 ? (Q + disc) : t2 / (disc - Q)) / 2),
-      uE = hypot(u, _E),
+      uE = hypot(u, _eE),
       // H+M, Eq 6-8b
       sbet = u != 0 ? Z * uE : copysign(sqrt(-Q), Z),
       cbet = u != 0 ? p * u : p,
@@ -187,27 +187,27 @@ namespace GeographicLib {
     sbet = s != 0 ? sbet/s : 1;
     cbet = s != 0 ? cbet/s : 0;
     real
-      z = _E/u,
+      z = _eE/u,
       z2 = Math::sq(z),
-      den = hypot(u, _E * sbet);
+      den = hypot(u, _eE * sbet);
     if (_f < 0) {
       swap(sbet, cbet);
       swap(u, uE);
     }
     real
       invw = uE / den,          // H+M, Eq 2-63
-      bu = _b / (u != 0 || _f < 0 ? u : _E),
+      bu = _b / (u != 0 || _f < 0 ? u : _eE),
       // Qf(z2->inf, false) = pi/(4*z^3)
-      q = ((u != 0 || _f < 0 ? Qf(z2, _f < 0) : Math::pi() / 4) / _Q0) *
+      q = ((u != 0 || _f < 0 ? Qf(z2, _f < 0) : Math::pi() / 4) / _qQ0) *
         bu * Math::sq(bu),
-      qp = _b * Math::sq(bu) * (u != 0 || _f < 0 ? Hf(z2, _f < 0) : 2) / _Q0,
+      qp = _b * Math::sq(bu) * (u != 0 || _f < 0 ? Hf(z2, _f < 0) : 2) / _qQ0,
       ang = (Math::sq(sbet) - 1/real(3)) / 2,
       // H+M, Eqs 2-62 + 6-9, but omitting last (rotational) term.
-      Vres = _GM * (u != 0 || _f < 0 ?
+      Vres = _gGM * (u != 0 || _f < 0 ?
                     atanzz(z2, _f < 0) / u :
-                    Math::pi() / (2 * _E)) + _aomega2 * q * ang,
+                    Math::pi() / (2 * _eE)) + _aomega2 * q * ang,
       // H+M, Eq 6-10
-      gamu = - (_GM + (_aomega2 * qp * ang)) * invw / Math::sq(uE),
+      gamu = - (_gGM + (_aomega2 * qp * ang)) * invw / Math::sq(uE),
       gamb = _aomega2 * q * sbet * cbet * invw / uE,
       t = u * invw / uE,
       gamp = t * cbet * gamu - invw * sbet * gamb;

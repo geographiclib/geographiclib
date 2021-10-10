@@ -104,7 +104,7 @@ namespace GeographicLib {
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _C4x[nC4x_];
+    real _cC4x[nC4x_];
 
     void Lengths(const EllipticFunction& E,
                  real sig12,

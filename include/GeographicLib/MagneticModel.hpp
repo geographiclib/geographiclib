@@ -78,11 +78,11 @@ namespace GeographicLib {
     static const int idlength_ = 8;
     std::string _name, _dir, _description, _date, _filename, _id;
     real _t0, _dt0, _tmin, _tmax, _a, _hmin, _hmax;
-    int _Nmodels, _Nconstants, _nmx, _mmx;
+    int _nNmodels, _nNconstants, _nmx, _mmx;
     SphericalHarmonic::normalization _norm;
     Geocentric _earth;
-    std::vector< std::vector<real> > _G;
-    std::vector< std::vector<real> > _H;
+    std::vector< std::vector<real> > _gG;
+    std::vector< std::vector<real> > _hH;
     std::vector<SphericalHarmonic> _harm;
     void Field(real t, real lat, real lon, real h, bool diffp,
                real& Bx, real& By, real& Bz,

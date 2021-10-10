@@ -7294,7 +7294,7 @@ namespace GeographicLib {
     for (int l = 0; l < nC4_; ++l) {        // l is index of C4[l]
       for (int j = nC4_ - 1; j >= l; --j) { // coeff of eps^j
         int m = nC4_ - j - 1;               // order of polynomial in n
-        _C4x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
+        _cC4x[k++] = Math::polyval(m, coeff + o, _n) / coeff[o + m + 1];
         o += m + 2;
       }
     }

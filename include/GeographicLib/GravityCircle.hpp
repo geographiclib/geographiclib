@@ -52,8 +52,8 @@ namespace GeographicLib {
     };
 
     unsigned _caps;
-    real _a, _f, _lat, _h, _Z, _Px, _invR, _cpsi, _spsi,
-      _cphi, _sphi, _amodel, _GMmodel, _dzonal0,
+    real _a, _f, _lat, _h, _zZ, _pPx, _invR, _cpsi, _spsi,
+      _cphi, _sphi, _amodel, _gGMmodel, _dzonal0,
       _corrmult, _gamma0, _gamma, _frot;
     CircularEngine _gravitational, _disturbing, _correction;
 

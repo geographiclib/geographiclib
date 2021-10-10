@@ -65,7 +65,7 @@ namespace GeographicLib {
 
     enum { num_ = 13 }; // Max depth required for sncndn; probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
-    real _Kc, _Ec, _Dc, _Pic, _Gc, _Hc;
+    real _kKc, _eEc, _dDc, _pPic, _gGc, _hHc;
   public:
     /** \name Constructor
      **********************************************************************/
@@ -187,7 +187,7 @@ namespace GeographicLib {
      *   K(k) = \int_0^{\pi/2} \frac1{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real K() const { return _Kc; }
+    Math::real K() const { return _kKc; }
 
     /**
      * The complete integral of the second kind.
@@ -199,7 +199,7 @@ namespace GeographicLib {
      *   E(k) = \int_0^{\pi/2} \sqrt{1-k^2\sin^2\phi}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real E() const { return _Ec; }
+    Math::real E() const { return _eEc; }
 
     /**
      * Jahnke's complete integral.
@@ -212,7 +212,7 @@ namespace GeographicLib {
      *   \int_0^{\pi/2} \frac{\sin^2\phi}{\sqrt{1-k^2\sin^2\phi}}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real D() const { return _Dc; }
+    Math::real D() const { return _dDc; }
 
     /**
      * The difference between the complete integrals of the first and second
@@ -220,7 +220,7 @@ namespace GeographicLib {
      *
      * @return \e K(\e k) &minus; \e E(\e k).
      **********************************************************************/
-    Math::real KE() const { return _k2 * _Dc; }
+    Math::real KE() const { return _k2 * _dDc; }
 
     /**
      * The complete integral of the third kind.
@@ -234,7 +234,7 @@ namespace GeographicLib {
      *     \frac1{\sqrt{1-k^2\sin^2\phi}(1 - \alpha^2\sin^2\phi)}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real Pi() const { return _Pic; }
+    Math::real Pi() const { return _pPic; }
 
     /**
      * Legendre's complete geodesic longitude integral.
@@ -247,7 +247,7 @@ namespace GeographicLib {
      *     \frac{\sqrt{1-k^2\sin^2\phi}}{1 - \alpha^2\sin^2\phi}\,d\phi.
      * \f]
      **********************************************************************/
-    Math::real G() const { return _Gc; }
+    Math::real G() const { return _gGc; }
 
     /**
      * Cayley's complete geodesic longitude difference integral.
@@ -261,7 +261,7 @@ namespace GeographicLib {
      *     \,d\phi.
      * \f]
      **********************************************************************/
-    Math::real H() const { return _Hc; }
+    Math::real H() const { return _hHc; }
     ///@}
 
     /** \name Incomplete elliptic integrals.

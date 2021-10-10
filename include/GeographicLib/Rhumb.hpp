@@ -73,8 +73,8 @@ namespace GeographicLib {
     real _c2;
     static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
     static const int maxpow_ = GEOGRAPHICLIB_RHUMBAREA_ORDER;
-    // _R[0] unused
-    real _R[maxpow_ + 1];
+    // _rR[0] unused
+    real _rR[maxpow_ + 1];
     static real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }
 

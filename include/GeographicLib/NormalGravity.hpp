@@ -81,8 +81,8 @@ namespace GeographicLib {
     static const int maxit_ = 20;
     typedef Math::real real;
     friend class GravityModel;
-    real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
-    real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _Q0, _k, _fstar;
+    real _a, _gGM, _omega, _f, _jJ2, _omega2, _aomega2;
+    real _e2, _ep2, _b, _eE, _uU0, _gammae, _gammap, _qQ0, _k, _fstar;
     Geocentric _earth;
     static real atanzz(real x, bool alt) {
       // This routine obeys the identity
@@ -276,7 +276,7 @@ namespace GeographicLib {
      *   constructor.
      **********************************************************************/
     Math::real MassConstant() const
-    { return Init() ? _GM : Math::NaN(); }
+    { return Init() ? _gGM : Math::NaN(); }
 
     /**
      * @return <i>J</i><sub><i>n</i></sub> the dynamical form factors of the
@@ -291,7 +291,7 @@ namespace GeographicLib {
      * &minus;<i>J</i><sub><i>n</i></sub> / sqrt(2 \e n + 1).
      **********************************************************************/
     Math::real DynamicalFormFactor(int n = 2) const
-    { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN(); }
+    { return Init() ? ( n == 2 ? _jJ2 : Jn(n)) : Math::NaN(); }
 
     /**
      * @return &omega; the angular velocity of the ellipsoid (rad
@@ -333,7 +333,7 @@ namespace GeographicLib {
      *   surface of the ellipsoid (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real SurfacePotential() const
-    { return Init() ? _U0 : Math::NaN(); }
+    { return Init() ? _uU0 : Math::NaN(); }
 
     /**
      * @return the Geocentric object used by this instance.

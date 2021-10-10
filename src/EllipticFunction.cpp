@@ -262,15 +262,15 @@ namespace GeographicLib {
     if (_k2 != 0) {
       // Complete elliptic integral K(k), Carlson eq. 4.1
       // https://dlmf.nist.gov/19.25.E1
-      _Kc = _kp2 != 0 ? RF(_kp2, 1) : Math::infinity();
+      _kKc = _kp2 != 0 ? RF(_kp2, 1) : Math::infinity();
       // Complete elliptic integral E(k), Carlson eq. 4.2
       // https://dlmf.nist.gov/19.25.E1
-      _Ec = _kp2 != 0 ? 2 * RG(_kp2, 1) : 1;
+      _eEc = _kp2 != 0 ? 2 * RG(_kp2, 1) : 1;
       // D(k) = (K(k) - E(k))/k^2, Carlson eq.4.3
       // https://dlmf.nist.gov/19.25.E1
-      _Dc = _kp2 != 0 ? RD(0, _kp2, 1) / 3 : Math::infinity();
+      _dDc = _kp2 != 0 ? RD(0, _kp2, 1) / 3 : Math::infinity();
     } else {
-      _Kc = _Ec = Math::pi()/2; _Dc = _Kc/2;
+      _kKc = _eEc = Math::pi()/2; _dDc = _kKc/2;
     }
     if (_alpha2 != 0) {
       // https://dlmf.nist.gov/19.25.E2
@@ -280,13 +280,13 @@ namespace GeographicLib {
         rc = _kp2 != 0 ? 0 :
         (_alphap2 != 0 ? RC(1, _alphap2) : Math::infinity());
       // Pi(alpha^2, k)
-      _Pic = _kp2 != 0 ? _Kc + _alpha2 * rj / 3 : Math::infinity();
+      _pPic = _kp2 != 0 ? _kKc + _alpha2 * rj / 3 : Math::infinity();
       // G(alpha^2, k)
-      _Gc = _kp2 != 0 ? _Kc + (_alpha2 - _k2) * rj / 3 :  rc;
+      _gGc = _kp2 != 0 ? _kKc + (_alpha2 - _k2) * rj / 3 :  rc;
       // H(alpha^2, k)
-      _Hc = _kp2 != 0 ? _Kc - (_alphap2 != 0 ? _alphap2 * rj : 0) / 3 : rc;
+      _hHc = _kp2 != 0 ? _kKc - (_alphap2 != 0 ? _alphap2 * rj : 0) / 3 : rc;
     } else {
-      _Pic = _Kc; _Gc = _Ec;
+      _pPic = _kKc; _gGc = _eEc;
       // Hc = Kc - Dc but this involves large cancellations if k2 is close to
       // 1.  So write (for alpha2 = 0)
       //   Hc = int(cos(phi)^2/sqrt(1-k2*sin(phi)^2),phi,0,pi/2)
@@ -300,7 +300,7 @@ namespace GeographicLib {
       //   RF(x, 1) - RD(0, x, 1)/3 = x * RD(0, 1, x)/3 for x > 0
       // For k2 = 1 and alpha2 = 0, we have
       //   Hc = int(cos(phi),...) = 1
-      _Hc = _kp2 != 0 ? _kp2 * RD(0, 1, _kp2) / 3 : 1;
+      _hHc = _kp2 != 0 ? _kp2 * RD(0, 1, _kp2) / 3 : 1;
     }
   }
 
@@ -538,13 +538,13 @@ namespace GeographicLib {
   Math::real EllipticFunction::Einv(real x) const {
     static const real tolJAC =
       sqrt(numeric_limits<real>::epsilon() * real(0.01));
-    real n = floor(x / (2 * _Ec) + real(0.5));
-    x -= 2 * _Ec * n;           // x now in [-ec, ec)
+    real n = floor(x / (2 * _eEc) + real(0.5));
+    x -= 2 * _eEc * n;                      // x now in [-ec, ec)
     // Linear approximation
-    real phi = Math::pi() * x / (2 * _Ec); // phi in [-pi/2, pi/2)
+    real phi = Math::pi() * x / (2 * _eEc); // phi in [-pi/2, pi/2)
     // First order correction
     phi -= _eps * sin(2 * phi) / 2;
-    // For kp2 close to zero use asin(x/_Ec) or
+    // For kp2 close to zero use asin(x/_eEc) or
     // J. P. Boyd, Applied Math. and Computation 218, 7005-7013 (2012)
     // https://doi.org/10.1016/j.amc.2011.12.021
     for (int i = 0; i < num_ || GEOGRAPHICLIB_PANIC; ++i) {
