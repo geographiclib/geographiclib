@@ -179,7 +179,7 @@ namespace GeographicLib {
     static void date(const std::string& s, int& y, int& m, int& d) {
       if (s == "now") {
         std::time_t t = std::time(0);
-        struct tm* now = gmtime(&t);
+        struct tm* now = std::gmtime(&t);
         y = now->tm_year + 1900;
         m = now->tm_mon + 1;
         d = now->tm_mday;
@@ -248,7 +248,8 @@ namespace GeographicLib {
      * The string is first read as an ordinary number (e.g., 2010 or 2012.5);
      * if this is successful, the value is returned.  Otherwise the string
      * should be of the form yyyy-mm or yyyy-mm-dd and this is converted to a
-     * number with 2010-01-01 giving 2010.0 and 2012-07-03 giving 2012.5.
+     * number with 2010-01-01 giving 2010.0 and 2012-07-03 giving 2012.5.  The
+     * string "now" is interpreted as the present date.
      **********************************************************************/
     template<typename T> static T fractionalyear(const std::string& s) {
       try {
