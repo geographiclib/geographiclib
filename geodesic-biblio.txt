@@ -1657,7 +1657,7 @@
  * B. R. Bowring,[[BR]]
    ''The Direct and Inverse Problems for Short Geodesic Lines on the
    Ellipsoid'',
-   Surveying and Mapping '''41'''(2), 135--141 (1981).[[BR]
+   Surveying and Mapping '''41'''(2), 135--141 (1981).[[BR]]
    https://books.google.com/books?id=eEI4AAAAIAAJ&pg=PA135
  * B. K. Meade,[[BR]]
    ''Comments on Formulas for the Solution of Direct and Inverse Problems

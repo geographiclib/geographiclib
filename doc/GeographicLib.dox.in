@@ -1428,7 +1428,7 @@ Heiman, which exposes all of the functionality of GeographicLib to the
 \section maxima Maxima routines
 
 Maxima is a free computer algebra system which can be downloaded from
-http://maxima.sourceforge.net.  Maxima was used to generate the series used by
+https://maxima.sourceforge.io.  Maxima was used to generate the series used by
 TransverseMercator (<a href="tmseries.mac"> tmseries.mac</a>), Geodesic
 (<a href="geod.mac"> geod.mac</a>), Rhumb (<a href="rhumbarea.mac">
 rhumbarea.mac</a>), \ref gearea (<a href="gearea.mac"> gearea.mac</a>),
@@ -7755,6 +7755,7 @@ git repository for GeographicLib</a>.
      - Maybe segregate more tasks into a MAINTAINER mode.
    - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
      class for conversions via the series?
+   - Document restrictions on ranges of arguments to elliptic integrals.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>

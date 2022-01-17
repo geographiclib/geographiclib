@@ -44,7 +44,8 @@ namespace GeographicLib {
    * The computation of the elliptic integrals uses the algorithms given in
    * - B. C. Carlson,
    *   <a href="https://doi.org/10.1007/BF02198293"> Computation of real or
-   *   complex elliptic integrals</a>, Numerical Algorithms 10, 13--26 (1995)
+   *   complex elliptic integrals</a>, Numerical Algorithms 10, 13--26 (1995);
+   *   <a href="https://arxiv.org/abs/math/9409227">preprint</a>.
    * .
    * with the additional optimizations given in https://dlmf.nist.gov/19.36.i.
    * The computation of the Jacobi elliptic functions uses the algorithm given
@@ -601,9 +602,11 @@ namespace GeographicLib {
      *
      * <i>R</i><sub><i>F</i></sub> is defined in https://dlmf.nist.gov/19.16.E1
      * \f[ R_F(x, y, z) = \frac12
-     *       \int_0^\infty\frac1{\sqrt{(t + x) (t + y) (t + z)}}\, dt \f]
-     * If one of the arguments is zero, it is more efficient to call the
-     * two-argument version of this function with the non-zero arguments.
+     *       \int_0^\infty\frac1{\sqrt{(t + x) (t + y) (t + z)}}\, dt, \f]
+     * where at most one of arguments, \e x, \e y, \e z, can be zero and those
+     * arguments that are nonzero must be positive.  If one of the arguments is
+     * zero, it is more efficient to call the two-argument version of this
+     * function with the non-zero arguments.
      **********************************************************************/
     static real RF(real x, real y, real z);
 
@@ -614,6 +617,8 @@ namespace GeographicLib {
      * @param[in] x
      * @param[in] y
      * @return <i>R</i><sub><i>F</i></sub>(\e x, \e y, 0).
+     *
+     * The arguments \e x and \e y must be positive.
      **********************************************************************/
     static real RF(real x, real y);
 
@@ -628,7 +633,8 @@ namespace GeographicLib {
      *
      * <i>R</i><sub><i>C</i></sub> is defined in https://dlmf.nist.gov/19.2.E17
      * \f[ R_C(x, y) = \frac12
-     *       \int_0^\infty\frac1{\sqrt{t + x}(t + y)}\,dt \f]
+     *       \int_0^\infty\frac1{\sqrt{t + x}(t + y)}\,dt, \f]
+     * where \e x &ge; 0 and \e y > 0.
      **********************************************************************/
     static real RC(real x, real y);
 
@@ -645,10 +651,12 @@ namespace GeographicLib {
      *       \int_0^\infty[(t + x) (t + y) (t + z)]^{-1/2}
      *        \biggl(
      *             \frac x{t + x} + \frac y{t + y} + \frac z{t + z}
-     *        \biggr)t\,dt \f]
-     * See also https://dlmf.nist.gov/19.16.E3.
-     * If one of the arguments is zero, it is more efficient to call the
-     * two-argument version of this function with the non-zero arguments.
+     *        \biggr)t\,dt, \f]
+     * where at most one of arguments, \e x, \e y, \e z, can be zero and those
+     * arguments that are nonzero must be positive.  See also
+     * https://dlmf.nist.gov/19.23.E6_5.  If one of the arguments is zero, it
+     * is more efficient to call the two-argument version of this function with
+     * the non-zero arguments.
      **********************************************************************/
     static real RG(real x, real y, real z);
 
@@ -659,6 +667,8 @@ namespace GeographicLib {
      * @param[in] x
      * @param[in] y
      * @return <i>R</i><sub><i>G</i></sub>(\e x, \e y, 0).
+     *
+     * The arguments \e x and \e y must be positive.
      **********************************************************************/
     static real RG(real x, real y);
 
@@ -674,7 +684,9 @@ namespace GeographicLib {
      * <i>R</i><sub><i>J</i></sub> is defined in https://dlmf.nist.gov/19.16.E2
      * \f[ R_J(x, y, z, p) = \frac32
      *       \int_0^\infty
-     *       [(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt \f]
+     *       [(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt, \f]
+     * where \e p > 0, and \e x, \e y, \e z are nonnegative with at most one of
+     * them being 0.
      **********************************************************************/
     static real RJ(real x, real y, real z, real p);
 
@@ -690,7 +702,9 @@ namespace GeographicLib {
      *
      * <i>R</i><sub><i>D</i></sub> is defined in https://dlmf.nist.gov/19.16.E5
      * \f[ R_D(x, y, z) = \frac32
-     *       \int_0^\infty[(t + x) (t + y)]^{-1/2} (t + z)^{-3/2}\, dt \f]
+     *       \int_0^\infty[(t + x) (t + y)]^{-1/2} (t + z)^{-3/2}\, dt, \f]
+     * where \e x, \e y, \e z are positive except that at most one of \e x and
+     * \e y can be 0.
      **********************************************************************/
     static real RD(real x, real y, real z);
     ///@}
