@@ -93,7 +93,7 @@ namespace GeographicLib {
     // throwp = false, return bool instead.
     static bool CheckCoords(bool utmp, bool northp, real x, real y,
                             bool msgrlimits = false, bool throwp = true);
-    UTMUPS();                   // Disable constructor
+    UTMUPS() = delete;          // Disable constructor
 
   public:
 

@@ -44,7 +44,7 @@ namespace GeographicLib {
     static const unsigned long long mask_ = 1ULL << 45;
     static const char* const lcdigits_;
     static const char* const ucdigits_;
-    Geohash();                     // Disable constructor
+    Geohash() = delete;         // Disable constructor
 
   public:
 

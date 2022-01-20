@@ -107,7 +107,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Constants {
   private:
     typedef Math::real real;
-    Constants();                // Disable constructor
+    Constants() = delete;       // Disable constructor
 
   public:
     /**

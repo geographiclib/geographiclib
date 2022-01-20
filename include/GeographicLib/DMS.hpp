@@ -108,7 +108,7 @@ namespace GeographicLib {
     static const char* const components_[3];
     static Math::real NumMatch(const std::string& s);
     static Math::real InternalDecode(const std::string& dmsa, flag& ind);
-    DMS();                      // Disable constructor
+    DMS() = delete;             // Disable constructor
 
   public:
 

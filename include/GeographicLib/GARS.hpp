@@ -40,7 +40,15 @@ namespace GeographicLib {
     typedef Math::real real;
     static const char* const digits_;
     static const char* const letters_;
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       lonorig_ = -180,          // Origin for longitude
       latorig_ = -90,           // Origin for latitude
       baselon_ = 10,            // Base for longitude tiles
@@ -53,9 +61,13 @@ namespace GeographicLib {
       mult3_ = 3,               // 7th char gives 3x more precision
       m_ = mult1_ * mult2_ * mult3_,
       maxprec_ = 2,
-      maxlen_ = baselen_ + maxprec_,
+      maxlen_ = baselen_ + maxprec_
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
-    GARS();                     // Disable constructor
+#endif
+    GARS() = delete;            // Disable constructor
 
   public:
 

@@ -87,7 +87,15 @@ namespace GeographicLib {
     static const int maxeasting_[4];
     static const int minnorthing_[4];
     static const int maxnorthing_[4];
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       base_ = 10,
       // Top-level tiles are 10^5 m = 100 km on a side
       tilelevel_ = 5,
@@ -98,8 +106,12 @@ namespace GeographicLib {
       // Maximum precision is um
       maxprec_ = 5 + 6,
       // For generating digits at maxprec
-      mult_ = 1000000,
+      mult_ = 1000000
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
+#endif
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int UTMRow(int iband, int icol, int irow);
 
@@ -137,8 +149,16 @@ namespace GeographicLib {
       // X 9  80:94  15
       return y >= 0 ? b : -(b + 1);
     }
-    // UTMUPS access these enums
+    // UTMUPS accesses these enums
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       tile_ = 100000,            // Size MGRS blocks
       minutmcol_ = 1,
       maxutmcol_ = 9,
@@ -154,8 +174,12 @@ namespace GeographicLib {
       utmeasting_ = 5,           // UTM false easting
       // Difference between S hemisphere northing and N hemisphere northing
       utmNshift_ = (maxutmSrow_ - minutmNrow_) * tile_
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
-    MGRS();                     // Disable constructor
+#endif
+    MGRS() = delete;            // Disable constructor
 
   public:
 

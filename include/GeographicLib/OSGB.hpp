@@ -47,7 +47,15 @@ namespace GeographicLib {
     static const char* const letters_;
     static const char* const digits_;
     static const TransverseMercator& OSGBTM();
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       base_ = 10,
       tile_ = 100000,
       tilelevel_ = 5,
@@ -59,11 +67,15 @@ namespace GeographicLib {
       maxx_ = (tilegrid_*tilegrid_ - tileoffx_) * tile_,
       maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_,
       // Maximum precision is um
-      maxprec_ = 5 + 6,
+      maxprec_ = 5 + 6
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
+#endif
     static real computenorthoffset();
     static void CheckCoords(real x, real y);
-    OSGB();                     // Disable constructor
+    OSGB() = delete;            // Disable constructor
   public:
 
     /**

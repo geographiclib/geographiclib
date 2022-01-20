@@ -76,7 +76,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Math {
   private:
     void dummy();               // Static check for GEOGRAPHICLIB_PRECISION
-    Math();                     // Disable constructor
+    Math() = delete;            // Disable constructor
   public:
 
 #if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
