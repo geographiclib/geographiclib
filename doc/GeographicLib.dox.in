@@ -12,10 +12,10 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2021-06-22
+\date @PROJECT_DATE@
 
 The documentation for other versions is available at
-<tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
+<tt>https://geographiclib.sourceforge.io/C++/m.nn/</tt> for versions numbers
 <tt>m.nn</tt> &ge; 1.0.
 
 \section abstract Abstract
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2021-06-22),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (@PROJECT_DATE@),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -5903,7 +5903,7 @@ References:
    addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    geod-addenda.html</a>.
  - A. Pallikaris & G. Latsas,
-   <a href="https://doi.org/1017/S0373463309005323">
+   <a href="https://doi.org/10.1017/S0373463309005323">
    New algorithm for great elliptic sailing (GES)</a>,
    J. Navigation 62(3), 493--507 (2009).
  - A. Pallikaris, L. Tsoulos, & D. Paradissis,
@@ -7759,6 +7759,9 @@ git repository for GeographicLib</a>.
      allowing larger buckets on construction or by just do additional
      splits as necessary).
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
+   (released @PROJECT_DATE@)
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-06-22)

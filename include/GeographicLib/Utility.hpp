@@ -300,7 +300,8 @@ namespace GeographicLib {
       std::ostringstream s;
 #if GEOGRAPHICLIB_PRECISION == 4
       // boost-quadmath treats precision == 0 as "use as many digits as
-      // necessary" (see https://svn.boost.org/trac/boost/ticket/10103), so...
+      // necessary" (see https://svn.boost.org/trac/boost/ticket/10103 and
+      // https://github.com/boostorg/multiprecision/issues/416) so...
       using std::floor; using std::fmod;
       if (p == 0) {
         x += Math::real(0.5);

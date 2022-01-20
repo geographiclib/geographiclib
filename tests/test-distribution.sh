@@ -36,54 +36,8 @@ umask 0022
 #   doc/GeographicLib.dox.in (3 places)
 #   doc/NETGeographicLib.dox (a few places)
 
-# Need updating if underlying library changes
-
-# python
-#   python/setup.py
-#   python/geographiclib/__init__.py
-#   python/doc/index.rst (date + update change log)
-#   python/README.md
-# use: cd python; pylint geographiclib/*.py (need to reduce noise!)
-
-# MATLAB
-#   matlab/geographiclib/Contents.m version (multiple places) + date
-#   matlab/geographiclib-blurb.txt version (multiple places) + date
-#   update version number "%2F15%2F" in documentation link in index.html,
-#     GeographicLib.dox.in, geodesic-{c,for}.dox,
-#     java/src/main/java/net/sf/geographiclib/package-info.java,
-#     js/GeographicLib.md, python/doc/index.rst
-#   mathworks has switched to an uglier URL.  Only update if there are
-#   changes.
-# use MATLAB's analyze code
-
-# C
-#   legacy/C/geodesic.h comment + GEODESIC_VERSION_*
-#   doc/geodesic-c.dox (date + update change log)
-# PROJ integration
-#   geodesic.[hc], geodtest.c (renamed to src/tests/geodtest.cpp)
-#   plus docs/source/geodesic.rst docs/source/apps/geod.rst
-
-# Fortran
-#   legacy/Fortran/geodesic.for comment + geover
-#   doc/geodesic-for.dox (date + update change log)
-
-# Java
-#   java/pom.xml java/*/pom.xml
-#   java/src/main/java/net/sf/geographiclib/package-info.java (date +
-#   update change log)
-#   (remember to remove SNAPSHOT from version number of lib in test programs)
-# probably should deploy a SNAPSHOT version of the lib to grease the
-# wheels
-
 # maxima
 #   maxima/geodesic.mac
-
-# JavaScript
-#   js/src/Math.js
-#   js/package.json
-#   js/README.md
-#   js/GeographicLib.md (date + update change log)
-# use: cd js; jshint src
 
 START=`date +%s`
 DATE=`date +%F`
@@ -205,7 +159,7 @@ tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
     done
 )
 rm -rf GeographicLib-$VERSION
-rm java/.gitignore
+rm -f java/.gitignore
 for ((i=0; i<7; ++i)); do
     find * -type d -empty | xargs -r rmdir
 done
@@ -369,7 +323,6 @@ cd $TEMP/relx/GeographicLib-$VERSION
     find . -type f |
 	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.gif|\.pdf|\.xml' |
 	egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
-	egrep -v 'js/samples/geod-.*\.html' |
 	xargs grep -l  '	' || true
     echo
     echo Files with multiple newlines:
@@ -394,9 +347,6 @@ cd $TEMP/relx/GeographicLib-$VERSION
 	while read f; do
 	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
 	done
-    echo
-    echo JS files with bad comment ends:
-    find js -type f -name '*.js' | xargs grep -l '\*\*/' || true
     echo
 ) > $TEMP/badfiles.txt
 cat $TEMP/badfiles.txt
