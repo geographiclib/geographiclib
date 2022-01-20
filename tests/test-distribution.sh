@@ -101,7 +101,7 @@ else
 fi
 WINDOWSBUILDWIN=u:/temp
 GITSOURCE=file://$DEVELSOURCE
-WEBDIST=/home/ckarney/web-alt/geographiclib-web
+WEBDIST=/home/ckarney/web/geographiclib-web
 mkdir -p $WEBDIST/htdocs/C++
 NUMCPUS=4
 HAVEINTEL=

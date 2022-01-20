@@ -664,10 +664,9 @@ The following Fedora package is also useful for syntax checking python
 .
 Installing the python package requires the following \verbatim
   python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
-mpreal.h, version 3.6.8 or later, needs to be downloaded from
+mpreal.h, version 3.6.9 or later, needs to be downloaded from
 https://github.com/advanpix/mpreal and installed in the
-<code>include/</code> directory.  (Version 3.6.8 requires also the fixes
-given in pull requests #8 and #10.)  For all the tests to be run,
+<code>include/</code> directory.  For all the tests to be run,
 the following datasets need to be installed
 - geoid models: egm96-5
 - magnetic models: wmm2010 emm2015
@@ -7756,6 +7755,9 @@ git repository for GeographicLib</a>.
    - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
      class for conversions via the series?
    - Document restrictions on ranges of arguments to elliptic integrals.
+   - Allow addition of points to NearestNeighbor objects (maybe by
+     allowing larger buckets on construction or by just do additional
+     splits as necessary).
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>

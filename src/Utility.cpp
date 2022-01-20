@@ -33,11 +33,6 @@ namespace GeographicLib {
     return true;
   }
 
-  bool Utility::ParseLine(const std::string& line,
-                          std::string& key, std::string& value) {
-    return ParseLine(line, key, value, '\0');
-  }
-
   int Utility::set_digits(int ndigits) {
 #if GEOGRAPHICLIB_PRECISION == 5
     if (ndigits <= 0) {

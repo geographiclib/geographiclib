@@ -621,8 +621,8 @@ namespace GeographicLib {
      * @param[in] line the input line.
      * @param[out] key the KEY.
      * @param[out] value the VALUE.
-     * @param[in] delim delimiter to separate KEY and VALUE, if NULL use first
-     *   space character.
+     * @param[in] delim delimiter to separate KEY and VALUE, if NULL (the
+     *   default) use first space character.
      * @exception std::bad_alloc if memory for the internal strings can't be
      *   allocated.
      * @return whether a key was found.
@@ -636,25 +636,7 @@ namespace GeographicLib {
      **********************************************************************/
     static bool ParseLine(const std::string& line,
                           std::string& key, std::string& value,
-                          char delim);
-
-    /**
-     * Parse a KEY VALUE line.
-     *
-     * @param[in] line the input line.
-     * @param[out] key the KEY.
-     * @param[out] value the VALUE.
-     * @exception std::bad_alloc if memory for the internal strings can't be
-     *   allocated.
-     * @return whether a key was found.
-     *
-     * \note This is a transition routine.  At some point \e delim will be made
-     * an optional argument in the previous version of ParseLine and this
-     * version will be removed.
-     **********************************************************************/
-
-    static bool ParseLine(const std::string& line,
-                          std::string& key, std::string& value);
+                          char delim = '\0');
 
     /**
      * Set the binary precision of a real number.

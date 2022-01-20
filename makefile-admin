@@ -4,7 +4,7 @@
 # git: /home/git/p/geographiclib/code.git
 
 USER=karney
-STAGE=$(HOME)/web-alt
+STAGE=$(HOME)/web
 WEBSTAGE=$(STAGE)/geographiclib-web
 DATASTAGE=$(STAGE)/geographiclib-files
 SCRIPTSTAGE=$(WEBSTAGE)/htdocs/scripts
