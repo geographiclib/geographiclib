@@ -41,7 +41,7 @@ namespace GeographicLib {
     real ex2 = _f < 0 ? -_e2 : _ep2;
     _qQ0 = Qf(ex2, _f < 0);
     _earth = Geocentric(_a, _f);
-    _eE = _a * sqrt(abs(_e2));  // H+M, Eq 2-54
+    _eE = _a * sqrt(fabs(_e2));  // H+M, Eq 2-54
     // H+M, Eq 2-61
     _uU0 = _gGM * atanzz(ex2, _f < 0) / _b + _aomega2 / 3;
     real P = Hf(ex2, _f < 0) / (6 * _qQ0);
@@ -115,7 +115,7 @@ namespace GeographicLib {
     //        = q(z)/z^3 with q(z) defined by H+M, Eq 2-57 with z = E/u
     //   z = sqrt(x)
     real y = alt ? -x / (1 + x) : x;
-    return !(4 * abs(y) < 1) ?  // Backwards test to allow NaNs through
+    return !(4 * fabs(y) < 1) ?  // Backwards test to allow NaNs through
       ((1 + 3/y) * atanzz(x, alt) - 3/y) / (2 * y) :
       (3 * (3 + y) * atan5series(y) - 1) / 6;
   }
@@ -127,7 +127,7 @@ namespace GeographicLib {
     //        = (3 * (1 + 1/z^2) * (1 - atan(z)/z) - 1) / z^2
     //        = q'(z)/z^2, with q'(z) defined by H+M, Eq 2-67, with z = E/u
     real y = alt ? -x / (1 + x) : x;
-    return !(4 * abs(y) < 1) ?  // Backwards test to allow NaNs through
+    return !(4 * fabs(y) < 1) ?  // Backwards test to allow NaNs through
       (3 * (1 + 1/y) * (1 - atanzz(x, alt)) - 1) / y :
       1 - 3 * (1 + y) * atan5series(y);
   }
@@ -139,7 +139,7 @@ namespace GeographicLib {
     //   = ((15+9*z^2)*atan(z)-4*z^3-15*z)/(6*z^7)
     //   = ((25+15*z^2)*atan7+3)/10
     real y = alt ? -x / (1 + x) : x;
-    return !(4 * abs(y) < 1) ? // Backwards test to allow NaNs through
+    return !(4 * fabs(y) < 1) ? // Backwards test to allow NaNs through
       ((9 + 15/y) * atanzz(x, alt) - 4 - 15/y) / (6 * Math::sq(y)) :
       ((25 + 15*y) * atan7series(y) + 3)/10;
   }
@@ -266,9 +266,9 @@ namespace GeographicLib {
     // Q0 = pi/(4*z^3) - 2/z^4 + (3*pi)/(4*z^5), z = sqrt(ep2), and balance two
     // leading terms to give
     real
-      ep2 = max(Math::sq(32 * K / (3 * Math::sq(Math::pi()) * (J0 - J2))),
+      ep2 = fmax(Math::sq(32 * K / (3 * Math::sq(Math::pi()) * (J0 - J2))),
                 -maxe_),
-      e2 = min(ep2 / (1 + ep2), maxe_);
+      e2 = fmin(ep2 / (1 + ep2), maxe_);
     for (int j = 0; j < maxit_ || GEOGRAPHICLIB_PANIC; ++j) {
       real
         e2a = e2, ep2a = ep2,
@@ -278,9 +278,9 @@ namespace GeographicLib {
         h = e2 - f1 * f2 * K / Q0 - 3 * J2,
         dh = 1 - 3 * f1 * K * QH3f(e2 < 0 ? -e2 : ep2, e2 < 0) /
                      (2 * Math::sq(Q0));
-      e2 = min(e2a - h / dh, maxe_);
-      ep2 = max(e2 / (1 - e2), -maxe_);
-      if (abs(h) < eps2_ || e2 == e2a || ep2 == ep2a)
+      e2 = fmin(e2a - h / dh, maxe_);
+      ep2 = fmax(e2 / (1 - e2), -maxe_);
+      if (fabs(h) < eps2_ || e2 == e2a || ep2 == ep2a)
         break;
     }
     return e2 / (1 + sqrt(1 - e2));

@@ -53,7 +53,7 @@ namespace GeographicLib {
     real cbet1, sbet1;
     Math::sincosd(Math::AngRound(_lat1), sbet1, cbet1); sbet1 *= _f1;
     // Ensure cbet1 = +epsilon at poles
-    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
+    Math::norm(sbet1, cbet1); cbet1 = fmax(tiny_, cbet1);
     _dn1 = sqrt(1 + g._ep2 * Math::sq(sbet1));
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -163,7 +163,7 @@ namespace GeographicLib {
                                      _cC1pa, nC1p_);
       sig12 = tau12 - (B12 - _bB11);
       ssig12 = sin(sig12); csig12 = cos(sig12);
-      if (abs(_f) > 0.01) {
+      if (fabs(_f) > 0.01) {
         // Reverted distance series is inaccurate for |f| > 1/100, so correct
         // sig12 with 1 Newton iteration.  The following table shows the
         // approximate maximum error for a = WGS_a() and various f relative to
@@ -203,7 +203,7 @@ namespace GeographicLib {
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
     real dn2 = sqrt(1 + _k2 * Math::sq(ssig2));
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
-      if (arcmode || abs(_f) > 0.01)
+      if (arcmode || fabs(_f) > 0.01)
         B12 = Geodesic::SinCosSeries(true, ssig2, csig2, _cC1a, nC1_);
       AB1 = (1 + _aA1m1) * (B12 - _bB11);
     }

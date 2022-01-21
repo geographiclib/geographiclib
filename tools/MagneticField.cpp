@@ -89,13 +89,13 @@ int main(int argc, const char* const argv[]) {
       } else if (arg == "-c") {
         if (m + 3 >= argc) return usage(1, true);
         try {
-          using std::abs;
+          using std::fabs;
           time = Utility::fractionalyear<real>(std::string(argv[++m]));
           DMS::flag ind;
           lat = DMS::Decode(std::string(argv[++m]), ind);
           if (ind == DMS::LONGITUDE)
             throw GeographicErr("Bad hemisphere letter on latitude");
-          if (!(abs(lat) <= 90))
+          if (!(fabs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
           h = Utility::val<real>(std::string(argv[++m]));
           timeset = false;
@@ -213,8 +213,9 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    tguard = std::max(real(0), tguard);
-    hguard = std::max(real(0), hguard);
+    using std::fmax;
+    tguard = fmax(real(0), tguard);
+    hguard = fmax(real(0), hguard);
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     int retval = 0;
     try {

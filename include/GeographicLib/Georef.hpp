@@ -152,7 +152,7 @@ namespace GeographicLib {
      * The returned length is in the range [0, 11].
      **********************************************************************/
     static int Precision(real res) {
-      using std::abs; res = abs(res);
+      using std::fabs; res = fabs(res);
       for (int prec = 0; prec < maxprec_; ++prec) {
         if (prec == 1)
           continue;

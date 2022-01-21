@@ -431,7 +431,7 @@ namespace GeographicLib {
      *   return NaN.
      **********************************************************************/
     template<typename T> static T LatFix(T x)
-    { using std::abs; return abs(x) > 90 ? NaN<T>() : x; }
+    { using std::fabs; return fabs(x) > 90 ? NaN<T>() : x; }
 
     /**
      * The exact difference of two angles reduced to

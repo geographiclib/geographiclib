@@ -126,7 +126,7 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real res) {
-      using std::abs; res = abs(res);
+      using std::fabs; res = fabs(res);
       for (int len = 0; len < maxlen_; ++len)
         if (LongitudeResolution(len) <= res)
           return len;
@@ -143,9 +143,9 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real latres, real lonres) {
-      using std::abs;
-      latres = abs(latres);
-      lonres = abs(lonres);
+      using std::fabs;
+      latres = fabs(latres);
+      lonres = fabs(lonres);
       for (int len = 0; len < maxlen_; ++len)
         if (LatitudeResolution(len) <= latres &&
             LongitudeResolution(len) <= lonres)

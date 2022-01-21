@@ -335,8 +335,8 @@ namespace GeographicLib {
     , _azi12(Math::AngNormalize(azi12))
   {
     real alp12 = _azi12 * Math::degree();
-    _salp =     _azi12  == -180 ? 0 : sin(alp12);
-    _calp = abs(_azi12) ==   90 ? 0 : cos(alp12);
+    _salp =      _azi12  == -180 ? 0 : sin(alp12);
+    _calp = fabs(_azi12) ==   90 ? 0 : cos(alp12);
     _mu1 = _rh._ell.RectifyingLatitude(lat1);
     _psi1 = _rh._ell.IsometricLatitude(lat1);
     _r1 = _rh._ell.CircleRadius(lat1);
@@ -348,7 +348,7 @@ namespace GeographicLib {
       mu12 = s12 * _calp * 90 / _rh._ell.QuarterMeridian(),
       mu2 = _mu1 + mu12;
     real psi2, lat2x, lon2x;
-    if (abs(mu2) <= 90) {
+    if (fabs(mu2) <= 90) {
       if (_calp != 0) {
         lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
         real psi12 = _rh.DRectifyingToIsometric(  mu2 * Math::degree(),
@@ -369,7 +369,7 @@ namespace GeographicLib {
       // Reduce to the interval [-180, 180)
       mu2 = Math::AngNormalize(mu2);
       // Deal with points on the anti-meridian
-      if (abs(mu2) > 90) mu2 = Math::AngNormalize(180 - mu2);
+      if (fabs(mu2) > 90) mu2 = Math::AngNormalize(180 - mu2);
       lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
       lon2x = Math::NaN();
       if (outmask & AREA)

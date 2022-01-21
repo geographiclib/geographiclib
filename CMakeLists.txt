@@ -532,7 +532,7 @@ if (WIN32)
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   # No provision for accommodating different compiler versions.  However
   # the Visual Studio 14 2015 build works also with Visual Studio 15
-  # 2017 and Visual Studio 16 2019.
+  # 2017, Visual Studio 16 2019, and Visual Studio 17 2022.
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files")
     set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")

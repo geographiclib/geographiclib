@@ -70,7 +70,7 @@ namespace GeographicLib {
       real ds = little ? (m - rho * M) * M : (rho * m - M) * m;
       s -= ds;
       // Reversed test to allow escape with NaNs
-      if (!(abs(ds) >= eps_ * _a))
+      if (!(fabs(ds) >= eps_ * _a))
         ++trip;
     }
     if (trip) {

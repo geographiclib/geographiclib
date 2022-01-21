@@ -114,13 +114,13 @@ namespace GeographicLib {
     os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
     if (isfinite(easting)) {
       os << " " << Utility::str(easting / scale, max(0, prec));
-      if (prec < 0 && abs(easting / scale) > real(0.5))
+      if (prec < 0 && fabs(easting / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else
       os << " nan";
     if (isfinite(northing)) {
       os << " " << Utility::str(northing / scale, max(0, prec));
-      if (prec < 0 && abs(northing / scale) > real(0.5))
+      if (prec < 0 && fabs(northing / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else
       os << " nan";

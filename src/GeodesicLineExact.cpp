@@ -54,7 +54,7 @@ namespace GeographicLib {
     real cbet1, sbet1;
     Math::sincosd(Math::AngRound(_lat1), sbet1, cbet1); sbet1 *= _f1;
     // Ensure cbet1 = +epsilon at poles
-    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
+    Math::norm(sbet1, cbet1); cbet1 = fmax(tiny_, cbet1);
     _dn1 = (_f >= 0 ? sqrt(1 + g._ep2 * Math::sq(sbet1)) :
             sqrt(1 - _e2 * Math::sq(cbet1)) / _f1);
 
@@ -150,7 +150,7 @@ namespace GeographicLib {
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * Math::degree();
-      real s12a = abs(s12_a12);
+      real s12a = fabs(s12_a12);
       s12a -= 180 * floor(s12a / 180);
       ssig12 = s12a ==  0 ? 0 : sin(sig12);
       csig12 = s12a == 90 ? 0 : cos(sig12);

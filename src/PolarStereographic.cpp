@@ -17,7 +17,7 @@ namespace GeographicLib {
     : _a(a)
     , _f(f)
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
     , _e2m(1 - _e2)
     , _c( (1 - _f) * exp(Math::eatanhe(real(1), _es)) )
     , _k0(k0)
@@ -67,7 +67,7 @@ namespace GeographicLib {
       tau = Math::tand(lat),
       secphi = hypot(real(1), tau),
       taup = Math::taupf(tau, _es),
-      rho = hypot(real(1), taup) + abs(taup);
+      rho = hypot(real(1), taup) + fabs(taup);
     rho = taup >= 0 ? (lat != 90 ? 1/rho : 0) : rho;
     rho *= 2 * _k0 * _a / _c;
     k = lat != 90 ? (rho / _a) * secphi * sqrt(_e2m + _e2 / Math::sq(secphi)) :

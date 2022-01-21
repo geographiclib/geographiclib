@@ -22,7 +22,7 @@ namespace GeographicLib {
     , _f(f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
   {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
@@ -30,7 +30,7 @@ namespace GeographicLib {
       throw GeographicErr("Polar semi-axis is not positive");
     if (!(isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(abs(stdlat) <= 90))
+    if (!(fabs(stdlat) <= 90))
       throw GeographicErr("Standard latitude not in [-90d, 90d]");
     real sphi, cphi;
     Math::sincosd(stdlat, sphi, cphi);
@@ -47,7 +47,7 @@ namespace GeographicLib {
     , _f(f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
   {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
@@ -55,9 +55,9 @@ namespace GeographicLib {
       throw GeographicErr("Polar semi-axis is not positive");
     if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(abs(stdlat1) <= 90))
+    if (!(fabs(stdlat1) <= 90))
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
-    if (!(abs(stdlat2) <= 90))
+    if (!(fabs(stdlat2) <= 90))
       throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
     real sphi1, cphi1, sphi2, cphi2;
     Math::sincosd(stdlat1, sphi1, cphi1);
@@ -76,7 +76,7 @@ namespace GeographicLib {
     , _f(f)
     , _fm(1 - _f)
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
   {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
@@ -88,9 +88,9 @@ namespace GeographicLib {
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
     if (!(coslat2 >= 0))
       throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
-    if (!(abs(sinlat1) <= 1 && coslat1 <= 1) || (coslat1 == 0 && sinlat1 == 0))
+    if (!(fabs(sinlat1) <= 1 && coslat1 <= 1) || (coslat1 == 0 && sinlat1 == 0))
       throw GeographicErr("Bad sine/cosine of standard latitude 1");
-    if (!(abs(sinlat2) <= 1 && coslat2 <= 1) || (coslat2 == 0 && sinlat2 == 0))
+    if (!(fabs(sinlat2) <= 1 && coslat2 <= 1) || (coslat2 == 0 && sinlat2 == 0))
       throw GeographicErr("Bad sine/cosine of standard latitude 2");
     if (coslat1 == 0 || coslat2 == 0)
       if (!(coslat1 == coslat2 && sinlat1 == sinlat2))
@@ -109,8 +109,8 @@ namespace GeographicLib {
       sphi2 /= r; cphi2 /= r;
     }
     bool polar = (cphi1 == 0);
-    cphi1 = max(epsx_, cphi1);   // Avoid singularities at poles
-    cphi2 = max(epsx_, cphi2);
+    cphi1 = fmax(epsx_, cphi1);   // Avoid singularities at poles
+    cphi2 = fmax(epsx_, cphi2);
     // Determine hemisphere of tangent latitude
     _sign = sphi1 + sphi2 >= 0 ? 1 : -1;
     // Internally work with tangent latitude positive
@@ -265,7 +265,7 @@ namespace GeographicLib {
           dchia = (amu12 - dnu12 * (scphi2 + scphi1)),
           tam = (dchia - dtchi * dbet) / (scchi1 + scchi2);
         t *= tbm - tam;
-        _nc = sqrt(max(real(0), t) * (1 + _n));
+        _nc = sqrt(fmax(real(0), t) * (1 + _n));
       }
       {
         real r = hypot(_n, _nc);
@@ -344,7 +344,7 @@ namespace GeographicLib {
     // and drho is evaluated with divided differences
     real sphi, cphi;
     Math::sincosd(Math::LatFix(lat) * _sign, sphi, cphi);
-    cphi = max(epsx_, cphi);
+    cphi = fmax(epsx_, cphi);
     real
       lam = lon * Math::degree(),
       tphi = sphi/cphi, scbet = hyp(_fm * tphi),
@@ -394,9 +394,9 @@ namespace GeographicLib {
       drho = ((den != 0 && isfinite(den))
               ? (x*nx + y * (ny - 2*_nrho0)) / den
               : den);
-    drho = min(drho, _drhomax);
+    drho = fmin(drho, _drhomax);
     if (_n == 0)
-      drho = max(drho, -_drhomax);
+      drho = fmax(drho, -_drhomax);
     real
       tnm1 = _t0nm1 + _n * drho/_scale,
       dpsi = (den == 0 ? 0 :
@@ -441,9 +441,9 @@ namespace GeographicLib {
   void LambertConformalConic::SetScale(real lat, real k) {
     if (!(isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(abs(lat) <= 90))
+    if (!(fabs(lat) <= 90))
       throw GeographicErr("Latitude for SetScale not in [-90d, 90d]");
-    if (abs(lat) == 90 && !(_nc == 0 && lat * _n > 0))
+    if (fabs(lat) == 90 && !(_nc == 0 && lat * _n > 0))
       throw GeographicErr("Incompatible polar latitude in SetScale");
     real x, y, gamma, kold;
     Forward(0, lat, 0, x, y, gamma, kold);

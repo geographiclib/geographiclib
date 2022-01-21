@@ -91,12 +91,12 @@ int main(int argc, const char* const argv[]) {
       else if (arg == "-c") {
         if (m + 2 >= argc) return usage(1, true);
         try {
-          using std::abs;
+          using std::fabs;
           DMS::flag ind;
           lat = DMS::Decode(std::string(argv[++m]), ind);
           if (ind == DMS::LONGITUDE)
             throw GeographicErr("Bad hemisphere letter on latitude");
-          if (!(abs(lat) <= 90))
+          if (!(fabs(lat) <= 90))
             throw GeographicErr("Latitude not in [-90d, 90d]");
           h = Utility::val<real>(std::string(argv[++m]));
           circle = true;

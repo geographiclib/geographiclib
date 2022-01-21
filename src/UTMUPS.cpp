@@ -66,7 +66,7 @@ namespace GeographicLib {
                        int& zone, bool& northp, real& x, real& y,
                        real& gamma, real& k,
                        int setzone, bool mgrslimits) {
-    if (abs(lat) > 90)
+    if (fabs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
     bool northp1 = lat >= 0;
@@ -83,7 +83,7 @@ namespace GeographicLib {
       real
         lon0 = CentralMeridian(zone1),
         dlon = lon - lon0;
-      dlon = abs(dlon - 360 * floor((dlon + 180)/360));
+      dlon = fabs(dlon - 360 * floor((dlon + 180)/360));
       if (!(dlon <= 60))
         // Check isn't really necessary because CheckCoords catches this case.
         // But this allows a more meaningful error message to be given.
@@ -92,7 +92,7 @@ namespace GeographicLib {
                             + Utility::str(zone1));
       TransverseMercator::UTM().Forward(lon0, lat, lon, x1, y1, gamma1, k1);
     } else {
-      if (abs(lat) < 70)
+      if (fabs(lat) < 70)
         // Check isn't really necessary ... (see above).
         throw GeographicErr("Latitude " + Utility::str(lat)
                             + "d more than 20d from "

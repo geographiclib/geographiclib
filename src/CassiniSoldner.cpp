@@ -37,12 +37,12 @@ namespace GeographicLib {
       return;
     real dlon = Math::AngDiff(LongitudeOrigin(), lon);
     real sig12, s12, azi1, azi2;
-    sig12 = _earth.Inverse(lat, -abs(dlon), lat, abs(dlon), s12, azi1, azi2);
+    sig12 = _earth.Inverse(lat, -fabs(dlon), lat, fabs(dlon), s12, azi1, azi2);
     sig12 *= real(0.5);
     s12 *= real(0.5);
     if (s12 == 0) {
       real da = Math::AngDiff(azi1, azi2)/2;
-      if (abs(dlon) <= 90) {
+      if (fabs(dlon) <= 90) {
         azi1 = 90 - da;
         azi2 = 90 + da;
       } else {
@@ -67,7 +67,7 @@ namespace GeographicLib {
     Math::sincosd(perp.EquatorialAzimuth(), salp0, calp0);
     real
       sbet1 = lat >=0 ? calp0 : -calp0,
-      cbet1 = abs(dlon) <= 90 ? abs(salp0) : -abs(salp0),
+      cbet1 = fabs(dlon) <= 90 ? fabs(salp0) : -fabs(salp0),
       sbet01 = sbet1 * _cbet0 - cbet1 * _sbet0,
       cbet01 = cbet1 * _cbet0 + sbet1 * _sbet0,
       sig01 = atan2(sbet01, cbet01) / Math::degree();

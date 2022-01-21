@@ -375,7 +375,7 @@ namespace GeographicLib {
     real
       lat1 = ia == LATITUDE ? a : b,
       lon1 = ia == LATITUDE ? b : a;
-    if (abs(lat1) > 90)
+    if (fabs(lat1) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat1)
                           + "d not in [-90d, 90d]");
     lat = lat1;

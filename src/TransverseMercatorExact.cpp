@@ -191,7 +191,7 @@ namespace GeographicLib {
       scal = 1/hypot(real(1), taup);
     if (zetainv0(psi, lam, u, v))
       return;
-    real stol2 = tol2_ / Math::sq(max(psi, real(1)));
+    real stol2 = tol2_ / Math::sq(fmax(psi, real(1)));
     // min iterations = 2, max iterations = 6; mean = 4.0
     for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;

@@ -117,7 +117,7 @@ namespace GeographicLib {
   template<typename T> T Math::AngRound(T x) {
     static const T z = 1/T(16);
     if (x == 0) return 0;
-    GEOGRAPHICLIB_VOLATILE T y = abs(x);
+    GEOGRAPHICLIB_VOLATILE T y = fabs(x);
     // The compiler mustn't "simplify" z - (z - y) to y
     y = y < z ? z - (z - y) : y;
     return x < 0 ? -y : y;
@@ -183,7 +183,7 @@ namespace GeographicLib {
     // converting it to degrees and mapping the result to the correct
     // quadrant.
     int q = 0;
-    if (abs(y) > abs(x)) { swap(x, y); q = 2; }
+    if (fabs(y) > fabs(x)) { swap(x, y); q = 2; }
     if (x < 0) { x = -x; ++q; }
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
     T ang = atan2(y, x) / degree<T>();
@@ -239,15 +239,15 @@ namespace GeographicLib {
       // sufficiently large tau (such that sqrt(1+tau^2) = |tau|), we can exit
       // with the intial guess and avoid overflow problems.  This also reduces
       // the mean number of iterations slightly from 1.963 to 1.954.
-      tau = abs(taup) > 70 ? taup * exp(eatanhe(T(1), es)) : taup/e2m,
-      stol = tol * max(T(1), abs(taup));
-    if (!(abs(tau) < taumax)) return tau; // handles +/-inf and nan
+      tau = fabs(taup) > 70 ? taup * exp(eatanhe(T(1), es)) : taup/e2m,
+      stol = tol * fmax(T(1), fabs(taup));
+    if (!(fabs(tau) < taumax)) return tau; // handles +/-inf and nan
     for (int i = 0; i < numit || GEOGRAPHICLIB_PANIC; ++i) {
       T taupa = taupf(tau, es),
         dtau = (taup - taupa) * (1 + e2m * sq(tau)) /
         ( e2m * hypot(T(1), tau) * hypot(T(1), taupa) );
       tau += dtau;
-      if (!(abs(dtau) >= stol))
+      if (!(fabs(dtau) >= stol))
         break;
     }
     return tau;

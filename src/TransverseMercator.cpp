@@ -46,7 +46,7 @@ namespace GeographicLib {
     , _f(f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) ) )
       // See, for example, Lee (1976), p 100.
@@ -500,7 +500,7 @@ namespace GeographicLib {
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
     gamma -= Math::atan2d(z1.imag(), z1.real());
-    k *= _b1 * abs(z1);
+    k *= _b1 * fabs(z1);
     real xi = y1.real(), eta = y1.imag();
     y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
@@ -552,7 +552,7 @@ namespace GeographicLib {
     y1 = complex<real>(xi, eta) + a * y0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
     gamma = Math::atan2d(z1.imag(), z1.real());
-    k = _b1 / abs(z1);
+    k = _b1 / fabs(z1);
     // JHS 154 has
     //
     //   phi' = asin(sin(xi') / cosh(eta')) (Krueger p 17 (25))
@@ -561,7 +561,7 @@ namespace GeographicLib {
     real
       xip = y1.real(), etap = y1.imag(),
       s = sinh(etap),
-      c = max(real(0), cos(xip)), // cos(pi/2) might be negative
+      c = fmax(real(0), cos(xip)), // cos(pi/2) might be negative
       r = hypot(s, c);
     if (r != 0) {
       lon = Math::atan2d(s, c); // Krueger p 17 (25)

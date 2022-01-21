@@ -22,7 +22,7 @@ namespace GeographicLib {
     static const real shift = ldexp(real(1), 45);
     static const real loneps = 180 / shift;
     static const real lateps =  90 / shift;
-    if (abs(lat) > 90)
+    if (fabs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
     if (isnan(lat) || isnan(lon)) {

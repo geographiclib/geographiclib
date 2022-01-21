@@ -69,7 +69,7 @@ namespace GeographicLib {
     , _c2((Math::sq(_a) + Math::sq(_b) *
            (_f == 0 ? 1 :
             (_f > 0 ? asinh(sqrt(_ep2)) : atan(sqrt(-_e2))) /
-            sqrt(abs(_e2))))/2) // authalic radius squared
+            sqrt(fabs(_e2))))/2) // authalic radius squared
       // The sig12 threshold for "really short".  Using the auxiliary sphere
       // solution with dnm computed at (bet1 + bet2) / 2, the relative error in
       // the azimuth consistency check is sig12^2 * abs(f) * min(1, 1-f/2) / 2.
@@ -81,7 +81,7 @@ namespace GeographicLib {
       // and max(0.001, abs(f)) stops etol2 getting too large in the nearly
       // spherical case.
     , _etol2(real(0.1) * tol2_ /
-             sqrt( max(real(0.001), abs(_f)) * min(real(1), 1 - _f/2) / 2 ))
+             sqrt( fmax(real(0.001), fabs(_f)) * fmin(real(1), 1 - _f/2) / 2 ))
   {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
@@ -193,7 +193,7 @@ namespace GeographicLib {
     lat2 = Math::AngRound(Math::LatFix(lat2));
     // Swap points so that point with higher (abs) latitude is point 1
     // If one latitude is a nan, then it becomes lat1.
-    int swapp = abs(lat1) < abs(lat2) || isnan(lat2) ? -1 : 1;
+    int swapp = fabs(lat1) < fabs(lat2) || isnan(lat2) ? -1 : 1;
     if (swapp < 0) {
       lonsign *= -1;
       swap(lat1, lat2);
@@ -222,11 +222,11 @@ namespace GeographicLib {
     Math::sincosd(lat1, sbet1, cbet1); sbet1 *= _f1;
     // Ensure cbet1 = +epsilon at poles; doing the fix on beta means that sig12
     // will be <= 2*tiny for two points at the same pole.
-    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
+    Math::norm(sbet1, cbet1); cbet1 = fmax(tiny_, cbet1);
 
     Math::sincosd(lat2, sbet2, cbet2); sbet2 *= _f1;
     // Ensure cbet2 = +epsilon at poles
-    Math::norm(sbet2, cbet2); cbet2 = max(tiny_, cbet2);
+    Math::norm(sbet2, cbet2); cbet2 = fmax(tiny_, cbet2);
 
     // If cbet1 < -sbet1, then cbet2 - cbet1 is a sensitive measure of the
     // |bet1| - |bet2|.  Alternatively (cbet1 >= -sbet1), abs(sbet2) + sbet1 is
@@ -240,7 +240,7 @@ namespace GeographicLib {
       if (cbet2 == cbet1)
         sbet2 = sbet2 < 0 ? sbet1 : -sbet1;
     } else {
-      if (abs(sbet2) == -sbet1)
+      if (fabs(sbet2) == -sbet1)
         cbet2 = cbet1;
     }
 
@@ -268,8 +268,8 @@ namespace GeographicLib {
         ssig2 = sbet2, csig2 = calp2 * cbet2;
 
       // sig12 = sig2 - sig1
-      sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                                 csig1 * csig2 + ssig1 * ssig2);
+      sig12 = atan2(fmax(real(0), csig1 * ssig2 - ssig1 * csig2),
+                                  csig1 * csig2 + ssig1 * ssig2);
       {
         real dummy;
         Lengths(E, sig12, ssig1, csig1, dn1, ssig2, csig2, dn2,
@@ -380,7 +380,7 @@ namespace GeographicLib {
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             E, domg12, numit < maxit1_, dv);
           // Reversed test to allow escape with NaNs
-          if (tripb || !(abs(v) >= (tripn ? 8 : 1) * tol0_)) break;
+          if (tripb || !(fabs(v) >= (tripn ? 8 : 1) * tol0_)) break;
           // Update bracketing values
           if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b))
             { salp1b = salp1; calp1b = calp1; }
@@ -392,14 +392,14 @@ namespace GeographicLib {
             real
               sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
               nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-            if (nsalp1 > 0 && abs(dalp1) < Math::pi()) {
+            if (nsalp1 > 0 && fabs(dalp1) < Math::pi()) {
               calp1 = calp1 * cdalp1 - salp1 * sdalp1;
               salp1 = nsalp1;
               Math::norm(salp1, calp1);
               // In some regimes we don't get quadratic convergence because
               // slope -> 0.  So use convergence conditions based on epsilon
               // instead of sqrt(epsilon).
-              tripn = abs(v) <= 16 * tol0_;
+              tripn = fabs(v) <= 16 * tol0_;
               continue;
             }
           }
@@ -415,8 +415,8 @@ namespace GeographicLib {
           calp1 = (calp1a + calp1b)/2;
           Math::norm(salp1, calp1);
           tripn = false;
-          tripb = (abs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
-                   abs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
+          tripb = (fabs(salp1a - salp1) + (calp1a - calp1) < tolb_ ||
+                   fabs(salp1 - salp1b) + (calp1 - calp1b) < tolb_);
         }
         {
           real dummy;
@@ -699,9 +699,9 @@ namespace GeographicLib {
       Math::norm(salp2, calp2);
       // Set return value
       sig12 = atan2(ssig12, csig12);
-    } else if (abs(_n) > real(0.1) || // Skip astroid calc if too eccentric
+    } else if (fabs(_n) > real(0.1) || // Skip astroid calc if too eccentric
                csig12 >= 0 ||
-               ssig12 >= 6 * abs(_n) * Math::pi() * Math::sq(cbet1)) {
+               ssig12 >= 6 * fabs(_n) * Math::pi() * Math::sq(cbet1)) {
       // Nothing to do, zeroth order spherical approximation is OK
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
@@ -745,9 +745,9 @@ namespace GeographicLib {
         // strip near cut
         // Need real(x) here to cast away the volatility of x for min/max
         if (_f >= 0) {
-          salp1 = min(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
+          salp1 = fmin(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
         } else {
-          calp1 = max(real(x > -tol1_ ? 0 : -1), real(x));
+          calp1 = fmax(real(x > -tol1_ ? 0 : -1), real(x));
           salp1 = sqrt(1 - Math::sq(calp1));
         }
       } else {
@@ -846,12 +846,12 @@ namespace GeographicLib {
     //       = sqrt(sq(calp0) - sq(sbet2)) / cbet2
     // and subst for calp0 and rearrange to give (choose positive sqrt
     // to give alp2 in [0, pi/2]).
-    calp2 = cbet2 != cbet1 || abs(sbet2) != -sbet1 ?
+    calp2 = cbet2 != cbet1 || fabs(sbet2) != -sbet1 ?
       sqrt(Math::sq(calp1 * cbet1) +
            (cbet1 < -sbet1 ?
             (cbet2 - cbet1) * (cbet1 + cbet2) :
             (sbet1 - sbet2) * (sbet1 + sbet2))) / cbet2 :
-      abs(calp1);
+      fabs(calp1);
     // tan(bet2) = tan(sig2) * cos(alp2)
     // tan(omg2) = sin(alp0) * tan(sig2).
     ssig2 = sbet2; somg2 = salp0 * sbet2;
@@ -863,18 +863,18 @@ namespace GeographicLib {
     // Math::norm(schi2, cchi2); -- don't need to normalize!
 
     // sig12 = sig2 - sig1, limit to [0, pi]
-    sig12 = atan2(max(real(0), csig1 * ssig2 - ssig1 * csig2),
-                               csig1 * csig2 + ssig1 * ssig2);
+    sig12 = atan2(fmax(real(0), csig1 * ssig2 - ssig1 * csig2),
+                                csig1 * csig2 + ssig1 * ssig2);
 
     // omg12 = omg2 - omg1, limit to [0, pi]
-    somg12 = max(real(0), comg1 * somg2 - somg1 * comg2);
-    comg12 =              comg1 * comg2 + somg1 * somg2;
+    somg12 = fmax(real(0), comg1 * somg2 - somg1 * comg2);
+    comg12 =               comg1 * comg2 + somg1 * somg2;
     real k2 = Math::sq(calp0) * _ep2;
     E.Reset(-k2, -_ep2, 1 + k2, 1 + _ep2);
     // chi12 = chi2 - chi1, limit to [0, pi]
     real
-      schi12 = max(real(0), cchi1 * somg2 - somg1 * cchi2),
-      cchi12 =              cchi1 * cchi2 + somg1 * somg2;
+      schi12 = fmax(real(0), cchi1 * somg2 - somg1 * cchi2),
+      cchi12 =               cchi1 * cchi2 + somg1 * somg2;
     // eta = chi12 - lam120
     real eta = atan2(schi12 * clam120 - cchi12 * slam120,
                      cchi12 * clam120 + schi12 * slam120);
