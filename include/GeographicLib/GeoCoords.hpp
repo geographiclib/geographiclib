@@ -538,12 +538,6 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     Math::real Flattening() const { return UTMUPS::Flattening(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };

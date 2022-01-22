@@ -287,12 +287,6 @@ namespace GeographicLib {
      **********************************************************************/
     void CurrentPoint(real& lat, real& lon) const
     { lat = _lat1; lon = _lon1; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };
 

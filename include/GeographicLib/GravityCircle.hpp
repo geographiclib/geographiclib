@@ -273,12 +273,6 @@ namespace GeographicLib {
     bool Capabilities(unsigned testcaps) const {
       return (_caps & testcaps) == testcaps;
     }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };
 

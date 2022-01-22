@@ -248,12 +248,6 @@ namespace GeographicLib {
      * @return false easting the OSGB projection (400000 meters).
      **********************************************************************/
     static Math::real FalseEasting() { return real(400000); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 
   };

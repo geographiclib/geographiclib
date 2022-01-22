@@ -206,12 +206,6 @@ namespace GeographicLib {
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _earth.Flattening(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };

@@ -54,54 +54,6 @@ namespace GeographicLib {
       digits10() - numeric_limits<double>::digits10 : 0;
   }
 
-  template<typename T> T Math::hypot(T x, T y) {
-    using std::hypot; return hypot(x, y);
-  }
-
-  template<typename T> T Math::expm1(T x) {
-    using std::expm1; return expm1(x);
-  }
-
-  template<typename T> T Math::log1p(T x) {
-    using std::log1p; return log1p(x);
-  }
-
-  template<typename T> T Math::asinh(T x) {
-    using std::asinh; return asinh(x);
-  }
-
-  template<typename T> T Math::atanh(T x) {
-    using std::atanh; return atanh(x);
-  }
-
-  template<typename T> T Math::copysign(T x, T y) {
-    using std::copysign; return copysign(x, y);
-  }
-
-  template<typename T> T Math::cbrt(T x) {
-    using std::cbrt; return cbrt(x);
-  }
-
-  template<typename T> T Math::remainder(T x, T y) {
-    using std::remainder; return remainder(x, y);
-  }
-
-  template<typename T> T Math::remquo(T x, T y, int* n) {
-    using std::remquo; return remquo(x, y, n);
-  }
-
-  template<typename T> T Math::round(T x) {
-    using std::round; return round(x);
-  }
-
-  template<typename T> long Math::lround(T x) {
-    using std::lround; return lround(x);
-  }
-
-  template<typename T> T Math::fma(T x, T y, T z) {
-    using std::fma; return fma(x, y, z);
-  }
-
   template<typename T> T Math::sum(T u, T v, T& t) {
     GEOGRAPHICLIB_VOLATILE T s = u + v;
     GEOGRAPHICLIB_VOLATILE T up = s - v;
@@ -253,10 +205,6 @@ namespace GeographicLib {
     return tau;
   }
 
-    template<typename T> bool Math::isfinite(T x) {
-      using std::isfinite; return isfinite(x);
-    }
-
     template<typename T> T Math::NaN() {
 #if defined(_MSC_VER)
       return numeric_limits<T>::has_quiet_NaN ?
@@ -267,10 +215,6 @@ namespace GeographicLib {
         numeric_limits<T>::quiet_NaN() :
         numeric_limits<T>::max();
 #endif
-    }
-
-    template<typename T> bool Math::isnan(T x) {
-      using std::isnan; return isnan(x);
     }
 
   template<typename T> T Math::infinity() {
@@ -288,18 +232,6 @@ namespace GeographicLib {
   /// \cond SKIP
   // Instantiate
 #define GEOGRAPHICLIB_MATH_INSTANTIATE(T)                               \
-  template T    GEOGRAPHICLIB_EXPORT Math::hypot    <T>(T, T);          \
-  template T    GEOGRAPHICLIB_EXPORT Math::expm1    <T>(T);             \
-  template T    GEOGRAPHICLIB_EXPORT Math::log1p    <T>(T);             \
-  template T    GEOGRAPHICLIB_EXPORT Math::asinh    <T>(T);             \
-  template T    GEOGRAPHICLIB_EXPORT Math::atanh    <T>(T);             \
-  template T    GEOGRAPHICLIB_EXPORT Math::cbrt     <T>(T);             \
-  template T    GEOGRAPHICLIB_EXPORT Math::remainder<T>(T, T);          \
-  template T    GEOGRAPHICLIB_EXPORT Math::remquo   <T>(T, T, int*);    \
-  template T    GEOGRAPHICLIB_EXPORT Math::round    <T>(T);             \
-  template long GEOGRAPHICLIB_EXPORT Math::lround   <T>(T);             \
-  template T    GEOGRAPHICLIB_EXPORT Math::copysign <T>(T, T);          \
-  template T    GEOGRAPHICLIB_EXPORT Math::fma      <T>(T, T, T);       \
   template T    GEOGRAPHICLIB_EXPORT Math::sum      <T>(T, T, T&);      \
   template T    GEOGRAPHICLIB_EXPORT Math::AngRound <T>(T);             \
   template void GEOGRAPHICLIB_EXPORT Math::sincosd  <T>(T, T&, T&);     \
@@ -311,9 +243,7 @@ namespace GeographicLib {
   template T    GEOGRAPHICLIB_EXPORT Math::eatanhe  <T>(T, T);          \
   template T    GEOGRAPHICLIB_EXPORT Math::taupf    <T>(T, T);          \
   template T    GEOGRAPHICLIB_EXPORT Math::tauf     <T>(T, T);          \
-  template bool GEOGRAPHICLIB_EXPORT Math::isfinite <T>(T);             \
   template T    GEOGRAPHICLIB_EXPORT Math::NaN      <T>();              \
-  template bool GEOGRAPHICLIB_EXPORT Math::isnan    <T>(T);             \
   template T    GEOGRAPHICLIB_EXPORT Math::infinity <T>();
 
   // Instantiate with the standard floating type

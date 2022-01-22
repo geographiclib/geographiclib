@@ -508,12 +508,6 @@ namespace GeographicLib {
      * @return \e Mmax the maximum order of the components of the model.
      **********************************************************************/
     int Order() const { return _mmx; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

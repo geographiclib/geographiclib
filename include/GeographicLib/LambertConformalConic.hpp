@@ -309,12 +309,6 @@ namespace GeographicLib {
      *   latitude of origin.
      **********************************************************************/
     Math::real CentralScale() const { return _k0; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

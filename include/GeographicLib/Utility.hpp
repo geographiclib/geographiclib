@@ -382,14 +382,6 @@ namespace GeographicLib {
         throw GeographicErr(errmsg);
       return x;
     }
-    /**
-     * \deprecated An old name for val<T>(s).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use Utility::val<T>(s)")
-      static T num(const std::string& s) {
-      return val<T>(s);
-    }
 
     /**
      * Match "nan" and "inf" (and variants thereof) in a string.

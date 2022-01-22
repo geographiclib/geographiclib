@@ -693,12 +693,6 @@ namespace GeographicLib {
      * @return \e a13, the arc length to point 3 (degrees).
      **********************************************************************/
     Math::real Arc() const { return GenDistance(true); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };

@@ -428,12 +428,6 @@ namespace GeographicLib {
      *   polygon.
      **********************************************************************/
     Math::real EllipsoidArea() const { return _ell.Area(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

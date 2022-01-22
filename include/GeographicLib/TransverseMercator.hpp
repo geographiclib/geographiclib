@@ -185,12 +185,6 @@ namespace GeographicLib {
      *   k0 used in the constructor and is the scale on the central meridian.
      **********************************************************************/
     Math::real CentralScale() const { return _k0; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

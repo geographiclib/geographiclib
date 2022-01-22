@@ -339,12 +339,6 @@ namespace GeographicLib {
      * @return the Geocentric object used by this instance.
      **********************************************************************/
     const Geocentric& Earth() const { return _earth; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**
