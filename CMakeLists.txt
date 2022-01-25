@@ -57,9 +57,8 @@ cmake_minimum_required (VERSION 3.7.0) # This version was released 2016-11-11
 # directory, e.g., /usr/local.  If it is OFF (the Windows default),
 # the installation directory contains the package name, e.g.,
 # c:/pkg/GeographicLib-1.22.  The installation directories for the
-# documentation, cmake configuration, python and matlab interfaces all
-# depend on the variable with deeper paths relative to
-# CMAKE_INSTALL_PREFIX being used when it's ON.
+# documentation and cmake configuration all depend on the variable with
+# deeper paths relative to CMAKE_INSTALL_PREFIX being used when it's ON.
 
 if (WIN32)
   option (COMMON_INSTALL_PATH "Use a common installation path for packages"
@@ -86,6 +85,13 @@ else ()
 endif ()
 
 # (4) Build which libraries?  Possible values are SHARED, STATIC, BOTH.
+# This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier versions
+option (BUILD_SHARED_LIBS "Build as a shared library" ON)
+
+# Build both share and static libraries (ignoring BUILD_SHARED_LIBS)
+# This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier versions
+option (BUILD_BOTH_LIBS "Build both shared and static libraries" OFF)
+
 if (MSVC)
   set (GEOGRAPHICLIB_LIB_TYPE STATIC CACHE STRING
     "Types of library generated: SHARED, STATIC (default), or BOTH")
@@ -96,22 +102,18 @@ endif ()
 set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
   PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
 
-if (GEOGRAPHICLIB_LIB_TYPE STREQUAL "BOTH")
+if (BUILD_BOTH_LIBS)
   set (GEOGRAPHICLIB_SHARED_LIB ON)
   set (GEOGRAPHICLIB_STATIC_LIB ON)
   set (GEOGRAPHICLIB_LIB_TYPE_VAL 2)
-elseif (GEOGRAPHICLIB_LIB_TYPE STREQUAL "SHARED")
+elseif (BUILD_SHARED_LIBS)
   set (GEOGRAPHICLIB_SHARED_LIB ON)
   set (GEOGRAPHICLIB_STATIC_LIB OFF)
   set (GEOGRAPHICLIB_LIB_TYPE_VAL 1)
-elseif (GEOGRAPHICLIB_LIB_TYPE STREQUAL "STATIC")
+else ()
   set (GEOGRAPHICLIB_SHARED_LIB OFF)
   set (GEOGRAPHICLIB_STATIC_LIB ON)
   set (GEOGRAPHICLIB_LIB_TYPE_VAL 0)
-else ()
-  message (FATAL_ERROR
-    "Bad value of GEOGRAPHICLIB_LIB_TYPE, \"${GEOGRAPHICLIB_LIB_TYPE}\" "
-    "(should be SHARED, STATIC or BOTH)")
 endif ()
 
 if (GEOGRAPHICLIB_STATIC_LIB)
@@ -145,11 +147,6 @@ set (PROJECT_ALL_LIBRARIES
 # documentation on Sourceforge.
 option (GEOGRAPHICLIB_DOCUMENTATION
   "Use doxygen to create the documentation" OFF)
-
-# (6) Build .NET wrapper library NETGeographicLib.  This only applies to
-# Windows.  Default is OFF, because, currently, most people don't use
-# this interface.
-option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
 
 # (7) Set the default "real" precision.  This should probably be left
 # at 2 (double).
@@ -274,47 +271,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     set (CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} -fp-model precise -diag-disable=11074,11076")
   endif ()
-endif ()
-
-include (CheckCXXSourceCompiles)
-if (MSVC)
-  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-else ()
-  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
-      CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-    # Flags for CMAKE_CXX_STANDARD are added here by default
-    set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x")
-  endif ()
-endif ()
-# Check whether the C++11 math functions: std::expm1, std::atanh,
-# etc. are available.  These functions are required.
-check_cxx_source_compiles (
-  "#include <cmath>
-int main() {
-  int q = 0;
-  return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
-             std::log1p(2.0) + std::asinh(10.0) +
-             std::atanh(0.8) + std::cbrt(8.0) +
-             std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
-             std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0) +
-             std::round(3.5)) +
-         std::isfinite(4.0) + std::isnan(0.0) + int(std::lround(-3.5));
-}\n" CXX11_MATH)
-if (NOT CXX11_MATH)
-  message (FATAL_ERROR "Missing C++11 math functions")
-endif ()
-
-# Check whether the C++11 static_assert macro is available.  This
-# capability is required.
-check_cxx_source_compiles (
-  "#include <cmath>
-int main() {
-  static_assert(true, \"static assert test\");
-  return 0;
-}\n" CXX11_STATIC_ASSERT)
-if (NOT CXX11_STATIC_ASSERT)
-  message (FATAL_ERROR "Missing C++11 static_assert")
 endif ()
 
 # Include directories are specified via target_include_directories in src.
@@ -516,8 +472,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(xml|html|css|kmz|pdf)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(robots.txt|geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
-  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$")
+  "${PROJECT_SOURCE_DIR}/(robots.txt|geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$")
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
@@ -548,9 +503,9 @@ if (WIN32)
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "https://geographiclib.sourceforge.io/${PROJECT_VERSION}/index.html"
+    "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/index.html"
     "Library documentation"
-    "https://geographiclib.sourceforge.io/${PROJECT_VERSION}/utilities.html"
+    "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
     "https://geographiclib.sourceforge.io" "GeographicLib home page"
     "https://sourceforge.net/projects/geographiclib/" "Main project page")

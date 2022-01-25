@@ -7762,6 +7762,22 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
    (released @PROJECT_DATE@)
+   - Major reorganization.
+   - Use fmin, fmax, fabs.
+   - Remove deprecated functions: XXX::MajorRadius, Utility::val, and
+     placeholders (Math::cbrt, etc.) for C++11 math functions.
+   - Rename various internal identifiers to avoid reserved names.
+   - Remove unused internal variable in RhumbLine.
+   - EllipticFunction: specify restrictions on args.
+   - Put GeodesicExactC4.cpp back into GeodesicExact.cpp.
+   - Fix bug where a geodesic with lat1 = 0 and lat2 = nan was treated
+     as equatorial.
+   - CMake changes: GEOGRAPHICLIB_LIB_TYPE -> BUILD_SHARED_LIBS +
+     BUILD_BOTH_LIBS
+   - Change refs to https://geographiclib.sourceforge.io/VERSION to
+     https://geographiclib.sourceforge.io/C++/VERSION.  TODO: probably
+     more to do.
+   - Use variable for pod2html etc in makeusage.sh.
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-06-22)

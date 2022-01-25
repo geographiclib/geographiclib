@@ -46,7 +46,7 @@ SYSMANPAGES = geographiclib-get-geoids.8 \
 	geographiclib-get-gravity.8 \
 	geographiclib-get-magnetic.8
 
-POD2MAN = pod2man --center="GeographicLib Utilities" \
+POD2MANCMD = $(POD2MAN) --center="GeographicLib Utilities" \
 	--release="$(PACKAGE_STRING)"
 PODFIX = sed \
 	-e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' \
@@ -67,13 +67,14 @@ sysmanpages: $(SYSMANPAGES)
 if HAVE_PODPROGS
 
 .pod.usage:
+	env POD2MAN=$(POD2MAN) COL=$(COL) \
 	sh $(srcdir)/makeusage.sh $< $(VERSION) > $@
 
 .pod.1:
-	$(POD2MAN) $^ > $@
+	$(POD2MANCMD) $^ > $@
 
 .pod.1.html:
-	pod2html --noindex --title "$*(1)" $^ | $(PODFIX) > $@
+	$(POD2HTML) --noindex --title "$*(1)" $^ | $(PODFIX) > $@
 
 else
 
