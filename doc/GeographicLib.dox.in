@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date @PROJECT_DATE@
+\date 2022-mm-dd
 
 The documentation for other versions is available at
 <tt>https://geographiclib.sourceforge.io/C++/m.nn/</tt> for versions numbers
@@ -74,7 +74,7 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (@PROJECT_DATE@),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2022-mm-dd),
   https://geographiclib.sourceforge.io/@PROJECT_VERSION@
 
 \section contents Contents
@@ -7761,7 +7761,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
-   (released @PROJECT_DATE@)
+   (released 2022-mm-dd)
    - Major reorganization.
    - Use fmin, fmax, fabs.
    - Remove deprecated functions: XXX::MajorRadius, Utility::val, and

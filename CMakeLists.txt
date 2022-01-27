@@ -8,7 +8,6 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
-set (PROJECT_DATE "2022-mm-dd")
 
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
 
@@ -188,7 +187,7 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   set (CMAKE_DEBUG_POSTFIX _d)
 endif ()
 
-if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
+if (EXISTS ${PROJECT_SOURCE_DIR}/develop/CMakeLists.txt)
   set (DEVELOPER ON)
 else ()
   set (DEVELOPER OFF)
@@ -436,8 +435,9 @@ add_subdirectory (man)
 add_subdirectory (doc)
 add_subdirectory (examples)
 add_subdirectory (cmake)
+add_subdirectory (tests)
 if (DEVELOPER)
-  add_subdirectory (tests)
+  add_subdirectory (develop)
 endif ()
 
 # Packaging support; we deal with
@@ -468,7 +468,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "~\$"
   "/\\\\.git"
   "${PROJECT_SOURCE_DIR}/BUILD"
-  "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
+  "${PROJECT_SOURCE_DIR}/(develop|testdata|cgi-bin|.*\\\\.cache)/"
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(xml|html|css|kmz|pdf)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
@@ -567,6 +567,4 @@ if (MAINTAINER)
   add_dependencies (dist distrib-all)
 endif ()
 
-# The test suite -- split into a separate file because it's rather large.
-# N.B. Many of the tests fail with GEOGRAPHICLIB_PRECISION = 1 (float).
-include (tools/tests.cmake)
+enable_testing ()

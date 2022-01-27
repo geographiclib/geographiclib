@@ -7,7 +7,7 @@ AUTOMAKE_OPTIONS = foreign
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = src man tools doc include cmake examples
+SUBDIRS = src man tools doc include cmake examples tests
 
 EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md \
 	Makefile.mk CMakeLists.txt maxima doc wrapper

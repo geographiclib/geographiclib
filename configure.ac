@@ -87,6 +87,7 @@ doc/Makefile
 man/Makefile
 cmake/Makefile
 examples/Makefile
+tests/Makefile
 ])
 
 PKG_PROG_PKG_CONFIG

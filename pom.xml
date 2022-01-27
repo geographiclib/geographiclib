@@ -27,9 +27,8 @@
             <id>default-cmake-configure</id>
             <configuration>
               <options>
-                <GEOGRAPHICLIB_LIB_TYPE>BOTH</GEOGRAPHICLIB_LIB_TYPE>
+                <BUILD_BOTH_LIBS>ON</BUILD_BOTH_LIBS>
                 <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
-                <BUILD_NETGEOGRAPHICLIB>OFF</BUILD_NETGEOGRAPHICLIB>
               </options>
             </configuration>
           </execution>

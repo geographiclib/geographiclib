@@ -34,7 +34,6 @@ umask 0022
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
 #   tests/test-distribution.sh
 #   doc/GeographicLib.dox.in (3 places)
-#   doc/NETGeographicLib.dox (a few places)
 
 # maxima
 #   maxima/geodesic.mac
@@ -71,7 +70,7 @@ mkdir $TEMP/gitr # For release branch
 cd $TEMP/gita/geographiclib
 sh autogen.sh
 cmake -S . -B BUILD \
-      -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON
+      -D BUILD_BOTH_LIBS=ON -D GEOGRAPHICLIB_DOCUMENTATION=ON
 make -C BUILD dist
 cp BUILD/GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make -C BUILD doc
@@ -117,7 +116,7 @@ for ver in 14 15 16; do
 	    echo b=c:/scratch/geog-$pkg
 	    echo rm -rf \$b \$bc u:/pkg-$pkg/GeographicLib-$VERSION/\*
 	    echo 'unset GEOGRAPHICLIB_DATA'
-	    echo cmake -G \"$gen\" -A $arch -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D BUILD_NETGEOGRAPHICLIB=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
+	    echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=u:/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
 	    echo cmake --build \$b --config Debug   --target ALL_BUILD
 	    echo cmake --build \$b --config Debug   --target RUN_TESTS
 	    echo cmake --build \$b --config Debug   --target INSTALL
@@ -191,18 +190,18 @@ cd $TEMP/instb
 find . -type f | sort -u > ../files.b
 
 cd $TEMP/relc/GeographicLib-$VERSION
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
+cmake -D BUILD_BOTH_LIBS=ON -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
 make -C BUILD -j$NUMCPUS all
 make -C BUILD test
 make -C BUILD -j$NUMCPUS exampleprograms
 make -C BUILD install
 
-cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
+cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
 make -C BUILD-system -j$NUMCPUS all
 make -C BUILD-system test
 
 if test "$HAVEINTEL"; then
-    env FC=ifort CC=icc CXX=icpc cmake -D GEOGRAPHICLIB_LIB_TYPE=BOTH -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
+    env FC=ifort CC=icc CXX=icpc cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
     make -C BUILD-intel -j$NUMCPUS all
     make -C BUILD-intel test
     make -C BUILD-intel -j$NUMCPUS exampleprograms
@@ -215,7 +214,7 @@ cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
 make -C tests/sandbox/BUILD
 
 cd $TEMP/gita/geographiclib
-make -C BUILD -j$NUMCPUS testprograms
+make -C BUILD -j$NUMCPUS develprograms
 cp $DEVELSOURCE/include/mpreal.h include/
 for p in 1 3 4 5; do
     mkdir BUILD-$p
@@ -224,7 +223,7 @@ for p in 1 3 4 5; do
     if test $p -ne 1; then
 	make -C BUILD-$p test
     fi
-    make -C BUILD-$p -j$NUMCPUS testprograms
+    make -C BUILD-$p -j$NUMCPUS develprograms
 done
 
 cd $TEMP/instc
