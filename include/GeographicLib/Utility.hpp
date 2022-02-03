@@ -280,6 +280,7 @@ namespace GeographicLib {
       s << x; return s.str();
     }
 
+#if 0
     /**
      * Convert a Math::real object to a string.
      *
@@ -303,21 +304,24 @@ namespace GeographicLib {
       // necessary" (see https://svn.boost.org/trac/boost/ticket/10103 and
       // https://github.com/boostorg/multiprecision/issues/416)
       // Fixed by https://github.com/boostorg/multiprecision/pull/389
-      using std::floor; using std::fmod;
       if (p == 0) {
-        x += Math::real(0.5);
+        using std::signbit; using std::fabs;
+        using std::floor; using std::fmod;
+        bool n = signbit(x);
+        x = fabs(x) + Math::real(0.5);
         Math::real ix = floor(x);
         // Implement the "round ties to even" rule
         x = (ix == x && fmod(ix, Math::real(2)) == 1) ? ix - 1 : ix;
         s << std::fixed << std::setprecision(1) << x;
         std::string r(s.str());
         // strip off trailing ".0"
-        return r.substr(0, (std::max)(int(r.size()) - 2, 0));
+        return (n ? "-" : "") + r.substr(0, (std::max)(int(r.size()) - 2, 0));
       }
 #endif
       if (p >= 0) s << std::fixed << std::setprecision(p);
       s << x; return s.str();
     }
+#endif
 
     /**
      * Trim the white space from the beginning and end of a string.
@@ -699,6 +703,46 @@ namespace GeographicLib {
       break;
     }
     throw GeographicErr("Cannot decode " + t + " as a bool");
+  }
+
+  /**
+   * Convert a Math::real object to a string.
+   *
+   * @param[in] x the value to be converted.
+   * @param[in] p the precision used (default &minus;1).
+   * @exception std::bad_alloc if memory for the string can't be allocated.
+   * @return the string representation.
+   *
+   * If \e p &ge; 0, then the number fixed format is used with p bits of
+   * precision.  With p < 0, there is no manipulation of the format.  This is
+   * an overload of str<T> which deals with inf and nan.
+   **********************************************************************/
+  template<> inline std::string Utility::str<Math::real>(Math::real x, int p) {
+    using std::isfinite;
+    if (!isfinite(x))
+      return x < 0 ? std::string("-inf") :
+        (x > 0 ? std::string("inf") : std::string("nan"));
+    std::ostringstream s;
+#if GEOGRAPHICLIB_PRECISION == 4
+    // boost-quadmath treats precision == 0 as "use as many digits as
+    // necessary" (see https://svn.boost.org/trac/boost/ticket/10103 and
+    // https://github.com/boostorg/multiprecision/issues/416)
+    // Fixed by https://github.com/boostorg/multiprecision/pull/389
+    if (p == 0) {
+      using std::signbit; using std::fabs;
+      using std::round; using std::fmod;
+      int n = signbit(x) ? -1 : 1; x = fabs(x);
+      Math::real ix = round(x); // Rounds ties away from zero (up for positive)
+      // Implement the "round ties to even" rule
+      if (2 * (ix - x) == 1 && fmod(ix, Math::real(2)) == 1) --ix;
+      s << std::fixed << std::setprecision(1) << n*ix;
+      std::string r(s.str());
+      // strip off trailing ".0"
+      return r.substr(0, (std::max)(int(r.size()) - 2, 0));
+    }
+#endif
+    if (p >= 0) s << std::fixed << std::setprecision(p);
+    s << x; return s.str();
   }
 
 } // namespace GeographicLib

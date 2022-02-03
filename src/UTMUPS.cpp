@@ -69,7 +69,7 @@ namespace GeographicLib {
     if (fabs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    bool northp1 = lat >= 0;
+    bool northp1 = !(signbit(lat));
     int zone1 = StandardZone(lat, lon, setzone);
     if (zone1 == INVALID) {
       zone = zone1;
@@ -82,8 +82,7 @@ namespace GeographicLib {
     if (utmp) {
       real
         lon0 = CentralMeridian(zone1),
-        dlon = lon - lon0;
-      dlon = fabs(dlon - 360 * floor((dlon + 180)/360));
+        dlon = Math::AngDiff(lon0, lon);
       if (!(dlon <= 60))
         // Check isn't really necessary because CheckCoords catches this case.
         // But this allows a more meaningful error message to be given.

@@ -108,12 +108,10 @@ namespace GeographicLib {
     static int transit(real lon1, real lon2) {
       // Return 1 or -1 if crossing prime meridian in east or west direction.
       // Otherwise return zero.
-      // Compute lon12 the same way as Geodesic::Inverse.
+      real lon12 = Math::AngDiff(lon1, lon2);
       lon1 = Math::AngNormalize(lon1);
       lon2 = Math::AngNormalize(lon2);
-      real lon12 = Math::AngDiff(lon1, lon2);
-      // Treat 0 as negative in these tests.  This balances +/- 180 being
-      // treated as positive, i.e., +180.
+      // Treat 0 as negative in these tests.
       int cross =
         lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
         (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);

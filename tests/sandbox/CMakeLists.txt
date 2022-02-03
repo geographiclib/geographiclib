@@ -8,7 +8,7 @@ if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif ()
 
 find_package (GeographicLib 2.0 REQUIRED)
+message(STATUS "GeographicLib_LIBRARIES: ${GeographicLib_LIBRARIES}")
 
 add_executable (sandbox sandbox.cpp)
-message(STATUS "GeographicLib_LIBRARIES: ${GeographicLib_LIBRARIES}")
 target_link_libraries (sandbox ${GeographicLib_LIBRARIES})

@@ -33,7 +33,6 @@ namespace GeographicLib {
                       _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
       DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, longfirst);
-      _long = Math::AngNormalize(_long);
       UTMUPS::Forward( _lat, _long,
                        _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {
@@ -62,20 +61,8 @@ namespace GeographicLib {
   string GeoCoords::GeoRepresentation(int prec, bool longfirst) const {
     using std::isnan;           // Needed for Centos 7, ubuntu 14
     prec = max(0, min(9 + Math::extra_digits(), prec) + 5);
-    ostringstream os;
-    os << fixed << setprecision(prec);
-    real a = longfirst ? _long : _lat;
-    real b = longfirst ? _lat : _long;
-    if (!isnan(a))
-      os << a;
-    else
-      os << "nan";
-    os << " ";
-    if (!isnan(b))
-      os << b;
-    else
-      os << "nan";
-    return os.str();
+    return Utility::str(longfirst ? _long : _lat, prec) +
+      " " + Utility::str(longfirst ? _lat : _long, prec);
   }
 
   string GeoCoords::DMSRepresentation(int prec, bool longfirst,

@@ -352,8 +352,8 @@ namespace GeographicLib {
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
-      latsign = (lat < 0) ? -1 : 1,
-      lonsign = (lon < 0) ? -1 : 1;
+      latsign = signbit(lat) ? -1 : 1,
+      lonsign = signbit(lon) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     bool backside = lon > 90;
@@ -500,7 +500,7 @@ namespace GeographicLib {
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
     gamma -= Math::atan2d(z1.imag(), z1.real());
-    k *= _b1 * fabs(z1);
+    k *= _b1 * abs(z1);
     real xi = y1.real(), eta = y1.imag();
     y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
@@ -522,8 +522,8 @@ namespace GeographicLib {
       eta = x / (_a1 * _k0);
     // Explicitly enforce the parity
     int
-      xisign = (xi < 0) ? -1 : 1,
-      etasign = (eta < 0) ? -1 : 1;
+      xisign = signbit(xi) ? -1 : 1,
+      etasign = signbit(eta) ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
     bool backside = xi > Math::pi()/2;
@@ -552,7 +552,7 @@ namespace GeographicLib {
     y1 = complex<real>(xi, eta) + a * y0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
     gamma = Math::atan2d(z1.imag(), z1.real());
-    k = _b1 / fabs(z1);
+    k = _b1 / abs(z1);
     // JHS 154 has
     //
     //   phi' = asin(sin(xi') / cosh(eta')) (Krueger p 17 (25))

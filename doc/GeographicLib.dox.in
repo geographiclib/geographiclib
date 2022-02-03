@@ -7758,6 +7758,9 @@ git repository for GeographicLib</a>.
    - Allow addition of points to NearestNeighbor objects (maybe by
      allowing larger buckets on construction or by just do additional
      splits as necessary).
+   - Check need for using std::nan for Centos 7 + Ubuntu 14.
+   - Migrate function implementation from Utility.hpp to cpp (plus for
+     other classes).
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
@@ -7778,6 +7781,7 @@ git repository for GeographicLib</a>.
      https://geographiclib.sourceforge.io/C++/VERSION.  TODO: probably
      more to do.
    - Use variable for pod2html etc in makeusage.sh.
+   - Better treatment of &plusmn;0&deg; and &plusmn;180&deg;.
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-06-22)

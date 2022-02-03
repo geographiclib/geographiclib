@@ -352,8 +352,8 @@ namespace GeographicLib {
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
-      latsign = (!_extendp && lat < 0) ? -1 : 1,
-      lonsign = (!_extendp && lon < 0) ? -1 : 1;
+      latsign = (!_extendp && signbit(lat)) ? -1 : 1,
+      lonsign = (!_extendp && signbit(lon)) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     bool backside = !_extendp && lon > 90;
@@ -414,10 +414,10 @@ namespace GeographicLib {
       eta = x / (_a * _k0);
     // Explicitly enforce the parity
     int
-      latsign = !_extendp && y < 0 ? -1 : 1,
-      lonsign = !_extendp && x < 0 ? -1 : 1;
-    xi *= latsign;
-    eta *= lonsign;
+      xisign = (!_extendp && signbit(xi)) ? -1 : 1,
+      etasign = (!_extendp && signbit(eta)) ? -1 : 1;
+    xi *= xisign;
+    eta *= etasign;
     bool backside = !_extendp && xi > _eEu.E();
     if (backside)
       xi = 2 * _eEu.E()- xi;
@@ -450,12 +450,12 @@ namespace GeographicLib {
 
     if (backside)
       lon = 180 - lon;
-    lon *= lonsign;
+    lon *= etasign;
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
-    lat *= latsign;
+    lat *= xisign;
     if (backside)
       gamma = 180 - gamma;
-    gamma *= latsign * lonsign;
+    gamma *= xisign * etasign;
     k *= _k0;
   }
 

@@ -206,8 +206,9 @@ namespace GeographicLib {
      * @param[out] t the exact error given by (\e u + \e v) - \e s.
      * @return \e s = round(\e u + \e v).
      *
-     * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.  (Note that \e t can be
-     * the same as one of the first two arguments.)
+     * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
+     *
+     * \note \e t can be the same as one of the first two arguments.
      **********************************************************************/
     template<typename T> static T sum(T u, T v, T& t);
 
@@ -239,14 +240,12 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range (&minus;180&deg;, 180&deg;].
+     * @return the angle reduced to the range [&minus;180&deg;, 180&deg;].
      *
-     * The range of \e x is unrestricted.
+     * The range of \e x is unrestricted.  If the result is &plusmn;0&deg; or
+     * &plusmn;180&deg; then the sign is the sign the same of \e x.
      **********************************************************************/
-    template<typename T> static T AngNormalize(T x) {
-      using std::remainder;
-      x = remainder(x, T(360)); return x != -180 ? x : 180;
-    }
+    template<typename T> static T AngNormalize(T x);
 
     /**
      * Normalize a latitude.
@@ -261,7 +260,7 @@ namespace GeographicLib {
 
     /**
      * The exact difference of two angles reduced to
-     * (&minus;180&deg;, 180&deg;].
+     * [&minus;180&deg;, 180&deg;].
      *
      * @tparam T the type of the arguments and returned value.
      * @param[in] x the first angle in degrees.
@@ -270,23 +269,13 @@ namespace GeographicLib {
      * @return \e d, the truncated value of \e y &minus; \e x.
      *
      * This computes \e z = \e y &minus; \e x exactly, reduced to
-     * (&minus;180&deg;, 180&deg;]; and then sets \e z = \e d + \e e where \e d
+     * [&minus;180&deg;, 180&deg;]; and then sets \e z = \e d + \e e where \e d
      * is the nearest representable number to \e z and \e e is the truncation
-     * error.  If \e d = &minus;180, then \e e &gt; 0; If \e d = 180, then \e e
-     * &le; 0.
+     * error.  If \e z = &plusmn;0&deg; or &plusmn;180&deg;, then the sign of
+     * \e d is given by the sign of \e y &minus; \e x.  The maximum absolute
+     * value of \e e is 2<sup>&minus;26</sup> (for doubles).
      **********************************************************************/
-    template<typename T> static T AngDiff(T x, T y, T& e) {
-      using std::remainder;
-      T t, d = AngNormalize(sum(remainder(-x, T(360)),
-                                remainder( y, T(360)), t));
-      // Here y - x = d + t (mod 360), exactly, where d is in (-180,180] and
-      // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
-      // addition of t takes the result outside the range (-180,180] is d = 180
-      // and t > 0.  The case, d = -180 + eps, t = -eps, can't happen, since
-      // sum would have returned the exact result in such a case (i.e., given t
-      // = 0).
-      return sum(d == 180 && t > 0 ? -180 : d, t, e);
-    }
+    template<typename T> static T AngDiff(T x, T y, T& e);
 
     /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
@@ -298,9 +287,7 @@ namespace GeographicLib {
      *   180&deg;].
      *
      * The result is equivalent to computing the difference exactly, reducing
-     * it to (&minus;180&deg;, 180&deg;] and rounding the result.  Note that
-     * this prescription allows &minus;180&deg; to be returned (e.g., if \e x
-     * is tiny and negative and \e y = 180&deg;).
+     * it to [&minus;180&deg;, 180&deg;] and rounding the result.
      **********************************************************************/
     template<typename T> static T AngDiff(T x, T y)
     { T e; return AngDiff(x, y, e); }
@@ -313,12 +300,11 @@ namespace GeographicLib {
      * @return the coarsened value.
      *
      * The makes the smallest gap in \e x = 1/16 &minus; nextafter(1/16, 0) =
-     * 1/2<sup>57</sup> for reals = 0.7 pm on the earth if \e x is an angle in
-     * degrees.  (This is about 1000 times more resolution than we get with
+     * 1/2<sup>57</sup> for doubles = 0.8 pm on the earth if \e x is an angle
+     * in degrees.  (This is about 2000 times more resolution than we get with
      * angles around 90&deg;.)  We use this to avoid having to deal with near
      * singular cases when \e x is non-zero but tiny (e.g.,
-     * 10<sup>&minus;200</sup>).  This converts &minus;0 to +0; however tiny
-     * negative numbers get converted to &minus;0.
+     * 10<sup>&minus;200</sup>).  This sign of &plusmn;0 is preserved.
      **********************************************************************/
     template<typename T> static T AngRound(T x);
 
@@ -332,8 +318,8 @@ namespace GeographicLib {
      *
      * The results obey exactly the elementary properties of the trigonometric
      * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
-     * If x = &minus;0, then \e sinx = &minus;0; this is the only case where
-     * &minus;0 is returned.
+     * If x = &minus;0 or a negative multiple of 180&deg;, then \e sinx =
+     * &minus;0; this is the only case where &minus;0 is returned.
      **********************************************************************/
     template<typename T> static void sincosd(T x, T& sinx, T& cosx);
 
@@ -376,7 +362,7 @@ namespace GeographicLib {
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
      * The result is in the range (&minus;180&deg; 180&deg;].  N.B.,
-     * atan2d(&plusmn;0, &minus;1) = +180&deg;; atan2d(&minus;&epsilon;,
+     * atan2d(&plusmn;0, &minus;1) = +180&deg;, atan2d(&minus;&epsilon;,
      * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
      * atan2d(&plusmn;0, +1) = &plusmn;0&deg;.
      **********************************************************************/

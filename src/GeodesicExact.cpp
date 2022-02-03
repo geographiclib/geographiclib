@@ -175,7 +175,7 @@ namespace GeographicLib {
     using std::isnan;           // Needed for Centos 7, ubuntu 14
     real lon12s, lon12 = Math::AngDiff(lon1, lon2, lon12s);
     // Make longitude difference positive.
-    int lonsign = lon12 >= 0 ? 1 : -1;
+    int lonsign = signbit(lon12) ? -1 : 1;
     // If very close to being on the same half-meridian, then make it so.
     lon12 = lonsign * Math::AngRound(lon12);
     lon12s = Math::AngRound((180 - lon12) - lonsign * lon12s);
@@ -199,7 +199,7 @@ namespace GeographicLib {
       swap(lat1, lat2);
     }
     // Make lat1 <= 0
-    int latsign = lat1 < 0 ? 1 : -1;
+    int latsign = signbit(lat1) ? 1 : -1;
     lat1 *= latsign;
     lat2 *= latsign;
     // Now we have

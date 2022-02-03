@@ -153,7 +153,7 @@ namespace GeographicLib {
     while (beg < end && isspace(dmsa[end - 1]))
       --end;
     // The trimmed string in [beg, end)
-    real v = 0;
+    real v = -0.0;              // So "-0" returns -0.0
     int i = 0;
     flag ind1 = NONE;
     // p is pointer to the next piece that needs decoding
@@ -416,9 +416,15 @@ namespace GeographicLib {
       scale *= 60;
     for (unsigned i = 0; i < prec; ++i)
       scale *= 10;
-    if (ind == AZIMUTH)
-      angle -= floor(angle/360) * 360;
-    int sign = angle < 0 ? -1 : 1;
+    if (ind == AZIMUTH) {
+      angle = Math::AngNormalize(angle);
+      // Only angles strictly less than 0 can become 360; convert -0 to +0.
+      if (angle < 0)
+        angle += 360;
+      else
+        angle = Math::real(0) + angle;
+    }
+    int sign = signbit(angle) ? -1 : 1;
     angle *= sign;
 
     // Break off integer part to preserve precision in manipulation of
