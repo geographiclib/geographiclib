@@ -28,13 +28,13 @@ foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${CMAKE_CURRENT_BINARY_DIR}/${TOOL}.1.html)
   if (MAINTAINER)
     add_custom_command (OUTPUT ${TOOL}.1
-      COMMAND pod2man --center=\"GeographicLib Utilities\"
+      COMMAND ${POD2MAN} --center=\"GeographicLib Utilities\"
         --release=\"GeographicLib ${PROJECT_VERSION}\"
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.1
       COMMENT "Building man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.1.html COMMAND
-        pod2html --title "'${TOOL}(1)'"
+        ${POD2HTML} --title "'${TOOL}(1)'"
           --noindex ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod |
         sed
           -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
@@ -43,7 +43,8 @@ foreach (TOOL ${TOOLS})
       COMMENT "Building html version of man page for ${TOOL}"
       MAIN_DEPENDENCY ${TOOL}.pod)
     add_custom_command (OUTPUT ${TOOL}.usage
-      COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/makeusage.sh
+      COMMAND env POD2MAN=${POD2MAN} COL=${COL}
+        sh ${CMAKE_CURRENT_SOURCE_DIR}/makeusage.sh
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod ${PROJECT_VERSION}
         > ${TOOL}.usage
       COMMENT "Building usage code for ${TOOL}"

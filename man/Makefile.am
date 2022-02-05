@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011, Charles Karney <charles@karney.com>
+# Copyright (C) 2011-2022, Charles Karney <charles@karney.com>
 
 USAGE = \
 	CartConvert.usage \
@@ -46,15 +46,10 @@ SYSMANPAGES = geographiclib-get-geoids.8 \
 	geographiclib-get-gravity.8 \
 	geographiclib-get-magnetic.8
 
-POD2MANCMD = $(POD2MAN) --center="GeographicLib Utilities" \
-	--release="$(PACKAGE_STRING)"
-PODFIX = sed \
-	-e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%' \
-	-e 's%<code>\([^<>]*\)(\(.\))</code>%<a href="\1.\2.html">&</a>%'g
 man1_MANS = $(MANPAGES)
 man8_MANS = $(SYSMANPAGES)
 
-SUFFIXES = .pod .1 .usage .1.html .8
+SUFFIXES = .1 .usage .1.html .8
 
 all: man
 man: manpages usage htmlman sysmanpages
@@ -63,101 +58,6 @@ manpages: $(MANPAGES)
 usage: $(USAGE)
 htmlman: $(HTMLMAN)
 sysmanpages: $(SYSMANPAGES)
-
-if HAVE_PODPROGS
-
-.pod.usage:
-	env POD2MAN=$(POD2MAN) COL=$(COL) \
-	sh $(srcdir)/makeusage.sh $< $(VERSION) > $@
-
-.pod.1:
-	$(POD2MANCMD) $^ > $@
-
-.pod.1.html:
-	$(POD2HTML) --noindex --title "$*(1)" $^ | $(PODFIX) > $@
-
-else
-
-USAGECMD = cat $(srcdir)/$@ 2> /dev/null || \
-	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
-	$(srcdir)/dummy.usage.in > $@
-MANCMD = cat $(srcdir)/$@ 2> /dev/null || \
-	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
-	$(srcdir)/dummy.1.in > $@
-HTMLCMD = cat $(srcdir)/$@ 2> /dev/null || \
-	sed -e "s/@TOOL@/$*/g" -e "s/@PROJECT_VERSION@/$(VERSION)/g" \
-	$(srcdir)/dummy.1.html.in > $@
-
-CartConvert.usage:
-	$(USAGECMD)
-ConicProj.usage:
-	$(USAGECMD)
-GeodesicProj.usage:
-	$(USAGECMD)
-GeoConvert.usage:
-	$(USAGECMD)
-GeodSolve.usage:
-	$(USAGECMD)
-GeoidEval.usage:
-	$(USAGECMD)
-Gravity.usage:
-	$(USAGECMD)
-MagneticField.usage:
-	$(USAGECMD)
-Planimeter.usage:
-	$(USAGECMD)
-RhumbSolve.usage:
-	$(USAGECMD)
-TransverseMercatorProj.usage:
-	$(USAGECMD)
-
-CartConvert.1:
-	$(MANCMD)
-ConicProj.1:
-	$(MANCMD)
-GeodesicProj.1:
-	$(MANCMD)
-GeoConvert.1:
-	$(MANCMD)
-GeodSolve.1:
-	$(MANCMD)
-GeoidEval.1:
-	$(MANCMD)
-Gravity.1:
-	$(MANCMD)
-MagneticField.1:
-	$(MANCMD)
-Planimeter.1:
-	$(MANCMD)
-RhumbSolve.1:
-	$(MANCMD)
-TransverseMercatorProj.1:
-	$(MANCMD)
-
-CartConvert.1.html:
-	$(HTMLCMD)
-ConicProj.1.html:
-	$(HTMLCMD)
-GeodesicProj.1.html:
-	$(HTMLCMD)
-GeoConvert.1.html:
-	$(HTMLCMD)
-GeodSolve.1.html:
-	$(HTMLCMD)
-GeoidEval.1.html:
-	$(HTMLCMD)
-Gravity.1.html:
-	$(HTMLCMD)
-MagneticField.1.html:
-	$(HTMLCMD)
-Planimeter.1.html:
-	$(HTMLCMD)
-RhumbSolve.1.html:
-	$(HTMLCMD)
-TransverseMercatorProj.1.html:
-	$(HTMLCMD)
-
-endif
 
 geographiclib_data = $(datadir)/GeographicLib
 SCRIPTMANCMD = sed -e "s/@SCRIPT@/$*/g" \
@@ -172,12 +72,7 @@ geographiclib-get-gravity.8:
 geographiclib-get-magnetic.8:
 	$(SCRIPTMANCMD)
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt makeusage.sh \
-	GeoConvert.pod TransverseMercatorProj.pod \
-	CartConvert.pod ConicProj.pod GeodSolve.pod GeodesicProj.pod \
-	GeoidEval.pod Gravity.pod MagneticField.pod Planimeter.pod \
-	RhumbSolve.pod $(MANPAGES) $(USAGE) $(HTMLMAN) \
-	dummy.usage.in dummy.1.in dummy.1.html.in script.8.in
+EXTRA_DIST = CMakeLists.txt $(MANPAGES) $(USAGE) $(HTMLMAN) script.8.in
 
 maintainer-clean-local:
-	rm -rf *.usage *.1.html *.1 *.8
+	rm -rf *.8

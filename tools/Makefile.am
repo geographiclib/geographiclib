@@ -120,6 +120,7 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/PolygonArea.hpp \
+	../include/GeographicLib/Rhumb.hpp \
 	../include/GeographicLib/UTMUPS.hpp \
 	../include/GeographicLib/Utility.hpp
 RhumbSolve_SOURCES = RhumbSolve.cpp \
@@ -157,6 +158,6 @@ geographiclib-get-magnetic: geographiclib-get-magnetic.sh
 	chmod +x $@
 
 CLEANFILES = $(sbin_SCRIPTS)
-EXTRA_DIST = Makefile.mk CMakeLists.txt \
+EXTRA_DIST = CMakeLists.txt \
 	geographiclib-get-geoids.sh geographiclib-get-gravity.sh \
 	geographiclib-get-magnetic.sh

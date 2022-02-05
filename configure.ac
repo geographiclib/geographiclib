@@ -70,11 +70,6 @@ AM_CONDITIONAL([HAVE_DOXYGEN],
         [test "$DOXYGEN" && test `"$DOXYGEN" --version |
          sed 's/\b\([[0-9]]\)\b/0\1/g'` '>' 01.08.06.99])
 
-AC_CHECK_PROGS([POD2MAN], [pod2man])
-AC_CHECK_PROGS([POD2HTML], [pod2html])
-AC_CHECK_PROGS([COL], [col])
-AM_CONDITIONAL([HAVE_PODPROGS], [test "$POD2MAN" -a  "$POD2HTML" -a "$COL"])
-
 dnl
 dnl Add here new file to be generated
 dnl

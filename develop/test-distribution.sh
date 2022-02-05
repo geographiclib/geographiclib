@@ -14,7 +14,7 @@
 # gita - check out from git, create package with cmake
 # gitb - check out from git, create package with autoconf
 # gitr - new release branch
-# rela - release package, build with make
+# SKIP rela - release package, build with make
 # relb - release package, build with autoconf
 # relc - release package, build with cmake
 # relx - cmake release package inventory
@@ -76,8 +76,7 @@ cp BUILD/GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 make -C BUILD doc
 rsync -a --delete BUILD/doc/html/ $WEBDIST/htdocs/C++/$VERSION-pre/
 
-mkdir $TEMP/rel{a,b,c,x,y}
-tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/rela # Version of make build
+mkdir $TEMP/rel{b,c,x,y}
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake+mvn
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relx
@@ -163,11 +162,11 @@ for ((i=0; i<7; ++i)); do
     find * -type d -empty | xargs -r rmdir
 done
 
-cd $TEMP/rela/GeographicLib-$VERSION
-make -j$NUMCPUS
-make PREFIX=$TEMP/insta install
-cd $TEMP/insta
-find . -type f | sort -u > ../files.a
+# cd $TEMP/rela/GeographicLib-$VERSION
+# make -j$NUMCPUS
+# make PREFIX=$TEMP/insta install
+# cd $TEMP/insta
+# find . -type f | sort -u > ../files.a
 
 cd $TEMP/relb/GeographicLib-$VERSION
 mkdir BUILD-config

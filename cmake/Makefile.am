@@ -10,5 +10,5 @@ install:
 	$(INSTALL) -m 644 $(srcdir)/FindGeographicLib.cmake \
 		$(DESTDIR)$(cmakedir)
 
-EXTRA_DIST = Makefile.mk CMakeLists.txt FindGeographicLib.cmake \
+EXTRA_DIST = CMakeLists.txt FindGeographicLib.cmake \
 	project-config-version.cmake.in project-config.cmake.in

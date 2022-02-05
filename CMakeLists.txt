@@ -387,11 +387,11 @@ endif ()
 # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
 # file and there's no simple equivalent for MacOSX
 if (NOT WIN32 AND NOT APPLE)
-  find_program (HAVE_POD2MAN pod2man)
-  find_program (HAVE_POD2HTML pod2html)
-  find_program (HAVE_COL col)
+  find_program (POD2MAN pod2man)
+  find_program (POD2HTML pod2html)
+  find_program (COL col)
 endif ()
-if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL)
+if (POD2MAN AND POD2HTML AND COL)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)
@@ -469,6 +469,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "~\$"
   "/\\\\.git"
   "${PROJECT_SOURCE_DIR}/BUILD"
+  "${PROJECT_SOURCE_DIR}/man/(.*\\\\.pod|makeusage\\\\.sh|dummy\\\\..*)\$"
   "${PROJECT_SOURCE_DIR}/(develop|testdata|cgi-bin|.*\\\\.cache)/"
   "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
   "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(xml|html|css|kmz|pdf)\$"
@@ -526,7 +527,7 @@ include (CPack)
 # via the target dist.  This calls package_source to make a tar.gz file.
 # However this needs to be touched up to support the vanilla Makefiles
 # provided with GeographicLib.  This entails
-# (1) creating Makefile (which includes Makefile.mk);
+# SKIP (1) creating Makefile (which includes Makefile.mk);
 # (2) creating a bare-bones Config.h (with just the version information);
 # (3) making sure that make thinks the generated documentation files are
 # up-to-date.
@@ -534,17 +535,11 @@ include (CPack)
 # problems with directory permissions, tar and zip are told only to
 # archive the files.
 if (MAINTAINER)
+  add_custom_target (prep-dist
+    COMMAND cd ${PROJECT_SOURCE_DIR} && ./autogen.sh
+    DEPENDS distrib-man)
   add_custom_target (dist
     COMMAND ${CMAKE_MAKE_PROGRAM} package_source
-    COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      echo include Makefile.mk > Makefile &&
-      sed -e "s/Unconfigured/${PROJECT_VERSION}/"
-      -e "s/MAJOR .*/MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}/"
-      -e "s/MINOR .*/MINOR ${CPACK_PACKAGE_VERSION_MINOR}/"
-      -e "s/PATCH .*/PATCH ${CPACK_PACKAGE_VERSION_PATCH}/"
-      include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
-      mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
       touch man/[A-Za-z]*.usage man/[A-Za-z]*.1 man/[A-Za-z]*.1.html &&
@@ -559,11 +554,8 @@ if (MAINTAINER)
       _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
       _CPack_Packages/Linux-Source/TGZ.DOS/ &&
       cd _CPack_Packages/Linux-Source/TGZ.DOS &&
-      find . -type f |
-      egrep -v '/\(compile|config[^/]*|depcomp|install-sh|missing|[Mm]akefile[^/]*|[^/]*\\.\(ac|am|csproj|eps|kmz|m4|pdf|png|resx|settings|sh|sln|vcproj|vcxproj\)\)$$' |
-      xargs unix2dos -q -k &&
       find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
       zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
   )
-  add_dependencies (dist distrib-all)
+  add_dependencies (dist prep-dist distrib-all)
 endif ()
