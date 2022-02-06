@@ -1,7 +1,13 @@
 # Build the tools...
 
 # Where to find the *.usage files for the --help option.
-include_directories (${PROJECT_BINARY_DIR}/man)
+if (RELEASE)
+  set (MANDIR ${PROJECT_SOURCE_DIR}/man)
+else ()
+  set (MANDIR ${PROJECT_BINARY_DIR}/man)
+endif ()
+include_directories (${MANDIR})
+
 # Only needed if target_compile_definitions is not supported
 add_definitions (${PROJECT_DEFINITIONS})
 
@@ -10,13 +16,13 @@ add_custom_target (tools ALL)
 foreach (TOOL ${TOOLS})
 
   add_executable (${TOOL} ${TOOL}.cpp)
-  if (MAINTAINER)
+  if (NOT RELEASE)
     add_dependencies (${TOOL} usage)
   endif ()
   add_dependencies (tools ${TOOL})
 
   set_source_files_properties (${TOOL}.cpp PROPERTIES
-    OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
+    OBJECT_DEPENDS ${MANDIR}/${TOOL}.usage)
 
   target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 

@@ -147,6 +147,10 @@ set (PROJECT_ALL_LIBRARIES
 option (GEOGRAPHICLIB_DOCUMENTATION
   "Use doxygen to create the documentation" OFF)
 
+# Attempt to make the man pages.  This only has any affect with a
+# non-release tree.
+option (GEOGRAPHICLIB_MANPAGES "Use doxygen to create the documentation" ON)
+
 # (7) Set the default "real" precision.  This should probably be left
 # at 2 (double).
 set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
@@ -176,9 +180,12 @@ option (USE_BOOST_FOR_EXAMPLES
 option (APPLE_MULTIPLE_ARCHITECTURES
   "Build multiple architectures for Apple systems" OFF)
 
-# (11) Convert warnings into errors?  Default is OFF.  If the tests
-# directory is present you get this behavior regardless.
-option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+# (11) Convert warnings into errors?  Default is OFF if RELEASE, else ON.
+if (RELEASE)
+  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+else ()
+  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)
+endif ()
 
 set (LIBNAME Geographic)
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
@@ -187,10 +194,13 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   set (CMAKE_DEBUG_POSTFIX _d)
 endif ()
 
-if (EXISTS ${PROJECT_SOURCE_DIR}/develop/CMakeLists.txt)
-  set (DEVELOPER ON)
+if (EXISTS ${PROJECT_SOURCE_DIR}/VERSION)
+  # If the file, VERSION, exists then this is a released version of
+  # GeographicLib and the processed man pages are available in the
+  # source tree
+  set (RELEASE ON)
 else ()
-  set (DEVELOPER OFF)
+  set (RELEASE OFF)
 endif ()
 
 if (NOT MSVC)
@@ -247,7 +257,7 @@ else ()
   set (CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
 endif ()
-if (DEVELOPER OR CONVERT_WARNINGS_TO_ERRORS)
+if (CONVERT_WARNINGS_TO_ERRORS)
   if (MSVC)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
     set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
@@ -306,8 +316,8 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
-  # Install MPFR C++ version 3.6.5 (2016-12-19) or later from
-  # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
+  # Install MPFR C++ version 3.6.9 (2022-01-18) or later from
+  # https://github.com/advanpix/mpreal and install mpreal.h in the
   # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
   # to abide by the terms of this license.
   #
@@ -316,6 +326,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
   # fine.  For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
   # the MPFR C++ site and unpack in the top-level directory.  The
   # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
+  # NOTE: The Windows build hasn't been tested for a long time.
   # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
   # abide by the terms of this license.
   #
@@ -386,7 +397,7 @@ endif ()
 # documentation files into the source tree.  Skip Apple here because
 # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
 # file and there's no simple equivalent for MacOSX
-if (NOT WIN32 AND NOT APPLE)
+if (NOT RELEASE AND GEOGRAPHICLIB_MANPAGES AND NOT WIN32 AND NOT APPLE)
   find_program (POD2MAN pod2man)
   find_program (POD2HTML pod2html)
   find_program (COL col)
@@ -437,7 +448,7 @@ add_subdirectory (examples)
 add_subdirectory (cmake)
 enable_testing ()
 add_subdirectory (tests)
-if (DEVELOPER)
+if (NOT RELEASE)
   add_subdirectory (develop)
 endif ()
 
