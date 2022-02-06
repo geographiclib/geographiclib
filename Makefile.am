@@ -27,6 +27,7 @@ dist-hook:
 	find $(distdir) \
 		\( -name '.git*' -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.tmp' -o -name '*.bak' -o -name '*.BAK' \) | \
 		xargs rm -rf
+	echo $(VERSION) > $(distdir)/VERSION
 
 # Custom rules
 

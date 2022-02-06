@@ -535,14 +535,21 @@ include (CPack)
 # problems with directory permissions, tar and zip are told only to
 # archive the files.
 if (MAINTAINER)
+  add_custom_command (OUTPUT autogen.done
+    COMMAND cd ${PROJECT_SOURCE_DIR} &&
+      ./autogen.sh &&
+      touch ${PROJECT_BINARY_DIR}/autogen.done
+    DEPENDS autogen.sh configure.ac
+      Makefile.am src/Makefile.am include/Makefile.am tools/Makefile.am
+      doc/Makefile.am man/Makefile.am cmake/Makefile.am
+      examples/Makefile.am tests/Makefile.am)
   add_custom_target (prep-dist
-    COMMAND cd ${PROJECT_SOURCE_DIR} && ./autogen.sh
-    DEPENDS distrib-man)
+    DEPENDS distrib-man autogen.done)
   add_custom_target (dist
     COMMAND ${CMAKE_MAKE_PROGRAM} package_source
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      touch man/[A-Za-z]*.usage man/[A-Za-z]*.1 man/[A-Za-z]*.1.html &&
+      echo ${PROJECT_VERSION} > VERSION &&
       chmod -R g-w .
     COMMAND
       cd _CPack_Packages/Linux-Source/TGZ &&
