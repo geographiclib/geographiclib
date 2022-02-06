@@ -2305,7 +2305,7 @@ As an illustration, here is egm2008.egm:
 EGMF-1
 # An Earth Gravity Model (Format 1) file.  For documentation on the
 # format of this file see
-# https://geographiclib.sourceforge.io/html/gravity.html#gravityformat
+# https://geographiclib.sourceforge.io/C++/doc/gravity.html#gravityformat
 Name            egm2008
 Publisher       National Geospatial Intelligence Agency
 Description     Earth Gravity Model 2008
@@ -3286,7 +3286,7 @@ As an illustration, here is igrf11.wmm:
 WMMF-1
 # A World Magnetic Model (Format 1) file.  For documentation on the
 # format of this file see
-# https://geographiclib.sourceforge.io/html/magnetic.html#magneticformat
+# https://geographiclib.sourceforge.io/C++/doc/magnetic.html#magneticformat
 Name            igrf11
 Description     International Geomagnetic Reference Field 11th Generation
 URL             https://ngdc.noaa.gov/IAGA/vmod/igrf.html

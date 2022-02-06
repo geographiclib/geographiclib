@@ -216,7 +216,7 @@ file.
 
 Instructions for downloading and installing magnetic models are
 available at
-L<https://geographiclib.sourceforge.io/html/magnetic.html#magneticinst>.
+L<https://geographiclib.sourceforge.io/C++/doc/magnetic.html#magneticinst>.
 
 =head1 ENVIRONMENT
 

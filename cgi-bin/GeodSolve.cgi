@@ -124,7 +124,7 @@ cat <<EOF
   <body>
     <h3>
       Online geodesic calculations using the
-      <a href="https://geographiclib.sourceforge.io/html/GeodSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/GeodSolve.1.html">
          GeodSolve</a> utility
     </h3>
     <form action="/cgi-bin/GeodSolve" method="get">
@@ -293,7 +293,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="https://geographiclib.sourceforge.io/html/GeodSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/GeodSolve.1.html">
         GeodSolve (version $VERSION)</a>
       performs geodesic calculations for an arbitrary ellipsoid of
       revolution.  The shortest path between two points on the ellipsoid
@@ -347,10 +347,10 @@ cat <<EOF
       pair of points.
     </p>
     <p>
-      <a href="https://geographiclib.sourceforge.io/html/GeodSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/GeodSolve.1.html">
         GeodSolve</a>,
       which is a simple wrapper of the
-      <a href="https://geographiclib.sourceforge.io/html/classGeographicLib_1_1Geodesic.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/classGeographicLib_1_1Geodesic.html">
         GeographicLib::Geodesic</a> class,
       is one of the utilities provided
       with <a href="https://geographiclib.sourceforge.io/">

@@ -6,4 +6,4 @@ compiled with Visual Studio 14 2015).
 
 For installation instructions, see
 
- https://geographiclib.sourceforge.io/html/install.html
+ https://geographiclib.sourceforge.io/C++/doc/install.html

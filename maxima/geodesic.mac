@@ -96,7 +96,7 @@ This returns a list, [a12, s12, azi1, azi2, m12, M12, M21, S12], e.g.,
 (10) The interface is copied from the C library for geodesics which is
 documented at
 
-  https://geographiclib.sourceforge.io/html/C/index.html
+  https://geographiclib.sourceforge.io/C/doc/index.html
 
 */
 

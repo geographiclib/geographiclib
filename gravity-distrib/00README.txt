@@ -10,4 +10,4 @@ which one to install, start with
 
 For more information, see
 
- https://geographiclib.sourceforge.io/html/gravity.html#gravityinst
+ https://geographiclib.sourceforge.io/C++/doc/gravity.html#gravityinst

@@ -60,7 +60,7 @@ will be saved.  -h prints this help.
 
 For more information on the magnetic models, visit
 
-  https://geographiclib.sourceforge.io/html/$NAME.html
+  https://geographiclib.sourceforge.io/C++/doc/$NAME.html
 
 EOF
 }

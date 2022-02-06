@@ -19,7 +19,7 @@ All 30 inter-relations are found.  The coefficients are expressed as
 Taylor series in the third flattening n.  This generates the series
 given on the page
 
-  https://geographiclib.sourceforge.io/html/auxlat.html
+  https://geographiclib.sourceforge.io/C++/doc/auxlat.html
 
 Instructions:
 

@@ -76,7 +76,7 @@ cat <<EOF
   <body>
     <h3>
       Online geographic coordinate conversions using the
-      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/GeoConvert.1.html">
         GeoConvert</a> utility
     </h3>
     <form action="/cgi-bin/GeoConvert" method="get">
@@ -170,7 +170,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/GeoConvert.1.html">
         GeoConvert (version $VERSION)</a>
       converts between geographic (latitude and longitude) coordinates,
       <a href="https://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system">
@@ -222,10 +222,10 @@ cat <<EOF
       </ul>
     </p>
     <p>
-      <a href="https://geographiclib.sourceforge.io/html/GeoConvert.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/GeoConvert.1.html">
         GeoConvert</a>,
       which is a simple wrapper of the
-      <a href="https://geographiclib.sourceforge.io/html/classGeographicLib_1_1GeoCoords.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/classGeographicLib_1_1GeoCoords.html">
         GeographicLib::GeoCoords</a> class,
       is one of the utilities provided
       with <a href="https://geographiclib.sourceforge.io/">
