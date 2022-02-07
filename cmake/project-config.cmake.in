@@ -77,10 +77,8 @@ else ()
   message (STATUS "  \${@PROJECT_NAME@_LIBRARIES} set to shared library")
 endif ()
 
-set (@PROJECT_NAME@_NETGeographicLib_LIBRARIES @NETGEOGRAPHICLIB_LIBRARIES@)
-
 # Check for the components requested.  This only supports components
-# STATIC, SHARED, and NETGeographicLib by checking the value of
+# STATIC and SHARED by checking the value of
 # @PROJECT_NAME@_${comp}_LIBRARIES.  No need to check if the component
 # is required or not--the version file took care of that.
 # @PROJECT_NAME@_${comp}_FOUND is set appropriately for each component.
