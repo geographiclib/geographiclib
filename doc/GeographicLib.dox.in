@@ -834,32 +834,31 @@ In order to use GeographicLib from C++ code, you will need to
     This is only needed for Windows systems when both shared and static
     libraries have been installed.  (If you configure your package with
     cmake, this definition is added automatically.)
-  - Tell the linker the name, Geographic, and location of the
+  - Tell the linker the name, GeographicLib, and location of the
     library.  Using g++ as the linker, you would use \verbatim
-    g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
+    g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographicLib
     \endverbatim
     With Visual Studio, you supply this information in the IDE via,
     e.g., \verbatim
-    Linker -> Input -> Additional Dependencies = Geographic-i.lib (for shared library)
-    Linker -> Input -> Additional Dependencies = Geographic.lib (for static library)
-    Linker -> General -> Additional Library Directories = C:\pkg-vc14-x64\Geographic\lib
+    Linker -> Input -> Additional Dependencies = GeographicLib-i.lib (for shared library)
+    Linker -> Input -> Additional Dependencies = GeographicLib.lib (for static library)
+    Linker -> General -> Additional Library Directories = C:\pkg-vc14-x64\GeographicLib\lib
     \endverbatim
-    Note that the library name is <b>Geographic</b> and not
-    GeographicLib.  For the Debug version of your program on Windows
-    add "_d" to the library, e.g., Geographic_d-i.lib or
-    Geographic_d.lib.
+    For the Debug version of your program on Windows
+    add "_d" to the library, e.g., GeographicLib_d-i.lib or
+    GeographicLib_d.lib.
   - Tell the runtime environment where to find the shared library
-    (assuming you compiled %Geographic as a shared library).  With g++,
+    (assuming you compiled %GeographicLib as a shared library).  With g++,
     this is accomplished by modifying the link line above to read \verbatim
     g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib \
-      -L/usr/local/lib -lGeographic
+      -L/usr/local/lib -lGeographicLib
     \endverbatim
     (There are two other ways to specify the location of shared libraries
     at runtime: (1) define the environment variable
     <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
     directories to search; (2) as <b>root</b>, specify /usr/local/lib as a
     directory searched by ldconfig(8).)  On Windows, you need to ensure
-    that Geographic.dll or Geographic_d.dll is in the same directory as
+    that GeographicLib.dll or GeographicLib_d.dll is in the same directory as
     your executable or else include the directory containing the dll in
     your <code>PATH</code>.
   - You can also use the pkg-config utility to specify compile and link
@@ -7782,6 +7781,10 @@ git repository for GeographicLib</a>.
      more to do.
    - Use variable for pod2html etc in makeusage.sh.
    - Better treatment of &plusmn;0&deg; and &plusmn;180&deg;.
+   - Library file now called libGeographicLib.so, etc., instead of
+     libGeographic.so.
+   - Variable names for installation directories.
+   - Remove legacy cmake config support (non-namespace).
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-06-22)

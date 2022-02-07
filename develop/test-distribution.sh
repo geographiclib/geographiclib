@@ -12,17 +12,15 @@
 # relc/GeographicLib-$VERSION/BUILD-system
 #
 # gita - check out from git, create package with cmake
-# gitb - check out from git, create package with autoconf
+# gitb - check out from git, check various builds in the non-release tree
 # gitr - new release branch
 # SKIP rela - release package, build with make
 # relb - release package, build with autoconf
 # relc - release package, build with cmake
 # relx - cmake release package inventory
 # rely - autoconf release package inventory
-# insta - installed files, make
 # instb - installed files, autoconf
 # instc - installed files, cmake
-# instf - installed files, autoconf direct from git repository
 
 set -e
 umask 0022
@@ -62,25 +60,27 @@ HAVEINTEL=
 test -d $TEMP || mkdir $TEMP
 rm -rf $TEMP/*
 mkdir $TEMP/gita # Package creation via cmake
-mkdir $TEMP/gitb # Package creation via autoconf
+mkdir $TEMP/gitb # Non release testing
 mkdir $TEMP/gitr # For release branch
 (cd $TEMP/gitr; git clone -b $BRANCH $GITSOURCE)
 (cd $TEMP/gita; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 (cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
+
+echo Make a source package
+
 cd $TEMP/gita/geographiclib
-sh autogen.sh
-cmake -S . -B BUILD \
-      -D BUILD_BOTH_LIBS=ON -D GEOGRAPHICLIB_DOCUMENTATION=ON
+cmake -S . -B BUILD
 make -C BUILD dist
 cp BUILD/GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
-make -C BUILD doc
-rsync -a --delete BUILD/doc/html/ $WEBDIST/htdocs/C++/$VERSION-pre/
 
-mkdir $TEMP/rel{b,c,x,y}
+
+mkdir $TEMP/rel{b,c,x,y,z}
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake+mvn
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relx
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
+
+echo Make a release for Windows testing
 unzip -qq -d $WINDOWSBUILD BUILD/GeographicLib-$VERSION.zip
 
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
@@ -143,6 +143,8 @@ cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
 
+echo Set up release branch
+
 cd $TEMP/gitr/geographiclib
 git checkout release
 git config user.email charles@karney.com
@@ -161,12 +163,6 @@ rm -f java/.gitignore
 for ((i=0; i<7; ++i)); do
     find * -type d -empty | xargs -r rmdir
 done
-
-# cd $TEMP/rela/GeographicLib-$VERSION
-# make -j$NUMCPUS
-# make PREFIX=$TEMP/insta install
-# cd $TEMP/insta
-# find . -type f | sort -u > ../files.a
 
 cd $TEMP/relb/GeographicLib-$VERSION
 mkdir BUILD-config
@@ -190,11 +186,20 @@ find . -type f | sort -u > ../files.b
 
 cd $TEMP/relc/GeographicLib-$VERSION
 cmake -D BUILD_BOTH_LIBS=ON -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
+make -C BUILD dist
 make -C BUILD -j$NUMCPUS all
 make -C BUILD test
 make -C BUILD -j$NUMCPUS exampleprograms
 make -C BUILD install
-
+(
+    cd $TEMP/instc
+    find . -type f | sort -u > ../files.c
+)
+tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relz
+(
+    cd $TEMP/relz
+    find . -type f | sort -u > ../files.z
+)
 cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
 make -C BUILD-system -j$NUMCPUS all
 make -C BUILD-system test
@@ -208,12 +213,14 @@ fi
 
 # mvn -Dcmake.project.bin.directory=$TEMP/mvn install
 
-cd $TEMP/gita/geographiclib/
+cd $TEMP/gitb/geographiclib/
 cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
 make -C tests/sandbox/BUILD
 
-cd $TEMP/gita/geographiclib
+cd $TEMP/gitb/geographiclib
+cmake -D BUILD_BOTH_LIBS=ON -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instx -S . -B BUILD
 make -C BUILD -j$NUMCPUS develprograms
+
 cp $DEVELSOURCE/include/mpreal.h include/
 for p in 1 3 4 5; do
     mkdir BUILD-$p
@@ -225,13 +232,22 @@ for p in 1 3 4 5; do
     make -C BUILD-$p -j$NUMCPUS develprograms
 done
 
-cd $TEMP/instc
-find . -type f | sort -u > ../files.c
+while read doc man suff; do
+    mkdir BUILD-$suff
+    cmake -D GEOGRAPHICLIB_DOCUMENTATION=$doc -D GEOGRAPHICLIB_MANPAGES=$man \
+	  -D CMAKE_INSTALL_PREFIX=$TEMP/inst-$suff -S . -B BUILD-$suff
+    make -C BUILD-$suff -j10 all
+    make -C BUILD-$suff install
+done <<EOF
+OFF OFF ff
+OFF ON  ft
+ON  OFF tf
+ON  ON  tt
+EOF
 
-cd $TEMP/gitb/geographiclib
-./autogen.sh
-mkdir BUILD-config
-cd BUILD-config
+cd $TEMP/relb/GeographicLib-$VERSION
+mkdir BUILD-dist
+cd BUILD-dist
 ../configure --prefix=$TEMP/instf
 make dist-gzip
 make install
@@ -284,18 +300,18 @@ int main() {
   return 0;
 }
 EOF
-for i in a b c f; do
+for i in  b c f; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
     g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib \
-	-L$TEMP/inst$i/lib -lGeographic
+	-L$TEMP/inst$i/lib -lGeographicLib
     ./testprogram$i
 done
 
 libversion=`find $TEMP/instc/lib -type f \
--name 'libGeographic.so.*' -printf "%f" |
-sed 's/libGeographic\.so\.//'`
-test -f $TEMP/instb/lib/libGeographic.so.$libversion ||
+-name 'libGeographicLib.so.*' -printf "%f" |
+sed 's/libGeographicLib\.so\.//'`
+test -f $TEMP/instb/lib/libGeographicLib.so.$libversion ||
 echo autoconf/cmake library so mismatch
 
 CONFIG_FILE=$TEMP/gitr/geographiclib/configure
@@ -370,6 +386,7 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
+# Check .gitignore files!
 git add -A
 git commit -m "Version $VERSION ($DATE)"
 git tag -m "Version $VERSION ($DATE)" r$VERSION

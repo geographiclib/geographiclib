@@ -13,12 +13,6 @@ foreach (TOOL ${TOOLS})
   set (HTMLMAN ${HTMLMAN} ${MANDIR}/${TOOL}.1.html)
 endforeach ()
 
-if (COMMON_INSTALL_PATH)
-  set (INSTALL_DOC_DIR "share/doc/GeographicLib")
-else ()
-  set (INSTALL_DOC_DIR "doc")
-endif ()
-
 # Run doxygen, if available
 
 # First assemble a list of all the files the documentation uses.  Add a
@@ -68,5 +62,7 @@ else ()
 
 endif ()
 
-install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
-  DESTINATION ${INSTALL_DOC_DIR})
+if (DOCDIR)
+  install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html
+    DESTINATION ${DOCDIR})
+endif ()

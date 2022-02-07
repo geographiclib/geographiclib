@@ -10,10 +10,10 @@
 // Compile in Matlab with
 // [Unix]
 // mex -I/usr/local/include -L/usr/local/lib -Wl,-rpath=/usr/local/lib
-//    -lGeographic geodesicinverse.cpp
+//    -lGeographicLib geodesicinverse.cpp
 // [Windows]
 // mex -I../include -L../windows/Release
-//    -lGeographic geodesicinverse.cpp
+//    -lGeographicLib geodesicinverse.cpp
 
 #include <algorithm>
 #include <GeographicLib/Geodesic.hpp>

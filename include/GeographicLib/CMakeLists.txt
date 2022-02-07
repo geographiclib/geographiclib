@@ -44,6 +44,8 @@ set (HEADERS
   UTMUPS.hpp
   Utility.hpp
   )
-install (FILES ${HEADERS} DESTINATION include/GeographicLib)
-install (FILES ${CMAKE_CURRENT_BINARY_DIR}/Config.h
-  DESTINATION include/GeographicLib)
+if (INCDIR)
+  install (FILES ${HEADERS} DESTINATION ${INCDIR}/GeographicLib)
+  install (FILES ${CMAKE_CURRENT_BINARY_DIR}/Config.h
+    DESTINATION ${INCDIR}/GeographicLib)
+endif ()

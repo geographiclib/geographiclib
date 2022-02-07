@@ -37,11 +37,13 @@ endif ()
 if (APPLE)
   # Ensure that the package is relocatable
   set_target_properties (${TOOLS} PROPERTIES
-    INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
+    INSTALL_RPATH "@loader_path/${RELATIVE_LIBDIR}")
 endif ()
 
 # Specify where the tools are installed, adding them to the export targets
-install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
+if (BINDIR)
+  install (TARGETS ${TOOLS} EXPORT targets DESTINATION ${BINDIR})
+endif ()
 
 if (MSVC AND PACKAGE_DEBUG_LIBS)
   # Possibly don't EXPORT the debug versions of the tools and then this
@@ -68,7 +70,10 @@ if (NOT WIN32)
       COMMAND ${CMAKE_COMMAND} -E
         copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}
       DEPENDS ${SCRIPT}.sh)
-    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
+    if (SBINDIR)
+      install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}
+	DESTINATION ${SBINDIR})
+      endif ()
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif ()

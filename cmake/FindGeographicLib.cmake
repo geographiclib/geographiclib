@@ -3,10 +3,10 @@
 # Set
 #  GeographicLib_FOUND = GEOGRAPHICLIB_FOUND = TRUE
 #  GeographicLib_INCLUDE_DIRS = /usr/local/include
-#  GeographicLib_LIBRARIES = /usr/local/lib/libGeographic.so
+#  GeographicLib_LIBRARIES = /usr/local/lib/libGeographicLib.so
 #  GeographicLib_LIBRARY_DIRS = /usr/local/lib
 
-find_library (GeographicLib_LIBRARIES Geographic
+find_library (GeographicLib_LIBRARIES GeographicLib
   PATHS "${CMAKE_INSTALL_PREFIX}/../GeographicLib/lib")
 
 if (GeographicLib_LIBRARIES)
@@ -17,7 +17,7 @@ if (GeographicLib_LIBRARIES)
   set (GeographicLib_BINARY_DIRS "${_ROOT_DIR}/bin")
   if (NOT EXISTS "${GeographicLib_INCLUDE_DIRS}/GeographicLib/Config.h")
     # On Debian systems the library is in e.g.,
-    #   /usr/lib/x86_64-linux-gnu/libGeographic.so
+    #   /usr/lib/x86_64-linux-gnu/libGeographicLib.so
     # so try stripping another element off _ROOT_DIR
     get_filename_component (_ROOT_DIR "${_ROOT_DIR}" PATH)
     set (GeographicLib_INCLUDE_DIRS "${_ROOT_DIR}/include")

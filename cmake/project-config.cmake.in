@@ -52,7 +52,6 @@ set (@PROJECT_NAME@_HIGHPREC_LIBRARIES "@HIGHPREC_LIBRARIES@")
 set (@PROJECT_NAME@_SHARED_LIBRARIES @CONFIG_SHARED_LIBRARIES@)
 set (@PROJECT_NAME@_STATIC_LIBRARIES @CONFIG_STATIC_LIBRARIES@)
 # Read in the exported definition of the library
-include ("${_DIR}/@PROJECT_NAME_LOWER@-legacy-targets.cmake")
 include ("${_DIR}/@PROJECT_NAME_LOWER@-targets.cmake")
 
 # For interoperability with older installations of GeographicLib and

@@ -51,23 +51,6 @@ cmake_minimum_required (VERSION 3.7.0) # This version was released 2016-11-11
 
 # User-settable variables
 
-# (1) COMMON_INSTALL_PATH governs the installation convention.  If it
-# is on ON (the Linux default), the installation is to a common
-# directory, e.g., /usr/local.  If it is OFF (the Windows default),
-# the installation directory contains the package name, e.g.,
-# c:/pkg/GeographicLib-1.22.  The installation directories for the
-# documentation and cmake configuration all depend on the variable with
-# deeper paths relative to CMAKE_INSTALL_PREFIX being used when it's ON.
-
-if (WIN32)
-  option (COMMON_INSTALL_PATH "Use a common installation path for packages"
-    OFF)
-else ()
-  option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
-endif ()
-
-# (2) PACKAGE_PATH and INSTALL_PATH have now been removed
-
 # (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
@@ -75,11 +58,11 @@ if (WIN32)
   # with Inno Setup which uses {commonappdata} which (since Windows
   # Vista) is C:/ProgramData.
   set (GEOGRAPHICLIB_DATA
-    "C:/ProgramData/GeographicLib"
+    "C:/ProgramData/${PROJECT_NAME}"
     CACHE PATH "Location for data for GeographicLib")
 else ()
   set (GEOGRAPHICLIB_DATA
-    "/usr/local/share/GeographicLib"
+    "/usr/local/share/${PROJECT_NAME}"
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
@@ -90,16 +73,6 @@ option (BUILD_SHARED_LIBS "Build as a shared library" ON)
 # Build both share and static libraries (ignoring BUILD_SHARED_LIBS)
 # This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier versions
 option (BUILD_BOTH_LIBS "Build both shared and static libraries" OFF)
-
-if (MSVC)
-  set (GEOGRAPHICLIB_LIB_TYPE STATIC CACHE STRING
-    "Types of library generated: SHARED, STATIC (default), or BOTH")
-else ()
-  set (GEOGRAPHICLIB_LIB_TYPE SHARED CACHE STRING
-    "Types of library generated: SHARED (default), STATIC, or BOTH")
-endif ()
-set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
-  PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
 
 if (BUILD_BOTH_LIBS)
   set (GEOGRAPHICLIB_SHARED_LIB ON)
@@ -187,7 +160,22 @@ else ()
   option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)
 endif ()
 
-set (LIBNAME Geographic)
+set (INCDIR "include" CACHE STRING "Where to install header files")
+set (BINDIR "bin" CACHE STRING "Where to install tools")
+set (SBINDIR "sbin" CACHE STRING "Where to install admin tools")
+set (LIBDIR "lib" CACHE STRING "Where to install libraries")
+set (DLLDIR "bin" CACHE STRING "Where to install dlls")
+set (CMAKEDIR "lib/cmake/${PROJECT_NAME}"
+  CACHE STRING "Where to install cmake configs")
+set (PKGDIR "lib/pkgconfig" CACHE STRING "Where to install package config")
+set (DOCDIR "share/doc/${PROJECT_NAME}"
+  CACHE STRING "Where to install documentation")
+
+# The relative path to library directory from the bin directory
+file (RELATIVE_PATH RELATIVE_LIBDIR
+  "${CMAKE_INSTALL_PREFIX}/${BINDIR}" "${CMAKE_INSTALL_PREFIX}/${LIBDIR}")
+
+set (LIBNAME "GeographicLib")
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of
   # the library is called Geographic_d.
@@ -214,7 +202,7 @@ if (NOT MSVC)
   # (2) include installed path for GeographicLib.
   if (NOT APPLE)
     # Use relative path so that package is relocatable
-    set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
+    set (CMAKE_INSTALL_RPATH "\$ORIGIN/${RELATIVE_LIBDIR}")
   else ()
     # cmake 2.8.12 introduced a way to make the package relocatable.
     # See also INSTALL_RPATH property on the tools.
@@ -542,7 +530,7 @@ if (MAINTAINER)
       Makefile.am src/Makefile.am include/Makefile.am tools/Makefile.am
       doc/Makefile.am man/Makefile.am cmake/Makefile.am
       examples/Makefile.am tests/Makefile.am)
-  add_custom_target (prep-dist DEPENDS distrib-man autogen.done)
+  add_custom_target (distrib-all DEPENDS distrib-man autogen.done)
 endif ()
 if (RELEASE OR MAINTAINER)
   add_custom_target (dist
@@ -566,5 +554,5 @@ if (RELEASE OR MAINTAINER)
     )
 endif ()
 if (MAINTAINER)
-  add_dependencies (dist prep-dist)
+  add_dependencies (dist distrib-all)
 endif ()

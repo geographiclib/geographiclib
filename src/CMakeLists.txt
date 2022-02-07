@@ -139,38 +139,40 @@ if (GEOGRAPHICLIB_SHARED_LIB)
   target_include_directories (${PROJECT_SHARED_LIBRARIES} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:${INCDIR}>)
 endif ()
 if (GEOGRAPHICLIB_STATIC_LIB)
   target_include_directories (${PROJECT_STATIC_LIBRARIES} PUBLIC
     $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>)
+    $<INSTALL_INTERFACE:${INCDIR}>)
 endif ()
 
 # Specify where the library is installed, adding it to the export targets
-install (TARGETS ${PROJECT_ALL_LIBRARIES}
-  EXPORT targets
-  # A potentially useful option.  However it's only supported in recent
-  # versions of cmake (2.8.12 and later?).  So comment out for now.
-  # INCLUDES DESTINATION include
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib${LIB_SUFFIX}
-  ARCHIVE DESTINATION lib${LIB_SUFFIX})
+if (LIBDIR)
+  install (TARGETS ${PROJECT_ALL_LIBRARIES}
+    EXPORT targets
+    # A potentially useful option.  However it's only supported in recent
+    # versions of cmake (2.8.12 and later?).  So comment out for now.
+    # INCLUDES DESTINATION include
+    RUNTIME DESTINATION ${DLLDIR}
+    LIBRARY DESTINATION ${LIBDIR}
+    ARCHIVE DESTINATION ${LIBDIR})
+endif ()
 
-if (MSVC AND PACKAGE_DEBUG_LIBS)
+if (MSVC AND PACKAGE_DEBUG_LIBS AND LIBDIR)
   if (GEOGRAPHICLIB_SHARED_LIB)
     install (FILES
       "${PROJECT_BINARY_DIR}/lib/Debug/${LIBNAME}${CMAKE_DEBUG_POSTFIX}-i.lib"
-      DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Release)
+      DESTINATION ${LIBDIR} CONFIGURATIONS Release)
     install (PROGRAMS
       "${PROJECT_BINARY_DIR}/bin/Debug/${LIBNAME}${CMAKE_DEBUG_POSTFIX}.dll"
-      DESTINATION bin CONFIGURATIONS Release)
+      DESTINATION ${DLLDIR} CONFIGURATIONS Release)
   endif ()
   if (GEOGRAPHICLIB_STATIC_LIB)
     install (FILES
       "${PROJECT_BINARY_DIR}/lib/Debug/${LIBNAME}${CMAKE_DEBUG_POSTFIX}.lib"
-      DESTINATION lib${LIB_SUFFIX} CONFIGURATIONS Release)
+      DESTINATION ${LIBDIR} CONFIGURATIONS Release)
   endif ()
 endif ()
 
