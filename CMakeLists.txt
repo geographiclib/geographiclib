@@ -393,7 +393,7 @@ endif ()
 # C++ code, and html.  Because this require tools that may not be
 # available on an end-user's system, the creation of the final
 # documentation is therefore only done in "MAINTAINER" mode.  The
-# maintainer runs "make distrib-all" which installs the transformed
+# maintainer runs "make distrib-man" which installs the transformed
 # documentation files into the source tree.  Skip Apple here because
 # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
 # file and there's no simple equivalent for MacOSX
@@ -406,10 +406,6 @@ if (POD2MAN AND POD2HTML AND COL)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)
-endif ()
-if (MAINTAINER)
-  add_custom_target (distrib-all)
-  add_dependencies (distrib-all distrib-man)
 endif ()
 
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
@@ -534,17 +530,9 @@ endif ()
 
 include (CPack)
 
-# Another maintainer-specific target is building the source distribution
-# via the target dist.  This calls package_source to make a tar.gz file.
-# However this needs to be touched up to support the vanilla Makefiles
-# provided with GeographicLib.  This entails
-# SKIP (1) creating Makefile (which includes Makefile.mk);
-# (2) creating a bare-bones Config.h (with just the version information);
-# (3) making sure that make thinks the generated documentation files are
-# up-to-date.
-# Then a new tar.gz file and zip file are created.  To avoid potential
-# problems with directory permissions, tar and zip are told only to
-# archive the files.
+# Build the source distribution via the "dist" target.  If in RELEASE
+# mode, nothing special is required.  In non-RELEASE mode, we need to be
+# MAINTAINER to create the extra files that go in the source package.
 if (MAINTAINER)
   add_custom_command (OUTPUT autogen.done
     COMMAND cd ${PROJECT_SOURCE_DIR} &&
@@ -554,26 +542,29 @@ if (MAINTAINER)
       Makefile.am src/Makefile.am include/Makefile.am tools/Makefile.am
       doc/Makefile.am man/Makefile.am cmake/Makefile.am
       examples/Makefile.am tests/Makefile.am)
-  add_custom_target (prep-dist
-    DEPENDS distrib-man autogen.done)
+  add_custom_target (prep-dist DEPENDS distrib-man autogen.done)
+endif ()
+if (RELEASE OR MAINTAINER)
   add_custom_target (dist
     COMMAND ${CMAKE_MAKE_PROGRAM} package_source
     COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      echo ${PROJECT_VERSION} > VERSION &&
-      chmod -R g-w .
+    cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
+    echo ${PROJECT_VERSION} > VERSION &&
+    chmod -R g-w .
     COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ &&
-      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-      tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
+    cd _CPack_Packages/Linux-Source/TGZ &&
+    find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
+    tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
     COMMAND
-      rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
-      rsync -a --delete
-      _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
-      _CPack_Packages/Linux-Source/TGZ.DOS/ &&
-      cd _CPack_Packages/Linux-Source/TGZ.DOS &&
-      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-      zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
-  )
-  add_dependencies (dist prep-dist distrib-all)
+    rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
+    rsync -a --delete
+    _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
+    _CPack_Packages/Linux-Source/TGZ.DOS/ &&
+    cd _CPack_Packages/Linux-Source/TGZ.DOS &&
+    find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
+    zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
+    )
+endif ()
+if (MAINTAINER)
+  add_dependencies (dist prep-dist)
 endif ()
