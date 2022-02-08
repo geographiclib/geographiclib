@@ -370,7 +370,7 @@ cat <<EOF
       <a href="https://doi.org/10.1007/s00190-012-0578-z">
         10.1007/s00190-012-0578-z</a>;
       addenda:
-      <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+      <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
         geod-addenda.html</a>.  See also the Wikipedia page,
       <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
         Geodesics on an ellipsoid</a>.

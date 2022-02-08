@@ -599,7 +599,7 @@
    English translation: by K. Balagangadharan (Hindustan Book Agency, 2009)
    [[BR]] https://www.worldcat.org/oclc/440645889 [[BR]]
    https://books.google.com/books?id=s9o0QwAACAAJ [[BR]]
-   Errata: https://geographiclib.sourceforge.io/jacobi-errata.html
+   Errata: https://geographiclib.sourceforge.io/misc/jacobi-errata.html
  * C. G. J. Jacobi,[[BR]]
    ''Über die Curve, welche alle von einem Punkte ausgehenden geodätischen
    Linien eines Rotationsellipsoides berührt [The envelope of geodesic
@@ -1707,13 +1707,13 @@
    ''Geodesics on an ellipsoid of revolution''
    (Feb. 2011).[[BR]]
    https://arxiv.org/abs/1102.1215 [[BR]]
-   Errata: https://geographiclib.sourceforge.io/geod-addenda.html#geod-errata
+   Errata: https://geographiclib.sourceforge.io/misc/geod-addenda.html#geod-errata
  * C. F. F. Karney,[[BR]]
    ''Algorithms for geodesics'',
    J. Geodesy '''87'''(1), 43--55 (2013).[[BR]]
    https://doi.org/10.1007/s00190-012-0578-z [[BR]]
    https://arxiv.org/abs/1109.4448 [[BR]]
-   Addenda: https://geographiclib.sourceforge.io/geod-addenda.html
+   Addenda: https://geographiclib.sourceforge.io/misc/geod-addenda.html
  * C. M. Rollins,[[BR]]
    ''An integral for geodesic length'',
    Survey Review '''42'''(315), 20--26 (2010).[[BR]]

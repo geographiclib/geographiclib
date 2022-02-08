@@ -29,7 +29,7 @@ namespace GeographicLib {
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda:
-   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   *   <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    *   geod-addenda.html</a>.
    *
    * Arbitrarily complex polygons are allowed.  In the case self-intersecting

@@ -1,10 +1,1 @@
 *.errs
-/HarmTest
-/HarmTest-ld
-ConicTest
-GeodTest
-NaNTester
-PASouth
-ProjTest
-TMTest
-vintest*

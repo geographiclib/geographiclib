@@ -75,7 +75,7 @@ For more information on GeographicLib, see
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
 - C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2022-mm-dd),
-  https://geographiclib.sourceforge.io/@PROJECT_VERSION@
+  https://geographiclib.sourceforge.io/C++/@PROJECT_VERSION@
 
 \section contents Contents
  - \ref intro
@@ -3375,10 +3375,10 @@ References:
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
    https://geographiclib.sourceforge.io/geodesic-papers/biblio.html
  - The wikipedia page,
@@ -4458,7 +4458,7 @@ Go to
       J. Geodesy 87(1), 43--55 (2013);
       DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+      addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
       geod-addenda.html</a>.
 
 \section triaxial-coords Triaxial coordinate systems
@@ -4968,7 +4968,7 @@ of ellipsoid.  He covers this in greater detail in
 <i>Vorlesungen &uuml;ber Dynamik</i>, &sect;28</a>, which is now
 available in an <a href="https://www.worldcat.org/oclc/440645889">
 English translation: Lectures on Dynamics</a>
-(<a href="https://geographiclib.sourceforge.io/jacobi-errata.html">
+(<a href="https://geographiclib.sourceforge.io/misc/jacobi-errata.html">
 errata</a>).
 
 \section jacobi-conformal Conformal projection
@@ -5341,22 +5341,22 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/geod.html"> geod.html</a>.
  - L. Kr&uuml;ger,
    <a href="https://doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
@@ -5899,7 +5899,7 @@ References:
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
-   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    geod-addenda.html</a>.
  - A. Pallikaris & G. Latsas,
    <a href="https://doi.org/10.1017/S0373463309005323">
@@ -6255,18 +6255,18 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
  .
 The algorithm for TransverseMercator is based on
 Kr&uuml;ger (1912); that for TransverseMercatorExact is
 based on Lee (1976).
 
-See <a href="https://geographiclib.sourceforge.io/tm-grid.kmz"
+See <a href="https://geographiclib.sourceforge.io/misc/tm-grid.kmz"
 type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
 illustration of the exact transverse Mercator grid in Google Earth.
 
@@ -6500,18 +6500,18 @@ This section gives color versions of the figures in
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
 
 \b NOTE:
 The numbering of the figures matches that in the paper cited above.  The
 figures in this section are relatively small in order to allow them to
 be displayed quickly.  Vector versions of these figures are available in
-<a href="https://geographiclib.sourceforge.io/tm-figs.pdf"
+<a href="https://geographiclib.sourceforge.io/misc/tm-figs.pdf"
 type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
 figures to show the details more clearly.
 
