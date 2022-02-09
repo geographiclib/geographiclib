@@ -29,7 +29,7 @@
               <options>
                 <BUILD_BOTH_LIBS>ON</BUILD_BOTH_LIBS>
                 <CONVERT_WARNINGS_TO_ERRORS>ON</CONVERT_WARNINGS_TO_ERRORS>
-                <GEOGRAPHICLIB_DOCUMENTATION>OFF</GEOGRAPHICLIB_DOCUMENTATION>
+                <BUILD_DOCUMENTATION>OFF</BUILD_DOCUMENTATION>
               </options>
             </configuration>
           </execution>

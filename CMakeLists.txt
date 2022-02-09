@@ -114,15 +114,19 @@ set (PROJECT_ALL_LIBRARIES
   ${PROJECT_SHARED_LIBRARIES}
   ${PROJECT_INTERFACE_LIBRARIES})
 
+if (EXISTS ${PROJECT_SOURCE_DIR}/VERSION)
+  # If the file, VERSION, exists then this is a released version of
+  # GeographicLib and the processed man pages are available in the
+  # source tree
+  set (RELEASE ON)
+else ()
+  set (RELEASE OFF)
+endif ()
+
 # (5) Create the documentation?  This depends on whether doxygen can be
 # found.  If this is OFF, then links will be provided to the online
 # documentation on Sourceforge.
-option (GEOGRAPHICLIB_DOCUMENTATION
-  "Use doxygen to create the documentation" OFF)
-
-# Attempt to make the man pages.  This only has any affect with a
-# non-release tree.
-option (GEOGRAPHICLIB_MANPAGES "Use doxygen to create the documentation" ON)
+option (BUILD_DOCUMENTATION "Use doxygen to create the documentation" OFF)
 
 # (7) Set the default "real" precision.  This should probably be left
 # at 2 (double).
@@ -153,18 +157,42 @@ option (USE_BOOST_FOR_EXAMPLES
 option (APPLE_MULTIPLE_ARCHITECTURES
   "Build multiple architectures for Apple systems" OFF)
 
-# (11) Convert warnings into errors?  Default is OFF if RELEASE, else ON.
 if (RELEASE)
   option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+  # BUILD_MANPAGES is ignored in RELEASE mode
+  option (BUILD_MANPAGES "Convert pod files to manpages" OFF)
 else ()
+  # (11) Convert warnings into errors?  Default is OFF if RELEASE, else ON.
   option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)
+  # Convert pod files to man pages.  This only necessary with a
+  # non-release tree.
+  option (BUILD_MANPAGES "Convert pod files to manpages" ON)
+endif ()
+
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release" CACHE STRING "The build type")
+endif ()
+
+if (MSVC OR CMAKE_CONFIGURATION_TYPES)
+  # For multi-config systems and for Visual Studio, the debug version of
+  # the library is called Geographic_d.
+  set (CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "The suffix for debug objects")
+else ()
+  set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
 set (INCDIR "include" CACHE STRING "Where to install header files")
 set (BINDIR "bin" CACHE STRING "Where to install tools")
-set (SBINDIR "sbin" CACHE STRING "Where to install admin tools")
+if (WIN32)
+  set (SBINDIR "" CACHE STRING "Where to install admin tools")
+else ()
+  set (SBINDIR "sbin" CACHE STRING "Where to install admin tools")
+endif ()
 set (LIBDIR "lib" CACHE STRING "Where to install libraries")
 set (DLLDIR "bin" CACHE STRING "Where to install dlls")
+set (MANDIR "share/man" CACHE STRING "Where to instal the man pages")
 set (CMAKEDIR "lib/cmake/${PROJECT_NAME}"
   CACHE STRING "Where to install cmake configs")
 set (PKGDIR "lib/pkgconfig" CACHE STRING "Where to install package config")
@@ -172,24 +200,14 @@ set (DOCDIR "share/doc/${PROJECT_NAME}"
   CACHE STRING "Where to install documentation")
 
 # The relative path to library directory from the bin directory
-file (RELATIVE_PATH RELATIVE_LIBDIR
-  "${CMAKE_INSTALL_PREFIX}/${BINDIR}" "${CMAKE_INSTALL_PREFIX}/${LIBDIR}")
+if (LIBDIR AND BINDIR)
+  file (RELATIVE_PATH RELATIVE_LIBDIR
+    "${CMAKE_INSTALL_PREFIX}/${BINDIR}" "${CMAKE_INSTALL_PREFIX}/${LIBDIR}")
+else ()
+  set (RELATIVE_LIBDIR "")
+endif ()
 
 set (LIBNAME "GeographicLib")
-if (MSVC OR CMAKE_CONFIGURATION_TYPES)
-  # For multi-config systems and for Visual Studio, the debug version of
-  # the library is called Geographic_d.
-  set (CMAKE_DEBUG_POSTFIX _d)
-endif ()
-
-if (EXISTS ${PROJECT_SOURCE_DIR}/VERSION)
-  # If the file, VERSION, exists then this is a released version of
-  # GeographicLib and the processed man pages are available in the
-  # source tree
-  set (RELEASE ON)
-else ()
-  set (RELEASE OFF)
-endif ()
 
 if (NOT MSVC)
   # Set the run time path for shared libraries for non-Windows machines.
@@ -200,7 +218,7 @@ if (NOT MSVC)
     set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   endif ()
   # (2) include installed path for GeographicLib.
-  if (NOT APPLE)
+  if (NOT APPLE AND RELATIVE_LIBDIR)
     # Use relative path so that package is relocatable
     set (CMAKE_INSTALL_RPATH "\$ORIGIN/${RELATIVE_LIBDIR}")
   else ()
@@ -371,7 +389,7 @@ configure_file (
   @ONLY)
 
 # The documentation depends on doxygen.
-if (GEOGRAPHICLIB_DOCUMENTATION)
+if (BUILD_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   # Version 1.8.7 or later needed for &hellip;
   find_package (Doxygen 1.8.7)
@@ -385,7 +403,7 @@ endif ()
 # documentation files into the source tree.  Skip Apple here because
 # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
 # file and there's no simple equivalent for MacOSX
-if (NOT RELEASE AND GEOGRAPHICLIB_MANPAGES AND NOT WIN32 AND NOT APPLE)
+if (NOT RELEASE AND BUILD_MANPAGES AND NOT WIN32 AND NOT APPLE)
   find_program (POD2MAN pod2man)
   find_program (POD2HTML pod2html)
   find_program (COL col)
@@ -394,12 +412,6 @@ if (POD2MAN AND POD2HTML AND COL)
   set (MAINTAINER ON)
 else ()
   set (MAINTAINER OFF)
-endif ()
-
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-  # Set a default build type for single-configuration cmake generators
-  # if no build type is set.
-  set (CMAKE_BUILD_TYPE Release)
 endif ()
 
 # Set output directories for Windows so that executables and dlls are

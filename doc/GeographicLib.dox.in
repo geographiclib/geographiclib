@@ -7760,12 +7760,14 @@ git repository for GeographicLib</a>.
    - Check need for using std::nan for Centos 7 + Ubuntu 14.
    - Migrate function implementation from Utility.hpp to cpp (plus for
      other classes).
+   - Check whether boost/quadmath workarounds can be removed with boost 1.79.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
    (released 2022-mm-dd)
    - Major reorganization.
    - Use fmin, fmax, fabs.
+   - Ellipsoid::MinorRadius() -> Ellipsoid::PolarRadius().
    - Remove deprecated functions: XXX::MajorRadius, Utility::val, and
      placeholders (Math::cbrt, etc.) for C++11 math functions.
    - Rename various internal identifiers to avoid reserved names.

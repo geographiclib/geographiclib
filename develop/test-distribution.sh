@@ -14,7 +14,6 @@
 # gita - check out from git, create package with cmake
 # gitb - check out from git, check various builds in the non-release tree
 # gitr - new release branch
-# SKIP rela - release package, build with make
 # relb - release package, build with autoconf
 # relc - release package, build with cmake
 # relx - cmake release package inventory
@@ -30,7 +29,7 @@ umask 0022
 #   CMakeLists.txt (PROJECT_VERSION_* LIBVERSION_*)
 #   NEWS
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
-#   tests/test-distribution.sh
+#   develop/test-distribution.sh
 #   doc/GeographicLib.dox.in (3 places)
 
 # maxima
@@ -66,21 +65,33 @@ mkdir $TEMP/gitr # For release branch
 (cd $TEMP/gita; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 (cd $TEMP/gitb; git clone -b $BRANCH file://$TEMP/gitr/geographiclib)
 
-echo Make a source package
+echo ==============================================================
+echo Make a source package in $TEMP/gita/geographiclib/BUILD
 
 cd $TEMP/gita/geographiclib
 cmake -S . -B BUILD
-make -C BUILD dist
+(cd BUILD && make dist)
 cp BUILD/GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
 
+echo ==============================================================
+echo Unpack source package in $TEMP/rel bcx
 
-mkdir $TEMP/rel{b,c,x,y,z}
+mkdir $TEMP/rel{b,c,x}
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
 tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake+mvn
-tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relx
+tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relx # for listing
+
+echo ==============================================================
+echo Unpack devel cmake distribution in $TEMP/relx and list in $TEMP/files.x
+(
+    cd $TEMP/relx
+    find . -type f | sort -u > ../files.x
+)
+
+echo ==============================================================
+echo Make a release for Windows testing in $WINDOWSBUILD/GeographicLib-$VERSION
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 
-echo Make a release for Windows testing
 unzip -qq -d $WINDOWSBUILD BUILD/GeographicLib-$VERSION.zip
 
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
@@ -143,7 +154,8 @@ cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
 
-echo Set up release branch
+echo ==============================================================
+echo Set up release branch in $TEMP/gitr/geographiclib
 
 cd $TEMP/gitr/geographiclib
 git checkout release
@@ -164,6 +176,71 @@ for ((i=0; i<7; ++i)); do
     find * -type d -empty | xargs -r rmdir
 done
 
+echo ==============================================================
+echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD install to $TEMP/instc
+cd $TEMP/relc/GeographicLib-$VERSION
+cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
+(
+    cd BUILD
+    make dist
+    make -j$NUMCPUS all
+    make test
+    make -j$NUMCPUS exampleprograms
+    make install
+    rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$VERSION/
+)
+
+echo ==============================================================
+echo List installed files fron cmake build in $TEMP/instc to $TEMP/files.c
+(
+    cd $TEMP/instc
+    find . -type f | sort -u > ../files.c
+)
+
+echo ==============================================================
+echo Sandbox build of $TEMP/gitb/geographiclib/tests/sandox using installation in $TEMP/instc
+cd $TEMP/gitb/geographiclib/
+cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
+(cd tests/sandbox/BUILD && make all)
+
+
+echo ==============================================================
+echo Make distribution from release tree with cmake
+
+cmake -S . -B BUILD-dist
+(cd BUILD-dist && make dist)
+
+echo ==============================================================
+echo Unpack release cmake distribution in $TEMP/relz and list in $TEMP/files.z
+mkdir $TEMP/relz
+tar xfpzC BUILD-dist/GeographicLib-$VERSION.tar.gz $TEMP/relz
+
+(
+    cd $TEMP/relz
+    find . -type f | sort -u > ../files.z
+)
+
+echo ==============================================================
+echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD-system install to /usr/local
+
+cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
+(cd BUILD-system && make -j$NUMCPUS all&& make test)
+
+if test "$HAVEINTEL"; then
+    echo ==============================================================
+    echo CMake build for intel in $TEMP/relc/GeographicLib-$VERSION/BUILD-intel
+    env FC=ifort CC=icc CXX=icpc cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
+    (
+	cd BUILD-intel
+	make -j$NUMCPUS all
+	make test
+	make -j$NUMCPUS exampleprograms
+    )
+fi
+
+echo ==============================================================
+echo Check build with configure in $TEMP/relb/GeographicLib-$VERSION/BUILD-config to $TEMP/instb
+
 cd $TEMP/relb/GeographicLib-$VERSION
 mkdir BUILD-config
 cd BUILD-config
@@ -173,6 +250,9 @@ make install
 cd ..
 
 if test "$HAVEINTEL"; then
+echo ==============================================================
+echo Check build with configure + intell in $TEMP/relb/GeographicLib-$VERSION/BUILD-config-intel
+
     mkdir BUILD-config-intel
     cd BUILD-config-intel
     env FC=ifort CC=icc CXX=icpc ../configure
@@ -180,88 +260,56 @@ if test "$HAVEINTEL"; then
     cd ..
 fi
 
-mv $TEMP/instb/share/doc/{geographiclib,GeographicLib}
-cd $TEMP/instb
-find . -type f | sort -u > ../files.b
+echo ==============================================================
+echo Make source dist with autoconf $TEMP/relb/GeographicLib-$VERSION/BUILD-dist
 
-cd $TEMP/relc/GeographicLib-$VERSION
-cmake -D BUILD_BOTH_LIBS=ON -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
-make -C BUILD dist
-make -C BUILD -j$NUMCPUS all
-make -C BUILD test
-make -C BUILD -j$NUMCPUS exampleprograms
-make -C BUILD install
-(
-    cd $TEMP/instc
-    find . -type f | sort -u > ../files.c
-)
-tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relz
-(
-    cd $TEMP/relz
-    find . -type f | sort -u > ../files.z
-)
-cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
-make -C BUILD-system -j$NUMCPUS all
-make -C BUILD-system test
-
-if test "$HAVEINTEL"; then
-    env FC=ifort CC=icc CXX=icpc cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
-    make -C BUILD-intel -j$NUMCPUS all
-    make -C BUILD-intel test
-    make -C BUILD-intel -j$NUMCPUS exampleprograms
-fi
-
-# mvn -Dcmake.project.bin.directory=$TEMP/mvn install
-
-cd $TEMP/gitb/geographiclib/
-cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
-make -C tests/sandbox/BUILD
-
-cd $TEMP/gitb/geographiclib
-cmake -D BUILD_BOTH_LIBS=ON -D GEOGRAPHICLIB_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instx -S . -B BUILD
-make -C BUILD -j$NUMCPUS develprograms
-
-cp $DEVELSOURCE/include/mpreal.h include/
-for p in 1 3 4 5; do
-    mkdir BUILD-$p
-    cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
-    make -C BUILD-$p -j$NUMCPUS all
-    if test $p -ne 1; then
-	make -C BUILD-$p test
-    fi
-    make -C BUILD-$p -j$NUMCPUS develprograms
-done
-
-while read doc man suff; do
-    mkdir BUILD-$suff
-    cmake -D GEOGRAPHICLIB_DOCUMENTATION=$doc -D GEOGRAPHICLIB_MANPAGES=$man \
-	  -D CMAKE_INSTALL_PREFIX=$TEMP/inst-$suff -S . -B BUILD-$suff
-    make -C BUILD-$suff -j10 all
-    make -C BUILD-$suff install
-done <<EOF
-OFF OFF ff
-OFF ON  ft
-ON  OFF tf
-ON  ON  tt
-EOF
-
-cd $TEMP/relb/GeographicLib-$VERSION
 mkdir BUILD-dist
 cd BUILD-dist
-../configure --prefix=$TEMP/instf
+../configure
 make dist-gzip
-make install
+
+echo ==============================================================
+echo Unpack release autoconf distribution in $TEMP/rely and list in $TEMP/files.z
+
+mkdir $TEMP/rely
 tar xfpzC geographiclib-$VERSION.tar.gz $TEMP/rely
 mv $TEMP/rely/{geographiclib,GeographicLib}-$VERSION
 cd $TEMP/rely
 find . -type f | sort -u > ../files.y
-cd $TEMP/relx
-find . -type f | sort -u > ../files.x
 
-mv $TEMP/instf/share/doc/{geographiclib,GeographicLib}
-cd $TEMP/instf
-find . -type f | sort -u > ../files.f
+echo ==============================================================
+echo List installed files fron autoconf build in $TEMP/instb to $TEMP/files.b
 
+mv $TEMP/instb/share/doc/{geographiclib,GeographicLib}
+cd $TEMP/instb
+find . -type f | sort -u > ../files.b
+
+echo ==============================================================
+echo CMake build of devel tree in $TEMP/gitb/geographiclib/BUILD
+
+cd $TEMP/gitb/geographiclib
+cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD
+(cd BUILD && make -j$NUMCPUS && make -j$NUMCPUS develprograms)
+
+cp $DEVELSOURCE/include/mpreal.h include/
+# Skip 4 for now because of various boost bugs
+for p in 1 3 5; do
+    echo ==============================================================
+    echo CMake build of devel tree at precision $p in $TEMP/gitb/geographiclib/BUILD-$p
+    mkdir BUILD-$p
+    cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
+    (
+	cd BUILD-$p
+	make -j$NUMCPUS all
+	if test $p -ne 1; then
+	    make test
+	fi
+	make -j$NUMCPUS develprograms
+    )
+done
+
+echo ==============================================================
+echo Compile and run little test program
 cd $TEMP
 cat > testprogram.cpp <<EOF
 #include <iostream>
@@ -300,13 +348,16 @@ int main() {
   return 0;
 }
 EOF
-for i in  b c f; do
+for i in  b c; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
     g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib \
 	-L$TEMP/inst$i/lib -lGeographicLib
     ./testprogram$i
 done
+
+echo ==============================================================
+echo Verify library versions of cmake and autoconf builds are the same and other checks
 
 libversion=`find $TEMP/instc/lib -type f \
 -name 'libGeographicLib.so.*' -printf "%f" |
@@ -328,36 +379,35 @@ test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 cd $TEMP/relx/GeographicLib-$VERSION
 (
     echo Files with trailing spaces:
-    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif|\.pdf' |
+    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif' |
 	while read f; do
 	    tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
 	done
     echo
     echo Files with tabs:
     find . -type f |
-	egrep -v '[Mm]akefile|\.html|\.vcproj|\.sln|\.m4|\.png|\.gif|\.pdf|\.xml' |
+	egrep -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
 	egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
 	xargs grep -l  '	' || true
     echo
     echo Files with multiple newlines:
     find . -type f |
 	egrep -v \
-	   '/Makefile\.in|\.1\.html|\.png|\.gif|\.pdf|/ltmain|/config|\.m4|Settings' |
-	egrep -v '(Resources|Settings)\.Designer\.cs' |
+	   '/Makefile\.in|\.1\.html|\.png|\.gif|/ltmain|/config|\.m4' |
 	while read f; do
 	    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
 	done
     echo
     echo Files with no newline at end:
     find . -type f |
-	egrep -v '\.png|\.gif|\.pdf' |
+	egrep -v '\.png|\.gif' |
 	while read f; do
 	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
 	done
     echo
     echo Files with extra newlines at end:
     find . -type f |
-	egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.pdf|\.1\.html' |
+	egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.1\.html' |
 	while read f; do
 	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
 	done

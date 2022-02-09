@@ -34,7 +34,7 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
 endif ()
 
-if (APPLE)
+if (APPLE AND RELATIVE_LIBDIR)
   # Ensure that the package is relocatable
   set_target_properties (${TOOLS} PROPERTIES
     INSTALL_RPATH "@loader_path/${RELATIVE_LIBDIR}")
@@ -73,7 +73,7 @@ if (NOT WIN32)
     if (SBINDIR)
       install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}
 	DESTINATION ${SBINDIR})
-      endif ()
+    endif ()
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif ()

@@ -82,7 +82,7 @@ namespace GeographicLib {
     /**
      * @return \e b the polar semi-axis (meters).
      **********************************************************************/
-    Math::real MinorRadius() const { return _b; }
+    Math::real PolarRadius() const { return _b; }
 
     /**
      * @return \e L the distance between the equator and a pole along a

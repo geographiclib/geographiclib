@@ -4,9 +4,11 @@ if (RELEASE)
   # and usage formats This cmake file then just has to install the man
   # pages.  The html pages will be copied by doc/CMakeLists.txt and the
   # usage pages will be included by tools/CMakeLists.txt
-  foreach (TOOL ${TOOLS})
-    install (FILES ${TOOL}.1 DESTINATION share/man/man1)
-  endforeach ()
+  if (MANDIR AND BINDIR)
+    foreach (TOOL ${TOOLS})
+      install (FILES ${TOOL}.1 DESTINATION ${MANDIR}/man1)
+    endforeach ()
+  endif ()
 
 else ()
 
@@ -59,7 +61,9 @@ else ()
     endif ()
   endforeach ()
 
-  install (FILES ${MANPAGES} DESTINATION share/man/man1)
+  if (MANDIR AND BINDIR)
+    install (FILES ${MANPAGES} DESTINATION ${MANDIR}/man1)
+  endif ()
 
   if (MAINTAINER)
     add_custom_target (manpages ALL DEPENDS ${MANPAGES}
@@ -102,5 +106,7 @@ if (NOT WIN32)
     set (SYSMANPAGES ${SYSMANPAGES} ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}.8)
     configure_file (script.8.in ${SCRIPT}.8 @ONLY)
   endforeach ()
-  install (FILES ${SYSMANPAGES} DESTINATION share/man/man8)
+  if (MANDIR AND SBINDIR)
+    install (FILES ${SYSMANPAGES} DESTINATION ${MANDIR}/man8)
+  endif ()
 endif ()
