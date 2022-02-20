@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # tar.gz and zip distrib files copied to $DEVELSOURCE
-# html documentation rsync'ed to $WEBDIST/htdocs/C++/$VERSION-pre/
+# html documentation rsync'ed to $WEBDIST/htdocs/C++/$VERSION$SUFFIX/
 #
 # Windows version ready to build in
 # $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10{,-x64}
@@ -38,6 +38,8 @@ umask 0022
 START=`date +%s`
 DATE=`date +%F`
 VERSION=2.0
+SUFFIX=-alpha
+DISTVERSION=$VERSION$SUFFIX
 BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
@@ -71,15 +73,15 @@ echo Make a source package in $TEMP/gita/geographiclib/BUILD
 cd $TEMP/gita/geographiclib
 cmake -S . -B BUILD
 (cd BUILD && make dist)
-cp BUILD/GeographicLib-$VERSION.{zip,tar.gz} $DEVELSOURCE
+cp BUILD/GeographicLib-$DISTVERSION.{zip,tar.gz} $DEVELSOURCE
 
 echo ==============================================================
 echo Unpack source package in $TEMP/rel bcx
 
 mkdir $TEMP/rel{b,c,x}
-tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relb # Version for autoconf
-tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relc # Version for cmake+mvn
-tar xfpzC BUILD/GeographicLib-$VERSION.tar.gz $TEMP/relx # for listing
+tar xfpzC BUILD/GeographicLib-$DISTVERSION.tar.gz $TEMP/relb # Version for autoconf
+tar xfpzC BUILD/GeographicLib-$DISTVERSION.tar.gz $TEMP/relc # Version for cmake+mvn
+tar xfpzC BUILD/GeographicLib-$DISTVERSION.tar.gz $TEMP/relx # for listing
 
 echo ==============================================================
 echo Unpack devel cmake distribution in $TEMP/relx and list in $TEMP/files.x
@@ -92,7 +94,7 @@ echo ==============================================================
 echo Make a release for Windows testing in $WINDOWSBUILD/GeographicLib-$VERSION
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 
-unzip -qq -d $WINDOWSBUILD BUILD/GeographicLib-$VERSION.zip
+unzip -qq -d $WINDOWSBUILD BUILD/GeographicLib-$DISTVERSION.zip
 
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
@@ -137,7 +139,7 @@ for ver in 14 15 16; do
 	    echo cmake --build \$b --config Release --target INSTALL
 	    echo cmake --build \$b --config Release --target PACKAGE
 	    test "$installer" &&
-		echo cp \$b/GeographicLib-$VERSION-*.exe $WINDEVELSOURCE/ ||
+		echo cp \$b/GeographicLib-$DISTVERSION-*.exe $WINDEVELSOURCE/ ||
 		    true
 	) > $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
 	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
@@ -161,7 +163,7 @@ cd $TEMP/gitr/geographiclib
 git checkout release
 git config user.email charles@karney.com
 find . -type f | grep -v '/\.git' | xargs rm
-tar xfpz $DEVELSOURCE/GeographicLib-$VERSION.tar.gz
+tar xfpz $DEVELSOURCE/GeographicLib-$DISTVERSION.tar.gz
 (
     cd GeographicLib-$VERSION
     find . -type f | while read f; do
@@ -187,7 +189,7 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
     make test
     make -j$NUMCPUS exampleprograms
     make install
-    rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$VERSION/
+    rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$DISTVERSION/
 )
 
 echo ==============================================================
@@ -213,7 +215,7 @@ cmake -S . -B BUILD-dist
 echo ==============================================================
 echo Unpack release cmake distribution in $TEMP/relz and list in $TEMP/files.z
 mkdir $TEMP/relz
-tar xfpzC BUILD-dist/GeographicLib-$VERSION.tar.gz $TEMP/relz
+tar xfpzC BUILD-dist/GeographicLib-$DISTVERSION.tar.gz $TEMP/relz
 
 (
     cd $TEMP/relz

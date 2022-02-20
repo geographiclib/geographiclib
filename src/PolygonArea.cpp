@@ -71,7 +71,7 @@ namespace GeographicLib {
     tempsum += S12;
     int crossings = _crossings + transit(_lon1, _lon0);
     AreaReduce(tempsum, crossings, reverse, sign);
-    area = 0 + tempsum();
+    area = real(0) + tempsum();
     return _num;
   }
 
@@ -107,7 +107,7 @@ namespace GeographicLib {
       return num;
 
     AreaReduce(tempsum, crossings, reverse, sign);
-    area = 0 + tempsum;
+    area = real(0) + tempsum;
     return num;
   }
 
@@ -143,14 +143,14 @@ namespace GeographicLib {
     }
 
     AreaReduce(tempsum, crossings, reverse, sign);
-    area = 0 + tempsum;
+    area = real(0) + tempsum;
     return num;
   }
 
   template <class GeodType>
   template <typename T>
-  void PolygonAreaT<GeodType>::AreaReduce(T& area, int crossings, bool reverse,
-                                      bool sign) const {
+  void PolygonAreaT<GeodType>::AreaReduce(T& area, int crossings,
+                                          bool reverse, bool sign) const {
     Remainder(area);
     if (crossings & 1) area += (area < 0 ? 1 : -1) * _area0/2;
     // area is with the clockwise sense.  If !reverse convert to

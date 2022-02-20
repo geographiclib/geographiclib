@@ -1,3 +1,12 @@
+/**
+ * \file signtest.cpp
+ * \brief Test treatment of +/-0 and +/-180
+ *
+ * Copyright (c) Charles Karney (2022) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * https://geographiclib.sourceforge.io/
+ **********************************************************************/
+
 #include <iostream>
 #include <limits>
 #include <string>
@@ -17,22 +26,35 @@ bool equiv(T x, T y) {
 
 // use "do { } while (false)" idiom so it can be punctuated like a statement.
 
-#define check(expr, r) do {                        \
-    T s = T(r),  t = expr;                         \
-    if (!equiv(s, t)) {                            \
-      cout << "Line " << __LINE__ << ": " << #expr \
+#define check(expr, r) do {                         \
+    T s = T(r),  t = expr;                          \
+    if (!equiv(s, t)) {                             \
+      cout << "Line " << __LINE__ << ": " << #expr  \
            << " != " << #r << " (" << t << ")\n";   \
-      ++n;                                         \
-    }                                              \
+      ++n;                                          \
+    }                                               \
   } while (false)
 
-// use "do { } while (false)" idiom so it can be punctuated like a statement.
+#define checksincosd(x, s, c) do {                  \
+    T sx, cx;                                       \
+    Math::sincosd(x, sx, cx);                       \
+    if (!equiv(s, sx)) {                            \
+      cout << "Line " << __LINE__ << ": sin(" << x  \
+           << ") != " << s << " (" << sx << ")\n";  \
+      ++n;                                          \
+    }                                               \
+    if (!equiv(c, cx)) {                            \
+      cout << "Line " << __LINE__ << ": cos(" << x  \
+           << ") != " << c << " (" << cx << ")\n";  \
+      ++n;                                          \
+    }                                               \
+  } while (false)
 
-#define strcheck(expr, r) do {                        \
-    string s = string(r),  t = expr;                         \
-    if (!(s == t)) {                                           \
+#define strcheck(expr, r) do {                     \
+    string s = string(r),  t = expr;               \
+    if (!(s == t)) {                               \
       cout << "Line " << __LINE__ << ": " << #expr \
-           << " != " << #r << " (" << t << ")\n";   \
+           << " != " << #r << " (" << t << ")\n";  \
       ++n;                                         \
     }                                              \
   } while (false)
@@ -86,6 +108,30 @@ int main() {
   check( Math::AngRound(T(90)-64*eps),  90-64*eps  );
   check( Math::AngRound(T(90)-32*eps),  90         );
   check( Math::AngRound(T(90)       ),  90         );
+
+  checksincosd(-  inf ,  nan,  nan);
+  checksincosd(-T(810), -1.0, +0.0);
+  checksincosd(-T(720), -0.0, +1.0);
+  checksincosd(-T(630), +1.0, +0.0);
+  checksincosd(-T(540), -0.0, -1.0);
+  checksincosd(-T(450), -1.0, +0.0);
+  checksincosd(-T(360), -0.0, +1.0);
+  checksincosd(-T(270), +1.0, +0.0);
+  checksincosd(-T(180), -0.0, -1.0);
+  checksincosd(-T( 90), -1.0, +0.0);
+  checksincosd(-T(  0), -0.0, +1.0);
+  checksincosd(+T(  0), +0.0, +1.0);
+  checksincosd(+T( 90), +1.0, +0.0);
+  checksincosd(+T(180), +0.0, -1.0);
+  checksincosd(+T(270), -1.0, +0.0);
+  checksincosd(+T(360), +0.0, +1.0);
+  checksincosd(+T(450), +1.0, +0.0);
+  checksincosd(+T(540), +0.0, -1.0);
+  checksincosd(+T(630), -1.0, +0.0);
+  checksincosd(+T(720), +0.0, +1.0);
+  checksincosd(+T(810), +1.0, +0.0);
+  checksincosd(+  inf ,  nan,  nan);
+  checksincosd(   nan ,  nan,  nan);
 
   check( Math::sind(-  inf ),  nan);
   check( Math::sind(-T(720)), -0.0);

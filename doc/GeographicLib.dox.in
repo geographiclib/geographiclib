@@ -15,8 +15,8 @@ namespace GeographicLib {
 \date 2022-mm-dd
 
 The documentation for other versions is available at
-<tt>https://geographiclib.sourceforge.io/C++/m.nn/</tt> for versions numbers
-<tt>m.nn</tt> &ge; 1.0.
+<tt>https://geographiclib.sourceforge.io/C++/m.n/</tt> for version numbers
+<tt>m.n</tt> &ge; 1.0.
 
 \section abstract Abstract
 

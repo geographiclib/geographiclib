@@ -60,6 +60,7 @@ namespace GeographicLib {
     GEOGRAPHICLIB_VOLATILE T vpp = s - up;
     up -= u;
     vpp -= v;
+    // mpreal needs T(0) here
     t = T(0) - (up + vpp);      // t = +0 if result is exact
     // u + v =       s      + t
     //       = round(u + v) + t
@@ -119,6 +120,7 @@ namespace GeographicLib {
     default: sinx = -c; cosx =  s; break; // case 3U
     }
     // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1950.pdf
+    // mpreal needs T(0) here
     cosx += T(0);                            // special values from F.10.1.12
     if (sinx == 0) sinx = copysign(sinx, x); // special values from F.10.1.13
   }
@@ -143,6 +145,7 @@ namespace GeographicLib {
     unsigned p = unsigned(q + 1);
     r = p & 1U ? cos(r) : sin(r);
     if (p & 2U) r = -r;
+    // mpreal needs T(0) here
     return T(0) + r;
   }
 
@@ -164,16 +167,10 @@ namespace GeographicLib {
     // quadrant.
     int q = 0;
     if (fabs(y) > fabs(x)) { swap(x, y); q = 2; }
-    if (x < 0) { x = -x; ++q; }
+    if (signbit(x)) { x = -x; ++q; }
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
     T ang = atan2(y, x) / degree<T>();
     switch (q) {
-      // Note that atan2d(-0.0, 1.0) will return -0.  However, we expect that
-      // atan2d will not be called with y = -0.  If need be, include
-      //
-      //   case 0: ang = 0 + ang; break;
-      //
-      // and handle mpfr as in AngRound.
     case 1: ang = (signbit(y) ? -180 : 180) - ang; break;
     case 2: ang =  90 - ang; break;
     case 3: ang = -90 + ang; break;
@@ -186,7 +183,7 @@ namespace GeographicLib {
   { return atan2d(x, T(1)); }
 
   template<typename T> T Math::eatanhe(T x, T es)  {
-    return es > T(0) ? es * atanh(es * x) : -es * atan(es * x);
+    return es > 0 ? es * atanh(es * x) : -es * atan(es * x);
   }
 
   template<typename T> T Math::taupf(T tau, T es) {
@@ -204,7 +201,7 @@ namespace GeographicLib {
     // min iterations = 1, max iterations = 2; mean = 1.95
     static const T tol = sqrt(numeric_limits<T>::epsilon()) / 10;
     static const T taumax = 2 / sqrt(numeric_limits<T>::epsilon());
-    T e2m = T(1) - sq(es),
+    T e2m = 1 - sq(es),
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
       // tau = taup/e2m as a starting guess. Only 1 iteration is needed for
       // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau

@@ -8,6 +8,7 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
+set (PROJECT_VERSION_SUFFIX "-alpha")
 
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
 
@@ -37,6 +38,7 @@ else ()
   set (CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set (CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   set (CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+  set (CPACK_PACKAGE_VERSION_SUFFIX ${PROJECT_VERSION_SUFFIX})
 
 endif ()
 
@@ -464,7 +466,7 @@ endif ()
 set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
 include (InstallRequiredSystemLibraries)
 
-# The configuration of CPack is via variable that need to be set before
+# The configuration of CPack is via variables that need to be set before
 # the include (CPack).
 set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
@@ -484,8 +486,9 @@ set (CPACK_SOURCE_IGNORE_FILES
 set (CPACK_SOURCE_GENERATOR TGZ)
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}-${PROJECT_VERSION}")
-set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+set (CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
+set (CPACK_PACKAGE_INSTALL_DIRECTORY
+  "${CPACK_SOURCE_PACKAGE_FILE_NAME}${PROJECT_VERSION_SUFFIX}")
 
 if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
@@ -544,6 +547,7 @@ if (MAINTAINER)
   add_custom_target (distrib-all DEPENDS distrib-man autogen.done)
 endif ()
 if (RELEASE OR MAINTAINER)
+  # Make the source package as RELEASE with the file VERSION.
   add_custom_target (dist
     COMMAND ${CMAKE_MAKE_PROGRAM} package_source
     COMMAND
@@ -553,15 +557,12 @@ if (RELEASE OR MAINTAINER)
     COMMAND
     cd _CPack_Packages/Linux-Source/TGZ &&
     find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-    tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
+    tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_PACKAGE_INSTALL_DIRECTORY}.tar.gz -
     COMMAND
-    rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
-    rsync -a --delete
-    _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
-    _CPack_Packages/Linux-Source/TGZ.DOS/ &&
-    cd _CPack_Packages/Linux-Source/TGZ.DOS &&
+    rm -f ${CMAKE_BINARY_DIR}/${CPACK_PACKAGE_INSTALL_DIRECTORY}.zip &&
+    cd _CPack_Packages/Linux-Source/TGZ &&
     find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-    zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
+    zip -q ${CMAKE_BINARY_DIR}/${CPACK_PACKAGE_INSTALL_DIRECTORY}.zip -@
     )
 endif ()
 if (MAINTAINER)
