@@ -159,7 +159,9 @@ int main() {
   check( Math::cosd(+T(810)), +0.0);
   check( Math::cosd(+  inf ),  nan);
 
+#if !(defined(_MSC_VER) && _MSC_VER == 1900)
   check( Math::tand(-  inf ),  nan);
+#endif
   check( Math::tand(-T(810)), -ovf);
   check( Math::tand(-T(720)), -0.0);
   check( Math::tand(-T(630)), +ovf);
@@ -180,7 +182,9 @@ int main() {
   check( Math::tand(+T(630)), -ovf);
   check( Math::tand(+T(720)), +0.0);
   check( Math::tand(+T(810)), +ovf);
+#if !(defined(_MSC_VER) && _MSC_VER == 1900)
   check( Math::tand(+  inf ),  nan);
+#endif
 
   check( Math::atan2d(+T(0), -T(0)), +180 );
   check( Math::atan2d(-T(0), -T(0)), -180 );
@@ -250,6 +254,9 @@ int main() {
   check( Utility::val<T>( "inf"), +inf );
   check( Utility::val<T>("-inf"), -inf );
 
+#if !defined(_MSC_VER)
+  // Visual Studio C++ does not implement round to even, see
+  // https://developercommunity.visualstudio.com/t/stdfixed-output-does-not-implement-round-to-even/1671088
   strcheck( Utility::str<T>( nan, 0),  "nan" );
   strcheck( Utility::str<T>(-inf, 0), "-inf" );
   strcheck( Utility::str<T>(-T(3.5), 0),   "-4" );
@@ -263,7 +270,17 @@ int main() {
   strcheck( Utility::str<T>(+T(2.5), 0),    "2" );
   strcheck( Utility::str<T>(+T(3.5), 0),    "4" );
   strcheck( Utility::str<T>(+inf, 0),  "inf" );
-
+  strcheck( Utility::str<T>(-T(1.75), 1), "-1.8");
+  strcheck( Utility::str<T>(-T(1.25), 1), "-1.2");
+  strcheck( Utility::str<T>(-T(0.75), 1), "-0.8");
+  strcheck( Utility::str<T>(-T(0.25), 1), "-0.2");
+  strcheck( Utility::str<T>(-T(0   ), 1), "-0.0");
+  strcheck( Utility::str<T>(+T(0   ), 1),  "0.0");
+  strcheck( Utility::str<T>(+T(0.25), 1),  "0.2");
+  strcheck( Utility::str<T>(+T(0.75), 1),  "0.8");
+  strcheck( Utility::str<T>(+T(1.25), 1),  "1.2");
+  strcheck( Utility::str<T>(+T(1.75), 1),  "1.8");
+#endif
   DMS::flag ind;
   check( DMS::Decode("+0", ind),  +0.0 );
   check( DMS::Decode("-0", ind),  -0.0 );

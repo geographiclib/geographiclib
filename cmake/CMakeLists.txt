@@ -84,7 +84,7 @@ if (CMAKEDIR)
 
   if (MSVC AND PACKAGE_DEBUG_LIBS)
     install (FILES
-      "${PROJECT_BINARY_DIR}/cmake/CMakeFiles/Export/cmake/${PROJECT_NAME_LOWER}-targets-debug.cmake"
+      "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/Export/${CMAKEDIR}/${PROJECT_NAME_LOWER}-targets-debug.cmake"
       DESTINATION "${CMAKEDIR}" CONFIGURATIONS Release)
   endif ()
 endif ()
