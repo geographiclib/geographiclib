@@ -73,7 +73,7 @@ echo Make a source package in $TEMP/gita/geographiclib/BUILD
 cd $TEMP/gita/geographiclib
 cmake -S . -B BUILD
 (cd BUILD && make dist)
-cp BUILD/GeographicLib-$DISTVERSION.{zip,tar.gz} $DEVELSOURCE
+cp BUILD/GeographicLib-$DISTVERSION.{zip,tar.gz} $DEVELSOURCE/data-distrib/distrib-C++/
 
 echo ==============================================================
 echo Unpack source package in $TEMP/rel bcx

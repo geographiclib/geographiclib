@@ -24,14 +24,10 @@ BUILD*/
 TAGS
 /archive/
 /autom4te.cache/
-/distrib/
-/geoids-distrib/
-/gravity-distrib/
-/gravity/
-/magnetic-distrib/
-/magnetic/
+/data-distrib/
+/data-installer/gravity/
+/data-installer/magnetic/
 /scratch/
-/testdata/
 stamp-h1
 /mpfr_mpir_x86_x64_msvc2010/
 CMakeCache.txt

@@ -479,8 +479,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/\\\\.git"
   "${PROJECT_SOURCE_DIR}/BUILD"
   "${PROJECT_SOURCE_DIR}/man/(.*\\\\.pod|makeusage\\\\.sh|dummy\\\\..*)\$"
-  "${PROJECT_SOURCE_DIR}/(develop|testdata|cgi-bin|misc|.*\\\\.cache)/"
-  "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
+  "${PROJECT_SOURCE_DIR}/(develop|cgi-bin|misc|.*\\\\.cache)/"
+  "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer|geodesic-papers)/"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
   "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin)\$")
 set (CPACK_SOURCE_GENERATOR TGZ)
