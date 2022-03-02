@@ -329,6 +329,9 @@ namespace GeographicLib {
      * @tparam T the type of the argument and the returned value.
      * @param[in] x in degrees.
      * @return sin(<i>x</i>).
+     *
+     * The result is +0 for \e x = +0 and positive multiples of 180&deg;.  The
+     * result is &minus;0 for \e x = -0 and negative multiples of 180&deg;.
      **********************************************************************/
     template<typename T> static T sind(T x);
 
@@ -338,6 +341,8 @@ namespace GeographicLib {
      * @tparam T the type of the argument and the returned value.
      * @param[in] x in degrees.
      * @return cos(<i>x</i>).
+     *
+     * The result is +0 for \e x an odd multiple of 90&deg;.
      **********************************************************************/
     template<typename T> static T cosd(T x);
 
@@ -348,8 +353,8 @@ namespace GeographicLib {
      * @param[in] x in degrees.
      * @return tan(<i>x</i>).
      *
-     * If \e x = &plusmn;90&deg;, then a suitably large (but finite) value is
-     * returned.
+     * If \e x is an odd multiple of 90&deg;, then a suitably large (but
+     * finite) value is returned.
      **********************************************************************/
     template<typename T> static T tand(T x);
 
@@ -361,10 +366,8 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
-     * The result is in the range (&minus;180&deg; 180&deg;].  N.B.,
-     * atan2d(&plusmn;0, &minus;1) = +180&deg;, atan2d(&minus;&epsilon;,
-     * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
-     * atan2d(&plusmn;0, +1) = &plusmn;0&deg;.
+     * The result is in the range [&minus;180&deg; 180&deg;].  N.B.,
+     * atan2d(&plusmn;0, &minus;1) = &plusmn;180&deg;.
      **********************************************************************/
     template<typename T> static T atan2d(T y, T x);
 

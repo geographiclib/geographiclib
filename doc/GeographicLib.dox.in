@@ -8773,8 +8773,6 @@ git repository for GeographicLib</a>.
    - Improve efficiency of MGRS::Forward by avoiding the
      calculation of the latitude if possible (adapting an idea of Craig
      Rollins).
-   - Fixes to the way the MATLAB interface routines are built (thanks to
-     Phil Miller and Chris F.).
    .
  - <a href="https://geographiclib.sourceforge.io/1.30">Version 1.30</a>
    (released 2013-02-27)

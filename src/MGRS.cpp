@@ -87,7 +87,7 @@ namespace GeographicLib {
     if (utmp) {
       int
         // Correct fuzziness in latitude near equator
-        iband = fabs(lat) > angeps ? LatitudeBand(lat) : (northp ? 0 : -1),
+        iband = fabs(lat) < angeps ? (northp ? 0 : -1) : LatitudeBand(lat),
         icol = xh - minutmcol_,
         irow = UTMRow(iband, icol, yh % utmrowperiod_);
       if (irow != yh - (northp ? minutmNrow_ : maxutmSrow_))

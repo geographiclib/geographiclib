@@ -254,10 +254,12 @@ int main() {
   check( Utility::val<T>( "inf"), +inf );
   check( Utility::val<T>("-inf"), -inf );
 
-#if !(defined(_MSC_VER) && _MSC_VER < 1930)
+  //#if !(defined(_MSC_VER) && _MSC_VER < 1930)
   // Visual Studio C++ does not implement round to even, see
   // https://developercommunity.visualstudio.com/t/stdfixed-output-does-not-implement-round-to-even/1671088
-  // Visual Studio 17 2022 is OK
+  // Problem can't be reproduced at Microsoft, so allow the tests
+  // Probably this is some issue with the runtime library
+#if 1
   strcheck( Utility::str<T>( nan, 0),  "nan" );
   strcheck( Utility::str<T>(-inf, 0), "-inf" );
   strcheck( Utility::str<T>(-T(3.5), 0),   "-4" );

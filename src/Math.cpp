@@ -60,8 +60,9 @@ namespace GeographicLib {
     GEOGRAPHICLIB_VOLATILE T vpp = s - up;
     up -= u;
     vpp -= v;
+    // if s = 0, then t = 0 and give t the same sign as s
     // mpreal needs T(0) here
-    t = T(0) - (up + vpp);      // t = +0 if result is exact
+    t = s ? T(0) - (up + vpp) : s;
     // u + v =       s      + t
     //       = round(u + v) + t
     return s;
