@@ -50,7 +50,7 @@ namespace GeographicLib {
         azi2 = -90 + da;
       }
     }
-    if (dlon < 0) {
+    if (signbit(dlon)) {
       azi2 = azi1;
       s12 = -s12;
       sig12 = -sig12;

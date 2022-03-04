@@ -95,9 +95,9 @@ namespace GeographicLib {
     real
       d1 = sqrt(Math::sq(cnu) + _mv * Math::sq(snu * snv)),
       d2 = sqrt(_mu * Math::sq(cnu) + _mv * Math::sq(cnv)),
-      t1 = (d1 != 0 ? snu * dnv / d1 : (snu < 0 ? -overflow : overflow)),
+      t1 = (d1 != 0 ? snu * dnv / d1 : (signbit(snu) ? -overflow : overflow)),
       t2 = (d2 != 0 ? sinh( _e * asinh(_e * snu / d2) ) :
-            (snu < 0 ? -overflow : overflow));
+            (signbit(snu) ? -overflow : overflow));
     // psi = asinh(t1) - asinh(t2)
     // taup = sinh(psi)
     taup = t1 * hypot(real(1), t2) - t2 * hypot(real(1), t1);

@@ -13,11 +13,22 @@
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/DMS.hpp>
+#include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicExact.hpp>
+#include <GeographicLib/UTMUPS.hpp>
+#include <GeographicLib/MGRS.hpp>
 
 using namespace std;
 using namespace GeographicLib;
 
 typedef Math::real T;
+
+static int checkEquals(T x, T y, T d) {
+  if (fabs(x - y) <= d)
+    return 0;
+  cout << "checkEquals fails: " << x << " != " << y << " +/- " << d << "\n";
+  return 1;
+}
 
 bool equiv(T x, T y) {
   return (isnan(x) && isnan(y)) ||
@@ -63,7 +74,8 @@ int main() {
   T inf = Math::infinity(),
     nan = Math::NaN(),
     eps = numeric_limits<T>::epsilon(),
-    ovf = 1 / Math::sq(eps);
+    ovf = 1 / Math::sq(eps),
+    e;
   int n = 0;
 
   check( Math::AngRound(-eps/32), -eps/32);
@@ -132,6 +144,18 @@ int main() {
   checksincosd(+T(810), +1.0, +0.0);
   checksincosd(+  inf ,  nan,  nan);
   checksincosd(   nan ,  nan,  nan);
+
+  {
+    T s1, c1, s2, c2, s3, c3;
+    Math::sincosd(T(         9), s1, c1);
+    Math::sincosd(T(        81), s2, c2);
+    Math::sincosd(T(-123456789), s3, c3);
+    if (!(equiv(s1, c2) && equiv(s1, s3) &&
+          equiv(s1, s3) && equiv(c1, -c3))) {
+      cout << "Line " << __LINE__ << " : sincos accuracy fail\n";
+      ++n;
+    }
+  }
 
   check( Math::sind(-  inf ),  nan);
   check( Math::sind(-T(720)), -0.0);
@@ -213,7 +237,14 @@ int main() {
   check( Math::atan2d(  nan, +T(1)),  nan );
   check( Math::atan2d(+T(1),   nan),  nan );
 
-  Math::real e;
+  {
+    T s = 7e-16;
+    if (!equiv( Math::atan2d(s, -T(1)), 180 - Math::atan2d(s, T(1)) )) {
+      cout << "Line " << __LINE__ << " : atan2d accuracy fail\n";
+      ++n;
+    }
+  }
+
   check( Math::sum(+T(9), -T(9), e), +0.0 );
   check( Math::sum(-T(9), +T(9), e), +0.0 );
   check( Math::sum(-T(0), +T(0), e), +0.0 );
@@ -295,6 +326,166 @@ int main() {
   check( DMS::Decode("-0N", ind),  -0.0 );
   check( DMS::Decode("+0S", ind),  -0.0 );
   check( DMS::Decode("-0S", ind),  +0.0 );
+
+  {
+    // azimuth of geodesic line with points on equator determined by signs of
+    // latitude
+    // lat1 lat2 azi1/2
+    T C[2][3] = {
+      { +T(0), -T(0), 180 },
+      { -T(0), +T(0),   0 }
+    };
+    const Geodesic& g = Geodesic::WGS84();
+    const GeodesicExact& ge = GeodesicExact::WGS84();
+    T azi1, azi2;
+    int i = 0;
+    for (int k = 0; k < 2; ++k) {
+      g.Inverse(C[k][0], T(0), C[k][1], T(0), azi1, azi2);
+      if (!( equiv(azi1, C[k][2]) && equiv(azi2, C[k][2]) )) ++i;
+      ge.Inverse(C[k][0], T(0), C[k][1], T(0), azi1, azi2);
+      if (!( equiv(azi1, C[k][2]) && equiv(azi2, C[k][2]) )) ++i;
+    }
+    if (i) {
+      cout << "Line " << __LINE__
+           << ": Geodesic::Inverse coincident points on equator fail\n";
+      ++n;
+    }
+  }
+
+  {
+    // Does the nearly antipodal equatorial solution go north or south?
+    // lat1 lat2 azi1 azi2
+    T C[2][4] = {
+      { +T(0), +T(0),  56, 124},
+      { -T(0), -T(0), 124,  56}
+    };
+    const Geodesic& g = Geodesic::WGS84();
+    const GeodesicExact& ge = GeodesicExact::WGS84();
+    T azi1, azi2;
+    int i = 0;
+    for (int k = 0; k < 2; ++k) {
+      g.Inverse(C[k][0], T(0), C[k][1], T(179.5), azi1, azi2);
+      i += checkEquals(azi1, C[k][2], 1) + checkEquals(azi2, C[k][3], 1);
+      ge.Inverse(C[k][0], T(0), C[k][1], T(179.5), azi1, azi2);
+      i += checkEquals(azi1, C[k][2], 1) + checkEquals(azi2, C[k][3], 1);
+    }
+    if (i) {
+      cout << "Line " << __LINE__
+           << ": Geodesic::Inverse nearly antipodal points on equator fail\n";
+      ++n;
+    }
+  }
+
+  {
+    // How does the exact antipodal equatorial path go N/S + E/W
+    // lat1 lat2 lon2 azi1 azi2
+    T C[4][5] = {
+      { +T(0), +T(0), +180,   +T(0), +180},
+      { -T(0), -T(0), +180, +180,   +T(0)},
+      { +T(0), +T(0), -180,   -T(0), -180},
+      { -T(0), -T(0), -180, -180,   -T(0)}
+    };
+    const Geodesic& g = Geodesic::WGS84();
+    const GeodesicExact& ge = GeodesicExact::WGS84();
+    T azi1, azi2;
+    int i = 0;
+    for (int k = 0; k < 4; ++k) {
+      g.Inverse(C[k][0], T(0), C[k][1], C[k][2], azi1, azi2);
+      if (!( equiv(azi1, C[k][3]) && equiv(azi2, C[k][4]) )) ++i;
+      ge.Inverse(C[k][0], T(0), C[k][1], C[k][2], azi1, azi2);
+      if (!( equiv(azi1, C[k][3]) && equiv(azi2, C[k][4]) )) ++i;
+    }
+    if (i) {
+      cout << "Line " << __LINE__
+           << ": Geodesic::Inverse antipodal points on equator fail\n";
+      ++n;
+    }
+  }
+
+  {
+    // Antipodal points on the equator with prolate ellipsoid
+    // lon2 azi1/2
+    T C[2][2] = {
+      { +180, +90 },
+      { -180, -90 }
+    };
+    const Geodesic g(T(6.4e6), -1/T(300));
+    const GeodesicExact ge(T(6.4e6), -1/T(300));
+    T azi1, azi2;
+    int i = 0;
+    for (int k = 0; k < 2; ++k) {
+      g.Inverse(T(0), T(0), T(0), C[k][0], azi1, azi2);
+      if (!( equiv(azi1, C[k][1]) && equiv(azi2, C[k][1]) )) ++i;
+      ge.Inverse(T(0), T(0), T(0), C[k][0], azi1, azi2);
+      if (!( equiv(azi1, C[k][1]) && equiv(azi2, C[k][1]) )) ++i;
+    }
+    if (i) {
+      cout << "Line " << __LINE__
+           << ": Geodesic::Inverse antipodal points on equator, prolate, fail\n";
+      ++n;
+    }
+  }
+
+  {
+    // azimuths = +/-0 and +/-180 for the direct problem
+    // azi1, lon2, azi2
+    T C[4][4] = {
+      { +T(0), +180, +180  },
+      { -T(0), -180, -180  },
+      { +180 , +180, +T(0) },
+      { -180 , -180, -T(0) }
+    };
+    const Geodesic& g = Geodesic::WGS84();
+    const GeodesicExact& ge = GeodesicExact::WGS84();
+    T lon2, azi2;
+    int i = 0;
+    for (int k = 0; k < 4; ++k) {
+      T t;
+      g.GenDirect(T(0), T(0), C[k][0], false, T(15e6),
+                  Geodesic::LONGITUDE | Geodesic::AZIMUTH |
+                  Geodesic::LONG_UNROLL,
+                  t, lon2, azi2,
+                  t, t, t, t, t);
+      if (!( equiv(lon2, C[k][1]) && equiv(azi2, C[k][2]) )) ++i;
+      ge.GenDirect(T(0), T(0), C[k][0], false, T(15e6),
+                   Geodesic::LONGITUDE | Geodesic::AZIMUTH |
+                   Geodesic::LONG_UNROLL,
+                   t, lon2, azi2,
+                   t, t, t, t, t);
+      if (!( equiv(lon2, C[k][1]) && equiv(azi2, C[k][2]) )) ++i;
+    }
+    if (i) {
+      cout << "Line " << __LINE__
+           << ": Geodesic::Direct azi1 = +/-0 +/-180, fail\n";
+      ++n;
+    }
+  }
+
+  {
+    // lat = +/-0 in UTMUPS::Forward
+    // lat y northp
+    T C[2][3] = {
+      { +T(0), T(0), 1 },
+      { -T(0), 10e6, 0 }
+    };
+    int i = 0;
+    bool northp; int zone; T x, y; string mgrs;
+    for (int k = 0; k < 2; ++k) {
+      UTMUPS::Forward(C[k][0], T(3), zone, northp, x, y);
+      if (!( equiv(y, C[k][1]) && northp == (C[k][2] > 0) )) ++i;
+      MGRS::Forward(zone, northp, x, y, 2, mgrs);
+      if (!( mgrs == (k == 0 ? "31NEA0000" : "31MEV0099") )) ++i;
+      MGRS::Forward(zone, northp, x, y, +T(0), 2, mgrs);
+      if (!( mgrs == (k == 0 ? "31NEA0000" : "31MEV0099") )) ++i;
+      MGRS::Forward(zone, northp, x, y, -T(0), 2, mgrs);
+      if (!( mgrs == (k == 0 ? "31NEA0000" : "31MEV0099") )) ++i;
+    }
+    if (i) {
+      cout << "Line " << __LINE__
+           << ": UTMUPS/MGRS::Forward lat = +/-0, fail\n";
+      ++n;
+    }
+  }
 
   if (n) {
     cout << n << " failure" << (n > 1 ? "s" : "") << "\n";

@@ -229,9 +229,9 @@ namespace GeographicLib {
       throw GeographicErr("Parameter k2 is not in (-inf, 1]");
     if (alpha2 > 1)
       throw GeographicErr("Parameter alpha2 is not in (-inf, 1]");
-    if (kp2 < 0)
+    if (signbit(kp2))
       throw GeographicErr("Parameter kp2 is not in [0, inf)");
-    if (alphap2 < 0)
+    if (signbit(alphap2))
       throw GeographicErr("Parameter alphap2 is not in [0, inf)");
     _k2 = k2;
     _kp2 = kp2;
@@ -319,7 +319,7 @@ namespace GeographicLib {
       sqrt(numeric_limits<real>::epsilon() * real(0.01));
     if (_kp2 != 0) {
       real mc = _kp2, d = 0;
-      if (_kp2 < 0) {
+      if (signbit(_kp2)) {
         d = 1 - mc;
         mc /= -d;
         d = sqrt(d);
@@ -355,9 +355,9 @@ namespace GeographicLib {
           a = c / b;
         }
         a = 1 / sqrt(c*c + 1);
-        sn = sn < 0 ? -a : a;
+        sn = signbit(sn) ? -a : a;
         cn = c * sn;
-        if (_kp2 < 0) {
+        if (signbit(_kp2)) {
           swap(cn, dn);
           sn /= d;
         }
@@ -374,7 +374,7 @@ namespace GeographicLib {
     real cn2 = cn*cn, dn2 = dn*dn,
       fi = cn2 != 0 ? fabs(sn) * RF(cn2, dn2, 1) : K();
     // Enforce usual trig-like symmetries
-    if (cn < 0)
+    if (signbit(cn))
       fi = 2 * K() - fi;
     return copysign(fi, sn);
   }
@@ -397,7 +397,7 @@ namespace GeographicLib {
                      dn / fabs(cn) ) ) :
       E();
     // Enforce usual trig-like symmetries
-    if (cn < 0)
+    if (signbit(cn))
       ei = 2 * E() - ei;
     return copysign(ei, sn);
   }
@@ -409,7 +409,7 @@ namespace GeographicLib {
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       di = cn2 != 0 ? fabs(sn) * sn2 * RD(cn2, dn2, 1) / 3 : D();
     // Enforce usual trig-like symmetries
-    if (cn < 0)
+    if (signbit(cn))
       di = 2 * D() - di;
     return copysign(di, sn);
   }
@@ -424,7 +424,7 @@ namespace GeographicLib {
                                    RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
       Pi();
     // Enforce usual trig-like symmetries
-    if (cn < 0)
+    if (signbit(cn))
       pii = 2 * Pi() - pii;
     return copysign(pii, sn);
   }
@@ -437,7 +437,7 @@ namespace GeographicLib {
                                   RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
       G();
     // Enforce usual trig-like symmetries
-    if (cn < 0)
+    if (signbit(cn))
       gi = 2 * G() - gi;
     return copysign(gi, sn);
   }
@@ -451,44 +451,44 @@ namespace GeographicLib {
                                   RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3) :
       H();
     // Enforce usual trig-like symmetries
-    if (cn < 0)
+    if (signbit(cn))
       hi = 2 * H() - hi;
     return copysign(hi, sn);
   }
 
   Math::real EllipticFunction::deltaF(real sn, real cn, real dn) const {
     // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
+    if (signbit(cn)) { cn = -cn; sn = -sn; }
     return F(sn, cn, dn) * (Math::pi()/2) / K() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaE(real sn, real cn, real dn) const {
     // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
+    if (signbit(cn)) { cn = -cn; sn = -sn; }
     return E(sn, cn, dn) * (Math::pi()/2) / E() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaPi(real sn, real cn, real dn) const {
     // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
+    if (signbit(cn)) { cn = -cn; sn = -sn; }
     return Pi(sn, cn, dn) * (Math::pi()/2) / Pi() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaD(real sn, real cn, real dn) const {
     // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
+    if (signbit(cn)) { cn = -cn; sn = -sn; }
     return D(sn, cn, dn) * (Math::pi()/2) / D() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaG(real sn, real cn, real dn) const {
     // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
+    if (signbit(cn)) { cn = -cn; sn = -sn; }
     return G(sn, cn, dn) * (Math::pi()/2) / G() - atan2(sn, cn);
   }
 
   Math::real EllipticFunction::deltaH(real sn, real cn, real dn) const {
     // Function is periodic with period pi
-    if (cn < 0) { cn = -cn; sn = -sn; }
+    if (signbit(cn)) { cn = -cn; sn = -sn; }
     return H(sn, cn, dn) * (Math::pi()/2) / H() - atan2(sn, cn);
   }
 
@@ -563,7 +563,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::deltaEinv(real stau, real ctau) const {
     // Function is periodic with period pi
-    if (ctau < 0) { ctau = -ctau; stau = -stau; }
+    if (signbit(ctau)) { ctau = -ctau; stau = -stau; }
     real tau = atan2(stau, ctau);
     return Einv( tau * E() / (Math::pi()/2) ) - tau;
   }

@@ -84,9 +84,9 @@ namespace GeographicLib {
       throw GeographicErr("Polar semi-axis is not positive");
     if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(coslat1 >= 0))
+    if (signbit(coslat1))
       throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
-    if (!(coslat2 >= 0))
+    if (signbit(coslat2))
       throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
     if (!(fabs(sinlat1) <= 1 && coslat1 <= 1) || (coslat1 == 0 && sinlat1 == 0))
       throw GeographicErr("Bad sine/cosine of standard latitude 1");
@@ -159,7 +159,7 @@ namespace GeographicLib {
         - Deatanhe(sphi2, sphi1) * Dsn(tphi2, tphi1, sphi2, sphi1);
       _n = num/den;
 
-      if (_n < 0.25)
+      if (_n < 1/real(4))
         _nc = sqrt((1 - _n) * (1 + _n));
       else {
         // Compute nc = cos(phi0) = sqrt((1 - n) * (1 + n)), evaluating 1 - n

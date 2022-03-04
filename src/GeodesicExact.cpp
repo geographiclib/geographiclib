@@ -238,7 +238,7 @@ namespace GeographicLib {
 
     if (cbet1 < -sbet1) {
       if (cbet2 == cbet1)
-        sbet2 = sbet2 < 0 ? sbet1 : -sbet1;
+        sbet2 = signbit(sbet2) ? sbet1 : -sbet1;
     } else {
       if (fabs(sbet2) == -sbet1)
         cbet2 = cbet1;
@@ -706,11 +706,7 @@ namespace GeographicLib {
     } else {
       // Scale lam12 and bet2 to x, y coordinate system where antipodal point
       // is at origin and singular point is at y = 0, x = -1.
-      real y, lamscale, betscale;
-      // Volatile declaration needed to fix inverse case
-      // 56.320923501171 0 -56.320923501171 179.664747671772880215
-      // which otherwise fails with g++ 4.4.4 x86 -O3
-      GEOGRAPHICLIB_VOLATILE real x;
+      real x, y, lamscale, betscale;
       real lam12x = atan2(-slam12, -clam12); // lam12 - pi
       if (_f >= 0) {            // In fact f == 0 does not get here
         // x = dlong, y = dlat
@@ -745,9 +741,9 @@ namespace GeographicLib {
         // strip near cut
         // Need real(x) here to cast away the volatility of x for min/max
         if (_f >= 0) {
-          salp1 = fmin(real(1), -real(x)); calp1 = - sqrt(1 - Math::sq(salp1));
+          salp1 = fmin(real(1), -x); calp1 = - sqrt(1 - Math::sq(salp1));
         } else {
-          calp1 = fmax(real(x > -tol1_ ? 0 : -1), real(x));
+          calp1 = fmax(real(x > -tol1_ ? 0 : -1), x);
           salp1 = sqrt(1 - Math::sq(calp1));
         }
       } else {
