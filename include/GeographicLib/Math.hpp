@@ -324,6 +324,23 @@ namespace GeographicLib {
     template<typename T> static void sincosd(T x, T& sinx, T& cosx);
 
     /**
+     * Evaluate the sine and cosine with reduced argument plus correction
+     *
+     * @tparam T the type of the arguments.
+     * @param[in] x angle in degrees.
+     * @param[in] t correction in degrees.
+     * @param[out] sinx sin(<i>x</i> + <i>t</i>).
+     * @param[out] cosx cos(<i>x</i> + <i>t</i>).
+     *
+     * This is a variant of Math::sincosd allowing a correction to the angle to
+     * be supplied.  \e x must be in [&minus;180&deg;, 180&deg;] and \e t is
+     * assumed to be a <i>small</i> correction.  Math::AngRound is applied to
+     * the reduced angle to prevent problems with \e x + \e t being extremely
+     * close but not exactly equal to one of the cardinal directions.
+     **********************************************************************/
+    template<typename T> static void sincosde(T x, T t, T& sinx, T& cosx);
+
+    /**
      * Evaluate the sine function with the argument in degrees
      *
      * @tparam T the type of the argument and the returned value.

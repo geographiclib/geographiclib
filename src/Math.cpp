@@ -82,11 +82,10 @@ namespace GeographicLib {
   template<typename T> T Math::AngDiff(T x, T y, T& e) {
     // Use remainder instead of AngNormalize, since we treat boundary cases
     // later taking account of the error
-    T d = remainder(sum(remainder(-x, T(360)),
-                        remainder( y, T(360)), e), T(360));
+    T d = sum(remainder(-x, T(360)), remainder( y, T(360)), e);
     // This second sum can only change d if abs(d) < 128, so don't need to
     // apply remainder yet again.
-    d = sum(d, e, e);
+    d = sum(remainder(d, T(360)), e, e);
     // Fix the sign if d = -180, 0, 180.
     if (d == 0 || fabs(d) == 180)
       // If e == 0, take sign from y - x
@@ -107,10 +106,29 @@ namespace GeographicLib {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
     T r; int q = 0;
-    // N.B. the implementation of remquo in glibc pre 2.22 were buggy.  See
-    // https://sourceware.org/bugzilla/show_bug.cgi?id=17569
-    // This was fixed in version 2.22 on 2015-08-05
     r = remquo(x, T(90), &q);   // now abs(r) <= 45
+    r *= degree<T>();
+    // g++ -O turns these two function calls into a call to sincos
+    T s = sin(r), c = cos(r);
+    switch (unsigned(q) & 3U) {
+    case 0U: sinx =  s; cosx =  c; break;
+    case 1U: sinx =  c; cosx = -s; break;
+    case 2U: sinx = -s; cosx = -c; break;
+    default: sinx = -c; cosx =  s; break; // case 3U
+    }
+    // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1950.pdf
+    // mpreal needs T(0) here
+    cosx += T(0);                            // special values from F.10.1.12
+    if (sinx == 0) sinx = copysign(sinx, x); // special values from F.10.1.13
+  }
+
+  template<typename T> void Math::sincosde(T x, T t, T& sinx, T& cosx) {
+    // In order to minimize round-off errors, this function exactly reduces
+    // the argument to the range [-45, 45] before converting it to radians.
+    // This implementation allows x outside [-180, 180], but implementations in
+    // other languages may not.
+    T r; int q = 0;
+    r = AngRound(remquo(x, T(90), &q) + t); // now abs(r) <= 45
     r *= degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
@@ -172,9 +190,9 @@ namespace GeographicLib {
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
     T ang = atan2(y, x) / degree<T>();
     switch (q) {
-    case 1: ang = (signbit(y) ? -180 : 180) - ang; break;
-    case 2: ang =  90 - ang; break;
-    case 3: ang = -90 + ang; break;
+    case 1: ang = copysign(T(180), y) - ang; break;
+    case 2: ang =             90      - ang; break;
+    case 3: ang =            -90      + ang; break;
     default: break;
     }
     return ang;
@@ -254,21 +272,22 @@ namespace GeographicLib {
 
   /// \cond SKIP
   // Instantiate
-#define GEOGRAPHICLIB_MATH_INSTANTIATE(T)                               \
-  template T    GEOGRAPHICLIB_EXPORT Math::sum          <T>(T, T, T&);  \
-  template T    GEOGRAPHICLIB_EXPORT Math::AngNormalize <T>(T);         \
-  template T    GEOGRAPHICLIB_EXPORT Math::AngDiff      <T>(T, T, T&);  \
-  template T    GEOGRAPHICLIB_EXPORT Math::AngRound     <T>(T);         \
-  template void GEOGRAPHICLIB_EXPORT Math::sincosd      <T>(T, T&, T&); \
-  template T    GEOGRAPHICLIB_EXPORT Math::sind         <T>(T);         \
-  template T    GEOGRAPHICLIB_EXPORT Math::cosd         <T>(T);         \
-  template T    GEOGRAPHICLIB_EXPORT Math::tand         <T>(T);         \
-  template T    GEOGRAPHICLIB_EXPORT Math::atan2d       <T>(T, T);      \
-  template T    GEOGRAPHICLIB_EXPORT Math::atand        <T>(T);         \
-  template T    GEOGRAPHICLIB_EXPORT Math::eatanhe      <T>(T, T);      \
-  template T    GEOGRAPHICLIB_EXPORT Math::taupf        <T>(T, T);      \
-  template T    GEOGRAPHICLIB_EXPORT Math::tauf         <T>(T, T);      \
-  template T    GEOGRAPHICLIB_EXPORT Math::NaN          <T>();          \
+#define GEOGRAPHICLIB_MATH_INSTANTIATE(T)                                  \
+  template T    GEOGRAPHICLIB_EXPORT Math::sum          <T>(T, T, T&);     \
+  template T    GEOGRAPHICLIB_EXPORT Math::AngNormalize <T>(T);            \
+  template T    GEOGRAPHICLIB_EXPORT Math::AngDiff      <T>(T, T, T&);     \
+  template T    GEOGRAPHICLIB_EXPORT Math::AngRound     <T>(T);            \
+  template void GEOGRAPHICLIB_EXPORT Math::sincosd      <T>(T, T&, T&);    \
+  template void GEOGRAPHICLIB_EXPORT Math::sincosde     <T>(T, T, T&, T&); \
+  template T    GEOGRAPHICLIB_EXPORT Math::sind         <T>(T);            \
+  template T    GEOGRAPHICLIB_EXPORT Math::cosd         <T>(T);            \
+  template T    GEOGRAPHICLIB_EXPORT Math::tand         <T>(T);            \
+  template T    GEOGRAPHICLIB_EXPORT Math::atan2d       <T>(T, T);         \
+  template T    GEOGRAPHICLIB_EXPORT Math::atand        <T>(T);            \
+  template T    GEOGRAPHICLIB_EXPORT Math::eatanhe      <T>(T, T);         \
+  template T    GEOGRAPHICLIB_EXPORT Math::taupf        <T>(T, T);         \
+  template T    GEOGRAPHICLIB_EXPORT Math::tauf         <T>(T, T);         \
+  template T    GEOGRAPHICLIB_EXPORT Math::NaN          <T>();             \
   template T    GEOGRAPHICLIB_EXPORT Math::infinity     <T>();
 
   // Instantiate with the standard floating type

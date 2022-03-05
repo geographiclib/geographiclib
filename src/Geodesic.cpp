@@ -162,24 +162,18 @@ namespace GeographicLib {
                                   real& salp2, real& calp2,
                                   real& m12, real& M12, real& M21,
                                   real& S12) const {
-    // Compute longitude difference (AngDiff does this carefully).  Result is
-    // in [-180, 180] but -180 is only for west-going geodesics.  180 is for
-    // east-going and meridional geodesics.
+    // Compute longitude difference (AngDiff does this carefully).
     using std::isnan;           // Needed for Centos 7, ubuntu 14
     real lon12s, lon12 = Math::AngDiff(lon1, lon2, lon12s);
     // Make longitude difference positive.
     int lonsign = signbit(lon12) ? -1 : 1;
-    // If very close to being on the same half-meridian, then make it so.
-    lon12 = lonsign * Math::AngRound(lon12);
-    lon12s = Math::AngRound((180 - lon12) - lonsign * lon12s);
+    lon12 *= lonsign; lon12s *= lonsign;
     real
       lam12 = lon12 * Math::degree(),
       slam12, clam12;
-    if (lon12 > 90) {
-      Math::sincosd(lon12s, slam12, clam12);
-      clam12 = -clam12;
-    } else
-      Math::sincosd(lon12, slam12, clam12);
+    // Calculate sincos of lon12 + error (this applies AngRound internally).
+    Math::sincosde(lon12, lon12s, slam12, clam12);
+    lon12s = (180 - lon12) - lon12s; // the supplementary longitude difference
 
     // If really close to the equator, treat as on equator.
     lat1 = Math::AngRound(Math::LatFix(lat1));

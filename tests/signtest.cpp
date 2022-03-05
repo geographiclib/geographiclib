@@ -23,6 +23,11 @@ using namespace GeographicLib;
 
 typedef Math::real T;
 
+static int equiv(T x, T y) {
+  return ( (isnan(x) && isnan(y)) || (x == y && signbit(x) == signbit(y)) ) ?
+    0 : 1;
+}
+
 static int checkEquals(T x, T y, T d) {
   if (fabs(x - y) <= d)
     return 0;
@@ -30,16 +35,11 @@ static int checkEquals(T x, T y, T d) {
   return 1;
 }
 
-bool equiv(T x, T y) {
-  return (isnan(x) && isnan(y)) ||
-    (x == y && signbit(x) == signbit(y));
-}
-
 // use "do { } while (false)" idiom so it can be punctuated like a statement.
 
 #define check(expr, r) do {                         \
     T s = T(r),  t = expr;                          \
-    if (!equiv(s, t)) {                             \
+    if (equiv(s, t)) {                              \
       cout << "Line " << __LINE__ << ": " << #expr  \
            << " != " << #r << " (" << t << ")\n";   \
       ++n;                                          \
@@ -49,12 +49,12 @@ bool equiv(T x, T y) {
 #define checksincosd(x, s, c) do {                  \
     T sx, cx;                                       \
     Math::sincosd(x, sx, cx);                       \
-    if (!equiv(s, sx)) {                            \
+    if (equiv(s, sx)) {                             \
       cout << "Line " << __LINE__ << ": sin(" << x  \
            << ") != " << s << " (" << sx << ")\n";  \
       ++n;                                          \
     }                                               \
-    if (!equiv(c, cx)) {                            \
+    if (equiv(c, cx)) {                             \
       cout << "Line " << __LINE__ << ": cos(" << x  \
            << ") != " << c << " (" << cx << ")\n";  \
       ++n;                                          \
@@ -150,8 +150,7 @@ int main() {
     Math::sincosd(T(         9), s1, c1);
     Math::sincosd(T(        81), s2, c2);
     Math::sincosd(T(-123456789), s3, c3);
-    if (!(equiv(s1, c2) && equiv(s1, s3) &&
-          equiv(s1, s3) && equiv(c1, -c3))) {
+    if ( equiv(s1, c2) + equiv(s1, s3) + equiv(c1, s2) + equiv(c1, -c3) ) {
       cout << "Line " << __LINE__ << " : sincos accuracy fail\n";
       ++n;
     }
@@ -239,7 +238,7 @@ int main() {
 
   {
     T s = 7e-16;
-    if (!equiv( Math::atan2d(s, -T(1)), 180 - Math::atan2d(s, T(1)) )) {
+    if ( equiv( Math::atan2d(s, -T(1)), 180 - Math::atan2d(s, T(1)) ) ) {
       cout << "Line " << __LINE__ << " : atan2d accuracy fail\n";
       ++n;
     }
@@ -277,6 +276,14 @@ int main() {
   check( Math::AngDiff( -eps  , +T(180), e), -180.0 );
   check( Math::AngDiff( +eps  , -T(180), e), +180.0 );
   check( Math::AngDiff( -eps  , -T(180), e), -180.0 );
+
+  {
+    T x = 138 + 128 * eps, y = -164;
+    if ( equiv( Math::AngDiff(x, y), 58 - 128 * eps ) ) {
+      cout << "Line " << __LINE__ << " : AngDiff accuracy fail\n";
+      ++n;
+    }
+  }
 
   check( Utility::val<T>("+0"), +0.0 );
   check( Utility::val<T>("-0"), -0.0 );
@@ -341,9 +348,9 @@ int main() {
     int i = 0;
     for (int k = 0; k < 2; ++k) {
       g.Inverse(C[k][0], T(0), C[k][1], T(0), azi1, azi2);
-      if (!( equiv(azi1, C[k][2]) && equiv(azi2, C[k][2]) )) ++i;
+      if ( equiv(azi1, C[k][2]) + equiv(azi2, C[k][2]) ) ++i;
       ge.Inverse(C[k][0], T(0), C[k][1], T(0), azi1, azi2);
-      if (!( equiv(azi1, C[k][2]) && equiv(azi2, C[k][2]) )) ++i;
+      if ( equiv(azi1, C[k][2]) + equiv(azi2, C[k][2]) ) ++i;
     }
     if (i) {
       cout << "Line " << __LINE__
@@ -391,9 +398,9 @@ int main() {
     int i = 0;
     for (int k = 0; k < 4; ++k) {
       g.Inverse(C[k][0], T(0), C[k][1], C[k][2], azi1, azi2);
-      if (!( equiv(azi1, C[k][3]) && equiv(azi2, C[k][4]) )) ++i;
+      if ( equiv(azi1, C[k][3]) + equiv(azi2, C[k][4]) ) ++i;
       ge.Inverse(C[k][0], T(0), C[k][1], C[k][2], azi1, azi2);
-      if (!( equiv(azi1, C[k][3]) && equiv(azi2, C[k][4]) )) ++i;
+      if ( equiv(azi1, C[k][3]) + equiv(azi2, C[k][4]) ) ++i;
     }
     if (i) {
       cout << "Line " << __LINE__
@@ -415,9 +422,9 @@ int main() {
     int i = 0;
     for (int k = 0; k < 2; ++k) {
       g.Inverse(T(0), T(0), T(0), C[k][0], azi1, azi2);
-      if (!( equiv(azi1, C[k][1]) && equiv(azi2, C[k][1]) )) ++i;
+      if ( equiv(azi1, C[k][1]) + equiv(azi2, C[k][1]) ) ++i;
       ge.Inverse(T(0), T(0), T(0), C[k][0], azi1, azi2);
-      if (!( equiv(azi1, C[k][1]) && equiv(azi2, C[k][1]) )) ++i;
+      if ( equiv(azi1, C[k][1]) + equiv(azi2, C[k][1]) ) ++i;
     }
     if (i) {
       cout << "Line " << __LINE__
@@ -446,13 +453,13 @@ int main() {
                   Geodesic::LONG_UNROLL,
                   t, lon2, azi2,
                   t, t, t, t, t);
-      if (!( equiv(lon2, C[k][1]) && equiv(azi2, C[k][2]) )) ++i;
+      if ( equiv(lon2, C[k][1]) + equiv(azi2, C[k][2]) ) ++i;
       ge.GenDirect(T(0), T(0), C[k][0], false, T(15e6),
                    Geodesic::LONGITUDE | Geodesic::AZIMUTH |
                    Geodesic::LONG_UNROLL,
                    t, lon2, azi2,
                    t, t, t, t, t);
-      if (!( equiv(lon2, C[k][1]) && equiv(azi2, C[k][2]) )) ++i;
+      if ( equiv(lon2, C[k][1]) + equiv(azi2, C[k][2]) ) ++i;
     }
     if (i) {
       cout << "Line " << __LINE__
@@ -472,7 +479,7 @@ int main() {
     bool northp; int zone; T x, y; string mgrs;
     for (int k = 0; k < 2; ++k) {
       UTMUPS::Forward(C[k][0], T(3), zone, northp, x, y);
-      if (!( equiv(y, C[k][1]) && northp == (C[k][2] > 0) )) ++i;
+      if ( equiv(y, C[k][1]) + (northp == (C[k][2] > 0) ? 0 : 1) ) ++i;
       MGRS::Forward(zone, northp, x, y, 2, mgrs);
       if (!( mgrs == (k == 0 ? "31NEA0000" : "31MEV0099") )) ++i;
       MGRS::Forward(zone, northp, x, y, +T(0), 2, mgrs);
