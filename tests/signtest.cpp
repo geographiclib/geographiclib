@@ -436,7 +436,7 @@ int main() {
   {
     // azimuths = +/-0 and +/-180 for the direct problem
     // azi1, lon2, azi2
-    T C[4][4] = {
+    T C[4][3] = {
       { +T(0), +180, +180  },
       { -T(0), -180, -180  },
       { +180 , +180, +T(0) },

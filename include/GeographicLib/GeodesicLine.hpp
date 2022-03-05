@@ -148,6 +148,12 @@ namespace GeographicLib {
        **********************************************************************/
       DISTANCE      = Geodesic::DISTANCE,
       /**
+       * A combination of the common capabilities: GeodesicLine::LATITUDE,
+       * GeodesicLine::LONGITUDE, GeodesicLine::AZIMUTH, GeodesicLine::DISTANCE.
+       * @hideinitializer
+       **********************************************************************/
+      STANDARD      = Geodesic::STANDARD,
+      /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
@@ -174,8 +180,8 @@ namespace GeographicLib {
        **********************************************************************/
       LONG_UNROLL   = Geodesic::LONG_UNROLL,
       /**
-       * All capabilities, calculate everything.  (LONG_UNROLL is not
-       * included in this mask.)
+       * All capabilities, calculate everything.  (GeodesicLine::LONG_UNROLL is
+       * not included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = Geodesic::ALL,

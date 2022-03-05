@@ -108,6 +108,13 @@ namespace GeographicLib {
        **********************************************************************/
       DISTANCE      = GeodesicExact::DISTANCE,
       /**
+       * A combination of the common capabilities: GeodesicLineExact::LATITUDE,
+       * GeodesicLineExact::LONGITUDE, GeodesicLineExact::AZIMUTH,
+       * GeodesicLineExact::DISTANCE.
+       * @hideinitializer
+       **********************************************************************/
+      STANDARD      = GeodesicExact::STANDARD,
+      /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer

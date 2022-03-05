@@ -254,7 +254,7 @@ namespace GeographicLib {
 
     /**
      * Bit masks for what calculations to do.  These masks do double duty.
-     * They signify to the GeodesicLine::GeodesicLine constructor and to
+     * They signify to the GeodesicLine constructor and to
      * Geodesic::Line what capabilities should be included in the GeodesicLine
      * object.  They also specify which results to return in the general
      * routines Geodesic::GenDirect and Geodesic::GenInverse routines.
@@ -290,6 +290,12 @@ namespace GeographicLib {
        **********************************************************************/
       DISTANCE      = 1U<<10 | CAP_C1,
       /**
+       * A combination of the common capabilities: Geodesic::LATITUDE,
+       * Geodesic::LONGITUDE, Geodesic::AZIMUTH, Geodesic::DISTANCE.
+       * @hideinitializer
+       **********************************************************************/
+      STANDARD      = LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
+      /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
@@ -316,7 +322,7 @@ namespace GeographicLib {
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
       /**
-       * All capabilities, calculate everything.  (LONG_UNROLL is not
+       * All capabilities, calculate everything.  (Geodesic::LONG_UNROLL is not
        * included in this mask.)
        * @hideinitializer
        **********************************************************************/

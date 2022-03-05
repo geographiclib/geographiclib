@@ -185,6 +185,13 @@ namespace GeographicLib {
        **********************************************************************/
       DISTANCE      = 1U<<10 | CAP_E,
       /**
+       * A combination of the common capabilities: GeodesicExact::LATITUDE,
+       * GeodesicExact::LONGITUDE, GeodesicExact::AZIMUTH,
+       * GeodesicExact::DISTANCE.
+       * @hideinitializer
+       **********************************************************************/
+      STANDARD      = LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
+      /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
@@ -211,8 +218,8 @@ namespace GeographicLib {
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
       /**
-       * All capabilities, calculate everything.  (LONG_UNROLL is not
-       * included in this mask.)
+       * All capabilities, calculate everything.  (GeodesicExact::LONG_UNROLL
+       * is not included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = OUT_ALL| CAP_ALL,
