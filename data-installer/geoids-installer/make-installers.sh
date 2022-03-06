@@ -19,8 +19,8 @@ egm2008-1   EGM2008 1'
 EOF
 ) | while read prefix name; do
     "$INNO" geoid-installers.iss \
-	/dGEOIDDIR="$GEOIDDIR" \
-	/dPREFIX="$prefix" \
-	/dNAME="$name" > $prefix.log 2>&1
+        /dGEOIDDIR="$GEOIDDIR" \
+        /dPREFIX="$prefix" \
+        /dNAME="$name" > $prefix.log 2>&1
 done
 exit 0

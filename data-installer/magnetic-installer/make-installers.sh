@@ -11,9 +11,9 @@ igrf13  IGRF13
 EOF
 ) | while read prefix name; do
     "$INNO" magnetic-installers.iss \
-	//dMAGNETICDIR="$MAGNETICDIR" \
-	//dPREFIX="$prefix" \
-	//dNAME="$name" > $prefix.log 2>&1
+        //dMAGNETICDIR="$MAGNETICDIR" \
+        //dPREFIX="$prefix" \
+        //dNAME="$name" > $prefix.log 2>&1
 done
 exit 0
 

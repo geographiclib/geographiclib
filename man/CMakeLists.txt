@@ -28,26 +28,26 @@ else ()
 
       # A maintainer can transform these to man, html, and usage formats.
       add_custom_command (OUTPUT ${TOOL}.1
-	COMMAND ${POD2MAN} --center=\"GeographicLib Utilities\"
+        COMMAND ${POD2MAN} --center=\"GeographicLib Utilities\"
         --release=\"GeographicLib ${PROJECT_VERSION}\"
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.1
-	COMMENT "Building man page for ${TOOL}"
-	MAIN_DEPENDENCY ${TOOL}.pod)
+        COMMENT "Building man page for ${TOOL}"
+        MAIN_DEPENDENCY ${TOOL}.pod)
       add_custom_command (OUTPUT ${TOOL}.1.html COMMAND
         ${POD2HTML} --title "'${TOOL}(1)'"
         --noindex ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod |
         sed
         -e 's%<head>%<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">%'
         -e 's%<code>\\\([^<>]*\\\)\(\\\(.\\\)\)</code>%<a href="\\1.\\2.html">&</a>%'g > ${TOOL}.1.html
-	COMMENT "Building html version of man page for ${TOOL}"
-	MAIN_DEPENDENCY ${TOOL}.pod)
+        COMMENT "Building html version of man page for ${TOOL}"
+        MAIN_DEPENDENCY ${TOOL}.pod)
       add_custom_command (OUTPUT ${TOOL}.usage
-	COMMAND env POD2MAN=${POD2MAN} COL=${COL}
+        COMMAND env POD2MAN=${POD2MAN} COL=${COL}
         sh ${CMAKE_CURRENT_SOURCE_DIR}/makeusage.sh
         ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod ${PROJECT_VERSION}
         > ${TOOL}.usage
-	COMMENT "Building usage code for ${TOOL}"
-	MAIN_DEPENDENCY ${TOOL}.pod)
+        COMMENT "Building usage code for ${TOOL}"
+        MAIN_DEPENDENCY ${TOOL}.pod)
 
     else ()
 

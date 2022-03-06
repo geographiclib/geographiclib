@@ -72,7 +72,7 @@ if (NOT WIN32)
       DEPENDS ${SCRIPT}.sh)
     if (SBINDIR)
       install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}
-	DESTINATION ${SBINDIR})
+        DESTINATION ${SBINDIR})
     endif ()
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})

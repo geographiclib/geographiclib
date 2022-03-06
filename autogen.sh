@@ -9,8 +9,8 @@ run ()
     eval $*
 
     if test $? != 0 ; then
-	echo "Error: while running '$*'"
-	exit 1
+        echo "Error: while running '$*'"
+        exit 1
     fi
 }
 

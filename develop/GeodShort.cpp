@@ -5,7 +5,6 @@
  * (following Bowring 1981).
  **********************************************************************/
 
-
 #include <ctime>                // for std::time
 #include <functional>           // for std::function and std::bind
 #include <random>               // for C++11 random numbers

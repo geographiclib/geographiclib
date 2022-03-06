@@ -115,33 +115,33 @@ cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 # for ver in 10 11 12 14 15 16; do
 for ver in 14 15 16; do
     for arch in win32 x64; do
-	pkg=vc$ver-$arch
-	gen="Visual Studio $ver"
-	installer=
-	# N.B. update CPACK_NSIS_INSTALL_ROOT in CMakeLists.txt and
-	# update documentation examples if VS version for binary
-	# installer changes.
-	test "$ver" = 14 && installer=y
-	(
-	    echo "#! /bin/sh -exv"
-	    echo echo ========== cmake $pkg ==========
-	    echo b=c:/scratch/geog-$pkg
-	    echo rm -rf \$b \$bc //datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION/\*
-	    echo 'unset GEOGRAPHICLIB_DATA'
-	    echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
-	    echo cmake --build \$b --config Debug   --target ALL_BUILD
-	    echo cmake --build \$b --config Debug   --target RUN_TESTS
-	    echo cmake --build \$b --config Debug   --target INSTALL
-	    echo cmake --build \$b --config Release --target ALL_BUILD
-	    echo cmake --build \$b --config Release --target exampleprograms
-	    echo cmake --build \$b --config Release --target RUN_TESTS
-	    echo cmake --build \$b --config Release --target INSTALL
-	    echo cmake --build \$b --config Release --target PACKAGE
-	    test "$installer" &&
-		echo cp \$b/GeographicLib-$DISTVERSION-*.exe $WINDEVELSOURCE/ ||
-		    true
-	) > $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
-	chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
+        pkg=vc$ver-$arch
+        gen="Visual Studio $ver"
+        installer=
+        # N.B. update CPACK_NSIS_INSTALL_ROOT in CMakeLists.txt and
+        # update documentation examples if VS version for binary
+        # installer changes.
+        test "$ver" = 14 && installer=y
+        (
+            echo "#! /bin/sh -exv"
+            echo echo ========== cmake $pkg ==========
+            echo b=c:/scratch/geog-$pkg
+            echo rm -rf \$b \$bc //datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION/\*
+            echo 'unset GEOGRAPHICLIB_DATA'
+            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
+            echo cmake --build \$b --config Debug   --target ALL_BUILD
+            echo cmake --build \$b --config Debug   --target RUN_TESTS
+            echo cmake --build \$b --config Debug   --target INSTALL
+            echo cmake --build \$b --config Release --target ALL_BUILD
+            echo cmake --build \$b --config Release --target exampleprograms
+            echo cmake --build \$b --config Release --target RUN_TESTS
+            echo cmake --build \$b --config Release --target INSTALL
+            echo cmake --build \$b --config Release --target PACKAGE
+            test "$installer" &&
+                echo cp \$b/GeographicLib-$DISTVERSION-*.exe $WINDEVELSOURCE/ ||
+                    true
+        ) > $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
+        chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
     done
 done
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
@@ -166,9 +166,9 @@ tar xfpz $DEVELSOURCE/GeographicLib-$DISTVERSION.tar.gz
 (
     cd GeographicLib-$VERSION
     find . -type f | while read f; do
-	dest=../`dirname $f`
-	test -d $dest || mkdir -p $dest
-	mv $f $dest/
+        dest=../`dirname $f`
+        test -d $dest || mkdir -p $dest
+        mv $f $dest/
     done
 )
 rm -rf GeographicLib-$VERSION
@@ -204,7 +204,6 @@ cd $TEMP/gitb/geographiclib/
 cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
 (cd tests/sandbox/BUILD && make all)
 
-
 echo ==============================================================
 echo Make distribution from release tree with cmake
 
@@ -232,10 +231,10 @@ if test "$HAVEINTEL"; then
     echo CMake build for intel in $TEMP/relc/GeographicLib-$VERSION/BUILD-intel
     env FC=ifort CC=icc CXX=icpc cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
     (
-	cd BUILD-intel
-	make -j$NUMCPUS all
-	make test
-	make -j$NUMCPUS exampleprograms
+        cd BUILD-intel
+        make -j$NUMCPUS all
+        make test
+        make -j$NUMCPUS exampleprograms
     )
 fi
 
@@ -300,12 +299,12 @@ for p in 1 3 5; do
     mkdir BUILD-$p
     cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
     (
-	cd BUILD-$p
-	make -j$NUMCPUS all
-	if test $p -ne 1; then
-	    make test
-	fi
-	make -j$NUMCPUS develprograms
+        cd BUILD-$p
+        make -j$NUMCPUS all
+        if test $p -ne 1; then
+            make test
+        fi
+        make -j$NUMCPUS develprograms
     )
 done
 
@@ -353,7 +352,7 @@ for i in  b c; do
     cp testprogram.cpp testprogram$i.cpp
     g++ -c -g -O3 -I$TEMP/inst$i/include testprogram$i.cpp
     g++ -g -o testprogram$i testprogram$i.o -Wl,-rpath=$TEMP/inst$i/lib \
-	-L$TEMP/inst$i/lib -lGeographicLib
+        -L$TEMP/inst$i/lib -lGeographicLib
     ./testprogram$i
 done
 
@@ -381,37 +380,37 @@ cd $TEMP/relx/GeographicLib-$VERSION
 (
     echo Files with trailing spaces:
     find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif' |
-	while read f; do
-	    tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
-	done
+        while read f; do
+            tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
+        done
     echo
     echo Files with tabs:
     find . -type f |
-	egrep -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
-	egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
-	xargs grep -l  '	' || true
+        egrep -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
+        egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
+        xargs grep -l  '        ' || true
     echo
     echo Files with multiple newlines:
     find . -type f |
-	egrep -v \
-	   '/Makefile\.in|\.1\.html|\.png|\.gif|/ltmain|/config|\.m4' |
-	while read f; do
-	    tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
-	done
+        egrep -v \
+           '/Makefile\.in|\.1\.html|\.png|\.gif|/ltmain|/config|\.m4' |
+        while read f; do
+            tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
+        done
     echo
     echo Files with no newline at end:
     find . -type f |
-	egrep -v '\.png|\.gif' |
-	while read f; do
-	    n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
-	done
+        egrep -v '\.png|\.gif' |
+        while read f; do
+            n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
+        done
     echo
     echo Files with extra newlines at end:
     find . -type f |
-	egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.1\.html' |
-	while read f; do
-	    n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
-	done
+        egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.1\.html' |
+        while read f; do
+            n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
+        done
     echo
 ) > $TEMP/badfiles.txt
 cat $TEMP/badfiles.txt

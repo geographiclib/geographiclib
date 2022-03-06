@@ -16,8 +16,8 @@ grs80 GRS80
 EOF
 ) | while read prefix name; do
     "$INNO" gravity-installers.iss \
-	/dGRAVITYDIR="$GRAVITYDIR" \
-	/dPREFIX="$prefix" \
-	/dNAME="$name" > $prefix.log 2>&1
+        /dGRAVITYDIR="$GRAVITYDIR" \
+        /dPREFIX="$prefix" \
+        /dNAME="$name" > $prefix.log 2>&1
 done
 exit 0

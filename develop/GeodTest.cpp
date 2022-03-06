@@ -184,7 +184,6 @@ void GeodError(const test& tgeod,
   }
 }
 
-
 int main(int argc, char* argv[]) {
   Utility::set_digits();
   Math::real a = Constants::WGS84_a();

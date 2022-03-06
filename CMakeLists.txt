@@ -567,4 +567,30 @@ if (RELEASE OR MAINTAINER)
 endif ()
 if (MAINTAINER)
   add_dependencies (dist distrib-all)
+
+  if (EXISTS ${PROJECT_SOURCE_DIR}/.git AND NOT WIN32)
+    set (BINARY_EXT "m4|gif|pdf|png|kmz")
+    add_custom_target (checktrailingspace
+      COMMAND git ls-tree -r HEAD --name-only |
+      egrep -v '\\.\(${BINARY_EXT}\)$$' |
+      xargs grep ' $$' || true
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+      COMMENT "Looking for trailing spaces")
+    add_custom_target (checktabs
+      COMMAND git ls-tree -r HEAD --name-only |
+      egrep -v '\([Mm]akefile|\\.\(${BINARY_EXT}\)$$\)' |
+      xargs grep -l '\t' || true
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+      COMMENT "Looking for tabs")
+    add_custom_target (checkblanklines
+      COMMAND git ls-tree -r HEAD --name-only |
+      egrep -v '\\.\(${BINARY_EXT}\)$$' |
+      while read f\; do tr 'X\\n' 'YX' < $$f |
+      egrep '\(^X|XXX|XX$$|[^X]$$\)' > /dev/null && echo $$f\; done || true
+      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+      COMMENT "Looking for extra blank lines")
+
+    add_custom_target(sanitize)
+    add_dependencies(sanitize checktrailingspace checktabs checkblanklines)
+  endif ()
 endif ()
