@@ -573,7 +573,7 @@ if (MAINTAINER)
     add_custom_target (checktrailingspace
       COMMAND git ls-tree -r HEAD --name-only |
       egrep -v '\\.\(${BINARY_EXT}\)$$' |
-      xargs grep ' $$' || true
+      xargs grep '[ \t]$$' || true
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
       COMMENT "Looking for trailing spaces")
     add_custom_target (checktabs

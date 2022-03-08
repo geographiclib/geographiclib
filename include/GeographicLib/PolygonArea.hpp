@@ -105,29 +105,10 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    static int transit(real lon1, real lon2) {
-      // Return 1 or -1 if crossing prime meridian in east or west direction.
-      // Otherwise return zero.
-      real lon12 = Math::AngDiff(lon1, lon2);
-      lon1 = Math::AngNormalize(lon1);
-      lon2 = Math::AngNormalize(lon2);
-      // Treat 0 as negative in these tests.
-      int cross =
-        lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
-        (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
-      return cross;
-    }
+    static int transit(real lon1, real lon2);
     // an alternate version of transit to deal with longitudes in the direct
     // problem.
-    static int transitdirect(real lon1, real lon2) {
-      // Compute exactly the parity of
-      //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
-      using std::remainder;
-      lon1 = remainder(lon1, real(720));
-      lon2 = remainder(lon2, real(720));
-      return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
-               (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
-    }
+    static int transitdirect(real lon1, real lon2);
     void Remainder(Accumulator<>& a) const { a.remainder(_area0); }
     void Remainder(real& a) const {
       using std::remainder;

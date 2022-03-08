@@ -14,8 +14,39 @@ namespace GeographicLib {
   using namespace std;
 
   template <class GeodType>
+  int PolygonAreaT<GeodType>::transit(real lon1, real lon2) {
+    // Return 1 or -1 if crossing prime meridian in east or west direction.
+    // Otherwise return zero.
+    real lon12 = Math::AngDiff(lon1, lon2);
+    lon1 = Math::AngNormalize(lon1);
+    lon2 = Math::AngNormalize(lon2);
+    // Treat 0 as negative in these tests.
+    int cross =
+      lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
+      (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
+    return cross;
+  }
+
+  // an alternate version of transit to deal with longitudes in the direct
+  // problem.
+  template <class GeodType>
+  int PolygonAreaT<GeodType>::transitdirect(real lon1, real lon2) {
+    // Compute exactly the parity of
+    //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
+    using std::remainder;
+    // C++ C remainder -> [-360,360]
+    // Java % -> (-720, 720) switch to IEEEremainder?
+    // JS % -> (-720, 720)
+    // Python fmod -> (-720, 720)
+    // Fortran, Octave skip
+    lon1 = remainder(lon1, real(720));
+    lon2 = remainder(lon2, real(720));
+    return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
+             (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
+  }
+
+  template <class GeodType>
   void PolygonAreaT<GeodType>::AddPoint(real lat, real lon) {
-    lat = Math::LatFix(lat);
     if (_num == 0) {
       _lat0 = _lat1 = lat;
       _lon0 = _lon1 = lon;
