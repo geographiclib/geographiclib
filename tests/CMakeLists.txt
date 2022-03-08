@@ -570,6 +570,15 @@ add_test (NAME Planimeter12 COMMAND Planimeter
   --input-string "66:33:44 0; 66:33:44 180; 66:33:44 360")
 set_tests_properties (Planimeter12 PROPERTIES PASS_REGULAR_EXPRESSION
   "3 10465729\\.[0-9]+ -?0.0")
+# Reverse area of arctic circle
+add_test (NAME Planimeter11r COMMAND Planimeter
+  -R --input-string "66:33:44 -0; 66:33:44 -180; 66:33:44 -360")
+set_tests_properties (Planimeter11r PROPERTIES PASS_REGULAR_EXPRESSION
+  "3 15985058\\.[0-9]+ -212084182523..\\.")
+add_test (NAME Planimeter12r COMMAND Planimeter
+  --input-string "66:33:44 -0; 66:33:44 -180; 66:33:44 -360")
+set_tests_properties (Planimeter12r PROPERTIES PASS_REGULAR_EXPRESSION
+  "3 10465729\\.[0-9]+ -?0.0")
 # Check encircling pole twice
 add_test (NAME Planimeter13 COMMAND Planimeter
   --input-string "89 -360; 89 -240; 89 -120; 89 0; 89 120; 89 240")

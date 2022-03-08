@@ -17,6 +17,7 @@
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/UTMUPS.hpp>
 #include <GeographicLib/MGRS.hpp>
+#include <GeographicLib/PolygonArea.hpp>
 
 using namespace std;
 using namespace GeographicLib;
@@ -490,6 +491,30 @@ int main() {
     if (i) {
       cout << "Line " << __LINE__
            << ": UTMUPS/MGRS::Forward lat = +/-0, fail\n";
+      ++n;
+    }
+  }
+
+  {
+    // Placeholder to implement check on AddEdge bug: AddPoint(0,0) +
+    // AddEdge(90, 1000) + AddEdge(0, 1000) + AddEdge(-90, 0).  The area
+    // should be 1e6.  Prior to the fix it was 1e6 - A/2, where A = ellipsoid
+    // area.
+    // add_test (NAME Planimeter29 COMMAND Planimeter ...)
+    const Geodesic& g = Geodesic::WGS84();
+    PolygonArea poly(g);
+    poly.AddPoint(0, 0);
+    poly.AddEdge( 90, 1000);
+    poly.AddEdge(  0, 1000);
+    poly.AddEdge(-90, 1000);
+    T perim, area;
+    // The area should be 1e6.  Prior to the fix it was 1e6 - A/2, where
+    // A = ellipsoid area.
+    poly.Compute(false, true, perim, area);
+    int i = checkEquals(area, 1000000, 0.01);
+    if (i)  {
+      cout << "Line " << __LINE__
+           << ": Planimeter29 fail\n";
       ++n;
     }
   }

@@ -16,15 +16,27 @@ namespace GeographicLib {
   template <class GeodType>
   int PolygonAreaT<GeodType>::transit(real lon1, real lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
-    // Otherwise return zero.
+    // Otherwise return zero.  longitude = +/-0 considered to be positive.
+    // This is (should be?) compatible with transitdirect which computes
+    // exactly the parity of
+    //   int(floor((lon1 + lon12) / 360)) - int(floor(lon1 / 360)))
     real lon12 = Math::AngDiff(lon1, lon2);
     lon1 = Math::AngNormalize(lon1);
     lon2 = Math::AngNormalize(lon2);
-    // Treat 0 as negative in these tests.
-    int cross =
-      lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
-      (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
-    return cross;
+    // N.B. lon12 == 0 gives cross = 0
+    return
+      // edge case lon1 = 180, lon2 = 360->0, lon12 = 180 to give 1
+      lon12 > 0 && ((lon1 < 0 && lon2 >= 0) ||
+                    // lon12 > 0 && lon1 > 0 && lon2 == 0 implies lon1 == 180
+                    (lon1 > 0 && lon2 == 0)) ? 1 :
+      // non edge case lon1 = -180, lon2 = -360->-0, lon12 = -180
+      (lon12 < 0 && lon1 >= 0 && lon2 < 0 ? -1 : 0);
+    // This was the old method (treating +/- 0 as negative).  However, with the
+    // new scheme for handling longitude differences this fails on:
+    // lon1 = -180, lon2 = -360->-0, lon12 = -180 gives 0 not -1.
+    //    return
+    //      lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
+    //      (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
   }
 
   // an alternate version of transit to deal with longitudes in the direct
@@ -32,17 +44,21 @@ namespace GeographicLib {
   template <class GeodType>
   int PolygonAreaT<GeodType>::transitdirect(real lon1, real lon2) {
     // Compute exactly the parity of
-    //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
+    //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
     using std::remainder;
     // C++ C remainder -> [-360,360]
     // Java % -> (-720, 720) switch to IEEEremainder?
     // JS % -> (-720, 720)
     // Python fmod -> (-720, 720)
     // Fortran, Octave skip
+    // If mod function gives result in [-360, 360]
+    // [0, 360) -> 0; [-360, 0) or 360 -> 1
+    // If mod function gives result in (-720, 720)
+    // [0, 360) or [-inf, -360) -> 0; [-360, 0) or [360, inf) -> 1
     lon1 = remainder(lon1, real(720));
     lon2 = remainder(lon2, real(720));
-    return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
-             (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
+    return ( (lon2 >= 0 && lon2 < 360 ? 0 : 1) -
+             (lon1 >= 0 && lon1 < 360 ? 0 : 1) );
   }
 
   template <class GeodType>
