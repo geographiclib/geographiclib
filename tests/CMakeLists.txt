@@ -1,5 +1,5 @@
 # Compile test programs
-set (TESTPROGRAMS signtest)
+set (TESTPROGRAMS signtest polygontest)
 
 add_custom_target (testprograms)
 foreach (TESTPROGRAM ${TESTPROGRAMS})
@@ -605,7 +605,7 @@ set_tests_properties (Planimeter17 PROPERTIES PASS_REGULAR_EXPRESSION
 set_tests_properties (Planimeter18 PROPERTIES PASS_REGULAR_EXPRESSION
   " 510047167161763\\.[01]")    # 510065621724088.5093-18454562325.45119
 
-# Some test to add code coverage: degerate polygons
+# Some tests to add code coverage: degerate polygons
 add_test (NAME Planimeter19 COMMAND Planimeter --input-string "1 1")
 set_tests_properties (Planimeter19 PROPERTIES PASS_REGULAR_EXPRESSION
   "1 0\\.0* 0\\.0")
@@ -613,7 +613,7 @@ add_test (NAME Planimeter20 COMMAND Planimeter --input-string "1 1" -l)
 set_tests_properties (Planimeter20 PROPERTIES PASS_REGULAR_EXPRESSION
   "1 0\\.0*")
 
-# Some test to add code coverage: multiple circlings of pole
+# Some tests to add code coverage: multiple circlings of pole
 set (_t "45 60;45 180;45 -60")
 # r =   39433884866571.4277 = Area for one circuit
 # a0 = 510065621724088.5093 = Ellipsoid area
@@ -652,7 +652,7 @@ set_tests_properties (Planimeter28 PROPERTIES
 # Placeholder to implement check on AddEdge bug: AddPoint(0,0) +
 # AddEdge(90, 1000) + AddEdge(0, 1000) + AddEdge(-90, 0).  The area
 # should be 1e6.  Prior to the fix it was 1e6 - A/2, where A = ellipsoid
-# area.
+# area.  This is now implemented in polygontest.cpp.
 # add_test (NAME Planimeter29 COMMAND Planimeter ...)
 
 # Check fix for AlbersEqualArea::Reverse bug found 2011-05-01
@@ -848,3 +848,4 @@ if (EXISTS "${_DATADIR}/gravity/grs80.egm")
 endif ()
 
 add_test (NAME signtest COMMAND signtest)
+add_test (NAME polygontest COMMAND polygontest)

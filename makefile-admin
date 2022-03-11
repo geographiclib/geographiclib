@@ -2,6 +2,8 @@
 
 # ssh -t karney,geographiclib@shell.sourceforge.net create
 # git: /home/git/p/geographiclib/code.git
+# web: /home/project-web/geographiclib
+# files: /home/frs/project/geographiclib
 
 USER=karney
 STAGE=$(HOME)/web

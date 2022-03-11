@@ -266,6 +266,22 @@ namespace GeographicLib {
      **********************************************************************/
     void CurrentPoint(real& lat, real& lon) const
     { lat = _lat1; lon = _lon1; }
+
+    /**
+     * Report the number of points currently in the polygon or polyline.
+     *
+     * @return the number of points.
+     *
+     * If no points have been added, then 0 is returned.
+     **********************************************************************/
+    unsigned NumberPoints() const { return _num; }
+
+    /**
+     * Report whether the current object is a polygon or a polyline.
+     *
+     * @return true if the object is a polyline.
+     **********************************************************************/
+    bool Polyline() const { return _polyline; }
     ///@}
   };
 

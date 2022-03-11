@@ -25,6 +25,18 @@ namespace GeographicLib {
   const char* const DMS::dmsindicators_ = "D'\":";
   const char* const DMS::components_[] = {"degrees", "minutes", "seconds"};
 
+  // Replace all occurrences of pat by c.  If c is NULL remove pat.
+  void DMS::replace(std::string& s, const std::string& pat, char c) {
+    std::string::size_type p = 0;
+    int count = c ? 1 : 0;
+    while (true) {
+      p = s.find(pat, p);
+      if (p == std::string::npos)
+        break;
+      s.replace(p, pat.length(), count, c);
+    }
+  }
+
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     // Here's a table of the allowed characters
 

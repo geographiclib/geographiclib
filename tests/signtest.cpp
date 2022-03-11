@@ -496,21 +496,21 @@ int main() {
   }
 
   {
-    // Placeholder to implement check on AddEdge bug: AddPoint(0,0) +
+    // Implement check on AddEdge bug: AddPoint(0,0) +
     // AddEdge(90, 1000) + AddEdge(0, 1000) + AddEdge(-90, 0).  The area
     // should be 1e6.  Prior to the fix it was 1e6 - A/2, where A = ellipsoid
     // area.
     // add_test (NAME Planimeter29 COMMAND Planimeter ...)
     const Geodesic& g = Geodesic::WGS84();
-    PolygonArea poly(g);
-    poly.AddPoint(0, 0);
-    poly.AddEdge( 90, 1000);
-    poly.AddEdge(  0, 1000);
-    poly.AddEdge(-90, 1000);
+    PolygonArea polygon(g);
+    polygon.AddPoint(0, 0);
+    polygon.AddEdge( 90, 1000);
+    polygon.AddEdge(  0, 1000);
+    polygon.AddEdge(-90, 1000);
     T perim, area;
     // The area should be 1e6.  Prior to the fix it was 1e6 - A/2, where
     // A = ellipsoid area.
-    poly.Compute(false, true, perim, area);
+    polygon.Compute(false, true, perim, area);
     int i = checkEquals(area, 1000000, 0.01);
     if (i)  {
       cout << "Line " << __LINE__
