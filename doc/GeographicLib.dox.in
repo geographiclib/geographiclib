@@ -4331,8 +4331,8 @@ the last condition, the triangle inequality).  Typically the cost of
 constructing a VP tree of \e N points is \e N log \e N, while the cost
 of a query is log \e N.  Thus a VP tree should be used in situations
 where \e N is large and at least log \e N queries are to be made.  The
-condition, \e N is large, means that \f$ N \gg 2^D \f$, where \e D is
-the dimensionality of the space.
+condition, \e N is large, should be taken to mean that \f$ N \gg 2^D
+\f$, where \e D is the dimensionality of the space.
 
 - This implementation includes Yianilos' upper and lower bounds for the
   inside and outside sets.  This helps limit the number of searches

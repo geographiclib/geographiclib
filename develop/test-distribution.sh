@@ -186,7 +186,7 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
     make dist
     make -j$NUMCPUS all
     make test
-    make -j$NUMCPUS exampleprograms
+    make exampleprograms
     make install
     rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$DISTVERSION/
 )
@@ -199,14 +199,9 @@ echo List installed files fron cmake build in $TEMP/instc to $TEMP/files.c
 )
 
 echo ==============================================================
-echo Sandbox build of $TEMP/gitb/geographiclib/tests/sandox using installation in $TEMP/instc
-cd $TEMP/gitb/geographiclib/
-cmake -D CMAKE_PREFIX_PATH=$TEMP/instc -S tests/sandbox -B tests/sandbox/BUILD
-(cd tests/sandbox/BUILD && make all)
-
-echo ==============================================================
 echo Make distribution from release tree with cmake
 
+cd $TEMP/relc/GeographicLib-$VERSION
 cmake -S . -B BUILD-dist
 (cd BUILD-dist && make dist)
 
@@ -234,7 +229,7 @@ if test "$HAVEINTEL"; then
         cd BUILD-intel
         make -j$NUMCPUS all
         make test
-        make -j$NUMCPUS exampleprograms
+        make exampleprograms
     )
 fi
 

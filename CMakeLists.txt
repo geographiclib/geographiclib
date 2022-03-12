@@ -174,7 +174,7 @@ endif ()
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   # Set a default build type for single-configuration cmake generators
   # if no build type is set.
-  set (CMAKE_BUILD_TYPE "Release" CACHE STRING "The build type")
+  set (CMAKE_BUILD_TYPE "Release")
 endif ()
 
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
@@ -200,6 +200,8 @@ set (CMAKEDIR "lib/cmake/${PROJECT_NAME}"
 set (PKGDIR "lib/pkgconfig" CACHE STRING "Where to install package config")
 set (DOCDIR "share/doc/${PROJECT_NAME}"
   CACHE STRING "Where to install documentation")
+set (EXAMPLEDIR "share/doc/${PROJECT_NAME}-dev"
+  CACHE STRING "Where to install examples")
 
 # The relative path to library directory from the bin directory
 if (LIBDIR AND BINDIR)
@@ -442,6 +444,7 @@ add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
+set (CALLED_FROM_ADD_SUBDIRECTORY ON)
 add_subdirectory (examples)
 add_subdirectory (cmake)
 enable_testing ()
@@ -449,6 +452,13 @@ add_subdirectory (tests)
 if (NOT RELEASE)
   add_subdirectory (develop)
 endif ()
+
+add_custom_target (exampleprograms
+  COMMAND ${CMAKE_COMMAND}
+  -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
+  -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}
+  COMMAND ${CMAKE_COMMAND} --build exampleprograms --parallel 8)
+add_dependencies (exampleprograms ${PROJECT_LIBRARIES})
 
 # Packaging support; we deal with
 # (1) a source distribution: cmake make a tar.gz file and the zip file
