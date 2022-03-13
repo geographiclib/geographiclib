@@ -119,6 +119,16 @@ set_tests_properties (GeoConvert20
 set_tests_properties (GeoConvert21
   PROPERTIES PASS_REGULAR_EXPRESSION "^BKH41[\r\n]")
 
+# Check DMS::Encode round ties to even for whole degrees.  Fixed 2022-05-13.
+add_test (NAME GeoConvert22 COMMAND GeoConvert
+  -p -5 --input-string "5.5 6.5")
+set_tests_properties (GeoConvert22
+  PROPERTIES PASS_REGULAR_EXPRESSION "6 6")
+add_test (NAME GeoConvert23 COMMAND GeoConvert
+  -p -5 -d --input-string "5.5 6.5")
+set_tests_properties (GeoConvert23
+  PROPERTIES PASS_REGULAR_EXPRESSION "06N 006E")
+
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
 set_tests_properties (GeodSolve0 PROPERTIES PASS_REGULAR_EXPRESSION

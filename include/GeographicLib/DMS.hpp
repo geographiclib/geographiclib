@@ -131,9 +131,10 @@ namespace GeographicLib {
      * result is multiplied by the implied sign of the hemisphere designator
      * (negative for S and W).  In addition \e ind is set to DMS::LATITUDE if N
      * or S is present, to DMS::LONGITUDE if E or W is present, and to
-     * DMS::NONE otherwise.  Throws an error on a malformed string.  No check
-     * is performed on the range of the result.  Examples of legal and illegal
-     * strings are
+     * DMS::NONE otherwise.  Leading and trailing whitespace is removed from
+     * the string before processing.  This routine throws an error on a
+     * malformed string.  No check is performed on the range of the result.
+     * Examples of legal and illegal strings are
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20&deg;30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5

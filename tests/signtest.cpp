@@ -298,9 +298,9 @@ int main() {
   // https://developercommunity.visualstudio.com/t/stdfixed-output-does-not-implement-round-to-even/1671088
   // Problem can't be reproduced at Microsoft, so allow the tests
   // Probably this is some issue with the runtime library
-#if 1
   strcheck( Utility::str<T>( nan, 0),  "nan" );
   strcheck( Utility::str<T>(-inf, 0), "-inf" );
+  strcheck( Utility::str<T>(+inf, 0),  "inf" );
   strcheck( Utility::str<T>(-T(3.5), 0),   "-4" );
   strcheck( Utility::str<T>(-T(2.5), 0),   "-2" );
   strcheck( Utility::str<T>(-T(1.5), 0),   "-2" );
@@ -311,7 +311,6 @@ int main() {
   strcheck( Utility::str<T>(+T(1.5), 0),    "2" );
   strcheck( Utility::str<T>(+T(2.5), 0),    "2" );
   strcheck( Utility::str<T>(+T(3.5), 0),    "4" );
-  strcheck( Utility::str<T>(+inf, 0),  "inf" );
   strcheck( Utility::str<T>(-T(1.75), 1), "-1.8");
   strcheck( Utility::str<T>(-T(1.25), 1), "-1.2");
   strcheck( Utility::str<T>(-T(0.75), 1), "-0.8");
@@ -322,18 +321,44 @@ int main() {
   strcheck( Utility::str<T>(+T(0.75), 1),  "0.8");
   strcheck( Utility::str<T>(+T(1.25), 1),  "1.2");
   strcheck( Utility::str<T>(+T(1.75), 1),  "1.8");
-#endif
+
+  strcheck( DMS::Encode( nan, DMS::DEGREE, 0),  "nan" );
+  strcheck( DMS::Encode(-inf, DMS::DEGREE, 0), "-inf" );
+  strcheck( DMS::Encode(+inf, DMS::DEGREE, 0),  "inf" );
+  strcheck( DMS::Encode(-T(3.5), DMS::DEGREE, 0),   "-4" );
+  strcheck( DMS::Encode(-T(2.5), DMS::DEGREE, 0),   "-2" );
+  strcheck( DMS::Encode(-T(1.5), DMS::DEGREE, 0),   "-2" );
+  strcheck( DMS::Encode(-T(0.5), DMS::DEGREE, 0),   "-0" );
+  strcheck( DMS::Encode(-T(0  ), DMS::DEGREE, 0),   "-0" );
+  strcheck( DMS::Encode(+T(0  ), DMS::DEGREE, 0),    "0" );
+  strcheck( DMS::Encode(+T(0.5), DMS::DEGREE, 0),    "0" );
+  strcheck( DMS::Encode(+T(1.5), DMS::DEGREE, 0),    "2" );
+  strcheck( DMS::Encode(+T(2.5), DMS::DEGREE, 0),    "2" );
+  strcheck( DMS::Encode(+T(3.5), DMS::DEGREE, 0),    "4" );
+  strcheck( DMS::Encode(-T(1.75), DMS::DEGREE, 1), "-1.8");
+  strcheck( DMS::Encode(-T(1.25), DMS::DEGREE, 1), "-1.2");
+  strcheck( DMS::Encode(-T(0.75), DMS::DEGREE, 1), "-0.8");
+  strcheck( DMS::Encode(-T(0.25), DMS::DEGREE, 1), "-0.2");
+  strcheck( DMS::Encode(-T(0   ), DMS::DEGREE, 1), "-0.0");
+  strcheck( DMS::Encode(+T(0   ), DMS::DEGREE, 1),  "0.0");
+  strcheck( DMS::Encode(+T(0.25), DMS::DEGREE, 1),  "0.2");
+  strcheck( DMS::Encode(+T(0.75), DMS::DEGREE, 1),  "0.8");
+  strcheck( DMS::Encode(+T(1.25), DMS::DEGREE, 1),  "1.2");
+  strcheck( DMS::Encode(+T(1.75), DMS::DEGREE, 1),  "1.8");
+  strcheck( DMS::Encode( T(1e20), DMS::DEGREE, 0), "100000000000000000000");
+  strcheck( DMS::Encode( T(1e21), DMS::DEGREE, 0), "1000000000000000000000");
+  // #endif
   DMS::flag ind;
-  check( DMS::Decode("+0", ind),  +0.0 );
-  check( DMS::Decode("-0", ind),  -0.0 );
-  check( DMS::Decode("nan", ind),  nan );
+  check( DMS::Decode(" +0 ", ind),  +0.0 );
+  check( DMS::Decode("-0  ", ind),  -0.0 );
+  check( DMS::Decode(" nan", ind),   nan );
   check( DMS::Decode("+inf", ind),  +inf );
-  check( DMS::Decode( "inf", ind),  +inf );
+  check( DMS::Decode(" inf", ind),  +inf );
   check( DMS::Decode("-inf", ind),  -inf );
-  check( DMS::Decode("+0N", ind),  +0.0 );
-  check( DMS::Decode("-0N", ind),  -0.0 );
-  check( DMS::Decode("+0S", ind),  -0.0 );
-  check( DMS::Decode("-0S", ind),  +0.0 );
+  check( DMS::Decode(" +0N", ind),  +0.0 );
+  check( DMS::Decode("-0N ", ind),  -0.0 );
+  check( DMS::Decode("+0S ", ind),  -0.0 );
+  check( DMS::Decode(" -0S", ind),  +0.0 );
 
   {
     // azimuth of geodesic line with points on equator determined by signs of

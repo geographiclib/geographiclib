@@ -27,11 +27,11 @@ namespace GeographicLib {
 
   // Replace all occurrences of pat by c.  If c is NULL remove pat.
   void DMS::replace(std::string& s, const std::string& pat, char c) {
-    std::string::size_type p = 0;
+    string::size_type p = 0;
     int count = c ? 1 : 0;
     while (true) {
       p = s.find(pat, p);
-      if (p == std::string::npos)
+      if (p == string::npos)
         break;
       s.replace(p, pat.length(), count, c);
     }
@@ -426,8 +426,6 @@ namespace GeographicLib {
     real scale = 1;
     for (unsigned i = 0; i < unsigned(trailing); ++i)
       scale *= 60;
-    for (unsigned i = 0; i < prec; ++i)
-      scale *= 10;
     if (ind == AZIMUTH) {
       angle = Math::AngNormalize(angle);
       // Only angles strictly less than 0 can become 360; convert -0 to +0.
@@ -439,67 +437,78 @@ namespace GeographicLib {
     int sign = signbit(angle) ? -1 : 1;
     angle *= sign;
 
-    // Break off integer part to preserve precision in manipulation of
-    // fractional part.
+    // Break off integer part to preserve precision and avoid overflow in
+    // manipulation of fractional part for MINUTE and SECOND
     real
-      idegree = floor(angle),
-      fdegree = (angle - idegree) * scale + real(0.5);
-    {
-      // Implement the "round ties to even" rule
-      real f = floor(fdegree);
-      fdegree = (f == fdegree && fmod(f, real(2)) == 1) ? f - 1 : f;
+      idegree = trailing == DEGREE ? 0 : floor(angle),
+      fdegree = (angle - idegree) * scale;
+    string s = Utility::str(fdegree, prec), degree, minute, second;
+    switch (trailing) {
+    case DEGREE:
+      degree = s;
+      break;
+    default:                    // case MINUTE: case SECOND:
+      string::size_type p = s.find_first_of('.');
+      int i;
+      if (p == 0)
+        i = 0;
+      else {
+        i = stoi(s);
+        if (p == string::npos)
+          s.clear();
+        else
+          s = s.substr(p);
+      }
+      // Now i in [0,60] or [0,3600] for MINUTE/DEGREE
+      switch (trailing) {
+      case MINUTE:
+        minute = to_string(i % 60) + s; i /= 60;
+        degree = Utility::str(i + idegree, 0); // no overflow since i in [0,1]
+        break;
+      default:                  // case SECOND:
+        second = to_string(i % 60) + s; i /= 60;
+        minute = to_string(i % 60)    ; i /= 60;
+        degree = Utility::str(i + idegree, 0); // no overflow since i in [0,1]
+        break;
+      }
+      break;
     }
-    fdegree /= scale;
-    if (fdegree >= 1) {
-      idegree += 1;
-      fdegree -= 1;
-    }
-    real pieces[3] = {fdegree, 0, 0};
-    for (unsigned i = 1; i <= unsigned(trailing); ++i) {
-      real
-        ip = floor(pieces[i - 1]),
-        fp = pieces[i - 1] - ip;
-      pieces[i] = fp * 60;
-      pieces[i - 1] = ip;
-    }
-    pieces[0] += idegree;
-    ostringstream s;
-    s << fixed << setfill('0');
+    // No glue together degree+minute+second with
+    // sign + zero-fill + delimiters + hemisphere
+    ostringstream str;
+    if (prec) ++prec;           // Extra width for decimal point
     if (ind == NONE && sign < 0)
-      s << '-';
+      str << '-';
+    str << setfill('0');
     switch (trailing) {
     case DEGREE:
       if (ind != NONE)
-        s << setw(1 + min(int(ind), 2) + prec + (prec ? 1 : 0));
-      s << Utility::str(pieces[0], prec);
+        str << setw(1 + min(int(ind), 2) + prec);
+      str << degree;
       // Don't include degree designator (d) if it is the trailing component.
       break;
-    default:
+    case MINUTE:
       if (ind != NONE)
-        s << setw(1 + min(int(ind), 2));
-      s << int(pieces[0])
-        << (dmssep ? dmssep : char(tolower(dmsindicators_[0])));
-      switch (trailing) {
-      case MINUTE:
-        s << setw(2 + prec + (prec ? 1 : 0)) << Utility::str(pieces[1], prec);
-        if (!dmssep)
-          s << char(tolower(dmsindicators_[1]));
-        break;
-      case SECOND:
-        s << setw(2)
-          << int(pieces[1])
-          << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
-          << setw(2 + prec + (prec ? 1 : 0)) << Utility::str(pieces[2], prec);
-        if (!dmssep)
-          s << char(tolower(dmsindicators_[2]));
-        break;
-      default:
-        break;
-      }
+        str << setw(1 + min(int(ind), 2));
+      str << degree << (dmssep ? dmssep : char(tolower(dmsindicators_[0])))
+          << setw(2 + prec) << minute;
+      if (!dmssep)
+        str << char(tolower(dmsindicators_[1]));
+      break;
+    default:                    // case SECOND:
+      if (ind != NONE)
+        str << setw(1 + min(int(ind), 2));
+      str << degree << (dmssep ? dmssep : char(tolower(dmsindicators_[0])))
+          << setw(2)
+          << minute << (dmssep ? dmssep : char(tolower(dmsindicators_[1])))
+          << setw(2 + prec) << second;
+      if (!dmssep)
+        str << char(tolower(dmsindicators_[2]));
+      break;
     }
     if (ind != NONE && ind != AZIMUTH)
-      s << hemispheres_[(ind == LATITUDE ? 0 : 2) + (sign < 0 ? 0 : 1)];
-    return s.str();
+      str << hemispheres_[(ind == LATITUDE ? 0 : 2) + (sign < 0 ? 0 : 1)];
+    return str.str();
   }
 
 } // namespace GeographicLib
