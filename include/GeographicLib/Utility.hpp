@@ -272,7 +272,7 @@ namespace GeographicLib {
       if (t == "NAN" || t == "1.#QNAN" || t == "1.#SNAN" || t == "1.#IND" ||
           t == "1.#R")
         return Math::NaN<T>();
-      else if (t == "INF" || t == "1.#INF")
+      else if (t == "INF" || t == "1.#INF" || t == "INFINITY")
         return sign * Math::infinity<T>();
       return 0;
     }
