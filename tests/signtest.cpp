@@ -63,10 +63,10 @@ static int checkEquals(T x, T y, T d) {
   } while (false)
 
 #define strcheck(expr, r) do {                     \
-    string s = string(r),  t = expr;               \
-    if (!(s == t)) {                               \
+    string s = string(r),  ss = expr;              \
+    if (!(s == ss)) {                              \
       cout << "Line " << __LINE__ << ": " << #expr \
-           << " != " << #r << " (" << t << ")\n";  \
+           << " != " << #r << " (" << ss << ")\n"; \
       ++n;                                         \
     }                                              \
   } while (false)
@@ -298,6 +298,7 @@ int main() {
   // https://developercommunity.visualstudio.com/t/stdfixed-output-does-not-implement-round-to-even/1671088
   // Problem can't be reproduced at Microsoft, so allow the tests
   // Probably this is some issue with the runtime library
+  // #endif
   strcheck( Utility::str<T>( nan, 0),  "nan" );
   strcheck( Utility::str<T>(-inf, 0), "-inf" );
   strcheck( Utility::str<T>(+inf, 0),  "inf" );
@@ -347,7 +348,34 @@ int main() {
   strcheck( DMS::Encode(+T(1.75), DMS::DEGREE, 1),  "1.8");
   strcheck( DMS::Encode( T(1e20), DMS::DEGREE, 0), "100000000000000000000");
   strcheck( DMS::Encode( T(1e21), DMS::DEGREE, 0), "1000000000000000000000");
-  // #endif
+  {
+    T t = -(1 + 2/T(60) + T(2.99)/3600);
+
+    strcheck( DMS::Encode( t,DMS::DEGREE,0,DMS::NONE     ), "-1"         );
+    strcheck( DMS::Encode( t,DMS::DEGREE,0,DMS::LATITUDE ), "01S"         );
+    strcheck( DMS::Encode( t,DMS::DEGREE,0,DMS::LONGITUDE),"001W"         );
+    strcheck( DMS::Encode(-t,DMS::DEGREE,0,DMS::AZIMUTH  ),"001"          );
+    strcheck( DMS::Encode( t,DMS::DEGREE,1,DMS::NONE     ), "-1.0"       );
+    strcheck( DMS::Encode( t,DMS::DEGREE,1,DMS::LATITUDE ), "01.0S"       );
+    strcheck( DMS::Encode( t,DMS::DEGREE,1,DMS::LONGITUDE),"001.0W"       );
+    strcheck( DMS::Encode(-t,DMS::DEGREE,1,DMS::AZIMUTH  ),"001.0"        );
+    strcheck( DMS::Encode( t,DMS::MINUTE,0,DMS::NONE     ), "-1d02'"      );
+    strcheck( DMS::Encode( t,DMS::MINUTE,0,DMS::LATITUDE ), "01d02'S"      );
+    strcheck( DMS::Encode( t,DMS::MINUTE,0,DMS::LONGITUDE),"001d02'W"      );
+    strcheck( DMS::Encode(-t,DMS::MINUTE,0,DMS::AZIMUTH  ),"001d02'"       );
+    strcheck( DMS::Encode( t,DMS::MINUTE,1,DMS::NONE     ), "-1d02.0'"    );
+    strcheck( DMS::Encode( t,DMS::MINUTE,1,DMS::LATITUDE ), "01d02.0'S"    );
+    strcheck( DMS::Encode( t,DMS::MINUTE,1,DMS::LONGITUDE),"001d02.0'W"    );
+    strcheck( DMS::Encode(-t,DMS::MINUTE,1,DMS::AZIMUTH  ),"001d02.0'"     );
+    strcheck( DMS::Encode( t,DMS::SECOND,0,DMS::NONE     ), "-1d02'03\""  );
+    strcheck( DMS::Encode( t,DMS::SECOND,0,DMS::LATITUDE ), "01d02'03\"S"  );
+    strcheck( DMS::Encode( t,DMS::SECOND,0,DMS::LONGITUDE),"001d02'03\"W"  );
+    strcheck( DMS::Encode(-t,DMS::SECOND,0,DMS::AZIMUTH  ),"001d02'03\""   );
+    strcheck( DMS::Encode( t,DMS::SECOND,1,DMS::NONE     ), "-1d02'03.0\"");
+    strcheck( DMS::Encode( t,DMS::SECOND,1,DMS::LATITUDE ), "01d02'03.0\"S");
+    strcheck( DMS::Encode( t,DMS::SECOND,1,DMS::LONGITUDE),"001d02'03.0\"W");
+    strcheck( DMS::Encode(-t,DMS::SECOND,1,DMS::AZIMUTH  ),"001d02'03.0\"" );
+  }
   DMS::flag ind;
   check( DMS::Decode(" +0 ", ind),  +0.0 );
   check( DMS::Decode("-0  ", ind),  -0.0 );
