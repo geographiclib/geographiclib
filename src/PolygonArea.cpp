@@ -46,8 +46,8 @@ namespace GeographicLib {
     // Compute exactly the parity of
     //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
     using std::remainder;
-    // C++ C remainder -> [-360,360]
-    // Java % -> (-720, 720) switch to IEEEremainder?
+    // C++ C remainder -> [-360, 360]
+    // Java % -> (-720, 720) switch to IEEEremainder -> [-360, 360]
     // JS % -> (-720, 720)
     // Python fmod -> (-720, 720)
     // Fortran, Octave skip

@@ -42,6 +42,9 @@ else ()
 
 endif ()
 
+set (PACKAGE_DIR "${PROJECT_NAME}-${PROJECT_VERSION}")
+set (PACKAGE_NAME "${PACKAGE_DIR}${PROJECT_VERSION_SUFFIX}")
+
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 22)
@@ -68,14 +71,16 @@ else ()
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
-# (4) Build which libraries?  Possible values are SHARED, STATIC, BOTH.
-# This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier versions
+# (4) Build which libraries?
 option (BUILD_SHARED_LIBS "Build as a shared library" ON)
 
-# Build both share and static libraries (ignoring BUILD_SHARED_LIBS)
-# This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier versions
+# Ignoring BUILD_SHARED_LIBS and build both shared and static libraries.
+# (This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier
+# versions.)
 option (BUILD_BOTH_LIBS "Build both shared and static libraries" OFF)
 
+# GEOGRAPHICLIB_LIB_TYPE_VAL is used to initialize
+# GEOGRAPHICLIB_SHARED_LIB in include/GeographicLib/Config.h.in
 if (BUILD_BOTH_LIBS)
   set (GEOGRAPHICLIB_SHARED_LIB ON)
   set (GEOGRAPHICLIB_STATIC_LIB ON)
@@ -294,16 +299,6 @@ endif ()
 
 # Include directories are specified via target_include_directories in src.
 
-if (USE_BOOST_FOR_EXAMPLES)
-  # quad precision numbers appeared in Boost 1.54.  Various
-  # workarounds stopped being needed with Boost 1.64.
-  find_package (Boost 1.64 COMPONENTS serialization)
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.64)
-  endif ()
-endif ()
-
 set (HIGHPREC_LIBRARIES)
 if (GEOGRAPHICLIB_PRECISION EQUAL 1)
   message (WARNING "Compiling with floats which results in poor accuracy")
@@ -317,6 +312,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    find_package (Boost 1.64)
     if (Boost_FOUND)
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()
@@ -331,17 +327,20 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
   # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
   # to abide by the terms of this license.
   #
-  # For Linux, use system versions of mpfr and gmp.  For Apple, use
+  # For Linux, use system versions of mpfr and gmp.  This is routinely
+  # used only on Linux.  It can be made to work on Apple and Windows
+  # systems.  However, the following notes are likely out of data...
+  #
+  # For Apple, use
   # brew install mpfr.  Recent versions of mpfr (3.0 or later) work
-  # fine.  For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
+  # fine.
+  #
+  # For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
   # the MPFR C++ site and unpack in the top-level directory.  The
-  # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
+  # Windows build only works with static libraries.
   # NOTE: The Windows build hasn't been tested for a long time.
   # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
   # abide by the terms of this license.
-  #
-  # Need Visual Studio 12 2013 or later, g++ 4.5 or later; not sure
-  # about clang.
   if (WIN32)
     if (MSVC AND NOT MSVC_VERSION LESS 1800)
       if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -406,14 +405,18 @@ endif ()
 # maintainer runs "make distrib-man" which installs the transformed
 # documentation files into the source tree.  Skip Apple here because
 # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
-# file and there's no simple equivalent for MacOSX
+# file and there's no simple equivalent for MacOSX.  MAINTAINER mode
+# also supported (a) running autogen.sh to configure the autoconf
+# builds, and (b) running git ls-tree to run some sanity checks.
+# MAINTAINTER mode is not set in RELEASE mode.
 if (NOT RELEASE AND BUILD_MANPAGES AND NOT WIN32 AND NOT APPLE)
   find_program (POD2MAN pod2man)
   find_program (POD2HTML pod2html)
   find_program (COL col)
 endif ()
-if (POD2MAN AND POD2HTML AND COL)
+if (POD2MAN AND POD2HTML AND COL AND EXISTS ${PROJECT_SOURCE_DIR}/.git)
   set (MAINTAINER ON)
+  find_program (RSYNC rsync)
 else ()
   set (MAINTAINER OFF)
 endif ()
@@ -456,6 +459,7 @@ endif ()
 add_custom_target (exampleprograms
   COMMAND ${CMAKE_COMMAND}
   -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
+  -D USE_BOOST_FOR_EXAMPLES=${USE_BOOST_FOR_EXAMPLES}
   -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}
   COMMAND ${CMAKE_COMMAND} --build exampleprograms --parallel 8)
 add_dependencies (exampleprograms ${PROJECT_LIBRARIES})
@@ -489,16 +493,18 @@ set (CPACK_SOURCE_IGNORE_FILES
   "/\\\\.git"
   "${PROJECT_SOURCE_DIR}/BUILD"
   "${PROJECT_SOURCE_DIR}/man/(.*\\\\.pod|makeusage\\\\.sh|dummy\\\\..*)\$"
+  "${PROJECT_SOURCE_DIR}/cmake/maintainer-.*\\\\.cmake\$"
   "${PROJECT_SOURCE_DIR}/(develop|cgi-bin|misc|.*\\\\.cache)/"
   "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer|geodesic-papers)/"
+  "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
+  "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
   "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin)\$")
-set (CPACK_SOURCE_GENERATOR TGZ)
+set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set (CPACK_SOURCE_PACKAGE_FILE_NAME "${PROJECT_NAME}-${PROJECT_VERSION}")
-set (CPACK_PACKAGE_INSTALL_DIRECTORY
-  "${CPACK_SOURCE_PACKAGE_FILE_NAME}${PROJECT_VERSION_SUFFIX}")
+set (CPACK_SOURCE_PACKAGE_FILE_NAME "${PACKAGE_DIR}")
+set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PACKAGE_DIR}")
 
 if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
@@ -511,13 +517,13 @@ if (WIN32)
   # 2017, Visual Studio 16 2019, and Visual Studio 17 2022.
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files")
-    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
+    set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win64")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
   else ()
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files (x86)")
-    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
+    set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win32")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} win32 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-win32-${PROJECT_VERSION}")
@@ -542,65 +548,14 @@ endif ()
 
 include (CPack)
 
-# Build the source distribution via the "dist" target.  If in RELEASE
-# mode, nothing special is required.  In non-RELEASE mode, we need to be
-# MAINTAINER to create the extra files that go in the source package.
+# If MAINTAINER, then prepare the source distribution for RELEASE mode.
+# "make dist" does the following:
+#   "make package_source" to call the CPack source generator
+#   remove stray files which aren't in git
+#   runs autogen.sh in the package source directory
+#   creates the processing man documentation and installs it too
+#   creates a file VERSION to signal that this is a RELEASE source
+#   create .tar.gz and .zip archives of the results
 if (MAINTAINER)
-  add_custom_command (OUTPUT autogen.done
-    COMMAND cd ${PROJECT_SOURCE_DIR} &&
-      ./autogen.sh &&
-      touch ${PROJECT_BINARY_DIR}/autogen.done
-    DEPENDS autogen.sh configure.ac
-      Makefile.am src/Makefile.am include/Makefile.am tools/Makefile.am
-      doc/Makefile.am man/Makefile.am cmake/Makefile.am
-      examples/Makefile.am tests/Makefile.am)
-  add_custom_target (distrib-all DEPENDS distrib-man autogen.done)
-endif ()
-if (RELEASE OR MAINTAINER)
-  # Make the source package as RELEASE with the file VERSION.
-  add_custom_target (dist
-    COMMAND ${CMAKE_MAKE_PROGRAM} package_source
-    COMMAND
-    cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-    echo ${PROJECT_VERSION} > VERSION &&
-    chmod -R g-w .
-    COMMAND
-    cd _CPack_Packages/Linux-Source/TGZ &&
-    find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-    tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_PACKAGE_INSTALL_DIRECTORY}.tar.gz -
-    COMMAND
-    rm -f ${CMAKE_BINARY_DIR}/${CPACK_PACKAGE_INSTALL_DIRECTORY}.zip &&
-    cd _CPack_Packages/Linux-Source/TGZ &&
-    find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-    zip -q ${CMAKE_BINARY_DIR}/${CPACK_PACKAGE_INSTALL_DIRECTORY}.zip -@
-    )
-endif ()
-if (MAINTAINER)
-  add_dependencies (dist distrib-all)
-
-  if (EXISTS ${PROJECT_SOURCE_DIR}/.git AND NOT WIN32)
-    set (BINARY_EXT "m4|gif|pdf|png|kmz")
-    add_custom_target (checktrailingspace
-      COMMAND git ls-tree -r HEAD --name-only |
-      egrep -v '\\.\(${BINARY_EXT}\)$$' |
-      xargs grep '[ \t]$$' || true
-      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-      COMMENT "Looking for trailing spaces")
-    add_custom_target (checktabs
-      COMMAND git ls-tree -r HEAD --name-only |
-      egrep -v '\([Mm]akefile|\\.\(${BINARY_EXT}\)$$\)' |
-      xargs grep -l '\t' || true
-      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-      COMMENT "Looking for tabs")
-    add_custom_target (checkblanklines
-      COMMAND git ls-tree -r HEAD --name-only |
-      egrep -v '\\.\(${BINARY_EXT}\)$$' |
-      while read f\; do tr 'X\\n' 'YX' < $$f |
-      egrep '\(^X|XXX|XX$$|[^X]$$\)' > /dev/null && echo $$f\; done || true
-      WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
-      COMMENT "Looking for extra blank lines")
-
-    add_custom_target(sanitize)
-    add_dependencies(sanitize checktrailingspace checktabs checkblanklines)
-  endif ()
+  include (cmake/maintainer-top.cmake)
 endif ()

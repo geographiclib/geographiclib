@@ -1,3 +1,80 @@
+CMake configuration
+
+How this proceeds depends on whether you're building from a release
+package or not.  A release package (marked by a file named VERSION at
+the top level) has preprocessed man pages and so can be built without
+the extra tools needed for processing the pod-style man pages; in
+addition, the release package has a configure script (created by
+autogen.sh) for autoconf-style builds.
+
+Supported optins
+
+BUILD_SHARED_LIBS "Build as a shared library" ON
+BUILD_BOTH_LIBS "Build both shared and static libraries" OFF
+BUILD_DOCUMENTATION "Use doxygen to create the documentation" OFF
+
+USE_BOOST_FOR_EXAMPLES "Look for Boost library when compiling examples" OFF
+
+CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF (ON in
+non-RELEASE mode)
+
+BUILD_MANPAGES  "Convert pod files to manpages" OFF (ON in non-release mode)
+GEOGRAPHICLIB_DATA  "Location for data for GeographicLib"
+/usr/local/share/GeographicLib
+C:/ProgramData/GeographicLib
+
+GEOGRAPHICLIB_PRECISION
+"Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable"
+2
+
+Where things get installed.  Use an empty string to disable that installation
+
+INCDIR "include" "Where to install header files"
+BINDIR "bin" "Where to install tools"
+SBINDIR "sbin" "Where to install admin tools" ("" for Windows)
+LIBDIR "lib" "Where to install libraries"
+DLLDIR "bin" "Where to install dlls"
+MANDIR "share/man" "Where to instal the man pages"
+CMAKEDIR "lib/cmake/GeographicLib "Where to install cmake configs"
+PKGDIR "lib/pkgconfig" "Where to install package config"
+DOCDIR "share/doc/GeographicLib" "Where to install documentation"
+EXAMPLEDIR "share/doc/GeographicLib-dev" "Where to install examples"
+
+CMAKE_DEBUG_POSTFIX  "The suffix for debug objects" "_d"
+
+Windows only
+PACKAGE_DEBUG_LIBS "Include debug versions of library in binary package" OFF
+
+CMake targets
+
+sanitize hygiene check on source files (trailing blanks, etc)
+
+exampleprograms compile example programs
+
+package make binary package for Windows
+distrib-all Create additional files for release
+dist  Package release into a tar.gz + zip files
+
+stage-doc copy documenation to staging area
+stage-dist copy source distribution to staging area
+
+deploy-doc deploy documentation from staging area to sourceforge
+deploy-dist deploy source distributions from staging area to sourceforge
+
+vcpkg
+
+    git
+      url = git@github.com:cffk/vcpkg.git
+      url = git@github.com:microsoft/vcpkg.git
+
+    Edit ports/geographiclib/
+
+    at top-level
+    ./vcpkg remove geographiclib
+    rm downloads/<old-tar-file>  # if necessary
+    ./vcpkg install 'geographiclib[tools]'
+    ls installed/x64-linux/tools/geographiclib
+
 Fedora package
 fedora33
 GeographicLib.i686

@@ -15,7 +15,7 @@ run ()
 }
 
 mv m4/pkg.m4 ./
-rm -rf autom4ate.cache m4
+rm -rf autom4te.cache m4
 mkdir m4
 mv pkg.m4 m4/
 run aclocal
@@ -27,4 +27,4 @@ run automake --add-missing --copy --force-missing --foreign
 run autoconf
 run autoreconf
 
-rm -f include/GeographicLib/Config-ac.h
+rm -rf autom4te.cache

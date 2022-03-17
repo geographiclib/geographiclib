@@ -25,8 +25,7 @@ TAGS
 /archive/
 /autom4te.cache/
 /data-distrib/
-/data-installer/gravity/
-/data-installer/magnetic/
+/data-installer
 /scratch/
 stamp-h1
 /mpfr_mpir_x86_x64_msvc2010/

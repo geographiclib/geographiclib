@@ -1,5 +1,5 @@
 # Compile test programs
-set (TESTPROGRAMS signtest polygontest)
+set (TESTPROGRAMS geodtest signtest polygontest)
 
 add_custom_target (testprograms)
 foreach (TESTPROGRAM ${TESTPROGRAMS})
@@ -8,6 +8,8 @@ foreach (TESTPROGRAM ${TESTPROGRAMS})
   add_dependencies (testprograms ${TESTPROGRAM})
   target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES}
     ${HIGHPREC_LIBRARIES})
+
+  add_test (NAME ${TESTPROGRAM} COMMAND ${TESTPROGRAM})
 
 endforeach ()
 
@@ -856,6 +858,3 @@ if (EXISTS "${_DATADIR}/gravity/grs80.egm")
   set_tests_properties (Gravity3 PROPERTIES PASS_REGULAR_EXPRESSION
     "^-?0\\.000 -?0\\.000 -?0.000")
 endif ()
-
-add_test (NAME signtest COMMAND signtest)
-add_test (NAME polygontest COMMAND polygontest)
