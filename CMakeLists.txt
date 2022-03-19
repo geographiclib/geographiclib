@@ -176,6 +176,9 @@ else ()
   option (BUILD_MANPAGES "Convert pod files to manpages" ON)
 endif ()
 
+option (DISABLE_ROUND_TO_EVEN_TESTS
+  "Disable tests checking for round-to-even" OFF)
+
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   # Set a default build type for single-configuration cmake generators
   # if no build type is set.
@@ -197,7 +200,14 @@ if (WIN32)
 else ()
   set (SBINDIR "sbin" CACHE STRING "Where to install admin tools")
 endif ()
-set (LIBDIR "lib" CACHE STRING "Where to install libraries")
+if (CMAKE_INSTALL_LIBDIR)
+  # If it's defined, use this GNUInstallDirs path to support lib, lib64,
+  # and lib/<muliarch-tuple> variants
+  set (LIBDIR "${CMAKE_INSTALL_LIBDIR}"
+    CACHE STRING "Where to install libraries")
+else ()
+  set (LIBDIR "lib" CACHE STRING "Where to install libraries")
+endif ()
 set (DLLDIR "bin" CACHE STRING "Where to install dlls")
 set (MANDIR "share/man" CACHE STRING "Where to instal the man pages")
 set (CMAKEDIR "lib/cmake/${PROJECT_NAME}"
@@ -456,8 +466,12 @@ if (NOT RELEASE)
   add_subdirectory (develop)
 endif ()
 
+if (CMAKE_GENERATOR_PLATFORM)
+  set (PLATFORM_FLAG "-A")
+endif ()
 add_custom_target (exampleprograms
   COMMAND ${CMAKE_COMMAND}
+  -G ${CMAKE_GENERATOR} ${PLATFORM_FLAG} ${CMAKE_GENERATOR_PLATFORM}
   -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
   -D USE_BOOST_FOR_EXAMPLES=${USE_BOOST_FOR_EXAMPLES}
   -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}

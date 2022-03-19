@@ -33,6 +33,7 @@ INCDIR "include" "Where to install header files"
 BINDIR "bin" "Where to install tools"
 SBINDIR "sbin" "Where to install admin tools" ("" for Windows)
 LIBDIR "lib" "Where to install libraries"
+  this is set to ${CMAKE_INSTALL_LIBDIR} if that's defined
 DLLDIR "bin" "Where to install dlls"
 MANDIR "share/man" "Where to instal the man pages"
 CMAKEDIR "lib/cmake/GeographicLib "Where to install cmake configs"
@@ -64,8 +65,8 @@ deploy-dist deploy source distributions from staging area to sourceforge
 vcpkg
 
     git
-      url = git@github.com:cffk/vcpkg.git
-      url = git@github.com:microsoft/vcpkg.git
+      git@github.com:cffk/vcpkg.git
+      git@github.com:microsoft/vcpkg.git
 
     Edit ports/geographiclib/
 
@@ -74,6 +75,95 @@ vcpkg
     rm downloads/<old-tar-file>  # if necessary
     ./vcpkg install 'geographiclib[tools]'
     ls installed/x64-linux/tools/geographiclib
+
+conda-forge
+
+    git
+      git@github.com:conda-forge/feedstocks.git
+      https://github.com/conda-forge/geographiclib-cpp-feedstock.git
+
+  /home/scratch/feedstocks/feedstocks/geographiclib-cpp/build_artifacts
+  linux-64/geographiclib-cpp-1.52-h4bd325d_1.tar.bz2
+
+Local build of 1.52
+
+  in geographiclib-cpp-feedstock, run
+  python build-locally.py linux_64_
+
+creates via docker
+
+  build_artifacts/linux-64/geographiclib-cpp-1.52-h4bd325d_1.tar.bz2
+
+Manual build
+
+[conda remove -y -n build --all]
+conda create -y -n build
+conda activate build
+conda install -y conda-build conda-verify conda-forge-pinning
+
+conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
+conda debug recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml -p /tmp/condabuild
+# additional args? --dirty --keep-old-work
+
+under /tmp/condabuild
+  work       -- your checked out out source + conda_build.sh
+  _h_env     -- the host environment where "make install" installs to
+  _build_env -- the build environment
+
+cd /tmp/condabuild/work
+./conda_test_runner.sh
+conda_build.sh does a
+
+  conda         activate $PREFIX/_h_env
+  conda --stack activate $PREFIX/_build_env
+
+and then builds + installs (into _h_env) your package.
+
+Subsequently you can run your package with
+
+  conda activate /tmp/condabuild/_h_env
+
+Under ${CONDA_PREFIX}/conda-bld
+
+  src_cache has downloaded source
+  linux-64 contains completed package geographiclib-cpp-1.52-h2bc3f7f_1.tar.bz2
+
+delete work dirs with
+  conda build purge
+
+delete packages with
+  conda build purge-all
+
+Completed package retained in
+
+${CONDA_PREFIX}/pkgs
+
+Unused cmake variables
+    CMAKE_FIND_ROOT_PATH Used by find_package and find_library
+    CMAKE_FIND_ROOT_PATH_MODE_LIBRARY Used by find_library
+    CMAKE_INSTALL_LIBDIR Gnu lib installation dir
+
+Under ${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675
+cmake's source directory =
+  work_moved_geographiclib-cpp-1.52-h2bc3f7f_1_linux-64
+renamed from work
+has patches applied
++ metadata_conda_debug.yaml = meta.yaml with variables substituted
++ conda_build.sh = build.sh + a header
+
+cmake's binary directory
+work_moved_geographiclib-cpp-1.52-h2bc3f7f_1_linux-64/build
+GeographicLib_SOURCE_DIR = work
+CMAKE_INSTALL_PREFIX:PATH=/home/ckarney/miniconda3/envs/build/conda-bld/geographiclib-cpp_1647616815675/_h_env_....
+
+Installation directory gets renamed to
+${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675/_h_env_moved_geographiclib-cpp-1.52-h2bc3f7f_1_linux-64
+
+${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675/_test_env... is for running tests
+
+Docker command to debug conda builds...
+docker run -ti -v `pwd`:/tmp/source  quay.io/condaforge/linux-anvil-cos7-x86_64 bash
+** Need to clean up conda stuff **
 
 Fedora package
 fedora33

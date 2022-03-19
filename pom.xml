@@ -30,6 +30,8 @@
                 <BUILD_BOTH_LIBS>ON</BUILD_BOTH_LIBS>
                 <CONVERT_WARNINGS_TO_ERRORS>ON</CONVERT_WARNINGS_TO_ERRORS>
                 <BUILD_DOCUMENTATION>OFF</BUILD_DOCUMENTATION>
+                <DISABLE_ROUND_TO_EVEN_TESTS>OFF</DISABLE_ROUND_TO_EVEN_TESTS>
+                <EXAMPLEDIR></EXAMPLEDIR>
               </options>
             </configuration>
           </execution>

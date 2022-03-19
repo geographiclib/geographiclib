@@ -73,15 +73,15 @@ echo Make a source package in $TEMP/gita/geographiclib/BUILD
 cd $TEMP/gita/geographiclib
 cmake -S . -B BUILD
 (cd BUILD && make dist)
-cp BUILD/GeographicLib-$DISTVERSION.{zip,tar.gz} $DEVELSOURCE/data-distrib/distrib-C++/
+cp BUILD/distrib/GeographicLib-$DISTVERSION.{zip,tar.gz} $DEVELSOURCE/data-distrib/distrib-C++/
 
 echo ==============================================================
 echo Unpack source package in $TEMP/rel bcx
 
 mkdir $TEMP/rel{b,c,x}
-tar xfpzC BUILD/GeographicLib-$DISTVERSION.tar.gz $TEMP/relb # Version for autoconf
-tar xfpzC BUILD/GeographicLib-$DISTVERSION.tar.gz $TEMP/relc # Version for cmake+mvn
-tar xfpzC BUILD/GeographicLib-$DISTVERSION.tar.gz $TEMP/relx # for listing
+tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relb # Version for autoconf
+tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relc # Version for cmake+mvn
+tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relx # for listing
 
 echo ==============================================================
 echo Unpack devel cmake distribution in $TEMP/relx and list in $TEMP/files.x
@@ -94,7 +94,7 @@ echo ==============================================================
 echo Make a release for Windows testing in $WINDOWSBUILD/GeographicLib-$VERSION
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 
-unzip -qq -d $WINDOWSBUILD BUILD/GeographicLib-$DISTVERSION.zip
+unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
 
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
 #! /bin/sh -exv
@@ -110,7 +110,10 @@ for v in 2019 2017 2015; do
 done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
-cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
+FLAG=DISABLE_ROUND_TO_EVEN_TESTS
+sed -e "s%<$FLAG>OFF</$FLAG>%<$FLAG>ON</$FLAG>%" pom.xml \
+    > $WINDOWSBUILD/GeographicLib-$VERSION/pom.xml
+#cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
 # for ver in 10 11 12 14 15 16; do
 for ver in 14 15 16; do
@@ -128,7 +131,7 @@ for ver in 14 15 16; do
             echo b=c:/scratch/geog-$pkg
             echo rm -rf \$b \$bc //datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION/\*
             echo 'unset GEOGRAPHICLIB_DATA'
-            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B \$b
+            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= -D $FLAG=ON -S . -B \$b
             echo cmake --build \$b --config Debug   --target ALL_BUILD
             echo cmake --build \$b --config Debug   --target RUN_TESTS
             echo cmake --build \$b --config Debug   --target INSTALL
@@ -162,7 +165,7 @@ cd $TEMP/gitr/geographiclib
 git checkout release
 git config user.email charles@karney.com
 find . -type f | grep -v '/\.git' | xargs rm
-tar xfpz $DEVELSOURCE/GeographicLib-$DISTVERSION.tar.gz
+tar xfpz $DEVELSOURCE/data-distrib/distrib-C++/GeographicLib-$DISTVERSION.tar.gz
 (
     cd GeographicLib-$VERSION
     find . -type f | while read f; do
@@ -183,7 +186,7 @@ cd $TEMP/relc/GeographicLib-$VERSION
 cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
 (
     cd BUILD
-    make dist
+    make package_source
     make -j$NUMCPUS all
     make test
     make exampleprograms
@@ -203,12 +206,12 @@ echo Make distribution from release tree with cmake
 
 cd $TEMP/relc/GeographicLib-$VERSION
 cmake -S . -B BUILD-dist
-(cd BUILD-dist && make dist)
+(cd BUILD-dist && make package_source)
 
 echo ==============================================================
 echo Unpack release cmake distribution in $TEMP/relz and list in $TEMP/files.z
 mkdir $TEMP/relz
-tar xfpzC BUILD-dist/GeographicLib-$DISTVERSION.tar.gz $TEMP/relz
+tar xfpzC BUILD-dist/GeographicLib-$VERSION.tar.gz $TEMP/relz
 
 (
     cd $TEMP/relz

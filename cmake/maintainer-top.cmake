@@ -47,10 +47,13 @@ if (RSYNC)
     COMMAND ${RSYNC} --delete -av
     ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/ ${DATAROOT}/)
   add_dependencies(stage-dist dist)
-  add_custom_target (stage-doc
-    COMMAND ${RSYNC} --delete -av
-    doc/html/ ${DOCROOT}/C++/${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}/)
-  add_dependencies(stage-doc doc)
+
+  if (BUILD_DOCUMENTATION AND DOXYGEN_FOUND)
+    add_custom_target (stage-doc
+      COMMAND ${RSYNC} --delete -av
+      doc/html/ ${DOCROOT}/C++/${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}/)
+    add_dependencies(stage-doc doc)
+  endif ()
 
   add_custom_target (deploy-dist
     COMMAND ${RSYNC} --delete -av ${DATAROOT}

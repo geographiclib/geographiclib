@@ -49,7 +49,7 @@ namespace GeographicLib {
     // C++ C remainder -> [-360, 360]
     // Java % -> (-720, 720) switch to IEEEremainder -> [-360, 360]
     // JS % -> (-720, 720)
-    // Python fmod -> (-720, 720)
+    // Python fmod -> (-720, 720) swith to Math.remainder
     // Fortran, Octave skip
     // If mod function gives result in [-360, 360]
     // [0, 360) -> 0; [-360, 0) or 360 -> 1

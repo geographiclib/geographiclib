@@ -62,7 +62,7 @@ namespace GeographicLib {
     vpp -= v;
     // if s = 0, then t = 0 and give t the same sign as s
     // mpreal needs T(0) here
-    t = s ? T(0) - (up + vpp) : s;
+    t = s != 0 ? T(0) - (up + vpp) : s;
     // u + v =       s      + t
     //       = round(u + v) + t
     return s;

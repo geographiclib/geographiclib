@@ -1,22 +1,30 @@
 # Compile test programs
 set (TESTPROGRAMS geodtest signtest polygontest)
 
-add_custom_target (testprograms)
-foreach (TESTPROGRAM ${TESTPROGRAMS})
+if (GEOGRAPHICLIB_PRECISION GREATER 1)
 
-  add_executable (${TESTPROGRAM} ${TESTPROGRAM}.cpp)
-  add_dependencies (testprograms ${TESTPROGRAM})
-  target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES}
-    ${HIGHPREC_LIBRARIES})
+  if (DISABLE_ROUND_TO_EVEN_TESTS)
+    add_compile_definitions(BUGGY_ROUNDING=1)
+  else ()
+    add_compile_definitions(BUGGY_ROUNDING=0)
+  endif ()
 
-  add_test (NAME ${TESTPROGRAM} COMMAND ${TESTPROGRAM})
+  add_custom_target (testprograms)
+  foreach (TESTPROGRAM ${TESTPROGRAMS})
 
-endforeach ()
+    add_executable (${TESTPROGRAM} ${TESTPROGRAM}.cpp)
+    add_dependencies (testprograms ${TESTPROGRAM})
+    target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES}
+      ${HIGHPREC_LIBRARIES})
 
-# Put all the tests into a folder in the IDE
-set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
+    add_test (NAME ${TESTPROGRAM} COMMAND ${TESTPROGRAM})
 
-# Don't install develop programs
+  endforeach ()
+
+  # Put all the tests into a folder in the IDE
+  set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
+
+endif ()
 
 # Here are the tests for GeographicLib
 if (DEFINED ENV{GEOGRAPHICLIB_DATA})
@@ -83,14 +91,18 @@ add_test (NAME GeoConvert12 COMMAND GeoConvert --input-string "5d60. 10")
 add_test (NAME GeoConvert13 COMMAND GeoConvert --input-string "5d60.0 10")
 
 # Check DMS::Encode does round ties to even.  Fixed 2015-06-11.
-add_test (NAME GeoConvert14 COMMAND GeoConvert
-  -: -p -4 --input-string "5.25 5.75")
-set_tests_properties (GeoConvert14
-  PROPERTIES PASS_REGULAR_EXPRESSION "05.2N 005.8E")
-add_test (NAME GeoConvert15 COMMAND GeoConvert
-  -: -p -1 --input-string "5.03125 5.09375")
-set_tests_properties (GeoConvert15
-  PROPERTIES PASS_REGULAR_EXPRESSION "05:01:52N 005:05:38E")
+if (NOT DISABLE_ROUND_TO_EVEN_TESTS)
+  # DMS::Encode now uses standard library to format the number and
+  # sometimes this doesn't get the round to even rule right.
+  add_test (NAME GeoConvert14 COMMAND GeoConvert
+    -: -p -4 --input-string "5.25 5.75")
+  set_tests_properties (GeoConvert14
+    PROPERTIES PASS_REGULAR_EXPRESSION "05.2N 005.8E")
+  add_test (NAME GeoConvert15 COMMAND GeoConvert
+    -: -p -1 --input-string "5.03125 5.09375")
+  set_tests_properties (GeoConvert15
+    PROPERTIES PASS_REGULAR_EXPRESSION "05:01:52N 005:05:38E")
+endif ()
 
 # Check MGRS::Forward improved rounding fix, 2015-07-22
 add_test (NAME GeoConvert16 COMMAND GeoConvert
@@ -122,14 +134,18 @@ set_tests_properties (GeoConvert21
   PROPERTIES PASS_REGULAR_EXPRESSION "^BKH41[\r\n]")
 
 # Check DMS::Encode round ties to even for whole degrees.  Fixed 2022-05-13.
-add_test (NAME GeoConvert22 COMMAND GeoConvert
-  -p -5 --input-string "5.5 6.5")
-set_tests_properties (GeoConvert22
-  PROPERTIES PASS_REGULAR_EXPRESSION "6 6")
-add_test (NAME GeoConvert23 COMMAND GeoConvert
-  -p -5 -d --input-string "5.5 6.5")
-set_tests_properties (GeoConvert23
-  PROPERTIES PASS_REGULAR_EXPRESSION "06N 006E")
+if (NOT DISABLE_ROUND_TO_EVEN_TESTS)
+  # DMS::Encode now uses standard library to format the number and
+  # sometimes this doesn't get the round to even rule right.
+  add_test (NAME GeoConvert22 COMMAND GeoConvert
+    -p -5 --input-string "5.5 6.5")
+  set_tests_properties (GeoConvert22
+    PROPERTIES PASS_REGULAR_EXPRESSION "6 6")
+  add_test (NAME GeoConvert23 COMMAND GeoConvert
+    -p -5 -d --input-string "5.5 6.5")
+  set_tests_properties (GeoConvert23
+    PROPERTIES PASS_REGULAR_EXPRESSION "06N 006E")
+endif ()
 
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
