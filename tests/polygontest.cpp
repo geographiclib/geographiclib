@@ -32,6 +32,7 @@ static int checkEquals(T x, T y, T d) {
 }
 
 static int checkNaN(T x) {
+  using std::isnan;
   if (isnan(x))
     return 0;
   cout << "checkNaN fails\n";
