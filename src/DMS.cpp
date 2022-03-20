@@ -449,11 +449,11 @@ namespace GeographicLib {
       break;
     default:                    // case MINUTE: case SECOND:
       string::size_type p = s.find_first_of('.');
-      int i;
+      long long i;
       if (p == 0)
         i = 0;
       else {
-        i = stoi(s);
+        i = stoll(s);
         if (p == string::npos)
           s.clear();
         else
