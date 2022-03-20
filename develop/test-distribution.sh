@@ -110,10 +110,7 @@ for v in 2019 2017 2015; do
 done
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
-FLAG=DISABLE_ROUND_TO_EVEN_TESTS
-sed -e "s%<$FLAG>OFF</$FLAG>%<$FLAG>ON</$FLAG>%" pom.xml \
-    > $WINDOWSBUILD/GeographicLib-$VERSION/pom.xml
-#cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
+cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
 # for ver in 10 11 12 14 15 16; do
 for ver in 14 15 16; do
@@ -131,7 +128,7 @@ for ver in 14 15 16; do
             echo b=c:/scratch/geog-$pkg
             echo rm -rf \$b \$bc //datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION/\*
             echo 'unset GEOGRAPHICLIB_DATA'
-            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= -D $FLAG=ON -S . -B \$b
+            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= -S . -B \$b
             echo cmake --build \$b --config Debug   --target ALL_BUILD
             echo cmake --build \$b --config Debug   --target RUN_TESTS
             echo cmake --build \$b --config Debug   --target INSTALL

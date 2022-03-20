@@ -176,9 +176,6 @@ else ()
   option (BUILD_MANPAGES "Convert pod files to manpages" ON)
 endif ()
 
-option (DISABLE_ROUND_TO_EVEN_TESTS
-  "Disable tests checking for round-to-even" OFF)
-
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   # Set a default build type for single-configuration cmake generators
   # if no build type is set.

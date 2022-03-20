@@ -3,12 +3,6 @@ set (TESTPROGRAMS geodtest signtest polygontest)
 
 if (GEOGRAPHICLIB_PRECISION GREATER 1)
 
-  if (DISABLE_ROUND_TO_EVEN_TESTS)
-    add_compile_definitions(BUGGY_ROUNDING=1)
-  else ()
-    add_compile_definitions(BUGGY_ROUNDING=0)
-  endif ()
-
   add_custom_target (testprograms)
   foreach (TESTPROGRAM ${TESTPROGRAMS})
 
@@ -91,7 +85,7 @@ add_test (NAME GeoConvert12 COMMAND GeoConvert --input-string "5d60. 10")
 add_test (NAME GeoConvert13 COMMAND GeoConvert --input-string "5d60.0 10")
 
 # Check DMS::Encode does round ties to even.  Fixed 2015-06-11.
-if (NOT DISABLE_ROUND_TO_EVEN_TESTS)
+if (NOT WIN32)
   # DMS::Encode now uses standard library to format the number and
   # sometimes this doesn't get the round to even rule right.
   add_test (NAME GeoConvert14 COMMAND GeoConvert
@@ -134,7 +128,7 @@ set_tests_properties (GeoConvert21
   PROPERTIES PASS_REGULAR_EXPRESSION "^BKH41[\r\n]")
 
 # Check DMS::Encode round ties to even for whole degrees.  Fixed 2022-05-13.
-if (NOT DISABLE_ROUND_TO_EVEN_TESTS)
+if (NOT WIN32)
   # DMS::Encode now uses standard library to format the number and
   # sometimes this doesn't get the round to even rule right.
   add_test (NAME GeoConvert22 COMMAND GeoConvert

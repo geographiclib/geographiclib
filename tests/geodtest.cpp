@@ -113,20 +113,23 @@ static int testinverse(T f = 1) {
   const G& g = G::WGS84();
   int result = 0;
   for (int i = 0; i < ncases; ++i) {
+    int k = 0;
     lat1 = testcases[i][0]; lon1 = testcases[i][1]; azi1 = testcases[i][2];
     lat2 = testcases[i][3]; lon2 = testcases[i][4]; azi2 = testcases[i][5];
     s12 = testcases[i][6]; a12 = testcases[i][7]; m12 = testcases[i][8];
     M12 = testcases[i][9]; M21 = testcases[i][10]; S12 = testcases[i][11];
     a12a = g.GenInverse(lat1, lon1, lat2, lon2, G::ALL,
                         s12a, azi1a, azi2a, m12a, M12a, M21a, S12a);
-    result += checkEquals(azi1, azi1a, 1e-13 * f);
-    result += checkEquals(azi2, azi2a, 1e-13 * f);
-    result += checkEquals(s12, s12a, 1e-8 * f);
-    result += checkEquals(a12, a12a, 1e-13 * f);
-    result += checkEquals(m12, m12a, 1e-8 * f);
-    result += checkEquals(M12, M12a, 1e-15 * f);
-    result += checkEquals(M21, M21a, 1e-15 * f);
-    result += checkEquals(S12, S12a, 0.1 * f);
+    k += checkEquals(azi1, azi1a, 1e-13 * f);
+    k += checkEquals(azi2, azi2a, 1e-13 * f);
+    k += checkEquals(s12, s12a, 1e-8 * f);
+    k += checkEquals(a12, a12a, 1e-13 * f);
+    k += checkEquals(m12, m12a, 1e-8 * f);
+    k += checkEquals(M12, M12a, 1e-15 * f);
+    k += checkEquals(M21, M21a, 1e-15 * f);
+    k += checkEquals(S12, S12a, 0.1 * f);
+    if (k) cout << "testinverse failure: case " << i << "\n";
+    result += k;
   }
   return result;
 }
@@ -138,21 +141,24 @@ static int testdirect(T f = 1) {
   const G& g = G::WGS84();
   int result = 0;
   for (int i = 0; i < ncases; ++i) {
+    int k = 0;
     lat1 = testcases[i][0]; lon1 = testcases[i][1]; azi1 = testcases[i][2];
     lat2 = testcases[i][3]; lon2 = testcases[i][4]; azi2 = testcases[i][5];
     s12 = testcases[i][6]; a12 = testcases[i][7]; m12 = testcases[i][8];
     M12 = testcases[i][9]; M21 = testcases[i][10]; S12 = testcases[i][11];
     a12a = g.GenDirect(lat1, lon1, azi1, false, s12, G::ALL | G::LONG_UNROLL,
               lat2a, lon2a, azi2a, s12a, m12a, M12a, M21a, S12a);
-    result += checkEquals(lat2, lat2a, 1e-13 * f);
-    result += checkEquals(lon2, lon2a, 1e-13 * f);
-    result += checkEquals(azi2, azi2a, 1e-13 * f);
-    result += checkEquals(s12, s12a, 0 * f);
-    result += checkEquals(a12, a12a, 1e-13 * f);
-    result += checkEquals(m12, m12a, 1e-8 * f);
-    result += checkEquals(M12, M12a, 1e-15 * f);
-    result += checkEquals(M21, M21a, 1e-15 * f);
-    result += checkEquals(S12, S12a, 0.1 * f);
+    k += checkEquals(lat2, lat2a, 1e-13 * f);
+    k += checkEquals(lon2, lon2a, 1e-13 * f);
+    k += checkEquals(azi2, azi2a, 1e-13 * f);
+    k += checkEquals(s12, s12a, 0 * f);
+    k += checkEquals(a12, a12a, 1e-13 * f);
+    k += checkEquals(m12, m12a, 1e-8 * f);
+    k += checkEquals(M12, M12a, 1e-15 * f);
+    k += checkEquals(M21, M21a, 1e-15 * f);
+    k += checkEquals(S12, S12a, 0.1 * f);
+    if (k) cout << "testdirect failure: case " << i << "\n";
+    result += k;
   }
   return result;
 }
@@ -164,21 +170,24 @@ static int testarcdirect(T f = 1) {
   const G& g = G::WGS84();
   int result = 0;
   for (int i = 0; i < ncases; ++i) {
+    int k = 0;
     lat1 = testcases[i][0]; lon1 = testcases[i][1]; azi1 = testcases[i][2];
     lat2 = testcases[i][3]; lon2 = testcases[i][4]; azi2 = testcases[i][5];
     s12 = testcases[i][6]; a12 = testcases[i][7]; m12 = testcases[i][8];
     M12 = testcases[i][9]; M21 = testcases[i][10]; S12 = testcases[i][11];
     a12a = g.GenDirect(lat1, lon1, azi1, true, a12, G::ALL | G::LONG_UNROLL,
                        lat2a, lon2a, azi2a, s12a, m12a, M12a, M21a, S12a);
-    result += checkEquals(lat2, lat2a, 1e-13 * f);
-    result += checkEquals(lon2, lon2a, 1e-13 * f);
-    result += checkEquals(azi2, azi2a, 1e-13 * f);
-    result += checkEquals(s12, s12a, 1e-8 * f);
-    result += checkEquals(a12, a12a, 0 * f);
-    result += checkEquals(m12, m12a, 1e-8 * f);
-    result += checkEquals(M12, M12a, 1e-15 * f);
-    result += checkEquals(M21, M21a, 1e-15 * f);
-    result += checkEquals(S12, S12a, 0.1 * f);
+    k += checkEquals(lat2, lat2a, 1e-13 * f);
+    k += checkEquals(lon2, lon2a, 1e-13 * f);
+    k += checkEquals(azi2, azi2a, 1e-13 * f);
+    k += checkEquals(s12, s12a, 1e-8 * f);
+    k += checkEquals(a12, a12a, 0 * f);
+    k += checkEquals(m12, m12a, 1e-8 * f);
+    k += checkEquals(M12, M12a, 1e-15 * f);
+    k += checkEquals(M21, M21a, 1e-15 * f);
+    k += checkEquals(S12, S12a, 0.1 * f);
+    if (k) cout << "testarcdirect failure: case " << i << "\n";
+    result += k;
   }
   return result;
 }
@@ -187,29 +196,23 @@ int main() {
   int n = 0, i;
 
   i = testinverse<Geodesic>(); n += i;
-  if (i)
-    cout << "testinverse<Geodesic> failure\n";
+  if (i) cout << "testinverse<Geodesic> failure\n";
 
   i = testdirect<Geodesic>(); n += i;
-  if (i)
-    cout << "testdirect<Geodesic> failure\n";
+  if (i) cout << "testdirect<Geodesic> failure\n";
 
   i = testarcdirect<Geodesic>(); n += i;
-  if (i)
-    cout << "testarcdirect<Geodesic> failure\n";
+  if (i) cout << "testarcdirect<Geodesic> failure\n";
 
   // Allow 2x error with GeodesicExact calcuations (for WGS84)
   i = testinverse<GeodesicExact>(2); n += i;
-  if (i)
-    cout << "testinverse<GeodesicExact> failure\n";
+  if (i) cout << "testinverse<GeodesicExact> failure\n";
 
   i = testdirect<GeodesicExact>(2); n += i;
-  if (i)
-    cout << "testdirect<GeodesicExact> failure\n";
+  if (i) cout << "testdirect<GeodesicExact> failure\n";
 
   i = testarcdirect<GeodesicExact>(2); n += i;
-  if (i)
-    cout << "testarcdirect<GeodesicExact> failure\n";
+  if (i) cout << "testarcdirect<GeodesicExact> failure\n";
 
   if (n) {
     cout << n << " failure" << (n > 1 ? "s" : "") << "\n";
