@@ -3,7 +3,7 @@
 # GeodSolve.cgi
 # cgi script for geodesic calculations
 #
-# Copyright (c) Charles Karney (2011-2017) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 

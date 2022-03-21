@@ -208,7 +208,12 @@ int main() {
   i = testinverse<GeodesicExact>(2); n += i;
   if (i) cout << "testinverse<GeodesicExact> failure\n";
 
+#if defined(__ARM_ARCH) && __ARM_ARCH
+  // ARM needs more slop here.
+  i = testdirect<GeodesicExact>(4); n += i;
+#else
   i = testdirect<GeodesicExact>(2); n += i;
+#endif
   if (i) cout << "testdirect<GeodesicExact> failure\n";
 
   i = testarcdirect<GeodesicExact>(2); n += i;

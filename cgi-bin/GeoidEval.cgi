@@ -3,7 +3,7 @@
 # GeoidEval.cgi
 # cgi script for geoid height evaluations
 #
-# Copyright (c) Charles Karney (2011-2021) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 

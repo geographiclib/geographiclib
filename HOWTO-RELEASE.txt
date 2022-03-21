@@ -161,7 +161,7 @@ ${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675/_h_env_moved_geographi
 
 ${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675/_test_env... is for running tests
 
-Docker command to debug conda builds...
+Docker command to debug conda builds for Centos 7
 docker run -ti -v `pwd`:/tmp/source  quay.io/condaforge/linux-anvil-cos7-x86_64 bash
 ** Need to clean up conda stuff **
 

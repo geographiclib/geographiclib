@@ -2,8 +2,8 @@
  * \file Accumulator.cpp
  * \brief Implementation for GeographicLib::Accumulator class
  *
- * Copyright (c) Charles Karney (2013) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2013-2022) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 

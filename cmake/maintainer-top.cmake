@@ -10,6 +10,9 @@ add_custom_target (prep-source
   ( cd ${PROJECT_SOURCE_DIR} && git ls-tree -r HEAD --name-only ) |
   sort -u > ${DISTRIB_DIR}/files.2 &&
   comm -23 ${DISTRIB_DIR}/files.[12] | xargs -r -d '\\n' rm
+  # Remove now empty directories
+  COMMAND for p in 1 2 3 4 5\; do
+  find ${DISTRIB_NAME} -type d -empty -print0 | xargs -0r rmdir\; done
   COMMAND ${CMAKE_COMMAND} -E rm -f autogen.done)
 add_custom_command (OUTPUT autogen.done
   COMMAND cd ${DISTRIB_NAME} && ${PROJECT_SOURCE_DIR}/autogen.sh &&

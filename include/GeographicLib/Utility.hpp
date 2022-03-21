@@ -2,7 +2,7 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -152,13 +152,15 @@ namespace GeographicLib {
      * @exception std::bad_alloc if memory for the string can't be allocated.
      * @return the string representation.
      *
-     * If \e p &ge; 0, then the number fixed format is used with p bits of
-     * precision.  With p < 0, there is no manipulation of the format.
+     * If \e p &ge; 0, then the number fixed format is used with \e p bits of
+     * precision.  With \e p < 0, there is no manipulation of the format,
+     * except that <code>boolalpha</code> is used to represent bools as "true"
+     * and "false".
      **********************************************************************/
     template<typename T> static std::string str(T x, int p = -1) {
       std::ostringstream s;
       if (p >= 0) s << std::fixed << std::setprecision(p);
-      s << x; return s.str();
+      s << std::boolalpha << x; return s.str();
     }
 
     /**

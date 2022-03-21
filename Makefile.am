@@ -10,7 +10,7 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src man tools doc include cmake examples tests
 
 EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md \
-	CMakeLists.txt maxima doc wrapper
+	HOWTO-RELEASE.txt CMakeLists.txt maxima doc wrapper
 
 # Install the pkg-config file; the directory is set using
 # PKG_INSTALLDIR in configure.ac.
@@ -25,7 +25,9 @@ dist-hook:
 	find $(distdir)/wrapper -type f -name '*.o' -o -name '*.mex*' | \
 		xargs rm -f
 	find $(distdir) \
-		\( -name '.git*' -o -name Makefile -o -name '*~' -o -name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o -name '*.tmp' -o -name '*.bak' -o -name '*.BAK' \) | \
+		\( -name '.git*' -o -name Makefile -o -name '*~' -o \
+		-name '*#*' -o -name 'CMakeFiles' -o -name '*.log' -o \
+		-name '*.tmp' -o -name '*.bak' -o -name '*.BAK' \) | \
 		xargs rm -rf
 	echo $(VERSION) > $(distdir)/VERSION
 

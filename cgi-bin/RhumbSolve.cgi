@@ -3,7 +3,7 @@
 # RhumbSolve.cgi
 # cgi script for rhumb line calculations
 #
-# Copyright (c) Charles Karney (2014-2018) <charles@karney.com> and
+# Copyright (c) Charles Karney (2014-2022) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 

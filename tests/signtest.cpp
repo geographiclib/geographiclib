@@ -53,7 +53,7 @@ using namespace GeographicLib;
 typedef Math::real T;
 
 static int equiv(T x, T y) {
-  using std::isnan;
+  using std::isnan;             // Needed for Centos 7, ubuntu 14
   return ( (isnan(x) && isnan(y)) || (x == y && signbit(x) == signbit(y)) ) ?
     0 : 1;
 }
