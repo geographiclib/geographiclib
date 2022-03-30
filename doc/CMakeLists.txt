@@ -27,7 +27,7 @@ endforeach ()
 # tree) is done.
 
 file (MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html-stage)
-if (DOXYGEN_FOUND)
+if (BUILD_DOCUMENTATION)
 
   configure_file (GeographicLib.dox.in GeographicLib.dox @ONLY)
   configure_file (doxyfile.in doxyfile @ONLY)

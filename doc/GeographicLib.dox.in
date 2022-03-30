@@ -7757,7 +7757,6 @@ git repository for GeographicLib</a>.
    - Allow addition of points to NearestNeighbor objects (maybe by
      allowing larger buckets on construction or by just do additional
      splits as necessary).
-   - Check need for using std::nan for Centos 7 + Ubuntu 14.
    - Migrate function implementation from Utility.hpp to cpp (plus for
      other classes).
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
@@ -7774,8 +7773,9 @@ git repository for GeographicLib</a>.
    - Remove unused internal variable in RhumbLine.
    - EllipticFunction: specify restrictions on args.
    - Put GeodesicExactC4.cpp back into GeodesicExact.cpp.
-   - Fix bug where a geodesic with lat1 = 0 and lat2 = nan was treated
-     as equatorial.
+   - Fixed bug where in the solution of the inverse geodesic problem where
+     with lat1 = 0 and lat2 = nan was treated as equatorial.
+   - Fixed bug corner case with long double.
    - CMake changes: GEOGRAPHICLIB_LIB_TYPE -> BUILD_SHARED_LIBS +
      BUILD_BOTH_LIBS
    - Change refs to https://geographiclib.sourceforge.io/VERSION to

@@ -1,7 +1,7 @@
 #! /bin/sh
 #
 # tar.gz and zip distrib files copied to $DEVELSOURCE
-# html documentation rsync'ed to $WEBDIST/htdocs/C++/$VERSION$SUFFIX/
+# html documentation rsync'ed to $WEBDIST/htdocs/C++/$VERSION/
 #
 # Windows version ready to build in
 # $WINDOWSBUILD/GeographicLib-$VERSION/BUILD-vc10{,-x64}
@@ -73,7 +73,7 @@ echo Make a source package in $TEMP/gita/geographiclib/BUILD
 cd $TEMP/gita/geographiclib
 cmake -S . -B BUILD
 (cd BUILD && make dist)
-cp BUILD/distrib/GeographicLib-$DISTVERSION.{zip,tar.gz} $DEVELSOURCE/data-distrib/distrib-C++/
+# cp $TEMP/gita/geographiclib/BUILD/distrib/GeographicLib-$DISTVERSION.{zip,tar.gz} $DEVELSOURCE/data-distrib/distrib-C++/
 
 echo ==============================================================
 echo Unpack source package in $TEMP/rel bcx
@@ -162,7 +162,7 @@ cd $TEMP/gitr/geographiclib
 git checkout release
 git config user.email charles@karney.com
 find . -type f | grep -v '/\.git' | xargs rm
-tar xfpz $DEVELSOURCE/data-distrib/distrib-C++/GeographicLib-$DISTVERSION.tar.gz
+tar xfpz $TEMP/gita/geographiclib/BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz
 (
     cd GeographicLib-$VERSION
     find . -type f | while read f; do
@@ -188,7 +188,7 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
     make test
     make exampleprograms
     make install
-    rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$DISTVERSION/
+    # rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$VERSION/
 )
 
 echo ==============================================================

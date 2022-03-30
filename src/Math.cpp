@@ -97,8 +97,9 @@ namespace GeographicLib {
   template<typename T> T Math::AngRound(T x) {
     static const T z = T(1)/T(16);
     GEOGRAPHICLIB_VOLATILE T y = fabs(x);
+    GEOGRAPHICLIB_VOLATILE T w = z - y;
     // The compiler mustn't "simplify" z - (z - y) to y
-    y = y < z ? z - (z - y) : y;
+    y = w > 0 ? z - w : y;
     return copysign(y, x);
   }
 

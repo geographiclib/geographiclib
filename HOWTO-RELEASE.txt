@@ -7,25 +7,21 @@ the extra tools needed for processing the pod-style man pages; in
 addition, the release package has a configure script (created by
 autogen.sh) for autoconf-style builds.
 
-Supported optins
+CMake options and variables: see CMakeLists for information
 
-BUILD_SHARED_LIBS "Build as a shared library" ON
-BUILD_BOTH_LIBS "Build both shared and static libraries" OFF
-BUILD_DOCUMENTATION "Use doxygen to create the documentation" OFF
-
-USE_BOOST_FOR_EXAMPLES "Look for Boost library when compiling examples" OFF
-
-CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF (ON in
-non-RELEASE mode)
-
-BUILD_MANPAGES  "Convert pod files to manpages" OFF (ON in non-release mode)
-GEOGRAPHICLIB_DATA  "Location for data for GeographicLib"
-/usr/local/share/GeographicLib
-C:/ProgramData/GeographicLib
-
-GEOGRAPHICLIB_PRECISION
-"Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable"
-2
+BUILD_SHARED_LIBS ON
+BUILD_BOTH_LIBS OFF
+BUILD_DOCUMENTATION OFF
+USE_BOOST_FOR_EXAMPLES OFF
+CONVERT_WARNINGS_TO_ERRORS OFF (ON in non-RELEASE mode)
+BUILD_MANPAGES OFF (ON in non-release mode)
+GEOGRAPHICLIB_DATA /usr/local/share/GeographicLib or C:/ProgramData/GeographicLib
+GEOGRAPHICLIB_PRECISION 2
+  1 = float
+  2 = double
+  3 = extended
+  4 = quadruple (boost float128)
+  5 = variable (mpreal)
 
 Where things get installed.  Use an empty string to disable that installation
 
@@ -48,19 +44,33 @@ PACKAGE_DEBUG_LIBS "Include debug versions of library in binary package" OFF
 
 CMake targets
 
-sanitize hygiene check on source files (trailing blanks, etc)
+release mode
+  all test
+  sanitize hygiene check on source files (trailing blanks, etc)
+  exampleprograms compile example programs (this is separate cmake config)
+  package make binary package for Windows
+  package_source make source package
 
-exampleprograms compile example programs
+maintainer
+  doc (if BUILD_DOCUMENTATION and doxygen found)
+  prep-source prep source distribute prior to making release package
+  distrib-man create extra versions of man pages
+  distrib-all distrib-man + run autogen for autoconf builds
+  dist Package release into a tar.gz + zip files
+  stage-doc copy documenation to staging area
+  stage-dist copy source distribution to staging area
+  deploy-doc deploy documentation from staging area to sourceforge
+  deploy-dist deploy source distributions from staging area to sourceforge
+  develprograms build experimental stuff
 
-package make binary package for Windows
-distrib-all Create additional files for release
-dist  Package release into a tar.gz + zip files
+Version update checks
 
-stage-doc copy documenation to staging area
-stage-dist copy source distribution to staging area
+Add PROJECT_VERSION_SUFFIX = "-alpha" to
+  tar package of source
 
-deploy-doc deploy documentation from staging area to sourceforge
-deploy-dist deploy source distributions from staging area to sourceforge
+Do not add PROJECT_VERSION_SUFFIX to
+  unpack directory for tar package
+  documentation
 
 vcpkg
 
@@ -164,6 +174,36 @@ ${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675/_test_env... is for ru
 Docker command to debug conda builds for Centos 7
 docker run -ti -v `pwd`:/tmp/source  quay.io/condaforge/linux-anvil-cos7-x86_64 bash
 ** Need to clean up conda stuff **
+
+binaries for cgi scripts
+ssh -t karney,geographiclib@shell.sourceforge.net create
+# git: /home/git/p/geographiclib/code.git
+# web: /home/project-web/geographiclib
+# files: /home/frs/project/geographiclib
+run compile.sh
+
+VERSION=2.0
+FULLVERSION=$VERSION-alpha
+rm -rf /tmp/GeographicLib-$VERSION /tmp/geog-$VERSION
+tar xfpzC /home/frs/project/geographiclib/distrib-C++/GeographicLib-$FULLVERSION.tar.gz /tmp
+cd /tmp/GeographicLib-$VERSION
+# N.B. $HOME/cmake/bin is in PATH for cmake
+cmake \
+    -D CMAKE_INSTALL_PREFIX=/tmp/geog-$VERSION \
+    -D BUILD_SHARED_LIBS=OFF \
+    -D GEOGRAPHICLIB_PRECISION=3 \
+    -D EXAMPLEDIR= -B BUILD -S .
+cd BUILD
+make
+make install
+mkdir -p /home/project-web/geographiclib/bin-$VERSION
+cd /tmp/geog-$VERSION/bin
+install CartConvert ConicProj GeodesicProj GeoConvert GeodSolve GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj /home/project-web/geographiclib/bin-$VERSION/
+
+When ready for switch over, do
+cd /home/project-web/geographiclib
+rm bin
+ln -s bin-$VERSION bin
 
 Fedora package
 fedora33

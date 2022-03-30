@@ -1,7 +1,7 @@
 # Look for GeographicLib
 #
 # Set
-#  GeographicLib_FOUND = GEOGRAPHICLIB_FOUND = TRUE
+#  GeographicLib_FOUND = TRUE
 #  GeographicLib_INCLUDE_DIRS = /usr/local/include
 #  GeographicLib_LIBRARIES = /usr/local/lib/libGeographicLib.so
 #  GeographicLib_LIBRARY_DIRS = /usr/local/lib
@@ -32,6 +32,7 @@ if (GeographicLib_LIBRARIES)
   unset (_ROOT_DIR)
 endif ()
 
+# This sets GeographicLib_FOUND (and GEOGRAPHICLIB_FOUND, deprecated) to TRUE
 include (FindPackageHandleStandardArgs)
 find_package_handle_standard_args (GeographicLib DEFAULT_MSG
   GeographicLib_LIBRARY_DIRS GeographicLib_LIBRARIES

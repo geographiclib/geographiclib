@@ -226,7 +226,7 @@ if (NOT (GEOGRAPHICLIB_PRECISION EQUAL 4 AND Boost_VERSION LESS 106000))
   add_test (NAME GeodSolve14 COMMAND GeodSolve -i --input-string "0 0 1 nan")
   set_tests_properties (GeodSolve14 PROPERTIES PASS_REGULAR_EXPRESSION
     "nan nan nan")
-endif()
+endif ()
 
 # Initial implementation of Math::eatanhe was wrong for e^2 < 0.  This
 # checks that this is fixed.
@@ -542,6 +542,19 @@ add_test (NAME GeodSolve95 COMMAND GeodSolve
   -i --input-string "0 0 nan 90" -E)
 set_tests_properties (GeodSolve94 GeodSolve95 PROPERTIES PASS_REGULAR_EXPRESSION
   "nan nan nan")
+
+# Failure with long doubles found with test case from Nowak + Nowak Da
+# Costa (2022).  Problem was using somg12 > 1 as a test that it needed
+# to be set when roundoff could result in somg12 slightly bigger that 1.
+# Found + fixed 2022-03-30.
+add_test (NAME GeodSolve96 COMMAND GeodSolve
+  -i -f -e 6378137 1/298.257222101
+  --input-string "0 0 60.0832522871723 89.8492185074635")
+add_test (NAME GeodSolve97 COMMAND GeodSolve
+  -i -f -e 6378137 1/298.257222101
+  --input-string "0 0 60.0832522871723 89.8492185074635")
+set_tests_properties (GeodSolve96 GeodSolve97 PROPERTIES PASS_REGULAR_EXPRESSION
+  ".* 42426932221845")
 
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter

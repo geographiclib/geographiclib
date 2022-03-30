@@ -3,7 +3,7 @@
 # (1) With "add_subdirectory (examples)" from GeographicLib's top-level
 # CMakeLists.txt.  This mode of invocation is flagged by the variable
 #
-#   CALLED_FROM_ADD_SUBDIRECTORY
+#   CALLED_FROM_TOPLEVEL
 #
 # In this case, the only action taken is to install the examples and
 # this CMakeLists.txt in ${EXAMPLEDIR}.
@@ -69,7 +69,7 @@ set (EXAMPLES0
 set (EXAMPLES1 GeoidToGTX.cpp make-egmcof.cpp JacobiConformal.cpp)
 set (EXAMPLEHEADERS JacobiConformal.hpp)
 
-if (CALLED_FROM_ADD_SUBDIRECTORY)
+if (CALLED_FROM_TOPLEVEL)
   if (EXAMPLEDIR)
     install (FILES CMakeLists.txt ${EXAMPLES0} ${EXAMPLES1} ${EXAMPLEHEADERS}
       DESTINATION ${EXAMPLEDIR})

@@ -9,6 +9,7 @@ if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
 set (PROJECT_VERSION_SUFFIX "-alpha")
+set (PROJECT_FULLVERSION ${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX})
 
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
 
@@ -43,7 +44,7 @@ else ()
 endif ()
 
 set (PACKAGE_DIR "${PROJECT_NAME}-${PROJECT_VERSION}")
-set (PACKAGE_NAME "${PACKAGE_DIR}${PROJECT_VERSION_SUFFIX}")
+set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
@@ -403,6 +404,10 @@ if (BUILD_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   # Version 1.8.7 or later needed for &hellip;
   find_package (Doxygen 1.8.7)
+  if (NOT DOXYGEN_FOUND)
+    message (WARNING "Doxygen not found, not building the documentation")
+    set (BUILD_DOCUMENTATION OFF)
+  endif ()
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,
@@ -414,14 +419,14 @@ endif ()
 # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
 # file and there's no simple equivalent for MacOSX.  MAINTAINER mode
 # also supported (a) running autogen.sh to configure the autoconf
-# builds, and (b) running git ls-tree to run some sanity checks.
+# builds, and (b) running git ls-files to run some sanity checks.
 # MAINTAINTER mode is not set in RELEASE mode.
 if (NOT RELEASE AND BUILD_MANPAGES AND NOT WIN32 AND NOT APPLE)
   find_program (POD2MAN pod2man)
   find_program (POD2HTML pod2html)
   find_program (COL col)
 endif ()
-if (POD2MAN AND POD2HTML AND COL AND EXISTS ${PROJECT_SOURCE_DIR}/.git)
+if (POD2MAN AND POD2HTML AND COL AND IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git)
   set (MAINTAINER ON)
   find_program (RSYNC rsync)
 else ()
@@ -454,7 +459,7 @@ add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
-set (CALLED_FROM_ADD_SUBDIRECTORY ON)
+set (CALLED_FROM_TOPLEVEL ON)
 add_subdirectory (examples)
 add_subdirectory (cmake)
 enable_testing ()

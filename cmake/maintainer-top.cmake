@@ -7,7 +7,7 @@ add_custom_target (prep-source
   _CPack_Packages/Linux-Source/TGZ/${PACKAGE_DIR} ${DISTRIB_NAME}
   COMMAND cd ${DISTRIB_NAME} &&
   find * -type f | sort -u > ${DISTRIB_DIR}/files.1 &&
-  ( cd ${PROJECT_SOURCE_DIR} && git ls-tree -r HEAD --name-only ) |
+  ( cd ${PROJECT_SOURCE_DIR} && git ls-files ) |
   sort -u > ${DISTRIB_DIR}/files.2 &&
   comm -23 ${DISTRIB_DIR}/files.[12] | xargs -r -d '\\n' rm
   # Remove now empty directories
@@ -34,60 +34,63 @@ add_custom_target (dist
   rm -f ${DISTRIB_DIR}/${PACKAGE_NAME}.zip &&
   cd ${DISTRIB_DIR} &&
   find ${PACKAGE_DIR} -type f | zip -q ${PACKAGE_NAME}.zip -@
-  COMMENT
-  "created distrib/${PACKAGE_NAME}.{tar.gz,zip}")
+  COMMENT "created distrib/${PACKAGE_NAME}.{tar.gz,zip}")
 add_dependencies (dist distrib-all)
 
 if (RSYNC)
   set (USER karney)
-  set (DATAROOT $ENV{HOME}/web/geographiclib-files/distrib-C++)
-  set (DOCROOT $ENV{HOME}/web/geographiclib-web/htdocs)
+  set (DATATOP $ENV{HOME}/web/geographiclib-files)
+  set (DATAROOT ${DATATOP}/distrib-C++)
+  set (DOCROOT $ENV{HOME}/web/geographiclib-web/htdocs/C++)
   add_custom_target (stage-dist
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${DISTRIB_DIR}/${PACKAGE_NAME}.tar.gz
     ${DISTRIB_DIR}/${PACKAGE_NAME}.zip
     ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/
-    COMMAND ${RSYNC} --delete -av
-    ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/ ${DATAROOT}/)
-  add_dependencies(stage-dist dist)
+    COMMAND
+    ${RSYNC} --delete -av --exclude '*~'
+    ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/ ${DATAROOT}/ &&
+    ${RSYNC} --delete -av
+    ${PROJECT_SOURCE_DIR}/data-distrib/00README.md ${DATATOP}/)
+  add_dependencies (stage-dist dist)
 
-  if (BUILD_DOCUMENTATION AND DOXYGEN_FOUND)
+  if (BUILD_DOCUMENTATION)
     add_custom_target (stage-doc
-      COMMAND ${RSYNC} --delete -av
-      doc/html/ ${DOCROOT}/C++/${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX}/)
-    add_dependencies(stage-doc doc)
+      COMMAND ${RSYNC} --delete -a
+      doc/html/ ${DOCROOT}/${PROJECT_VERSION}/)
+    add_dependencies (stage-doc doc)
   endif ()
 
   add_custom_target (deploy-dist
-    COMMAND ${RSYNC} --delete -av ${DATAROOT}
+    COMMAND ${RSYNC} --delete -av ${DATAROOT} ${DATATOP}/00README.md
     ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib/)
   add_custom_target (deploy-doc
     COMMAND ${RSYNC} --delete -av -e ssh
-    ${DOCROOT}/C++ ${USER},geographiclib@web.sourceforge.net:./htdocs/)
+    ${DOCROOT} ${USER},geographiclib@web.sourceforge.net:./htdocs/)
 endif ()
 
 if (NOT WIN32)
   set (BINARY_EXT "m4|gif|pdf|png|kmz")
   add_custom_target (checktrailingspace
-    COMMAND git ls-tree -r HEAD --name-only |
+    COMMAND git ls-files |
     egrep -v '\\.\(${BINARY_EXT}\)$$' |
     xargs grep '[ \t]$$' || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for trailing spaces")
   add_custom_target (checktabs
-    COMMAND git ls-tree -r HEAD --name-only |
+    COMMAND git ls-files |
     egrep -v '\([Mm]akefile|\\.\(${BINARY_EXT}\)$$\)' |
     xargs grep -l '\t' || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for tabs")
   add_custom_target (checkblanklines
-    COMMAND git ls-tree -r HEAD --name-only |
+    COMMAND git ls-files |
     egrep -v '\\.\(${BINARY_EXT}\)$$' |
     while read f\; do tr 'X\\n' 'YX' < $$f |
     egrep '\(^X|XXX|XX$$|[^X]$$\)' > /dev/null && echo $$f\; done || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for extra blank lines")
 
-  add_custom_target(sanitize)
-  add_dependencies(sanitize checktrailingspace checktabs checkblanklines)
+  add_custom_target (sanitize)
+  add_dependencies (sanitize checktrailingspace checktabs checkblanklines)
 endif ()
