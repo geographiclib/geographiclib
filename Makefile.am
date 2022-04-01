@@ -9,7 +9,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = src man tools doc include cmake examples tests
 
-EXTRA_DIST = AUTHORS 00README.txt LICENSE.txt NEWS INSTALL README.md \
+EXTRA_DIST = AUTHORS LICENSE.txt NEWS README.md \
 	HOWTO-RELEASE.txt CMakeLists.txt maxima doc wrapper
 
 # Install the pkg-config file; the directory is set using

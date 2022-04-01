@@ -7769,6 +7769,7 @@ git repository for GeographicLib</a>.
    - Ellipsoid::MinorRadius() -> Ellipsoid::PolarRadius().
    - Remove deprecated functions: XXX::MajorRadius, Utility::val, and
      placeholders (Math::cbrt, etc.) for C++11 math functions.
+   - Can specify the comment character in Utility::ParseLine.
    - Rename various internal identifiers to avoid reserved names.
    - Remove unused internal variable in RhumbLine.
    - EllipticFunction: specify restrictions on args.

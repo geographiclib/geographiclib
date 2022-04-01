@@ -169,12 +169,12 @@ namespace GeographicLib {
 
   bool Utility::ParseLine(const std::string& line,
                           std::string& key, std::string& value,
-                          char delim) {
+                          char equals, char comment) {
     key.clear(); value.clear();
-    string::size_type n = line.find('#');
+    string::size_type n = comment ? line.find(comment) : line.size();
     string linea = trim(line.substr(0, n));
     if (linea.empty()) return false;
-    n = delim ? linea.find(delim) : linea.find_first_of(" \t\n\v\f\r");      //
+    n = equals ? linea.find(equals) : linea.find_first_of(" \t\n\v\f\r");
     key = trim(linea.substr(0, n));
     if (key.empty()) return false;
     if (n != string::npos) value = trim(linea.substr(n + 1));

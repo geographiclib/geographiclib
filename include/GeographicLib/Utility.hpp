@@ -155,7 +155,8 @@ namespace GeographicLib {
      * If \e p &ge; 0, then the number fixed format is used with \e p bits of
      * precision.  With \e p < 0, there is no manipulation of the format,
      * except that <code>boolalpha</code> is used to represent bools as "true"
-     * and "false".
+     * and "false".  There is an overload of this function if T is Math::real;
+     * this deals with inf and nan.
      **********************************************************************/
     template<typename T> static std::string str(T x, int p = -1) {
       std::ostringstream s;
@@ -444,22 +445,24 @@ namespace GeographicLib {
      * @param[in] line the input line.
      * @param[out] key the KEY.
      * @param[out] value the VALUE.
-     * @param[in] delim delimiter to separate KEY and VALUE, if NULL (the
-     *   default) use first space character.
+     * @param[in] equals character representing "equals" to separate KEY and
+     *   VALUE, if NULL (the default) use first space character.
+     * @param[in] comment character to use as the comment character; if
+     *   non-NULL everything after this character is discarded; default is '#'.
      * @exception std::bad_alloc if memory for the internal strings can't be
      *   allocated.
      * @return whether a key was found.
      *
-     * A "#" character and everything after it are discarded and the result
-     * trimmed of leading and trailing white space.  Use the delimiter
-     * character (or, if it is NULL, the first white space) to separate \e key
-     * and \e value.  \e key and \e value are trimmed of leading and trailing
-     * white space.  If \e key is empty, then \e value is set to "" and false
-     * is returned.
+     * The \e comment character (default is '#') and everything after it are
+     * discarded and the result trimmed of leading and trailing white space.
+     * Use the \e equals delimiter character (or, if it is NULL -- the default,
+     * the first white space) to separate \e key and \e value.  \e key and \e
+     * value are trimmed of leading and trailing white space.  If \e key is
+     * empty, then \e value is set to "" and false is returned.
      **********************************************************************/
     static bool ParseLine(const std::string& line,
                           std::string& key, std::string& value,
-                          char delim = '\0');
+                          char equals = '\0', char comment = '#');
 
     /**
      * Set the binary precision of a real number.
@@ -486,12 +489,27 @@ namespace GeographicLib {
 
   /**
    * The specialization of Utility::val<T>() for strings.
+   *
+   * @param[in] s the string to be converted.
+   * @exception GeographicErr is \e s is not readable as a T.
+   * @return the string trimmed of its whitespace.
    **********************************************************************/
   template<> inline std::string Utility::val<std::string>(const std::string& s)
   { return trim(s); }
 
   /**
    * The specialization of Utility::val<T>() for bools.
+   *
+   * @param[in] s the string to be converted.
+   * @exception GeographicErr is \e s is not readable as a T.
+   * @return boolean value.
+   *
+   * \e s should either be string a representing 0 (false)
+   * or 1 (true) or one of the strings
+   * - "false", "f", "nil", "no", "n", "off", or "" meaning false,
+   * - "true", "t", "yes", "y", or "on" meaning true;
+   * .
+   * case is ignored.
    **********************************************************************/
   template<> inline bool Utility::val<bool>(const std::string& s) {
     std::string t(trim(s));

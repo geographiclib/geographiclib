@@ -161,14 +161,50 @@ echo Set up release branch in $TEMP/gitr/geographiclib
 cd $TEMP/gitr/geographiclib
 git checkout release
 git config user.email charles@karney.com
-find . -type f | grep -v '/\.git' | xargs rm
-tar xfpz $TEMP/gita/geographiclib/BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz
+git ls-files | sort > ../files.old
 (
-    cd GeographicLib-$VERSION
-    find . -type f | while read f; do
-        dest=../`dirname $f`
-        test -d $dest || mkdir -p $dest
-        mv $f $dest/
+    cd $TEMP/gitb/geographiclib
+    git ls-files | sort
+) > ../files.current
+cut -f3- -d/ $TEMP/files.x | sort > ../files.new
+(
+    cd ..
+    comm -23 files.old files.new | grep -v gitattributes > files.delete
+    comm -23 files.new files.current > files.relonly
+    comm -12 files.new files.current > files.main
+    comm -13 files.delete files.new > files.add
+    comm -13 files.old files.new > files.add
+    comm -12 files.old files.new > files.common
+)
+
+(
+    S=$TEMP/relx/GeographicLib-$VERSION
+    C=$TEMP/gitb/geographiclib
+    xargs git rm -f < ../files.delete
+    cat ../files.main ../files.relonly |
+        sed -e 's%[^/][^/]*$%%' -e 's%/$%%' | sort -u | grep -v '^$' |
+        while read d; do
+            test -d $d || mkdir -p $d
+        done
+    while read f; do
+        if cmp $S/$f $f >& /dev/null; then :
+        else
+            cp -p $S/$f $f
+            git add $f
+        fi
+    done < ../files.relonly
+    while read f; do
+        test -d `dirname $f` || mkdir `dirname $f`
+        git checkout $BRANCH $f
+        if cmp $S/$f $f >& /dev/null; then :
+        else
+            cp -p $S/$f $f
+            git add $f
+        fi
+    done < ../files.main
+    git checkout $BRANCH .gitattributes
+    for i in 1 2 3 4 5; do
+        find -type d -empty | xargs -r rmdir
     done
 )
 rm -rf GeographicLib-$VERSION

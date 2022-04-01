@@ -72,6 +72,13 @@ Do not add PROJECT_VERSION_SUFFIX to
   unpack directory for tar package
   documentation
 
+Debian maintainers
+Francesco Paolo Lovergine (QA Page)
+Bas Couwenberg (QA Page)
+
+Fedora maintainer
+rmattes, smani
+
 vcpkg
 
     git
