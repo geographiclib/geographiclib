@@ -2,7 +2,7 @@
  * \file PolarStereographic.hpp
  * \brief Header for GeographicLib::PolarStereographic class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -139,12 +139,6 @@ namespace GeographicLib {
      * PolarStereographic::SetScale.
      **********************************************************************/
     Math::real CentralScale() const { return _k0; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

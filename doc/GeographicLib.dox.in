@@ -12,11 +12,11 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2021-06-22
+\date 2022-mm-dd
 
 The documentation for other versions is available at
-<tt>https://geographiclib.sourceforge.io/m.nn/</tt> for versions numbers
-<tt>m.nn</tt> &ge; 1.0.
+<tt>https://geographiclib.sourceforge.io/C++/m.n/</tt> for version numbers
+<tt>m.n</tt> &ge; 1.0.
 
 \section abstract Abstract
 
@@ -74,8 +74,8 @@ For more information on GeographicLib, see
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2021-06-22),
-  https://geographiclib.sourceforge.io/@PROJECT_VERSION@
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2022-mm-dd),
+  https://geographiclib.sourceforge.io/C++/@PROJECT_VERSION@
 
 \section contents Contents
  - \ref intro
@@ -664,10 +664,9 @@ The following Fedora package is also useful for syntax checking python
 .
 Installing the python package requires the following \verbatim
   python3 -m pip install --user --upgrade setuptools wheel twine \endverbatim
-mpreal.h, version 3.6.8 or later, needs to be downloaded from
+mpreal.h, version 3.6.9 or later, needs to be downloaded from
 https://github.com/advanpix/mpreal and installed in the
-<code>include/</code> directory.  (Version 3.6.8 requires also the fixes
-given in pull requests #8 and #10.)  For all the tests to be run,
+<code>include/</code> directory.  For all the tests to be run,
 the following datasets need to be installed
 - geoid models: egm96-5
 - magnetic models: wmm2010 emm2015
@@ -835,32 +834,31 @@ In order to use GeographicLib from C++ code, you will need to
     This is only needed for Windows systems when both shared and static
     libraries have been installed.  (If you configure your package with
     cmake, this definition is added automatically.)
-  - Tell the linker the name, Geographic, and location of the
+  - Tell the linker the name, GeographicLib, and location of the
     library.  Using g++ as the linker, you would use \verbatim
-    g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographic
+    g++ -g -o testprogram testprogram.o -L/usr/local/lib -lGeographicLib
     \endverbatim
     With Visual Studio, you supply this information in the IDE via,
     e.g., \verbatim
-    Linker -> Input -> Additional Dependencies = Geographic-i.lib (for shared library)
-    Linker -> Input -> Additional Dependencies = Geographic.lib (for static library)
-    Linker -> General -> Additional Library Directories = C:\pkg-vc14-x64\Geographic\lib
+    Linker -> Input -> Additional Dependencies = GeographicLib-i.lib (for shared library)
+    Linker -> Input -> Additional Dependencies = GeographicLib.lib (for static library)
+    Linker -> General -> Additional Library Directories = C:\pkg-vc14-x64\GeographicLib\lib
     \endverbatim
-    Note that the library name is <b>Geographic</b> and not
-    GeographicLib.  For the Debug version of your program on Windows
-    add "_d" to the library, e.g., Geographic_d-i.lib or
-    Geographic_d.lib.
+    For the Debug version of your program on Windows
+    add "_d" to the library, e.g., GeographicLib_d-i.lib or
+    GeographicLib_d.lib.
   - Tell the runtime environment where to find the shared library
-    (assuming you compiled %Geographic as a shared library).  With g++,
+    (assuming you compiled %GeographicLib as a shared library).  With g++,
     this is accomplished by modifying the link line above to read \verbatim
     g++ -g -o testprogram testprogram.o -Wl,-rpath=/usr/local/lib \
-      -L/usr/local/lib -lGeographic
+      -L/usr/local/lib -lGeographicLib
     \endverbatim
     (There are two other ways to specify the location of shared libraries
     at runtime: (1) define the environment variable
     <code>LD_LIBRARY_PATH</code> to be a colon-separated list of
     directories to search; (2) as <b>root</b>, specify /usr/local/lib as a
     directory searched by ldconfig(8).)  On Windows, you need to ensure
-    that Geographic.dll or Geographic_d.dll is in the same directory as
+    that GeographicLib.dll or GeographicLib_d.dll is in the same directory as
     your executable or else include the directory containing the dll in
     your <code>PATH</code>.
   - You can also use the pkg-config utility to specify compile and link
@@ -1428,7 +1426,7 @@ Heiman, which exposes all of the functionality of GeographicLib to the
 \section maxima Maxima routines
 
 Maxima is a free computer algebra system which can be downloaded from
-http://maxima.sourceforge.net.  Maxima was used to generate the series used by
+https://maxima.sourceforge.io.  Maxima was used to generate the series used by
 TransverseMercator (<a href="tmseries.mac"> tmseries.mac</a>), Geodesic
 (<a href="geod.mac"> geod.mac</a>), Rhumb (<a href="rhumbarea.mac">
 rhumbarea.mac</a>), \ref gearea (<a href="gearea.mac"> gearea.mac</a>),
@@ -1985,7 +1983,7 @@ This is about 11 MB (compressed).  This test set consists of a set of
 500000 geographic coordinates together with the corresponding geoid
 heights according to various earth gravity models.
 
-Each line of the test set gives 6 space delimited numbers
+Each line of the test set gives 5 space delimited numbers
  - latitude (degrees, exact)
  - longitude (degrees, exact)
  - EGM84 height (meters, accurate to 1 &mu;m)
@@ -2306,7 +2304,7 @@ As an illustration, here is egm2008.egm:
 EGMF-1
 # An Earth Gravity Model (Format 1) file.  For documentation on the
 # format of this file see
-# https://geographiclib.sourceforge.io/html/gravity.html#gravityformat
+# https://geographiclib.sourceforge.io/C++/doc/gravity.html#gravityformat
 Name            egm2008
 Publisher       National Geospatial Intelligence Agency
 Description     Earth Gravity Model 2008
@@ -2735,7 +2733,7 @@ C_m-A_m &= \frac {ME^2}3.
 \end{align}
 \f]
 This mass distribution is the same as that produced by projecting a
-uniform spheric shell of mass \f$ M \f$ and radius \f$ E \f$ onto the
+uniform spherical shell of mass \f$ M \f$ and radius \f$ E \f$ onto the
 equatorial plane.
 
 In the prolate case, \f$ U_m \f$ is generated by a massive rod at \f$ R
@@ -2750,7 +2748,7 @@ C_m-A_m &= -\frac {ME'^2}3.
 \end{align}
 \f]
 This mass distribution is the same as that produced by projecting a
-uniform spheric shell of mass \f$ M \f$ and radius \f$ E' \f$ onto the
+uniform spherical shell of mass \f$ M \f$ and radius \f$ E' \f$ onto the
 polar axis.
 
 Similarly, \f$ U_q \f$ is generated in the oblate case by
@@ -2821,8 +2819,8 @@ where
 \gamma_{ma} &= \frac{GM}{ab},\qquad \gamma_{mb} = \frac{GM}{a^2},\\
 \gamma_{qa} &= -\frac{\omega^2 a}6 \frac{H(E/b)}{Q(E/b)}
              = -\frac{\omega^2 a}6 \frac{H'(E'/a)}{Q'(E'/a)},\\
-\gamma_{qb} &= -\frac{\omega^2 b}3 \frac{H(E/b)}{Q(E/b)}
-             = -\frac{\omega^2 b}3 \frac{H'(E'/a)}{Q'(E'/a)},\\
+\gamma_{qb} &= \frac{\omega^2 b}3 \frac{H(E/b)}{Q(E/b)}
+             = \frac{\omega^2 b}3 \frac{H'(E'/a)}{Q'(E'/a)},\\
 \gamma_{ra} &= -\omega^2 a,\qquad \gamma_{rb} = 0.
 \end{align}
 \f]
@@ -2866,7 +2864,7 @@ hydrostatic equilibrium would not result in a prolate ellipsoid.)
 However, it is much easier to measure the dynamical form factor
 \f$ J_2 \f$ (from the motion of artificial satellites) than the
 flattening \f$ f \f$.  (Note too that \f$ GM \f$ is typically
-measured from from satellite or astronomical observations and so it
+measured from satellite or astronomical observations and so it
 includes the mass of the atmosphere.)
 
 So a question for the software developer is: given values of \f$ M > 0\f$,
@@ -3287,7 +3285,7 @@ As an illustration, here is igrf11.wmm:
 WMMF-1
 # A World Magnetic Model (Format 1) file.  For documentation on the
 # format of this file see
-# https://geographiclib.sourceforge.io/html/magnetic.html#magneticformat
+# https://geographiclib.sourceforge.io/C++/doc/magnetic.html#magneticformat
 Name            igrf11
 Description     International Geomagnetic Reference Field 11th Generation
 URL             https://ngdc.noaa.gov/IAGA/vmod/igrf.html
@@ -3377,10 +3375,10 @@ References:
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
    https://geographiclib.sourceforge.io/geodesic-papers/biblio.html
  - The wikipedia page,
@@ -4333,8 +4331,8 @@ the last condition, the triangle inequality).  Typically the cost of
 constructing a VP tree of \e N points is \e N log \e N, while the cost
 of a query is log \e N.  Thus a VP tree should be used in situations
 where \e N is large and at least log \e N queries are to be made.  The
-condition, \e N is large, means that \f$ N \gg 2^D \f$, where \e D is
-the dimensionality of the space.
+condition, \e N is large, should be taken to mean that \f$ N \gg 2^D
+\f$, where \e D is the dimensionality of the space.
 
 - This implementation includes Yianilos' upper and lower bounds for the
   inside and outside sets.  This helps limit the number of searches
@@ -4460,7 +4458,7 @@ Go to
       J. Geodesy 87(1), 43--55 (2013);
       DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+      addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
       geod-addenda.html</a>.
 
 \section triaxial-coords Triaxial coordinate systems
@@ -4970,7 +4968,7 @@ of ellipsoid.  He covers this in greater detail in
 <i>Vorlesungen &uuml;ber Dynamik</i>, &sect;28</a>, which is now
 available in an <a href="https://www.worldcat.org/oclc/440645889">
 English translation: Lectures on Dynamics</a>
-(<a href="https://geographiclib.sourceforge.io/jacobi-errata.html">
+(<a href="https://geographiclib.sourceforge.io/misc/jacobi-errata.html">
 errata</a>).
 
 \section jacobi-conformal Conformal projection
@@ -5194,7 +5192,7 @@ of the elliptic integral of the first kind, https://dlmf.nist.gov/19.2.E4
 \begin{align}
 x &= F(\omega, \cos\nu), \\
 y &= F(\beta, \sin\nu), \\
-k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}},
+k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}}.
 \end{align}
 \f]
 Obtaining the limit of a sphere via an oblate (resp. prolate) ellipsoid
@@ -5343,22 +5341,22 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/geod.html"> geod.html</a>.
  - L. Kr&uuml;ger,
    <a href="https://doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
@@ -5901,10 +5899,10 @@ References:
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
-   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    geod-addenda.html</a>.
  - A. Pallikaris & G. Latsas,
-   <a href="https://doi.org/1017/S0373463309005323">
+   <a href="https://doi.org/10.1017/S0373463309005323">
    New algorithm for great elliptic sailing (GES)</a>,
    J. Navigation 62(3), 493--507 (2009).
  - A. Pallikaris, L. Tsoulos, & D. Paradissis,
@@ -6257,18 +6255,18 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
  .
 The algorithm for TransverseMercator is based on
 Kr&uuml;ger (1912); that for TransverseMercatorExact is
 based on Lee (1976).
 
-See <a href="https://geographiclib.sourceforge.io/tm-grid.kmz"
+See <a href="https://geographiclib.sourceforge.io/misc/tm-grid.kmz"
 type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
 illustration of the exact transverse Mercator grid in Google Earth.
 
@@ -6502,18 +6500,18 @@ This section gives color versions of the figures in
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
 
 \b NOTE:
 The numbering of the figures matches that in the paper cited above.  The
 figures in this section are relatively small in order to allow them to
 be displayed quickly.  Vector versions of these figures are available in
-<a href="https://geographiclib.sourceforge.io/tm-figs.pdf"
+<a href="https://geographiclib.sourceforge.io/misc/tm-figs.pdf"
 type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
 figures to show the details more clearly.
 
@@ -7755,7 +7753,41 @@ git repository for GeographicLib</a>.
      - Maybe segregate more tasks into a MAINTAINER mode.
    - Add Math routine for Clenshaw summation; may AuxiliaryLatitude
      class for conversions via the series?
+   - Document restrictions on ranges of arguments to elliptic integrals.
+   - Allow addition of points to NearestNeighbor objects (maybe by
+     allowing larger buckets on construction or by just do additional
+     splits as necessary).
+   - Migrate function implementation from Utility.hpp to cpp (plus for
+     other classes).
+   - Check whether boost/quadmath workarounds can be removed with boost 1.79.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
+   (released 2022-mm-dd)
+   - Major reorganization.
+   - Use fmin, fmax, fabs.
+   - Ellipsoid::MinorRadius() -> Ellipsoid::PolarRadius().
+   - Remove deprecated functions: XXX::MajorRadius, Utility::val, and
+     placeholders (Math::cbrt, etc.) for C++11 math functions.
+   - Can specify the comment character in Utility::ParseLine.
+   - Rename various internal identifiers to avoid reserved names.
+   - Remove unused internal variable in RhumbLine.
+   - EllipticFunction: specify restrictions on args.
+   - Put GeodesicExactC4.cpp back into GeodesicExact.cpp.
+   - Fixed bug where in the solution of the inverse geodesic problem where
+     with lat1 = 0 and lat2 = nan was treated as equatorial.
+   - Fixed bug corner case with long double.
+   - CMake changes: GEOGRAPHICLIB_LIB_TYPE -> BUILD_SHARED_LIBS +
+     BUILD_BOTH_LIBS
+   - Change refs to https://geographiclib.sourceforge.io/VERSION to
+     https://geographiclib.sourceforge.io/C++/VERSION.  TODO: probably
+     more to do.
+   - Use variable for pod2html etc in makeusage.sh.
+   - Better treatment of &plusmn;0&deg; and &plusmn;180&deg;.
+   - Library file now called libGeographicLib.so, etc., instead of
+     libGeographic.so.
+   - Variable names for installation directories.
+   - Remove legacy cmake config support (non-namespace).
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-06-22)
@@ -8742,8 +8774,6 @@ git repository for GeographicLib</a>.
    - Improve efficiency of MGRS::Forward by avoiding the
      calculation of the latitude if possible (adapting an idea of Craig
      Rollins).
-   - Fixes to the way the MATLAB interface routines are built (thanks to
-     Phil Miller and Chris F.).
    .
  - <a href="https://geographiclib.sourceforge.io/1.30">Version 1.30</a>
    (released 2013-02-27)

@@ -2,7 +2,7 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2021) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -73,8 +73,8 @@ namespace GeographicLib {
     real _c2;
     static const int tm_maxord = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
     static const int maxpow_ = GEOGRAPHICLIB_RHUMBAREA_ORDER;
-    // _R[0] unused
-    real _R[maxpow_ + 1];
+    // _rR[0] unused
+    real _rR[maxpow_ + 1];
     static real gd(real x)
     { using std::atan; using std::sinh; return atan(sinh(x)); }
 
@@ -428,12 +428,6 @@ namespace GeographicLib {
      *   polygon.
      **********************************************************************/
     Math::real EllipsoidArea() const { return _ell.Area(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**
@@ -466,12 +460,10 @@ namespace GeographicLib {
     typedef Math::real real;
     friend class Rhumb;
     const Rhumb& _rh;
-    bool _exact;                // TODO: RhumbLine::_exact is unused; retire
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1, _r1;
     // copy assignment not allowed
     RhumbLine& operator=(const RhumbLine&) = delete;
-    RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,
-              bool exact);
+    RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12);
   public:
     /**
      * Construction is via default copy constructor.

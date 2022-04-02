@@ -44,7 +44,7 @@ interface with
 (4) Copy
 
   Release\cgeodesic.dll   # the interface routines
-  Release\Geographic.dll  # the main GeographicLib library
+  Release\GeographicLib.dll  # the main GeographicLib library
 
 to directory where the Excel executable lives.  You can find this
 directory by launching Excel, launching Task Manager, right-clicking on

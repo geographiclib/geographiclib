@@ -2,7 +2,7 @@
  * \file GeodesicExact.hpp
  * \brief Header for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -104,7 +104,7 @@ namespace GeographicLib {
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _C4x[nC4x_];
+    real _cC4x[nC4x_];
 
     void Lengths(const EllipticFunction& E,
                  real sig12,
@@ -185,6 +185,13 @@ namespace GeographicLib {
        **********************************************************************/
       DISTANCE      = 1U<<10 | CAP_E,
       /**
+       * A combination of the common capabilities: GeodesicExact::LATITUDE,
+       * GeodesicExact::LONGITUDE, GeodesicExact::AZIMUTH,
+       * GeodesicExact::DISTANCE.
+       * @hideinitializer
+       **********************************************************************/
+      STANDARD      = LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
+      /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
@@ -211,8 +218,8 @@ namespace GeographicLib {
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
       /**
-       * All capabilities, calculate everything.  (LONG_UNROLL is not
-       * included in this mask.)
+       * All capabilities, calculate everything.  (GeodesicExact::LONG_UNROLL
+       * is not included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = OUT_ALL| CAP_ALL,
@@ -848,12 +855,6 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EllipsoidArea() const
     { return 4 * Math::pi() * _c2; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

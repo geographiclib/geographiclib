@@ -2,7 +2,7 @@
  * \file GeoCoords.cpp
  * \brief Implementation for GeographicLib::GeoCoords class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -33,7 +33,6 @@ namespace GeographicLib {
                       _lat, _long, _gamma, _k);
     } else if (sa.size() == 2) {
       DMS::DecodeLatLon(sa[0], sa[1], _lat, _long, longfirst);
-      _long = Math::AngNormalize(_long);
       UTMUPS::Forward( _lat, _long,
                        _zone, _northp, _easting, _northing, _gamma, _k);
     } else if (sa.size() == 3) {
@@ -62,20 +61,8 @@ namespace GeographicLib {
   string GeoCoords::GeoRepresentation(int prec, bool longfirst) const {
     using std::isnan;           // Needed for Centos 7, ubuntu 14
     prec = max(0, min(9 + Math::extra_digits(), prec) + 5);
-    ostringstream os;
-    os << fixed << setprecision(prec);
-    real a = longfirst ? _long : _lat;
-    real b = longfirst ? _lat : _long;
-    if (!isnan(a))
-      os << a;
-    else
-      os << "nan";
-    os << " ";
-    if (!isnan(b))
-      os << b;
-    else
-      os << "nan";
-    return os.str();
+    return Utility::str(longfirst ? _long : _lat, prec) +
+      " " + Utility::str(longfirst ? _lat : _long, prec);
   }
 
   string GeoCoords::DMSRepresentation(int prec, bool longfirst,
@@ -114,13 +101,13 @@ namespace GeographicLib {
     os << UTMUPS::EncodeZone(zone, northp, abbrev) << fixed << setfill('0');
     if (isfinite(easting)) {
       os << " " << Utility::str(easting / scale, max(0, prec));
-      if (prec < 0 && abs(easting / scale) > real(0.5))
+      if (prec < 0 && fabs(easting / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else
       os << " nan";
     if (isfinite(northing)) {
       os << " " << Utility::str(northing / scale, max(0, prec));
-      if (prec < 0 && abs(northing / scale) > real(0.5))
+      if (prec < 0 && fabs(northing / scale) > real(0.5))
         os << setw(-prec) << 0;
     } else
       os << " nan";

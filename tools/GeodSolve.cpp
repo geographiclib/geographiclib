@@ -323,8 +323,12 @@ int main(int argc, const char* const argv[]) {
           if (full)
             *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                     << " ";
-          if (azi2back)
-            azi2 += azi2 >= 0 ? -180 : 180;
+          if (azi2back) {
+            using std::copysign;
+            // map +/-0 -> -/+180; +/-180 -> -/+0
+            // this depends on abs(azi2) <= 180
+            azi2 = copysign(azi2 + copysign(real(180), -azi2), -azi2);
+          }
           *output << AzimuthString(azi2, prec, dms, dmssep) << " "
                   << DistanceStrings(s12, a12, full, arcmode, prec, dms);
           if (full)
@@ -365,8 +369,12 @@ int main(int argc, const char* const argv[]) {
               << LatLonString(lat1, unroll ? lon1 : Math::AngNormalize(lon1),
                               prec, dms, dmssep, longfirst)
               << " " << AzimuthString(azi1, prec, dms, dmssep) << " ";
-          if (azi2back)
-            azi2 += azi2 >= 0 ? -180 : 180;
+          if (azi2back) {
+            using std::copysign;
+            // map +/-0 -> -/+180; +/-180 -> -/+0
+            // this depends on abs(azi2) <= 180
+            azi2 = copysign(azi2 + copysign(real(180), -azi2), -azi2);
+          }
           *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                   << " " << AzimuthString(azi2, prec, dms, dmssep);
           if (full)

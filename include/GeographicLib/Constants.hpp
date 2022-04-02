@@ -2,7 +2,7 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -52,6 +52,7 @@
 //   1900     vc14  (2015) First version of VS to include enough C++11 support
 //   191[0-9] vc15  (2017)
 //   192[0-9] vc16  (2019)
+//   193[0-9] vc17  (2022)
 
 #if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
   GEOGRAPHICLIB_SHARED_LIB
@@ -106,7 +107,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Constants {
   private:
     typedef Math::real real;
-    Constants();                // Disable constructor
+    Constants() = delete;       // Disable constructor
 
   public:
     /**

@@ -2,7 +2,7 @@
  * \file GeodesicLineExact.cpp
  * \brief Implementation for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -54,7 +54,7 @@ namespace GeographicLib {
     real cbet1, sbet1;
     Math::sincosd(Math::AngRound(_lat1), sbet1, cbet1); sbet1 *= _f1;
     // Ensure cbet1 = +epsilon at poles
-    Math::norm(sbet1, cbet1); cbet1 = max(tiny_, cbet1);
+    Math::norm(sbet1, cbet1); cbet1 = fmax(tiny_, cbet1);
     _dn1 = (_f >= 0 ? sqrt(1 + g._ep2 * Math::sq(sbet1)) :
             sqrt(1 - _e2 * Math::sq(cbet1)) / _f1);
 
@@ -81,35 +81,35 @@ namespace GeographicLib {
     // Math::norm(_schi1, _cchi1); -- don't need to normalize!
 
     _k2 = Math::sq(_calp0) * g._ep2;
-    _E.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
+    _eE.Reset(-_k2, -g._ep2, 1 + _k2, 1 + g._ep2);
 
     if (_caps & CAP_E) {
-      _E0 = _E.E() / (Math::pi() / 2);
-      _E1 = _E.deltaE(_ssig1, _csig1, _dn1);
-      real s = sin(_E1), c = cos(_E1);
+      _eE0 = _eE.E() / (Math::pi() / 2);
+      _eE1 = _eE.deltaE(_ssig1, _csig1, _dn1);
+      real s = sin(_eE1), c = cos(_eE1);
       // tau1 = sig1 + B11
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
       // Not necessary because Einv inverts E
-      //    _E1 = -_E.deltaEinv(_stau1, _ctau1);
+      //    _eE1 = -_eE.deltaEinv(_stau1, _ctau1);
     }
 
     if (_caps & CAP_D) {
-      _D0 = _E.D() / (Math::pi() / 2);
-      _D1 = _E.deltaD(_ssig1, _csig1, _dn1);
+      _dD0 = _eE.D() / (Math::pi() / 2);
+      _dD1 = _eE.deltaD(_ssig1, _csig1, _dn1);
     }
 
     if (_caps & CAP_H) {
-      _H0 = _E.H() / (Math::pi() / 2);
-      _H1 = _E.deltaH(_ssig1, _csig1, _dn1);
+      _hH0 = _eE.H() / (Math::pi() / 2);
+      _hH1 = _eE.deltaH(_ssig1, _csig1, _dn1);
     }
 
     if (_caps & CAP_C4) {
       real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
-      g.C4f(eps, _C4a);
+      g.C4f(eps, _cC4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-      _A4 = Math::sq(_a) * _calp0 * _salp0 * _e2;
-      _B41 = GeodesicExact::CosSeries(_ssig1, _csig1, _C4a, nC4_);
+      _aA4 = Math::sq(_a) * _calp0 * _salp0 * _e2;
+      _bB41 = GeodesicExact::CosSeries(_ssig1, _csig1, _cC4a, nC4_);
     }
 
     _a13 = _s13 = Math::NaN();
@@ -150,19 +150,19 @@ namespace GeographicLib {
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * Math::degree();
-      real s12a = abs(s12_a12);
+      real s12a = fabs(s12_a12);
       s12a -= 180 * floor(s12a / 180);
       ssig12 = s12a ==  0 ? 0 : sin(sig12);
       csig12 = s12a == 90 ? 0 : cos(sig12);
     } else {
       // Interpret s12_a12 as distance
       real
-        tau12 = s12_a12 / (_b * _E0),
+        tau12 = s12_a12 / (_b * _eE0),
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
-      E2 = - _E.deltaEinv(_stau1 * c + _ctau1 * s, _ctau1 * c - _stau1 * s);
-      sig12 = tau12 - (E2 - _E1);
+      E2 = - _eE.deltaEinv(_stau1 * c + _ctau1 * s, _ctau1 * c - _stau1 * s);
+      sig12 = tau12 - (E2 - _eE1);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
     }
@@ -171,12 +171,12 @@ namespace GeographicLib {
     // sig2 = sig1 + sig12
     ssig2 = _ssig1 * csig12 + _csig1 * ssig12;
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
-    real dn2 = _E.Delta(ssig2, csig2);
+    real dn2 = _eE.Delta(ssig2, csig2);
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
       if (arcmode) {
-        E2 = _E.deltaE(ssig2, csig2, dn2);
+        E2 = _eE.deltaE(ssig2, csig2, dn2);
       }
-      AB1 = _E0 * (E2 - _E1);
+      AB1 = _eE0 * (E2 - _eE1);
     }
     // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
@@ -189,7 +189,7 @@ namespace GeographicLib {
     salp2 = _salp0; calp2 = _calp0 * csig2; // No need to normalize
 
     if (outmask & DISTANCE)
-      s12 = arcmode ? _b * (_E0 * sig12 + AB1) : s12_a12;
+      s12 = arcmode ? _b * (_eE0 * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
       real somg2 = _salp0 * ssig2, comg2 = csig2,  // No need to normalize
@@ -203,8 +203,8 @@ namespace GeographicLib {
         : atan2(somg2 * _cchi1 - cchi2 * _somg1,
                 cchi2 * _cchi1 + somg2 * _somg1);
       real lam12 = chi12 -
-        _e2/_f1 * _salp0 * _H0 *
-        (sig12 + (_E.deltaH(ssig2, csig2, dn2) - _H1));
+        _e2/_f1 * _salp0 * _hH0 *
+        (sig12 + (_eE.deltaH(ssig2, csig2, dn2) - _hH1));
       real lon12 = lam12 / Math::degree();
       lon2 = outmask & LONG_UNROLL ? _lon1 + lon12 :
         Math::AngNormalize(Math::AngNormalize(_lon1) +
@@ -218,7 +218,7 @@ namespace GeographicLib {
       azi2 = Math::atan2d(salp2, calp2);
 
     if (outmask & (REDUCEDLENGTH | GEODESICSCALE)) {
-      real J12 = _k2 * _D0 * (sig12 + (_E.deltaD(ssig2, csig2, dn2) - _D1));
+      real J12 = _k2 * _dD0 * (sig12 + (_eE.deltaD(ssig2, csig2, dn2) - _dD1));
       if (outmask & REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
@@ -233,7 +233,7 @@ namespace GeographicLib {
 
     if (outmask & AREA) {
       real
-        B42 = GeodesicExact::CosSeries(ssig2, csig2, _C4a, nC4_);
+        B42 = GeodesicExact::CosSeries(ssig2, csig2, _cC4a, nC4_);
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
@@ -260,7 +260,7 @@ namespace GeographicLib {
            ssig12 * (_csig1 * ssig12 / (1 + csig12) + _ssig1));
         calp12 = Math::sq(_salp0) + Math::sq(_calp0) * _csig1 * csig2;
       }
-      S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
+      S12 = _c2 * atan2(salp12, calp12) + _aA4 * (B42 - _bB41);
     }
 
     return arcmode ? s12_a12 : sig12 / Math::degree();

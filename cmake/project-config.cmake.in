@@ -1,7 +1,7 @@
 # Configure @PROJECT_NAME@
 #
 # Set
-#  @PROJECT_NAME@_FOUND = @PROJECT_NAME_UPPER@_FOUND = 1
+#  @PROJECT_NAME@_FOUND = TRUE
 #  @PROJECT_NAME@_INCLUDE_DIRS = /usr/local/include
 #  @PROJECT_NAME@_SHARED_LIBRARIES = GeographicLib_SHARED (or empty)
 #  @PROJECT_NAME@_STATIC_LIBRARIES = GeographicLib_STATIC (or empty)
@@ -52,7 +52,6 @@ set (@PROJECT_NAME@_HIGHPREC_LIBRARIES "@HIGHPREC_LIBRARIES@")
 set (@PROJECT_NAME@_SHARED_LIBRARIES @CONFIG_SHARED_LIBRARIES@)
 set (@PROJECT_NAME@_STATIC_LIBRARIES @CONFIG_STATIC_LIBRARIES@)
 # Read in the exported definition of the library
-include ("${_DIR}/@PROJECT_NAME_LOWER@-legacy-targets.cmake")
 include ("${_DIR}/@PROJECT_NAME_LOWER@-targets.cmake")
 
 # For interoperability with older installations of GeographicLib and
@@ -77,24 +76,22 @@ else ()
   message (STATUS "  \${@PROJECT_NAME@_LIBRARIES} set to shared library")
 endif ()
 
-set (@PROJECT_NAME@_NETGeographicLib_LIBRARIES @NETGEOGRAPHICLIB_LIBRARIES@)
-
 # Check for the components requested.  This only supports components
-# STATIC, SHARED, and NETGeographicLib by checking the value of
+# STATIC and SHARED by checking the value of
 # @PROJECT_NAME@_${comp}_LIBRARIES.  No need to check if the component
 # is required or not--the version file took care of that.
 # @PROJECT_NAME@_${comp}_FOUND is set appropriately for each component.
 if (@PROJECT_NAME@_FIND_COMPONENTS)
   foreach (comp ${@PROJECT_NAME@_FIND_COMPONENTS})
     if (@PROJECT_NAME@_${comp}_LIBRARIES)
-      set (@PROJECT_NAME@_${comp}_FOUND 1)
+      set (@PROJECT_NAME@_${comp}_FOUND TRUE)
       message (STATUS "@PROJECT_NAME@ component ${comp} found")
     else ()
-      set (@PROJECT_NAME@_${comp}_FOUND 0)
+      set (@PROJECT_NAME@_${comp}_FOUND FALSE)
       message (WARNING "@PROJECT_NAME@ component ${comp} not found")
     endif ()
   endforeach ()
 endif ()
 
-# @PROJECT_NAME@_FOUND is set to 1 automatically
-set (@PROJECT_NAME_UPPER@_FOUND 1)     # for backwards compatibility
+# @PROJECT_NAME@_FOUND is set to TRUE automatically
+set (@PROJECT_NAME_UPPER@_FOUND TRUE) # for backwards compatibility, deprecated

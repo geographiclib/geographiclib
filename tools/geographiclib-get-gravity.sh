@@ -2,7 +2,7 @@
 #
 # Download gravity models for use by GeographicLib::GravityModel.
 #
-# Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -55,7 +55,7 @@ will be saved.  -h prints this help.
 
 For more information on the $NAME datasets, visit
 
-  https://geographiclib.sourceforge.io/html/$NAME.html
+  https://geographiclib.sourceforge.io/C++/doc/$NAME.html
 
 EOF
 }
@@ -71,8 +71,8 @@ while getopts hp:fd c; do
             ;;
         p ) PARENTDIR="$OPTARG"
             ;;
-	f ) FORCE=y
-	    ;;
+        f ) FORCE=y
+            ;;
         d ) DEBUG=y
             ;;
         * )
@@ -125,24 +125,24 @@ EOF
 
 while test $# -gt 0; do
     if grep "^$1\$" $TEMP/all > /dev/null; then
-	echo $1
+        echo $1
     else
-	case "$1" in
-	    all )
-		cat $TEMP/all
-		;;
-	    minimal )
-		echo egm96; echo wgs84
-		;;
-	    * )
-		if test -n "$FORCE"; then
-		    echo $1
-		else
-		    echo Unknown $MODEL $1 1>&2
-		    exit 1
-		fi
-		;;
-	esac
+        case "$1" in
+            all )
+                cat $TEMP/all
+                ;;
+            minimal )
+                echo egm96; echo wgs84
+                ;;
+            * )
+                if test -n "$FORCE"; then
+                    echo $1
+                else
+                    echo Unknown $MODEL $1 1>&2
+                    exit 1
+                fi
+                ;;
+        esac
     fi
     shift
 done > $TEMP/list
@@ -151,9 +151,9 @@ sort -u $TEMP/list > $TEMP/todo
 
 while read file; do
     if test -z "$FORCE" -a -s $PARENTDIR/$SUBDIR/$file.$EXT; then
-	echo $PARENTDIR/$SUBDIR/$file.$EXT already installed, skipping $file...
-	echo $file >> $TEMP/skip
-	continue
+        echo $PARENTDIR/$SUBDIR/$file.$EXT already installed, skipping $file...
+        echo $file >> $TEMP/skip
+        continue
     fi
     echo download $file.tar.bz2 ...
     echo $file >> $TEMP/download

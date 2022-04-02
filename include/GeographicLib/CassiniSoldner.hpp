@@ -2,7 +2,7 @@
  * \file CassiniSoldner.hpp
  * \brief Header for GeographicLib::CassiniSoldner class
  *
- * Copyright (c) Charles Karney (2009-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -195,12 +195,6 @@ namespace GeographicLib {
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _earth.Flattening(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };

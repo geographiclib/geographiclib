@@ -2,7 +2,7 @@
  * \file Geocentric.cpp
  * \brief Implementation for GeographicLib::Geocentric class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -18,7 +18,7 @@ namespace GeographicLib {
     , _f(f)
     , _e2(_f * (2 - _f))
     , _e2m(Math::sq(1 - _f))    // 1 - _e2
-    , _e2a(abs(_e2))
+    , _e2a(fabs(_e2))
     , _e4a(Math::sq(_e2))
     , _maxrad(2 * _a / numeric_limits<real>::epsilon())
   {
@@ -118,7 +118,7 @@ namespace GeographicLib {
           // e4 * q / (v - u) because u ~ e^4 when q is small and u < 0.
           uv = u < 0 ? _e4a * q / (v - u) : u + v, // u+v, guaranteed positive
           // Need to guard against w going negative due to roundoff in uv - q.
-          w = max(real(0), _e2a * (uv - q) / (2 * v)),
+          w = fmax(real(0), _e2a * (uv - q) / (2 * v)),
           // Rearrange expression for k to avoid loss of accuracy due to
           // subtraction.  Division by 0 not possible because uv > 0, w >= 0.
           k = uv / (sqrt(uv + Math::sq(w)) + w),

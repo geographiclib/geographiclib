@@ -2,7 +2,7 @@
  * \file SphericalEngine.cpp
  * \brief Implementation for GeographicLib::SphericalEngine class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -164,7 +164,7 @@ namespace GeographicLib {
       sl = p != 0 ? y / p : 0,  // sin(lambda)
       r = hypot(z, p),
       t = r != 0 ? z / r : 0,   // cos(theta); at origin, pick theta = pi/2
-      u = r != 0 ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
+      u = r != 0 ? fmax(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;
     real
       q2 = Math::sq(q),
@@ -304,7 +304,7 @@ namespace GeographicLib {
     real
       r = hypot(z, p),
       t = r != 0 ? z / r : 0,   // cos(theta); at origin, pick theta = pi/2
-      u = r != 0 ? max(p / r, eps()) : 1, // sin(theta); but avoid the pole
+      u = r != 0 ? fmax(p / r, eps()) : 1, // sin(theta); but avoid the pole
       q = a / r;
     real
       q2 = Math::sq(q),

@@ -2,10 +2,8 @@
 *.ac eol=lf
 *.am eol=lf
 *.sh eol=lf
-configure* eol=lf
-*.sln eol=crlf
-*.vcproj eol=crlf
-*.vcxproj eol=crlf
-*.csproj eol=crlf
-*.resx eol=crlf
-*.settings eol=crlf
+*.eps -text
+*.pdf -text
+*.png -text
+*.gif -text
+*.kmz -text

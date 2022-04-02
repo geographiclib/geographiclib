@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -66,10 +66,10 @@ namespace GeographicLib {
                        int& zone, bool& northp, real& x, real& y,
                        real& gamma, real& k,
                        int setzone, bool mgrslimits) {
-    if (abs(lat) > 90)
+    if (fabs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
-    bool northp1 = lat >= 0;
+    bool northp1 = !(signbit(lat));
     int zone1 = StandardZone(lat, lon, setzone);
     if (zone1 == INVALID) {
       zone = zone1;
@@ -82,8 +82,7 @@ namespace GeographicLib {
     if (utmp) {
       real
         lon0 = CentralMeridian(zone1),
-        dlon = lon - lon0;
-      dlon = abs(dlon - 360 * floor((dlon + 180)/360));
+        dlon = Math::AngDiff(lon0, lon);
       if (!(dlon <= 60))
         // Check isn't really necessary because CheckCoords catches this case.
         // But this allows a more meaningful error message to be given.
@@ -92,7 +91,7 @@ namespace GeographicLib {
                             + Utility::str(zone1));
       TransverseMercator::UTM().Forward(lon0, lat, lon, x1, y1, gamma1, k1);
     } else {
-      if (abs(lat) < 70)
+      if (fabs(lat) < 70)
         // Check isn't really necessary ... (see above).
         throw GeographicErr("Latitude " + Utility::str(lat)
                             + "d more than 20d from "

@@ -2,7 +2,7 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2021) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -29,7 +29,7 @@ namespace GeographicLib {
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda:
-   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   *   <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    *   geod-addenda.html</a>.
    *
    * Arbitrarily complex polygons are allowed.  In the case self-intersecting
@@ -105,31 +105,10 @@ namespace GeographicLib {
     int _crossings;
     Accumulator<> _areasum, _perimetersum;
     real _lat0, _lon0, _lat1, _lon1;
-    static int transit(real lon1, real lon2) {
-      // Return 1 or -1 if crossing prime meridian in east or west direction.
-      // Otherwise return zero.
-      // Compute lon12 the same way as Geodesic::Inverse.
-      lon1 = Math::AngNormalize(lon1);
-      lon2 = Math::AngNormalize(lon2);
-      real lon12 = Math::AngDiff(lon1, lon2);
-      // Treat 0 as negative in these tests.  This balances +/- 180 being
-      // treated as positive, i.e., +180.
-      int cross =
-        lon1 <= 0 && lon2 > 0 && lon12 > 0 ? 1 :
-        (lon2 <= 0 && lon1 > 0 && lon12 < 0 ? -1 : 0);
-      return cross;
-    }
+    static int transit(real lon1, real lon2);
     // an alternate version of transit to deal with longitudes in the direct
     // problem.
-    static int transitdirect(real lon1, real lon2) {
-      // Compute exactly the parity of
-      //   int(ceil(lon2 / 360)) - int(ceil(lon1 / 360))
-      using std::remainder;
-      lon1 = remainder(lon1, real(720));
-      lon2 = remainder(lon2, real(720));
-      return ( (lon2 <= 0 && lon2 > -360 ? 1 : 0) -
-               (lon1 <= 0 && lon1 > -360 ? 1 : 0) );
-    }
+    static int transitdirect(real lon1, real lon2);
     void Remainder(Accumulator<>& a) const { a.remainder(_area0); }
     void Remainder(real& a) const {
       using std::remainder;
@@ -289,10 +268,20 @@ namespace GeographicLib {
     { lat = _lat1; lon = _lon1; }
 
     /**
-     * \deprecated An old name for EquatorialRadius().
+     * Report the number of points currently in the polygon or polyline.
+     *
+     * @return the number of points.
+     *
+     * If no points have been added, then 0 is returned.
      **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
+    unsigned NumberPoints() const { return _num; }
+
+    /**
+     * Report whether the current object is a polygon or a polyline.
+     *
+     * @return true if the object is a polyline.
+     **********************************************************************/
+    bool Polyline() const { return _polyline; }
     ///@}
   };
 

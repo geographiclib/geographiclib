@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
  * classes
  *
- * Copyright (c) Charles Karney (2014-2021) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -132,7 +132,7 @@ namespace GeographicLib {
       // definite integral.  So don't bother computing it.  It won't be used
       // when invoking SinCosSeries.
       if (l)
-        _R[l] = d * Math::polyval(m, coeff + o, _ell._n) / coeff[o + m + 1];
+        _rR[l] = d * Math::polyval(m, coeff + o, _ell._n) / coeff[o + m + 1];
       o += m + 2;
       d *= _ell._n;
     }
@@ -166,7 +166,7 @@ namespace GeographicLib {
   }
 
   RhumbLine Rhumb::Line(real lat1, real lon1, real azi12) const
-  { return RhumbLine(*this, lat1, lon1, azi12, _exact); }
+  { return RhumbLine(*this, lat1, lon1, azi12); }
 
   void Rhumb::GenDirect(real lat1, real lon1, real azi12, real s12,
                         unsigned outmask,
@@ -325,20 +325,18 @@ namespace GeographicLib {
 
   Math::real Rhumb::MeanSinXi(real psix, real psiy) const {
     return Dlog(cosh(psix), cosh(psiy)) * Dcosh(psix, psiy)
-      + SinCosSeries(false, gd(psix), gd(psiy), _R, maxpow_) * Dgd(psix, psiy);
+      + SinCosSeries(false, gd(psix), gd(psiy), _rR, maxpow_) * Dgd(psix, psiy);
   }
 
-  RhumbLine::RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12,
-                       bool /* exact */)
+  RhumbLine::RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12)
     : _rh(rh)
-    , _exact(true)              // TODO: RhumbLine::_exact is unused; retire
     , _lat1(Math::LatFix(lat1))
     , _lon1(lon1)
     , _azi12(Math::AngNormalize(azi12))
   {
     real alp12 = _azi12 * Math::degree();
-    _salp =     _azi12  == -180 ? 0 : sin(alp12);
-    _calp = abs(_azi12) ==   90 ? 0 : cos(alp12);
+    _salp =      _azi12  == -180 ? 0 : sin(alp12);
+    _calp = fabs(_azi12) ==   90 ? 0 : cos(alp12);
     _mu1 = _rh._ell.RectifyingLatitude(lat1);
     _psi1 = _rh._ell.IsometricLatitude(lat1);
     _r1 = _rh._ell.CircleRadius(lat1);
@@ -350,7 +348,7 @@ namespace GeographicLib {
       mu12 = s12 * _calp * 90 / _rh._ell.QuarterMeridian(),
       mu2 = _mu1 + mu12;
     real psi2, lat2x, lon2x;
-    if (abs(mu2) <= 90 && _exact) { // TODO: dummy use of _exact; retire
+    if (fabs(mu2) <= 90) {
       if (_calp != 0) {
         lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
         real psi12 = _rh.DRectifyingToIsometric(  mu2 * Math::degree(),
@@ -371,7 +369,7 @@ namespace GeographicLib {
       // Reduce to the interval [-180, 180)
       mu2 = Math::AngNormalize(mu2);
       // Deal with points on the anti-meridian
-      if (abs(mu2) > 90) mu2 = Math::AngNormalize(180 - mu2);
+      if (fabs(mu2) > 90) mu2 = Math::AngNormalize(180 - mu2);
       lat2x = _rh._ell.InverseRectifyingLatitude(mu2);
       lon2x = Math::NaN();
       if (outmask & AREA)

@@ -2,7 +2,7 @@
  * \file GARS.hpp
  * \brief Header for GeographicLib::GARS class
  *
- * Copyright (c) Charles Karney (2015-2021) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -40,7 +40,15 @@ namespace GeographicLib {
     typedef Math::real real;
     static const char* const digits_;
     static const char* const letters_;
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       lonorig_ = -180,          // Origin for longitude
       latorig_ = -90,           // Origin for latitude
       baselon_ = 10,            // Base for longitude tiles
@@ -53,9 +61,13 @@ namespace GeographicLib {
       mult3_ = 3,               // 7th char gives 3x more precision
       m_ = mult1_ * mult2_ * mult3_,
       maxprec_ = 2,
-      maxlen_ = baselen_ + maxprec_,
+      maxlen_ = baselen_ + maxprec_
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
-    GARS();                     // Disable constructor
+#endif
+    GARS() = delete;            // Disable constructor
 
   public:
 
@@ -125,7 +137,7 @@ namespace GeographicLib {
      * The returned length is in the range [0, 2].
      **********************************************************************/
     static int Precision(real res) {
-      using std::abs; res = abs(res);
+      using std::fabs; res = fabs(res);
       for (int prec = 0; prec < maxprec_; ++prec)
         if (Resolution(prec) <= res)
           return prec;

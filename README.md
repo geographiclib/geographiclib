@@ -8,4 +8,4 @@ is
 
 The API for the library is documented at
 
-> https://geographiclib.sourceforge.io/html
+> https://geographiclib.sourceforge.io/C++/doc/

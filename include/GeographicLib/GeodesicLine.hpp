@@ -2,7 +2,7 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -56,7 +56,7 @@ namespace GeographicLib {
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda:
-   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   *   <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
@@ -82,11 +82,11 @@ namespace GeographicLib {
     real _lat1, _lon1, _azi1;
     real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1, _somg1, _comg1,
-      _A1m1, _A2m1, _A3c, _B11, _B21, _B31, _A4, _B41;
+      _aA1m1, _aA2m1, _aA3c, _bB11, _bB21, _bB31, _aA4, _bB41;
     real _a13, _s13;
-    // index zero elements of _C1a, _C1pa, _C2a, _C3a are unused
-    real _C1a[nC1_ + 1], _C1pa[nC1p_ + 1], _C2a[nC2_ + 1], _C3a[nC3_],
-      _C4a[nC4_];    // all the elements of _C4a are used
+    // index zero elements of _cC1a, _cC1pa, _cC2a, _cC3a are unused
+    real _cC1a[nC1_ + 1], _cC1pa[nC1p_ + 1], _cC2a[nC2_ + 1], _cC3a[nC3_],
+      _cC4a[nC4_];              // all the elements of _cC4a are used
     unsigned _caps;
 
     void LineInit(const Geodesic& g,
@@ -148,6 +148,12 @@ namespace GeographicLib {
        **********************************************************************/
       DISTANCE      = Geodesic::DISTANCE,
       /**
+       * A combination of the common capabilities: GeodesicLine::LATITUDE,
+       * GeodesicLine::LONGITUDE, GeodesicLine::AZIMUTH, GeodesicLine::DISTANCE.
+       * @hideinitializer
+       **********************************************************************/
+      STANDARD      = Geodesic::STANDARD,
+      /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
@@ -174,8 +180,8 @@ namespace GeographicLib {
        **********************************************************************/
       LONG_UNROLL   = Geodesic::LONG_UNROLL,
       /**
-       * All capabilities, calculate everything.  (LONG_UNROLL is not
-       * included in this mask.)
+       * All capabilities, calculate everything.  (GeodesicLine::LONG_UNROLL is
+       * not included in this mask.)
        * @hideinitializer
        **********************************************************************/
       ALL           = Geodesic::ALL,
@@ -693,12 +699,6 @@ namespace GeographicLib {
      * @return \e a13, the arc length to point 3 (degrees).
      **********************************************************************/
     Math::real Arc() const { return GenDistance(true); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };
