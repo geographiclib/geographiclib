@@ -29,15 +29,15 @@ namespace GeographicLib {
     , _f(f)
     , _lat(Math::LatFix(lat))
     , _h(h)
-    , _Z(Z)
-    , _Px(P)
-    , _invR(1 / hypot(_Px, _Z))
-    , _cpsi(_Px * _invR)
-    , _spsi(_Z * _invR)
+    , _zZ(Z)
+    , _pPx(P)
+    , _invR(1 / hypot(_pPx, _zZ))
+    , _cpsi(_pPx * _invR)
+    , _spsi(_zZ * _invR)
     , _cphi(cphi)
     , _sphi(sphi)
     , _amodel(amodel)
-    , _GMmodel(GMmodel)
+    , _gGMmodel(GMmodel)
     , _dzonal0(dzonal0)
     , _corrmult(corrmult)
     , _gamma0(gamma0)
@@ -101,7 +101,7 @@ namespace GeographicLib {
 
   Math::real GravityCircle::W(real slam, real clam,
                               real& gX, real& gY, real& gZ) const {
-    real Wres = V(slam, clam, gX, gY, gZ) + _frot * _Px / 2;
+    real Wres = V(slam, clam, gX, gY, gZ) + _frot * _pPx / 2;
     gX += _frot * clam;
     gY += _frot * slam;
     return Wres;
@@ -115,7 +115,7 @@ namespace GeographicLib {
     }
     real
       Vres = _gravitational(slam, clam, GX, GY, GZ),
-      f = _GMmodel / _amodel;
+      f = _gGMmodel / _amodel;
     Vres *= f;
     GX *= f;
     GY *= f;
@@ -140,17 +140,17 @@ namespace GeographicLib {
     real T = (gradp
               ? _disturbing(slam, clam, deltaX, deltaY, deltaZ)
               : _disturbing(slam, clam));
-    T = (T / _amodel - (correct ? _dzonal0 : 0) * _invR) * _GMmodel;
+    T = (T / _amodel - (correct ? _dzonal0 : 0) * _invR) * _gGMmodel;
     if (gradp) {
-      real f = _GMmodel / _amodel;
+      real f = _gGMmodel / _amodel;
       deltaX *= f;
       deltaY *= f;
       deltaZ *= f;
       if (correct) {
-        real r3 = _GMmodel * _dzonal0 * _invR * _invR * _invR;
-        deltaX += _Px * clam * r3;
-        deltaY += _Px * slam * r3;
-        deltaZ += _Z * r3;
+        real r3 = _gGMmodel * _dzonal0 * _invR * _invR * _invR;
+        deltaX += _pPx * clam * r3;
+        deltaY += _pPx * slam * r3;
+        deltaZ += _zZ * r3;
       }
     }
     return T;

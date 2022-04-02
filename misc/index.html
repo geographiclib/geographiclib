@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "https://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>
+      GeographicLib
+    </title>
+    <meta name="description" content="GeographicLib" />
+    <meta name="keywords"
+          content="geographic projections,
+                   transverse Mercator,
+                   polar stereographic,
+                   azimuthal equidistant,
+                   Cassini-Soldner,
+                   UTM, UPS, MGRS,
+                   geocentric coordinates,
+                   geodetic coordinates,
+                   local Cartesian coordinates,
+                   geodesics, shortest path,
+                   direct geodesic problem,
+                   inverse geodesic problem,
+                   rhumb line, loxodrome,
+                   geoid, EGM84, EGM96, EGM2008,
+                   earth gravity model,
+                   gravity disturbance,
+                   gravity anomaly,
+                   deflection of the vertical,
+                   geomagnetism, WMM2020, EMM2015, IGRF11,
+                   WGS84 ellipsoid,
+                   latitude and longitude,
+                   degrees minutes and seconds,
+                   C++ library" />
+    <meta name="author" content="Charles F. F. Karney" />
+    <link rel="stylesheet" type="text/css" href="misc/default.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  </head>
+  <body topmargin=10 leftmargin=10>
+    <h3>GeographicLib</h3>
+    <p>
+      GeographicLib is a small set of C++ classes for performing
+      conversions between geographic, UTM, UPS, MGRS, geocentric, and
+      local cartesian coordinates, for gravity (e.g., EGM2008), geoid
+      height, and geomagnetic field (e.g., WMM2020) calculations, and
+      for solving geodesic problems.  It is a
+      suitable replacement for the core functionality provided by
+      <a href="https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_geotrans">geotrans</a>.
+      The library is licensed under the
+      <a href="https://opensource.org/licenses/MIT">MIT/X11 License</a>;
+      see <a href="C++/doc/LICENSE.txt">LICENSE.txt</a> for the terms.
+    </p>
+    <ul>
+      <li>
+        <a href="https://sourceforge.net/projects/geographiclib/">
+          Main project page</a>
+      <li>
+        <a href="C++/doc/">Library documentation</a>
+      <li>
+        <a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+          git repository</a>
+      <li>
+        <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
+          Download</a>
+      <li>
+        Implementations in <a href="C++/doc/other.html">other languages</a>:
+        <ul>
+          <li>
+            C (geodesic routines):
+            <a href="C/doc/">
+              documentation</a>, also included with recent versions of
+            <a href="https://proj.org">
+              PROJ</a> and the
+            <a href="https://cran.r-project.org/package=geosphere">
+              R package, geosphere</a>;
+          <li>
+            Fortran (geodesic routines):
+            <a href="Fortran/doc/">
+              documentation</a>;
+          <li>
+            Java (geodesic routines):
+            <a href="https://repo1.maven.org/maven2/net/sf/geographiclib/GeographicLib-Java/">
+              Maven Central package</a>,
+            <a href="Java/doc/">
+              documentation</a>;
+          <li>
+            JavaScript (geodesic routines):
+            <a href="https://www.npmjs.com/package/geographiclib">
+              npm package</a>,
+            <a href="JavaScript/doc/">
+              documentation</a>;
+          <li>
+            Python (geodesic routines):
+            <a href="https://pypi.python.org/pypi/geographiclib">
+              PyPI package</a>,
+            <a href="Python/doc/">
+              documentation</a>;
+          <li>
+            Matlab/Octave (geodesic and some other routines):
+            <a href="https://www.mathworks.com/matlabcentral/fileexchange/50605">
+              Matlab Central package</a>,
+            <!-- Update version/num as needed -->
+            <a href="https://viewer.mathworks.com/?viewer=plain_code&url=https%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Fmlc-downloads%2Fdownloads%2Fsubmissions%2F50605%2Fversions%2F15%2Fcontents%2FContents.m">
+              documentation</a>;
+          <li>IDL (not part of GeographicLib):
+            <a href="https://seanelvidge.com/2013/04/newtons-method-for-solving-the-inverse-geodesic-problem-in-idl/">
+              solving the inverse geodesic problem in IDL</a> by Sean
+            Elvidge and Chris Mannix;
+          <li>C# (not part of GeographicLib):
+            <a href="https://github.com/suryapratap/GeographicLib">
+              GeographicLib (C#)</a> by Surya Pratap;
+          <li>Mathematica (not part of GeographicLib):
+            <a href="https://github.com/330k/mathematica-geodesic/">
+              mathematica-geodesic</a> by Kei Misawa;
+          <li>R (not part of GeographicLib):
+            <a href="https://cran.r-project.org/web/packages/geosphere/">
+              geosphere</a> by Robert J. Hijmans,
+            <a href="https://cran.r-project.org/web/packages/geosphere/geosphere.pdf">
+              documentation</a>;
+          <li>Rust (not part of GeographicLib):
+            <a href="https://github.com/georust/geographiclib-rs">
+              geographiclib-rs</a> by Michael Kirk;
+          <li>Cython (interface to GeographicLib):
+            <a href="https://github.com/megaserg/geographiclib-cython-bindings">
+              geographiclib-cython-bindings</a> by Sergey Serebryakov;
+          <li>JavaScript (interface to GeographicLib):
+            <a href="https://github.com/ngageoint/opensphere-asm">
+              opensphere-asm</a> by William Wall.
+        </ul>
+      <li><a href="https://sourceforge.net/projects/geographiclib/files/testdata">
+          Test data</a> for
+        <ul>
+          <li>the <a href="https://doi.org/10.5281/zenodo.32156">
+              geodesic problem</a>
+          <li>the <a href="https://doi.org/10.5281/zenodo.32470">
+              transverse Mercator projection</a>
+          <li><a href="C++/doc/geoid.html#testgeoid">
+              geoid heights</a>
+        </ul>
+      <li><a href="https://sourceforge.net/projects/geographiclib/files/geoids-distrib">
+          Gridded geoid data</a>; see
+        <a href="C++/doc/geoid.html#geoidinst">here</a> for
+        documentation
+      <li><a href="https://sourceforge.net/projects/geographiclib/files/gravity-distrib">
+          Earth gravity models</a>; see
+        <a href="C++/doc/gravity.html#gravityinst">here</a> for
+        documentation
+      <li><a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib">
+          Geomagnetic models</a>; see
+        <a href="C++/doc/magnetic.html#magneticinst">here</a> for
+        documentation
+      <li>
+        Online calculations using GeographicLib
+        <a href="C++/doc/utilities.html">utilities</a>
+        <ul>
+          <li>
+            <a href="cgi-bin/GeoConvert">
+              geographic coordinate conversions</a> between
+            latitude/longitude, UTM or UPS, and MGRS
+          <li>
+            <a href="cgi-bin/GeodSolve">
+              direct and inverse geodesic calculations</a>
+          <li>
+            <a href="cgi-bin/Planimeter">
+              calculate the perimeter and area of geodesic polygons</a>
+          <li>
+            <a href="scripts/geod-calc.html">
+              various geodesic calculations using JavaScript</a>
+          <li>
+            <a href="scripts/geod-google.html">
+              a tool for displaying geodesics on Google Maps</a>
+          <li>
+            <a href="http://geo.javawa.nl/coordcalc/index_en.html">
+              a graphical tool for geodesic calculations</a>
+          <li>
+            <a href="cgi-bin/RhumbSolve">
+              rhumb line calculator</a>
+          <li>
+            <a href="cgi-bin/GeoidEval">
+              evaluate the geoid height</a> for
+            EGM84, EGM96, and EGM2008
+        </ul>
+      <li>
+        <a href="geodesic-papers/biblio.html">
+          A geodesic bibliography</a>.
+        This lists many papers treating geodesics on an ellipsoid and
+        includes links to online versions of the papers.
+      <li>
+        <a href="misc/tm.html">Resource page</a> for
+        <ul>
+          <li>
+            C. F. F. Karney,
+            <a href="https://doi.org/10.1007/s00190-011-0445-3">
+              <i>Transverse Mercator with an accuracy of a few
+                nanometers</i></a>,
+            J. Geodesy <b>85</b>(8), 475&ndash;485 (Aug. 2011); preprint
+            <a href="https://arxiv.org/abs/1002.1417">
+              arXiv:1002.1417</a>;
+            <a href="misc/tm-addenda.html">addenda</a>.
+        </ul>
+      <li>
+        <a href="misc/geod.html">Resource page</a> for
+        <ul>
+          <li>
+            C. F. F. Karney,
+            <i>Geodesics on an ellipsoid of revolution</i>,
+            <a href="https://arxiv.org/abs/1102.1215"> arXiv:1102.1215</a>
+            (Feb. 2011).
+          <li>
+            C. F. F. Karney,
+            <a href="https://doi.org/10.1007/s00190-012-0578-z">
+              <i>Algorithms for geodesics</i></a>,
+            J. Geodesy <b>87</b>(1), 43&ndash;55 (Jan. 2013); DOI:
+            <a href="https://doi.org/10.1007/s00190-012-0578-z">
+              10.1007/s00190-012-0578-z</a>;
+            <a href="misc/geod-addenda.html">addenda</a>.
+        </ul>
+    </ul>
+    <hr>
+    <address>Charles Karney
+      <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
+      (2020-07-20)</address>
+    <br>
+  </body>
+</html>

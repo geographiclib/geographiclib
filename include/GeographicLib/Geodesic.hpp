@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -35,7 +35,7 @@ namespace GeographicLib {
    * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
    * the two end points.  (The azimuth is the heading measured clockwise from
    * north.  \e azi2 is the "forward" azimuth, i.e., the heading that takes you
-   * beyond point 2 not back to point 1.)  In the figure below, latitude if
+   * beyond point 2 not back to point 1.)  In the figure below, latitude is
    * labeled &phi;, longitude &lambda; (with &lambda;<sub>12</sub> =
    * &lambda;<sub>2</sub> &minus; &lambda;<sub>1</sub>), and azimuth &alpha;.
    *
@@ -157,7 +157,7 @@ namespace GeographicLib {
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda:
-   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   *   <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
@@ -209,7 +209,7 @@ namespace GeographicLib {
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
+    real _aA3x[nA3x_], _cC3x[nC3x_], _cC4x[nC4x_];
 
     void Lengths(real eps, real sig12,
                  real ssig1, real csig1, real dn1,
@@ -254,7 +254,7 @@ namespace GeographicLib {
 
     /**
      * Bit masks for what calculations to do.  These masks do double duty.
-     * They signify to the GeodesicLine::GeodesicLine constructor and to
+     * They signify to the GeodesicLine constructor and to
      * Geodesic::Line what capabilities should be included in the GeodesicLine
      * object.  They also specify which results to return in the general
      * routines Geodesic::GenDirect and Geodesic::GenInverse routines.
@@ -290,6 +290,12 @@ namespace GeographicLib {
        **********************************************************************/
       DISTANCE      = 1U<<10 | CAP_C1,
       /**
+       * A combination of the common capabilities: Geodesic::LATITUDE,
+       * Geodesic::LONGITUDE, Geodesic::AZIMUTH, Geodesic::DISTANCE.
+       * @hideinitializer
+       **********************************************************************/
+      STANDARD      = LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
+      /**
        * Allow distance \e s12 to be used as input in the direct geodesic
        * problem.
        * @hideinitializer
@@ -316,7 +322,7 @@ namespace GeographicLib {
        **********************************************************************/
       LONG_UNROLL   = 1U<<15,
       /**
-       * All capabilities, calculate everything.  (LONG_UNROLL is not
+       * All capabilities, calculate everything.  (Geodesic::LONG_UNROLL is not
        * included in this mask.)
        * @hideinitializer
        **********************************************************************/
@@ -956,12 +962,6 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EllipsoidArea() const
     { return 4 * Math::pi() * _c2; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

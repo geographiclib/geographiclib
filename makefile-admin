@@ -2,6 +2,8 @@
 
 # ssh -t karney,geographiclib@shell.sourceforge.net create
 # git: /home/git/p/geographiclib/code.git
+# web: /home/project-web/geographiclib
+# files: /home/frs/project/geographiclib
 
 USER=karney
 STAGE=$(HOME)/web
@@ -9,19 +11,21 @@ WEBSTAGE=$(STAGE)/geographiclib-web
 DATASTAGE=$(STAGE)/geographiclib-files
 SCRIPTSTAGE=$(WEBSTAGE)/htdocs/scripts
 
-geodesic-papers/biblio.html: geodesic-biblio.txt biblio.sh
-	sh biblio.sh $< > $@
+geodesic-papers/biblio.html: geodesic-papers/geodesic-biblio.txt geodesic-papers/biblio.sh
+	sh geodesic-papers/biblio.sh $< > $@
 
 distrib-html: geodesic-papers/biblio.html
-	rsync -av --exclude .svn --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded default.css index.html robots.txt google*html tm.html tm-addenda.html tm-grid.kmz geod.html geod-addenda.html bessel-errata.html jacobi-errata.html *-figs.pdf geodesic-papers $(WEBSTAGE)/htdocs/
+	rsync -av  misc/*.txt misc/google*.html misc/index.html $(WEBSTAGE)/htdocs/
+	rsync -av --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --exclude '*.txt' --exclude 'google*.html' --exclude 'index.html' --exclude '*.png' --delete --delete-excluded misc/  $(WEBSTAGE)/htdocs/misc/
+	rsync -av --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --exclude '*.sh' --exclude '*.txt' --delete --delete-excluded  geodesic-papers/ $(WEBSTAGE)/htdocs/geodesic-papers/
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-doc:
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
 distrib-files:
-	rsync -av --exclude .svn --exclude '.git*' --delete distrib testdata geoids-distrib gravity-distrib magnetic-distrib $(DATASTAGE)/
-	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/{distrib,testdata,{geoids,gravity,magnetic}-distrib} $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
+	rsync -av --exclude .svn --exclude '.git*' --delete data-distrib/distrib-C++ $(DATASTAGE)/
+	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/* $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
 
 distrib-cgi:
 	for f in GeoConvert GeodSolve GeoidEval Planimeter RhumbSolve printlogs Geod; do \

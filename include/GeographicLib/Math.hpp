@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -76,7 +76,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Math {
   private:
     void dummy();               // Static check for GEOGRAPHICLIB_PRECISION
-    Math();                     // Disable constructor
+    Math() = delete;            // Disable constructor
   public:
 
 #if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
@@ -172,180 +172,6 @@ namespace GeographicLib {
     { return x * x; }
 
     /**
-     * The hypotenuse function avoiding underflow and overflow.
-     *
-     * @tparam T the type of the arguments and the returned value.
-     * @param[in] x
-     * @param[in] y
-     * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup>).
-     *
-     * \deprecated Use std::hypot(x, y).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::hypot(x, y)")
-      static T hypot(T x, T y);
-
-    /**
-     * exp(\e x) &minus; 1 accurate near \e x = 0.
-     *
-     * @tparam T the type of the argument and the returned value.
-     * @param[in] x
-     * @return exp(\e x) &minus; 1.
-     *
-     * \deprecated Use std::expm1(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::expm1(x)")
-      static T expm1(T x);
-
-    /**
-     * log(1 + \e x) accurate near \e x = 0.
-     *
-     * @tparam T the type of the argument and the returned value.
-     * @param[in] x
-     * @return log(1 + \e x).
-     *
-     * \deprecated Use std::log1p(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::log1p(x)")
-      static T log1p(T x);
-
-    /**
-     * The inverse hyperbolic sine function.
-     *
-     * @tparam T the type of the argument and the returned value.
-     * @param[in] x
-     * @return asinh(\e x).
-     *
-     * \deprecated Use std::asinh(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::asinh(x)")
-      static T asinh(T x);
-
-    /**
-     * The inverse hyperbolic tangent function.
-     *
-     * @tparam T the type of the argument and the returned value.
-     * @param[in] x
-     * @return atanh(\e x).
-     *
-     * \deprecated Use std::atanh(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::atanh(x)")
-      static T atanh(T x);
-
-    /**
-     * Copy the sign.
-     *
-     * @tparam T the type of the argument.
-     * @param[in] x gives the magitude of the result.
-     * @param[in] y gives the sign of the result.
-     * @return value with the magnitude of \e x and with the sign of \e y.
-     *
-     * This routine correctly handles the case \e y = &minus;0, returning
-     * &minus|<i>x</i>|.
-     *
-     * \deprecated Use std::copysign(x, y).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::copysign(x, y)")
-      static T copysign(T x, T y);
-
-    /**
-     * The cube root function.
-     *
-     * @tparam T the type of the argument and the returned value.
-     * @param[in] x
-     * @return the real cube root of \e x.
-     *
-     * \deprecated Use std::cbrt(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::cbrt(x)")
-      static T cbrt(T x);
-
-    /**
-     * The remainder function.
-     *
-     * @tparam T the type of the arguments and the returned value.
-     * @param[in] x
-     * @param[in] y
-     * @return the remainder of \e x/\e y in the range [&minus;\e y/2, \e y/2].
-     *
-     * \deprecated Use std::remainder(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::remainder(x)")
-      static T remainder(T x, T y);
-
-    /**
-     * The remquo function.
-     *
-     * @tparam T the type of the arguments and the returned value.
-     * @param[in] x
-     * @param[in] y
-     * @param[out] n the low 3 bits of the quotient
-     * @return the remainder of \e x/\e y in the range [&minus;\e y/2, \e y/2].
-     *
-     * \deprecated Use std::remquo(x, y, n).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::remquo(x, y, n)")
-      static T remquo(T x, T y, int* n);
-
-    /**
-     * The round function.
-     *
-     * @tparam T the type of the argument and the returned value.
-     * @param[in] x
-     * @return \e x round to the nearest integer (ties round away from 0).
-     *
-     * \deprecated Use std::round(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::round(x)")
-      static T round(T x);
-
-    /**
-     * The lround function.
-     *
-     * @tparam T the type of the argument.
-     * @param[in] x
-     * @return \e x round to the nearest integer as a long int (ties round away
-     *   from 0).
-     *
-     * If the result does not fit in a long int, the return value is undefined.
-     *
-     * \deprecated Use std::lround(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::lround(x)")
-      static long lround(T x);
-
-    /**
-     * Fused multiply and add.
-     *
-     * @tparam T the type of the arguments and the returned value.
-     * @param[in] x
-     * @param[in] y
-     * @param[in] z
-     * @return <i>xy</i> + <i>z</i>, correctly rounded (on those platforms with
-     *   support for the <code>fma</code> instruction).
-     *
-     * On platforms without the <code>fma</code> instruction, no attempt is
-     * made to improve on the result of a rounded multiplication followed by a
-     * rounded addition.
-     *
-     * \deprecated Use std::fma(x, y, z).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::fma(x, y, z)")
-      static T fma(T x, T y, T z);
-
-    /**
      * Normalize a two-vector.
      *
      * @tparam T the type of the argument and the returned value.
@@ -380,8 +206,9 @@ namespace GeographicLib {
      * @param[out] t the exact error given by (\e u + \e v) - \e s.
      * @return \e s = round(\e u + \e v).
      *
-     * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.  (Note that \e t can be
-     * the same as one of the first two arguments.)
+     * See D. E. Knuth, TAOCP, Vol 2, 4.2.2, Theorem B.
+     *
+     * \note \e t can be the same as one of the first two arguments.
      **********************************************************************/
     template<typename T> static T sum(T u, T v, T& t);
 
@@ -413,14 +240,12 @@ namespace GeographicLib {
      *
      * @tparam T the type of the argument and returned value.
      * @param[in] x the angle in degrees.
-     * @return the angle reduced to the range (&minus;180&deg;, 180&deg;].
+     * @return the angle reduced to the range [&minus;180&deg;, 180&deg;].
      *
-     * The range of \e x is unrestricted.
+     * The range of \e x is unrestricted.  If the result is &plusmn;0&deg; or
+     * &plusmn;180&deg; then the sign is the sign the same of \e x.
      **********************************************************************/
-    template<typename T> static T AngNormalize(T x) {
-      using std::remainder;
-      x = remainder(x, T(360)); return x != -180 ? x : 180;
-    }
+    template<typename T> static T AngNormalize(T x);
 
     /**
      * Normalize a latitude.
@@ -431,11 +256,11 @@ namespace GeographicLib {
      *   return NaN.
      **********************************************************************/
     template<typename T> static T LatFix(T x)
-    { using std::abs; return abs(x) > 90 ? NaN<T>() : x; }
+    { using std::fabs; return fabs(x) > 90 ? NaN<T>() : x; }
 
     /**
      * The exact difference of two angles reduced to
-     * (&minus;180&deg;, 180&deg;].
+     * [&minus;180&deg;, 180&deg;].
      *
      * @tparam T the type of the arguments and returned value.
      * @param[in] x the first angle in degrees.
@@ -444,23 +269,13 @@ namespace GeographicLib {
      * @return \e d, the truncated value of \e y &minus; \e x.
      *
      * This computes \e z = \e y &minus; \e x exactly, reduced to
-     * (&minus;180&deg;, 180&deg;]; and then sets \e z = \e d + \e e where \e d
+     * [&minus;180&deg;, 180&deg;]; and then sets \e z = \e d + \e e where \e d
      * is the nearest representable number to \e z and \e e is the truncation
-     * error.  If \e d = &minus;180, then \e e &gt; 0; If \e d = 180, then \e e
-     * &le; 0.
+     * error.  If \e z = &plusmn;0&deg; or &plusmn;180&deg;, then the sign of
+     * \e d is given by the sign of \e y &minus; \e x.  The maximum absolute
+     * value of \e e is 2<sup>&minus;26</sup> (for doubles).
      **********************************************************************/
-    template<typename T> static T AngDiff(T x, T y, T& e) {
-      using std::remainder;
-      T t, d = AngNormalize(sum(remainder(-x, T(360)),
-                                remainder( y, T(360)), t));
-      // Here y - x = d + t (mod 360), exactly, where d is in (-180,180] and
-      // abs(t) <= eps (eps = 2^-45 for doubles).  The only case where the
-      // addition of t takes the result outside the range (-180,180] is d = 180
-      // and t > 0.  The case, d = -180 + eps, t = -eps, can't happen, since
-      // sum would have returned the exact result in such a case (i.e., given t
-      // = 0).
-      return sum(d == 180 && t > 0 ? -180 : d, t, e);
-    }
+    template<typename T> static T AngDiff(T x, T y, T& e);
 
     /**
      * Difference of two angles reduced to [&minus;180&deg;, 180&deg;]
@@ -472,9 +287,7 @@ namespace GeographicLib {
      *   180&deg;].
      *
      * The result is equivalent to computing the difference exactly, reducing
-     * it to (&minus;180&deg;, 180&deg;] and rounding the result.  Note that
-     * this prescription allows &minus;180&deg; to be returned (e.g., if \e x
-     * is tiny and negative and \e y = 180&deg;).
+     * it to [&minus;180&deg;, 180&deg;] and rounding the result.
      **********************************************************************/
     template<typename T> static T AngDiff(T x, T y)
     { T e; return AngDiff(x, y, e); }
@@ -487,12 +300,11 @@ namespace GeographicLib {
      * @return the coarsened value.
      *
      * The makes the smallest gap in \e x = 1/16 &minus; nextafter(1/16, 0) =
-     * 1/2<sup>57</sup> for reals = 0.7 pm on the earth if \e x is an angle in
-     * degrees.  (This is about 1000 times more resolution than we get with
+     * 1/2<sup>57</sup> for doubles = 0.8 pm on the earth if \e x is an angle
+     * in degrees.  (This is about 2000 times more resolution than we get with
      * angles around 90&deg;.)  We use this to avoid having to deal with near
      * singular cases when \e x is non-zero but tiny (e.g.,
-     * 10<sup>&minus;200</sup>).  This converts &minus;0 to +0; however tiny
-     * negative numbers get converted to &minus;0.
+     * 10<sup>&minus;200</sup>).  This sign of &plusmn;0 is preserved.
      **********************************************************************/
     template<typename T> static T AngRound(T x);
 
@@ -506,10 +318,27 @@ namespace GeographicLib {
      *
      * The results obey exactly the elementary properties of the trigonometric
      * functions, e.g., sin 9&deg; = cos 81&deg; = &minus; sin 123456789&deg;.
-     * If x = &minus;0, then \e sinx = &minus;0; this is the only case where
-     * &minus;0 is returned.
+     * If x = &minus;0 or a negative multiple of 180&deg;, then \e sinx =
+     * &minus;0; this is the only case where &minus;0 is returned.
      **********************************************************************/
     template<typename T> static void sincosd(T x, T& sinx, T& cosx);
+
+    /**
+     * Evaluate the sine and cosine with reduced argument plus correction
+     *
+     * @tparam T the type of the arguments.
+     * @param[in] x reduced angle in degrees.
+     * @param[in] t correction in degrees.
+     * @param[out] sinx sin(<i>x</i> + <i>t</i>).
+     * @param[out] cosx cos(<i>x</i> + <i>t</i>).
+     *
+     * This is a variant of Math::sincosd allowing a correction to the angle to
+     * be supplied.  \e x must be in [&minus;180&deg;, 180&deg;] and \e t is
+     * assumed to be a <i>small</i> correction.  Math::AngRound is applied to
+     * the reduced angle to prevent problems with \e x + \e t being extremely
+     * close but not exactly equal to one of the four cardinal directions.
+     **********************************************************************/
+    template<typename T> static void sincosde(T x, T t, T& sinx, T& cosx);
 
     /**
      * Evaluate the sine function with the argument in degrees
@@ -517,6 +346,9 @@ namespace GeographicLib {
      * @tparam T the type of the argument and the returned value.
      * @param[in] x in degrees.
      * @return sin(<i>x</i>).
+     *
+     * The result is +0 for \e x = +0 and positive multiples of 180&deg;.  The
+     * result is &minus;0 for \e x = -0 and negative multiples of 180&deg;.
      **********************************************************************/
     template<typename T> static T sind(T x);
 
@@ -526,6 +358,8 @@ namespace GeographicLib {
      * @tparam T the type of the argument and the returned value.
      * @param[in] x in degrees.
      * @return cos(<i>x</i>).
+     *
+     * The result is +0 for \e x an odd multiple of 90&deg;.
      **********************************************************************/
     template<typename T> static T cosd(T x);
 
@@ -536,8 +370,8 @@ namespace GeographicLib {
      * @param[in] x in degrees.
      * @return tan(<i>x</i>).
      *
-     * If \e x = &plusmn;90&deg;, then a suitably large (but finite) value is
-     * returned.
+     * If \e x is an odd multiple of 90&deg;, then a suitably large (but
+     * finite) value is returned.
      **********************************************************************/
     template<typename T> static T tand(T x);
 
@@ -549,10 +383,8 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan2(<i>y</i>, <i>x</i>) in degrees.
      *
-     * The result is in the range (&minus;180&deg; 180&deg;].  N.B.,
-     * atan2d(&plusmn;0, &minus;1) = +180&deg;; atan2d(&minus;&epsilon;,
-     * &minus;1) = &minus;180&deg;, for &epsilon; positive and tiny;
-     * atan2d(&plusmn;0, +1) = &plusmn;0&deg;.
+     * The result is in the range [&minus;180&deg; 180&deg;].  N.B.,
+     * atan2d(&plusmn;0, &minus;1) = &plusmn;180&deg;.
      **********************************************************************/
     template<typename T> static T atan2d(T y, T x);
 
@@ -618,38 +450,12 @@ namespace GeographicLib {
     template<typename T> static T tauf(T taup, T es);
 
     /**
-     * Test for finiteness.
-     *
-     * @tparam T the type of the argument.
-     * @param[in] x
-     * @return true if number is finite, false if NaN or infinite.
-     *
-     * \deprecated Use std::isfinite(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::isfinite(x)")
-      static bool isfinite(T x);
-
-    /**
      * The NaN (not a number)
      *
      * @tparam T the type of the returned value.
      * @return NaN if available, otherwise return the max real of type T.
      **********************************************************************/
     template<typename T = real> static T NaN();
-
-    /**
-     * Test for NaN.
-     *
-     * @tparam T the type of the argument.
-     * @param[in] x
-     * @return true if argument is a NaN.
-     *
-     * \deprecated Use std::isnan(x).
-     **********************************************************************/
-    template<typename T>
-      GEOGRAPHICLIB_DEPRECATED("Use std::isnan(x)")
-      static bool isnan(T x);
 
     /**
      * Infinity

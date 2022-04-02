@@ -42,7 +42,7 @@ namespace GeographicLib {
     , _description("NONE")
     , _date("UNKNOWN")
     , _amodel(Math::NaN())
-    , _GMmodel(Math::NaN())
+    , _gGMmodel(Math::NaN())
     , _zeta0(0)
     , _corrmult(1)
     , _nmx(-1)
@@ -72,21 +72,21 @@ namespace GeographicLib {
         throw GeographicErr("ID mismatch: " + _id + " vs " + id);
       int N, M;
       if (truncate) { N = Nmax; M = Mmax; }
-      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _Cx, _Sx, truncate);
+      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _cCx, _sSx, truncate);
       if (!(N >= 0 && M >= 0))
         throw GeographicErr("Degree and order must be at least 0");
-      if (_Cx[0] != 0)
+      if (_cCx[0] != 0)
         throw GeographicErr("The degree 0 term should be zero");
-      _Cx[0] = 1;               // Include the 1/r term in the sum
-      _gravitational = SphericalHarmonic(_Cx, _Sx, N, N, M, _amodel, _norm);
+      _cCx[0] = 1;              // Include the 1/r term in the sum
+      _gravitational = SphericalHarmonic(_cCx, _sSx, N, N, M, _amodel, _norm);
       if (truncate) { N = Nmax; M = Mmax; }
-      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _CC, _CS, truncate);
+      SphericalEngine::coeff::readcoeffs(coeffstr, N, M, _cCC, _cCS, truncate);
       if (N < 0) {
         N = M = 0;
-        _CC.resize(1, real(0));
+        _cCC.resize(1, real(0));
       }
-      _CC[0] += _zeta0 / _corrmult;
-      _correction = SphericalHarmonic(_CC, _CS, N, N, M, real(1), _norm);
+      _cCC[0] += _zeta0 / _corrmult;
+      _correction = SphericalHarmonic(_cCC, _cCS, N, N, M, real(1), _norm);
       int pos = int(coeffstr.tellg());
       coeffstr.seekg(0, ios::end);
       if (pos != coeffstr.tellg())
@@ -97,13 +97,13 @@ namespace GeographicLib {
     _mmx = max(_gravitational.Coefficients().mmx(),
                _correction.Coefficients().mmx());
     // Adjust the normalization of the normal potential to match the model.
-    real mult = _earth._GM / _GMmodel;
+    real mult = _earth._gGM / _gGMmodel;
     real amult = Math::sq(_earth._a / _amodel);
     // The 0th term in _zonal should be is 1 + _dzonal0.  Instead set it to 1
     // to give exact cancellation with the (0,0) term in the model and account
     // for _dzonal0 separately.
     _zonal.clear(); _zonal.push_back(1);
-    _dzonal0 = (_earth.MassConstant() - _GMmodel) / _GMmodel;
+    _dzonal0 = (_earth.MassConstant() - _gGMmodel) / _gGMmodel;
     for (int n = 2; n <= nmx; n += 2) {
       // Only include as many normal zonal terms as matter.  Figuring the limit
       // in this way works because the coefficients of the normal potential
@@ -112,7 +112,7 @@ namespace GeographicLib {
       // goes out to n = 18.
       mult *= amult;
       real
-        r = _Cx[n],                                        // the model term
+        r = _cCx[n],                                       // the model term
         s = - mult * _earth.Jn(n) / sqrt(real(2 * n + 1)), // the normal term
         t = r - s;                                         // the difference
       if (t == r)               // the normal term is negligible
@@ -121,7 +121,7 @@ namespace GeographicLib {
       _zonal.push_back(s);
     }
     int nmx1 = int(_zonal.size()) - 1;
-    _disturbing = SphericalHarmonic1(_Cx, _Sx,
+    _disturbing = SphericalHarmonic1(_cCx, _sSx,
                                      _gravitational.Coefficients().N(),
                                      nmx, _gravitational.Coefficients().mmx(),
                                      _zonal,
@@ -162,7 +162,7 @@ namespace GeographicLib {
       else if (key == "ModelRadius")
         _amodel = Utility::val<real>(val);
       else if (key == "ModelMass")
-        _GMmodel = Utility::val<real>(val);
+        _gGMmodel = Utility::val<real>(val);
       else if (key == "AngularVelocity")
         omega = Utility::val<real>(val);
       else if (key == "ReferenceRadius")
@@ -196,7 +196,7 @@ namespace GeographicLib {
     // Check values
     if (!(isfinite(_amodel) && _amodel > 0))
       throw GeographicErr("Model radius must be positive");
-    if (!(isfinite(_GMmodel) && _GMmodel > 0))
+    if (!(isfinite(_gGMmodel) && _gGMmodel > 0))
       throw GeographicErr("Model mass constant must be positive");
     if (!(isfinite(_corrmult) && _corrmult > 0))
       throw GeographicErr("Correction multiplier must be positive");
@@ -224,19 +224,19 @@ namespace GeographicLib {
       // initial values to suppress warnings
       deltaX = deltaY = deltaZ = 0;
       T = _disturbing(-1, X, Y, Z, deltaX, deltaY, deltaZ);
-      real f = _GMmodel / _amodel;
+      real f = _gGMmodel / _amodel;
       deltaX *= f;
       deltaY *= f;
       deltaZ *= f;
       if (correct) {
-        invR = _GMmodel * _dzonal0 * invR * invR * invR;
+        invR = _gGMmodel * _dzonal0 * invR * invR * invR;
         deltaX += X * invR;
         deltaY += Y * invR;
         deltaZ += Z * invR;
       }
     } else
       T = _disturbing(-1, X, Y, Z);
-    T = (T / _amodel - (correct ? _dzonal0 : 0) * invR) * _GMmodel;
+    T = (T / _amodel - (correct ? _dzonal0 : 0) * invR) * _gGMmodel;
     return T;
   }
 
@@ -244,7 +244,7 @@ namespace GeographicLib {
                              real& GX, real& GY, real& GZ) const {
     real
       Vres = _gravitational(X, Y, Z, GX, GY, GZ),
-      f = _GMmodel / _amodel;
+      f = _gGMmodel / _amodel;
     Vres *= f;
     GX *= f;
     GY *= f;
@@ -339,7 +339,7 @@ namespace GeographicLib {
     _earth.Phi(X, Y, fx, fy);
     return GravityCircle(GravityCircle::mask(caps),
                          _earth._a, _earth._f, lat, h, Z, X, M[7], M[8],
-                         _amodel, _GMmodel, _dzonal0, _corrmult,
+                         _amodel, _gGMmodel, _dzonal0, _corrmult,
                          gamma0, gamma, fx,
                          caps & CAP_G ?
                          _gravitational.Circle(X, Z, true) :

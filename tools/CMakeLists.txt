@@ -1,7 +1,13 @@
 # Build the tools...
 
 # Where to find the *.usage files for the --help option.
-include_directories (${PROJECT_BINARY_DIR}/man)
+if (RELEASE)
+  set (MANDIR ${PROJECT_SOURCE_DIR}/man)
+else ()
+  set (MANDIR ${PROJECT_BINARY_DIR}/man)
+endif ()
+include_directories (${MANDIR})
+
 # Only needed if target_compile_definitions is not supported
 add_definitions (${PROJECT_DEFINITIONS})
 
@@ -10,13 +16,13 @@ add_custom_target (tools ALL)
 foreach (TOOL ${TOOLS})
 
   add_executable (${TOOL} ${TOOL}.cpp)
-  if (MAINTAINER)
+  if (NOT RELEASE)
     add_dependencies (${TOOL} usage)
   endif ()
   add_dependencies (tools ${TOOL})
 
   set_source_files_properties (${TOOL}.cpp PROPERTIES
-    OBJECT_DEPENDS ${PROJECT_BINARY_DIR}/man/${TOOL}.usage)
+    OBJECT_DEPENDS ${MANDIR}/${TOOL}.usage)
 
   target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 
@@ -28,14 +34,16 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
     DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}")
 endif ()
 
-if (APPLE)
+if (APPLE AND RELATIVE_LIBDIR)
   # Ensure that the package is relocatable
   set_target_properties (${TOOLS} PROPERTIES
-    INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
+    INSTALL_RPATH "@loader_path/${RELATIVE_LIBDIR}")
 endif ()
 
 # Specify where the tools are installed, adding them to the export targets
-install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
+if (BINDIR)
+  install (TARGETS ${TOOLS} EXPORT targets DESTINATION ${BINDIR})
+endif ()
 
 if (MSVC AND PACKAGE_DEBUG_LIBS)
   # Possibly don't EXPORT the debug versions of the tools and then this
@@ -62,7 +70,10 @@ if (NOT WIN32)
       COMMAND ${CMAKE_COMMAND} -E
         copy scripts/${SCRIPT} ${SCRIPT} && chmod +x ${SCRIPT}
       DEPENDS ${SCRIPT}.sh)
-    install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT} DESTINATION sbin)
+    if (SBINDIR)
+      install (PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/${SCRIPT}
+        DESTINATION ${SBINDIR})
+    endif ()
   endforeach ()
   add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
 endif ()

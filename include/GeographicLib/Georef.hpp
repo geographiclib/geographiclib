@@ -2,7 +2,7 @@
  * \file Georef.hpp
  * \brief Header for GeographicLib::Georef class
  *
- * Copyright (c) Charles Karney (2015-2021) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -42,16 +42,28 @@ namespace GeographicLib {
     static const char* const lontile_;
     static const char* const lattile_;
     static const char* const degrees_;
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       tile_ = 15,               // The size of tile in degrees
       lonorig_ = -180,          // Origin for longitude
       latorig_ = -90,           // Origin for latitude
       base_ = 10,               // Base for minutes
       baselen_ = 4,
       maxprec_ = 11,            // approximately equivalent to MGRS class
-      maxlen_ = baselen_ + 2 * maxprec_,
+      maxlen_ = baselen_ + 2 * maxprec_
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
-    Georef();                     // Disable constructor
+#endif
+    Georef() = delete;          // Disable constructor
 
   public:
 
@@ -140,7 +152,7 @@ namespace GeographicLib {
      * The returned length is in the range [0, 11].
      **********************************************************************/
     static int Precision(real res) {
-      using std::abs; res = abs(res);
+      using std::fabs; res = fabs(res);
       for (int prec = 0; prec < maxprec_; ++prec) {
         if (prec == 1)
           continue;

@@ -2,7 +2,7 @@
  * \file Ellipsoid.cpp
  * \brief Implementation for GeographicLib::Ellipsoid class
  *
- * Copyright (c) Charles Karney (2012-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -20,7 +20,7 @@ namespace GeographicLib {
     , _f1(1 - _f)
     , _f12(Math::sq(_f1))
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
     , _e12(_e2 / (1 - _e2))
     , _n(_f / (2  - _f))
     , _b(_a * _f1)
@@ -42,7 +42,7 @@ namespace GeographicLib {
       ((Math::sq(_a) + Math::sq(_b) *
         (_e2 == 0 ? 1 :
          (_e2 > 0 ? atanh(sqrt(_e2)) : atan(sqrt(-_e2))) /
-         sqrt(abs(_e2))))/2);
+         sqrt(fabs(_e2))))/2);
   }
 
   Math::real Ellipsoid::ParametricLatitude(real phi) const
@@ -58,12 +58,12 @@ namespace GeographicLib {
   { return Math::atand(Math::tand(Math::LatFix(theta)) / _f12); }
 
   Math::real Ellipsoid::RectifyingLatitude(real phi) const {
-    return abs(phi) == 90 ? phi:
+    return fabs(phi) == 90 ? phi:
       90 * MeridianDistance(phi) / QuarterMeridian();
   }
 
   Math::real Ellipsoid::InverseRectifyingLatitude(real mu) const {
-    if (abs(mu) == 90)
+    if (fabs(mu) == 90)
       return mu;
     return InverseParametricLatitude(_ell.Einv(mu * _ell.E() / 90) /
                                      Math::degree());
@@ -89,7 +89,7 @@ namespace GeographicLib {
   { return Math::atand(Math::tauf(sinh(psi * Math::degree()), _es)); }
 
   Math::real Ellipsoid::CircleRadius(real phi) const {
-    return abs(phi) == 90 ? 0 :
+    return fabs(phi) == 90 ? 0 :
       // a * cos(beta)
       _a / hypot(real(1), _f1 * Math::tand(Math::LatFix(phi)));
   }

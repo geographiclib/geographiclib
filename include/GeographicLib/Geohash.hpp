@@ -2,7 +2,7 @@
  * \file Geohash.hpp
  * \brief Header for GeographicLib::Geohash class
  *
- * Copyright (c) Charles Karney (2012-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -44,7 +44,7 @@ namespace GeographicLib {
     static const unsigned long long mask_ = 1ULL << 45;
     static const char* const lcdigits_;
     static const char* const ucdigits_;
-    Geohash();                     // Disable constructor
+    Geohash() = delete;         // Disable constructor
 
   public:
 
@@ -126,7 +126,7 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real res) {
-      using std::abs; res = abs(res);
+      using std::fabs; res = fabs(res);
       for (int len = 0; len < maxlen_; ++len)
         if (LongitudeResolution(len) <= res)
           return len;
@@ -143,9 +143,9 @@ namespace GeographicLib {
      * The returned length is in the range [0, 18].
      **********************************************************************/
     static int GeohashLength(real latres, real lonres) {
-      using std::abs;
-      latres = abs(latres);
-      lonres = abs(lonres);
+      using std::fabs;
+      latres = fabs(latres);
+      lonres = fabs(lonres);
       for (int len = 0; len < maxlen_; ++len)
         if (LatitudeResolution(len) <= latres &&
             LongitudeResolution(len) <= lonres)

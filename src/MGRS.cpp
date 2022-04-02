@@ -2,7 +2,7 @@
  * \file MGRS.cpp
  * \brief Implementation for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2021) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -87,7 +87,7 @@ namespace GeographicLib {
     if (utmp) {
       int
         // Correct fuzziness in latitude near equator
-        iband = abs(lat) > angeps ? LatitudeBand(lat) : (northp ? 0 : -1),
+        iband = fabs(lat) < angeps ? (northp ? 0 : -1) : LatitudeBand(lat),
         icol = xh - minutmcol_,
         irow = UTMRow(iband, icol, yh % utmrowperiod_);
       if (irow != yh - (northp ? minutmNrow_ : maxutmSrow_))
@@ -132,7 +132,7 @@ namespace GeographicLib {
       // Here we do a more careful job using the band letter corresponding to
       // the actual latitude.
       ys /= tile_;
-      if (abs(ys) < 1)
+      if (fabs(ys) < 1)
         lat = real(0.9) * ys;         // accurate enough estimate near equator
       else {
         real

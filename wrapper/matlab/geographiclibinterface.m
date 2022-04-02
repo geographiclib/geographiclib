@@ -30,7 +30,7 @@ function geographiclibinterface(incdir, libdir)
 % Run 'mex -setup' to configure the C++ compiler for Matlab to use.
 
   funs = { 'geodesicinverse' };
-  lib='Geographic';
+  lib='GeographicLib';
   if (nargin < 2)
     if (nargin == 0)
       if ispc

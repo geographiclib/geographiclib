@@ -1,7 +1,7 @@
 The geodesic routines in GeographicLib have been implemented in
 JavaScript library.  See
 
-  https://geographiclib.sourceforge.io/html/js
+  https://geographiclib.sourceforge.io/JavaScript/doc
 
 William Wall <wallw@users.sourceforge.net> has posted a method of
 automatically translating the C++ code into JavaScript

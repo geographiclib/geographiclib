@@ -1,13 +1,15 @@
 project (GeographicLib)
 
 # Version information
-set (PROJECT_VERSION_MAJOR 1)
-set (PROJECT_VERSION_MINOR 52)
+set (PROJECT_VERSION_MAJOR 2)
+set (PROJECT_VERSION_MINOR 0)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
+set (PROJECT_VERSION_SUFFIX "-alpha")
+set (PROJECT_FULLVERSION ${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX})
 
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
 
@@ -37,37 +39,23 @@ else ()
   set (CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
   set (CPACK_PACKAGE_VERSION_PATCH ${PROJECT_VERSION_PATCH})
   set (CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+  set (CPACK_PACKAGE_VERSION_SUFFIX ${PROJECT_VERSION_SUFFIX})
 
 endif ()
 
+set (PACKAGE_DIR "${PROJECT_NAME}-${PROJECT_VERSION}")
+set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
+
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION_API 19)
-set (LIBVERSION_BUILD 19.2.0)
+set (LIBVERSION_API 22)
+set (LIBVERSION_BUILD 22.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
 cmake_minimum_required (VERSION 3.7.0) # This version was released 2016-11-11
 
 # User-settable variables
-
-# (1) COMMON_INSTALL_PATH governs the installation convention.  If it
-# is on ON (the Linux default), the installation is to a common
-# directory, e.g., /usr/local.  If it is OFF (the Windows default),
-# the installation directory contains the package name, e.g.,
-# c:/pkg/GeographicLib-1.22.  The installation directories for the
-# documentation, cmake configuration, python and matlab interfaces all
-# depend on the variable with deeper paths relative to
-# CMAKE_INSTALL_PREFIX being used when it's ON.
-
-if (WIN32)
-  option (COMMON_INSTALL_PATH "Use a common installation path for packages"
-    OFF)
-else ()
-  option (COMMON_INSTALL_PATH "Use a common installation path for packages" ON)
-endif ()
-
-# (2) PACKAGE_PATH and INSTALL_PATH have now been removed
 
 # (3) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
@@ -76,41 +64,36 @@ if (WIN32)
   # with Inno Setup which uses {commonappdata} which (since Windows
   # Vista) is C:/ProgramData.
   set (GEOGRAPHICLIB_DATA
-    "C:/ProgramData/GeographicLib"
+    "C:/ProgramData/${PROJECT_NAME}"
     CACHE PATH "Location for data for GeographicLib")
 else ()
   set (GEOGRAPHICLIB_DATA
-    "/usr/local/share/GeographicLib"
+    "/usr/local/share/${PROJECT_NAME}"
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
-# (4) Build which libraries?  Possible values are SHARED, STATIC, BOTH.
-if (MSVC)
-  set (GEOGRAPHICLIB_LIB_TYPE STATIC CACHE STRING
-    "Types of library generated: SHARED, STATIC (default), or BOTH")
-else ()
-  set (GEOGRAPHICLIB_LIB_TYPE SHARED CACHE STRING
-    "Types of library generated: SHARED (default), STATIC, or BOTH")
-endif ()
-set_property (CACHE GEOGRAPHICLIB_LIB_TYPE
-  PROPERTY STRINGS "SHARED" "STATIC" "BOTH")
+# (4) Build which libraries?
+option (BUILD_SHARED_LIBS "Build as a shared library" ON)
 
-if (GEOGRAPHICLIB_LIB_TYPE STREQUAL "BOTH")
+# Ignoring BUILD_SHARED_LIBS and build both shared and static libraries.
+# (This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier
+# versions.)
+option (BUILD_BOTH_LIBS "Build both shared and static libraries" OFF)
+
+# GEOGRAPHICLIB_LIB_TYPE_VAL is used to initialize
+# GEOGRAPHICLIB_SHARED_LIB in include/GeographicLib/Config.h.in
+if (BUILD_BOTH_LIBS)
   set (GEOGRAPHICLIB_SHARED_LIB ON)
   set (GEOGRAPHICLIB_STATIC_LIB ON)
   set (GEOGRAPHICLIB_LIB_TYPE_VAL 2)
-elseif (GEOGRAPHICLIB_LIB_TYPE STREQUAL "SHARED")
+elseif (BUILD_SHARED_LIBS)
   set (GEOGRAPHICLIB_SHARED_LIB ON)
   set (GEOGRAPHICLIB_STATIC_LIB OFF)
   set (GEOGRAPHICLIB_LIB_TYPE_VAL 1)
-elseif (GEOGRAPHICLIB_LIB_TYPE STREQUAL "STATIC")
+else ()
   set (GEOGRAPHICLIB_SHARED_LIB OFF)
   set (GEOGRAPHICLIB_STATIC_LIB ON)
   set (GEOGRAPHICLIB_LIB_TYPE_VAL 0)
-else ()
-  message (FATAL_ERROR
-    "Bad value of GEOGRAPHICLIB_LIB_TYPE, \"${GEOGRAPHICLIB_LIB_TYPE}\" "
-    "(should be SHARED, STATIC or BOTH)")
 endif ()
 
 if (GEOGRAPHICLIB_STATIC_LIB)
@@ -139,16 +122,19 @@ set (PROJECT_ALL_LIBRARIES
   ${PROJECT_SHARED_LIBRARIES}
   ${PROJECT_INTERFACE_LIBRARIES})
 
+if (EXISTS ${PROJECT_SOURCE_DIR}/VERSION)
+  # If the file, VERSION, exists then this is a released version of
+  # GeographicLib and the processed man pages are available in the
+  # source tree
+  set (RELEASE ON)
+else ()
+  set (RELEASE OFF)
+endif ()
+
 # (5) Create the documentation?  This depends on whether doxygen can be
 # found.  If this is OFF, then links will be provided to the online
 # documentation on Sourceforge.
-option (GEOGRAPHICLIB_DOCUMENTATION
-  "Use doxygen to create the documentation" OFF)
-
-# (6) Build .NET wrapper library NETGeographicLib.  This only applies to
-# Windows.  Default is OFF, because, currently, most people don't use
-# this interface.
-option (BUILD_NETGEOGRAPHICLIB "Build NETGeographicLib library" OFF)
+option (BUILD_DOCUMENTATION "Use doxygen to create the documentation" OFF)
 
 # (7) Set the default "real" precision.  This should probably be left
 # at 2 (double).
@@ -179,22 +165,66 @@ option (USE_BOOST_FOR_EXAMPLES
 option (APPLE_MULTIPLE_ARCHITECTURES
   "Build multiple architectures for Apple systems" OFF)
 
-# (11) Convert warnings into errors?  Default is OFF.  If the tests
-# directory is present you get this behavior regardless.
-option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+if (RELEASE)
+  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+  # BUILD_MANPAGES is ignored in RELEASE mode
+  option (BUILD_MANPAGES "Convert pod files to manpages" OFF)
+else ()
+  # (11) Convert warnings into errors?  Default is OFF if RELEASE, else ON.
+  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)
+  # Convert pod files to man pages.  This only necessary with a
+  # non-release tree.
+  option (BUILD_MANPAGES "Convert pod files to manpages" ON)
+endif ()
 
-set (LIBNAME Geographic)
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release")
+endif ()
+
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of
   # the library is called Geographic_d.
-  set (CMAKE_DEBUG_POSTFIX _d)
+  set (CMAKE_DEBUG_POSTFIX "_d" CACHE STRING "The suffix for debug objects")
+else ()
+  set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
-if (EXISTS ${PROJECT_SOURCE_DIR}/tests/CMakeLists.txt)
-  set (DEVELOPER ON)
+set (INCDIR "include" CACHE STRING "Where to install header files")
+set (BINDIR "bin" CACHE STRING "Where to install tools")
+if (WIN32)
+  set (SBINDIR "" CACHE STRING "Where to install admin tools")
 else ()
-  set (DEVELOPER OFF)
+  set (SBINDIR "sbin" CACHE STRING "Where to install admin tools")
 endif ()
+if (CMAKE_INSTALL_LIBDIR)
+  # If it's defined, use this GNUInstallDirs path to support lib, lib64,
+  # and lib/<muliarch-tuple> variants
+  set (LIBDIR "${CMAKE_INSTALL_LIBDIR}"
+    CACHE STRING "Where to install libraries")
+else ()
+  set (LIBDIR "lib" CACHE STRING "Where to install libraries")
+endif ()
+set (DLLDIR "bin" CACHE STRING "Where to install dlls")
+set (MANDIR "share/man" CACHE STRING "Where to instal the man pages")
+set (CMAKEDIR "lib/cmake/${PROJECT_NAME}"
+  CACHE STRING "Where to install cmake configs")
+set (PKGDIR "lib/pkgconfig" CACHE STRING "Where to install package config")
+set (DOCDIR "share/doc/${PROJECT_NAME}"
+  CACHE STRING "Where to install documentation")
+set (EXAMPLEDIR "share/doc/${PROJECT_NAME}-dev"
+  CACHE STRING "Where to install examples")
+
+# The relative path to library directory from the bin directory
+if (LIBDIR AND BINDIR)
+  file (RELATIVE_PATH RELATIVE_LIBDIR
+    "${CMAKE_INSTALL_PREFIX}/${BINDIR}" "${CMAKE_INSTALL_PREFIX}/${LIBDIR}")
+else ()
+  set (RELATIVE_LIBDIR "")
+endif ()
+
+set (LIBNAME "GeographicLib")
 
 if (NOT MSVC)
   # Set the run time path for shared libraries for non-Windows machines.
@@ -205,9 +235,9 @@ if (NOT MSVC)
     set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   endif ()
   # (2) include installed path for GeographicLib.
-  if (NOT APPLE)
+  if (NOT APPLE AND RELATIVE_LIBDIR)
     # Use relative path so that package is relocatable
-    set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
+    set (CMAKE_INSTALL_RPATH "\$ORIGIN/${RELATIVE_LIBDIR}")
   else ()
     # cmake 2.8.12 introduced a way to make the package relocatable.
     # See also INSTALL_RPATH property on the tools.
@@ -250,7 +280,7 @@ else ()
   set (CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
 endif ()
-if (DEVELOPER OR CONVERT_WARNINGS_TO_ERRORS)
+if (CONVERT_WARNINGS_TO_ERRORS)
   if (MSVC)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
     set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
@@ -275,58 +305,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   endif ()
 endif ()
 
-include (CheckCXXSourceCompiles)
-if (MSVC)
-  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-else ()
-  set (CMAKE_REQUIRED_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-  if (CMAKE_CXX_COMPILER_ID STREQUAL GNU AND
-      CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-    # Flags for CMAKE_CXX_STANDARD are added here by default
-    set (CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x")
-  endif ()
-endif ()
-# Check whether the C++11 math functions: std::expm1, std::atanh,
-# etc. are available.  These functions are required.
-check_cxx_source_compiles (
-  "#include <cmath>
-int main() {
-  int q = 0;
-  return int(std::hypot(3.0, 4.0) + std::expm1(0.5) +
-             std::log1p(2.0) + std::asinh(10.0) +
-             std::atanh(0.8) + std::cbrt(8.0) +
-             std::fma(1.0, 2.0, 3.0) + std::remquo(100.0, 90.0, &q) +
-             std::remainder(100.0, 90.0) + std::copysign(1.0, -0.0) +
-             std::round(3.5)) +
-         std::isfinite(4.0) + std::isnan(0.0) + int(std::lround(-3.5));
-}\n" CXX11_MATH)
-if (NOT CXX11_MATH)
-  message (FATAL_ERROR "Missing C++11 math functions")
-endif ()
-
-# Check whether the C++11 static_assert macro is available.  This
-# capability is required.
-check_cxx_source_compiles (
-  "#include <cmath>
-int main() {
-  static_assert(true, \"static assert test\");
-  return 0;
-}\n" CXX11_STATIC_ASSERT)
-if (NOT CXX11_STATIC_ASSERT)
-  message (FATAL_ERROR "Missing C++11 static_assert")
-endif ()
-
 # Include directories are specified via target_include_directories in src.
-
-if (USE_BOOST_FOR_EXAMPLES)
-  # quad precision numbers appeared in Boost 1.54.  Various
-  # workarounds stopped being needed with Boost 1.64.
-  find_package (Boost 1.64 COMPONENTS serialization)
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.64)
-  endif ()
-endif ()
 
 set (HIGHPREC_LIBRARIES)
 if (GEOGRAPHICLIB_PRECISION EQUAL 1)
@@ -341,6 +320,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    find_package (Boost 1.64)
     if (Boost_FOUND)
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()
@@ -350,21 +330,25 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
-  # Install MPFR C++ version 3.6.5 (2016-12-19) or later from
-  # http://www.holoborodko.com/pavel/mpfr and install mpreal.h in the
+  # Install MPFR C++ version 3.6.9 (2022-01-18) or later from
+  # https://github.com/advanpix/mpreal and install mpreal.h in the
   # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
   # to abide by the terms of this license.
   #
-  # For Linux, use system versions of mpfr and gmp.  For Apple, use
+  # For Linux, use system versions of mpfr and gmp.  This is routinely
+  # used only on Linux.  It can be made to work on Apple and Windows
+  # systems.  However, the following notes are likely out of data...
+  #
+  # For Apple, use
   # brew install mpfr.  Recent versions of mpfr (3.0 or later) work
-  # fine.  For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
+  # fine.
+  #
+  # For Windows, download MPFR-MPIR-x86-x64-MSVC2010.zip from
   # the MPFR C++ site and unpack in the top-level directory.  The
-  # Windows build only works with GEOGRAPHICLIB_LIB_TYPE=STATIC.
+  # Windows build only works with static libraries.
+  # NOTE: The Windows build hasn't been tested for a long time.
   # NOTE: mpfr, gmp, and mpir are covered by the LGPL; be sure to
   # abide by the terms of this license.
-  #
-  # Need Visual Studio 12 2013 or later, g++ 4.5 or later; not sure
-  # about clang.
   if (WIN32)
     if (MSVC AND NOT MSVC_VERSION LESS 1800)
       if (CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -416,43 +400,37 @@ configure_file (
   @ONLY)
 
 # The documentation depends on doxygen.
-if (GEOGRAPHICLIB_DOCUMENTATION)
+if (BUILD_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)
   # Version 1.8.7 or later needed for &hellip;
   find_package (Doxygen 1.8.7)
-  # For JavaScript documentation
-  find_program (JSDOC jsdoc)
-  # For Python documentation
-  find_program (SPHINX sphinx-build)
+  if (NOT DOXYGEN_FOUND)
+    message (WARNING "Doxygen not found, not building the documentation")
+    set (BUILD_DOCUMENTATION OFF)
+  endif ()
 endif ()
 
 # The man pages are written as pod files and converted to nroff format,
 # C++ code, and html.  Because this require tools that may not be
 # available on an end-user's system, the creation of the final
 # documentation is therefore only done in "MAINTAINER" mode.  The
-# maintainer runs "make distrib-all" which installs the transformed
+# maintainer runs "make distrib-man" which installs the transformed
 # documentation files into the source tree.  Skip Apple here because
 # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
-# file and there's no simple equivalent for MacOSX
-if (NOT WIN32 AND NOT APPLE)
-  find_program (HAVE_POD2MAN pod2man)
-  find_program (HAVE_POD2HTML pod2html)
-  find_program (HAVE_COL col)
+# file and there's no simple equivalent for MacOSX.  MAINTAINER mode
+# also supported (a) running autogen.sh to configure the autoconf
+# builds, and (b) running git ls-files to run some sanity checks.
+# MAINTAINTER mode is not set in RELEASE mode.
+if (NOT RELEASE AND BUILD_MANPAGES AND NOT WIN32 AND NOT APPLE)
+  find_program (POD2MAN pod2man)
+  find_program (POD2HTML pod2html)
+  find_program (COL col)
 endif ()
-if (HAVE_POD2MAN AND HAVE_POD2HTML AND HAVE_COL)
+if (POD2MAN AND POD2HTML AND COL AND IS_DIRECTORY ${PROJECT_SOURCE_DIR}/.git)
   set (MAINTAINER ON)
+  find_program (RSYNC rsync)
 else ()
   set (MAINTAINER OFF)
-endif ()
-if (MAINTAINER)
-  add_custom_target (distrib-all)
-  add_dependencies (distrib-all distrib-man)
-endif ()
-
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-  # Set a default build type for single-configuration cmake generators
-  # if no build type is set.
-  set (CMAKE_BUILD_TYPE Release)
 endif ()
 
 # Set output directories for Windows so that executables and dlls are
@@ -481,24 +459,26 @@ add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
-add_subdirectory (js)
-add_subdirectory (matlab)
-add_subdirectory (python/geographiclib)
+set (CALLED_FROM_TOPLEVEL ON)
 add_subdirectory (examples)
-if (MSVC AND BUILD_NETGEOGRAPHICLIB)
-  if (GEOGRAPHICLIB_PRECISION EQUAL 2)
-    set (NETGEOGRAPHICLIB_LIBRARIES NETGeographicLib)
-    set (NETLIBNAME NETGeographic)
-    add_subdirectory (dotnet/NETGeographicLib)
-    add_subdirectory (dotnet/examples/ManagedCPP)
-  else ()
-    message (WARNING "Build of NETGeographicLib only works with doubles")
-  endif ()
-endif ()
 add_subdirectory (cmake)
-if (DEVELOPER)
-  add_subdirectory (tests)
+enable_testing ()
+add_subdirectory (tests)
+if (NOT RELEASE)
+  add_subdirectory (develop)
 endif ()
+
+if (CMAKE_GENERATOR_PLATFORM)
+  set (PLATFORM_FLAG "-A")
+endif ()
+add_custom_target (exampleprograms
+  COMMAND ${CMAKE_COMMAND}
+  -G ${CMAKE_GENERATOR} ${PLATFORM_FLAG} ${CMAKE_GENERATOR_PLATFORM}
+  -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
+  -D USE_BOOST_FOR_EXAMPLES=${USE_BOOST_FOR_EXAMPLES}
+  -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}
+  COMMAND ${CMAKE_COMMAND} --build exampleprograms --parallel 8)
+add_dependencies (exampleprograms ${PROJECT_LIBRARIES})
 
 # Packaging support; we deal with
 # (1) a source distribution: cmake make a tar.gz file and the zip file
@@ -516,7 +496,7 @@ endif ()
 set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
 include (InstallRequiredSystemLibraries)
 
-# The configuration of CPack is via variable that need to be set before
+# The configuration of CPack is via variables that need to be set before
 # the include (CPack).
 set (CPACK_PACKAGE_CONTACT charles@karney.com)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
@@ -528,17 +508,19 @@ set (CPACK_SOURCE_IGNORE_FILES
   "~\$"
   "/\\\\.git"
   "${PROJECT_SOURCE_DIR}/BUILD"
-  "${PROJECT_SOURCE_DIR}/(tests|testdata|cgi-bin|.*\\\\.cache)/"
-  "${PROJECT_SOURCE_DIR}/(distrib|.*-distrib|.*-installer|geodesic-papers)/"
-  "${PROJECT_SOURCE_DIR}/[^/]*\\\\.(xml|html|css|kmz|pdf)\$"
+  "${PROJECT_SOURCE_DIR}/man/(.*\\\\.pod|makeusage\\\\.sh|dummy\\\\..*)\$"
+  "${PROJECT_SOURCE_DIR}/cmake/maintainer-.*\\\\.cmake\$"
+  "${PROJECT_SOURCE_DIR}/(develop|cgi-bin|misc|.*\\\\.cache)/"
+  "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer|geodesic-papers)/"
+  "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
+  "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(robots.txt|geodesic-biblio.txt|makefile-admin|[^/]*\\\\.png)\$"
-  "${PROJECT_SOURCE_DIR}/matlab/.*blurb.txt\$")
-set (CPACK_SOURCE_GENERATOR TGZ)
+  "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin)\$")
+set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}-${PROJECT_VERSION}")
-set (CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}")
+set (CPACK_SOURCE_PACKAGE_FILE_NAME "${PACKAGE_DIR}")
+set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PACKAGE_DIR}")
 
 if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
@@ -548,25 +530,25 @@ if (WIN32)
   set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
   # No provision for accommodating different compiler versions.  However
   # the Visual Studio 14 2015 build works also with Visual Studio 15
-  # 2017 and Visual Studio 16 2019.
+  # 2017, Visual Studio 16 2019, and Visual Studio 17 2022.
   if (CMAKE_SIZEOF_VOID_P EQUAL 8)
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files")
-    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win64")
+    set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win64")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
   else ()
     set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files (x86)")
-    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-win32")
+    set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win32")
     set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} win32 ${PROJECT_VERSION}")
     set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
       "${PROJECT_NAME}-win32-${PROJECT_VERSION}")
   endif ()
   set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
   set (CPACK_NSIS_MENU_LINKS
-    "https://geographiclib.sourceforge.io/${PROJECT_VERSION}/index.html"
+    "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/index.html"
     "Library documentation"
-    "https://geographiclib.sourceforge.io/${PROJECT_VERSION}/utilities.html"
+    "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/utilities.html"
     "Utilities documentation"
     "https://geographiclib.sourceforge.io" "GeographicLib home page"
     "https://sourceforge.net/projects/geographiclib/" "Main project page")
@@ -582,52 +564,14 @@ endif ()
 
 include (CPack)
 
-# Another maintainer-specific target is building the source distribution
-# via the target dist.  This calls package_source to make a tar.gz file.
-# However this needs to be touched up to support the vanilla Makefiles
-# provided with GeographicLib.  This entails
-# (1) creating Makefile (which includes Makefile.mk);
-# (2) creating a bare-bones Config.h (with just the version information);
-# (3) making sure that make thinks the generated documentation files are
-# up-to-date.
-# Then a new tar.gz file and zip file are created.  To avoid potential
-# problems with directory permissions, tar and zip are told only to
-# archive the files.
+# If MAINTAINER, then prepare the source distribution for RELEASE mode.
+# "make dist" does the following:
+#   "make package_source" to call the CPack source generator
+#   remove stray files which aren't in git
+#   runs autogen.sh in the package source directory
+#   creates the processing man documentation and installs it too
+#   creates a file VERSION to signal that this is a RELEASE source
+#   create .tar.gz and .zip archives of the results
 if (MAINTAINER)
-  add_custom_target (dist
-    COMMAND ${CMAKE_MAKE_PROGRAM} package_source
-    COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      echo include Makefile.mk > Makefile &&
-      sed -e "s/Unconfigured/${PROJECT_VERSION}/"
-      -e "s/MAJOR .*/MAJOR ${CPACK_PACKAGE_VERSION_MAJOR}/"
-      -e "s/MINOR .*/MINOR ${CPACK_PACKAGE_VERSION_MINOR}/"
-      -e "s/PATCH .*/PATCH ${CPACK_PACKAGE_VERSION_PATCH}/"
-      include/GeographicLib/Config.h > include/GeographicLib/Config.h.new &&
-      mv include/GeographicLib/Config.h.new include/GeographicLib/Config.h
-    COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME} &&
-      touch man/[A-Za-z]*.usage man/[A-Za-z]*.1 man/[A-Za-z]*.1.html &&
-      chmod -R g-w .
-    COMMAND
-      cd _CPack_Packages/Linux-Source/TGZ &&
-      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-      tar cfzT ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.tar.gz -
-    COMMAND
-      rm -f ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip &&
-      rsync -a --delete
-      _CPack_Packages/Linux-Source/TGZ/${CPACK_SOURCE_PACKAGE_FILE_NAME}
-      _CPack_Packages/Linux-Source/TGZ.DOS/ &&
-      cd _CPack_Packages/Linux-Source/TGZ.DOS &&
-      find . -type f |
-      egrep -v '/\(compile|config[^/]*|depcomp|install-sh|missing|[Mm]akefile[^/]*|[^/]*\\.\(ac|am|csproj|eps|kmz|m4|pdf|png|resx|settings|sh|sln|vcproj|vcxproj\)\)$$' |
-      xargs unix2dos -q -k &&
-      find ${CPACK_SOURCE_PACKAGE_FILE_NAME} -type f |
-      zip -q ${CMAKE_BINARY_DIR}/${CPACK_SOURCE_PACKAGE_FILE_NAME}.zip -@
-  )
-  add_dependencies (dist distrib-all)
+  include (cmake/maintainer-top.cmake)
 endif ()
-
-# The test suite -- split into a separate file because it's rather large.
-# N.B. Many of the tests fail with GEOGRAPHICLIB_PRECISION = 1 (float).
-include (tools/tests.cmake)

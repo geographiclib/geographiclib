@@ -3,7 +3,7 @@
 # RhumbSolve.cgi
 # cgi script for rhumb line calculations
 #
-# Copyright (c) Charles Karney (2014-2018) <charles@karney.com> and
+# Copyright (c) Charles Karney (2014-2022) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -124,7 +124,7 @@ cat <<EOF
   <body>
     <h3>
       Online rhumb line calculations using the
-      <a href="https://geographiclib.sourceforge.io/html/RhumbSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/RhumbSolve.1.html">
          RhumbSolve</a> utility
     </h3>
     <form action="/cgi-bin/RhumbSolve" method="get">
@@ -258,7 +258,7 @@ cat <<EOF
     </form>
     <hr>
     <p>
-      <a href="https://geographiclib.sourceforge.io/html/RhumbSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/RhumbSolve.1.html">
         RhumbSolve (version $VERSION)</a>
       performs rhumb line calculations for an arbitrary ellipsoid of
       revolution.  The path with a constant heading between two points
@@ -324,15 +324,15 @@ cat <<EOF
       number) for <em>lon2</em> and <em>S12</em> in this case.
     </p>
     <p>
-      <a href="https://geographiclib.sourceforge.io/html/RhumbSolve.1.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/RhumbSolve.1.html">
         RhumbSolve</a>,
       which is a simple wrapper of the
-      <a href="https://geographiclib.sourceforge.io/html/classGeographicLib_1_1Rhumb.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/classGeographicLib_1_1Rhumb.html">
         GeographicLib::Rhumb</a> class, is one of the utilities provided
       with <a href="https://geographiclib.sourceforge.io/">
       GeographicLib</a>.  See also the section of the GeographicLib
       documentation on
-      <a href="https://geographiclib.sourceforge.io/html/rhumb.html">
+      <a href="https://geographiclib.sourceforge.io/C++/doc/rhumb.html">
         Rhumb lines</a> and the Wikipedia page,
       <a href="https://en.wikipedia.org/wiki/Rhumb_line">
         Rhumb line</a>.

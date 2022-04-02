@@ -2,7 +2,7 @@
  * \file Gnomonic.hpp
  * \brief Header for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -28,7 +28,7 @@ namespace GeographicLib {
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda:
-   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   *   <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * The projection of \e P is defined as follows: compute the geodesic line
@@ -206,12 +206,6 @@ namespace GeographicLib {
      *   inherited from the Geodesic object used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _earth.Flattening(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
   };

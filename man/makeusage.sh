@@ -12,7 +12,7 @@ int usage(int retval, bool brief) {
     ( retval ? std::cerr : std::cout ) << "Usage:\n\\
 EOF
 
-pod2man $SOURCE | nroff -c -man 2>/dev/null | col -b -x |
+$POD2MAN $SOURCE | nroff -c -man 2>/dev/null | $COL -b -x |
 sed -e 1,/SYNOPSIS/d -e '/^$/,$d' -e 's/  / /g' -e 's/$/\\n\\/' -e 's/"/\\"/g'
 
 cat <<EOF
@@ -20,12 +20,12 @@ cat <<EOF
 For full documentation type:\n\\
     $NAME --help\n\\
 or visit:\n\\
-    https://geographiclib.sourceforge.io/$VERSION/$NAME.1.html\n";
+    https://geographiclib.sourceforge.io/C++/$VERSION/$NAME.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n\\
 EOF
 
-pod2man $SOURCE | nroff -c -man 2>/dev/null | col -b -x | head --lines -4 |
+$POD2MAN $SOURCE | nroff -c -man 2>/dev/null | $COL -b -x | head --lines -4 |
 tail --lines +5 | sed -e 's/\\/\\\\/g' -e 's/$/\\n\\/' -e 's/"/\\"/g'
 
 cat <<EOF

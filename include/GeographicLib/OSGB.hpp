@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -28,10 +28,10 @@ namespace GeographicLib {
    * maps of Great Britain and conversions to the grid reference system.
    *
    * See
-   * - <a href="http://www.ordnancesurvey.co.uk/docs/support/guide-coordinate-systems-great-britain.pdf">
+   * - <a href="https://www.ordnancesurvey.co.uk/documents/resources/guide-coordinate-systems-great-britain.pdf">
    *   A guide to coordinate systems in Great Britain</a>
-   * - <a href="http://www.ordnancesurvey.co.uk/docs/support/national-grid.pdf">
-   *   Guide to the National Grid</a>
+   * - <a href="https://www.ordnancesurvey.co.uk/documents/resources/guide-to-nationalgrid.pdf">
+   *   Using the National Grid</a>
    *
    * \warning the latitudes and longitudes for the Ordnance Survey grid
    * system do not use the WGS84 datum.  Do not use the values returned by this
@@ -47,7 +47,15 @@ namespace GeographicLib {
     static const char* const letters_;
     static const char* const digits_;
     static const TransverseMercator& OSGBTM();
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       base_ = 10,
       tile_ = 100000,
       tilelevel_ = 5,
@@ -59,11 +67,15 @@ namespace GeographicLib {
       maxx_ = (tilegrid_*tilegrid_ - tileoffx_) * tile_,
       maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_,
       // Maximum precision is um
-      maxprec_ = 5 + 6,
+      maxprec_ = 5 + 6
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
+#endif
     static real computenorthoffset();
     static void CheckCoords(real x, real y);
-    OSGB();                     // Disable constructor
+    OSGB() = delete;            // Disable constructor
   public:
 
     /**
@@ -154,7 +166,7 @@ namespace GeographicLib {
     static void GridReference(real x, real y, int prec, std::string& gridref);
 
     /**
-     * Convert OSGB coordinates to a grid reference.
+     * Convert OSGB grid reference to coordinates.
      *
      * @param[in] gridref National Grid reference.
      * @param[out] x easting of point (meters).
@@ -184,8 +196,8 @@ namespace GeographicLib {
      * 10<sup>9.48401603&minus;10</sup> m.  The Airy 1830 value is returned
      * because the OSGB projection is based on this ellipsoid.  The conversion
      * factor from feet to meters is the one used for the 1936 retriangulation
-     * of Britain; see Section A.1 (p. 37) of <i>A guide to coordinate systems
-     * in Great Britain</i>, v2.2 (Dec. 2013).
+     * of Britain; see Section A.1 (footnote 10 on p. 44) of <i>A guide to
+     * coordinate systems in Great Britain</i>, v3.6 (2020).
      **********************************************************************/
     static Math::real EquatorialRadius() {
     // result is about 6377563.3960320664406 m
@@ -236,12 +248,6 @@ namespace GeographicLib {
      * @return false easting the OSGB projection (400000 meters).
      **********************************************************************/
     static Math::real FalseEasting() { return real(400000); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 
   };

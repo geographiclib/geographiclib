@@ -176,7 +176,7 @@ option.  The B<-h> option prints the default geoid path and name.  Use
 the B<-v> option to ascertain the full path name of the data file.
 
 Instructions for downloading and installing geoid data are available at
-L<https://geographiclib.sourceforge.io/html/geoid.html#geoidinst>.
+L<https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst>.
 
 B<NOTE>: all the geoids above apply to the WGS84 ellipsoid (I<a> =
 6378137 m, I<f> = 1/298.257223563) only.

@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -91,16 +91,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     // Replace all occurrences of pat by c.  If c is NULL remove pat.
-    static void replace(std::string& s, const std::string& pat, char c) {
-      std::string::size_type p = 0;
-      int count = c ? 1 : 0;
-      while (true) {
-        p = s.find(pat, p);
-        if (p == std::string::npos)
-          break;
-        s.replace(p, pat.length(), count, c);
-      }
-    }
+    static void replace(std::string& s, const std::string& pat, char c);
     static const char* const hemispheres_;
     static const char* const signs_;
     static const char* const digits_;
@@ -108,7 +99,7 @@ namespace GeographicLib {
     static const char* const components_[3];
     static Math::real NumMatch(const std::string& s);
     static Math::real InternalDecode(const std::string& dmsa, flag& ind);
-    DMS();                      // Disable constructor
+    DMS() = delete;             // Disable constructor
 
   public:
 
@@ -140,9 +131,10 @@ namespace GeographicLib {
      * result is multiplied by the implied sign of the hemisphere designator
      * (negative for S and W).  In addition \e ind is set to DMS::LATITUDE if N
      * or S is present, to DMS::LONGITUDE if E or W is present, and to
-     * DMS::NONE otherwise.  Throws an error on a malformed string.  No check
-     * is performed on the range of the result.  Examples of legal and illegal
-     * strings are
+     * DMS::NONE otherwise.  Leading and trailing whitespace is removed from
+     * the string before processing.  This routine throws an error on a
+     * malformed string.  No check is performed on the range of the result.
+     * Examples of legal and illegal strings are
      * - <i>LEGAL</i> (all the entries on each line are equivalent)
      *   - -20.51125, 20d30'40.5&quot;S, -20&deg;30'40.5, -20d30.675,
      *     N-20d30'40.5&quot;, -20:30:40.5

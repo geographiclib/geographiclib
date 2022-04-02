@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.hpp
  * \brief Header for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -59,7 +59,7 @@ namespace GeographicLib {
    * taken to be the equator.  See the documentation on TransverseMercator for
    * how to include a false easting, false northing, or a latitude of origin.
    *
-   * See <a href="https://geographiclib.sourceforge.io/tm-grid.kmz"
+   * See <a href="https://geographiclib.sourceforge.io/misc/tm-grid.kmz"
    * type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
    * illustration of the transverse Mercator grid in Google Earth.
    *
@@ -87,7 +87,7 @@ namespace GeographicLib {
     real tol_, tol2_, taytol_;
     real _a, _f, _k0, _mu, _mv, _e;
     bool _extendp;
-    EllipticFunction _Eu, _Ev;
+    EllipticFunction _eEu, _eEv;
 
     void zeta(real u, real snu, real cnu, real dnu,
               real v, real snv, real cnv, real dnv,
@@ -243,12 +243,6 @@ namespace GeographicLib {
      *   k0 used in the constructor and is the scale on the central meridian.
      **********************************************************************/
     Math::real CentralScale() const { return _k0; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

@@ -2,7 +2,7 @@
  * \file Gnomonic.cpp
  * \brief Implementation for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -70,7 +70,7 @@ namespace GeographicLib {
       real ds = little ? (m - rho * M) * M : (rho * m - M) * m;
       s -= ds;
       // Reversed test to allow escape with NaNs
-      if (!(abs(ds) >= eps_ * _a))
+      if (!(fabs(ds) >= eps_ * _a))
         ++trip;
     }
     if (trip) {

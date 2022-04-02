@@ -2,7 +2,7 @@
  * \file TransverseMercator.cpp
  * \brief Implementation for GeographicLib::TransverseMercator class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -46,7 +46,7 @@ namespace GeographicLib {
     , _f(f)
     , _k0(k0)
     , _e2(_f * (2 - _f))
-    , _es((_f < 0 ? -1 : 1) * sqrt(abs(_e2)))
+    , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
     , _e2m(1 - _e2)
       // _c = sqrt( pow(1 + _e, 1 + _e) * pow(1 - _e, 1 - _e) ) )
       // See, for example, Lee (1976), p 100.
@@ -352,8 +352,8 @@ namespace GeographicLib {
     lon = Math::AngDiff(lon0, lon);
     // Explicitly enforce the parity
     int
-      latsign = (lat < 0) ? -1 : 1,
-      lonsign = (lon < 0) ? -1 : 1;
+      latsign = signbit(lat) ? -1 : 1,
+      lonsign = signbit(lon) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
     bool backside = lon > 90;
@@ -522,8 +522,8 @@ namespace GeographicLib {
       eta = x / (_a1 * _k0);
     // Explicitly enforce the parity
     int
-      xisign = (xi < 0) ? -1 : 1,
-      etasign = (eta < 0) ? -1 : 1;
+      xisign = signbit(xi) ? -1 : 1,
+      etasign = signbit(eta) ? -1 : 1;
     xi *= xisign;
     eta *= etasign;
     bool backside = xi > Math::pi()/2;
@@ -561,7 +561,7 @@ namespace GeographicLib {
     real
       xip = y1.real(), etap = y1.imag(),
       s = sinh(etap),
-      c = max(real(0), cos(xip)), // cos(pi/2) might be negative
+      c = fmax(real(0), cos(xip)), // cos(pi/2) might be negative
       r = hypot(s, c);
     if (r != 0) {
       lon = Math::atan2d(s, c); // Krueger p 17 (25)

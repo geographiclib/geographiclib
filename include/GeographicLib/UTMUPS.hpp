@@ -2,7 +2,7 @@
  * \file UTMUPS.hpp
  * \brief Header for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -93,7 +93,7 @@ namespace GeographicLib {
     // throwp = false, return bool instead.
     static bool CheckCoords(bool utmp, bool northp, real x, real y,
                             bool msgrlimits = false, bool throwp = true);
-    UTMUPS();                   // Disable constructor
+    UTMUPS() = delete;          // Disable constructor
 
   public:
 
@@ -413,12 +413,6 @@ namespace GeographicLib {
      **********************************************************************/
     static Math::real Flattening()
     { return Constants::WGS84_f(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 
   };

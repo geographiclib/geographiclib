@@ -2,7 +2,7 @@
  * \file MGRS.hpp
  * \brief Header for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -87,7 +87,15 @@ namespace GeographicLib {
     static const int maxeasting_[4];
     static const int minnorthing_[4];
     static const int maxnorthing_[4];
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       base_ = 10,
       // Top-level tiles are 10^5 m = 100 km on a side
       tilelevel_ = 5,
@@ -98,8 +106,12 @@ namespace GeographicLib {
       // Maximum precision is um
       maxprec_ = 5 + 6,
       // For generating digits at maxprec
-      mult_ = 1000000,
+      mult_ = 1000000
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
+#endif
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int UTMRow(int iband, int icol, int irow);
 
@@ -117,8 +129,8 @@ namespace GeographicLib {
     // function isn't currently used.
     static int ApproxLatitudeBand(real y) {
       // northing at tile center in units of tile = 100km
-      using std::floor; using std::abs;
-      real ya = floor( (std::min)(real(88), abs(y/tile_)) ) +
+      using std::floor; using std::fabs; using std::fmin;
+      real ya = floor( fmin(real(88), fabs(y/tile_)) ) +
         real(0.5);
       // convert to lat (mult by 90/100) and then to band (divide by 8)
       // the +1 fine tunes the boundary between bands 3 and 4
@@ -137,8 +149,16 @@ namespace GeographicLib {
       // X 9  80:94  15
       return y >= 0 ? b : -(b + 1);
     }
-    // UTMUPS access these enums
+    // UTMUPS accesses these enums
+#if GEOGRAPHICLIB_PRECISION == 4
+    // Work around a enum lossage introduced in boost 1.76
+    //   https://github.com/boostorg/multiprecision/issues/324
+    // and fixed in
+    //   https://github.com/boostorg/multiprecision/pull/333
+    static const int
+#else
     enum {
+#endif
       tile_ = 100000,            // Size MGRS blocks
       minutmcol_ = 1,
       maxutmcol_ = 9,
@@ -154,8 +174,12 @@ namespace GeographicLib {
       utmeasting_ = 5,           // UTM false easting
       // Difference between S hemisphere northing and N hemisphere northing
       utmNshift_ = (maxutmSrow_ - minutmNrow_) * tile_
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
     };
-    MGRS();                     // Disable constructor
+#endif
+    MGRS() = delete;            // Disable constructor
 
   public:
 
@@ -334,12 +358,6 @@ namespace GeographicLib {
      * based on this ellipsoid.)
      **********************************************************************/
     static Math::real Flattening() { return UTMUPS::Flattening(); }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    static Math::real MajorRadius() { return EquatorialRadius(); }
     ///@}
 
     /**

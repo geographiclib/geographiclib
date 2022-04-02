@@ -2,7 +2,7 @@
  * \file GravityCircle.hpp
  * \brief Header for GeographicLib::GravityCircle class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -52,8 +52,8 @@ namespace GeographicLib {
     };
 
     unsigned _caps;
-    real _a, _f, _lat, _h, _Z, _Px, _invR, _cpsi, _spsi,
-      _cphi, _sphi, _amodel, _GMmodel, _dzonal0,
+    real _a, _f, _lat, _h, _zZ, _pPx, _invR, _cpsi, _spsi,
+      _cphi, _sphi, _amodel, _gGMmodel, _dzonal0,
       _corrmult, _gamma0, _gamma, _frot;
     CircularEngine _gravitational, _disturbing, _correction;
 
@@ -273,12 +273,6 @@ namespace GeographicLib {
     bool Capabilities(unsigned testcaps) const {
       return (_caps & testcaps) == testcaps;
     }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
   };
 

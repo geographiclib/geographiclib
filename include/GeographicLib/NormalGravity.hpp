@@ -2,7 +2,7 @@
  * \file NormalGravity.hpp
  * \brief Header for GeographicLib::NormalGravity class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -81,8 +81,8 @@ namespace GeographicLib {
     static const int maxit_ = 20;
     typedef Math::real real;
     friend class GravityModel;
-    real _a, _GM, _omega, _f, _J2, _omega2, _aomega2;
-    real _e2, _ep2, _b, _E, _U0, _gammae, _gammap, _Q0, _k, _fstar;
+    real _a, _gGM, _omega, _f, _jJ2, _omega2, _aomega2;
+    real _e2, _ep2, _b, _eE, _uU0, _gammae, _gammap, _qQ0, _k, _fstar;
     Geocentric _earth;
     static real atanzz(real x, bool alt) {
       // This routine obeys the identity
@@ -90,12 +90,12 @@ namespace GeographicLib {
       //
       // Require x >= -1.  Best to call with alt, s.t. x >= 0; this results in
       // a call to atan, instead of asin, or to asinh, instead of atanh.
-      using std::sqrt; using std::abs; using std::atan; using std::asin;
+      using std::sqrt; using std::fabs; using std::atan; using std::asin;
       using std::asinh; using std::atanh;
-      real z = sqrt(abs(x));
+      real z = sqrt(fabs(x));
       return x == 0 ? 1 :
         (alt ?
-         (!(x < 0) ? asinh(z) : asin(z)) / sqrt(abs(x) / (1 + x)) :
+         (!(x < 0) ? asinh(z) : asin(z)) / sqrt(fabs(x) / (1 + x)) :
          (!(x < 0) ? atan(z) : atanh(z)) / z);
     }
     static real atan7series(real x);
@@ -276,7 +276,7 @@ namespace GeographicLib {
      *   constructor.
      **********************************************************************/
     Math::real MassConstant() const
-    { return Init() ? _GM : Math::NaN(); }
+    { return Init() ? _gGM : Math::NaN(); }
 
     /**
      * @return <i>J</i><sub><i>n</i></sub> the dynamical form factors of the
@@ -291,7 +291,7 @@ namespace GeographicLib {
      * &minus;<i>J</i><sub><i>n</i></sub> / sqrt(2 \e n + 1).
      **********************************************************************/
     Math::real DynamicalFormFactor(int n = 2) const
-    { return Init() ? ( n == 2 ? _J2 : Jn(n)) : Math::NaN(); }
+    { return Init() ? ( n == 2 ? _jJ2 : Jn(n)) : Math::NaN(); }
 
     /**
      * @return &omega; the angular velocity of the ellipsoid (rad
@@ -333,18 +333,12 @@ namespace GeographicLib {
      *   surface of the ellipsoid (m<sup>2</sup> s<sup>&minus;2</sup>).
      **********************************************************************/
     Math::real SurfacePotential() const
-    { return Init() ? _U0 : Math::NaN(); }
+    { return Init() ? _uU0 : Math::NaN(); }
 
     /**
      * @return the Geocentric object used by this instance.
      **********************************************************************/
     const Geocentric& Earth() const { return _earth; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

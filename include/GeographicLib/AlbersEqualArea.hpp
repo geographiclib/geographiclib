@@ -2,7 +2,7 @@
  * \file AlbersEqualArea.hpp
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2021) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -74,7 +74,7 @@ namespace GeographicLib {
     // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
     // x                              if f = 0
     real atanhee(real x) const {
-      using std::atan; using std::abs; using std::atanh;
+      using std::atan; using std::atanh;
       return _f > 0 ? atanh(_e * x)/_e : (_f < 0 ? (atan(_e * x)/_e) : x);
     }
     // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x
@@ -286,12 +286,6 @@ namespace GeographicLib {
      *   on the latitude of origin.
      **********************************************************************/
     Math::real CentralScale() const { return _k0; }
-
-    /**
-     * \deprecated An old name for EquatorialRadius().
-     **********************************************************************/
-    GEOGRAPHICLIB_DEPRECATED("Use EquatorialRadius()")
-    Math::real MajorRadius() const { return EquatorialRadius(); }
     ///@}
 
     /**

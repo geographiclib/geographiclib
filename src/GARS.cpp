@@ -2,7 +2,7 @@
  * \file GARS.cpp
  * \brief Implementation for GeographicLib::GARS class
  *
- * Copyright (c) Charles Karney (2015-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2022) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -19,7 +19,7 @@ namespace GeographicLib {
 
   void GARS::Forward(real lat, real lon, int prec, string& gars) {
     using std::isnan;           // Needed for Centos 7, ubuntu 14
-    if (abs(lat) > 90)
+    if (fabs(lat) > 90)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-90d, 90d]");
     if (isnan(lat) || isnan(lon)) {
