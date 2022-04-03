@@ -505,8 +505,8 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::Ed(real ang) const {
-    real n = ceil(ang/360 - real(0.5));
-    ang -= 360 * n;
+    // ang - Math::AngNormalize(ang) is (nearly) an exact multiple of 360
+    real n = round((ang - Math::AngNormalize(ang))/Math::td);
     real sn, cn;
     Math::sincosd(ang, sn, cn);
     return E(sn, cn, Delta(sn, cn)) + 4 * E() * n;

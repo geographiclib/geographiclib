@@ -49,8 +49,8 @@ namespace GeographicLib {
 #else
     enum {
 #endif
-      lonorig_ = -180,          // Origin for longitude
-      latorig_ = -90,           // Origin for latitude
+      lonorig_ = -Math::hd,     // Origin for longitude
+      latorig_ = -Math::qd,     // Origin for latitude
       baselon_ = 10,            // Base for longitude tiles
       baselat_ = 24,            // Base for latitude tiles
       lonlen_ = 3,

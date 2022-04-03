@@ -7788,6 +7788,8 @@ git repository for GeographicLib</a>.
      libGeographic.so.
    - Variable names for installation directories.
    - Remove legacy cmake config support (non-namespace).
+   - Parameterize the conversion units for degrees, minutes, seconds as
+     Math::qd, Math::dm, Math::ms.
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-06-22)

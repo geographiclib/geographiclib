@@ -118,12 +118,12 @@ namespace GeographicLib {
      * @return the number of radians in an arcminute.
      **********************************************************************/
     static Math::real arcminute()
-    { return Math::degree() / 60; }
+    { return Math::degree() / Math::dm; }
     /**
      * @return the number of radians in an arcsecond.
      **********************************************************************/
     static Math::real arcsecond()
-    { return Math::degree() / 3600; }
+    { return Math::degree() / Math::ds; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/

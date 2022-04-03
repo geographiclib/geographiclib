@@ -248,7 +248,7 @@ namespace GeographicLib {
      * DMS::Decode(-3.0, -20.0).
      **********************************************************************/
     static Math::real Decode(real d, real m = 0, real s = 0)
-    { return d + (m + s / 60) / 60; }
+    { return d + (m + s / Math::ms) / Math::dm; }
 
     /**
      * Convert a pair of strings to latitude and longitude.
@@ -370,7 +370,7 @@ namespace GeographicLib {
      * @param[out] m arc minutes.
      **********************************************************************/
     static void Encode(real ang, real& d, real& m) {
-      d = int(ang); m = 60 * (ang - d);
+      d = int(ang); m = Math::dm * (ang - d);
     }
 
     /**
@@ -382,8 +382,8 @@ namespace GeographicLib {
      * @param[out] s arc seconds.
      **********************************************************************/
     static void Encode(real ang, real& d, real& m, real& s) {
-      d = int(ang); ang = 60 * (ang - d);
-      m = int(ang); s = 60 * (ang - m);
+      d = int(ang); ang = Math::dm * (ang - d);
+      m = int(ang); s = Math::ms * (ang - m);
     }
 
   };

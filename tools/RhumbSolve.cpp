@@ -176,7 +176,7 @@ int main(int argc, const char* const argv[]) {
 
     const Rhumb rh(a, f, exact);
     const RhumbLine rhl(linecalc ? rh.Line(lat1, lon1, azi12) :
-                        rh.Line(0, 0, 90));
+                        rh.Line(0, 0, Math::qd));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));

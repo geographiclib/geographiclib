@@ -52,8 +52,8 @@ namespace GeographicLib {
     enum {
 #endif
       tile_ = 15,               // The size of tile in degrees
-      lonorig_ = -180,          // Origin for longitude
-      latorig_ = -90,           // Origin for latitude
+      lonorig_ = -Math::hd,     // Origin for longitude
+      latorig_ = -Math::qd,     // Origin for latitude
       base_ = 10,               // Base for minutes
       baselen_ = 4,
       maxprec_ = 11,            // approximately equivalent to MGRS class

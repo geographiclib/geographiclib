@@ -338,14 +338,14 @@ namespace GeographicLib {
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
-      if (ipieces[1] >= 60 || fpieces[1] > 60 ) {
+      if (ipieces[1] >= Math::dm || fpieces[1] > Math::dm ) {
         errormsg = "Minutes " + Utility::str(fpieces[1])
-          + " not in range [0, 60)";
+          + " not in range [0, " + to_string(Math::dm) + ")";
         break;
       }
-      if (ipieces[2] >= 60 || fpieces[2] > 60) {
+      if (ipieces[2] >= Math::ms || fpieces[2] > Math::ms) {
         errormsg = "Seconds " + Utility::str(fpieces[2])
-          + " not in range [0, 60)";
+          + " not in range [0, " + to_string(Math::ms) + ")";
         break;
       }
       ind = ind1;
@@ -353,9 +353,9 @@ namespace GeographicLib {
       // might be able to offer a better diagnostic).
       return real(sign) *
         ( fpieces[2] != 0 ?
-          (60*(60*fpieces[0] + fpieces[1]) + fpieces[2]) / 3600 :
+          (Math::ms*(Math::dm*fpieces[0] + fpieces[1]) + fpieces[2])/Math::ds :
           ( fpieces[1] != 0 ?
-            (60*fpieces[0] + fpieces[1]) / 60 : fpieces[0] ) );
+            (Math::dm*fpieces[0] + fpieces[1]) / Math::dm : fpieces[0] ) );
     } while (false);
     real val = Utility::nummatch<real>(dmsa);
     if (val == 0)
@@ -387,9 +387,10 @@ namespace GeographicLib {
     real
       lat1 = ia == LATITUDE ? a : b,
       lon1 = ia == LATITUDE ? b : a;
-    if (fabs(lat1) > 90)
+    if (fabs(lat1) > Math::qd)
       throw GeographicErr("Latitude " + Utility::str(lat1)
-                          + "d not in [-90d, 90d]");
+                          + "d not in [-" + to_string(Math::qd)
+                          + "d, " + to_string(Math::qd) + "d]");
     lat = lat1;
     lon = lon1;
   }
@@ -423,14 +424,13 @@ namespace GeographicLib {
     // 15 - 2 * trailing = ceiling(log10(2^53/90/60^trailing)).
     // This suffices to give full real precision for numbers in [-90,90]
     prec = min(15 + Math::extra_digits() - 2 * unsigned(trailing), prec);
-    real scale = 1;
-    for (unsigned i = 0; i < unsigned(trailing); ++i)
-      scale *= 60;
+    real scale = trailing == MINUTE ? Math::dm :
+      (trailing == SECOND ? Math::ds : 1);
     if (ind == AZIMUTH) {
       angle = Math::AngNormalize(angle);
       // Only angles strictly less than 0 can become 360; convert -0 to +0.
       if (angle < 0)
-        angle += 360;
+        angle += Math::td;
       else
         angle = Math::real(0) + angle;
     }
@@ -459,15 +459,15 @@ namespace GeographicLib {
         else
           s = s.substr(p);
       }
-      // Now i in [0,60] or [0,3600] for MINUTE/DEGREE
+      // Now i in [0,Math::dm] or [0,Math::ds] for MINUTE/DEGREE
       switch (trailing) {
       case MINUTE:
-        minute = to_string(i % 60) + s; i /= 60;
+        minute = to_string(i % Math::dm) + s; i /= Math::dm;
         degree = Utility::str(i + idegree, 0); // no overflow since i in [0,1]
         break;
       default:                  // case SECOND:
-        second = to_string(i % 60) + s; i /= 60;
-        minute = to_string(i % 60)    ; i /= 60;
+        second = to_string(i % Math::ms) + s; i /= Math::ms;
+        minute = to_string(i % Math::dm)    ; i /= Math::dm;
         degree = Utility::str(i + idegree, 0); // no overflow since i in [0,1]
         break;
       }

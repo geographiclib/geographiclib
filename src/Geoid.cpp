@@ -289,8 +289,8 @@ namespace GeographicLib {
       // Possibly this test should be "<" because the file contains, e.g., a
       // second image.  However, for now we are more strict.
       throw GeographicErr("File has the wrong length " + _filename);
-    _rlonres = _width / real(360);
-    _rlatres = (_height - 1) / real(180);
+    _rlonres = _width / real(Math::td);
+    _rlatres = (_height - 1) / real(Math::hd);
     _cache = false;
     _ix = _width;
     _iy = _height;
@@ -417,7 +417,7 @@ namespace GeographicLib {
     west = Math::AngNormalize(west); // west in [-180, 180)
     east = Math::AngNormalize(east);
     if (east <= west)
-      east += 360;              // east - west in (0, 360]
+      east += Math::td;         // east - west in (0, 360]
     int
       iw = int(floor(west * _rlonres)),
       ie = int(floor(east * _rlonres)),

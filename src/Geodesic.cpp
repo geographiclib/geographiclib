@@ -173,7 +173,8 @@ namespace GeographicLib {
       slam12, clam12;
     // Calculate sincos of lon12 + error (this applies AngRound internally).
     Math::sincosde(lon12, lon12s, slam12, clam12);
-    lon12s = (180 - lon12) - lon12s; // the supplementary longitude difference
+    // the supplementary longitude difference
+    lon12s = (Math::hd - lon12) - lon12s;
 
     // If really close to the equator, treat as on equator.
     lat1 = Math::AngRound(Math::LatFix(lat1));
@@ -236,7 +237,7 @@ namespace GeographicLib {
     // index zero element of this array is unused
     real Ca[nC_];
 
-    bool meridian = lat1 == -90 || slam12 == 0;
+    bool meridian = lat1 == -Math::qd || slam12 == 0;
 
     if (meridian) {
 
@@ -290,7 +291,7 @@ namespace GeographicLib {
     real omg12 = 0, somg12 = 2, comg12 = 0;
     if (!meridian &&
         sbet1 == 0 &&   // and sbet2 == 0
-        (_f <= 0 || lon12s >= _f * 180)) {
+        (_f <= 0 || lon12s >= _f * Math::hd)) {
 
       // Geodesic runs along equator
       calp1 = calp2 = 0; salp1 = salp2 = 1;
