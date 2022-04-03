@@ -11,15 +11,6 @@ WEBSTAGE=$(STAGE)/geographiclib-web
 DATASTAGE=$(STAGE)/geographiclib-files
 SCRIPTSTAGE=$(WEBSTAGE)/htdocs/scripts
 
-geodesic-papers/biblio.html: geodesic-papers/geodesic-biblio.txt geodesic-papers/biblio.sh
-	sh geodesic-papers/biblio.sh $< > $@
-
-distrib-html: geodesic-papers/biblio.html
-	rsync -av  misc/*.txt misc/google*.html misc/index.html $(WEBSTAGE)/htdocs/
-	rsync -av --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --exclude '*.txt' --exclude 'google*.html' --exclude 'index.html' --exclude '*.png' --delete --delete-excluded misc/  $(WEBSTAGE)/htdocs/misc/
-	rsync -av --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --exclude '*.sh' --exclude '*.txt' --delete --delete-excluded  geodesic-papers/ $(WEBSTAGE)/htdocs/geodesic-papers/
-	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
-
 distrib-doc:
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
