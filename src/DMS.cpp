@@ -428,7 +428,8 @@ namespace GeographicLib {
       (trailing == SECOND ? Math::ds : 1);
     if (ind == AZIMUTH) {
       angle = Math::AngNormalize(angle);
-      // Only angles strictly less than 0 can become 360; convert -0 to +0.
+      // Only angles strictly less than 0 can become 360; since +/-180 are
+      // folded together, we convert -0 to +0 (instead of 360).
       if (angle < 0)
         angle += Math::td;
       else

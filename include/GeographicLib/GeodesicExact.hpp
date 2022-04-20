@@ -139,9 +139,22 @@ namespace GeographicLib {
     // the rest.  This choice avoids double rounding with doubles and higher
     // precision types.  float coefficients will suffer double rounding;
     // however the accuracy is already lousy for floats.
-    static Math::real reale(long long hi, long long lo) {
+    static Math::real reale(long long y, long long z) {
       using std::ldexp;
-      return ldexp(real(hi), 52) + lo;
+      return ldexp(real(y), 52) + z;
+    }
+    // These are currently unused extended versions of reale needed really
+    // large coefficients (when using 64th order series).  Such coefficients
+    // would overflow flats.
+    static Math::real reale(long long x, long long y, long long z) {
+      using std::ldexp;
+      return ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z);
+    }
+    static Math::real reale(long long w, long long x,
+                            long long y, long long z) {
+      using std::ldexp;
+      return ldexp(real(w), 3*52) +
+        (ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z));
     }
 
   public:

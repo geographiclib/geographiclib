@@ -340,7 +340,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2014-12-05)</address>
+      (2022-04-10)</address>
     <a href="https://geographiclib.sourceforge.io">
       GeographicLib home page
     </a>

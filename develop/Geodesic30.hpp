@@ -108,7 +108,7 @@ namespace GeographicLib {
    *   J. Geodesy <b>87</b>, 43--55 (2013);
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+   *   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
