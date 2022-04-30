@@ -130,7 +130,7 @@ namespace GeographicLib {
      * @param[in] omg &omega; (in degrees).
      * @return \e x (in degrees).
      *
-     * &omega; must be in (&minus;180&deg;, 180&deg;].
+     * &omega; must be in [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     Math::real x(real omg) const {
       real somg, comg;

@@ -143,9 +143,10 @@ namespace GeographicLib {
       using std::ldexp;
       return ldexp(real(y), 52) + z;
     }
+#if GEOGRAPHICLIB_GEODESICEXACT_ORDER > 30
     // These are currently unused extended versions of reale needed really
     // large coefficients (when using 64th order series).  Such coefficients
-    // would overflow flats.
+    // would overflow floats.
     static Math::real reale(long long x, long long y, long long z) {
       using std::ldexp;
       return ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z);
@@ -156,6 +157,7 @@ namespace GeographicLib {
       return ldexp(real(w), 3*52) +
         (ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z));
     }
+#endif
 
   public:
 
@@ -242,7 +244,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Constructor for a ellipsoid with
+     * Constructor for an ellipsoid with
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.

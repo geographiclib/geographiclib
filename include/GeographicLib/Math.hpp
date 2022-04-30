@@ -284,7 +284,7 @@ namespace GeographicLib {
      * @return the angle reduced to the range [&minus;180&deg;, 180&deg;].
      *
      * The range of \e x is unrestricted.  If the result is &plusmn;0&deg; or
-     * &plusmn;180&deg; then the sign is the sign the same of \e x.
+     * &plusmn;180&deg; then the sign is the sign of \e x.
      **********************************************************************/
     template<typename T> static T AngNormalize(T x);
 

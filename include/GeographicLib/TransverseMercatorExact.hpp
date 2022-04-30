@@ -119,7 +119,7 @@ namespace GeographicLib {
   public:
 
     /**
-     * Constructor for a ellipsoid with
+     * Constructor for an ellipsoid with
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.

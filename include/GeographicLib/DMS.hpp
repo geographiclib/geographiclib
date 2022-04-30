@@ -159,7 +159,7 @@ namespace GeographicLib {
      * not allowed after the initial sign).  Examples of legal and illegal
      * combinations are
      * - <i>LEGAL</i> (these are all equivalent)
-     *   - 070:00:45, 70:01:15W+0:0.5, 70:01:15W-0:0:30W, W70:01:15+0:0:30E
+     *   - -070:00:45, 70:01:15W+0:0.5, 70:01:15W-0:0:30W, W70:01:15+0:0:30E
      * - <i>ILLEGAL</i> (the exception thrown explains the problem)
      *   - 70:01:15W+0:0:15N, W70:01:15+W0:0:15
      *

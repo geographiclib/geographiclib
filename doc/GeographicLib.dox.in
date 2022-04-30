@@ -7802,6 +7802,8 @@ git repository for GeographicLib</a>.
      - When computing longitude differences, if &lambda;<sub>2</sub>
        &minus; &lambda;<sub>1</sub> = &plusmn;180&deg; (mod 360&deg;),
        then the sign is picked depending on the sign of the difference.
+     - The normal range for returned longitudes and azimuths is
+       [&minus;180&deg;, 180&deg;].
      - A separate test suite geodsigntest has been added to check this
        treatment.
 
