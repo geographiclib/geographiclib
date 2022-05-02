@@ -16,8 +16,15 @@ It is licensed under the MIT License; see
 * Library documentation: https://geographiclib.sourceforge.io/C++/doc
 * Change log: https://geographiclib.sourceforge.io/C++/doc/changes.html
 * GIT repository: https://github.com/geographiclib/geographiclib
-  Releases are tagged in git as, e.g., [`v1.52`](../../tree/v1.52),
-  [`v2.0`](../../tree/v2.0), etc.
+  * Releases are on branch [`release`](../../release), and specific
+    releases are tagged as, e.g., [`r1.52`](../../tree/r1.52),
+    [`r2.0`](../../tree/r2.0), etc.  This is the appropriate branch
+    for most *users* of GeographicLib.
+  * The main branch is [`main`](../..) and most development is done on
+    branch [`devel`](../../tree/devel).  These branches are for the
+    *developers* of GeographicLib.  Tags [`v1.52`](../../tree/v1.52),
+    [`v2.0`](../../tree/v2.0), etc., are aligned with the
+    corresponding release tags `r1.52`, `r2.0`, etc.
 * Source distribution:
   https://sourceforge.net/projects/geographiclib/files/distrib-C++
 * GeographicLib: https://geographiclib.sourceforge.io
