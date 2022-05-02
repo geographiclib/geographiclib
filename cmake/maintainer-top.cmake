@@ -41,7 +41,13 @@ if (RSYNC)
   set (USER karney)
   set (DATATOP $ENV{HOME}/web/geographiclib-files)
   set (DATAROOT ${DATATOP}/distrib-C++)
-  set (DOCROOT $ENV{HOME}/web/geographiclib-web/htdocs/C++)
+  set (DOCTOP $ENV{HOME}/web/geographiclib-web)
+  set (DOCROOT ${DOCTOP}/htdocs/C++)
+  set (CGIROOT ${DOCTOP}/cgi-bin)
+  set (GEOIDROOT ${DOCTOP}/geoids)
+  set (FRSDEPLOY ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib)
+  set (WEBDEPLOY ${USER},geographiclib@web.sourceforge.net:.)
+
   add_custom_target (stage-dist
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     ${DISTRIB_DIR}/${PACKAGE_NAME}.tar.gz
@@ -65,8 +71,22 @@ if (RSYNC)
     COMMAND ${RSYNC} --delete -av ${DATAROOT} ${DATATOP}/00README.md
     ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib/)
   add_custom_target (deploy-doc
-    COMMAND ${RSYNC} --delete -av -e ssh
-    ${DOCROOT} ${USER},geographiclib@web.sourceforge.net:./htdocs/)
+    COMMAND ${RSYNC} --delete -av -e ssh ${DOCROOT} ${WEBDEPLOY}/htdocs/)
+
+  set (CGI_SCRIPTS
+    GeoConvert GeodSolve GeoidEval Planimeter RhumbSolve printlogs Geod)
+  set (CGI_UTILS utils)
+
+  add_custom_target (stage-cgi
+    COMMAND for f in ${CGI_SCRIPTS}\; do
+    install -C $$f.cgi ${CGIROOT}/$$f\; done
+    COMMAND for f in ${CGI_UTILS}\; do
+    install -C -m 644 $$f.sh ${CGIROOT}/$$f.sh\; done
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/cgi-bin)
+
+  add_custom_target (deploy-cgi
+    COMMAND ${RSYNC} --delete -av -e ssh ${CGIROOT} ${GEOIDROOT} ${WEBDEPLOY}/)
+
 endif ()
 
 if (NOT WIN32)

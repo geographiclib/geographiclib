@@ -492,7 +492,7 @@ git push --tags
 #   file = Formula/geographiclib.rb
 #   brew install --build-from-source geographiclib
 #   commit message = geographiclib $VERSION
-# update vcpkg git@github.com:microsoft/vcpkg.git
+# update vcpkg git@github.com:microsoft/vcpkg
 #   dir = ports/geographiclib
 #   ./vcpkg install 'geographiclib[tools]'
 #   binaries in installed/x64-linux/tools/geographiclib
@@ -500,7 +500,7 @@ git push --tags
 #   ./vcpkg x-add-version geographiclib
 #   commit message = [geographiclib] Update to version $VERSION
 # update conda-forge
-#   url = git@github.com:conda-forge/geographiclib-cpp-feedstock.git
+#   url = git@github.com:conda-forge/geographiclib-cpp-feedstock
 #   conda build recipe
 # upload matlab packages
 # update binaries for cgi applications

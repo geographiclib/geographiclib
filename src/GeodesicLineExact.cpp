@@ -150,10 +150,7 @@ namespace GeographicLib {
     if (arcmode) {
       // Interpret s12_a12 as spherical arc length
       sig12 = s12_a12 * Math::degree();
-      real s12a = fabs(s12_a12);
-      s12a -= 180 * floor(s12a / 180);
-      ssig12 = s12a ==  0 ? 0 : sin(sig12);
-      csig12 = s12a == 90 ? 0 : cos(sig12);
+      Math::sincosd(s12_a12, ssig12, csig12);
     } else {
       // Interpret s12_a12 as distance
       real

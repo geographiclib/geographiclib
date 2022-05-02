@@ -356,11 +356,11 @@ namespace GeographicLib {
       lonsign = (!_extendp && signbit(lon)) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
-    bool backside = !_extendp && lon > 90;
+    bool backside = !_extendp && lon > Math::qd;
     if (backside) {
       if (lat == 0)
         latsign = -1;
-      lon = 180 - lon;
+      lon = Math::hd - lon;
     }
     real
       lam = lon * Math::degree(),
@@ -368,10 +368,10 @@ namespace GeographicLib {
 
     // u,v = coordinates for the Thompson TM, Lee 54
     real u, v;
-    if (lat == 90) {
+    if (lat == Math::qd) {
       u = _eEu.K();
       v = 0;
-    } else if (lat == 0 && lon == 90 * (1 - _e)) {
+    } else if (lat == 0 && lon == Math::qd * (1 - _e)) {
       u = 0;
       v = _eEv.K();
     } else
@@ -389,7 +389,7 @@ namespace GeographicLib {
     y = xi * _a * _k0 * latsign;
     x = eta * _a * _k0 * lonsign;
 
-    if (lat == 90) {
+    if (lat == Math::qd) {
       gamma = lon;
       k = 1;
     } else {
@@ -400,7 +400,7 @@ namespace GeographicLib {
       gamma /= Math::degree();
     }
     if (backside)
-      gamma = 180 - gamma;
+      gamma = Math::hd - gamma;
     gamma *= latsign * lonsign;
     k *= _k0;
   }
@@ -443,18 +443,18 @@ namespace GeographicLib {
       Scale(tau, lam, snu, cnu, dnu, snv, cnv, dnv, gamma, k);
       gamma /= Math::degree();
     } else {
-      lat = 90;
+      lat = Math::qd;
       lon = lam = gamma = 0;
       k = 1;
     }
 
     if (backside)
-      lon = 180 - lon;
+      lon = Math::hd - lon;
     lon *= etasign;
     lon = Math::AngNormalize(lon + Math::AngNormalize(lon0));
     lat *= xisign;
     if (backside)
-      gamma = 180 - gamma;
+      gamma = Math::hd - gamma;
     gamma *= xisign * etasign;
     k *= _k0;
   }

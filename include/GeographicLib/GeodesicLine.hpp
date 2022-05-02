@@ -56,7 +56,7 @@ namespace GeographicLib {
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
    *   addenda:
-   *   <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
@@ -643,7 +643,7 @@ namespace GeographicLib {
      * @return \e a1 the arc length (degrees) between the northward equatorial
      *   crossing and point 1.
      *
-     * The result lies in (&minus;180&deg;, 180&deg;].
+     * The result lies in [&minus;180&deg;, 180&deg;].
      **********************************************************************/
     Math::real EquatorialArc() const {
       return Init() ? Math::atan2d(_ssig1, _csig1) : Math::NaN();

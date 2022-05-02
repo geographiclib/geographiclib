@@ -11,15 +11,6 @@ WEBSTAGE=$(STAGE)/geographiclib-web
 DATASTAGE=$(STAGE)/geographiclib-files
 SCRIPTSTAGE=$(WEBSTAGE)/htdocs/scripts
 
-geodesic-papers/biblio.html: geodesic-papers/geodesic-biblio.txt geodesic-papers/biblio.sh
-	sh geodesic-papers/biblio.sh $< > $@
-
-distrib-html: geodesic-papers/biblio.html
-	rsync -av  misc/*.txt misc/google*.html misc/index.html $(WEBSTAGE)/htdocs/
-	rsync -av --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --exclude '*.txt' --exclude 'google*.html' --exclude 'index.html' --exclude '*.png' --delete --delete-excluded misc/  $(WEBSTAGE)/htdocs/misc/
-	rsync -av --exclude '.git*' --exclude '*~' --exclude '.#*' --exclude '#*' --exclude '*.sh' --exclude '*.txt' --delete --delete-excluded  geodesic-papers/ $(WEBSTAGE)/htdocs/geodesic-papers/
-	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
-
 distrib-doc:
 	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
 
@@ -35,25 +26,6 @@ distrib-cgi:
 	  a=cgi-bin/$$f.sh; b=$(WEBSTAGE)/cgi-bin/$$f.sh; \
 	  install -C -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
-
-distrib-js:
-	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/test/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/test/
-
-install-js:
-	find $(SCRIPTSTAGE)/test -type f -printf '%P\n' | \
-	while read f; do \
-	  install -C -m 644 $(SCRIPTSTAGE)/test/$$f $(SCRIPTSTAGE)/$$f; \
-	done
-	t=`find $(SCRIPTSTAGE)/test/geographiclib.js -printf '%l'`; \
-	rm -f $(SCRIPTSTAGE)/geographiclib.js; \
-	ln -s $$t $(SCRIPTSTAGE)/geographiclib.js
-	t=`find $(SCRIPTSTAGE)/test/geographiclib.min.js -printf '%l'`; \
-	rm -f $(SCRIPTSTAGE)/geographiclib.min.js; \
-	ln -s $$t $(SCRIPTSTAGE)/geographiclib.min.js
-	rsync --exclude '*~' --exclude '.#*' --exclude '#*' --delete --delete-excluded -av -e ssh $(SCRIPTSTAGE)/ $(USER),geographiclib@web.sourceforge.net:./htdocs/scripts/
-
-distrib-python: python/setup.py
-	cd python && python setup.py sdist --formats=gztar,zip upload
 
 TAGS:
 	ls include/GeographicLib/*hpp src/*.cpp tools/*.cpp | xargs etags

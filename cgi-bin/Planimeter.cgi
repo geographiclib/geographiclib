@@ -31,6 +31,7 @@ else
   RHUMBFLAG=
 fi
 EXECDIR=../bin
+# Don't add -E flag since this utility only treats the WGS84 ellipsoid
 COMMAND="Planimeter"
 VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 STATUS=
@@ -208,13 +209,13 @@ cat <<EOF
       <a href="https://doi.org/10.1007/s00190-012-0578-z">
         10.1007/s00190-012-0578-z</a>;
       addenda:
-      <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+      <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
         geod-addenda.html</a>.
     </p>
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2015-02-24)</address>
+      (2022-04-10)</address>
     <a href="https://geographiclib.sourceforge.io">
       GeographicLib home
     </a>

@@ -55,10 +55,10 @@ namespace GeographicLib {
     // [0, 360) -> 0; [-360, 0) or 360 -> 1
     // If mod function gives result in (-720, 720)
     // [0, 360) or [-inf, -360) -> 0; [-360, 0) or [360, inf) -> 1
-    lon1 = remainder(lon1, real(720));
-    lon2 = remainder(lon2, real(720));
-    return ( (lon2 >= 0 && lon2 < 360 ? 0 : 1) -
-             (lon1 >= 0 && lon1 < 360 ? 0 : 1) );
+    lon1 = remainder(lon1, real(2 * Math::td));
+    lon2 = remainder(lon2, real(2 * Math::td));
+    return ( (lon2 >= 0 && lon2 < Math::td ? 0 : 1) -
+             (lon1 >= 0 && lon1 < Math::td ? 0 : 1) );
   }
 
   template <class GeodType>

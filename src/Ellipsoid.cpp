@@ -58,14 +58,14 @@ namespace GeographicLib {
   { return Math::atand(Math::tand(Math::LatFix(theta)) / _f12); }
 
   Math::real Ellipsoid::RectifyingLatitude(real phi) const {
-    return fabs(phi) == 90 ? phi:
-      90 * MeridianDistance(phi) / QuarterMeridian();
+    return fabs(phi) == Math::qd ? phi:
+      Math::qd * MeridianDistance(phi) / QuarterMeridian();
   }
 
   Math::real Ellipsoid::InverseRectifyingLatitude(real mu) const {
-    if (fabs(mu) == 90)
+    if (fabs(mu) == Math::qd)
       return mu;
-    return InverseParametricLatitude(_ell.Einv(mu * _ell.E() / 90) /
+    return InverseParametricLatitude(_ell.Einv(mu * _ell.E() / Math::qd) /
                                      Math::degree());
   }
 
@@ -89,7 +89,7 @@ namespace GeographicLib {
   { return Math::atand(Math::tauf(sinh(psi * Math::degree()), _es)); }
 
   Math::real Ellipsoid::CircleRadius(real phi) const {
-    return fabs(phi) == 90 ? 0 :
+    return fabs(phi) == Math::qd ? 0 :
       // a * cos(beta)
       _a / hypot(real(1), _f1 * Math::tand(Math::LatFix(phi)));
   }

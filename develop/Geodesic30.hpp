@@ -26,7 +26,7 @@ namespace GeographicLib {
   /**
    * \brief %Geodesic calculations
    *
-   * The shortest path between two points on a ellipsoid at (\e lat1, \e lon1)
+   * The shortest path between two points on an ellipsoid at (\e lat1, \e lon1)
    * and (\e lat2, \e lon2) is called the geodesic.  Its length is \e s12 and
    * the geodesic from point 1 to point 2 has azimuths \e azi1 and \e azi2 at
    * the two end points.  (The azimuth is the heading measured clockwise from
@@ -108,7 +108,7 @@ namespace GeographicLib {
    *   J. Geodesy <b>87</b>, 43--55 (2013);
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+   *   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
@@ -280,7 +280,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Constructor for a ellipsoid with
+     * Constructor for an ellipsoid with
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.

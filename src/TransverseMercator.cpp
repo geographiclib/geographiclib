@@ -356,11 +356,11 @@ namespace GeographicLib {
       lonsign = signbit(lon) ? -1 : 1;
     lon *= lonsign;
     lat *= latsign;
-    bool backside = lon > 90;
+    bool backside = lon > Math::qd;
     if (backside) {
       if (lat == 0)
         latsign = -1;
-      lon = 180 - lon;
+      lon = Math::hd - lon;
     }
     real sphi, cphi, slam, clam;
     Math::sincosd(lat, sphi, cphi);
@@ -383,7 +383,7 @@ namespace GeographicLib {
     //   cosh(etap) = 1/denom                  = 1/denom
     //   sinh(etap) = cos(phi')*sin(lam)/denom = sech(psi)*sin(lam)/denom
     real etap, xip;
-    if (lat != 90) {
+    if (lat != Math::qd) {
       real
         tau = sphi / cphi,
         taup = Math::taupf(tau, _es);
@@ -505,7 +505,7 @@ namespace GeographicLib {
     y = _a1 * _k0 * (backside ? Math::pi() - xi : xi) * latsign;
     x = _a1 * _k0 * eta * lonsign;
     if (backside)
-      gamma = 180 - gamma;
+      gamma = Math::hd - gamma;
     gamma *= latsign * lonsign;
     gamma = Math::AngNormalize(gamma);
     k *= _k0;
@@ -575,17 +575,17 @@ namespace GeographicLib {
       k *= sqrt(_e2m + _e2 / (1 + Math::sq(tau))) *
         hypot(real(1), tau) * r;
     } else {
-      lat = 90;
+      lat = Math::qd;
       lon = 0;
       k *= _c;
     }
     lat *= xisign;
     if (backside)
-      lon = 180 - lon;
+      lon = Math::hd - lon;
     lon *= etasign;
     lon = Math::AngNormalize(lon + lon0);
     if (backside)
-      gamma = 180 - gamma;
+      gamma = Math::hd - gamma;
     gamma *= xisign * etasign;
     gamma = Math::AngNormalize(gamma);
     k *= _k0;

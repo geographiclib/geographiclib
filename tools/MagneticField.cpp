@@ -95,8 +95,9 @@ int main(int argc, const char* const argv[]) {
           lat = DMS::Decode(std::string(argv[++m]), ind);
           if (ind == DMS::LONGITUDE)
             throw GeographicErr("Bad hemisphere letter on latitude");
-          if (!(fabs(lat) <= 90))
-            throw GeographicErr("Latitude not in [-90d, 90d]");
+          if (!(fabs(lat) <= Math::qd))
+            throw GeographicErr("Latitude not in [-" + std::to_string(Math::qd)
+                                + "d, " + std::to_string(Math::qd) + "d]");
           h = Utility::val<real>(std::string(argv[++m]));
           timeset = false;
           circle = true;

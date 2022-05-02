@@ -99,7 +99,7 @@ namespace GeographicLib {
     static Math::real LatitudeResolution(int len) {
       using std::ldexp;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return ldexp(real(180), -(5 * len / 2));
+      return ldexp(real(Math::hd), -(5 * len / 2));
     }
 
     /**
@@ -113,7 +113,7 @@ namespace GeographicLib {
     static Math::real LongitudeResolution(int len) {
       using std::ldexp;
       len = (std::max)(0, (std::min)(int(maxlen_), len));
-      return ldexp(real(360), -(5 * len - 5 * len / 2));
+      return ldexp(real(Math::td), -(5 * len - 5 * len / 2));
     }
 
     /**

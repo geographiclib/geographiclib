@@ -30,8 +30,9 @@ namespace GeographicLib {
       throw GeographicErr("Polar semi-axis is not positive");
     if (!(isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(fabs(stdlat) <= 90))
-      throw GeographicErr("Standard latitude not in [-90d, 90d]");
+    if (!(fabs(stdlat) <= Math::qd))
+      throw GeographicErr("Standard latitude not in [-" + to_string(Math::qd)
+                          + "d, " + to_string(Math::qd) + "d]");
     real sphi, cphi;
     Math::sincosd(stdlat, sphi, cphi);
     Init(sphi, cphi, sphi, cphi, k0);
@@ -55,10 +56,14 @@ namespace GeographicLib {
       throw GeographicErr("Polar semi-axis is not positive");
     if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(fabs(stdlat1) <= 90))
-      throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
-    if (!(fabs(stdlat2) <= 90))
-      throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
+    if (!(fabs(stdlat1) <= Math::qd))
+      throw GeographicErr("Standard latitude 1 not in [-"
+                          + to_string(Math::qd) + "d, "
+                          + to_string(Math::qd) + "d]");
+    if (!(fabs(stdlat2) <= Math::qd))
+      throw GeographicErr("Standard latitude 2 not in [-"
+                          + to_string(Math::qd) + "d, "
+                          + to_string(Math::qd) + "d]");
     real sphi1, cphi1, sphi2, cphi2;
     Math::sincosd(stdlat1, sphi1, cphi1);
     Math::sincosd(stdlat2, sphi2, cphi2);
@@ -85,9 +90,13 @@ namespace GeographicLib {
     if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (signbit(coslat1))
-      throw GeographicErr("Standard latitude 1 not in [-90d, 90d]");
+      throw GeographicErr("Standard latitude 1 not in [-"
+                          + to_string(Math::qd) + "d, "
+                          + to_string(Math::qd) + "d]");
     if (signbit(coslat2))
-      throw GeographicErr("Standard latitude 2 not in [-90d, 90d]");
+      throw GeographicErr("Standard latitude 2 not in [-"
+                          + to_string(Math::qd) + "d, "
+                          + to_string(Math::qd) + "d]");
     if (!(fabs(sinlat1) <= 1 && coslat1 <= 1) || (coslat1 == 0 && sinlat1 == 0))
       throw GeographicErr("Bad sine/cosine of standard latitude 1");
     if (!(fabs(sinlat2) <= 1 && coslat2 <= 1) || (coslat2 == 0 && sinlat2 == 0))
@@ -441,9 +450,11 @@ namespace GeographicLib {
   void LambertConformalConic::SetScale(real lat, real k) {
     if (!(isfinite(k) && k > 0))
       throw GeographicErr("Scale is not positive");
-    if (!(fabs(lat) <= 90))
-      throw GeographicErr("Latitude for SetScale not in [-90d, 90d]");
-    if (fabs(lat) == 90 && !(_nc == 0 && lat * _n > 0))
+    if (!(fabs(lat) <= Math::qd))
+      throw GeographicErr("Latitude for SetScale not in [-"
+                          + to_string(Math::qd) + "d, "
+                          + to_string(Math::qd) + "d]");
+    if (fabs(lat) == Math::qd && !(_nc == 0 && lat * _n > 0))
       throw GeographicErr("Incompatible polar latitude in SetScale");
     real x, y, gamma, kold;
     Forward(0, lat, 0, x, y, gamma, kold);

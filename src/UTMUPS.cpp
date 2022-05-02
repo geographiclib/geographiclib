@@ -50,7 +50,7 @@ namespace GeographicLib {
       return INVALID;
     if (setzone == UTM || (lat >= -80 && lat < 84)) {
       int ilon = int(floor(Math::AngNormalize(lon)));
-      if (ilon == 180) ilon = -180; // ilon now in [-180,180)
+      if (ilon == Math::hd) ilon = -Math::hd; // ilon now in [-180,180)
       int zone = (ilon + 186)/6;
       int band = MGRS::LatitudeBand(lat);
       if (band == 7 && zone == 31 && ilon >= 3) // The Norway exception
@@ -66,9 +66,10 @@ namespace GeographicLib {
                        int& zone, bool& northp, real& x, real& y,
                        real& gamma, real& k,
                        int setzone, bool mgrslimits) {
-    if (fabs(lat) > 90)
+    if (fabs(lat) > Math::qd)
       throw GeographicErr("Latitude " + Utility::str(lat)
-                          + "d not in [-90d, 90d]");
+                          + "d not in [-" + to_string(Math::qd)
+                          + "d, " + to_string(Math::qd) + "d]");
     bool northp1 = !(signbit(lat));
     int zone1 = StandardZone(lat, lon, setzone);
     if (zone1 == INVALID) {

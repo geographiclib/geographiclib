@@ -49,7 +49,7 @@ if (BUILD_DOCUMENTATION)
       ${CMAKE_CURRENT_BINARY_DIR}/GeographicLib.dox
       ${CXXSOURCES} ${EXTRA_FILES} ${FIGURES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E copy ${HTMLMAN} html-stage
-    COMMAND ${CMAKE_COMMAND} -E remove_directory html
+    COMMAND ${CMAKE_COMMAND} -E rm -rf html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMENT "Generating C++ documentation tree")

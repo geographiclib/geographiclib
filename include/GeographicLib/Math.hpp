@@ -110,6 +110,47 @@ namespace GeographicLib {
 #endif
 
     /**
+     * The constants defining the meaning of degrees, minutes, and seconds, for
+     * angles.  Read the
+     * constants as follows (for example): \e ms = 60 is the ratio 1 minute / 1
+     * second.  The abbreviations are
+     * - \e t a whole turn (360&deg;)
+     * - \e h a half turn (180&deg;)
+     * - \e q a quarter turn (a right angle = 90&deg;)
+     * - \e d a degree
+     * - \e m a minute
+     * - \e s a second
+     * .
+     * Note that degree() is ratio 1 degree / 1 radian, thus, for example,
+     * Math::degree() * Math::qd is the ratio 1 quarter turn / 1 radian =
+     * &pi;/2.
+     *
+     * Defining all these in one place would mean that it's simple to convert
+     * to the centesimal system for measuring angles.  The DMS class assumes
+     * that Math::dm and Math::ms are less than or equal to 100 (so that two
+     * digits suffice for the integer parts of the minutes and degrees
+     * components of an angle).  Switching to the centesimal convention will
+     * break most of the tests.  Also the normal degree definition is baked
+     * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
+     **********************************************************************/
+#if GEOGRAPHICLIB_PRECISION == 4
+    static const int
+#else
+    enum dms {
+#endif
+      qd = 90,                  ///< degrees per quarter turn
+      dm = 60,                  ///< minutes per degree
+      ms = 60,                  ///< seconds per minute
+      hd = 2 * qd,              ///< degrees per half turn
+      td = 2 * hd,              ///< degrees per turn
+      ds = dm * ms              ///< seconds per degree
+#if GEOGRAPHICLIB_PRECISION == 4
+      ;
+#else
+    };
+#endif
+
+    /**
      * @return the number of bits of precision in a real number.
      **********************************************************************/
     static int digits();
@@ -157,7 +198,7 @@ namespace GeographicLib {
      * @return the number of radians in a degree.
      **********************************************************************/
     template<typename T = real> static T degree() {
-      static const T degree = pi<T>() / 180;
+      static const T degree = pi<T>() / hd;
       return degree;
     }
 
@@ -243,7 +284,7 @@ namespace GeographicLib {
      * @return the angle reduced to the range [&minus;180&deg;, 180&deg;].
      *
      * The range of \e x is unrestricted.  If the result is &plusmn;0&deg; or
-     * &plusmn;180&deg; then the sign is the sign the same of \e x.
+     * &plusmn;180&deg; then the sign is the sign of \e x.
      **********************************************************************/
     template<typename T> static T AngNormalize(T x);
 
@@ -256,7 +297,7 @@ namespace GeographicLib {
      *   return NaN.
      **********************************************************************/
     template<typename T> static T LatFix(T x)
-    { using std::fabs; return fabs(x) > 90 ? NaN<T>() : x; }
+    { using std::fabs; return fabs(x) > qd ? NaN<T>() : x; }
 
     /**
      * The exact difference of two angles reduced to

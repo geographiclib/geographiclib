@@ -370,7 +370,7 @@ cat <<EOF
       <a href="https://doi.org/10.1007/s00190-012-0578-z">
         10.1007/s00190-012-0578-z</a>;
       addenda:
-      <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+      <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
         geod-addenda.html</a>.  See also the Wikipedia page,
       <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">
         Geodesics on an ellipsoid</a>.
@@ -378,7 +378,7 @@ cat <<EOF
     <hr>
     <address>Charles Karney
       <a href="mailto:charles@karney.com">&lt;charles@karney.com&gt;</a>
-      (2015-05-14)</address>
+      (2022-04-10)</address>
     <a href="https://geographiclib.sourceforge.io">
       GeographicLib home
     </a>

@@ -44,8 +44,8 @@ int main() {
         real Dg01, xi, eta;
         egm.Anomaly(lat, lon, h, Dg01, xi, eta);
         Dg01 *= 1e5;
-        xi *= 3600;
-        eta *= 3600;
+        xi *= Math::ds;
+        eta *= Math::ds;
         cout << setprecision(12) << g << " " << Dg01 << " "
              << xi << " " << eta << "\n";
         */

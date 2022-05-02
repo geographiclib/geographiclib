@@ -69,25 +69,25 @@ namespace GeographicLib {
   }
 
   template<typename T> T Math::AngNormalize(T x) {
-    T y = remainder(x, T(360));
+    T y = remainder(x, T(td));
 #if GEOGRAPHICLIB_PRECISION == 4
     // boost-quadmath doesn't set the sign of 0 correctly, see
     // https://github.com/boostorg/multiprecision/issues/426
     // Fixed by https://github.com/boostorg/multiprecision/pull/428
     if (y == 0) y = copysign(y, x);
 #endif
-    return fabs(y) == T(180) ? copysign(T(180), x) : y;
+    return fabs(y) == T(hd) ? copysign(T(hd), x) : y;
   }
 
   template<typename T> T Math::AngDiff(T x, T y, T& e) {
     // Use remainder instead of AngNormalize, since we treat boundary cases
     // later taking account of the error
-    T d = sum(remainder(-x, T(360)), remainder( y, T(360)), e);
+    T d = sum(remainder(-x, T(td)), remainder( y, T(td)), e);
     // This second sum can only change d if abs(d) < 128, so don't need to
     // apply remainder yet again.
-    d = sum(remainder(d, T(360)), e, e);
+    d = sum(remainder(d, T(td)), e, e);
     // Fix the sign if d = -180, 0, 180.
-    if (d == 0 || fabs(d) == 180)
+    if (d == 0 || fabs(d) == hd)
       // If e == 0, take sign from y - x
       // else (e != 0, implies d = +/-180), d and e must have opposite signs
       d = copysign(d, e == 0 ? y - x : -e);
@@ -107,7 +107,7 @@ namespace GeographicLib {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
     T r; int q = 0;
-    r = remquo(x, T(90), &q);   // now abs(r) <= 45
+    r = remquo(x, T(qd), &q);   // now abs(r) <= 45
     r *= degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
@@ -129,7 +129,7 @@ namespace GeographicLib {
     // This implementation allows x outside [-180, 180], but implementations in
     // other languages may not.
     T r; int q = 0;
-    r = AngRound(remquo(x, T(90), &q) + t); // now abs(r) <= 45
+    r = AngRound(remquo(x, T(qd), &q) + t); // now abs(r) <= 45
     r *= degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
@@ -148,7 +148,7 @@ namespace GeographicLib {
   template<typename T> T Math::sind(T x) {
     // See sincosd
     T r; int q = 0;
-    r = remquo(x, T(90), &q); // now abs(r) <= 45
+    r = remquo(x, T(qd), &q); // now abs(r) <= 45
     r *= degree<T>();
     unsigned p = unsigned(q);
     r = p & 1U ? cos(r) : sin(r);
@@ -160,7 +160,7 @@ namespace GeographicLib {
   template<typename T> T Math::cosd(T x) {
     // See sincosd
     T r; int q = 0;
-    r = remquo(x, T(90), &q); // now abs(r) <= 45
+    r = remquo(x, T(qd), &q); // now abs(r) <= 45
     r *= degree<T>();
     unsigned p = unsigned(q + 1);
     r = p & 1U ? cos(r) : sin(r);
@@ -191,9 +191,9 @@ namespace GeographicLib {
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
     T ang = atan2(y, x) / degree<T>();
     switch (q) {
-    case 1: ang = copysign(T(180), y) - ang; break;
-    case 2: ang =             90      - ang; break;
-    case 3: ang =            -90      + ang; break;
+    case 1: ang = copysign(T(hd), y) - ang; break;
+    case 2: ang =            qd      - ang; break;
+    case 3: ang =           -qd      + ang; break;
     default: break;
     }
     return ang;

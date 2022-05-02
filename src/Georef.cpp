@@ -21,15 +21,16 @@ namespace GeographicLib {
 
   void Georef::Forward(real lat, real lon, int prec, string& georef) {
     using std::isnan;           // Needed for Centos 7, ubuntu 14
-    if (fabs(lat) > 90)
+    if (fabs(lat) > Math::qd)
       throw GeographicErr("Latitude " + Utility::str(lat)
-                          + "d not in [-90d, 90d]");
+                          + "d not in [-" + to_string(Math::qd)
+                          + "d, " + to_string(Math::qd) + "d]");
     if (isnan(lat) || isnan(lon)) {
       georef = "INVALID";
       return;
     }
     lon = Math::AngNormalize(lon); // lon in [-180,180)
-    if (lat == 90) lat *= (1 - numeric_limits<real>::epsilon() / 2);
+    if (lat == Math::qd) lat *= (1 - numeric_limits<real>::epsilon() / 2);
     prec = max(-1, min(int(maxprec_), prec));
     if (prec == 1) ++prec;      // Disallow prec = 1
     // The C++ standard mandates 64 bits for long long.  But

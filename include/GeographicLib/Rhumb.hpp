@@ -31,7 +31,7 @@ namespace GeographicLib {
   /**
    * \brief Solve of the direct and inverse rhumb problems.
    *
-   * The path of constant azimuth between two points on a ellipsoid at (\e
+   * The path of constant azimuth between two points on an ellipsoid at (\e
    * lat1, \e lon1) and (\e lat2, \e lon2) is called the rhumb line (also
    * called the loxodrome).  Its length is \e s12 and its azimuth is \e azi12.
    * (The azimuth is the heading measured clockwise from north.)
@@ -245,7 +245,7 @@ namespace GeographicLib {
     };
 
     /**
-     * Constructor for a ellipsoid with
+     * Constructor for an ellipsoid with
      *
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
