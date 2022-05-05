@@ -136,26 +136,26 @@ am__uninstall_files_from_dir = { \
   }
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libGeographic_la_LIBADD =
-am_libGeographic_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
+libGeographicLib_la_LIBADD =
+am_libGeographicLib_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
 	AzimuthalEquidistant.lo CassiniSoldner.lo CircularEngine.lo \
 	DMS.lo Ellipsoid.lo EllipticFunction.lo GARS.lo GeoCoords.lo \
-	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicExactC4.lo \
-	GeodesicLine.lo GeodesicLineExact.lo Geohash.lo Geoid.lo \
-	Georef.lo Gnomonic.lo GravityCircle.lo GravityModel.lo \
-	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
-	MagneticCircle.lo MagneticModel.lo Math.lo NormalGravity.lo \
-	OSGB.lo PolarStereographic.lo PolygonArea.lo Rhumb.lo \
-	SphericalEngine.lo TransverseMercator.lo \
-	TransverseMercatorExact.lo UTMUPS.lo Utility.lo
-libGeographic_la_OBJECTS = $(am_libGeographic_la_OBJECTS)
+	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicLine.lo \
+	GeodesicLineExact.lo Geohash.lo Geoid.lo Georef.lo Gnomonic.lo \
+	GravityCircle.lo GravityModel.lo LambertConformalConic.lo \
+	LocalCartesian.lo MGRS.lo MagneticCircle.lo MagneticModel.lo \
+	Math.lo NormalGravity.lo OSGB.lo PolarStereographic.lo \
+	PolygonArea.lo Rhumb.lo SphericalEngine.lo \
+	TransverseMercator.lo TransverseMercatorExact.lo UTMUPS.lo \
+	Utility.lo
+libGeographicLib_la_OBJECTS = $(am_libGeographicLib_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-libGeographic_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
+libGeographicLib_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(AM_CXXFLAGS) $(CXXFLAGS) $(libGeographic_la_LDFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS) $(libGeographicLib_la_LDFLAGS) \
 	$(LDFLAGS) -o $@
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
@@ -180,11 +180,10 @@ am__depfiles_remade = ./$(DEPDIR)/Accumulator.Plo \
 	./$(DEPDIR)/EllipticFunction.Plo ./$(DEPDIR)/GARS.Plo \
 	./$(DEPDIR)/GeoCoords.Plo ./$(DEPDIR)/Geocentric.Plo \
 	./$(DEPDIR)/Geodesic.Plo ./$(DEPDIR)/GeodesicExact.Plo \
-	./$(DEPDIR)/GeodesicExactC4.Plo ./$(DEPDIR)/GeodesicLine.Plo \
-	./$(DEPDIR)/GeodesicLineExact.Plo ./$(DEPDIR)/Geohash.Plo \
-	./$(DEPDIR)/Geoid.Plo ./$(DEPDIR)/Georef.Plo \
-	./$(DEPDIR)/Gnomonic.Plo ./$(DEPDIR)/GravityCircle.Plo \
-	./$(DEPDIR)/GravityModel.Plo \
+	./$(DEPDIR)/GeodesicLine.Plo ./$(DEPDIR)/GeodesicLineExact.Plo \
+	./$(DEPDIR)/Geohash.Plo ./$(DEPDIR)/Geoid.Plo \
+	./$(DEPDIR)/Georef.Plo ./$(DEPDIR)/Gnomonic.Plo \
+	./$(DEPDIR)/GravityCircle.Plo ./$(DEPDIR)/GravityModel.Plo \
 	./$(DEPDIR)/LambertConformalConic.Plo \
 	./$(DEPDIR)/LocalCartesian.Plo ./$(DEPDIR)/MGRS.Plo \
 	./$(DEPDIR)/MagneticCircle.Plo ./$(DEPDIR)/MagneticModel.Plo \
@@ -232,8 +231,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(libGeographic_la_SOURCES)
-DIST_SOURCES = $(libGeographic_la_SOURCES)
+SOURCES = $(libGeographicLib_la_SOURCES)
+DIST_SOURCES = $(libGeographicLib_la_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -271,7 +270,6 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-COL = @COL@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -334,8 +332,6 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
-POD2HTML = @POD2HTML@
-POD2MAN = @POD2MAN@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -388,6 +384,7 @@ pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -401,11 +398,11 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include -Wall -Wextra
-lib_LTLIBRARIES = libGeographic.la
-libGeographic_la_LDFLAGS = \
+lib_LTLIBRARIES = libGeographicLib.la
+libGeographicLib_la_LDFLAGS = \
 		-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
-libGeographic_la_SOURCES = Accumulator.cpp \
+libGeographicLib_la_SOURCES = Accumulator.cpp \
 		AlbersEqualArea.cpp \
 		AzimuthalEquidistant.cpp \
 		CassiniSoldner.cpp \
@@ -418,7 +415,6 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		Geocentric.cpp \
 		Geodesic.cpp \
 		GeodesicExact.cpp \
-		GeodesicExactC4.cpp \
 		GeodesicLine.cpp \
 		GeodesicLineExact.cpp \
 		Geohash.cpp \
@@ -488,7 +484,7 @@ libGeographic_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/Config.h
 
 geographiclib_data = $(datadir)/GeographicLib
-EXTRA_DIST = Makefile.mk CMakeLists.txt
+EXTRA_DIST = CMakeLists.txt
 all: all-am
 
 .SUFFIXES:
@@ -558,8 +554,8 @@ clean-libLTLIBRARIES:
 	  rm -f $${locs}; \
 	}
 
-libGeographic.la: $(libGeographic_la_OBJECTS) $(libGeographic_la_DEPENDENCIES) $(EXTRA_libGeographic_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(libGeographic_la_LINK) -rpath $(libdir) $(libGeographic_la_OBJECTS) $(libGeographic_la_LIBADD) $(LIBS)
+libGeographicLib.la: $(libGeographicLib_la_OBJECTS) $(libGeographicLib_la_DEPENDENCIES) $(EXTRA_libGeographicLib_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(libGeographicLib_la_LINK) -rpath $(libdir) $(libGeographicLib_la_OBJECTS) $(libGeographicLib_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -580,7 +576,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geocentric.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geodesic.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicExact.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicExactC4.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicLine.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicLineExact.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geohash.Plo@am__quote@ # am--include-marker
@@ -780,7 +775,6 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/Geocentric.Plo
 	-rm -f ./$(DEPDIR)/Geodesic.Plo
 	-rm -f ./$(DEPDIR)/GeodesicExact.Plo
-	-rm -f ./$(DEPDIR)/GeodesicExactC4.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLine.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLineExact.Plo
 	-rm -f ./$(DEPDIR)/Geohash.Plo
@@ -863,7 +857,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/Geocentric.Plo
 	-rm -f ./$(DEPDIR)/Geodesic.Plo
 	-rm -f ./$(DEPDIR)/GeodesicExact.Plo
-	-rm -f ./$(DEPDIR)/GeodesicExactC4.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLine.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLineExact.Plo
 	-rm -f ./$(DEPDIR)/Geohash.Plo
@@ -932,7 +925,7 @@ uninstall-am: uninstall-libLTLIBRARIES
 	  grep WORDS_BIGENDIAN $< | tail -1 | \
 	  sed -e 's/ WORDS_BIGENDIAN / GEOGRAPHICLIB_WORDS_BIGENDIAN /' ) > $@
 
-$(libGeographic_la_OBJECTS): ../include/GeographicLib/Config.h
+$(libGeographicLib_la_OBJECTS): ../include/GeographicLib/Config.h
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -188,7 +188,6 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-COL = @COL@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -251,8 +250,6 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
-POD2HTML = @POD2HTML@
-POD2MAN = @POD2MAN@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -305,6 +302,7 @@ pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -362,7 +360,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/Config.h
 
 geographiclib_data = $(datadir)/GeographicLib
-EXTRA_DIST = Makefile.mk GeographicLib/CMakeLists.txt GeographicLib/Config.h.in
+EXTRA_DIST = GeographicLib/CMakeLists.txt GeographicLib/Config.h.in
 all: all-am
 
 .SUFFIXES:

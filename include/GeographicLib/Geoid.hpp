@@ -255,8 +255,8 @@ namespace GeographicLib {
      * or coarser.  For a 1' grid, the required RAM is 450MB; a 2.5' grid needs
      * 72MB; and a 5' grid needs 18MB.
      **********************************************************************/
-    void CacheAll() const { CacheArea(real(-90), real(0),
-                                      real(90), real(360)); }
+    void CacheAll() const { CacheArea(real(-Math::qd), real(0),
+                                      real( Math::qd), real(Math::td)); }
 
     /**
      * Clear the cache.  This never throws an error.  (This does nothing with a
@@ -411,7 +411,7 @@ namespace GeographicLib {
      * @return north edge of the cached area; the cache includes this edge.
      **********************************************************************/
     Math::real CacheNorth() const {
-      return _cache ? 90 - (_yoffset + _cubic) / _rlatres : 0;
+      return _cache ? Math::qd - (_yoffset + _cubic) / _rlatres : 0;
     }
 
     /**
@@ -419,7 +419,8 @@ namespace GeographicLib {
      *   unless it's the south pole.
      **********************************************************************/
     Math::real CacheSouth() const {
-      return _cache ? 90 - ( _yoffset + _ysize - 1 - _cubic) / _rlatres : 0;
+      return _cache ? Math::qd - ( _yoffset + _ysize - 1 - _cubic) / _rlatres :
+        0;
     }
 
     /**

@@ -14,61 +14,49 @@ namespace GeographicLib {
 \version @PROJECT_VERSION@
 \date 2022-mm-dd
 
-The documentation for other versions is available at
-<tt>https://geographiclib.sourceforge.io/C++/m.n/</tt> for version numbers
-<tt>m.n</tt> &ge; 1.0.
-
 \section abstract Abstract
 
-GeographicLib is a small set of <a href="annotated.html">C++
-classes</a> for performing conversions between geographic, UTM, UPS,
-MGRS, geocentric, and local cartesian coordinates, for gravity (e.g.,
-EGM2008), geoid height and geomagnetic field (e.g., WMM2020)
-calculations, and for solving geodesic problems.  The emphasis is on
-returning accurate results with errors close to round-off (about 5--15
-nanometers).  Accurate algorithms for \ref geodesic and \ref
-transversemercator have been developed for this library.  The
-functionality of the library can be accessed from user code, from the
-\ref utilities provided, or via the \ref other.  Also included is a .NET
-wrapper library <a href="NET/index.html">NETGeographicLib</a>
-which exposes the functionality to .NET applications.  For a sample of
-the geodesic capabilities in JavaScript, check out the
-<a href="../scripts/geod-calc.html">online geodesic calculator</a> and
-the script for displaying
-<a href="../scripts/geod-google.html">geodesics in Google Maps</a>
+GeographicLib is a small C++ library for
+
+- geodesic and rhumb line calculations;
+- conversions between geographic, UTM, UPS, MGRS, geocentric, and local
+  cartesian coordinates;
+- gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2020)
+  calculations.
+
+The emphasis is on returning accurate results with errors close to
+round-off (about 5--15 nanometers).  Accurate algorithms for \ref
+geodesic and \ref transversemercator have been developed for this
+library.  The functionality of the library can be accessed from user
+code or from the \ref utilities provided.
+
+It is licensed under the MIT License; see
+<a href="../../LICENSE.txt">LICENSE.txt</a>.
 
 This library is <i>not</i> a general purpose projection library nor does
 it perform datum conversions; instead use
-<a href="https://proj.org">PROJ</a>.  On the other
-hand, it does provide the core functionality offered by
-<a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>.
+<a href="https://proj.org">PROJ</a>.
 
-\section download Download
+\section links Links
 
-The main project page is at
-- https://sourceforge.net/projects/geographiclib
-.
-The code is available for download at
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
-  GeographicLib-@PROJECT_VERSION@.tar.gz</a>
-- <a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
-  GeographicLib-@PROJECT_VERSION@.zip</a>
-.
-as either a compressed tar file (tar.gz) or a zip file.  (The two
-archives have identical contents, except that the zip file has DOS
-line endings.)  Alternatively you can get the latest release using git
-\verbatim
-  git clone git://git.code.sourceforge.net/p/geographiclib/code geographiclib
-\endverbatim
-Each release is tagged, e.g., with r@PROJECT_VERSION@.  There are also
-binary installers available for some platforms.  See \ref binaryinst.
-
-GeographicLib is licensed under the
-<a href="https://opensource.org/licenses/MIT">MIT/X11 License</a>;
-see <a href="LICENSE.txt">LICENSE.txt</a> for the terms.
-
-For more information on GeographicLib, see
-- https://geographiclib.sourceforge.io/.
+- Library documentation (all versions):
+  <a href="../">https://geographiclib.sourceforge.io/C++</a>
+- GIT repository: https://github.com/geographiclib/geographiclib
+  - Releases are on the `release` branch, and specific
+    releases are tagged as, e.g., `r1.52`,
+    `r2.0`, etc.  This is the appropriate branch
+    for most *users* of GeographicLib.
+  - The main branch is `main` and most development is done on the
+    `devel` branch.  These branches are for the
+    *developers* of GeographicLib.  Tags `v1.52`,
+    `v2.0`, etc., are aligned with the
+    corresponding release tags `r1.52`, `r2.0`, etc.
+- Source distribution:
+  https://sourceforge.net/projects/geographiclib/files/distrib-C++
+- GeographicLib:
+  <a href="../../index.html">https://geographiclib.sourceforge.io</a>
+- The library has been implemented in a few other <a
+  href="../../doc/library.html#languages">languages</a>.
 
 \section citint Citing GeographicLib
 
@@ -153,9 +141,6 @@ under Linux, with Apple LLVM 7.0.2 under Mac OS X, and with MS Visual
 Studio 14 (2015), 15 (2017), and 16 (2019) compiled for 32 bit and 64
 bit on Windows.
 
-MATLAB, JavaScript, and Python interfaces are provided to portions of
-GeographicLib; see \ref other.
-
 The section \ref geodesic documents the method of solving the geodesic
 problem.
 
@@ -198,28 +183,24 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 GeographicLib has been developed under Linux with the g++ compiler,
 under Mac OS X with Xcode, and under Windows with Visual Studio 2015 and
 later.  It should compile on any systems with a C++11 compliant
-compiler.  First download either
-<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.tar.gz">
-GeographicLib-@PROJECT_VERSION@.tar.gz</a> or
-<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@.zip">
-GeographicLib-@PROJECT_VERSION@.zip</a> (or
-<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
-GeographicLib-@PROJECT_VERSION@-win32.exe</a> or
-<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win64.exe">
-GeographicLib-@PROJECT_VERSION@-win64.exe</a>
-for binary installation under Windows).
+compiler.  First download one of
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@.tar.gz">
+GeographicLib-@PROJECT_VERSION@.tar.gz</a> tar'ed sources
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@.zip">
+GeographicLib-@PROJECT_VERSION@.zip</a> zipped sources
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@-win32.exe">
+GeographicLib-@PROJECT_VERSION@-win32.exe</a> 32-bit binary installer for Windows
+- <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@-win64.exe">
+GeographicLib-@PROJECT_VERSION@-win64.exe</a> 64-bit binary installer for Windows
+.
 Then pick one of the first five options below:
 - \ref cmake.  This is the preferred installation method as it will work
   on the widest range of platforms.  However it requires that you have
   <a href="https://www.cmake.org">cmake</a> installed.
 - \ref autoconf.  This method works for most Unix-like systems,
   including Linux and Mac OS X.
-- \ref gnu.  This is a simple installation method that works with g++
-  and GNU make on Linux and many Unix platforms.
 - \ref binaryinst.  Use this installation method if you only need to use
   the \ref utilities supplied with GeographicLib.
-- \ref qt.  How to compile GeographicLib so that it can be used by Qt
-  programs.
 - \ref maintainer.  This describes addition tasks of interest only to
   the maintainers of this code.
 .
@@ -265,7 +246,7 @@ command like
   \verbatim
   yum install cmake \endverbatim
 (executed as root).  The minimum version of cmake supported for building
-GeographicLib is 3.1.0 (which was released on 2014-12-15).
+GeographicLib is 3.7.0 (which was released on 2016-11-11).
 
 On other systems, download a binary installer from https://www.cmake.org
 click on download, and save and run the appropriate installer.  Run the
@@ -460,35 +441,6 @@ Here are the steps to compile and install GeographicLib:
   <code>prefix</code>.  For documentation, open <a href="index.html">
   share/doc/GeographicLib/html/index.html</a> in a web browser.
 
-\section gnu Installation with GNU compiler and Make
-
-This method requires the standard GNU suite of tools, in particular make
-and g++.  This builds a static library and the examples.
-
-Here are the steps to compile and install GeographicLib:
-- Unpack the source, running \verbatim
-  tar xfpz GeographicLib-@PROJECT_VERSION@.tar.gz \endverbatim
-  then enter the directory created \verbatim
-  cd GeographicLib-@PROJECT_VERSION@ \endverbatim
-- Edit \verbatim
-  include/GeographicLib/Config.h \endverbatim
-  If your C++ compiler does not recognize the long double type
-  (unlikely), insert \code
-  #undef GEOGRAPHICLIB_HAVE_LONG_DOUBLE \endcode
-  If your machine using big endian ordering, then insert \code
-  #define GEOGRAPHICLIB_WORDS_BIGENDIAN 1 \endcode
-- Build and install the software: \verbatim
-  make             # compile the library and the tools
-  make install     # as root \endverbatim
-  The installation is in directories under /usr/local.  You
-  can specify a different installation directory with, for example,
-  \verbatim
-  make PREFIX=/tmp/geographic install \endverbatim
-- The headers, library, and utilities are installed in the
-  include/GeographicLib, lib, and bin directories under
-  <code>PREFIX</code>.  For documentation, open <a href="index.html">
-  share/doc/GeographicLib/html/index.html</a> in a web browser.
-
 \section binaryinst Using a binary installer
 
 Binary installers are available for some platforms
@@ -503,9 +455,9 @@ the library, it may be advisable to build it with the compiler you are
 using for your own code using \ref cmake.
 
 Download and run
-<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win32.exe">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_VERSION@-win32.exe">
 GeographicLib-@PROJECT_VERSION@-win32.exe</a> or
-<a href="https://sourceforge.net/projects/geographiclib/files/distrib/GeographicLib-@PROJECT_VERSION@-win64.exe">
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_VERSION@-win64.exe">
 GeographicLib-@PROJECT_VERSION@-win64.exe</a>:
  - read the MIT/X11 License agreement,
  - select whether you want your PATH modified,
@@ -545,28 +497,6 @@ Now links to GeographicLib are installed under /usr/local.
 Some Linux distributions, Fedora, Debian, and Ubuntu, offer
 GeographicLib as a standard package.  Typically these will be one or two
 versions behind the latest.
-
-\section qt Building the library for use with Qt
-
-If Qt is using a standard compiler, then build GeographicLib with that
-same compiler (and optimization flags) as Qt.
-
-If you are using the mingw compiler on Windows for Qt, then you need to
-build GeographicLib with mingw.  You can accomplish this with cmake
-under cygwin with, for example, \verbatim
-  export PATH="`cygpath c:/QtSDK/mingw/bin`:$PATH"
-  mkdir BUILD
-  cd BUILD
-  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
-  mingw32-make
-  mingw32-make install \endverbatim
-If cmake complains that sh mustn't be in your path, invoke cmake with
-\verbatim
-  env PATH="$( echo $PATH | tr : '\n' |
-  while read d; do test -f "$d/sh.exe" || echo -n "$d:"; done |
-  sed 's/:$//' )" \
-  cmake -G "MinGW Makefiles" -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib" ..
-\endverbatim
 
 \section maintainer Maintainer tasks
 
@@ -3375,10 +3305,10 @@ References:
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/misc/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
  - A collection of some papers on geodesics is available at
    https://geographiclib.sourceforge.io/geodesic-papers/biblio.html
  - The wikipedia page,
@@ -4458,7 +4388,7 @@ Go to
       J. Geodesy 87(1), 43--55 (2013);
       DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
       10.1007/s00190-012-0578-z</a>;
-      addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+      addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
       geod-addenda.html</a>.
 
 \section triaxial-coords Triaxial coordinate systems
@@ -4968,7 +4898,7 @@ of ellipsoid.  He covers this in greater detail in
 <i>Vorlesungen &uuml;ber Dynamik</i>, &sect;28</a>, which is now
 available in an <a href="https://www.worldcat.org/oclc/440645889">
 English translation: Lectures on Dynamics</a>
-(<a href="https://geographiclib.sourceforge.io/misc/jacobi-errata.html">
+(<a href="https://geographiclib.sourceforge.io/jacobi-errata.html">
 errata</a>).
 
 \section jacobi-conformal Conformal projection
@@ -5341,22 +5271,22 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>,
    J. Geodesy 87(1), 43--55 (2013);
    DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    10.1007/s00190-012-0578-z</a>;
-   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    geod-addenda.html</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/misc/geod.html"> geod.html</a>.
+   <a href="https://geographiclib.sourceforge.io/geod.html"> geod.html</a>.
  - L. Kr&uuml;ger,
    <a href="https://doi.org/10.2312/GFZ.b103-krueger28"> Konforme
    Abbildung des Erdellipsoids in der Ebene</a> (Conformal mapping of
@@ -5899,7 +5829,7 @@ References:
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-012-0578-z">
    Algorithms for geodesics</a>, J. Geodesy 87(1), 43--55 (2013);
-   addenda: <a href="https://geographiclib.sourceforge.io/misc/geod-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    geod-addenda.html</a>.
  - A. Pallikaris & G. Latsas,
    <a href="https://doi.org/10.1017/S0373463309005323">
@@ -6255,18 +6185,18 @@ References:
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
  .
 The algorithm for TransverseMercator is based on
 Kr&uuml;ger (1912); that for TransverseMercatorExact is
 based on Lee (1976).
 
-See <a href="https://geographiclib.sourceforge.io/misc/tm-grid.kmz"
+See <a href="https://geographiclib.sourceforge.io/tm-grid.kmz"
 type="application/vnd.google-earth.kmz"> tm-grid.kmz</a>, for an
 illustration of the exact transverse Mercator grid in Google Earth.
 
@@ -6500,18 +6430,18 @@ This section gives color versions of the figures in
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
    J. Geodesy 85(8), 475--485 (Aug. 2011);
-   addenda: <a href="https://geographiclib.sourceforge.io/misc/tm-addenda.html">
+   addenda: <a href="https://geographiclib.sourceforge.io/tm-addenda.html">
    tm-addenda.html</a>;
    preprint:
    <a href="https://arxiv.org/abs/1002.1417"> arXiv:1002.1417</a>;
    resource page:
-   <a href="https://geographiclib.sourceforge.io/misc/tm.html"> tm.html</a>.
+   <a href="https://geographiclib.sourceforge.io/tm.html"> tm.html</a>.
 
 \b NOTE:
 The numbering of the figures matches that in the paper cited above.  The
 figures in this section are relatively small in order to allow them to
 be displayed quickly.  Vector versions of these figures are available in
-<a href="https://geographiclib.sourceforge.io/misc/tm-figs.pdf"
+<a href="https://geographiclib.sourceforge.io/tm-figs.pdf"
 type="application/pdf"> tm-figs.pdf</a>.  This allows you to magnify the
 figures to show the details more clearly.
 
@@ -7788,6 +7718,24 @@ git repository for GeographicLib</a>.
      libGeographic.so.
    - Variable names for installation directories.
    - Remove legacy cmake config support (non-namespace).
+   - Parameterize the conversion units for degrees, minutes, seconds as
+     Math::qd, Math::dm, Math::ms.
+   - More careful treatment of &plusmn;0&deg; and &plusmn;180&deg;.
+     - These behave consistently with taking the limits
+       - &plusmn;0 means &plusmn;&epsilon; as &epsilon; &rarr; 0+
+       - &plusmn;180 means &plusmn;(180 &minus; &epsilon;) as &epsilon;
+         &rarr; 0+
+     - As a consequence, azimuths of +0&deg; and +180&deg; are reckoned
+       to be east-going, as far as tracking the longitude with
+       Geodesic::LONG_UNROLL and the area goes, while azimuths
+       &minus;0&deg; and &minus;180&deg; are reckoned to be west-going.
+     - When computing longitude differences, if &lambda;<sub>2</sub>
+       &minus; &lambda;<sub>1</sub> = &plusmn;180&deg; (mod 360&deg;),
+       then the sign is picked depending on the sign of the difference.
+     - The normal range for returned longitudes and azimuths is
+       [&minus;180&deg;, 180&deg;].
+     - A separate test suite geodsigntest has been added to check this
+       treatment.
 
  - <a href="https://geographiclib.sourceforge.io/1.52">Version 1.52</a>
    (released 2021-06-22)

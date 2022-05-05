@@ -195,7 +195,7 @@ namespace GeographicLib {
     bool northp1 = iband >= (utmp ? 10 : 2);
     if (p == len) {             // Grid zone only (ignore centerp)
       // Approx length of a degree of meridian arc in units of tile.
-      real deg = real(utmNshift_) / (90 * tile_);
+      real deg = real(utmNshift_) / (Math::qd * tile_);
       zone = zone1;
       northp = northp1;
       if (utmp) {
@@ -349,7 +349,7 @@ namespace GeographicLib {
 
     // Estimate center row number for latitude band
     // 90 deg = 100 tiles; 1 band = 8 deg = 100*8/90 tiles
-    real c = 100 * (8 * iband + 4)/real(90);
+    real c = 100 * (8 * iband + 4) / real(Math::qd);
     bool northp = iband >= 0;
     // These are safe bounds on the rows
     //  iband minrow maxrow

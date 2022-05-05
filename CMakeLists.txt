@@ -8,7 +8,7 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
-set (PROJECT_VERSION_SUFFIX "-alpha")
+set (PROJECT_VERSION_SUFFIX "-rc1")
 set (PROJECT_FULLVERSION ${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX})
 
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
@@ -510,8 +510,8 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/BUILD"
   "${PROJECT_SOURCE_DIR}/man/(.*\\\\.pod|makeusage\\\\.sh|dummy\\\\..*)\$"
   "${PROJECT_SOURCE_DIR}/cmake/maintainer-.*\\\\.cmake\$"
-  "${PROJECT_SOURCE_DIR}/(develop|cgi-bin|misc|.*\\\\.cache)/"
-  "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer|geodesic-papers)/"
+  "${PROJECT_SOURCE_DIR}/(develop|cgi-bin|.*\\\\.cache)/"
+  "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer)/"
   "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
   "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"

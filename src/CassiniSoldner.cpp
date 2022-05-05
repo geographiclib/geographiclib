@@ -42,12 +42,12 @@ namespace GeographicLib {
     s12 *= real(0.5);
     if (s12 == 0) {
       real da = Math::AngDiff(azi1, azi2)/2;
-      if (fabs(dlon) <= 90) {
-        azi1 = 90 - da;
-        azi2 = 90 + da;
+      if (fabs(dlon) <= Math::qd) {
+        azi1 = Math::qd - da;
+        azi2 = Math::qd + da;
       } else {
-        azi1 = -90 - da;
-        azi2 = -90 + da;
+        azi1 = -Math::qd - da;
+        azi2 = -Math::qd + da;
       }
     }
     if (signbit(dlon)) {
@@ -67,7 +67,7 @@ namespace GeographicLib {
     Math::sincosd(perp.EquatorialAzimuth(), salp0, calp0);
     real
       sbet1 = lat >=0 ? calp0 : -calp0,
-      cbet1 = fabs(dlon) <= 90 ? fabs(salp0) : -fabs(salp0),
+      cbet1 = fabs(dlon) <= Math::qd ? fabs(salp0) : -fabs(salp0),
       sbet01 = sbet1 * _cbet0 - cbet1 * _sbet0,
       cbet01 = cbet1 * _cbet0 + sbet1 * _sbet0,
       sig01 = atan2(sbet01, cbet01) / Math::degree();
@@ -83,7 +83,7 @@ namespace GeographicLib {
     real lat1, lon1;
     real azi0, t;
     _meridian.Position(y, lat1, lon1, azi0);
-    _earth.Direct(lat1, lon1, azi0 + 90, x, lat, lon, azi, rk, t);
+    _earth.Direct(lat1, lon1, azi0 + Math::qd, x, lat, lon, azi, rk, t);
   }
 
 } // namespace GeographicLib

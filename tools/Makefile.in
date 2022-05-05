@@ -118,7 +118,7 @@ PROGRAMS = $(bin_PROGRAMS)
 am_CartConvert_OBJECTS = CartConvert.$(OBJEXT)
 CartConvert_OBJECTS = $(am_CartConvert_OBJECTS)
 CartConvert_LDADD = $(LDADD)
-CartConvert_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+CartConvert_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -126,44 +126,44 @@ am__v_lt_1 =
 am_ConicProj_OBJECTS = ConicProj.$(OBJEXT)
 ConicProj_OBJECTS = $(am_ConicProj_OBJECTS)
 ConicProj_LDADD = $(LDADD)
-ConicProj_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+ConicProj_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_GeoConvert_OBJECTS = GeoConvert.$(OBJEXT)
 GeoConvert_OBJECTS = $(am_GeoConvert_OBJECTS)
 GeoConvert_LDADD = $(LDADD)
-GeoConvert_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+GeoConvert_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_GeodSolve_OBJECTS = GeodSolve.$(OBJEXT)
 GeodSolve_OBJECTS = $(am_GeodSolve_OBJECTS)
 GeodSolve_LDADD = $(LDADD)
-GeodSolve_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+GeodSolve_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_GeodesicProj_OBJECTS = GeodesicProj.$(OBJEXT)
 GeodesicProj_OBJECTS = $(am_GeodesicProj_OBJECTS)
 GeodesicProj_LDADD = $(LDADD)
-GeodesicProj_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+GeodesicProj_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_GeoidEval_OBJECTS = GeoidEval.$(OBJEXT)
 GeoidEval_OBJECTS = $(am_GeoidEval_OBJECTS)
 GeoidEval_LDADD = $(LDADD)
-GeoidEval_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+GeoidEval_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_Gravity_OBJECTS = Gravity.$(OBJEXT)
 Gravity_OBJECTS = $(am_Gravity_OBJECTS)
 Gravity_LDADD = $(LDADD)
-Gravity_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+Gravity_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_MagneticField_OBJECTS = MagneticField.$(OBJEXT)
 MagneticField_OBJECTS = $(am_MagneticField_OBJECTS)
 MagneticField_LDADD = $(LDADD)
-MagneticField_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+MagneticField_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_Planimeter_OBJECTS = Planimeter.$(OBJEXT)
 Planimeter_OBJECTS = $(am_Planimeter_OBJECTS)
 Planimeter_LDADD = $(LDADD)
-Planimeter_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+Planimeter_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_RhumbSolve_OBJECTS = RhumbSolve.$(OBJEXT)
 RhumbSolve_OBJECTS = $(am_RhumbSolve_OBJECTS)
 RhumbSolve_LDADD = $(LDADD)
-RhumbSolve_DEPENDENCIES = $(top_builddir)/src/libGeographic.la
+RhumbSolve_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_TransverseMercatorProj_OBJECTS = TransverseMercatorProj.$(OBJEXT)
 TransverseMercatorProj_OBJECTS = $(am_TransverseMercatorProj_OBJECTS)
 TransverseMercatorProj_LDADD = $(LDADD)
 TransverseMercatorProj_DEPENDENCIES =  \
-	$(top_builddir)/src/libGeographic.la
+	$(top_builddir)/src/libGeographicLib.la
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -300,7 +300,6 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-COL = @COL@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -363,8 +362,6 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
-POD2HTML = @POD2HTML@
-POD2MAN = @POD2MAN@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -417,6 +414,7 @@ pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -432,8 +430,8 @@ top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(top_builddir)/include -I$(top_srcdir)/include \
            -I$(top_builddir)/man -I$(top_srcdir)/man -Wall -Wextra
 
-LDADD = $(top_builddir)/src/libGeographic.la
-DEPS = $(top_builddir)/src/libGeographic.la
+LDADD = $(top_builddir)/src/libGeographicLib.la
+DEPS = $(top_builddir)/src/libGeographicLib.la
 CartConvert_SOURCES = CartConvert.cpp \
 	../man/CartConvert.usage \
 	../include/GeographicLib/Config.h \
@@ -541,6 +539,7 @@ Planimeter_SOURCES = Planimeter.cpp \
 	../include/GeographicLib/Geodesic.hpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/PolygonArea.hpp \
+	../include/GeographicLib/Rhumb.hpp \
 	../include/GeographicLib/UTMUPS.hpp \
 	../include/GeographicLib/Utility.hpp
 
@@ -570,7 +569,7 @@ sbin_SCRIPTS = geographiclib-get-geoids \
 
 geographiclib_data = $(datadir)/GeographicLib
 CLEANFILES = $(sbin_SCRIPTS)
-EXTRA_DIST = Makefile.mk CMakeLists.txt tests.cmake \
+EXTRA_DIST = CMakeLists.txt \
 	geographiclib-get-geoids.sh geographiclib-get-gravity.sh \
 	geographiclib-get-magnetic.sh
 

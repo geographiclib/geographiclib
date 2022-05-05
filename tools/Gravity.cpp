@@ -96,8 +96,9 @@ int main(int argc, const char* const argv[]) {
           lat = DMS::Decode(std::string(argv[++m]), ind);
           if (ind == DMS::LONGITUDE)
             throw GeographicErr("Bad hemisphere letter on latitude");
-          if (!(fabs(lat) <= 90))
-            throw GeographicErr("Latitude not in [-90d, 90d]");
+          if (!(fabs(lat) <= Math::qd))
+            throw GeographicErr("Latitude not in [-" + std::to_string(Math::qd)
+                                + "d, " + std::to_string(Math::qd) + "d]");
           h = Utility::val<real>(std::string(argv[++m]));
           circle = true;
         }
@@ -295,8 +296,8 @@ int main(int argc, const char* const argv[]) {
               else
                 g.SphericalAnomaly(lat, lon, h, Dg01, xi, eta);
               Dg01 *= 100000;   // Convert to mGals
-              xi *= 3600;       // Convert to arcsecs
-              eta *= 3600;
+              xi *= Math::ds;   // Convert to arcsecs
+              eta *= Math::ds;
               *output << Utility::str(Dg01, prec) << " "
                       << Utility::str(xi, prec) << " "
                       << Utility::str(eta, prec) << eol;

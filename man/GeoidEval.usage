@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoidEval --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/1.52/GeoidEval.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.0/GeoidEval.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -151,7 +151,7 @@ int usage(int retval, bool brief) {
 "       -v option to ascertain the full path name of the data file.\n"
 "\n"
 "       Instructions for downloading and installing geoid data are available at\n"
-"       <https://geographiclib.sourceforge.io/html/geoid.html#geoidinst>.\n"
+"       <https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst>.\n"
 "\n"
 "       NOTE: all the geoids above apply to the WGS84 ellipsoid (a = 6378137 m,\n"
 "       f = 1/298.257223563) only.\n"

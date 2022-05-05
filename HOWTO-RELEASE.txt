@@ -82,8 +82,8 @@ rmattes, smani
 vcpkg
 
     git
-      git@github.com:cffk/vcpkg.git
-      git@github.com:microsoft/vcpkg.git
+      git@github.com:cffk/vcpkg
+      git@github.com:microsoft/vcpkg
 
     Edit ports/geographiclib/
 
@@ -96,8 +96,8 @@ vcpkg
 conda-forge
 
     git
-      git@github.com:conda-forge/feedstocks.git
-      https://github.com/conda-forge/geographiclib-cpp-feedstock.git
+      git@github.com:conda-forge/feedstocks
+      https://github.com/conda-forge/geographiclib-cpp-feedstock
 
   /home/scratch/feedstocks/feedstocks/geographiclib-cpp/build_artifacts
   linux-64/geographiclib-cpp-1.52-h4bd325d_1.tar.bz2

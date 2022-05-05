@@ -1,5 +1,9 @@
+# Calling the GeographicLib C++ library from JavaScript
+
 The geodesic routines in GeographicLib have been implemented in
-JavaScript library.  See
+JavaScript package
+[geographiclib-geodesic](https://www.npmjs.com/package/geographiclib-geodesic).
+For documentation, see
 
   https://geographiclib.sourceforge.io/JavaScript/doc
 
@@ -10,6 +14,5 @@ automatically translating the C++ code into JavaScript
 
 This will let you use other capabilities of GeographicLib in JavaScript.
 
-This is implemented in OpenSphere ASM
-
-  https://github.com/ngageoint/opensphere-asm
+This is implemented in [OpenSphere
+ASM](https://github.com/ngageoint/opensphere-asm).

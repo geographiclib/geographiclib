@@ -43,7 +43,7 @@ namespace GeographicLib {
     static const char* const lattile_;
     static const char* const degrees_;
 #if GEOGRAPHICLIB_PRECISION == 4
-    // Work around a enum lossage introduced in boost 1.76
+    // Work around an enum lossage introduced in boost 1.76
     //   https://github.com/boostorg/multiprecision/issues/324
     // and fixed in
     //   https://github.com/boostorg/multiprecision/pull/333
@@ -52,8 +52,8 @@ namespace GeographicLib {
     enum {
 #endif
       tile_ = 15,               // The size of tile in degrees
-      lonorig_ = -180,          // Origin for longitude
-      latorig_ = -90,           // Origin for latitude
+      lonorig_ = -Math::hd,     // Origin for longitude
+      latorig_ = -Math::qd,     // Origin for latitude
       base_ = 10,               // Base for minutes
       baselen_ = 4,
       maxprec_ = 11,            // approximately equivalent to MGRS class

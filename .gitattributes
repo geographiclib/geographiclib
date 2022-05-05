@@ -1,9 +1,6 @@
-[Mm]akefile* eol=lf
+Makefile* eol=lf
 *.ac eol=lf
 *.am eol=lf
 *.sh eol=lf
-*.eps -text
-*.pdf -text
 *.png -text
 *.gif -text
-*.kmz -text

@@ -17,7 +17,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011, Charles Karney <charles@karney.com>
+# Copyright (C) 2011-2022, Charles Karney <charles@karney.com>
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -139,7 +139,6 @@ AWK = @AWK@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
-COL = @COL@
 CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
@@ -202,8 +201,6 @@ PATH_SEPARATOR = @PATH_SEPARATOR@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
-POD2HTML = @POD2HTML@
-POD2MAN = @POD2MAN@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -256,6 +253,7 @@ pkgconfigdir = @pkgconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
+runstatedir = @runstatedir@
 sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
@@ -269,7 +267,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 cmakedir = $(datadir)/cmake/GeographicLib
-EXTRA_DIST = Makefile.mk CMakeLists.txt FindGeographicLib.cmake \
+EXTRA_DIST = CMakeLists.txt FindGeographicLib.cmake \
 	project-config-version.cmake.in project-config.cmake.in
 
 all: all-am
