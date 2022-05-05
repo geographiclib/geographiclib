@@ -1,3 +1,5 @@
+# Calling the GeographicLib C++ library from C
+
 The geodesic routines in GeographicLib have been implemented as a native
 C library.  See
 
@@ -11,28 +13,30 @@ information on calling C++ from C, see
   https://isocpp.org/wiki/faq/mixing-c-and-cpp
 
 To build and install this interface, do
-
-  mkdir BUILD
-  cd BUILD
-  cmake ..
-  make
-
+```bash
+mkdir BUILD
+cd BUILD
+cmake ..
+make
+```
 This assumes that you have installed GeographicLib somewhere that cmake
 can find it.  If you want just to use the version of GeographicLib that
 you have built in the top-level BUILD directory, include, e.g.,
-
-  -D GeographicLib_DIR=../../BUILD
+```bash
+-D GeographicLib_DIR=../../BUILD
+```
 
 in the invocation of cmake (the directory is relative to the source
 directory, wrapper/C).  To convert 20m above the geoid at 42N 75W to a
 height above the ellipsoid, use
-
+```bash
 $ echo 42 -75 20 | ./geoidtest
 -10.672
+```
 
 Notes:
 
-* The geoid data (egm2008-1) should be installed somewhere that
+* The geoid data (`egm2008-1`) should be installed somewhere that
   GeographicLib knows about.
 
 * This prescription applies to Linux machines.  Similar steps can be
