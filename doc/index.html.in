@@ -2,7 +2,7 @@
   <head>
     <title>GeographicLib-@PROJECT_VERSION@ documentation</title>
     <meta HTTP-EQUIV="Refresh"
-          CONTENT="0; URL=https://geographiclib.sourceforge.io/@PROJECT_VERSION@/index.html">
+          CONTENT="0; URL=https://geographiclib.sourceforge.io/C++/@PROJECT_VERSION@/index.html">
   </head>
   <body topmargin=10 leftmargin=10>
     <h3>
