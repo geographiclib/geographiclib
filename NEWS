@@ -43,15 +43,15 @@ Changes between 2.0 (released 2022-05-06) and 1.52 versions:
      invocations of the utility programs.
 
    * BUG FIXES:
-     + Fixed bug where in the solution of the inverse geodesic problem where
-       with lat1 = 0 and lat2 = nan was treated as equatorial.
+     + Fixed bug where in the solution of the inverse geodesic problem
+       where with lat1 = 0 and lat2 = nan was treated as equatorial.
      + Fixed roundoff corner case in geodesic area computation (only
        triggered with long double).
 
    * Minor changes in code:
      + Use fmin, fmax, fabs instead of min, max, abs, where appropriate.
-     + Parameterize the conversion units for degrees, minutes, seconds as
-       Math::qd, Math::dm, Math::ms.
+     + Parameterize the conversion units for degrees, minutes, seconds
+       as Math::qd, Math::dm, Math::ms.
      + Ellipsoid::MinorRadius() has be renamed Ellipsoid::PolarRadius().
      + Remove deprecated functions: XXX::MajorRadius, Utility::val, and
        placeholders (Math::cbrt, etc.) for C++11 math functions.

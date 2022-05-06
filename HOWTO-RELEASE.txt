@@ -239,3 +239,16 @@ From test-distribution.sh
 #   commit message = geographiclib $VERSION
 # update binaries for cgi applications
 # trigger build on build-open
+
+Release checklist:
+
+run develop/test-distribution.sh
+run windows build
+copy windows installers to data-distrib/distrib-C++
+remove alpha/rc versions of installers
+make stage-{doc,dist}
+make deploy-{doc,dist}
+checkin and tag release branch & push
+tag main branch
+
+set default downloads for distrib-C++ on sourceforge
