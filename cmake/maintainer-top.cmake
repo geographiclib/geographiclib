@@ -50,26 +50,33 @@ if (RSYNC)
 
   add_custom_target (stage-dist
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${DISTRIB_DIR}/${PACKAGE_NAME}.tar.gz
-    ${DISTRIB_DIR}/${PACKAGE_NAME}.zip
-    ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/
-    COMMAND
-    ${RSYNC} --delete -av --exclude '*~'
-    ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/ ${DATAROOT}/ &&
-    ${RSYNC} --delete -av
-    ${PROJECT_SOURCE_DIR}/data-distrib/00README.md ${DATATOP}/)
+      ${DISTRIB_DIR}/${PACKAGE_NAME}.tar.gz
+      ${DISTRIB_DIR}/${PACKAGE_NAME}.zip
+      ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/)
   add_dependencies (stage-dist dist)
 
   if (BUILD_DOCUMENTATION)
     add_custom_target (stage-doc
-      COMMAND ${RSYNC} --delete -a
-      doc/html/ ${DOCROOT}/${PROJECT_VERSION}/)
+      COMMAND ${RSYNC} --delete -a doc/html/ ${DOCROOT}/${PROJECT_VERSION}/)
     add_dependencies (stage-doc doc)
   endif ()
 
   add_custom_target (deploy-dist
-    COMMAND ${RSYNC} --delete -av ${DATAROOT} ${DATATOP}/00README.md
-    ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib/)
+    COMMAND
+      ${RSYNC} --delete -av --exclude '*~'
+      ${PROJECT_SOURCE_DIR}/data-distrib/distrib-C++/ ${DATAROOT}/ &&
+      ${RSYNC} --delete -av
+      ${PROJECT_SOURCE_DIR}/data-distrib/00README.md
+      ${PROJECT_SOURCE_DIR}/data-distrib/distrib ${DATATOP}/
+    COMMAND ${RSYNC} --delete -av
+      ${DATAROOT} ${DATATOP}/00README.md ${DATATOP}/distrib
+      ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib/)
+  add_custom_target (deploy-data
+    COMMAND
+      ${RSYNC} --delete -av --exclude '*~'
+      ${PROJECT_SOURCE_DIR}/data-distrib/*-distrib ${DATATOP}/
+    COMMAND ${RSYNC} --delete -av ${DATATOP}/*-distrib
+      ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib/)
   add_custom_target (deploy-doc
     COMMAND ${RSYNC} --delete -av -e ssh ${DOCROOT} ${WEBDEPLOY}/htdocs/)
 

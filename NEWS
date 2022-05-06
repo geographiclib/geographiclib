@@ -17,6 +17,7 @@ Changes between 2.0 (released 2022-05-06) and 1.52 versions:
        cmake variable) and BUILD_BOTH_LIBS.
      + Remove COMMON_INSTALL_PATH and replace with variables to
        specify where various components are to be installed.
+     + GEOGRAPHICLIB_DOCUMENTATION is now BUILD_DOCUMENTATION.
      + Remove BUILD_NETGEOGRAPHICLIB.
      + Remove legacy cmake config support (non-namespace).
      + make exampleprograms does a separate cmake configuration to

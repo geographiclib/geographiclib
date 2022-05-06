@@ -28,4 +28,6 @@ It is licensed under the MIT License; see
 * Source distribution:
   https://sourceforge.net/projects/geographiclib/files/distrib-C++
 * GeographicLib: https://geographiclib.sourceforge.io
+* GeographicLib in various languages:
+  https://geographiclib.sourceforge.io/doc/library.html#languages
 * Author: Charles Karney, <charles@karney.com>

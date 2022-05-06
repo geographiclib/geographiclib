@@ -11,13 +11,6 @@ WEBSTAGE=$(STAGE)/geographiclib-web
 DATASTAGE=$(STAGE)/geographiclib-files
 SCRIPTSTAGE=$(WEBSTAGE)/htdocs/scripts
 
-distrib-doc:
-	rsync --delete -av -e ssh $(WEBSTAGE)/htdocs $(USER),geographiclib@web.sourceforge.net:./
-
-distrib-files:
-	rsync -av --exclude .svn --exclude '.git*' --delete data-distrib/distrib-C++ $(DATASTAGE)/
-	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --exclude .svn --exclude '.git*' --delete --delete-excluded -av -e ssh $(DATASTAGE)/* $(USER)@frs.sourceforge.net:/home/frs/project/geographiclib/
-
 distrib-cgi:
 	for f in GeoConvert GeodSolve GeoidEval Planimeter RhumbSolve printlogs Geod; do \
 	  a=cgi-bin/$$f.cgi; b=$(WEBSTAGE)/cgi-bin/$$f; \
@@ -27,7 +20,4 @@ distrib-cgi:
 	  install -C -m 644 $$a $$b; done
 	rsync --exclude '*~' --exclude '#*' --exclude '.#*' --delete --delete-excluded -av -e ssh $(WEBSTAGE)/{cgi-bin,geoids} $(USER),geographiclib@web.sourceforge.net:./
 
-TAGS:
-	ls include/GeographicLib/*hpp src/*.cpp tools/*.cpp | xargs etags
-
-.PHONY: distrib-html distrib-files distrib-cgi distrib-js distrib-python TAGS
+.PHONY: distrib-files distrib-cgi

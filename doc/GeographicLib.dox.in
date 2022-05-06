@@ -346,7 +346,7 @@ Here are the steps to compile and install GeographicLib:
 \endverbatim
     (With IDE compile environments, you get to select the build type in
     the IDE.)
-  - <code>GEOGRAPHICLIB_DOCUMENTATION</code> (default: OFF).  If set to
+  - <code>BUILD_DOCUMENTATION</code> (default: OFF).  If set to
     ON, then html documentation is created from the source files,
     provided a sufficiently recent version of doxygen can be found.
     Otherwise, the html documentation will redirect to the appropriate
@@ -477,9 +477,10 @@ The utilities were linked against the release-mode shared library.
 
 \subsection binaryinstosx MacOSX
 
-You can install using Homebrew.  Follow the directions on
-https://brew.sh/ for installing this package manager.  Then type
-\verbatim
+GeographicLib is available as Homebrew package
+[geographiclib](https://formulae.brew.sh/formula/geographiclib).  Follow
+the directions on https://brew.sh/ for installing this package manager.
+Then type \verbatim
 brew install geographiclib \endverbatim
 Now links to GeographicLib are installed under /usr/local.
 
@@ -487,7 +488,15 @@ Now links to GeographicLib are installed under /usr/local.
 
 Some Linux distributions, Fedora, Debian, and Ubuntu, offer
 GeographicLib as a standard package.  Typically these will be one or two
-versions behind the latest.
+versions behind the latest.  It's also available with the follow package
+managers
+- Homebrew package [geographiclib](
+  https://formulae.brew.sh/formula/geographiclib) (also for MacOSX)
+- conda-forge package [geographiclib-cpp](
+  https://anaconda.org/conda-forge/geographiclib-cpp) (also for MacOSX
+  and Windows)
+- vcpkg package [geographiclib](https://vcpkg.info/port/geographiclib)
+  (also for MacOSX and Windows)
 
 \section maintainer Maintainer tasks
 
@@ -7480,6 +7489,7 @@ git repository for GeographicLib</a>.
        standard cmake variable) and `BUILD_BOTH_LIBS`.
      - Remove `COMMON_INSTALL_PATH` and replace with variables to
        specify where various components are to be installed.
+     - `GEOGRAPHICLIB_DOCUMENTATION` is now `BUILD_DOCUMENTATION`.
      - Remove `BUILD_NETGEOGRAPHICLIB`.
      - Remove legacy cmake config support (non-namespace).
      - `make exampleprograms` does a separate cmake configuration to

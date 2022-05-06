@@ -59,9 +59,11 @@ maintainer
   distrib-all distrib-man + run autogen for autoconf builds
   dist Package release into a tar.gz + zip files
   stage-doc copy documenation to staging area
-  stage-dist copy source distribution to staging area
+  stage-dist copy source distribution to data-distrib
   deploy-doc deploy documentation from staging area to sourceforge
-  deploy-dist deploy source distributions from staging area to sourceforge
+  deploy-dist deploy source distributions from data-distrib to staging
+    area and then to sourceforge
+  deploy-data deploy geoid data etc
   develprograms build experimental stuff
 
 Version update checks
@@ -79,121 +81,6 @@ Bas Couwenberg (QA Page)
 
 Fedora maintainer
 rmattes, smani
-
-vcpkg
-
-    git
-      git@github.com:cffk/vcpkg
-      git@github.com:microsoft/vcpkg
-
-    Edit ports/geographiclib/
-
-    at top-level
-    ./vcpkg remove geographiclib
-    rm downloads/<old-tar-file>  # if necessary
-    ./vcpkg install 'geographiclib[tools]'
-    ls installed/x64-linux/tools/geographiclib
-
-# update vcpkg git@github.com:microsoft/vcpkg
-#   dir = ports/geographiclib
-#   ./vcpkg install 'geographiclib[tools]'
-#   binaries in installed/x64-linux/tools/geographiclib
-#   libs in installed/x64-linux/{include,lib,debug/lib}
-#   ./vcpkg x-add-version geographiclib
-#   commit message = [geographiclib] Update to version $VERSION
-
-conda-forge
-
-# update conda-forge
-#   url = git@github.com:conda-forge/geographiclib-cpp-feedstock
-#   conda build recipe
-
-    git
-      git@github.com:conda-forge/feedstocks
-      https://github.com/conda-forge/geographiclib-cpp-feedstock
-
-  /home/scratch/feedstocks/feedstocks/geographiclib-cpp/build_artifacts
-  linux-64/geographiclib-cpp-1.52-h4bd325d_1.tar.bz2
-
-Local build of 1.52
-
-  in geographiclib-cpp-feedstock, run
-  python build-locally.py linux_64_
-
-creates via docker
-
-  build_artifacts/linux-64/geographiclib-cpp-1.52-h4bd325d_1.tar.bz2
-
-Manual build
-
-[conda remove -y -n build --all]
-conda create -y -n build
-conda activate build
-conda install -y conda-build conda-verify conda-forge-pinning
-
-conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
-conda debug recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml -p /tmp/condabuild
-# additional args? --dirty --keep-old-work
-
-under /tmp/condabuild
-  work       -- your checked out out source + conda_build.sh
-  _h_env     -- the host environment where "make install" installs to
-  _build_env -- the build environment
-
-cd /tmp/condabuild/work
-./conda_test_runner.sh
-conda_build.sh does a
-
-  conda         activate $PREFIX/_h_env
-  conda --stack activate $PREFIX/_build_env
-
-and then builds + installs (into _h_env) your package.
-
-Subsequently you can run your package with
-
-  conda activate /tmp/condabuild/_h_env
-
-Under ${CONDA_PREFIX}/conda-bld
-
-  src_cache has downloaded source
-  linux-64 contains completed package geographiclib-cpp-1.52-h2bc3f7f_1.tar.bz2
-
-delete work dirs with
-  conda build purge
-
-delete packages with
-  conda build purge-all
-
-Completed package retained in
-
-${CONDA_PREFIX}/pkgs
-
-Unused cmake variables
-    CMAKE_FIND_ROOT_PATH Used by find_package and find_library
-    CMAKE_FIND_ROOT_PATH_MODE_LIBRARY Used by find_library
-    CMAKE_INSTALL_LIBDIR Gnu lib installation dir
-
-Under ${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675
-cmake's source directory =
-  work_moved_geographiclib-cpp-1.52-h2bc3f7f_1_linux-64
-renamed from work
-has patches applied
-+ metadata_conda_debug.yaml = meta.yaml with variables substituted
-+ conda_build.sh = build.sh + a header
-
-cmake's binary directory
-work_moved_geographiclib-cpp-1.52-h2bc3f7f_1_linux-64/build
-GeographicLib_SOURCE_DIR = work
-CMAKE_INSTALL_PREFIX:PATH=/home/ckarney/miniconda3/envs/build/conda-bld/geographiclib-cpp_1647616815675/_h_env_....
-
-Installation directory gets renamed to
-${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675/_h_env_moved_geographiclib-cpp-1.52-h2bc3f7f_1_linux-64
-
-${CONDA_PREFIX}/conda-bld/geographiclib-cpp_1647616815675/_test_env... is for running tests
-
-Docker command to debug conda builds for Centos 7
-docker run -ti -v `pwd`:/tmp/source  quay.io/condaforge/linux-anvil-cos7-x86_64 bash
-** Need to clean up conda stuff **
 
 binaries for cgi scripts
 ssh -t karney,geographiclib@shell.sourceforge.net create
@@ -228,17 +115,8 @@ ln -s bin-$VERSION bin
 From test-distribution.sh
 
 # Also to do
-# post release notices
-# set default download files
 # make -f makefile-admin distrib-{cgi,html}
-# update home brew
-#   dir = /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
-#   branch = geographiclib/$VERSION
-#   file = Formula/geographiclib.rb
-#   brew install --build-from-source geographiclib
-#   commit message = geographiclib $VERSION
 # update binaries for cgi applications
-# trigger build on build-open
 
 Release checklist:
 
@@ -251,4 +129,76 @@ make deploy-{doc,dist}
 checkin and tag release branch & push
 tag main branch
 
+trigger build on build-open
+update binaries for cgi applications
+
+Local install
+sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
+
 set default downloads for distrib-C++ on sourceforge
+
+post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
+
+Brew...
+
+  brew update
+  cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
+  git checkout master; git pull?
+  edit geographiclib.rb
+  changing url and sha256
+
+  brew uninstall geographiclib
+  brew install --build-from-source geographiclib
+  brew reinstall --build-from-source geographiclib
+  brew test geographiclib
+  brew audit --strict geographiclib
+  brew style geographiclib
+
+  git checkout -b geographiclib/2.0
+  git add geographiclib.rb
+  git commit -m "geographiclib 2.0"
+  git push --set-upstream cffk geographiclib/2.0
+
+  trigger a PR
+
+conda-forge...
+
+  geographiclib-cpp-feedstock
+  edit recipe/bld.bat recipe/build.sh recipe/meta.yaml
+
+  [conda remove -y -n build --all]
+  conda create -y -n build
+  conda activate build
+  conda install -y conda-build conda-verify conda-forge-pinning
+
+  conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
+  Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-2.0-h924138e_0.tar.bz2
+
+  conda deactivate
+  conda create -y -n geog20-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-2.0-h924138e_0.tar.bz2
+  conda activate geog20-test
+  type GeoConvert
+
+  git checkout -b v2.0
+  commit changes
+  git push --set-upstream cffk v2.0
+
+  conda install -c conda-forge conda-smithy
+  conda smithy rerender
+
+vcpkg...
+  git pull
+  update ports/geographiclib
+
+  ./vcpkg remove geographiclib
+  ./vcpkg install 'geographiclib[tools]'
+  binaries in installed/x64-linux/tools/geographiclib
+  libs in installed/x64-linux/{include,lib,debug/lib}
+
+  commit changes
+
+  ./vcpkg x-add-version geographiclib
+
+  commit again
+  commit message = [geographiclib] Update to version $VERSION
+  git push --set-upstream cffk geographiclib/2.0
