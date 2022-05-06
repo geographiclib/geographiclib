@@ -4,7 +4,68 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 1.52
+The current version of the library is 2.0
+
+Changes between 2.0 (released 2022-05-06) and 1.52 versions:
+
+   * Remove non C++ implementations from this package.  These are now
+     managed as separate packages.  See
+     https://geographiclib.sourceforge.io/doc/library.html#languages
+
+   * This allowed the cmake interface to be rationalized:
+     + Replace GEOGRAPHICLIB_LIB_TYPE by BUILD_SHARED_LIBS (a standard
+       cmake variable) and BUILD_BOTH_LIBS.
+     + Remove COMMON_INSTALL_PATH and replace with variables to
+       specify where various components are to be installed.
+     + Remove BUILD_NETGEOGRAPHICLIB.
+     + Remove legacy cmake config support (non-namespace).
+     + make exampleprograms does a separate cmake configuration to
+       mimic how a user's program might find GeographicLib.
+     + find_package (GeographicLib) now sets and checks the value of
+       GEOGRAPHICLIB_PRECISION.
+     + Improve the separation of end-user and maintain cmake code.
+
+   * More careful treatment of +/-0d and +/-180d.
+     + These behave consistently with taking the limits
+       - +/-0 means +/-eps as eps -> 0+
+       - +/-180 means +/-(180 - eps) as eps -> 0+
+     + As a consequence, azimuths of +0d and +180d are reckoned to be
+       east-going, as far as tracking the longitude with
+       Geodesic::LONG_UNROLL and the area goes, while azimuths -0d and
+       -180d are reckoned to be west-going.
+     + When computing longitude differences, if lat2 - lat1 = +/-180d
+       (mod 360d), then the sign is picked depending on the sign of
+       the difference.
+     + The normal range for returned longitudes and azimuths is
+       [-180d, 180d].
+
+   * Programs in directory tests now allow testing to extend beyond
+     invocations of the utility programs.
+
+   * BUG FIXES:
+     + Fixed bug where in the solution of the inverse geodesic problem where
+       with lat1 = 0 and lat2 = nan was treated as equatorial.
+     + Fixed roundoff corner case in geodesic area computation (only
+       triggered with long double).
+
+   * Minor changes in code:
+     + Use fmin, fmax, fabs instead of min, max, abs, where appropriate.
+     + Parameterize the conversion units for degrees, minutes, seconds as
+       Math::qd, Math::dm, Math::ms.
+     + Ellipsoid::MinorRadius() has be renamed Ellipsoid::PolarRadius().
+     + Remove deprecated functions: XXX::MajorRadius, Utility::val, and
+       placeholders (Math::cbrt, etc.) for C++11 math functions.
+     + Can specify the comment character in Utility::ParseLine.
+     + Rename various internal identifiers to avoid reserved names.
+     + Remove unused internal variable in RhumbLine.
+     + The documentation for EllipticFunction specifies restrictions on
+       the arguments.
+     + Put GeodesicExactC4.cpp back into GeodesicExact.cpp.
+
+   * Library file now called libGeographicLib.so, etc., instead of
+     libGeographic.so.
+
+   * The .NET version of GeographicLib has been removed.
 
 Changes between 1.52 (released 2021-06-22) and 1.51 versions:
 

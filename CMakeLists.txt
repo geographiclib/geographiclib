@@ -8,7 +8,7 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
-set (PROJECT_VERSION_SUFFIX "-rc1")
+set (PROJECT_VERSION_SUFFIX "")
 set (PROJECT_FULLVERSION ${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX})
 
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
@@ -55,9 +55,18 @@ string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
 cmake_minimum_required (VERSION 3.7.0) # This version was released 2016-11-11
 
+if (EXISTS ${PROJECT_SOURCE_DIR}/VERSION)
+  # If the file, VERSION, exists then this is a released version of
+  # GeographicLib and the processed man pages are available in the
+  # source tree
+  set (RELEASE ON)
+else ()
+  set (RELEASE OFF)
+endif ()
+
 # User-settable variables
 
-# (3) Where to look for data files.  Various classes look in the geoids,
+# (1) Where to look for data files.  Various classes look in the geoids,
 # gravity, magnetic, subdirectories of ${GEOGRAPHICLIB_DATA}.
 if (WIN32)
   # The binary installers for the data files for Windows are created
@@ -72,16 +81,70 @@ else ()
     CACHE PATH "Location for data for GeographicLib")
 endif ()
 
-# (4) Build which libraries?
+# (2) Build which libraries?
 option (BUILD_SHARED_LIBS "Build as a shared library" ON)
 
-# Ignoring BUILD_SHARED_LIBS and build both shared and static libraries.
+# Ignore BUILD_SHARED_LIBS and build both shared and static libraries.
 # (This replaces the variable GEOGRAPHICLIB_LIB_TYPE in earlier
 # versions.)
 option (BUILD_BOTH_LIBS "Build both shared and static libraries" OFF)
 
-# GEOGRAPHICLIB_LIB_TYPE_VAL is used to initialize
-# GEOGRAPHICLIB_SHARED_LIB in include/GeographicLib/Config.h.in
+# (3) What sort of build?
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release")
+endif ()
+
+# (4) Create the documentation?  This depends on whether doxygen can be
+# found.  If this is OFF, then links will be provided to the online
+# documentation on Sourceforge.
+option (BUILD_DOCUMENTATION "Use doxygen to create the documentation" OFF)
+
+# (5) Set the default "real" precision.  This should probably be left
+# at 2 (double).
+set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
+  "Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable")
+set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
+
+# (6) Try to link against boost when building the examples.  The
+# NearestNeighbor example optionally uses the Boost library.  Set to ON,
+# if you want to exercise this functionality.  Default is OFF, so that
+# cmake configuration isn't slowed down looking for Boost.
+option (USE_BOOST_FOR_EXAMPLES
+  "Look for Boost library when compiling examples" OFF)
+
+# (7) On Mac OS X, build multiple architectures?  Set to ON to build
+# i386 and x86_64.  Default is OFF, meaning build for default
+# architecture.
+option (APPLE_MULTIPLE_ARCHITECTURES
+  "Build multiple architectures for Apple systems" OFF)
+
+# (8) Convert warnings into errors?  Default is OFF if RELEASE, else ON.
+if (RELEASE)
+  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+  # BUILD_MANPAGES is ignored in RELEASE mode
+  option (BUILD_MANPAGES "Convert pod files to manpages" OFF)
+else ()
+  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)
+  # Convert pod files to man pages.  This only necessary with a
+  # non-release tree.
+  option (BUILD_MANPAGES "Convert pod files to manpages" ON)
+endif ()
+
+# (9) When making a binary package, should we include the debug version
+# of the library?  This applies to MSVC only, because that's the
+# platform where debug and release compilations do not inter-operate.
+# It requires building as follows:
+#   cmake --build . --config Debug   --target ALL_BUILD
+#   cmake --build . --config Release --target ALL_BUILD
+#   cmake --build . --config Release --target PACKAGE
+option (PACKAGE_DEBUG_LIBS
+  "Include debug versions of library in binary package" OFF)
+
+# Figure out which libraries to build and set GEOGRAPHICLIB_LIB_TYPE_VAL
+# (used to initialize GEOGRAPHICLIB_SHARED_LIB in
+# include/GeographicLib/Config.h.in)
 if (BUILD_BOTH_LIBS)
   set (GEOGRAPHICLIB_SHARED_LIB ON)
   set (GEOGRAPHICLIB_STATIC_LIB ON)
@@ -122,67 +185,6 @@ set (PROJECT_ALL_LIBRARIES
   ${PROJECT_SHARED_LIBRARIES}
   ${PROJECT_INTERFACE_LIBRARIES})
 
-if (EXISTS ${PROJECT_SOURCE_DIR}/VERSION)
-  # If the file, VERSION, exists then this is a released version of
-  # GeographicLib and the processed man pages are available in the
-  # source tree
-  set (RELEASE ON)
-else ()
-  set (RELEASE OFF)
-endif ()
-
-# (5) Create the documentation?  This depends on whether doxygen can be
-# found.  If this is OFF, then links will be provided to the online
-# documentation on Sourceforge.
-option (BUILD_DOCUMENTATION "Use doxygen to create the documentation" OFF)
-
-# (7) Set the default "real" precision.  This should probably be left
-# at 2 (double).
-set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
-  "Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable")
-set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
-
-# (8) When making a binary package, should we include the debug version
-# of the library?  This applies to MSVC only, because that's the
-# platform where debug and release compilations do not inter-operate.
-# It requires building as follows:
-#   cmake --build . --config Debug   --target ALL_BUILD
-#   cmake --build . --config Release --target ALL_BUILD
-#   cmake --build . --config Release --target PACKAGE
-option (PACKAGE_DEBUG_LIBS
-  "Include debug versions of library in binary package" OFF)
-
-# (9) Try to link against boost when building the examples.  The
-# NearestNeighbor example optionally uses the Boost library.  Set to ON,
-# if you want to exercise this functionality.  Default is OFF, so that
-# cmake configuration isn't slowed down looking for Boost.
-option (USE_BOOST_FOR_EXAMPLES
-  "Look for Boost library when compiling examples" OFF)
-
-# (10) On Mac OS X, build multiple architectures?  Set to ON to build
-# i386 and x86_64.  Default is OFF, meaning build for default
-# architecture.
-option (APPLE_MULTIPLE_ARCHITECTURES
-  "Build multiple architectures for Apple systems" OFF)
-
-if (RELEASE)
-  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
-  # BUILD_MANPAGES is ignored in RELEASE mode
-  option (BUILD_MANPAGES "Convert pod files to manpages" OFF)
-else ()
-  # (11) Convert warnings into errors?  Default is OFF if RELEASE, else ON.
-  option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)
-  # Convert pod files to man pages.  This only necessary with a
-  # non-release tree.
-  option (BUILD_MANPAGES "Convert pod files to manpages" ON)
-endif ()
-
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-  # Set a default build type for single-configuration cmake generators
-  # if no build type is set.
-  set (CMAKE_BUILD_TYPE "Release")
-endif ()
-
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # For multi-config systems and for Visual Studio, the debug version of
   # the library is called Geographic_d.
@@ -191,6 +193,10 @@ else ()
   set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
+# Installation directories.  An empty string disables installation of
+# that component.  These are all relative to CMAKE_INSTALL_PREFIX.
+
+# Installation is to ${INCDIR}/GeographicLib
 set (INCDIR "include" CACHE STRING "Where to install header files")
 set (BINDIR "bin" CACHE STRING "Where to install tools")
 if (WIN32)
@@ -207,7 +213,8 @@ else ()
   set (LIBDIR "lib" CACHE STRING "Where to install libraries")
 endif ()
 set (DLLDIR "bin" CACHE STRING "Where to install dlls")
-set (MANDIR "share/man" CACHE STRING "Where to instal the man pages")
+# Installation is to ${MANDIR}/man1 and ${MANDIR}/man8
+set (MANDIR "share/man" CACHE STRING "Where to install the man pages")
 set (CMAKEDIR "lib/cmake/${PROJECT_NAME}"
   CACHE STRING "Where to install cmake configs")
 set (PKGDIR "lib/pkgconfig" CACHE STRING "Where to install package config")
@@ -459,8 +466,10 @@ add_subdirectory (include/GeographicLib)
 add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
-set (CALLED_FROM_TOPLEVEL ON)
-add_subdirectory (examples)
+if (EXAMPLEDIR)
+  set (CALLED_FROM_TOPLEVEL ON)
+  add_subdirectory (examples)   # This just installs the examples
+endif ()
 add_subdirectory (cmake)
 enable_testing ()
 add_subdirectory (tests)
@@ -468,6 +477,9 @@ if (NOT RELEASE)
   add_subdirectory (develop)
 endif ()
 
+# make exampleprograms does a fresh cmake configuration and so uses
+# find_package to find the just-built version og GeographicLib (via the
+# GeographicLib_DIR option to cmake).
 if (CMAKE_GENERATOR_PLATFORM)
   set (PLATFORM_FLAG "-A")
 endif ()
@@ -515,7 +527,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
   "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin)\$")
+  "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin|HOWTO-RELEASE.txt)\$")
 set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

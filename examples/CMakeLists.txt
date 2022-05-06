@@ -95,8 +95,8 @@ else ()
   set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
-# set (GeographicLib_DIR "/home/ckarney/geographiclib/BUILD2")
 find_package (GeographicLib 2.0 REQUIRED)
+include_directories (${GeographicLib_INCLUDE_DIRS})
 
 option (USE_BOOST_FOR_EXAMPLES
   "Look for Boost library when compiling examples" ON)
@@ -115,8 +115,11 @@ endif ()
 # "exampleprograms" target.  These are mainly for including as examples
 # within the doxygen documentation; however, compiling them catches some
 # obvious blunders.
-if (GEOGRAPHICLIB_PRECISION EQUAL 2)
-  # These examples all assume real = double
+
+if (NOT GEOGRAPHICLIB_PRECISION OR GEOGRAPHICLIB_PRECISION EQUAL 2)
+  # These examples all assume real = double, so check
+  # GEOGRAPHICLIB_PRECISION.  Allow GEOGRAPHICLIB_PRECISION to be unset
+  # to accommodate lame FindGeographicLib.cmake.
   set (EXAMPLE_SOURCES ${EXAMPLES0})
   if (USE_BOOST_FOR_EXAMPLES AND Boost_FOUND)
     add_definitions (-DGEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION=1)
@@ -128,8 +131,6 @@ endif ()
 set (EXAMPLE_SOURCES ${EXAMPLE_SOURCES} ${EXAMPLES1})
 
 set (EXAMPLES)
-add_definitions (${PROJECT_DEFINITIONS})
-
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
