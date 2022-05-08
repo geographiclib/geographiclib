@@ -53,7 +53,7 @@ page](../../index.html).
 
 - Library documentation (all versions):
   <a href="../">https://geographiclib.sourceforge.io/C++</a>
-- GIT repository: https://github.com/geographiclib/geographiclib
+- Git repository: https://github.com/geographiclib/geographiclib
   - Releases are on the `release` branch, and specific
     releases are tagged as, e.g., `r1.52`,
     `r2.0`, etc.  This is the appropriate branch
@@ -7436,11 +7436,11 @@ List of versions in reverse chronological order together with a brief
 list of changes.  (Note: Old versions of the library use a year-month
 style of numbering.  Now, the library uses a major and minor version
 number.)  Recent versions of GeographicLib are available at
+<a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/">
+https://sourceforge.net/projects/geographiclib/files/distrib-C++/</a>.
+Older versions are in
 <a href="https://sourceforge.net/projects/geographiclib/files/distrib/">
 https://sourceforge.net/projects/geographiclib/files/distrib/</a>.
-Older versions are in
-<a href="https://sourceforge.net/projects/geographiclib/files/distrib/archive/">
-https://sourceforge.net/projects/geographiclib/files/distrib/archive/</a>.
 
 The corresponding documentation for these versions is obtained by
 clicking on the &ldquo;Version <i>m.nn</i>&rdquo; links below.  Some of
@@ -7449,7 +7449,7 @@ particular the links for the source code will not work if the code has
 been migrated to the archive subdirectory).  All the releases are
 available as tags &ldquo;r<i>m.nn</i>&rdquo; in the the "release" branch
 of the
-<a href="https://sourceforge.net/p/geographiclib/code/ci/release/tree/">
+<a href="https://github.com/geographiclib/geographiclib/tree/release">
 git repository for GeographicLib</a>.
 
 \if SKIP

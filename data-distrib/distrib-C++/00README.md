@@ -16,7 +16,7 @@ Other links:
 * Installation instructions:
   https://geographiclib.sourceforge.io/C++/doc/install.html
 * Library documentation: https://geographiclib.sourceforge.io/C++/doc
-* GIT repository: https://github.com/geographiclib/geographiclib
+* Git repository: https://github.com/geographiclib/geographiclib
 * Git mirror site: https://sourceforge.net/p/geographiclib/code
 * Source distribution (2.0 and later):
   https://sourceforge.net/projects/geographiclib/files/distrib-C++

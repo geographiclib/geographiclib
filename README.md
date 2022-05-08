@@ -15,7 +15,7 @@ It is licensed under the MIT License; see
 
 * Library documentation: https://geographiclib.sourceforge.io/C++/doc
 * Change log: https://geographiclib.sourceforge.io/C++/doc/changes.html
-* GIT repository: https://github.com/geographiclib/geographiclib
+* Git repository: https://github.com/geographiclib/geographiclib
   * Releases are on the [`release`](../../release) branch, and specific
     releases are tagged as, e.g., [`r1.52`](../../tree/r1.52),
     [`r2.0`](../../tree/r2.0), etc.  This is the appropriate branch

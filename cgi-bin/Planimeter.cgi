@@ -199,7 +199,7 @@ cat <<EOF
       <a href="../scripts/geod-calc.html">JavaScript geodesic
         calculator</a>.
       If you wish to use Planimeter directly,
-      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
+      <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++">
         download</a>
       and compile GeographicLib.  The algorithms are described
       in C. F. F. Karney,

@@ -146,7 +146,7 @@ cat <<EOF
         GeographicLib</a>.
       This web interface illustrates a subset of its capabilities.  If
       you wish to use GeoidEval directly,
-      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
+      <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++">
         download</a>
       and compile GeographicLib.  A description of the methods is given
       <a href="https://geographiclib.sourceforge.io/C++/doc/geoid.html">

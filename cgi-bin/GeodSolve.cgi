@@ -360,7 +360,7 @@ cat <<EOF
         calculator</a> and
       <a href="../scripts/geod-google.html">geodesics on Google
         maps</a>.  If you wish to use GeodSolve directly,
-      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
+      <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++">
         download</a>
       and compile GeographicLib.  The algorithms are described
       in C. F. F. Karney,

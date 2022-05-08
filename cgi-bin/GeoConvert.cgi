@@ -232,7 +232,7 @@ cat <<EOF
         GeographicLib</a>.
       This web interface illustrates a subset of its capabilities.  If
       you wish to use GeoConvert directly,
-      <a href="https://sourceforge.net/projects/geographiclib/files/distrib">
+      <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++">
         download</a>
       and compile GeographicLib.
     </p>

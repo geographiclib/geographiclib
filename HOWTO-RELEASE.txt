@@ -83,40 +83,15 @@ Fedora maintainer
 rmattes, smani
 
 binaries for cgi scripts
-ssh -t karney,geographiclib@shell.sourceforge.net create
-# git: /home/git/p/geographiclib/code.git
-# web: /home/project-web/geographiclib
-# files: /home/frs/project/geographiclib
-run compile.sh
-
-VERSION=2.0
-FULLVERSION=$VERSION-alpha
-rm -rf /tmp/GeographicLib-$VERSION /tmp/geog-$VERSION
-tar xfpzC /home/frs/project/geographiclib/distrib-C++/GeographicLib-$FULLVERSION.tar.gz /tmp
-cd /tmp/GeographicLib-$VERSION
-# N.B. $HOME/cmake/bin is in PATH for cmake
-cmake \
-    -D CMAKE_INSTALL_PREFIX=/tmp/geog-$VERSION \
-    -D BUILD_SHARED_LIBS=OFF \
-    -D GEOGRAPHICLIB_PRECISION=3 \
-    -D EXAMPLEDIR= -B BUILD -S .
-cd BUILD
-make
-make install
-mkdir -p /home/project-web/geographiclib/bin-$VERSION
-cd /tmp/geog-$VERSION/bin
-install CartConvert ConicProj GeodesicProj GeoConvert GeodSolve GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj /home/project-web/geographiclib/bin-$VERSION/
+run compile.sh (copy in cgi-bin)
 
 When ready for switch over, do
 cd /home/project-web/geographiclib
 rm bin
 ln -s bin-$VERSION bin
 
-From test-distribution.sh
-
-# Also to do
-# make -f makefile-admin distrib-{cgi,html}
-# update binaries for cgi applications
+make -f makefile-admin distrib-cgi
+update binaries for cgi applications
 
 Release checklist:
 
