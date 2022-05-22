@@ -27,6 +27,9 @@
  **********************************************************************/
 
 #include <GeographicLib/GeodesicLineExact.hpp>
+#if GEOGRAPHICLIB_AREA_QUAD
+#include <boost/math/quadrature/gauss_kronrod.hpp>
+#endif
 
 namespace GeographicLib {
 
@@ -105,11 +108,17 @@ namespace GeographicLib {
     }
 
     if (_caps & CAP_C4) {
-      real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
-      g.C4f(eps, _cC4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       _aA4 = Math::sq(_a) * _calp0 * _salp0 * _e2;
-      _bB41 = GeodesicExact::CosSeries(_ssig1, _csig1, _cC4a, nC4_);
+#if !GEOGRAPHICLIB_AREA_QUAD
+      real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
+      if (_aA4 == 0)
+        _bB41 = 0;
+      else {
+        g.C4f(eps, _cC4a);
+        _bB41 = GeodesicExact::CosSeries(_ssig1, _csig1, _cC4a, nC4_);
+      }
+#endif
     }
 
     _a13 = _s13 = Math::NaN();
@@ -229,8 +238,23 @@ namespace GeographicLib {
     }
 
     if (outmask & AREA) {
-      real
-        B42 = GeodesicExact::CosSeries(ssig2, csig2, _cC4a, nC4_);
+#if GEOGRAPHICLIB_AREA_QUAD
+      real i4int;
+      if (_aA4 == 0)
+        i4int = 0;
+      else {
+        GeodesicExact::I4Integrand i4(_e2 / Math::sq(_f1), _k2);
+        /*
+        i4int = GEOGRAPHICLIB_AREA_INTEGRATE
+          (i4, atan2(_ssig1, _csig1), atan2(ssig2, csig2), _c2/_aA4);
+        */
+        i4int = GEOGRAPHICLIB_AREA_INTEGRATE
+          (i4, _csig1, csig2, _c2/_aA4);
+      }
+#else
+      real B42 = _aA4 == 0 ? 0 :
+        GeodesicExact::CosSeries(ssig2, csig2, _cC4a, nC4_);
+#endif
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
@@ -257,7 +281,11 @@ namespace GeographicLib {
            ssig12 * (_csig1 * ssig12 / (1 + csig12) + _ssig1));
         calp12 = Math::sq(_salp0) + Math::sq(_calp0) * _csig1 * csig2;
       }
+#if GEOGRAPHICLIB_AREA_QUAD
+      S12 = _c2 * atan2(salp12, calp12) + _aA4 * i4int;
+#else
       S12 = _c2 * atan2(salp12, calp12) + _aA4 * (B42 - _bB41);
+#endif
     }
 
     return arcmode ? s12_a12 : sig12 / Math::degree();
