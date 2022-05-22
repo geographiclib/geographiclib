@@ -311,7 +311,7 @@ Here are the steps to compile and install GeographicLib:
     for example, `CMAKE_INSTALL_PREFIX=/tmp/geographic`.  Where under
     `CMAKE_INSTALL_PREFIX` the various components of the library are
     installed is governed by the following variables (a value of an
-    empty string disables installation):
+    empty string or "OFF" disables installation):
     - `INCDIR` header files (the `GeographicLib` subdirectory is used)
     - `BINDIR` tools
     - `SBINDIR` admin tools

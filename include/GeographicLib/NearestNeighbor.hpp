@@ -51,7 +51,7 @@ namespace GeographicLib {
    *   signed integer type; in typical geodetic applications, \e dist_t might
    *   be <code>double</code>.
    * @tparam pos_t the type for specifying the positions of points; geodetic
-   *   application might bundled the latitude and longitude into a
+   *   application might bundle the latitude and longitude into a
    *   <code>std::pair<dist_t, dist_t></code>.
    * @tparam distfun_t the type of a function object which takes takes two
    *   positions (of type \e pos_t) and returns the distance (of type \e
@@ -72,9 +72,9 @@ namespace GeographicLib {
    *
    * \note This is a "header-only" implementation and, as such, depends in a
    * minimal way on the rest of GeographicLib (the only dependency is through
-   * the use of GeographicLib::GeographicErr for handling compile-time and
-   * run-time exceptions).  Therefore, it is easy to extract this class from
-   * the rest of GeographicLib and use it as a stand-alone facility.
+   * the use of GeographicLib::GeographicErr for handling and run-time
+   * exceptions).  Therefore, it is easy to extract this class from the rest of
+   * GeographicLib and use it as a stand-alone facility.
    *
    * The \e dist_t type must support numeric_limits queries (specifically:
    * is_signed, is_integer, max(), digits).
