@@ -43,6 +43,7 @@ set (HEADERS
   TransverseMercatorExact.hpp
   UTMUPS.hpp
   Utility.hpp
+  kissfft.hh
   )
 if (INCDIR)
   install (FILES ${HEADERS} DESTINATION ${INCDIR}/GeographicLib)

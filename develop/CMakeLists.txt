@@ -1,22 +1,32 @@
 # Build the test programs...
 
+if (USE_FFTW)
+
+if (GEOGRAPHICLIB_PRECISION EQUAL 1)
+  set (FFTW_PACKAGE FFTW3f)
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 2)
+  set (FFTW_PACKAGE FFTW3)
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
+  set (FFTW_PACKAGE FFTW3l)
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
+  set (FFTW_PACKAGE FFTW3q)
+elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
+  set (FFTW_PACKAGE OFF)
+endif ()
+
+if (FFTW_PACKAGE)
+  find_package (${FFTW_PACKAGE})
+  set (FFTW_LIBRARIES ${${FFTW_PACKAGE}_LIBRARIES})
+  set (FFTW_LIBRARY_DIRS ${${FFTW_PACKAGE}_LIBRARY_DIRS})
+  set (FFTW_INCLUDE_DIRS ${${FFTW_PACKAGE}_INCLUDE_DIRS})
+  message (STATUS "FFTW_LIBRARIES ${FFTW_LIBRARIES} FFTW_FOUND ${FFTW_FOUND}")
+  include_directories (${FFTW_INCLUDE_DIRS})
+endif ()
+
+endif ()
 set (DEVELPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect
-  ClosestApproach M12zero)
-
-# Check whether the C++11 random routines are available.
-check_cxx_source_compiles (
-  "#include <random>
-int main() {
-  unsigned s = std::random_device()(); // Set seed from random_device
-  std::mt19937 g(s);                   // Initialize URNG
-  std::uniform_real_distribution<double> dis;
-  return int(dis(g));
-}\n" CXX11_RANDOM)
-
-if (CXX11_RANDOM)
-  set (DEVELPROGRAMS ${DEVELPROGRAMS} GeodShort NormalTest)
-endif ()
+  ClosestApproach M12zero GeodShort NormalTest)
 
 if (Boost_FOUND AND NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
   # Skip LevelEllipsoid for quad precision because of compiler errors
@@ -51,12 +61,13 @@ add_dependencies (develprograms GeodExact)
 target_link_libraries (GeodExact ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
 set (DEVELPROGRAMS ${DEVELPROGRAMS} GeodExact)
 
+add_executable (AreaEst EXCLUDE_FROM_ALL AreaEst.cpp)
+add_dependencies (develprograms AreaEst)
+target_link_libraries (AreaEst ${PROJECT_LIBRARIES} ${FFTW_LIBRARIES}
+  ${HIGHPREC_LIBRARIES})
+set (DEVELPROGRAMS ${DEVELPROGRAMS} AreaEst)
+
 add_executable (reformat EXCLUDE_FROM_ALL reformat.cpp)
-if (MSVC OR CMAKE_CONFIGURATION_TYPES)
-  # Add _d suffix for your debug versions of the tools
-  set_target_properties (GeodExact PROPERTIES
-    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
-endif ()
 add_dependencies (develprograms reformat)
 set (DEVELPROGRAMS ${DEVELPROGRAMS} reformat)
 
