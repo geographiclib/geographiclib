@@ -10,6 +10,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/CircularEngine.hpp \
 			GeographicLib/Constants.hpp \
 			GeographicLib/DMS.hpp \
+			GeographicLib/DST.hpp \
 			GeographicLib/Ellipsoid.hpp \
 			GeographicLib/EllipticFunction.hpp \
 			GeographicLib/GARS.hpp \
@@ -45,7 +46,6 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 			GeographicLib/TransverseMercatorExact.hpp \
 			GeographicLib/UTMUPS.hpp \
 			GeographicLib/Utility.hpp \
-			GeographicLib/kissfft.hh \
 			GeographicLib/Config.h
 
 geographiclib_data=$(datadir)/GeographicLib

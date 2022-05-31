@@ -8,6 +8,7 @@ set (SOURCES
   CassiniSoldner.cpp
   CircularEngine.cpp
   DMS.cpp
+  DST.cpp
   Ellipsoid.cpp
   EllipticFunction.cpp
   GARS.cpp
@@ -42,6 +43,7 @@ set (SOURCES
   )
 
 set (HEADERS
+  kissfft.hh
   ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
   ../include/GeographicLib/Accumulator.hpp
   ../include/GeographicLib/AlbersEqualArea.hpp

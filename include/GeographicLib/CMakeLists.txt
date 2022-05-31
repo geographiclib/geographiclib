@@ -8,6 +8,7 @@ set (HEADERS
   CircularEngine.hpp
   Constants.hpp
   DMS.hpp
+  DST.hpp
   Ellipsoid.hpp
   EllipticFunction.hpp
   GARS.hpp
@@ -43,7 +44,6 @@ set (HEADERS
   TransverseMercatorExact.hpp
   UTMUPS.hpp
   Utility.hpp
-  kissfft.hh
   )
 if (INCDIR)
   install (FILES ${HEADERS} DESTINATION ${INCDIR}/GeographicLib)

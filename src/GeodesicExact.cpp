@@ -28,9 +28,8 @@
 
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
-#if GEOGRAPHICLIB_AREA_QUAD
-#include <boost/math/quadrature/gauss_kronrod.hpp>
-#endif
+
+#include <vector>
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables and
@@ -85,12 +84,16 @@ namespace GeographicLib {
       // spherical case.
     , _etol2(real(0.1) * tol2_ /
              sqrt( fmax(real(0.001), fabs(_f)) * fmin(real(1), 1 - _f/2) / 2 ))
+#if GEOGRAPHICLIB_AREA_DST
+    , _nC4(32)
+    , _fft(_nC4)
+#endif
   {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_b) && _b > 0))
       throw GeographicErr("Polar semi-axis is not positive");
-#if !GEOGRAPHICLIB_AREA_QUAD
+#if !GEOGRAPHICLIB_AREA_DST
     C4coeff();
 #endif
   }
@@ -454,7 +457,7 @@ namespace GeographicLib {
       if (A4 != 0) {
         real
           k2 = Math::sq(calp0) * _ep2,
-#if !GEOGRAPHICLIB_AREA_QUAD
+#if !GEOGRAPHICLIB_AREA_DST
           eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
 #endif
           // From Lambda12: tan(bet) = tan(sig) * cos(alp)
@@ -462,23 +465,21 @@ namespace GeographicLib {
           ssig2 = sbet2, csig2 = calp2 * cbet2;
         Math::norm(ssig1, csig1);
         Math::norm(ssig2, csig2);
-#if GEOGRAPHICLIB_AREA_QUAD
+#if GEOGRAPHICLIB_AREA_DST
         I4Integrand i4(_ep2, k2);
-        /*
-        real i4int = GEOGRAPHICLIB_AREA_INTEGRATE
-          (i4, atan2(ssig1, csig1), atan2(ssig2, csig2), _c2/A4);
-        */
-        real i4int = GEOGRAPHICLIB_AREA_INTEGRATE
-          (i4, csig1, csig2, _c2/A4);
-        S12 = A4 * i4int;
+        vector<real> C4a(_nC4);
+        _fft.transform(i4, _nC4, C4a);
+        real
+          B41 = DST::integral(C4a, ssig1, csig1),
+          B42 = DST::integral(C4a, ssig2, csig2);
 #else
         real C4a[nC4_];
         C4f(eps, C4a);
         real
           B41 = CosSeries(ssig1, csig1, C4a, nC4_),
           B42 = CosSeries(ssig2, csig2, C4a, nC4_);
-        S12 = A4 * (B42 - B41);
 #endif
+        S12 = A4 * (B42 - B41);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0;
@@ -908,7 +909,7 @@ namespace GeographicLib {
     return lam12;
   }
 
-#if !GEOGRAPHICLIB_AREA_QUAD
+#if !GEOGRAPHICLIB_AREA_DST
   void GeodesicExact::C4f(real eps, real c[]) const {
     // Evaluate C4 coeffs
     // Elements c[0] thru c[nC4_ - 1] are set

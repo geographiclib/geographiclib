@@ -11,6 +11,7 @@ EXAMPLE_FILES = \
 	example-CircularEngine.cpp \
 	example-Constants.cpp \
 	example-DMS.cpp \
+	example-DST.cpp \
 	example-Ellipsoid.cpp \
 	example-EllipticFunction.cpp \
 	example-GARS.cpp \

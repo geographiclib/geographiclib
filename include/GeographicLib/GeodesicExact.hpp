@@ -13,18 +13,14 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 
-#if GEOGRAPHICLIB_PRECISION == 4
-// Use boost's gauss_kronrod
-#  define GEOGRAPHICLIB_AREA_QUAD 1
-#else
-// Use series
-#  define GEOGRAPHICLIB_AREA_QUAD 0
+#if !defined(GEOGRAPHICLIB_AREA_DST)
+// GEOGRAPHICLIB_AREA_DST == 0 means use Taylor series for area
+// GEOGRAPHICLIB_AREA_DST == 1 means compute Taylor series via DST
+#  define GEOGRAPHICLIB_AREA_DST 1
 #endif
 
-#if GEOGRAPHICLIB_AREA_QUAD
-#  define GEOGRAPHICLIB_AREA_INTEGRATE(fun, a, b, scale) \
-  boost::math::quadrature::gauss_kronrod<Math::real, 15>:: \
-          integrate(fun, a, b, 15, Math::real(1e-24) * scale, 0)
+#if GEOGRAPHICLIB_AREA_DST
+#  include <GeographicLib/DST.hpp>
 #else
 #if !defined(GEOGRAPHICLIB_GEODESICEXACT_ORDER)
 /**
@@ -95,7 +91,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;
-#if !GEOGRAPHICLIB_AREA_QUAD
+#if !GEOGRAPHICLIB_AREA_DST
     static const int nC4_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
 #endif
@@ -120,7 +116,10 @@ namespace GeographicLib {
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-#if !GEOGRAPHICLIB_AREA_QUAD
+#if GEOGRAPHICLIB_AREA_DST
+    int _nC4;                   // Set in constructor
+    DST _fft;
+#else
     real _cC4x[nC4x_];
 #endif
 
@@ -149,7 +148,7 @@ namespace GeographicLib {
                     real& salp1, real& calp1, real& salp2, real& calp2,
                     real& m12, real& M12, real& M21, real& S12) const;
 
-#if GEOGRAPHICLIB_AREA_QUAD
+#if GEOGRAPHICLIB_AREA_DST
     class I4Integrand {
       const real X, tX, tdX, sX, sX1, sXX1, asinhsX, _k2;
       // return asinh(sqrt(x))/sqrt(x)
@@ -163,7 +162,7 @@ namespace GeographicLib {
       // difference of two evaluations of t and improves the accuracy(?).
       static real t(real x) {
         // Group terms to minimize roundoff
-        // with x = ep2, this is the sameas
+        // with x = ep2, this is the same as
         // e2/(1-e2) + (atanh(e)/e - 1)
         return x + (sqrt(1 + x) * asinhsqrt(x) - 1);
       }
@@ -203,49 +202,6 @@ namespace GeographicLib {
           ( 1 - (asin (z)/z) / d1 - (asinhsX + asin (sy)) / d2 );
       }
 
-      /*
-Dasinh(x,y) = 1/sqrt(1+x^2) if x = y
-             asinh( (x-y)*(x+y) / (x * sqrt(1+y^2) + y * sqrt(1+x^2)) )/(x-y) if x*y>0
-Dsqrt(x,y) = 1/(sqrt(x) + sqrt(y))
-
-asinhsqrt(x):=if x = 0b0 then 1b0 else if x > 0 then asinh(sqrt(x))/sqrt(x) else asin(sqrt(-x))/sqrt(-x);
-t(x):=if x = 0b0 then 0b0 else x + (asinhsqrt(x) * sqrt(1+x) - 1);
-td(x):=if x = 0b0 then 4/3b0 else 1 + (1 - asinhsqrt(x) / sqrt(1+x)) / (2*x);
-Dt(x,y):= if x = y then td(x) else if x*y <= 0 then (t(x)-t(y))/(x-y) else
-if x>0b0 then block([sx:sqrt(x), sy:sqrt(y), sx1:sqrt(1+x), sy1:sqrt(1+y), z],
-z:(x-y)/(sx*sy1+sy*sx1),
-1+(asinh(z)/z)/(2*sx*sy)
--(asinh(sy)+asinh(sx))/(2*(x*sy*sy1+y*sx*sx1)))
-else block([sx:sqrt(-x), sy:sqrt(-y), sx1:sqrt(1+x), sy1:sqrt(1+y),z],
-z:(x-y)/(sx*sy1+sy*sx1),
-1-(asin(z)/z)/(2*sx*sy)
--(asin(sy)+asin(sx))/(2*(x*sy*sy1+y*sx*sx1)));
-tda(x):=block([eps:1b-10], (t(x+eps)-t(x-eps))/(2*eps));
-Dta(x,y):=if x = y then tda(x) else (t(x)-t(y))/(x-y);
-
-e^2 = (a^2-b^2)/b^2
-ep^2 = (a^2-b^2)/b^2 = e^2 / (1 - e^2)
-sqrt(1+ep^2) = a/b = 1/(1-f)
-asinh(ep) = atanh(e)
- x + (asinhsqrt(x) *  sqrt(1+x) - 1) = ep^2 + (asinh(ep)/ep * sqrt(1+ep^2) - 1)
-= e^2/(1-e^2) + (atanh(e)/e  - 1)
-
-ep^2 - k^2*sin(sig)^2 = ep^2* (1 - cos(alp0)^2*sin(sig)^2)
-Multiply numerator + denomitor of Eq 61 by (b/a)^2
-(tx(e^2) - tx(e^2*cos(alp0)^2*sin(sig)^2)) / (e^2 - e^2*cos(alp0)^2*sin(sig)^2)
-tx(y):=(b/a)^2*t((a/b)^2*y)
-
-       */
-      static real tda(real x) {
-        return x > 0 ? (1 + 1/(2 * x) -
-                        (asinh(sqrt(x))/sqrt(x)) / ( (2 * x * sqrt(1 + x)) )) :
-          ( x < 0 ? (1 + 1/(2 * x) -
-                     (asin(sqrt(-x))/sqrt(-x)) / (2 * x * sqrt(1 + x))) :
-            4/real(3));
-      }
-      static real Dta(real x, real y) {
-        return x == y ? tda(x) : (t(x) - t(y)) / (x - y);
-      }
     public:
       I4Integrand(real ep2, real k2)
         : X( ep2 )
@@ -257,14 +213,9 @@ tx(y):=(b/a)^2*t((a/b)^2*y)
         , asinhsX( X > 0 ? asinh(sX) : asin(sX)) // atanh(e)
         , _k2( k2 )
       {}
-      /*
       real operator()(real sig) const {
         real ssig = sin(sig);
         return - DtX(_k2 * Math::sq(ssig)) * ssig/2;
-      }
-      */
-      real operator()(real csig) const {
-        return DtX(_k2 * (1 - Math::sq(csig)))/2;
       }
     };
 #else

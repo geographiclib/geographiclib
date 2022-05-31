@@ -46,7 +46,7 @@
 #endif
 
 #else
-#include <GeographicLib/kissfft.hh>
+#include <../src/kissfft.hh>
 #endif
 
 using namespace GeographicLib;
@@ -65,7 +65,7 @@ class I4Integrand {
   // difference of two evaluations of t and improves the accuracy(?).
   static Math::real t(Math::real x) {
     // Group terms to minimize roundoff
-    // with x = ep2, this is the sameas
+    // with x = ep2, this is the same as
     // e2/(1-e2) + (atanh(e)/e - 1)
     return x + (sqrt(1 + x) * asinhsqrt(x) - 1);
   }
@@ -138,7 +138,6 @@ Math::real CosSeries(Math::real sinx, Math::real cosx, const Math::real c[], int
     y0 = ar * y1 - y0 + *--c;
   }
   return cosx * (y0 - y1);    // cos(x) * (y0 - y1)
-
 }
 
 Math::real SinSeries(Math::real sinx, Math::real cosx, const Math::real c[], int n) {
@@ -208,7 +207,7 @@ void fft_transform(const vector<Math::real>& in, vector<Math::real>& out,
     tempin[0] = 0;
     for (int i = 0; i < N; ++i) tempin[i+1] = in[i];
     for (int i = 1; i < N; ++i) tempin[N+i] = tempin[N-i];
-    for (int i = 1; i < 2*N; ++i) tempin[2*N+i] = -tempin[i];
+    for (int i = 0; i < 2*N; ++i) tempin[2*N+i] = -tempin[i];
   }
   kissfft<Math::real> fft(2*N, false);
   vector<complex<Math::real>> tempout(2*N);
