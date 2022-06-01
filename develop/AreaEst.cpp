@@ -333,7 +333,7 @@ int main(int argc, const char* const argv[]) {
         maxalp0 = -1;
       int N = 0;
       // Pick N = 2^k and 3*2^k: [4, 6, 8, 12, 16, 24, 32, ...]
-      for (N = 4; N <= Nmax; N = (N % 3 == 0 ? 4*N/3 : 3*N/2)) {
+      for (N = 4; N <= Nmax; N = N % 3 == 0 ? 4*N/3 : 3*N/2) {
         errx = -1;
         maxalp0 = -1;
         Math::real alp0 = 10, err;

@@ -17,8 +17,12 @@ namespace GeographicLib {
   using namespace std;
 
   DST::DST(unsigned N)
-    : _fft(make_shared<fft_t>(fft_t(4*N, false)))
+    : _fft(make_shared<fft_t>(fft_t(2*N, false)))
   {}
+
+  void DST::reserve(unsigned N) {
+    _fft->assign(2*N, false);
+  }
 
   void DST::fft_transform(const vector<Math::real>& in,
                           vector<Math::real>& out, bool centerp) const {
@@ -94,7 +98,7 @@ namespace GeographicLib {
                    vector<Math::real>& newF) const {
     // oldF and newF can be the same arrays
     int N = oldF.size();
-    vector<double> temp(N);
+    vector<Math::real> temp(N);
     Math::real d = Math::pi()/(4 * N);
     for (int i = 0; i < N; ++i)
       temp[i] = f( (2*i + 1) * d );

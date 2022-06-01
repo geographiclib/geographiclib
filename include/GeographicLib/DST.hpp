@@ -52,6 +52,12 @@ namespace GeographicLib {
      * @param[in] N the expected number of points to use.
      **********************************************************************/
     DST(unsigned N = 0);
+
+    /**
+     * Reserve space for a given number of points.
+     * @param[in] N the expected number of points to use.
+     **********************************************************************/
+    void reserve(unsigned N);
     // void transform(const std::vector<Math::real>& x,
     //                std::vector<Math::real>& tx) const;
     /**
