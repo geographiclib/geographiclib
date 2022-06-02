@@ -37,93 +37,80 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT DST {
   private:
-    typedef kissfft<GeographicLib::Math::real> fft_t;
-    mutable std::shared_ptr<fft_t> _fft;
+    typedef Math::real real;
+    int _N;
+    typedef kissfft<real> fft_t;
+    std::shared_ptr<fft_t> _fft;
+    mutable std::vector<real> _data;
+    mutable std::vector<real> _temp;
     // Implement DST-III (centerp = false) or DST-IV (centerp = true)
-    void fft_transform(const std::vector<Math::real>& in,
-                       std::vector<Math::real>& out,
-                       bool centerp) const;
-    void fft_transform2(const std::vector<Math::real>& newin,
-                        const std::vector<Math::real>& oldout,
-                        std::vector<Math::real>& newout) const;
+    void fft_transform(real F[], bool centerp) const;
+    // Add another N terms to F
+    void fft_transform2(real F[]) const;
   public:
     /**
-     * Constructor specifying the expected number of points to use.
-     * @param[in] N the expected number of points to use.
+     * Constructor specifying the number of points to use.
+     * @param[in] N the number of points to use.
      **********************************************************************/
-    DST(unsigned N = 0);
+    DST(int N = 0);
 
     /**
-     * Reserve space for a given number of points.
-     * @param[in] N the expected number of points to use.
+     * Reset the given number of points.
+     * @param[in] N the number of points to use.
      **********************************************************************/
-    void reserve(unsigned N);
-    // void transform(const std::vector<Math::real>& x,
-    //                std::vector<Math::real>& tx) const;
+    void reset(int N);
+
+    /**
+     * Return the number of points.
+     * @return the number of points to use.
+     **********************************************************************/
+    int N() const { return _N; }
+
     /**
      * Determine first \e N terms in the Fourier series
      * @param[in] f the function used for evaluation.
-     * @param[in] N the number of points to use.
      * @param[out] F the first N coefficients of the Fourier series.
      *
      * The evaluates \f$ f(\sigma) \f$ at \f$ \sigma = i \pi / (2 N) \f$ for
      * integer \f$ i \in (0, N] \f$.
      **********************************************************************/
-    void transform(std::function<Math::real(Math::real)> f, int N,
-                   std::vector<Math::real>& F) const;
+    void transform(std::function<real(real)> f, real F[]) const;
+
     /**
      * Refine the Fourier series by doubling the number of points sampled
      * @param[in] f the function used for evaluation.
-     * @param[in] oldF the transform based on  \e N points.
-     * @param[out] newF the refined transform based on 2\e N points.
+     * @param[inout] F the refined transform based on 2\e N points.
      *
      * The evaluates \f$ f(\sigma) \f$ at additional points \f$ \sigma = (i -
      * \frac12) \pi / (2 N) \f$ for integer \f$ i \in (0, N] \f$ and combines
      * this with \e oldF to compute \e newF.  This is equivalent to calling
      * transform with twice the value of \e N but is more efficient.
      **********************************************************************/
-    void refine(std::function<Math::real(Math::real)> f,
-                const std::vector<Math::real>& oldF,
-                std::vector<Math::real>& newF) const;
+    void refine(std::function<real(real)> f, real F[]) const;
+
     /**
      * Evaluate the Fourier sum given the sine and cosine of the angle
-     * @param[in] F the vector of Fourier coefficients.
      * @param[in] sinx sin&sigma;.
      * @param[in] cosx cos&sigma;.
-     * @return the value of the Fourier sum.
-     **********************************************************************/
-    static Math::real eval(const std::vector<Math::real>& F,
-                           Math::real sinx, Math::real cosx);
-    /**
-     * Evaluate the Fourier sum given the angle
      * @param[in] F the vector of Fourier coefficients.
-     * @param[in] x &sigma;.
+     * @param[in] N the number of Fourier coefficients.
      * @return the value of the Fourier sum.
      **********************************************************************/
-    static Math::real evalx(const std::vector<Math::real>& F, Math::real x);
+    static real eval(real sinx, real cosx, const real F[], int N);
+
     /**
      * Evaluate the integral of Fourier sum given the sine and cosine of the
      * angle
-     * @param[in] F the vector of Fourier coefficients.
      * @param[in] sinx sin&sigma;.
      * @param[in] cosx cos&sigma;.
-     * @return the value of the integral.
-     *
-     * The constant of integration is chosen so that the integral is zero at
-     * \f$ \sigma = \frac12\pi \f$.
-     **********************************************************************/
-    static Math::real integral(const std::vector<Math::real>& F,
-                               Math::real sinx, Math::real cosx);
-    /**
-     * Evaluate the integral of the Fourier sum given the angle
      * @param[in] F the vector of Fourier coefficients.
-     * @param[in] x &sigma;.
+     * @param[in] N the number of Fourier coefficients.
      * @return the value of the integral.
      *
      * The constant of integration is chosen so that the integral is zero at
      * \f$ \sigma = \frac12\pi \f$.
      **********************************************************************/
-    static Math::real integralx(const std::vector<Math::real>& F, Math::real x);
+    static real integral(real sinx, real cosx, const real F[], int N);
   };
 
 } // namespace GeographicLib

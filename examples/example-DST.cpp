@@ -23,18 +23,21 @@ int main() {
   try {
     sawtooth f(Math::pi()/4);
     DST dst;
-    vector<double> tx, txa;
     int N = 8;
-    dst.transform(f, N, tx);
+    vector<double> tx(N), txa(2*N);
+    dst.reset(N);
+    dst.transform(f, tx.data());
     cout << "Transform of sawtooth based on " << N << " points\n"
          << "approx 1, -1/9, 1/25, -1/49, ...\n";
     for (int i = 0; i < min(10,N); ++i)
       cout << tx[i] << "\n";
-    dst.refine(f, tx, tx);
+    tx.resize(2*N);
+    dst.refine(f, tx.data());
     cout << "Add another " << N << " points\n";
     for (int i = 0; i < min(10,N); ++i)
       cout << tx[i] << "\n";
-    dst.transform(f, 2*N, txa);
+    dst.reset(2*N);
+    dst.transform(f, txa.data());
     cout << "Retransform of sawtooth based on " << 2*N << " points\n";
     for (int i = 0; i < min(10,N); ++i)
       cout << txa[i] << "\n";
@@ -43,8 +46,8 @@ int main() {
     for (int i = 0; i <= M; ++i) {
       double x = i*Math::pi()/(2*M), sinx = sin(x), cosx = cos(x);
       cout << x << " "
-           << DST::eval(txa, sinx, cosx) << " "
-           << DST::integral(txa, sinx, cosx) << "\n";
+           << DST::eval(sinx, cosx, txa.data(), 2*N) << " "
+           << DST::integral(sinx, cosx, txa.data(), 2*N) << "\n";
     }
   }
   catch (const exception& e) {

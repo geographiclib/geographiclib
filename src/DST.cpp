@@ -16,140 +16,113 @@ namespace GeographicLib {
 
   using namespace std;
 
-  DST::DST(unsigned N)
-    : _fft(make_shared<fft_t>(fft_t(2*N, false)))
+  DST::DST(int N)
+    : _N(N < 0 ? 0 : N)
+    , _fft(make_shared<fft_t>(fft_t(2 * _N, false)))
+    , _data(4*_N)
+    , _temp(4*_N)
   {}
 
-  void DST::reserve(unsigned N) {
-    _fft->assign(2*N, false);
+  void DST::reset(int N) {
+    N = N < 0 ? 0 : N;
+    if (N == _N) return;
+    _N = N;
+    _fft->assign(2 * _N, false);
+    _data.resize(4*_N);
+    _temp.resize(4*_N);
   }
 
-  void DST::fft_transform(const vector<Math::real>& in,
-                          vector<Math::real>& out, bool centerp) const {
-    // Implement DST-III (centerp = false) or DST-IV (centerp = true)
-    // in and out can be the same array
-    int N = in.size(); out.resize(N);
-    if (N == 0) return;
-    vector<Math::real> tempin(4*N);
+  void DST::fft_transform(real F[], bool centerp) const {
+    // Implement DST-III (centerp = false) or DST-IV (centerp = true).
+
+    // Elements (0,N], resp. [0,N), of _data should be set on input for centerp
+    // = false, resp. true.  F must have a size of at least N and on output
+    // elements [0,N) of F contain the transform.
+    if (_N == 0) return;
     if (centerp) {
-      for (int i = 0; i < N; ++i) {
-        tempin[i] = in[i];
-        tempin[N+i] = in[N-1-i];
-        tempin[2*N+i] = -in[i];
-        tempin[3*N+i] = -in[N-1-i];
+      for (int i = 0; i < _N; ++i) {
+        _data[_N+i] = _data[_N-1-i];
+        _data[2*_N+i] = -_data[i];
+        _data[3*_N+i] = -_data[_N-1-i];
       }
     } else {
-      tempin[0] = 0;            // set [0]
-      for (int i = 0; i < N; ++i) tempin[i+1] = in[i]; // set [1,N]
-      for (int i = 1; i < N; ++i) tempin[N+i] = tempin[N-i]; // set [N+1,2*N-1]
-      for (int i = 0; i < 2*N; ++i) tempin[2*N+i] = -tempin[i]; // [2*N, 4*N-1]
+      _data[0] = 0;            // set [0]
+      for (int i = 1; i < _N; ++i) _data[_N+i] = _data[_N-i]; // set [N+1,2*N-1]
+      for (int i = 0; i < 2*_N; ++i) _data[2*_N+i] = -_data[i]; // [2*N, 4*N-1]
     }
-    vector<complex<Math::real>> tempout(2*N);
-    _fft->assign(2*N, false);
-    _fft->transform_real(tempin.data(), tempout.data());
+    complex<real>* ctemp = reinterpret_cast<complex<real>*>(_temp.data());
+    _fft->transform_real(_data.data(), ctemp);
     if (centerp) {
-      Math::real d = -Math::pi()/(4*N);
-      for (int i = 0, j = 1; i < N; ++i, j+=2)
-        tempout[j] *= exp(complex<Math::real>(0, j*d));
+      real d = -Math::pi()/(4*_N);
+      for (int i = 0, j = 1; i < _N; ++i, j+=2)
+        ctemp[j] *= exp(complex<real>(0, j*d));
     }
-    for (int i = 0, j = 1; i < N; ++i, j+=2) {
-      out[i] = -tempout[j].imag() / (2*N);
+    for (int i = 0, j = 1; i < _N; ++i, j+=2) {
+      F[i] = -ctemp[j].imag() / (2*_N);
     }
   }
 
-  void DST::fft_transform2(const vector<Math::real>& newin,
-                           const vector<Math::real>& oldout,
-                           vector<Math::real>& newout) const {
-    // oldout is the transform for N points with centerp = false.
-    // newin at the corresponding N points with centerp = true values
+  void DST::fft_transform2(real F[]) const {
+    // Elements [0,N), of _data should be set to the N grid center values and F
+    // should have size of at least 2*N.  On input elements [0,N) of F contain
+    // the size N transform; on output elements [0,2*N) of F contain the size
+    // 2*N transform.
 
-    // newout is the centerp = false transform for the combined set of values,
-    // so newout.size() = 2*oldout.size()
-
-    // newin and newout can be the same array
-    // oldout and newout cannot be the same array
-    int N = newin.size();
-    if (oldout.size() != unsigned(N))
-      throw GeographicErr("Mismatch of array sizes in DST::fft_transform2");
-    fft_transform(newin, newout, true);
-    newout.resize(2*N);
-    for (int i = N; i < 2*N; ++i)
-      newout[i] = (-oldout[2*N-1-i] + newout[2*N-1-i])/2;
-    for (int i = 0; i < N; ++i)
-      newout[i] = (oldout[i] + newout[i])/2;
+    fft_transform(F+_N, true);
+    for (int i = 0; i < _N; ++i) _data[i] = F[i+_N];
+    for (int i = _N; i < 2*_N; ++i)
+      F[i] = (-_data[2*_N-1-i] + F[2*_N-1-i])/2;
+    for (int i = 0; i < _N; ++i)
+      F[i] = (_data[i] + F[i])/2;
   }
 
-  // void DST::transform(const vector<Math::real>& x,
-  //                     vector<Math::real>& F) const {
-  //   fft_transform(x, F, false);
-  // }
-
-  void DST::transform(function<Math::real(Math::real)> f, int N,
-                      vector<Math::real>& F) const {
-    F.resize(N);
-    Math::real d = Math::pi()/(2 * N);
-    for (int i = 0; i < N; ++i)
-      F[i] = f( (i + 1) * d );
-    fft_transform(F, F, false);
+  void DST::transform(function<real(real)> f, real F[]) const {
+    real d = Math::pi()/(2 * _N);
+    for (int i = 1; i <= _N; ++i)
+      _data[i] = f( i * d );
+    fft_transform(F, false);
   }
 
-  void DST::refine(function<Math::real(Math::real)> f,
-                   const vector<Math::real>& oldF,
-                   vector<Math::real>& newF) const {
-    // oldF and newF can be the same arrays
-    int N = oldF.size();
-    vector<Math::real> temp(N);
-    Math::real d = Math::pi()/(4 * N);
-    for (int i = 0; i < N; ++i)
-      temp[i] = f( (2*i + 1) * d );
-    fft_transform2(temp, oldF, temp);
-    newF.swap(temp);
+  void DST::refine(function<real(real)> f, real F[]) const {
+    real d = Math::pi()/(4 * _N);
+    for (int i = 0; i < _N; ++i)
+      _data[i] = f( (2*i + 1) * d );
+    fft_transform2(F);
   }
 
-  Math::real DST::eval(const vector<Math::real>& F,
-                       Math::real sinx, Math::real cosx) {
+  Math::real DST::eval(real sinx, real cosx, const real F[], int N) {
     // Evaluate
-    // y = sum(F[i] * sin((2*i+1) * x), i, 0, n-1)
+    // y = sum(F[i] * sin((2*i+1) * x), i, 0, N-1)
     // using Clenshaw summation.
-    // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    int n = F.size();
-    Math::real
+    // Approx operation count = (N + 5) mult and (2 * N + 2) add
+    real
       ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-      y0 = n & 1 ? F[--n] : 0, y1 = 0;          // accumulators for sum
-    // Now n is even
-    while (n > 0) {
+      y0 = N & 1 ? F[--N] : 0, y1 = 0;          // accumulators for sum
+    // Now N is even
+    while (N > 0) {
       // Unroll loop x 2, so accumulators return to their original role
-      y1 = ar * y0 - y1 + F[--n];
-      y0 = ar * y1 - y0 + F[--n];
+      y1 = ar * y0 - y1 + F[--N];
+      y0 = ar * y1 - y0 + F[--N];
     }
     return sinx * (y0 + y1);    // sin(x) * (y0 + y1)
   }
 
-  Math::real DST::evalx(const vector<Math::real>& F, Math::real x) {
-    return eval(F, sin(x), cos(x));
-  }
-
-  Math::real DST::integral(const vector<Math::real>& F,
-                           Math::real sinx, Math::real cosx) {
+  Math::real DST::integral(real sinx, real cosx, const real F[], int N) {
     // Evaluate
-    // y = -sum(F[i]/(2*i+1) * cos((2*i+1) * x), i, 0, n-1)
+    // y = -sum(F[i]/(2*i+1) * cos((2*i+1) * x), i, 0, N-1)
     // using Clenshaw summation.
-    // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    int n = F.size(), l = n;
-    Math::real
+    // Approx operation count = (N + 5) mult and (2 * N + 2) add
+    int l = N;
+    real
       ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-      y0 = n & 1 ? F[--n]/(2*(--l)+1) : 0, y1 = 0; // accumulators for sum
-    // Now n is even
-    while (n > 0) {
+      y0 = N & 1 ? F[--N]/(2*(--l)+1) : 0, y1 = 0; // accumulators for sum
+    // Now N is even
+    while (N > 0) {
       // Unroll loop x 2, so accumulators return to their original role
-      y1 = ar * y0 - y1 + F[--n]/(2*(--l)+1);
-      y0 = ar * y1 - y0 + F[--n]/(2*(--l)+1);
+      y1 = ar * y0 - y1 + F[--N]/(2*(--l)+1);
+      y0 = ar * y1 - y0 + F[--N]/(2*(--l)+1);
     }
     return cosx * (y1 - y0);    // cos(x) * (y1 - y0)
-  }
-
-  Math::real DST::integralx(const vector<Math::real>& F, Math::real x) {
-    return integral(F, sin(x), cos(x));
   }
 
 } // namespace GeographicLib

@@ -25,6 +25,7 @@ class kissfft
             ,_inverse(inverse)
         {
             using std::acos; using std::cos; using std::sin;
+            if (_nfft == 0) return;
             // fill twiddle factors
             _twiddles.resize(_nfft);
             {
@@ -106,6 +107,7 @@ class kissfft
         /// be equal to the original input times @c N.
         void transform(const cpx_t * fft_in, cpx_t * fft_out, const std::size_t stage = 0, const std::size_t fstride = 1, const std::size_t in_stride = 1) const
         {
+            if (_nfft == 0) return;
             const std::size_t p = _stageRadix[stage];
             const std::size_t m = _stageRemainder[stage];
             cpx_t * const Fout_beg = fft_out;

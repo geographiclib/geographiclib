@@ -21,6 +21,7 @@
 
 #if GEOGRAPHICLIB_AREA_DST
 #  include <GeographicLib/DST.hpp>
+#  include <vector>
 #else
 #if !defined(GEOGRAPHICLIB_GEODESICEXACT_ORDER)
 /**
@@ -119,6 +120,7 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_AREA_DST
     int _nC4;                   // Set in constructor
     DST _fft;
+    mutable std::vector<real> _C4a;
 #else
     real _cC4x[nC4x_];
 #endif
@@ -150,73 +152,16 @@ namespace GeographicLib {
 
 #if GEOGRAPHICLIB_AREA_DST
     class I4Integrand {
-      const real X, tX, tdX, sX, sX1, sXX1, asinhsX, _k2;
-      // return asinh(sqrt(x))/sqrt(x)
-      static real asinhsqrt(real x) {
-        return x == 0 ? 1 :
-          (x > 0 ? asinh(sqrt(x))/sqrt(x) :
-           asin(sqrt(-x))/sqrt(-x)); // NaNs end up here
-      }
-      // This differs by from t as defined following Eq 61 in Karney (2013) by
-      // the final subtraction of 1.  This changes nothing since Eq 61 uses the
-      // difference of two evaluations of t and improves the accuracy(?).
-      static real t(real x) {
-        // Group terms to minimize roundoff
-        // with x = ep2, this is the same as
-        // e2/(1-e2) + (atanh(e)/e - 1)
-        return x + (sqrt(1 + x) * asinhsqrt(x) - 1);
-      }
-      // d t(x) / dx
-      static real td(real x) {
-        return x == 0 ? 4/real(3) :
-          // Group terms to minimize roundoff
-          1 + (1 - asinhsqrt(x) / sqrt(1+x)) / (2*x);
-      }
-      // ( t(x) - t(y) ) / (x - y)
-      static real Dt(real x, real y) {
-        if (x == y) return td(x);
-        if (x * y <= 0) return ( t(x) - t(y) ) / (x - y);
-        real
-          sx = sqrt(fabs(x)), sx1 = sqrt(1 + x),
-          sy = sqrt(fabs(y)), sy1 = sqrt(1 + y),
-          z = (x - y) / (sx * sy1 + sy * sx1),
-          d1 = 2 * sx * sy,
-          d2 = 2 * (x * sy * sy1 + y * sx * sx1);
-        return x > 0 ?
-          ( 1 + (asinh(z)/z) / d1 - (asinh(sx) + asinh(sy)) / d2 ) :
-          // NaNs fall through to here
-          ( 1 - (asin (z)/z) / d1 - (asin (sx) + asin (sy)) / d2 );
-      }
-      // ( t(X) - t(y) ) / (X - y)
-      real DtX(real y) const {
-        if (X == y) return tdX;
-        if (X * y <= 0) return ( tX - t(y) ) / (X - y);
-        real
-          sy = sqrt(fabs(y)), sy1 = sqrt(1 + y),
-          z = (X - y) / (sX * sy1 + sy * sX1),
-          d1 = 2 * sX * sy,
-          d2 = 2 * (X * sy * sy1 + y * sXX1);
-        return X > 0 ?
-          ( 1 + (asinh(z)/z) / d1 - (asinhsX + asinh(sy)) / d2 ) :
-          // NaNs fall through to here
-          ( 1 - (asin (z)/z) / d1 - (asinhsX + asin (sy)) / d2 );
-      }
-
+    private:
+      real X, tX, tdX, sX, sX1, sXX1, asinhsX, _k2;
+      static real asinhsqrt(real x);
+      static real t(real x);
+      static real td(real x);
+      // static real Dt(real x, real y);
+      real DtX(real y) const;
     public:
-      I4Integrand(real ep2, real k2)
-        : X( ep2 )
-        , tX( t(X) )
-        , tdX( td(X) )
-        , sX( sqrt(fabs(X)) )   // ep
-        , sX1( sqrt(1 + X) )    // 1/(1-f)
-        , sXX1( sX * sX1 )
-        , asinhsX( X > 0 ? asinh(sX) : asin(sX)) // atanh(e)
-        , _k2( k2 )
-      {}
-      real operator()(real sig) const {
-        real ssig = sin(sig);
-        return - DtX(_k2 * Math::sq(ssig)) * ssig/2;
-      }
+      I4Integrand(real ep2, real k2);
+      real operator()(real sig) const;
     };
 #else
     // These are Maxima generated functions to provide series approximations to

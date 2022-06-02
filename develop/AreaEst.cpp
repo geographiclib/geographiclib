@@ -53,9 +53,10 @@ using namespace GeographicLib;
 using namespace std;
 
 class I4Integrand {
-  const Math::real X, tX, tdX, sX, sX1, sXX1, asinhsX, _k2;
+  Math::real X, tX, tdX, sX, sX1, sXX1, asinhsX, _k2;
   // return asinh(sqrt(x))/sqrt(x)
   static Math::real asinhsqrt(Math::real x) {
+    using std::sqrt; using std::asinh; using std::asin;
     return x == 0 ? 1 :
       (x > 0 ? asinh(sqrt(x))/sqrt(x) :
        asin(sqrt(-x))/sqrt(-x)); // NaNs end up here
@@ -64,6 +65,7 @@ class I4Integrand {
   // the final subtraction of 1.  This changes nothing since Eq 61 uses the
   // difference of two evaluations of t and improves the accuracy(?).
   static Math::real t(Math::real x) {
+    using std::sqrt;
     // Group terms to minimize roundoff
     // with x = ep2, this is the same as
     // e2/(1-e2) + (atanh(e)/e - 1)
@@ -71,12 +73,14 @@ class I4Integrand {
   }
   // d t(x) / dx
   static Math::real td(Math::real x) {
+    using std::sqrt;
     return x == 0 ? 4/Math::real(3) :
       // Group terms to minimize roundoff
       1 + (1 - asinhsqrt(x) / sqrt(1+x)) / (2*x);
   }
   // ( t(x) - t(y) ) / (x - y)
   static Math::real Dt(Math::real x, Math::real y) {
+    using std::sqrt; using std::fabs; using std::asinh; using std::asin;
     if (x == y) return td(x);
     if (x * y <= 0) return ( t(x) - t(y) ) / (x - y);
     Math::real
@@ -92,6 +96,7 @@ class I4Integrand {
   }
   // ( t(X) - t(y) ) / (X - y)
   Math::real DtX(Math::real y) const {
+    using std::sqrt; using std::fabs; using std::asinh; using std::asin;
     if (X == y) return tdX;
     if (X * y <= 0) return ( tX - t(y) ) / (X - y);
     Math::real
@@ -104,18 +109,22 @@ class I4Integrand {
       // NaNs fall through to here
       ( 1 - (asin (z)/z) / d1 - (asinhsX + asin (sy)) / d2 );
   }
+
 public:
   I4Integrand(Math::real ep2, Math::real k2)
     : X( ep2 )
     , tX( t(X) )
     , tdX( td(X) )
-    , sX( sqrt(fabs(X)) )   // ep
-    , sX1( sqrt(1 + X) )    // 1/(1-f)
-    , sXX1( sX * sX1 )
-    , asinhsX( X > 0 ? asinh(sX) : asin(sX)) // atanh(e)
     , _k2( k2 )
-  {}
+  {
+    using std::fabs; using std::sqrt; using std::asinh; using std::asin;
+    sX = sqrt(fabs(X));     // ep
+    sX1 =  sqrt(1 + X);     // 1/(1-f)
+    sXX1 = sX * sX1;
+    asinhsX = X > 0 ? asinh(sX) : asin(sX); // atanh(e)
+  }
   Math::real operator()(Math::real sig) const {
+    using std::sin;
     Math::real ssig = sin(sig);
     return - DtX(_k2 * Math::sq(ssig)) * ssig/2;
   }

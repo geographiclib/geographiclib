@@ -115,8 +115,9 @@ namespace GeographicLib {
       else {
 #if GEOGRAPHICLIB_AREA_DST
         GeodesicExact::I4Integrand i4(g._ep2, _k2);
-        g._fft.transform(i4, _nC4, _cC4a);
-        _bB41 = DST::integral(_cC4a, _ssig1, _csig1);
+        _cC4a.resize(_nC4);
+        g._fft.transform(i4, _cC4a.data());
+        _bB41 = DST::integral(_ssig1, _csig1, _cC4a.data(), _nC4);
 #else
         real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
         g.C4f(eps, _cC4a);
@@ -244,7 +245,7 @@ namespace GeographicLib {
     if (outmask & AREA) {
 #if GEOGRAPHICLIB_AREA_DST
       real B42 = _aA4 == 0 ? 0 :
-        DST::integral(_cC4a, ssig2, csig2);
+        DST::integral(ssig2, csig2, _cC4a.data(), _nC4);
 #else
       real B42 = _aA4 == 0 ? 0 :
         GeodesicExact::CosSeries(ssig2, csig2, _cC4a, nC4_);

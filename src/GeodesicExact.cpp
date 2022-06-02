@@ -29,8 +29,6 @@
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
 
-#include <vector>
-
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables and
 // constant conditional expressions
@@ -251,9 +249,10 @@ namespace GeographicLib {
     // Arbitrarily bump up number of terms by one step over the
     // GEOGRAPHICLIB_PRECISION = 5 value.  Still to do: determine a value
     // depending on the current precision.
-    _nC4 = _nC4 % 3 == 0 ? 4*_nC4/3 : 3*_nC4/2
+    _nC4 = _nC4 % 3 == 0 ? 4*_nC4/3 : 3*_nC4/2;
 #endif
-    _fft.reserve(_nC4);
+    _fft.reset(_nC4);
+    _C4a.resize(_nC4);
 #else
     C4coeff();
 #endif
@@ -628,11 +627,10 @@ namespace GeographicLib {
         Math::norm(ssig2, csig2);
 #if GEOGRAPHICLIB_AREA_DST
         I4Integrand i4(_ep2, k2);
-        vector<real> C4a(_nC4);
-        _fft.transform(i4, _nC4, C4a);
+        _fft.transform(i4, _C4a.data());
         real
-          B41 = DST::integral(C4a, ssig1, csig1),
-          B42 = DST::integral(C4a, ssig2, csig2);
+          B41 = DST::integral(ssig1, csig1, _C4a.data(), _nC4),
+          B42 = DST::integral(ssig2, csig2, _C4a.data(), _nC4);
 #else
         real C4a[nC4_];
         C4f(eps, C4a);
@@ -1070,7 +1068,83 @@ namespace GeographicLib {
     return lam12;
   }
 
-#if !GEOGRAPHICLIB_AREA_DST
+#if GEOGRAPHICLIB_AREA_DST
+  Math::real GeodesicExact::I4Integrand::asinhsqrt(real x) {
+    // return asinh(sqrt(x))/sqrt(x)
+    using std::sqrt; using std::asinh; using std::asin;
+    return x == 0 ? 1 :
+      (x > 0 ? asinh(sqrt(x))/sqrt(x) :
+       asin(sqrt(-x))/sqrt(-x)); // NaNs end up here
+  }
+  Math::real GeodesicExact::I4Integrand::t(real x) {
+    // This differs by from t as defined following Eq 61 in Karney (2013) by
+    // the final subtraction of 1.  This changes nothing since Eq 61 uses the
+    // difference of two evaluations of t and improves the accuracy(?).
+    using std::sqrt;
+    // Group terms to minimize roundoff
+    // with x = ep2, this is the same as
+    // e2/(1-e2) + (atanh(e)/e - 1)
+    return x + (sqrt(1 + x) * asinhsqrt(x) - 1);
+  }
+  Math::real GeodesicExact::I4Integrand::td(real x) {
+    // d t(x) / dx
+    using std::sqrt;
+    return x == 0 ? 4/real(3) :
+      // Group terms to minimize roundoff
+      1 + (1 - asinhsqrt(x) / sqrt(1+x)) / (2*x);
+  }
+  // Math::real GeodesicExact::I4Integrand::Dt(real x, real y) {
+  //   // ( t(x) - t(y) ) / (x - y)
+  //   using std::sqrt; using std::fabs; using std::asinh; using std::asin;
+  //   if (x == y) return td(x);
+  //   if (x * y <= 0) return ( t(x) - t(y) ) / (x - y);
+  //   real
+  //     sx = sqrt(fabs(x)), sx1 = sqrt(1 + x),
+  //     sy = sqrt(fabs(y)), sy1 = sqrt(1 + y),
+  //     z = (x - y) / (sx * sy1 + sy * sx1),
+  //     d1 = 2 * sx * sy,
+  //     d2 = 2 * (x * sy * sy1 + y * sx * sx1);
+  //   return x > 0 ?
+  //     ( 1 + (asinh(z)/z) / d1 - (asinh(sx) + asinh(sy)) / d2 ) :
+  //     // NaNs fall through to here
+  //     ( 1 - (asin (z)/z) / d1 - (asin (sx) + asin (sy)) / d2 );
+  // }
+  Math::real GeodesicExact::I4Integrand::DtX(real y) const {
+    // ( t(X) - t(y) ) / (X - y)
+    using std::sqrt; using std::fabs; using std::asinh; using std::asin;
+    if (X == y) return tdX;
+    if (X * y <= 0) return ( tX - t(y) ) / (X - y);
+    real
+      sy = sqrt(fabs(y)), sy1 = sqrt(1 + y),
+      z = (X - y) / (sX * sy1 + sy * sX1),
+      d1 = 2 * sX * sy,
+      d2 = 2 * (X * sy * sy1 + y * sXX1);
+    return X > 0 ?
+      ( 1 + (asinh(z)/z) / d1 - (asinhsX + asinh(sy)) / d2 ) :
+      // NaNs fall through to here
+      ( 1 - (asin (z)/z) / d1 - (asinhsX + asin (sy)) / d2 );
+  }
+  GeodesicExact::I4Integrand::I4Integrand(real ep2, real k2)
+    : X( ep2 )
+    , tX( t(X) )
+    , tdX( td(X) )
+    , _k2( k2 )
+  {
+    using std::fabs; using std::sqrt; using std::asinh; using std::asin;
+    sX = sqrt(fabs(X));     // ep
+    sX1 =  sqrt(1 + X);     // 1/(1-f)
+    sXX1 = sX * sX1;
+    asinhsX = X > 0 ? asinh(sX) : asin(sX); // atanh(e)
+  }
+  Math::real GeodesicExact::I4Integrand::operator()(real sig) const {
+    using std::sin;
+    real ssig = sin(sig);
+    return - DtX(_k2 * Math::sq(ssig)) * ssig/2;
+  }
+
+#else
+  // \cond SKIP
+
   void GeodesicExact::C4f(real eps, real c[]) const {
     // Evaluate C4 coeffs
     // Elements c[0] thru c[nC4_ - 1] are set
@@ -4363,6 +4437,7 @@ namespace GeographicLib {
     if  (!(o == sizeof(coeff) / sizeof(real) && k == nC4x_))
       throw GeographicErr("C4 misalignment");
   }
+  // \endcond
 #endif
 
 } // namespace GeographicLib
