@@ -36,11 +36,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicExact;
-#if GEOGRAPHICLIB_AREA_DST
     int _nC4;
-#else
-    static const int nC4_ = GeodesicExact::nC4_;
-#endif
 
     real tiny_;
     real _lat1, _lon1, _azi1;
@@ -50,11 +46,7 @@ namespace GeographicLib {
       _aA4, _eE0, _dD0, _hH0, _eE1, _dD1, _hH1;
     real _a13, _s13;
     real _bB41;
-#if GEOGRAPHICLIB_AREA_DST
     std::vector<real> _cC4a;
-#else
-    real _cC4a[nC4_];           // all the elements of _cC4a are used
-#endif
     EllipticFunction _eE;
     unsigned _caps;
 

@@ -19,8 +19,6 @@ namespace GeographicLib {
   DST::DST(int N)
     : _N(N < 0 ? 0 : N)
     , _fft(make_shared<fft_t>(fft_t(2 * _N, false)))
-    , _data(4*_N)
-    , _temp(4*_N)
   {}
 
   void DST::reset(int N) {
@@ -28,30 +26,28 @@ namespace GeographicLib {
     if (N == _N) return;
     _N = N;
     _fft->assign(2 * _N, false);
-    _data.resize(4*_N);
-    _temp.resize(4*_N);
   }
 
-  void DST::fft_transform(real F[], bool centerp) const {
+  void DST::fft_transform(vector<real>& data, real F[], bool centerp) const {
     // Implement DST-III (centerp = false) or DST-IV (centerp = true).
 
-    // Elements (0,N], resp. [0,N), of _data should be set on input for centerp
+    // Elements (0,N], resp. [0,N), of data should be set on input for centerp
     // = false, resp. true.  F must have a size of at least N and on output
     // elements [0,N) of F contain the transform.
     if (_N == 0) return;
     if (centerp) {
       for (int i = 0; i < _N; ++i) {
-        _data[_N+i] = _data[_N-1-i];
-        _data[2*_N+i] = -_data[i];
-        _data[3*_N+i] = -_data[_N-1-i];
+        data[_N+i] = data[_N-1-i];
+        data[2*_N+i] = -data[i];
+        data[3*_N+i] = -data[_N-1-i];
       }
     } else {
-      _data[0] = 0;            // set [0]
-      for (int i = 1; i < _N; ++i) _data[_N+i] = _data[_N-i]; // set [N+1,2*N-1]
-      for (int i = 0; i < 2*_N; ++i) _data[2*_N+i] = -_data[i]; // [2*N, 4*N-1]
+      data[0] = 0;            // set [0]
+      for (int i = 1; i < _N; ++i) data[_N+i] = data[_N-i]; // set [N+1,2*N-1]
+      for (int i = 0; i < 2*_N; ++i) data[2*_N+i] = -data[i]; // [2*N, 4*N-1]
     }
-    complex<real>* ctemp = reinterpret_cast<complex<real>*>(_temp.data());
-    _fft->transform_real(_data.data(), ctemp);
+    vector<complex<real>> ctemp(2*_N);
+    _fft->transform_real(data.data(), ctemp.data());
     if (centerp) {
       real d = -Math::pi()/(4*_N);
       for (int i = 0, j = 1; i < _N; ++i, j+=2)
@@ -62,32 +58,34 @@ namespace GeographicLib {
     }
   }
 
-  void DST::fft_transform2(real F[]) const {
-    // Elements [0,N), of _data should be set to the N grid center values and F
+  void DST::fft_transform2(vector<real>& data, real F[]) const {
+    // Elements [0,N), of data should be set to the N grid center values and F
     // should have size of at least 2*N.  On input elements [0,N) of F contain
     // the size N transform; on output elements [0,2*N) of F contain the size
     // 2*N transform.
 
-    fft_transform(F+_N, true);
-    for (int i = 0; i < _N; ++i) _data[i] = F[i+_N];
+    fft_transform(data, F+_N, true);
+    for (int i = 0; i < _N; ++i) data[i] = F[i+_N];
     for (int i = _N; i < 2*_N; ++i)
-      F[i] = (-_data[2*_N-1-i] + F[2*_N-1-i])/2;
+      F[i] = (-data[2*_N-1-i] + F[2*_N-1-i])/2;
     for (int i = 0; i < _N; ++i)
-      F[i] = (_data[i] + F[i])/2;
+      F[i] = (data[i] + F[i])/2;
   }
 
   void DST::transform(function<real(real)> f, real F[]) const {
+    vector<real> data(4 * _N);
     real d = Math::pi()/(2 * _N);
     for (int i = 1; i <= _N; ++i)
-      _data[i] = f( i * d );
-    fft_transform(F, false);
+      data[i] = f( i * d );
+    fft_transform(data, F, false);
   }
 
   void DST::refine(function<real(real)> f, real F[]) const {
+    vector<real> data(4 * _N);
     real d = Math::pi()/(4 * _N);
     for (int i = 0; i < _N; ++i)
-      _data[i] = f( (2*i + 1) * d );
-    fft_transform2(F);
+      data[i] = f( (2*i + 1) * d );
+    fft_transform2(data, F);
   }
 
   Math::real DST::eval(real sinx, real cosx, const real F[], int N) {

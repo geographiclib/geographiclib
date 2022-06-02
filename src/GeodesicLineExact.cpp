@@ -48,9 +48,7 @@ namespace GeographicLib {
     _c2 = g._c2;
     _f1 = g._f1;
     _e2 = g._e2;
-#if GEOGRAPHICLIB_AREA_DST
     _nC4 = g._nC4;
-#endif
     // Always allow latitude and azimuth and unrolling of longitude
     _caps = caps | LATITUDE | AZIMUTH | LONG_UNROLL;
 
@@ -113,16 +111,10 @@ namespace GeographicLib {
       if (_aA4 == 0)
         _bB41 = 0;
       else {
-#if GEOGRAPHICLIB_AREA_DST
         GeodesicExact::I4Integrand i4(g._ep2, _k2);
         _cC4a.resize(_nC4);
         g._fft.transform(i4, _cC4a.data());
         _bB41 = DST::integral(_ssig1, _csig1, _cC4a.data(), _nC4);
-#else
-        real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
-        g.C4f(eps, _cC4a);
-        _bB41 = GeodesicExact::CosSeries(_ssig1, _csig1, _cC4a, nC4_);
-#endif
       }
     }
 
@@ -243,13 +235,8 @@ namespace GeographicLib {
     }
 
     if (outmask & AREA) {
-#if GEOGRAPHICLIB_AREA_DST
       real B42 = _aA4 == 0 ? 0 :
         DST::integral(ssig2, csig2, _cC4a.data(), _nC4);
-#else
-      real B42 = _aA4 == 0 ? 0 :
-        GeodesicExact::CosSeries(ssig2, csig2, _cC4a, nC4_);
-#endif
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize

@@ -12,24 +12,8 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-
-#if !defined(GEOGRAPHICLIB_AREA_DST)
-// GEOGRAPHICLIB_AREA_DST == 0 means use Taylor series for area
-// GEOGRAPHICLIB_AREA_DST == 1 means compute Taylor series via DST
-#  define GEOGRAPHICLIB_AREA_DST 1
-#endif
-
-#if GEOGRAPHICLIB_AREA_DST
-#  include <GeographicLib/DST.hpp>
-#  include <vector>
-#else
-#if !defined(GEOGRAPHICLIB_GEODESICEXACT_ORDER)
-/**
- * The order of the expansions used by GeodesicExact.
- **********************************************************************/
-#  define GEOGRAPHICLIB_GEODESICEXACT_ORDER 30
-#endif
-#endif
+#include <GeographicLib/DST.hpp>
+#include <vector>
 
 namespace GeographicLib {
 
@@ -92,10 +76,6 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;
-#if !GEOGRAPHICLIB_AREA_DST
-    static const int nC4_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
-#endif
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
@@ -117,13 +97,8 @@ namespace GeographicLib {
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-#if GEOGRAPHICLIB_AREA_DST
-    int _nC4;                   // Set in constructor
+    int _nC4;
     DST _fft;
-    mutable std::vector<real> _C4a;
-#else
-    real _cC4x[nC4x_];
-#endif
 
     void Lengths(const EllipticFunction& E,
                  real sig12,
@@ -150,7 +125,6 @@ namespace GeographicLib {
                     real& salp1, real& calp1, real& salp2, real& calp2,
                     real& m12, real& M12, real& M21, real& S12) const;
 
-#if GEOGRAPHICLIB_AREA_DST
     class I4Integrand {
     private:
       real X, tX, tdX, sX, sX1, sXX1, asinhsX, _k2;
@@ -163,35 +137,6 @@ namespace GeographicLib {
       I4Integrand(real ep2, real k2);
       real operator()(real sig) const;
     };
-#else
-    // These are Maxima generated functions to provide series approximations to
-    // the integrals for the area.
-    void C4coeff();
-    void C4f(real k2, real c[]) const;
-    // Large coefficients are split so that lo contains the low 52 bits and hi
-    // the rest.  This choice avoids double rounding with doubles and higher
-    // precision types.  float coefficients will suffer double rounding;
-    // however the accuracy is already lousy for floats.
-    static Math::real reale(long long y, long long z) {
-      using std::ldexp;
-      return ldexp(real(y), 52) + z;
-    }
-#if GEOGRAPHICLIB_GEODESICEXACT_ORDER > 30
-    // These are currently unused extended versions of reale needed really
-    // large coefficients (when using 64th order series).  Such coefficients
-    // would overflow floats.
-    static Math::real reale(long long x, long long y, long long z) {
-      using std::ldexp;
-      return ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z);
-    }
-    static Math::real reale(long long w, long long x,
-                            long long y, long long z) {
-      using std::ldexp;
-      return ldexp(real(w), 3*52) +
-        (ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z));
-    }
-#endif
-#endif
 
   public:
 
