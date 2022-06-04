@@ -57,9 +57,10 @@ namespace GeographicLib {
    *       128     19024
    * </pre>
    *
-   * The computation of the area in these classes is via a 30th order series.
-   * This gives accurate results for <i>b</i>/\e a &isin; [1/2, 2]; the
-   * accuracy is about 8 decimal digits for <i>b</i>/\e a &isin; [1/4, 4].
+   * The area in this classes is computing by finding an accurate approximation
+   * to the area integrand using a discrete sine transform fitting \e N equally
+   * spaced points in &sigma;.  \e N chosen to ensure full accuracy for
+   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [&minus;99, 0.99].
    *
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesic problems.

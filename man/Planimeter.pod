@@ -24,14 +24,14 @@ and the start of the next.  For each polygon print a summary line with
 the number of points, the perimeter (in meters), and the area (in
 meters^2).
 
-The edges of the polygon are given by the I<shortest> geodesic between
-consecutive vertices.  In certain cases, there may be two or many such
-shortest geodesics, and in that case, the polygon is not uniquely
-specified by its vertices.  This only happens with very long edges (for
-the WGS84 ellipsoid, any edge shorter than 19970 km is uniquely
-specified by its end points).  In such cases, insert an additional
-vertex near the middle of the long edge to define the boundary of the
-polygon.
+The edges of the polygon are given by the I<shortest> geodesic (or
+rhumb line) between consecutive vertices.  In certain cases, there may
+be two or many such shortest path, and in that case, the polygon is
+not uniquely specified by its vertices.  For geodesics, this only
+happens with very long edges (for the WGS84 ellipsoid, any edge
+shorter than 19970 km is uniquely specified by its end points).  In
+such cases, insert an additional vertex near the middle of the long
+edge to define the boundary of the polygon.
 
 By default, polygons traversed in a counter-clockwise direction return a
 positive area and those traversed in a clockwise direction return a
@@ -106,10 +106,11 @@ mutually exclusive.
 =item B<-E>
 
 use "exact" algorithms (based on elliptic integrals) for the geodesic
-calculations.  These are more accurate than the (default) series
-expansions for |I<f>| E<gt> 0.02.  (But note that the implementation of
-areas in GeodesicExact uses a high order series and this is only
-accurate for modest flattenings.)
+calculations; the area is computed by applying discrete sine
+transforms to the integrand in the expression for the area.  These are
+more accurate, albeit slower, than the (default) series expansions for
+|I<f>| E<gt> 0.02 and will give high accuracy for -99 E<le> I<f> E<le>
+0.99.
 
 =item B<-Q>
 

@@ -155,6 +155,16 @@ cat <<EOF
         Planimeter (version $VERSION)</a>
       calculates the perimeter and area of a polygon whose edges are
       either geodesics or rhumb lines on the WGS84 ellipsoid.
+    </p>
+    <p>
+      The edges of the polygon are given by the <i>shortest</i> geodesic
+      or rhumb line between consecutive vertices.  In certain cases,
+      there may be two or many such shortest paths, and in that case,
+      the polygon is not uniquely specified by its vertices.  In such
+      cases, insert an additional vertex near the middle of the long
+      edge to define the boundary of the polygon.
+    </p>
+    <p>
       Counter-clockwise traversal of a polygon results in a positive
       area.  Arbitrarily complex polygons are allowed.  In the case of
       self-intersecting polygons the area is accumulated

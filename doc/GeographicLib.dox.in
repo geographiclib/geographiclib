@@ -3612,14 +3612,10 @@ distorted measure of distance from the equator with very eccentric
 ellipsoids and this introducing an irreducible representational error in
 the algorithms in this case.  It is therefore recommended to restrict
 the use of these classes to <i>b</i>/\e a &isin; [0.01, 100] or \e f
-&isin; [&minus;99, 0.99].  Note that GeodesicExact still uses a series
-expansion for the area \e S12.  However the series is taken out to 30th
-order and gives accurate results for <i>b</i>/\e a &isin; [1/2, 2]; the
-accuracy is about 8 decimal digits for <i>b</i>/\e a &isin; [1/4, 4].
-Additional work planned for this aspect of the geodesic problem:
-- formulate the area integral \e S12 in terms of elliptic integrals;
-- generate accurate test geodesics for highly eccentric ellipsoids so
-  that the roundoff errors can be quantified.
+&isin; [&minus;99, 0.99].  GeodesicExact uses an discrete sine transform
+fit for the area \e S12.  The number of terms used is adjusted to give
+accurate results for this same range of flattenings, \e f &isin;
+[&minus;99, 0.99].
 
 Thomas (1952) and Rollins (2010) use a different independent variable
 for geodesics, \f$\theta\f$ instead of \f$\sigma\f$, where \f$
