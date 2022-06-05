@@ -1,29 +1,36 @@
 # Build the test programs...
 
+# Use fftw for AreaEst?  Because CMake support for installed fftw
+# package is broken, using FFTW required building local copies of the
+# library (a separate cmake configure and build for each precision).  So
+# default to not using fftw and fall back on kissfftw.  For these
+# reasons + the overall complexity of adding a dependency to
+# GeographicLib, the DST class uses kissfft (despite it being somewhat
+# slower that fftw).
+set (USE_FFTW OFF)
 if (USE_FFTW)
-
-if (GEOGRAPHICLIB_PRECISION EQUAL 1)
-  set (FFTW_PACKAGE FFTW3f)
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 2)
-  set (FFTW_PACKAGE FFTW3)
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
-  set (FFTW_PACKAGE FFTW3l)
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  set (FFTW_PACKAGE FFTW3q)
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
-  set (FFTW_PACKAGE OFF)
+  if (GEOGRAPHICLIB_PRECISION EQUAL 1)
+    set (FFTW_PACKAGE FFTW3f)
+  elseif (GEOGRAPHICLIB_PRECISION EQUAL 2)
+    set (FFTW_PACKAGE FFTW3)
+  elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
+    set (FFTW_PACKAGE FFTW3l)
+  elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
+    set (FFTW_PACKAGE FFTW3q)
+  else () # GEOGRAPHICLIB_PRECISION EQUAL 5
+    set (FFTW_PACKAGE OFF)
+  endif ()
+  if (FFTW_PACKAGE)
+    find_package (${FFTW_PACKAGE})
+    if (${FFTW_PACKAGE}_FOUND)
+      set (FFTW_FOUND ON)
+      set (FFTW_LIBRARIES ${${FFTW_PACKAGE}_LIBRARIES})
+      set (FFTW_LIBRARY_DIRS ${${FFTW_PACKAGE}_LIBRARY_DIRS})
+      set (FFTW_INCLUDE_DIRS ${${FFTW_PACKAGE}_INCLUDE_DIRS})
+    endif ()
+  endif ()
 endif ()
 
-if (FFTW_PACKAGE)
-  find_package (${FFTW_PACKAGE})
-  set (FFTW_LIBRARIES ${${FFTW_PACKAGE}_LIBRARIES})
-  set (FFTW_LIBRARY_DIRS ${${FFTW_PACKAGE}_LIBRARY_DIRS})
-  set (FFTW_INCLUDE_DIRS ${${FFTW_PACKAGE}_INCLUDE_DIRS})
-  message (STATUS "FFTW_LIBRARIES ${FFTW_LIBRARIES} FFTW_FOUND ${FFTW_FOUND}")
-  include_directories (${FFTW_INCLUDE_DIRS})
-endif ()
-
-endif ()
 set (DEVELPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect
   ClosestApproach M12zero GeodShort NormalTest)
@@ -65,6 +72,11 @@ add_executable (AreaEst EXCLUDE_FROM_ALL AreaEst.cpp)
 add_dependencies (develprograms AreaEst)
 target_link_libraries (AreaEst ${PROJECT_LIBRARIES} ${FFTW_LIBRARIES}
   ${HIGHPREC_LIBRARIES})
+if (FFTW_FOUND)
+  target_compile_definitions (AreaEst PUBLIC HAVE_FFTW=1)
+  target_include_directories (AreaEst PUBLIC ${FFTW_INCLUDE_DIRS})
+endif ()
+
 set (DEVELPROGRAMS ${DEVELPROGRAMS} AreaEst)
 
 add_executable (reformat EXCLUDE_FROM_ALL reformat.cpp)

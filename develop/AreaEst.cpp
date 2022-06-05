@@ -16,33 +16,34 @@
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#define FFTW 0
-#if GEOGRAPHICLIB_PRECISION == 5 && FFTW
-#undef FFTW
-#define FFTW 0
+#if !defined(HAVE_FFTW)
+#define HAVE_FFTW 0
 #endif
 
-#if FFTW
+#if HAVE_FFTW
 #include <fftw3.h>
 
 #if GEOGRAPHICLIB_PRECISION == 1
-#define fftw_2r2_kind fftwf_2r2_kind
-#define fftw_plan fftwf_plan
-#define fftw_plan_r2r_1d fftwf_plan_r2r_1d
-#define fftw_execute fftwf_execute
-#define fftw_destroy_plan fftwf_destroy_plan
+#  define fftw_2r2_kind fftwf_2r2_kind
+#  define fftw_plan fftwf_plan
+#  define fftw_plan_r2r_1d fftwf_plan_r2r_1d
+#  define fftw_execute fftwf_execute
+#  define fftw_destroy_plan fftwf_destroy_plan
+#elif GEOGRAPHICLIB_PRECISION == 2
 #elif GEOGRAPHICLIB_PRECISION == 3
-#define fftw_2r2_kind fftwl_2r2_kind
-#define fftw_plan fftwl_plan
-#define fftw_plan_r2r_1d fftwl_plan_r2r_1d
-#define fftw_execute fftwl_execute
-#define fftw_destroy_plan fftwl_destroy_plan
+#  define fftw_2r2_kind fftwl_2r2_kind
+#  define fftw_plan fftwl_plan
+#  define fftw_plan_r2r_1d fftwl_plan_r2r_1d
+#  define fftw_execute fftwl_execute
+#  define fftw_destroy_plan fftwl_destroy_plan
 #elif GEOGRAPHICLIB_PRECISION == 4
-#define fftw_2r2_kind fftwq_2r2_kind
-#define fftw_plan fftwq_plan
-#define fftw_plan_r2r_1d fftwq_plan_r2r_1d
-#define fftw_execute fftwq_execute
-#define fftw_destroy_plan fftwq_destroy_plan
+#  define fftw_2r2_kind fftwq_2r2_kind
+#  define fftw_plan fftwq_plan
+#  define fftw_plan_r2r_1d fftwq_plan_r2r_1d
+#  define fftw_execute fftwq_execute
+#  define fftw_destroy_plan fftwq_destroy_plan
+#else
+#  error "Bad value for GEOGRAPHICLIB_PRECISION"
 #endif
 
 #else
@@ -3490,7 +3491,7 @@ Math::real fft_check(const vector<Math::real>& vals,
 void fft_transform(const vector<Math::real>& in, vector<Math::real>& out,
                    bool centerp = false, bool check = false) {
   int N = in.size(); out.resize(N);
-#if FFTW
+#if HAVE_FFTW
   fftw_r2r_kind kind = centerp ? FFTW_RODFT11 : FFTW_RODFT01;
   fftw_plan p;
 #if GEOGRAPHICLIB_PRECISION == 4
