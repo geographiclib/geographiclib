@@ -40,7 +40,7 @@ DATE=`date +%F`
 VERSION=2.1
 SUFFIX=-dev1
 DISTVERSION=$VERSION$SUFFIX
-BRANCH=main
+BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
     DEVELSOURCE=$HOME/geographiclib
@@ -169,7 +169,7 @@ git ls-files | sort > ../files.old
 cut -f3- -d/ $TEMP/files.x | sort > ../files.new
 (
     cd ..
-    comm -23 files.old files.new | grep -v gitattributes > files.delete
+    comm -23 files.old files.new | grep -v gitattributes > files.delete || true
     comm -23 files.new files.current > files.relonly
     comm -12 files.new files.current > files.main
     comm -13 files.delete files.new > files.add
@@ -180,7 +180,7 @@ cut -f3- -d/ $TEMP/files.x | sort > ../files.new
 (
     S=$TEMP/relx/GeographicLib-$VERSION
     C=$TEMP/gitb/geographiclib
-    xargs git rm -f < ../files.delete
+    test -s ../files.delete && xargs git rm -f < ../files.delete
     cat ../files.main ../files.relonly |
         sed -e 's%[^/][^/]*$%%' -e 's%/$%%' | sort -u | grep -v '^$' |
         while read d; do

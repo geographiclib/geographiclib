@@ -3647,7 +3647,10 @@ int main(int argc, const char* const argv[]) {
     case 2: eps = numeric_limits<double>::epsilon() / 2; break;
     case 3: eps = numeric_limits<long double>::epsilon() / 2; break;
     case 4: eps = pow(Math::real(0.5), 113); break;
+#if GEOGRAPHICLIB_PRECISION > 1
+      // Skip case 5 for float prec to avoid underflow to 0
     case 5: eps = pow(Math::real(0.5), 256); break;
+#endif
     default: eps = numeric_limits<double>::epsilon() / 2; break;
     }
     // The range of n in [-0.91, 0.91] the includes 1/20 < b/a < 20

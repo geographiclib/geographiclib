@@ -198,109 +198,113 @@ namespace GeographicLib {
     // 0.97   384 24  1024  512  1536  768  3072 2048   6144  6144
     // 0.98   512 16  1536  768  2048 1024  4096 3072   8192  8192
     // 0.99  1024  8  3072 1024  4096 1536  8192 6144  16384 16384
-# if GEOGRAPHICLIB_PRECISION == 1
-    if      (_n >= -0.10 && _n <= 0.11) _nC4 = 4;
-    else if (_n >= -0.21 && _n <= 0.26) _nC4 = 6;
-    else if (_n >= -0.30 && _n <= 0.41) _nC4 = 8;
-    else if (_n >= -0.45 && _n <= 0.62) _nC4 = 12;
-    else if (_n >= -0.55 && _n <= 0.76) _nC4 = 16;
-    else if (_n >= -0.67 && _n <= 0.99) _nC4 = 24;
-    else if (_n >= -0.74 && _n <= 0.99) _nC4 = 32;
-    else if (_n >= -0.82 && _n <= 0.99) _nC4 = 48;
-    else if (_n >= -0.86 && _n <= 0.99) _nC4 = 64;
-    else if (_n >= -0.90 && _n <= 0.99) _nC4 = 96;
-    else if (_n >= -0.92 && _n <= 0.99) _nC4 = 128;
-    else if (_n >= -0.95 && _n <= 0.99) _nC4 = 192;
-    else if (_n >= -0.96 && _n <= 0.99) _nC4 = 256;
-    else if (_n >= -0.97 && _n <= 0.99) _nC4 = 384;
-    else if (_n >= -0.98 && _n <= 0.99) _nC4 = 512;
-    else                                _nC4 = 1024;
-# elif GEOGRAPHICLIB_PRECISION == 2
-    if      (_n >= -0.01 && _n <= 0.01) _nC4 = 6;
-    else if (_n >= -0.03 && _n <= 0.03) _nC4 = 8;
-    else if (_n >= -0.11 && _n <= 0.11) _nC4 = 12;
-    else if (_n >= -0.19 && _n <= 0.20) _nC4 = 16;
-    else if (_n >= -0.33 && _n <= 0.36) _nC4 = 24;
-    else if (_n >= -0.43 && _n <= 0.48) _nC4 = 32;
-    else if (_n >= -0.57 && _n <= 0.63) _nC4 = 48;
-    else if (_n >= -0.65 && _n <= 0.72) _nC4 = 64;
-    else if (_n >= -0.75 && _n <= 0.82) _nC4 = 96;
-    else if (_n >= -0.81 && _n <= 0.87) _nC4 = 128;
-    else if (_n >= -0.87 && _n <= 0.92) _nC4 = 192;
-    else if (_n >= -0.90 && _n <= 0.94) _nC4 = 256;
-    else if (_n >= -0.93 && _n <= 0.96) _nC4 = 384;
-    else if (_n >= -0.94 && _n <= 0.97) _nC4 = 512;
-    else if (_n >= -0.96 && _n <= 0.98) _nC4 = 768;
-    else if (_n >= -0.97 && _n <= 0.99) _nC4 = 1024;
-    else if (_n >= -0.98 && _n <= 0.99) _nC4 = 1536;
-    else                                _nC4 = 3072;
-# elif GEOGRAPHICLIB_PRECISION == 3
-    if      (_n >= -0.01 && _n <= 0.01) _nC4 = 8;
-    else if (_n >= -0.06 && _n <= 0.06) _nC4 = 12;
-    else if (_n >= -0.12 && _n <= 0.13) _nC4 = 16;
-    else if (_n >= -0.23 && _n <= 0.26) _nC4 = 24;
-    else if (_n >= -0.35 && _n <= 0.38) _nC4 = 32;
-    else if (_n >= -0.49 && _n <= 0.54) _nC4 = 48;
-    else if (_n >= -0.59 && _n <= 0.64) _nC4 = 64;
-    else if (_n >= -0.70 && _n <= 0.75) _nC4 = 96;
-    else if (_n >= -0.76 && _n <= 0.81) _nC4 = 128;
-    else if (_n >= -0.83 && _n <= 0.88) _nC4 = 192;
-    else if (_n >= -0.87 && _n <= 0.91) _nC4 = 256;
-    else if (_n >= -0.91 && _n <= 0.94) _nC4 = 384;
-    else if (_n >= -0.93 && _n <= 0.96) _nC4 = 512;
-    else if (_n >= -0.95 && _n <= 0.97) _nC4 = 768;
-    else if (_n >= -0.96 && _n <= 0.98) _nC4 = 1024;
-    else if (_n >= -0.97 && _n <= 0.99) _nC4 = 1536;
-    else if (_n >= -0.98 && _n <= 0.99) _nC4 = 2048;
-    else                                _nC4 = 4096;
-# elif GEOGRAPHICLIB_PRECISION == 4
-    if      (_n >= -0.01 && _n <= 0.01) _nC4 = 16;
-    else if (_n >= -0.06 && _n <= 0.06) _nC4 = 24;
-    else if (_n >= -0.12 && _n <= 0.13) _nC4 = 32;
-    else if (_n >= -0.25 && _n <= 0.26) _nC4 = 48;
-    else if (_n >= -0.35 && _n <= 0.37) _nC4 = 64;
-    else if (_n >= -0.50 && _n <= 0.52) _nC4 = 96;
-    else if (_n >= -0.59 && _n <= 0.62) _nC4 = 128;
-    else if (_n >= -0.71 && _n <= 0.73) _nC4 = 192;
-    else if (_n >= -0.77 && _n <= 0.79) _nC4 = 256;
-    else if (_n >= -0.84 && _n <= 0.86) _nC4 = 384;
-    else if (_n >= -0.87 && _n <= 0.89) _nC4 = 512;
-    else if (_n >= -0.91 && _n <= 0.93) _nC4 = 768;
-    else if (_n >= -0.93 && _n <= 0.95) _nC4 = 1024;
-    else if (_n >= -0.95 && _n <= 0.96) _nC4 = 1536;
-    else if (_n >= -0.96 && _n <= 0.97) _nC4 = 2048;
-    else if (_n >= -0.97 && _n <= 0.98) _nC4 = 3072;
-    else if (_n >= -0.98 && _n <= 0.98) _nC4 = 4096;
-    else if (_n >= -0.98 && _n <= 0.99) _nC4 = 6144;
-    else                                _nC4 = 8192;
-# elif GEOGRAPHICLIB_PRECISION == 5
-    if      (_n >= -0.03 && _n <= 0.03) _nC4 = 48;
-    else if (_n >= -0.07 && _n <= 0.08) _nC4 = 64;
-    else if (_n >= -0.18 && _n <= 0.18) _nC4 = 96;
-    else if (_n >= -0.28 && _n <= 0.28) _nC4 = 128;
-    else if (_n >= -0.42 && _n <= 0.43) _nC4 = 192;
-    else if (_n >= -0.53 && _n <= 0.54) _nC4 = 256;
-    else if (_n >= -0.65 && _n <= 0.66) _nC4 = 384;
-    else if (_n >= -0.72 && _n <= 0.73) _nC4 = 512;
-    else if (_n >= -0.80 && _n <= 0.81) _nC4 = 768;
-    else if (_n >= -0.85 && _n <= 0.86) _nC4 = 1024;
-    else if (_n >= -0.89 && _n <= 0.90) _nC4 = 1536;
-    else if (_n >= -0.92 && _n <= 0.92) _nC4 = 2048;
-    else if (_n >= -0.94 && _n <= 0.95) _nC4 = 3072;
-    else if (_n >= -0.96 && _n <= 0.96) _nC4 = 4096;
-    else if (_n >= -0.97 && _n <= 0.97) _nC4 = 6144;
-    else if (_n >= -0.98 && _n <= 0.98) _nC4 = 8192;
-    else                                _nC4 = 16384;
+    real n = 100 * _n;
+    int N;
+#if GEOGRAPHICLIB_PRECISION == 1
+    if      (n >= -10 && n <= 11) N = 4;
+    else if (n >= -21 && n <= 26) N = 6;
+    else if (n >= -30 && n <= 41) N = 8;
+    else if (n >= -45 && n <= 62) N = 12;
+    else if (n >= -55 && n <= 76) N = 16;
+    // ignore the *reduction* in N for n > 97
+    else if (n >= -67 && n <= 99) N = 24;
+    else if (n >= -74 && n <= 99) N = 32;
+    else if (n >= -82 && n <= 99) N = 48;
+    else if (n >= -86 && n <= 99) N = 64;
+    else if (n >= -90 && n <= 99) N = 96;
+    else if (n >= -92 && n <= 99) N = 128;
+    else if (n >= -95 && n <= 99) N = 192;
+    else if (n >= -96 && n <= 99) N = 256;
+    else if (n >= -97 && n <= 99) N = 384;
+    else if (n >= -98 && n <= 99) N = 512;
+    else                          N = 1024;
+#elif GEOGRAPHICLIB_PRECISION == 2
+    if      (n >= - 1 && n <=  1) N = 6;
+    else if (n >= - 3 && n <=  3) N = 8;
+    else if (n >= -11 && n <= 11) N = 12;
+    else if (n >= -19 && n <= 20) N = 16;
+    else if (n >= -33 && n <= 36) N = 24;
+    else if (n >= -43 && n <= 48) N = 32;
+    else if (n >= -57 && n <= 63) N = 48;
+    else if (n >= -65 && n <= 72) N = 64;
+    else if (n >= -75 && n <= 82) N = 96;
+    else if (n >= -81 && n <= 87) N = 128;
+    else if (n >= -87 && n <= 92) N = 192;
+    else if (n >= -90 && n <= 94) N = 256;
+    else if (n >= -93 && n <= 96) N = 384;
+    else if (n >= -94 && n <= 97) N = 512;
+    else if (n >= -96 && n <= 98) N = 768;
+    else if (n >= -97 && n <= 99) N = 1024;
+    else if (n >= -98 && n <= 99) N = 1536;
+    else                          N = 3072;
+#elif GEOGRAPHICLIB_PRECISION == 3
+    if      (n >= - 1 && n <=  1) N = 8;
+    else if (n >= - 6 && n <=  6) N = 12;
+    else if (n >= -12 && n <= 13) N = 16;
+    else if (n >= -23 && n <= 26) N = 24;
+    else if (n >= -35 && n <= 38) N = 32;
+    else if (n >= -49 && n <= 54) N = 48;
+    else if (n >= -59 && n <= 64) N = 64;
+    else if (n >= -70 && n <= 75) N = 96;
+    else if (n >= -76 && n <= 81) N = 128;
+    else if (n >= -83 && n <= 88) N = 192;
+    else if (n >= -87 && n <= 91) N = 256;
+    else if (n >= -91 && n <= 94) N = 384;
+    else if (n >= -93 && n <= 96) N = 512;
+    else if (n >= -95 && n <= 97) N = 768;
+    else if (n >= -96 && n <= 98) N = 1024;
+    else if (n >= -97 && n <= 99) N = 1536;
+    else if (n >= -98 && n <= 99) N = 2048;
+    else                          N = 4096;
+#elif GEOGRAPHICLIB_PRECISION == 4
+    if      (n >= - 1 && n <=  1) N = 16;
+    else if (n >= - 6 && n <=  6) N = 24;
+    else if (n >= -12 && n <= 13) N = 32;
+    else if (n >= -25 && n <= 26) N = 48;
+    else if (n >= -35 && n <= 37) N = 64;
+    else if (n >= -50 && n <= 52) N = 96;
+    else if (n >= -59 && n <= 62) N = 128;
+    else if (n >= -71 && n <= 73) N = 192;
+    else if (n >= -77 && n <= 79) N = 256;
+    else if (n >= -84 && n <= 86) N = 384;
+    else if (n >= -87 && n <= 89) N = 512;
+    else if (n >= -91 && n <= 93) N = 768;
+    else if (n >= -93 && n <= 95) N = 1024;
+    else if (n >= -95 && n <= 96) N = 1536;
+    else if (n >= -96 && n <= 97) N = 2048;
+    else if (n >= -97 && n <= 98) N = 3072;
+    else if (n >= -98 && n <= 98) N = 4096;
+    else if (n >= -98 && n <= 99) N = 6144;
+    else                          N = 8192;
+#elif GEOGRAPHICLIB_PRECISION == 5
+    if      (n >= - 3 && n <=  3) N = 48;
+    else if (n >= - 7 && n <=  8) N = 64;
+    else if (n >= -18 && n <= 18) N = 96;
+    else if (n >= -28 && n <= 28) N = 128;
+    else if (n >= -42 && n <= 43) N = 192;
+    else if (n >= -53 && n <= 54) N = 256;
+    else if (n >= -65 && n <= 66) N = 384;
+    else if (n >= -72 && n <= 73) N = 512;
+    else if (n >= -80 && n <= 81) N = 768;
+    else if (n >= -85 && n <= 86) N = 1024;
+    else if (n >= -89 && n <= 90) N = 1536;
+    else if (n >= -92 && n <= 92) N = 2048;
+    else if (n >= -94 && n <= 95) N = 3072;
+    else if (n >= -96 && n <= 96) N = 4096;
+    else if (n >= -97 && n <= 97) N = 6144;
+    else if (n >= -98 && n <= 98) N = 8192;
+    else                          N = 16384;
     if (Math::digits() > 256) {
-      // Scale up _nC4 by the number of digits in the precision relative to
+      // Scale up N by the number of digits in the precision relative to
       // the number used for the test = 256.
-      int N = (Math::digits() * _nC4) / 256;
-      while (_nC4 < N) _nC4 = _nC4 % 3 == 0 ? 4*_nC4/3 : 3*_nC4/2;
+      int M = (Math::digits() * N) / 256;
+      while (N < M) N = N % 3 == 0 ? 4*N/3 : 3*N/2;
     }
-# else
+#else
 #error "Bad value for GEOGRAPHICLIB_PRECISION"
 #endif
-    _fft.reset(_nC4);
+    _fft.reset(N);
+    _nC4 = N;
   }
 
   const GeodesicExact& GeodesicExact::WGS84() {
@@ -1144,7 +1148,8 @@ namespace GeographicLib {
   //     ( 1 - (asin (z)/z) / d1 - (asin (sx) + asin (sy)) / d2 );
   // }
   Math::real GeodesicExact::I4Integrand::DtX(real y) const {
-    // ( t(X) - t(y) ) / (X - y)
+    // idiot version:
+    // return ( tX - t(y) ) / (X - y);
     using std::sqrt; using std::fabs; using std::asinh; using std::asin;
     if (X == y) return tdX;
     if (X * y <= 0) return ( tX - t(y) ) / (X - y);
