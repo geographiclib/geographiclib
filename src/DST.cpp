@@ -8,7 +8,7 @@
  **********************************************************************/
 
 #include <GeographicLib/DST.hpp>
-#include <memory>
+#include <vector>
 
 #include "kissfft.hh"
 
@@ -28,7 +28,7 @@ namespace GeographicLib {
     _fft->assign(2 * _N, false);
   }
 
-  void DST::fft_transform(vector<real>& data, real F[], bool centerp) const {
+  void DST::fft_transform(real data[], real F[], bool centerp) const {
     // Implement DST-III (centerp = false) or DST-IV (centerp = true).
 
     // Elements (0,N], resp. [0,N), of data should be set on input for centerp
@@ -47,7 +47,7 @@ namespace GeographicLib {
       for (int i = 0; i < 2*_N; ++i) data[2*_N+i] = -data[i]; // [2*N, 4*N-1]
     }
     vector<complex<real>> ctemp(2*_N);
-    _fft->transform_real(data.data(), ctemp.data());
+    _fft->transform_real(data, ctemp.data());
     if (centerp) {
       real d = -Math::pi()/(4*_N);
       for (int i = 0, j = 1; i < _N; ++i, j+=2)
@@ -58,7 +58,7 @@ namespace GeographicLib {
     }
   }
 
-  void DST::fft_transform2(vector<real>& data, real F[]) const {
+  void DST::fft_transform2(real data[], real F[]) const {
     // Elements [0,N), of data should be set to the N grid center values and F
     // should have size of at least 2*N.  On input elements [0,N) of F contain
     // the size N transform; on output elements [0,2*N) of F contain the size
@@ -77,7 +77,7 @@ namespace GeographicLib {
     real d = Math::pi()/(2 * _N);
     for (int i = 1; i <= _N; ++i)
       data[i] = f( i * d );
-    fft_transform(data, F, false);
+    fft_transform(data.data(), F, false);
   }
 
   void DST::refine(function<real(real)> f, real F[]) const {
@@ -85,7 +85,7 @@ namespace GeographicLib {
     real d = Math::pi()/(4 * _N);
     for (int i = 0; i < _N; ++i)
       data[i] = f( (2*i + 1) * d );
-    fft_transform2(data, F);
+    fft_transform2(data.data(), F);
   }
 
   Math::real DST::eval(real sinx, real cosx, const real F[], int N) {

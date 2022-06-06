@@ -31,7 +31,7 @@ class kissfft
             {
               const scalar_t s = _inverse ? 1 : -1;
               const scalar_t d = acos( (scalar_t) -1) / (2 * _nfft);
-              int i = 0, N = _nfft; // signed ints needed for subtractions
+              int i = 0, N = int(_nfft); // signed ints needed for subtractions
               // enforce trigonometric symmetries by evaluating sin and cos
               // with arguments in the range [-pi/4, pi/4]
               for (; 8*i <   N; ++i)

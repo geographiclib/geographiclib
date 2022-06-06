@@ -13,7 +13,6 @@
 #include <GeographicLib/Constants.hpp>
 
 #include <functional>
-#include <vector>
 #include <memory>
 
 template <typename scalar_t>
@@ -66,9 +65,9 @@ namespace GeographicLib {
     typedef kissfft<real> fft_t;
     std::shared_ptr<fft_t> _fft;
     // Implement DST-III (centerp = false) or DST-IV (centerp = true)
-    void fft_transform(std::vector<real>& data, real F[], bool centerp) const;
+    void fft_transform(real data[], real F[], bool centerp) const;
     // Add another N terms to F
-    void fft_transform2(std::vector<real>& data, real F[]) const;
+    void fft_transform2(real data[], real F[]) const;
   public:
     /**
      * Constructor specifying the number of points to use.
