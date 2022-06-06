@@ -58,7 +58,7 @@ namespace GeographicLib {
    * doesn't work with mpreals (GEOGRAPHICLIB_PRECISION = 5).
    **********************************************************************/
 
-  class GEOGRAPHICLIB_EXPORT DST {
+  class DST {
   private:
     typedef Math::real real;
     int _N;
@@ -73,13 +73,13 @@ namespace GeographicLib {
      * Constructor specifying the number of points to use.
      * @param[in] N the number of points to use.
      **********************************************************************/
-    DST(int N = 0);
+    GEOGRAPHICLIB_EXPORT DST(int N = 0);
 
     /**
      * Reset the given number of points.
      * @param[in] N the number of points to use.
      **********************************************************************/
-    void reset(int N);
+    void GEOGRAPHICLIB_EXPORT reset(int N);
 
     /**
      * Return the number of points.
@@ -96,7 +96,8 @@ namespace GeographicLib {
      * for integer \f$ j \in [0, N) \f$.  \e F should be an array of length at
      * least \e N.
      **********************************************************************/
-    void transform(std::function<real(real)> f, real F[]) const;
+    void GEOGRAPHICLIB_EXPORT transform(std::function<real(real)> f, real F[])
+      const;
 
     /**
      * Refine the Fourier series by doubling the number of points sampled
@@ -113,7 +114,8 @@ namespace GeographicLib {
      * efficient, given that the \e N term coefficients are already known.  See
      * the example code above.
      **********************************************************************/
-    void refine(std::function<real(real)> f, real F[]) const;
+    void GEOGRAPHICLIB_EXPORT refine(std::function<real(real)> f, real F[])
+      const;
 
     /**
      * Evaluate the Fourier sum given the sine and cosine of the angle
@@ -123,7 +125,8 @@ namespace GeographicLib {
      * @param[in] N the number of Fourier coefficients.
      * @return the value of the Fourier sum.
      **********************************************************************/
-    static real eval(real sinx, real cosx, const real F[], int N);
+    static real GEOGRAPHICLIB_EXPORT eval(real sinx, real cosx,
+                                          const real F[], int N);
 
     /**
      * Evaluate the integral of Fourier sum given the sine and cosine of the
@@ -137,7 +140,8 @@ namespace GeographicLib {
      * The constant of integration is chosen so that the integral is zero at
      * \f$ \sigma = \frac12\pi \f$.
      **********************************************************************/
-    static real integral(real sinx, real cosx, const real F[], int N);
+    static real GEOGRAPHICLIB_EXPORT integral(real sinx, real cosx,
+                                              const real F[], int N);
   };
 
 } // namespace GeographicLib

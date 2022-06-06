@@ -17,6 +17,7 @@
 
 namespace GeographicLib {
 
+  class GEOGRAPHICLIB_EXPORT DST;
   class GeodesicLineExact;
 
   /**
