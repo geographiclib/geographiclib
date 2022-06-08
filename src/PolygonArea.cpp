@@ -9,6 +9,11 @@
 
 #include <GeographicLib/PolygonArea.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about enum-float expressions
+#  pragma warning (disable: 5055)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;

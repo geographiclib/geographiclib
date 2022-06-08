@@ -30,9 +30,9 @@
 #include <GeographicLib/GeodesicLineExact.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about potentially uninitialized local variables and
-// constant conditional expressions
-#  pragma warning (disable: 4701 4127)
+// Squelch warnings about potentially uninitialized local variables,
+// constant conditional and enum-float expressions and mixing enums
+#  pragma warning (disable: 4701 4127 5055 5054)
 #endif
 
 namespace GeographicLib {

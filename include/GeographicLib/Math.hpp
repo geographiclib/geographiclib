@@ -198,7 +198,7 @@ namespace GeographicLib {
      * @return the number of radians in a degree.
      **********************************************************************/
     template<typename T = real> static T degree() {
-      static const T degree = pi<T>() / hd;
+      static const T degree = pi<T>() / T(hd);
       return degree;
     }
 
@@ -298,7 +298,7 @@ namespace GeographicLib {
      *   return NaN.
      **********************************************************************/
     template<typename T> static T LatFix(T x)
-    { using std::fabs; return fabs(x) > qd ? NaN<T>() : x; }
+    { using std::fabs; return fabs(x) > T(qd) ? NaN<T>() : x; }
 
     /**
      * The exact difference of two angles reduced to

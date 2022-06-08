@@ -278,7 +278,7 @@ include (CheckCXXCompilerFlag)
 if (MSVC)
   string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   # Turn on parallel builds for Visual Studio
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++latest /MP")
 else ()
   set (FLOAT_CONVERSION_FLAG "-Wfloat-conversion")
   check_cxx_compiler_flag (${FLOAT_CONVERSION_FLAG} FLOAT_CONVERSION)

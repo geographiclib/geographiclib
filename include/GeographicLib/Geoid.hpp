@@ -411,7 +411,7 @@ namespace GeographicLib {
      * @return north edge of the cached area; the cache includes this edge.
      **********************************************************************/
     Math::real CacheNorth() const {
-      return _cache ? Math::qd - (_yoffset + _cubic) / _rlatres : 0;
+      return _cache ? real(Math::qd) - (_yoffset + _cubic) / _rlatres : 0;
     }
 
     /**
@@ -419,7 +419,8 @@ namespace GeographicLib {
      *   unless it's the south pole.
      **********************************************************************/
     Math::real CacheSouth() const {
-      return _cache ? Math::qd - ( _yoffset + _ysize - 1 - _cubic) / _rlatres :
+      return _cache ?
+	real(Math::qd) - ( _yoffset + _ysize - 1 - _cubic) / _rlatres :
         0;
     }
 
