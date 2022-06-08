@@ -3633,128 +3633,150 @@ Math::real maxerr(const vector<Math::real> C4a, const vector<Math::real> C4b) {
 int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
-    int Nmax, prec;
-    if (argc != 3) { cerr << "AreaEst Nmax prec\n"; return 1; }
-    Nmax = Utility::val<int>(string(argv[1]));
-    prec = Utility::val<int>(string(argv[2]));
-    vector<Math::real> C4ref, C4;
-    Math::real eps;
-    switch (prec) {
-      // prec = 0 means use 30th order taylor series
-      // prec = -1 means use N=30 DST
-    case -1:
-    case 0: eps = numeric_limits<Math::real>::infinity(); break; // Use TaylorI4
-    case 1: eps = numeric_limits<float>::epsilon() / 2; break;
-    case 2: eps = numeric_limits<double>::epsilon() / 2; break;
-    case 3: eps = numeric_limits<long double>::epsilon() / 2; break;
-    case 4: eps = pow(Math::real(0.5), 113); break;
+    if (argc <= 2)
+      { cerr << "AreaEst mode ...\n"; return 1; }
+    string mode(argv[1]);
+    if (mode == "estN") {
+      int Nmax, prec;
+      if (argc != 4) { cerr << "AreaEst estN Nmax prec\n"; return 1; }
+      Nmax = Utility::val<int>(string(argv[2]));
+      prec = Utility::val<int>(string(argv[3]));
+      vector<Math::real> C4ref, C4;
+      Math::real eps;
+      switch (prec) {
+        // prec = 0 means use 30th order taylor series
+        // prec = -1 means use N=30 DST
+      case -1:
+      case 0: eps = numeric_limits<Math::real>::infinity(); break; // Use TaylorI4
+      case 1: eps = numeric_limits<float>::epsilon() / 2; break;
+      case 2: eps = numeric_limits<double>::epsilon() / 2; break;
+      case 3: eps = numeric_limits<long double>::epsilon() / 2; break;
+      case 4: eps = pow(Math::real(0.5), 113); break;
 #if GEOGRAPHICLIB_PRECISION > 1
-      // Skip case 5 for float prec to avoid underflow to 0
-    case 5: eps = pow(Math::real(0.5), 256); break;
+        // Skip case 5 for float prec to avoid underflow to 0
+      case 5: eps = pow(Math::real(0.5), 256); break;
 #endif
-    default: eps = numeric_limits<double>::epsilon() / 2; break;
-    }
-    // The range of n in [-0.91, 0.91] the includes 1/20 < b/a < 20
-    cout << "epsilon = " << (prec > 0 ? eps :
-                             numeric_limits<double>::epsilon() / 2) << endl;
-    for (int in = -99; in <= 99; ++in) {
-      vector<Math::real> C4x;
-      Math::real n = in/Math::real(100),
-        errx = -1,
-        maxalp0 = -1;
-      TaylorI4 tay(n);
-      int N = 0;
-      // Pick N = 2^k and 3*2^k: [4, 6, 8, 12, 16, 24, 32, ...]
-      for (N = (prec > 0 ? 4 : GEOGRAPHICLIB_GEODESICEXACT_ORDER);
-           N <= Nmax; N = N % 3 == 0 ? 4*N/3 : 3*N/2) {
-        errx = -1;
-        maxalp0 = -1;
-        Math::real alp0 = 10, err;
-        C4f(n, alp0, 2*N, C4ref);
-        C4falt(prec, n, alp0, N, C4, tay);
-        err = maxerr(C4, C4ref);
-       // cerr << "A " << N << " " << alp0 << " " << err << "\n";
-        if (err > eps) continue;
-        bool ok = true;
-        for (int a = 1; a < 90; ++a) {
-          alp0 = a;
-          C4f(n, alp0, 2*N, C4ref);
-          C4falt(prec, n, alp0, N, C4, tay);
-          err = maxerr(C4, C4ref);
-         // cerr << "B " << N << " " << alp0 << " " << err << "\n";
-          if (err > eps) { ok = false; break; }
-          if (err > errx) {
-            errx = err; C4x = C4;
-            maxalp0 = alp0;
-          }
-        }
-        if (!ok) continue;
-        Math::real alp00 = maxalp0;
-        for (int a = -9; a < 10; ++a) {
-          alp0 = alp00 + a/Math::real(10);
-          C4f(n, alp0, 2*N, C4ref);
-          C4falt(prec, n, alp0, N, C4, tay);
-          err = maxerr(C4, C4ref);
-         // cerr << "C " << N << " " << alp0 << " " << err << "\n";
-          if (err > eps) { ok = false; break; }
-          if (err > errx) {
-            errx = err; C4x = C4;
-            maxalp0 = alp0;
-          }
-        }
-        if (!ok) continue;
-        alp00 = maxalp0;
-        for (int a = -9; a < 10; ++a) {
-          alp0 = alp00 + a/Math::real(100);
-          C4f(n, alp0, 2*N, C4ref);
-          C4falt(prec, n, alp0, N, C4, tay);
-          err = maxerr(C4, C4ref);
-         // cerr << "D " << N << " " << alp0 << " " << err << "\n";
-          if (err > eps) { ok = false; break; }
-          if (err > errx) {
-            errx = err; C4x = C4;
-            maxalp0 = alp0;
-          }
-        }
-        if (!ok) continue;
-        alp00 = maxalp0;
-        for (int a = -9; a < 10; ++a) {
-          alp0 = alp00 + a/Math::real(1000);
-          C4f(n, alp0, 2*N, C4ref);
-          C4falt(prec, n, alp0, N, C4, tay);
-          err = maxerr(C4, C4ref);
-         // cerr << "E " << N << " " << alp0 << " " << err << "\n";
-          if (err > eps) { ok = false; break; }
-          if (err > errx) {
-            errx = err; C4x = C4;
-            maxalp0 = alp0;
-          }
-        }
-        if (!ok) continue;
-        alp00 = maxalp0;
-        for (int a = -9; a < 10; ++a) {
-          alp0 = alp00 + a/Math::real(10000);
-          C4f(n, alp0, 2*N, C4ref);
-          C4falt(prec, n, alp0, N, C4, tay);
-          err = maxerr(C4, C4ref);
-         // cerr << "F " << N << " " << alp0 << " " << err << "\n";
-          if (err > eps) { ok = false; break; }
-          if (err > errx) {
-            errx = err; C4x = C4;
-            maxalp0 = alp0;
-          }
-        }
-        if (ok) break;
-        if (prec <= 0) break;
+      default: eps = numeric_limits<double>::epsilon() / 2; break;
       }
-      Math::real erry = 0;
-      // Assess summing last few scaled coefficients as a less expensive
-      // error metric.
-      N = C4x.size();
-      for (int i = (31*N)/32; i < N; ++i)
-        erry = erry+fabs(C4x[i]);
-      cout << n << " " << N << " " << maxalp0 << " " << errx << " "
-           << erry/errx << endl;
+      // The range of n in [-0.91, 0.91] the includes 1/20 < b/a < 20
+      cout << "epsilon = " << (prec > 0 ? eps :
+                               numeric_limits<double>::epsilon() / 2) << endl;
+      for (int in = -99; in <= 99; ++in) {
+        vector<Math::real> C4x;
+        Math::real n = in/Math::real(100),
+          errx = -1,
+          maxalp0 = -1;
+        TaylorI4 tay(n);
+        int N = 0;
+        // Pick N = 2^k and 3*2^k: [4, 6, 8, 12, 16, 24, 32, ...]
+        for (N = (prec > 0 ? 4 : GEOGRAPHICLIB_GEODESICEXACT_ORDER);
+             N <= Nmax; N = N % 3 == 0 ? 4*N/3 : 3*N/2) {
+          errx = -1;
+          maxalp0 = -1;
+          Math::real alp0 = 10, err;
+          C4f(n, alp0, 2*N, C4ref);
+          C4falt(prec, n, alp0, N, C4, tay);
+          err = maxerr(C4, C4ref);
+          // cerr << "A " << N << " " << alp0 << " " << err << "\n";
+          if (err > eps) continue;
+          bool ok = true;
+          for (int a = 1; a < 90; ++a) {
+            alp0 = a;
+            C4f(n, alp0, 2*N, C4ref);
+            C4falt(prec, n, alp0, N, C4, tay);
+            err = maxerr(C4, C4ref);
+            // cerr << "B " << N << " " << alp0 << " " << err << "\n";
+            if (err > eps) { ok = false; break; }
+            if (err > errx) {
+              errx = err; C4x = C4;
+              maxalp0 = alp0;
+            }
+          }
+          if (!ok) continue;
+          Math::real alp00 = maxalp0;
+          for (int a = -9; a < 10; ++a) {
+            alp0 = alp00 + a/Math::real(10);
+            C4f(n, alp0, 2*N, C4ref);
+            C4falt(prec, n, alp0, N, C4, tay);
+            err = maxerr(C4, C4ref);
+            // cerr << "C " << N << " " << alp0 << " " << err << "\n";
+            if (err > eps) { ok = false; break; }
+            if (err > errx) {
+              errx = err; C4x = C4;
+              maxalp0 = alp0;
+            }
+          }
+          if (!ok) continue;
+          alp00 = maxalp0;
+          for (int a = -9; a < 10; ++a) {
+            alp0 = alp00 + a/Math::real(100);
+            C4f(n, alp0, 2*N, C4ref);
+            C4falt(prec, n, alp0, N, C4, tay);
+            err = maxerr(C4, C4ref);
+            // cerr << "D " << N << " " << alp0 << " " << err << "\n";
+            if (err > eps) { ok = false; break; }
+            if (err > errx) {
+              errx = err; C4x = C4;
+              maxalp0 = alp0;
+            }
+          }
+          if (!ok) continue;
+          alp00 = maxalp0;
+          for (int a = -9; a < 10; ++a) {
+            alp0 = alp00 + a/Math::real(1000);
+            C4f(n, alp0, 2*N, C4ref);
+            C4falt(prec, n, alp0, N, C4, tay);
+            err = maxerr(C4, C4ref);
+            // cerr << "E " << N << " " << alp0 << " " << err << "\n";
+            if (err > eps) { ok = false; break; }
+            if (err > errx) {
+              errx = err; C4x = C4;
+              maxalp0 = alp0;
+            }
+          }
+          if (!ok) continue;
+          alp00 = maxalp0;
+          for (int a = -9; a < 10; ++a) {
+            alp0 = alp00 + a/Math::real(10000);
+            C4f(n, alp0, 2*N, C4ref);
+            C4falt(prec, n, alp0, N, C4, tay);
+            err = maxerr(C4, C4ref);
+            // cerr << "F " << N << " " << alp0 << " " << err << "\n";
+            if (err > eps) { ok = false; break; }
+            if (err > errx) {
+              errx = err; C4x = C4;
+              maxalp0 = alp0;
+            }
+          }
+          if (ok) break;
+          if (prec <= 0) break;
+        }
+        Math::real erry = 0;
+        // Assess summing last few scaled coefficients as a less expensive
+        // error metric.
+        N = C4x.size();
+        for (int i = (31*N)/32; i < N; ++i)
+          erry = erry+fabs(C4x[i]);
+        cout << n << " " << N << " " << maxalp0 << " " << errx << " "
+             << erry/errx << endl;
+      }
+    }
+    else if (mode == "i4table") {
+      Math::real n, alp0;
+      if (argc != 4) { cerr << "AreaEst i4table n alp0\n"; return 1; }
+      n = Utility::val<Math::real>(string(argv[2]));
+      alp0 = Utility::val<Math::real>(string(argv[3]));
+      int N = 1024;
+      int m = 256;
+      vector<Math::real> C4;
+      C4f(n, alp0, N, C4);
+      cout << setprecision(17);
+      for (int i = 0; i <= m; ++i) {
+       Math::real sig = Math::real(90) * i / m, ssig, csig;
+       Math::sincosd(sig, ssig, csig);
+       cout << sig << " "
+            << CosSeries(ssig, csig, C4.data(), N) << "\n";
+     }
     }
   }
   catch (const std::exception& e) {

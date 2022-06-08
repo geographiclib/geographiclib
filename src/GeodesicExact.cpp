@@ -313,26 +313,6 @@ namespace GeographicLib {
     return wgs84;
   }
 
-  Math::real GeodesicExact::CosSeries(real sinx, real cosx,
-                                      const real c[], int n) {
-    // Evaluate
-    // y = sum(c[i] * cos((2*i+1) * x), i, 0, n-1)
-    // using Clenshaw summation.
-    // Approx operation count = (n + 5) mult and (2 * n + 2) add
-    c += n ;                    // Point to one beyond last element
-    real
-      ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-      y0 = n & 1 ? *--c : 0, y1 = 0;          // accumulators for sum
-    // Now n is even
-    n /= 2;
-    while (n--) {
-      // Unroll loop x 2, so accumulators return to their original role
-      y1 = ar * y0 - y1 + *--c;
-      y0 = ar * y1 - y0 + *--c;
-    }
-    return cosx * (y0 - y1);    // cos(x) * (y0 - y1)
-  }
-
   GeodesicLineExact GeodesicExact::Line(real lat1, real lon1, real azi1,
                                         unsigned caps) const {
     return GeodesicLineExact(*this, lat1, lon1, azi1, caps);

@@ -95,7 +95,6 @@ namespace GeographicLib {
       OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
     };
 
-    static real CosSeries(real sinx, real cosx, const real c[], int n);
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;

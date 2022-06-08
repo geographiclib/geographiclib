@@ -14,9 +14,9 @@
 #include <GeographicLib/Geoid.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions, potentially
-// uninitialized local variables, and unreachable code
-#  pragma warning (disable: 4127 4701 4702)
+// Squelch warnings about constant conditional and enum-float expressions,
+// potentially uninitialized local variables, and unreachable code
+#  pragma warning (disable: 4127 5055 4701 4702)
 #endif
 
 using namespace std;

@@ -17,8 +17,8 @@ B<GeoidEval> [ B<-n> I<name> ] [ B<-d> I<dir> ] [ B<-l> ]
 =head1 DESCRIPTION
 
 B<GeoidEval> reads in positions on standard input and prints out the
-corresponding heights of the geoid above the WGS84 ellipsoid on standard
-output.
+corresponding heights of the geoid model above the WGS84 ellipsoid on
+standard output.
 
 Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any
 of the formats accepted by GeoConvert(1).  (MGRS coordinates signify the
@@ -48,7 +48,7 @@ I<h> = I<N> + I<H>, E<nbsp>E<nbsp>I<H> = -I<N> + I<h>.
 
 =item B<-n> I<name>
 
-use geoid I<name> instead of the default C<egm96-5>.  See
+use I<name> for the geoid model instead of the default C<egm96-5>.  See
 L</GEOIDS>.
 
 =item B<-d> I<dir>
@@ -101,8 +101,8 @@ input line with the height converted to height above the geoid (MSL).
 
 =item B<-v>
 
-print information about the geoid on standard error before processing
-the input.
+print information about the geoid model on standard error before
+processing the input.
 
 =item B<--comment-delimiter> I<commentdelim>
 
@@ -118,7 +118,7 @@ print version and exit.
 
 =item B<-h>
 
-print usage, the default geoid path and name, and exit.
+print usage, the default path and name for geoid models, and exit.
 
 =item B<--help>
 
@@ -151,7 +151,7 @@ file name of "-" stands for standard output.
 
 B<GeoidEval> computes geoid heights by interpolating on the data in a
 regularly spaced table (see L</INTERPOLATION>).  The following geoid
-tables are available (however, some may not be installed):
+grids are available (however, some may not be installed):
 
                                   bilinear error    cubic error
    name         geoid    grid     max      rms      max      rms
@@ -163,17 +163,18 @@ tables are available (however, some may not be installed):
    egm2008-2_5  EGM2008   2.5'    0.135 m  3.2 mm   0.031 m  0.8 mm
    egm2008-1    EGM2008   1'      0.025 m  0.8 mm   .0022 m  0.7 mm
 
-By default, the C<egm96-5> geoid is used.  This may changed by setting
-the environment variable C<GEOGRAPHICLIB_GEOID_NAME> or with the B<-n>
-option.  The errors listed here are estimates of the quantization and
-interpolation errors in the reported heights compared to the specified
-geoid.
+By default, the C<egm96-5> geoid model is used.  This may changed by
+setting the environment variable C<GEOGRAPHICLIB_GEOID_NAME> or with
+the B<-n> option.  The errors listed here are estimates of the
+quantization and interpolation errors in the reported heights compared
+to the specified geoid.
 
-The geoid data will be loaded from a directory specified at compile
-time.  This may changed by setting the environment variables
-C<GEOGRAPHICLIB_GEOID_PATH> or C<GEOGRAPHICLIB_DATA>, or with the B<-d>
-option.  The B<-h> option prints the default geoid path and name.  Use
-the B<-v> option to ascertain the full path name of the data file.
+The geoid model data will be loaded from a directory specified at
+compile time.  This may changed by setting the environment variables
+C<GEOGRAPHICLIB_GEOID_PATH> or C<GEOGRAPHICLIB_DATA>, or with the
+B<-d> option.  The B<-h> option prints the default geoid path and
+name.  Use the B<-v> option to ascertain the full path name of the
+data file.
 
 Instructions for downloading and installing geoid data are available at
 L<https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst>.

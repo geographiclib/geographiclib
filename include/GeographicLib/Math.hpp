@@ -297,7 +297,7 @@ namespace GeographicLib {
      * @return x if it is in the range [&minus;90&deg;, 90&deg;], otherwise
      *   return NaN.
      **********************************************************************/
-    template<typename T>  static T LatFix(T x)
+    template<typename T> static T LatFix(T x)
     { using std::fabs; return fabs(x) > qd ? NaN<T>() : x; }
 
     /**

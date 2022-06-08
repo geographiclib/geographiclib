@@ -38,7 +38,7 @@ it perform datum conversions; instead use
 <a href="https://proj.org">PROJ</a>.
 
 <b>NOTE:</b> Starting with version 2.0, this library *only* includes the
-C++ code.  If you're interested in the
+C++ implementation.  If you're interested in the
 [C](../../C/doc/index.html),
 [Fortran](../../Fortran/doc/index.html),
 [Python](../../Python/doc/index.html),
@@ -1210,11 +1210,11 @@ The models published by the NGA are:
 - <b>EGM2008</b>:
   https://earth-info.nga.mil/index.php?dir=wgs84&action=wgs84#tab_egm2008
 .
-Geoid offers a uniform way to handle all 3 geoids at a variety of grid
-resolutions.  (In contrast, the software tools that NGA offers are
-different for each geoid, and the interpolation programs are different
-for each grid resolution.  In addition these tools are written in
-Fortran with is nowadays difficult to integrate with other software.)
+Geoid offers a uniform way to handle all 3 geoids models at a variety of
+grid resolutions.  (In contrast, the software tools that NGA offers are
+different for each geoid model, and the interpolation programs are
+different for each grid resolution.  In addition these tools are written
+in Fortran with is nowadays difficult to integrate with other software.)
 
 The height of the geoid above the ellipsoid, \e N, is sometimes called
 the geoid undulation.  It can be used to convert a height above the
