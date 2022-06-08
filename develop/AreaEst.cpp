@@ -3633,7 +3633,7 @@ Math::real maxerr(const vector<Math::real> C4a, const vector<Math::real> C4b) {
 int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
-    if (argc <= 2)
+    if (argc < 2)
       { cerr << "AreaEst mode ...\n"; return 1; }
     string mode(argv[1]);
     if (mode == "estN") {
@@ -3753,7 +3753,8 @@ int main(int argc, const char* const argv[]) {
         }
         Math::real erry = 0;
         // Assess summing last few scaled coefficients as a less expensive
-        // error metric.
+        // error metric.  This metric is not being used -- probably should skip
+        // calculating and printing it.
         N = C4x.size();
         for (int i = (31*N)/32; i < N; ++i)
           erry = erry+fabs(C4x[i]);

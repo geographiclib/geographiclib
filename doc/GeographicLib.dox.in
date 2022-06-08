@@ -7474,6 +7474,23 @@ git repository for GeographicLib</a>.
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
 \endif
 
+ - <a href="https://geographiclib.sourceforge.io/C++/2.1">Version 2.1</a>
+   (released 2022-mm-dd)
+   - Improve the accuracy of the area calculations in GeodesicExact and
+     the <a href="Planimeter.1.html">Planimeter</a> utility with the -E
+     option.  This now gives full double precision accuracy for
+     <i>b</i>/\e a &isin; [0.01, 100].  (Previously the range for full
+     accuracy was <i>b</i>/\e a &isin; [0.5, 2].) The method involves a
+     direct computation of the Fourier series for the integrand of area
+     integral which then allows the integral to be evaluated.
+   - Add a new class DST for doing discrete sine transforms.  This is
+     mainly for "internal" use, to compute the area in GeodesicExact.
+     Internally, this uses the
+     <a href="https://github.com/mborgerding/kissfft">kissfft</a>
+     package by Mark Borgerding.
+   - Fix various warnings from Visual Studio about arithmetic involving
+     enums.
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
    (released 2022-05-06)
    - Remove non C++ implementations from this package.  These are now

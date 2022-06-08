@@ -93,9 +93,10 @@ namespace GeographicLib {
     // columns list the values for negative and positive n.  Values determined
     // by running develop/AreaEst compiled with GEOGRAPHICLIB_PRECISION = 5.
     // For precision 4 and 5, GEOGRAPHICLIB_DIGITS was set to, resp., 384 and
-    // 768.  These error criterion is relative error less than or equal to
+    // 768.  The error criterion is relative error less than or equal to
     // epsilon/2 = 0.5^digits, with digits = 24, 53, 64, 113, 256.  The first 4
-    // are the the "standard" values; the last is the default for mpfr.
+    // are the the "standard" values for float, double, long double, and
+    // float128; the last is the default for GeographicLib + mpfr.
     //
     //         float    double     long d     quad        mpfr
     // n       f- f+    d-   d+    l-   l+    q-   q+     m-    m+
