@@ -155,11 +155,11 @@ conda-forge...
   type GeoConvert
 
   git checkout -b v2.0
+  conda install -c conda-forge conda-smithy
+  conda smithy rerender
   commit changes
   git push --set-upstream cffk v2.0
 
-  conda install -c conda-forge conda-smithy
-  conda smithy rerender
 
 vcpkg...
   git pull
