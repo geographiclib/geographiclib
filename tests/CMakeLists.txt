@@ -556,6 +556,15 @@ add_test (NAME GeodSolve97 COMMAND GeodSolve
 set_tests_properties (GeodSolve96 GeodSolve97 PROPERTIES PASS_REGULAR_EXPRESSION
   ".* 42426932221845")
 
+# Area of on high eccentricity n = 0.94 ellipsoid.  This is the most
+# oblate case that Nowak + Nowak Da Costa (2022) treats (convergence
+# with kmax = 18504).  High precision result is 5910062452739.93899501;
+# Accept xxx.930 thru xx.949
+add_test (NAME GeodSolve98 COMMAND GeodSolve
+  -E -a -u -f -e 6.4e6 188/194 -p 10 --input-string "0 0 45 90")
+set_tests_properties (GeodSolve98 PROPERTIES PASS_REGULAR_EXPRESSION
+  ".* 5910062452739\\.9[34].")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")
