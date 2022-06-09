@@ -4,7 +4,29 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.0
+The current version of the library is 2.1
+
+Changes between 2.1 (released 2022-06-09) and 2.0 versions:
+
+   * Improve the accuracy of the area calculations in GeodesicExact
+     and the Planimeter utility with the -E option.  This now gives
+     full double precision accuracy for b/a in [0.01, 100] or f in
+     [-99, 0.99].  (Previously the range for full accuracy was b/a in
+     [0.5, 2].) The method involves a direct computation of the
+     Fourier series for the integrand of area integral which then
+     allows the integral to be evaluated.
+
+   * Add a new class DST for doing discrete sine transforms.  This is
+     mainly for "internal" use, to compute the area in GeodesicExact.
+     Internally, this uses the kissfft package by Mark Borgerding.
+
+   * Fix various warnings from Visual Studio about arithmetic involving
+     enums.
+
+   * Minor improvement in the logic for the geodesic inverse problem
+     to address a slow down that can occur with
+     GEOGRAPHICLIB_PRECISION = 5 due to the time it takes to
+     calculate, for example, sin(10^(10^8)) accurately.
 
 Changes between 2.0 (released 2022-05-06) and 1.52 versions:
 

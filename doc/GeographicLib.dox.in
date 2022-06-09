@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2022-05-06
+\date 2022-06-09
 
 \section abstract Abstract
 
@@ -7475,14 +7475,15 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1">Version 2.1</a>
-   (released 2022-mm-dd)
+   (released 2022-06-09)
    - Improve the accuracy of the area calculations in GeodesicExact and
      the <a href="Planimeter.1.html">Planimeter</a> utility with the -E
      option.  This now gives full double precision accuracy for
-     <i>b</i>/\e a &isin; [0.01, 100].  (Previously the range for full
-     accuracy was <i>b</i>/\e a &isin; [0.5, 2].) The method involves a
-     direct computation of the Fourier series for the integrand of area
-     integral which then allows the integral to be evaluated.
+     <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [-99, 0.99].
+     (Previously the range for full accuracy was <i>b</i>/\e a &isin;
+     [0.5, 2].) The method involves a direct computation of the Fourier
+     series for the integrand of area integral which then allows the
+     integral to be evaluated.
    - Add a new class DST for doing discrete sine transforms.  This is
      mainly for "internal" use, to compute the area in GeodesicExact.
      Internally, this uses the
@@ -7490,6 +7491,10 @@ git repository for GeographicLib</a>.
      package by Mark Borgerding.
    - Fix various warnings from Visual Studio about arithmetic involving
      enums.
+   - Minor improvement in the logic for the geodesic inverse problem to
+     address a slow down that can occur with `GEOGRAPHICLIB_PRECISION =
+     5` due to the time it takes to calculate, for example,
+     `sin(10^(10^8))` accurately.
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.0">Version 2.0</a>
    (released 2022-05-06)

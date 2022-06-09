@@ -38,7 +38,7 @@ umask 0022
 START=`date +%s`
 DATE=`date +%F`
 VERSION=2.1
-SUFFIX=-alpha
+SUFFIX=
 DISTVERSION=$VERSION$SUFFIX
 BRANCH=main
 TEMP=/home/scratch/geographiclib-dist

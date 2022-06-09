@@ -420,7 +420,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real CacheSouth() const {
       return _cache ?
-	real(Math::qd) - ( _yoffset + _ysize - 1 - _cubic) / _rlatres :
+        real(Math::qd) - ( _yoffset + _ysize - 1 - _cubic) / _rlatres :
         0;
     }
 
