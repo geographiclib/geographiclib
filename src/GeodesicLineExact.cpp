@@ -28,6 +28,11 @@
 
 #include <GeographicLib/GeodesicLineExact.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about mixing enums
+#  pragma warning (disable: 5054)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
@@ -48,6 +53,7 @@ namespace GeographicLib {
     _c2 = g._c2;
     _f1 = g._f1;
     _e2 = g._e2;
+    _nC4 = g._nC4;
     // Always allow latitude and azimuth and unrolling of longitude
     _caps = caps | LATITUDE | AZIMUTH | LONG_UNROLL;
 
@@ -105,11 +111,16 @@ namespace GeographicLib {
     }
 
     if (_caps & CAP_C4) {
-      real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
-      g.C4f(eps, _cC4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
       _aA4 = Math::sq(_a) * _calp0 * _salp0 * _e2;
-      _bB41 = GeodesicExact::CosSeries(_ssig1, _csig1, _cC4a, nC4_);
+      if (_aA4 == 0)
+        _bB41 = 0;
+      else {
+        GeodesicExact::I4Integrand i4(g._ep2, _k2);
+        _cC4a.resize(_nC4);
+        g._fft.transform(i4, _cC4a.data());
+        _bB41 = DST::integral(_ssig1, _csig1, _cC4a.data(), _nC4);
+      }
     }
 
     _a13 = _s13 = Math::NaN();
@@ -229,8 +240,8 @@ namespace GeographicLib {
     }
 
     if (outmask & AREA) {
-      real
-        B42 = GeodesicExact::CosSeries(ssig2, csig2, _cC4a, nC4_);
+      real B42 = _aA4 == 0 ? 0 :
+        DST::integral(ssig2, csig2, _cC4a.data(), _nC4);
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize

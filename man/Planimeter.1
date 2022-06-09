@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2022-05-06" "GeographicLib 2.0" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2022-06-09" "GeographicLib 2.1" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -161,14 +161,14 @@ and the start of the next.  For each polygon print a summary line with
 the number of points, the perimeter (in meters), and the area (in
 meters^2).
 .PP
-The edges of the polygon are given by the \fIshortest\fR geodesic between
-consecutive vertices.  In certain cases, there may be two or many such
-shortest geodesics, and in that case, the polygon is not uniquely
-specified by its vertices.  This only happens with very long edges (for
-the \s-1WGS84\s0 ellipsoid, any edge shorter than 19970 km is uniquely
-specified by its end points).  In such cases, insert an additional
-vertex near the middle of the long edge to define the boundary of the
-polygon.
+The edges of the polygon are given by the \fIshortest\fR geodesic (or
+rhumb line) between consecutive vertices.  In certain cases, there may
+be two or many such shortest path, and in that case, the polygon is
+not uniquely specified by its vertices.  For geodesics, this only
+happens with very long edges (for the \s-1WGS84\s0 ellipsoid, any edge
+shorter than 19970 km is uniquely specified by its end points).  In
+such cases, insert an additional vertex near the middle of the long
+edge to define the boundary of the polygon.
 .PP
 By default, polygons traversed in a counter-clockwise direction return a
 positive area and those traversed in a clockwise direction return a
@@ -233,10 +233,11 @@ mutually exclusive.
 .IP "\fB\-E\fR" 4
 .IX Item "-E"
 use \*(L"exact\*(R" algorithms (based on elliptic integrals) for the geodesic
-calculations.  These are more accurate than the (default) series
-expansions for |\fIf\fR| > 0.02.  (But note that the implementation of
-areas in GeodesicExact uses a high order series and this is only
-accurate for modest flattenings.)
+calculations; the area is computed by applying discrete sine
+transforms to the integrand in the expression for the area.  These are
+more accurate, albeit slower, than the (default) series expansions for
+|\fIf\fR| > 0.02 and will give high accuracy for \-99 X \fIf\fR X
+0.99.
 .IP "\fB\-Q\fR" 4
 .IX Item "-Q"
 perform the calculation on the authalic sphere.  The area calculation is

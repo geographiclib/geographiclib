@@ -139,15 +139,15 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libGeographicLib_la_LIBADD =
 am_libGeographicLib_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
 	AzimuthalEquidistant.lo CassiniSoldner.lo CircularEngine.lo \
-	DMS.lo Ellipsoid.lo EllipticFunction.lo GARS.lo GeoCoords.lo \
-	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicLine.lo \
-	GeodesicLineExact.lo Geohash.lo Geoid.lo Georef.lo Gnomonic.lo \
-	GravityCircle.lo GravityModel.lo LambertConformalConic.lo \
-	LocalCartesian.lo MGRS.lo MagneticCircle.lo MagneticModel.lo \
-	Math.lo NormalGravity.lo OSGB.lo PolarStereographic.lo \
-	PolygonArea.lo Rhumb.lo SphericalEngine.lo \
-	TransverseMercator.lo TransverseMercatorExact.lo UTMUPS.lo \
-	Utility.lo
+	DMS.lo DST.lo Ellipsoid.lo EllipticFunction.lo GARS.lo \
+	GeoCoords.lo Geocentric.lo Geodesic.lo GeodesicExact.lo \
+	GeodesicLine.lo GeodesicLineExact.lo Geohash.lo Geoid.lo \
+	Georef.lo Gnomonic.lo GravityCircle.lo GravityModel.lo \
+	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
+	MagneticCircle.lo MagneticModel.lo Math.lo NormalGravity.lo \
+	OSGB.lo PolarStereographic.lo PolygonArea.lo Rhumb.lo \
+	SphericalEngine.lo TransverseMercator.lo \
+	TransverseMercatorExact.lo UTMUPS.lo Utility.lo
 libGeographicLib_la_OBJECTS = $(am_libGeographicLib_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -176,14 +176,15 @@ am__depfiles_remade = ./$(DEPDIR)/Accumulator.Plo \
 	./$(DEPDIR)/AlbersEqualArea.Plo \
 	./$(DEPDIR)/AzimuthalEquidistant.Plo \
 	./$(DEPDIR)/CassiniSoldner.Plo ./$(DEPDIR)/CircularEngine.Plo \
-	./$(DEPDIR)/DMS.Plo ./$(DEPDIR)/Ellipsoid.Plo \
-	./$(DEPDIR)/EllipticFunction.Plo ./$(DEPDIR)/GARS.Plo \
-	./$(DEPDIR)/GeoCoords.Plo ./$(DEPDIR)/Geocentric.Plo \
-	./$(DEPDIR)/Geodesic.Plo ./$(DEPDIR)/GeodesicExact.Plo \
-	./$(DEPDIR)/GeodesicLine.Plo ./$(DEPDIR)/GeodesicLineExact.Plo \
-	./$(DEPDIR)/Geohash.Plo ./$(DEPDIR)/Geoid.Plo \
-	./$(DEPDIR)/Georef.Plo ./$(DEPDIR)/Gnomonic.Plo \
-	./$(DEPDIR)/GravityCircle.Plo ./$(DEPDIR)/GravityModel.Plo \
+	./$(DEPDIR)/DMS.Plo ./$(DEPDIR)/DST.Plo \
+	./$(DEPDIR)/Ellipsoid.Plo ./$(DEPDIR)/EllipticFunction.Plo \
+	./$(DEPDIR)/GARS.Plo ./$(DEPDIR)/GeoCoords.Plo \
+	./$(DEPDIR)/Geocentric.Plo ./$(DEPDIR)/Geodesic.Plo \
+	./$(DEPDIR)/GeodesicExact.Plo ./$(DEPDIR)/GeodesicLine.Plo \
+	./$(DEPDIR)/GeodesicLineExact.Plo ./$(DEPDIR)/Geohash.Plo \
+	./$(DEPDIR)/Geoid.Plo ./$(DEPDIR)/Georef.Plo \
+	./$(DEPDIR)/Gnomonic.Plo ./$(DEPDIR)/GravityCircle.Plo \
+	./$(DEPDIR)/GravityModel.Plo \
 	./$(DEPDIR)/LambertConformalConic.Plo \
 	./$(DEPDIR)/LocalCartesian.Plo ./$(DEPDIR)/MGRS.Plo \
 	./$(DEPDIR)/MagneticCircle.Plo ./$(DEPDIR)/MagneticModel.Plo \
@@ -408,6 +409,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 		CassiniSoldner.cpp \
 		CircularEngine.cpp \
 		DMS.cpp \
+		DST.cpp \
 		Ellipsoid.cpp \
 		EllipticFunction.cpp \
 		GARS.cpp \
@@ -439,6 +441,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
 		Utility.cpp \
+		kissfft.hh \
 		../include/GeographicLib/Accumulator.hpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -484,7 +487,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 		../include/GeographicLib/Config.h
 
 geographiclib_data = $(datadir)/GeographicLib
-EXTRA_DIST = CMakeLists.txt
+EXTRA_DIST = CMakeLists.txt kissfft.hh
 all: all-am
 
 .SUFFIXES:
@@ -569,6 +572,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CassiniSoldner.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CircularEngine.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DMS.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DST.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Ellipsoid.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EllipticFunction.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GARS.Plo@am__quote@ # am--include-marker
@@ -768,6 +772,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/CassiniSoldner.Plo
 	-rm -f ./$(DEPDIR)/CircularEngine.Plo
 	-rm -f ./$(DEPDIR)/DMS.Plo
+	-rm -f ./$(DEPDIR)/DST.Plo
 	-rm -f ./$(DEPDIR)/Ellipsoid.Plo
 	-rm -f ./$(DEPDIR)/EllipticFunction.Plo
 	-rm -f ./$(DEPDIR)/GARS.Plo
@@ -850,6 +855,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/CassiniSoldner.Plo
 	-rm -f ./$(DEPDIR)/CircularEngine.Plo
 	-rm -f ./$(DEPDIR)/DMS.Plo
+	-rm -f ./$(DEPDIR)/DST.Plo
 	-rm -f ./$(DEPDIR)/Ellipsoid.Plo
 	-rm -f ./$(DEPDIR)/EllipticFunction.Plo
 	-rm -f ./$(DEPDIR)/GARS.Plo

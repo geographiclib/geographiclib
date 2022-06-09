@@ -2,7 +2,7 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
-set (PROJECT_VERSION_MINOR 0)
+set (PROJECT_VERSION_MINOR 1)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -48,8 +48,8 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION_API 22)
-set (LIBVERSION_BUILD 22.0.0)
+set (LIBVERSION_API 23)
+set (LIBVERSION_BUILD 23.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -193,8 +193,9 @@ else ()
   set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
-# Installation directories.  An empty string disables installation of
-# that component.  These are all relative to CMAKE_INSTALL_PREFIX.
+# Installation directories.  An empty string or "OFF" disables
+# installation of that component.  These are all relative to
+# CMAKE_INSTALL_PREFIX.
 
 # Installation is to ${INCDIR}/GeographicLib
 set (INCDIR "include" CACHE STRING "Where to install header files")
@@ -277,7 +278,7 @@ include (CheckCXXCompilerFlag)
 if (MSVC)
   string (REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   # Turn on parallel builds for Visual Studio
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /MP")
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++latest /MP")
 else ()
   set (FLOAT_CONVERSION_FLAG "-Wfloat-conversion")
   check_cxx_compiler_flag (${FLOAT_CONVERSION_FLAG} FLOAT_CONVERSION)

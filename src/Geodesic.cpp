@@ -30,9 +30,9 @@
 #include <GeographicLib/GeodesicLine.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about potentially uninitialized local variables and
-// constant conditional expressions
-#  pragma warning (disable: 4701 4127)
+// Squelch warnings about potentially uninitialized local variables,
+// constant conditional and enum-float expressions and mixing enums
+#  pragma warning (disable: 4701 4127 5055 5054)
 #endif
 
 namespace GeographicLib {
@@ -361,18 +361,23 @@ namespace GeographicLib {
           if (numit < maxit1_ && dv > 0) {
             real
               dalp1 = -v/dv;
-            real
-              sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
-              nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
-            if (nsalp1 > 0 && fabs(dalp1) < Math::pi()) {
-              calp1 = calp1 * cdalp1 - salp1 * sdalp1;
-              salp1 = nsalp1;
-              Math::norm(salp1, calp1);
-              // In some regimes we don't get quadratic convergence because
-              // slope -> 0.  So use convergence conditions based on epsilon
-              // instead of sqrt(epsilon).
-              tripn = fabs(v) <= 16 * tol0_;
-              continue;
+            // |dalp1| < pi test moved earlier because GEOGRAPHICLIB_PRECISION
+            // = 5 can result in dalp1 = 10^(10^8).  Then sin(dalp1) takes ages
+            // (because of the need to do accurate range reduction).
+            if (fabs(dalp1) < Math::pi()) {
+              real
+                sdalp1 = sin(dalp1), cdalp1 = cos(dalp1),
+                nsalp1 = salp1 * cdalp1 + calp1 * sdalp1;
+              if (nsalp1 > 0) {
+                calp1 = calp1 * cdalp1 - salp1 * sdalp1;
+                salp1 = nsalp1;
+                Math::norm(salp1, calp1);
+                // In some regimes we don't get quadratic convergence because
+                // slope -> 0.  So use convergence conditions based on epsilon
+                // instead of sqrt(epsilon).
+                tripn = fabs(v) <= 16 * tol0_;
+                continue;
+              }
             }
           }
           // Either dv was not positive or updated value was outside legal

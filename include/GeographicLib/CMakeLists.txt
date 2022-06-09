@@ -8,6 +8,7 @@ set (HEADERS
   CircularEngine.hpp
   Constants.hpp
   DMS.hpp
+  DST.hpp
   Ellipsoid.hpp
   EllipticFunction.hpp
   GARS.hpp

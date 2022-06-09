@@ -110,10 +110,10 @@ namespace GeographicLib {
 #endif
 
     /**
-     * The constants defining the meaning of degrees, minutes, and seconds, for
-     * angles.  Read the
-     * constants as follows (for example): \e ms = 60 is the ratio 1 minute / 1
-     * second.  The abbreviations are
+     * The constants defining the standard (Babylonian) meanings of degrees,
+     * minutes, and seconds, for angles.  Read the constants as follows (for
+     * example): \e ms = 60 is the ratio 1 minute / 1 second.  The
+     * abbreviations are
      * - \e t a whole turn (360&deg;)
      * - \e h a half turn (180&deg;)
      * - \e q a quarter turn (a right angle = 90&deg;)
@@ -130,7 +130,7 @@ namespace GeographicLib {
      * that Math::dm and Math::ms are less than or equal to 100 (so that two
      * digits suffice for the integer parts of the minutes and degrees
      * components of an angle).  Switching to the centesimal convention will
-     * break most of the tests.  Also the normal degree definition is baked
+     * break most of the tests.  Also the normal definition of degree is baked
      * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
      **********************************************************************/
 #if GEOGRAPHICLIB_PRECISION == 4
@@ -198,7 +198,7 @@ namespace GeographicLib {
      * @return the number of radians in a degree.
      **********************************************************************/
     template<typename T = real> static T degree() {
-      static const T degree = pi<T>() / hd;
+      static const T degree = pi<T>() / T(hd);
       return degree;
     }
 
@@ -258,19 +258,20 @@ namespace GeographicLib {
      *
      * @tparam T the type of the arguments and returned value.
      * @param[in] N the order of the polynomial.
-     * @param[in] p the coefficient array (of size \e N + 1).
+     * @param[in] p the coefficient array (of size \e N + 1) with
+     *   <i>p</i><sub>0</sub> being coefficient of <i>x</i><sup><i>N</i></sup>.
      * @param[in] x the variable.
      * @return the value of the polynomial.
      *
-     * Evaluate <i>y</i> = &sum;<sub><i>n</i>=0..<i>N</i></sub>
+     * Evaluate &sum;<sub><i>n</i>=0..<i>N</i></sub>
      * <i>p</i><sub><i>n</i></sub> <i>x</i><sup><i>N</i>&minus;<i>n</i></sup>.
      * Return 0 if \e N &lt; 0.  Return <i>p</i><sub>0</sub>, if \e N = 0 (even
      * if \e x is infinite or a nan).  The evaluation uses Horner's method.
      **********************************************************************/
     template<typename T> static T polyval(int N, const T p[], T x) {
-    // This used to employ Math::fma; but that's too slow and it seemed not to
-    // improve the accuracy noticeably.  This might change when there's direct
-    // hardware support for fma.
+      // This used to employ Math::fma; but that's too slow and it seemed not
+      // to improve the accuracy noticeably.  This might change when there's
+      // direct hardware support for fma.
       T y = N < 0 ? 0 : *p++;
       while (--N >= 0) y = y * x + *p++;
       return y;
@@ -297,7 +298,7 @@ namespace GeographicLib {
      *   return NaN.
      **********************************************************************/
     template<typename T> static T LatFix(T x)
-    { using std::fabs; return fabs(x) > qd ? NaN<T>() : x; }
+    { using std::fabs; return fabs(x) > T(qd) ? NaN<T>() : x; }
 
     /**
      * The exact difference of two angles reduced to

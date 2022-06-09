@@ -12,16 +12,12 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-
-#if !defined(GEOGRAPHICLIB_GEODESICEXACT_ORDER)
-/**
- * The order of the expansions used by GeodesicExact.
- **********************************************************************/
-#  define GEOGRAPHICLIB_GEODESICEXACT_ORDER 30
-#endif
+#include <GeographicLib/DST.hpp>
+#include <vector>
 
 namespace GeographicLib {
 
+  class GEOGRAPHICLIB_EXPORT DST;
   class GeodesicLineExact;
 
   /**
@@ -62,9 +58,10 @@ namespace GeographicLib {
    *       128     19024
    * </pre>
    *
-   * The computation of the area in these classes is via a 30th order series.
-   * This gives accurate results for <i>b</i>/\e a &isin; [1/2, 2]; the
-   * accuracy is about 8 decimal digits for <i>b</i>/\e a &isin; [1/4, 4].
+   * The area in this classes is computing by finding an accurate approximation
+   * to the area integrand using a discrete sine transform fitting \e N equally
+   * spaced points in &sigma;.  \e N chosen to ensure full accuracy for
+   * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [&minus;99, 0.99].
    *
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesic problems.
@@ -81,8 +78,6 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;
-    static const int nC4_ = GEOGRAPHICLIB_GEODESICEXACT_ORDER;
-    static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
@@ -100,11 +95,11 @@ namespace GeographicLib {
       OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
     };
 
-    static real CosSeries(real sinx, real cosx, const real c[], int n);
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _cC4x[nC4x_];
+    int _nC4;
+    DST _fft;
 
     void Lengths(const EllipticFunction& E,
                  real sig12,
@@ -131,33 +126,18 @@ namespace GeographicLib {
                     real& salp1, real& calp1, real& salp2, real& calp2,
                     real& m12, real& M12, real& M21, real& S12) const;
 
-    // These are Maxima generated functions to provide series approximations to
-    // the integrals for the area.
-    void C4coeff();
-    void C4f(real k2, real c[]) const;
-    // Large coefficients are split so that lo contains the low 52 bits and hi
-    // the rest.  This choice avoids double rounding with doubles and higher
-    // precision types.  float coefficients will suffer double rounding;
-    // however the accuracy is already lousy for floats.
-    static Math::real reale(long long y, long long z) {
-      using std::ldexp;
-      return ldexp(real(y), 52) + z;
-    }
-#if GEOGRAPHICLIB_GEODESICEXACT_ORDER > 30
-    // These are currently unused extended versions of reale needed really
-    // large coefficients (when using 64th order series).  Such coefficients
-    // would overflow floats.
-    static Math::real reale(long long x, long long y, long long z) {
-      using std::ldexp;
-      return ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z);
-    }
-    static Math::real reale(long long w, long long x,
-                            long long y, long long z) {
-      using std::ldexp;
-      return ldexp(real(w), 3*52) +
-        (ldexp(real(x), 2*52) + (ldexp(real(y), 52) + z));
-    }
-#endif
+    class I4Integrand {
+    private:
+      real X, tX, tdX, sX, sX1, sXX1, asinhsX, _k2;
+      static real asinhsqrt(real x);
+      static real t(real x);
+      static real td(real x);
+      // static real Dt(real x, real y);
+      real DtX(real y) const;
+    public:
+      I4Integrand(real ep2, real k2);
+      real operator()(real sig) const;
+    };
 
   public:
 

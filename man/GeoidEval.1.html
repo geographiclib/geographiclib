@@ -21,7 +21,7 @@
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
-<p><b>GeoidEval</b> reads in positions on standard input and prints out the corresponding heights of the geoid above the WGS84 ellipsoid on standard output.</p>
+<p><b>GeoidEval</b> reads in positions on standard input and prints out the corresponding heights of the geoid model above the WGS84 ellipsoid on standard output.</p>
 
 <p>Positions are given as latitude and longitude, UTM/UPS, or MGRS, in any of the formats accepted by GeoConvert(1). (MGRS coordinates signify the <i>center</i> of the corresponding MGRS square.) If the <b>-z</b> option is specified then the specified zone is prepended to each line of input (which must be in UTM/UPS coordinates). This allows a file with UTM eastings and northings in a single zone to be used as standard input.</p>
 
@@ -42,7 +42,7 @@
 <dt id="n-name"><b>-n</b> <i>name</i></dt>
 <dd>
 
-<p>use geoid <i>name</i> instead of the default <code>egm96-5</code>. See <a href="#GEOIDS">&quot;GEOIDS&quot;</a>.</p>
+<p>use <i>name</i> for the geoid model instead of the default <code>egm96-5</code>. See <a href="#GEOIDS">&quot;GEOIDS&quot;</a>.</p>
 
 </dd>
 <dt id="d-dir"><b>-d</b> <i>dir</i></dt>
@@ -96,7 +96,7 @@
 <dt id="v"><b>-v</b></dt>
 <dd>
 
-<p>print information about the geoid on standard error before processing the input.</p>
+<p>print information about the geoid model on standard error before processing the input.</p>
 
 </dd>
 <dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
@@ -114,7 +114,7 @@
 <dt id="h"><b>-h</b></dt>
 <dd>
 
-<p>print usage, the default geoid path and name, and exit.</p>
+<p>print usage, the default path and name for geoid models, and exit.</p>
 
 </dd>
 <dt id="help"><b>--help</b></dt>
@@ -151,7 +151,7 @@
 
 <h1 id="GEOIDS">GEOIDS</h1>
 
-<p><b>GeoidEval</b> computes geoid heights by interpolating on the data in a regularly spaced table (see <a href="#INTERPOLATION">&quot;INTERPOLATION&quot;</a>). The following geoid tables are available (however, some may not be installed):</p>
+<p><b>GeoidEval</b> computes geoid heights by interpolating on the data in a regularly spaced table (see <a href="#INTERPOLATION">&quot;INTERPOLATION&quot;</a>). The following geoid grids are available (however, some may not be installed):</p>
 
 <pre><code>                               bilinear error    cubic error
 name         geoid    grid     max      rms      max      rms
@@ -163,9 +163,9 @@ egm2008-5    EGM2008   5&#39;      0.478 m  12 mm    0.294 m  4.5 mm
 egm2008-2_5  EGM2008   2.5&#39;    0.135 m  3.2 mm   0.031 m  0.8 mm
 egm2008-1    EGM2008   1&#39;      0.025 m  0.8 mm   .0022 m  0.7 mm</code></pre>
 
-<p>By default, the <code>egm96-5</code> geoid is used. This may changed by setting the environment variable <code>GEOGRAPHICLIB_GEOID_NAME</code> or with the <b>-n</b> option. The errors listed here are estimates of the quantization and interpolation errors in the reported heights compared to the specified geoid.</p>
+<p>By default, the <code>egm96-5</code> geoid model is used. This may changed by setting the environment variable <code>GEOGRAPHICLIB_GEOID_NAME</code> or with the <b>-n</b> option. The errors listed here are estimates of the quantization and interpolation errors in the reported heights compared to the specified geoid.</p>
 
-<p>The geoid data will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GEOGRAPHICLIB_GEOID_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default geoid path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
+<p>The geoid model data will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GEOGRAPHICLIB_GEOID_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default geoid path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
 
 <p>Instructions for downloading and installing geoid data are available at <a href="https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst">https://geographiclib.sourceforge.io/C++/doc/geoid.html#geoidinst</a>.</p>
 

@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOIDEVAL 1"
-.TH GEOIDEVAL 1 "2022-05-06" "GeographicLib 2.0" "GeographicLib Utilities"
+.TH GEOIDEVAL 1 "2022-06-09" "GeographicLib 2.1" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -154,8 +154,8 @@ GeoidEval \-\- look up geoid heights
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 \&\fBGeoidEval\fR reads in positions on standard input and prints out the
-corresponding heights of the geoid above the \s-1WGS84\s0 ellipsoid on standard
-output.
+corresponding heights of the geoid model above the \s-1WGS84\s0 ellipsoid on
+standard output.
 .PP
 Positions are given as latitude and longitude, \s-1UTM/UPS,\s0 or \s-1MGRS,\s0 in any
 of the formats accepted by \fBGeoConvert\fR\|(1).  (\s-1MGRS\s0 coordinates signify the
@@ -180,7 +180,7 @@ using the relations
 .IX Header "OPTIONS"
 .IP "\fB\-n\fR \fIname\fR" 4
 .IX Item "-n name"
-use geoid \fIname\fR instead of the default \f(CW\*(C`egm96\-5\*(C'\fR.  See
+use \fIname\fR for the geoid model instead of the default \f(CW\*(C`egm96\-5\*(C'\fR.  See
 \&\*(L"\s-1GEOIDS\*(R"\s0.
 .IP "\fB\-d\fR \fIdir\fR" 4
 .IX Item "-d dir"
@@ -224,8 +224,8 @@ as a height (in meters) above the ellipsoid and the output echoes the
 input line with the height converted to height above the geoid (\s-1MSL\s0).
 .IP "\fB\-v\fR" 4
 .IX Item "-v"
-print information about the geoid on standard error before processing
-the input.
+print information about the geoid model on standard error before
+processing the input.
 .IP "\fB\-\-comment\-delimiter\fR \fIcommentdelim\fR" 4
 .IX Item "--comment-delimiter commentdelim"
 set the comment delimiter to \fIcommentdelim\fR (e.g., \*(L"#\*(R" or \*(L"//\*(R").  If
@@ -238,7 +238,7 @@ space).
 print version and exit.
 .IP "\fB\-h\fR" 4
 .IX Item "-h"
-print usage, the default geoid path and name, and exit.
+print usage, the default path and name for geoid models, and exit.
 .IP "\fB\-\-help\fR" 4
 .IX Item "--help"
 print full documentation and exit.
@@ -263,7 +263,7 @@ file name of \*(L"\-\*(R" stands for standard output.
 .IX Header "GEOIDS"
 \&\fBGeoidEval\fR computes geoid heights by interpolating on the data in a
 regularly spaced table (see \*(L"\s-1INTERPOLATION\*(R"\s0).  The following geoid
-tables are available (however, some may not be installed):
+grids are available (however, some may not be installed):
 .PP
 .Vb 9
 \&                                  bilinear error    cubic error
@@ -277,17 +277,18 @@ tables are available (however, some may not be installed):
 \&   egm2008\-1    EGM2008   1\*(Aq      0.025 m  0.8 mm   .0022 m  0.7 mm
 .Ve
 .PP
-By default, the \f(CW\*(C`egm96\-5\*(C'\fR geoid is used.  This may changed by setting
-the environment variable \f(CW\*(C`GEOGRAPHICLIB_GEOID_NAME\*(C'\fR or with the \fB\-n\fR
-option.  The errors listed here are estimates of the quantization and
-interpolation errors in the reported heights compared to the specified
-geoid.
+By default, the \f(CW\*(C`egm96\-5\*(C'\fR geoid model is used.  This may changed by
+setting the environment variable \f(CW\*(C`GEOGRAPHICLIB_GEOID_NAME\*(C'\fR or with
+the \fB\-n\fR option.  The errors listed here are estimates of the
+quantization and interpolation errors in the reported heights compared
+to the specified geoid.
 .PP
-The geoid data will be loaded from a directory specified at compile
-time.  This may changed by setting the environment variables
-\&\f(CW\*(C`GEOGRAPHICLIB_GEOID_PATH\*(C'\fR or \f(CW\*(C`GEOGRAPHICLIB_DATA\*(C'\fR, or with the \fB\-d\fR
-option.  The \fB\-h\fR option prints the default geoid path and name.  Use
-the \fB\-v\fR option to ascertain the full path name of the data file.
+The geoid model data will be loaded from a directory specified at
+compile time.  This may changed by setting the environment variables
+\&\f(CW\*(C`GEOGRAPHICLIB_GEOID_PATH\*(C'\fR or \f(CW\*(C`GEOGRAPHICLIB_DATA\*(C'\fR, or with the
+\&\fB\-d\fR option.  The \fB\-h\fR option prints the default geoid path and
+name.  Use the \fB\-v\fR option to ascertain the full path name of the
+data file.
 .PP
 Instructions for downloading and installing geoid data are available at
 <https://geographiclib.sourceforge.io/\*(C+/doc/geoid.html#geoidinst>.

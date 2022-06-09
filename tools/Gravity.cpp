@@ -19,9 +19,9 @@
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions and potentially
-// uninitialized local variables
-#  pragma warning (disable: 4127 4701)
+// Squelch warnings about constant conditional and enum-float expressions
+// and potentially uninitialized local variables
+#  pragma warning (disable: 4127 5055 4701)
 #endif
 
 #include "Gravity.usage"

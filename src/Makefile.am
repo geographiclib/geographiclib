@@ -15,6 +15,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 		CassiniSoldner.cpp \
 		CircularEngine.cpp \
 		DMS.cpp \
+		DST.cpp \
 		Ellipsoid.cpp \
 		EllipticFunction.cpp \
 		GARS.cpp \
@@ -46,6 +47,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 		TransverseMercatorExact.cpp \
 		UTMUPS.cpp \
 		Utility.cpp \
+		kissfft.hh \
 		../include/GeographicLib/Accumulator.hpp \
 		../include/GeographicLib/AlbersEqualArea.hpp \
 		../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -103,4 +105,4 @@ geographiclib_data=$(datadir)/GeographicLib
 
 DEFS=-DGEOGRAPHICLIB_DATA=\"$(geographiclib_data)\" @DEFS@
 
-EXTRA_DIST = CMakeLists.txt
+EXTRA_DIST = CMakeLists.txt kissfft.hh
