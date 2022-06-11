@@ -559,7 +559,7 @@ set_tests_properties (GeodSolve96 GeodSolve97 PROPERTIES PASS_REGULAR_EXPRESSION
 # Area of on high eccentricity n = 0.94 ellipsoid.  This is the most
 # oblate case that Nowak + Nowak Da Costa (2022) treats (convergence
 # with kmax = 18504).  High precision result is 5910062452739.93899501;
-# Accept xxx.930 thru xx.949
+# Accept xxx.930 thru xxx.949
 add_test (NAME GeodSolve98 COMMAND GeodSolve
   -E -a -u -f -e 6.4e6 188/194 -p 10 --input-string "0 0 45 90")
 set_tests_properties (GeodSolve98 PROPERTIES PASS_REGULAR_EXPRESSION
