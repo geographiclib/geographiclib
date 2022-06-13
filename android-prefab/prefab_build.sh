@@ -80,7 +80,7 @@ pushd build/prefab
   zip -Tv geographiclib-${version}.zip 2>/dev/null;
 
   # Verify that the zip contents are correct (see output below to verify)
-  result=$?; 
+  result=$?;
   if [[ $result == 0 ]]; then
     echo "Zip verified"
   else
