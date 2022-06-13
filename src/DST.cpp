@@ -67,7 +67,7 @@ namespace GeographicLib {
     fft_transform(data, F+_N, true);
     for (int i = 0; i < _N; ++i) data[i] = F[i+_N];
     for (int i = _N; i < 2*_N; ++i)
-      F[i] = (-data[2*_N-1-i] + F[2*_N-1-i])/2;
+      F[i] = (data[2*_N-1-i] - F[2*_N-1-i])/2;
     for (int i = 0; i < _N; ++i)
       F[i] = (data[i] + F[i])/2;
   }
