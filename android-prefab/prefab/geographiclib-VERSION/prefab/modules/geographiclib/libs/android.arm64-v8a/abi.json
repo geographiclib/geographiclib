@@ -1,0 +1,7 @@
+{
+    "abi": "arm64-v8a",
+    "api": 21,
+    "ndk": 24,
+    "stl": "c++_shared",
+    "static": true
+}
