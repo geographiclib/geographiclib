@@ -63,12 +63,14 @@ namespace GeographicLib {
     // should have size of at least 2*N.  On input elements [0,N) of F contain
     // the size N transform; on output elements [0,2*N) of F contain the size
     // 2*N transform.
-
     fft_transform(data, F+_N, true);
+    // Copy DST-IV order N tx to [0,N) elements of data
     for (int i = 0; i < _N; ++i) data[i] = F[i+_N];
     for (int i = _N; i < 2*_N; ++i)
+      // (DST-IV order N - DST-III order N) / 2
       F[i] = (data[2*_N-1-i] - F[2*_N-1-i])/2;
     for (int i = 0; i < _N; ++i)
+      // (DST-IV order N + DST-III order N) / 2
       F[i] = (data[i] + F[i])/2;
   }
 

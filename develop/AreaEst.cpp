@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include <limits>
 
@@ -3583,7 +3584,8 @@ void I4f(Math::real n, Math::real alp0, int N,
   fft_transform(in, I4, centerp, check);
 }
 
-// Scale to do the integal -1/(2*i + 1) and to normalize term to estimate error A4/c2;
+// Scale to do the integal -1/(2*l + 1) and to normalize term to estimate error
+// A4/c2;
 
 void C4f(Math::real n, Math::real alp0, int N,
          vector<Math::real>& C4, bool centerp = false) {
@@ -3596,8 +3598,8 @@ void C4f(Math::real n, Math::real alp0, int N,
            (n > 0 ? asinh(sqrt(ep2)) : atan(sqrt(-e2))) /
            sqrt(fabs(e2))))/2, // authalic radius squared
     A4 = Math::cosd(alp0) * Math::sind(alp0) * e2;
-  for (int i = 0; i < N; ++i)
-    C4[i] *= - A4/((2*i + 1) * c2);
+  for (int l = 0; l < N; ++l)
+    C4[l] *= - A4/((2*l + 1) * c2);
 }
 
 void C4falt(int prec, Math::real n, Math::real alp0, int N,
@@ -3630,15 +3632,27 @@ Math::real maxerr(const vector<Math::real> C4a, const vector<Math::real> C4b) {
   return err;
 }
 
+string bfloat(Math::real x) {
+  ostringstream str;
+  str << setprecision(Math::digits10()) << x;
+  string s = str.str();
+  string::size_type p = s.find('e', 0);
+  if (p == string::npos)
+    s = s + "b0";
+  else
+    s[p] = 'b';
+  return s;
+}
+
 int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
     if (argc < 2)
-      { cerr << "AreaEst mode ...\n"; return 1; }
+      { cerr << "AreaEst [estN|i4table|c4diff|c4arr] ...\n"; return 1; }
     string mode(argv[1]);
     if (mode == "estN") {
-      int Nmax, prec;
       if (argc != 4) { cerr << "AreaEst estN Nmax prec\n"; return 1; }
+      int Nmax, prec;
       Nmax = Utility::val<int>(string(argv[2]));
       prec = Utility::val<int>(string(argv[3]));
       vector<Math::real> C4ref, C4;
@@ -3659,8 +3673,8 @@ int main(int argc, const char* const argv[]) {
       default: eps = numeric_limits<double>::epsilon() / 2; break;
       }
       // The range of n in [-0.91, 0.91] the includes 1/20 < b/a < 20
-      cout << "epsilon = " << (prec > 0 ? eps :
-                               numeric_limits<double>::epsilon() / 2) << endl;
+      //      cout << "epsilon = " << (prec > 0 ? eps :
+      //       numeric_limits<double>::epsilon() / 2) << endl;
       for (int in = -99; in <= 99; ++in) {
         vector<Math::real> C4x;
         Math::real n = in/Math::real(100),
@@ -3751,20 +3765,147 @@ int main(int argc, const char* const argv[]) {
           if (ok) break;
           if (prec <= 0) break;
         }
-        Math::real erry = 0;
-        // Assess summing last few scaled coefficients as a less expensive
-        // error metric.  This metric is not being used -- probably should skip
-        // calculating and printing it.
         N = C4x.size();
-        for (int i = (31*N)/32; i < N; ++i)
+        /*
+          Math::real erry = 0;
+          // Assess summing last few scaled coefficients as a less expensive
+          // error metric.  This metric is not being used -- so
+          // skip calculating and printing it.
+          for (int i = (31*N)/32; i < N; ++i)
           erry = erry+fabs(C4x[i]);
-        cout << n << " " << N << " " << maxalp0 << " " << errx << " "
-             << erry/errx << endl;
+        */
+        cout << n << " " << N << " " << maxalp0 << " " << errx << endl;
       }
-    }
-    else if (mode == "i4table") {
-      Math::real n, alp0;
+    } else if (mode == "estN2") {
+      if (argc != 2) { cerr << "AreaEst estN2\n"; return 1; }
+      int Nmax = 9000, prec = 2;
+      vector<Math::real> C4ref, C4;
+      Math::real eps;
+      switch (prec) {
+        // prec = 0 means use 30th order taylor series
+        // prec = -1 means use N=30 DST
+      case -1:
+      case 0: eps = numeric_limits<Math::real>::infinity(); break; // Use TaylorI4
+      case 1: eps = numeric_limits<float>::epsilon() / 2; break;
+      case 2: eps = numeric_limits<double>::epsilon() / 2; break;
+      case 3: eps = numeric_limits<long double>::epsilon() / 2; break;
+      case 4: eps = pow(Math::real(0.5), 113); break;
+#if GEOGRAPHICLIB_PRECISION > 1
+        // Skip case 5 for float prec to avoid underflow to 0
+      case 5: eps = pow(Math::real(0.5), 256); break;
+#endif
+      default: eps = numeric_limits<double>::epsilon() / 2; break;
+      }
+      // The range of n in [-0.91, 0.91] the includes 1/20 < b/a < 20
+      //      cout << "epsilon = " << (prec > 0 ? eps :
+      //       numeric_limits<double>::epsilon() / 2) << endl;
+      for (int s = -1; s <= 1; s += 2) {
+        for (int in = 0; in <= 99; ++in) {
+          vector<Math::real> C4x;
+          Math::real n = s * (in ? in/Math::real(100) : 1/Math::real(1000)),
+            errx = -1,
+            maxalp0 = -1;
+          TaylorI4 tay(n);
+          int N = 4;
+          // Pick N = 2^k and 3*2^k: [4, 6, 8, 12, 16, 24, 32, ...]
+          Math::real alp0 = 10;
+          for (; N <= Nmax; N += (1 << max(0,int(log2(N))-5))) {
+            errx = -1;
+            alp0 = maxalp0;
+            maxalp0 = -1;
+            Math::real err;
+            C4f(n, alp0, 2*N, C4ref);
+            C4falt(prec, n, alp0, N, C4, tay);
+            err = maxerr(C4, C4ref);
+            // cerr << "A " << N << " " << alp0 << " " << err << "\n";
+            if (err > eps) continue;
+            bool ok = true;
+            for (int a = 1; a < 90; ++a) {
+              alp0 = a;
+              C4f(n, alp0, 2*N, C4ref);
+              C4falt(prec, n, alp0, N, C4, tay);
+              err = maxerr(C4, C4ref);
+              // cerr << "B " << N << " " << alp0 << " " << err << "\n";
+              if (err > eps) { ok = false; break; }
+              if (err > errx) {
+                errx = err; C4x = C4;
+                maxalp0 = alp0;
+              }
+            }
+            if (!ok) continue;
+            Math::real alp00 = maxalp0;
+            for (int a = -9; a < 10; ++a) {
+              alp0 = alp00 + a/Math::real(10);
+              C4f(n, alp0, 2*N, C4ref);
+              C4falt(prec, n, alp0, N, C4, tay);
+              err = maxerr(C4, C4ref);
+              // cerr << "C " << N << " " << alp0 << " " << err << "\n";
+              if (err > eps) { ok = false; break; }
+              if (err > errx) {
+                errx = err; C4x = C4;
+                maxalp0 = alp0;
+              }
+            }
+            if (!ok) continue;
+            alp00 = maxalp0;
+            for (int a = -9; a < 10; ++a) {
+              alp0 = alp00 + a/Math::real(100);
+              C4f(n, alp0, 2*N, C4ref);
+              C4falt(prec, n, alp0, N, C4, tay);
+              err = maxerr(C4, C4ref);
+              // cerr << "D " << N << " " << alp0 << " " << err << "\n";
+              if (err > eps) { ok = false; break; }
+              if (err > errx) {
+                errx = err; C4x = C4;
+                maxalp0 = alp0;
+              }
+            }
+            if (!ok) continue;
+            alp00 = maxalp0;
+            for (int a = -9; a < 10; ++a) {
+              alp0 = alp00 + a/Math::real(1000);
+              C4f(n, alp0, 2*N, C4ref);
+              C4falt(prec, n, alp0, N, C4, tay);
+              err = maxerr(C4, C4ref);
+              // cerr << "E " << N << " " << alp0 << " " << err << "\n";
+              if (err > eps) { ok = false; break; }
+              if (err > errx) {
+                errx = err; C4x = C4;
+                maxalp0 = alp0;
+              }
+            }
+            if (!ok) continue;
+            alp00 = maxalp0;
+            for (int a = -9; a < 10; ++a) {
+              alp0 = alp00 + a/Math::real(10000);
+              C4f(n, alp0, 2*N, C4ref);
+              C4falt(prec, n, alp0, N, C4, tay);
+              err = maxerr(C4, C4ref);
+              // cerr << "F " << N << " " << alp0 << " " << err << "\n";
+              if (err > eps) { ok = false; break; }
+              if (err > errx) {
+                errx = err; C4x = C4;
+                maxalp0 = alp0;
+              }
+            }
+            if (ok) break;
+            if (prec <= 0) break;
+          }
+          N = C4x.size();
+          /*
+            Math::real erry = 0;
+            // Assess summing last few scaled coefficients as a less expensive
+            // error metric.  This metric is not being used -- so
+            // skip calculating and printing it.
+            for (int i = (31*N)/32; i < N; ++i)
+            erry = erry+fabs(C4x[i]);
+          */
+          cout << n << " " << N << " " << maxalp0 << " " << errx << endl;
+        }
+      }
+    } else if (mode == "i4table") {
       if (argc != 4) { cerr << "AreaEst i4table n alp0\n"; return 1; }
+      Math::real n, alp0;
       n = Utility::val<Math::real>(string(argv[2]));
       alp0 = Utility::val<Math::real>(string(argv[3]));
       int N = 1024;
@@ -3773,11 +3914,56 @@ int main(int argc, const char* const argv[]) {
       C4f(n, alp0, N, C4);
       cout << setprecision(17);
       for (int i = 0; i <= m; ++i) {
-       Math::real sig = Math::real(90) * i / m, ssig, csig;
+       Math::real sig = i * Math::real(90) / m, ssig, csig;
        Math::sincosd(sig, ssig, csig);
        cout << sig << " "
             << CosSeries(ssig, csig, C4.data(), N) << "\n";
      }
+    } else if (mode == "c4diff") {
+      if (argc != 5) { cerr << "AreaEst c4diff n alp0 N0\n"; return 1; }
+      Math::real n = Utility::val<Math::real>(string(argv[2])),
+        alp0 = Utility::val<Math::real>(string(argv[3]));
+      int N0 = Utility::val<int>(string(argv[4]));
+      vector<Math::real> C4ref, C4;
+      C4f(n, alp0, 4*N0, C4ref);
+      cout << setprecision(17);
+      for (int N = 4; N <= N0; ++N) {
+        C4f(n, alp0, N, C4);
+        cout << N;
+        for (int l = 0; l < N0; ++l)
+          cout << " " << (l < N ? C4[l] : 0) - C4ref[l];
+        cout << "\n";
+      }
+    } else if (mode == "c4arr") {
+      if (argc != 5) { cerr << "AreaEst c4arr n alp0 N\n"; return 1; }
+      Math::real n = Utility::val<Math::real>(string(argv[2])),
+        alp0 = Utility::val<Math::real>(string(argv[3]));
+      int N = Utility::val<int>(string(argv[4]));
+      Math::real salp0, calp0;
+      Math::sincosd(alp0, salp0, calp0);
+      Math::real ep2 = 4*n/Math::sq(1 - n),
+        e2 = 4*n/Math::sq(1 + n),
+        k2 = ep2 * Math::sq(calp0),
+        eps = k2 / (2 * (1 + sqrt(1 + k2)) + k2),
+        c2 = (1 + Math::sq((1-n)/(1+n)) *
+              (n == 0 ? 1 :
+               (n > 0 ? asinh(sqrt(ep2)) : atan(sqrt(-e2))) /
+               sqrt(fabs(e2))))/2, // authalic radius squared
+        A4 = Math::cosd(alp0) * Math::sind(alp0) * e2;
+      cout << "(fpprec:" << Math::digits10()
+           << ",\nN:" << N
+           << ",\nnx:" << bfloat(n)
+           << ",\nalp0x:" << bfloat(alp0)
+           << ",\nepsx:" << bfloat(eps)
+           << ",\nnorm:" << bfloat(A4/c2);
+      vector<Math::real> C4;
+      C4f(n, alp0, 4*N, C4);
+      for (int l = 0; l < N; ++l)
+        cout << ",\nC40[" << l << "]:" << bfloat(C4[l]);
+      cout << ")$\n";
+    } else {
+      cerr << "Unknown mode " << mode << "\n";
+      return 1;
     }
   }
   catch (const std::exception& e) {

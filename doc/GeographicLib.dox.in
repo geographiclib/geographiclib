@@ -5062,7 +5062,7 @@ References:
  - W. M. Kahan and R. J. Fateman,
    <a href="https://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf">
    Symbolic computation of divided differences</a>,
-   SIGSAM Bull. 33(3), 7--28 (1999)
+   SIGSAM Bull. 33(2), 7--28 (1999)
    DOI: <a href="https://doi.org/10.1145/334714.334716">
    10.1145/334714.334716</a>.
  - C. F. F. Karney,
