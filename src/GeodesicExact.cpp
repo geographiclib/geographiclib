@@ -51,7 +51,7 @@ namespace GeographicLib {
       // which otherwise failed for Visual Studio 10 (Release and Debug)
     , tol1_(200 * tol0_)
     , tol2_(sqrt(tol0_))
-    , tolb_(tol0_ * tol2_)      // Check on bisection interval
+    , tolb_(tol0_)              // Check on bisection interval
     , xthresh_(1000 * tol2_)
     , _a(a)
     , _f(f)
@@ -625,9 +625,7 @@ namespace GeographicLib {
         unsigned numit = 0;
         // Bracketing range
         real salp1a = tiny_, calp1a = 1, salp1b = tiny_, calp1b = -1;
-        for (bool tripn = false, tripb = false;
-             numit < maxit2_ || GEOGRAPHICLIB_PANIC;
-             ++numit) {
+        for (bool tripn = false, tripb = false;; ++numit) {
           // 1/4 meridian = 10e6 m and random input.  max err is estimated max
           // error in nm (checking solution of inverse problem by direct
           // solution).  iter is mean and sd of number of iterations
@@ -654,8 +652,12 @@ namespace GeographicLib {
                             slam12, clam12,
                             salp2, calp2, sig12, ssig1, csig1, ssig2, csig2,
                             E, domg12, numit < maxit1_, dv);
-          // Reversed test to allow escape with NaNs
-          if (tripb || !(fabs(v) >= (tripn ? 8 : 1) * tol0_)) break;
+          if (tripb ||
+              // Reversed test to allow escape with NaNs
+              !(fabs(v) >= (tripn ? 8 : 1) * tol0_) ||
+              // Enough bisections to get accurate result
+              numit == maxit2_)
+            break;
           // Update bracketing values
           if (v > 0 && (numit > maxit1_ || calp1/salp1 > calp1b/salp1b))
             { salp1b = salp1; calp1b = calp1; }
