@@ -35,7 +35,8 @@ int main(int argc, const char* const argv[]) {
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    bool reverse = false, sign = true, polyline = false, longfirst = false;
+    bool reverse = false, sign = true, polyline = false, longfirst = false,
+      geoconvert_compat = false;
     int linetype = GEODESIC;
     int prec = 6;
     std::string istring, ifile, ofile, cdelim;
@@ -79,6 +80,8 @@ int main(int argc, const char* const argv[]) {
         linetype = AUTHALIC;
       else if (arg == "-R")
         linetype = RHUMB;
+      else if (arg == "--geoconvert-input")
+        geoconvert_compat = true;
       else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
@@ -163,6 +166,9 @@ int main(int argc, const char* const argv[]) {
     std::string s, eol("\n");
     real perimeter, area;
     unsigned num;
+    std::istringstream str;
+    std::string slat, slon, junk;
+    real lat, lon;
     while (std::getline(*input, s)) {
       if (!cdelim.empty()) {
         std::string::size_type m = s.find(cdelim);
@@ -175,8 +181,18 @@ int main(int argc, const char* const argv[]) {
       if (!endpoly) {
         try {
           using std::isnan;
-          p.Reset(s, true, longfirst);
-          if (isnan(p.Latitude()) || isnan(p.Longitude()))
+          if (geoconvert_compat) {
+            p.Reset(s, true, longfirst);
+            lat = p.Latitude(); lon = p.Longitude();
+          } else {
+            str.clear(); str.str(s);
+            if (!(str >> slat >> slon))
+              throw GeographicErr("incomplete input");
+            if (str >> junk)
+              throw GeographicErr("extra input");
+            DMS::DecodeLatLon(slat, slon, lat, lon, longfirst);
+          }
+          if (isnan(lat) || isnan(lon))
             endpoly = true;
         }
         catch (const GeographicErr&) {
@@ -199,12 +215,10 @@ int main(int argc, const char* const argv[]) {
           linetype == RHUMB ? polyr.Clear() : poly.Clear();
         eol = "\n";
       } else {
-        linetype == EXACT ? polye.AddPoint(p.Latitude(), p.Longitude()) :
-          linetype == RHUMB ? polyr.AddPoint(p.Latitude(), p.Longitude()) :
-          poly.AddPoint(linetype == AUTHALIC ?
-                        ellip.AuthalicLatitude(p.Latitude()) :
-                        p.Latitude(),
-                        p.Longitude());
+        linetype == EXACT ? polye.AddPoint(lat, lon) :
+          linetype == RHUMB ? polyr.AddPoint(lat, lon) :
+          poly.AddPoint(linetype == AUTHALIC ? ellip.AuthalicLatitude(lat) : lat,
+                        lon);
       }
     }
     num =

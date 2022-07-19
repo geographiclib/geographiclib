@@ -586,7 +586,7 @@ set_tests_properties (Planimeter4 PROPERTIES PASS_REGULAR_EXPRESSION
   "3 20020719\\.[0-9]+")
 # Check fix for Planimeter pole crossing bug found 2011-06-24
 add_test (NAME Planimeter5 COMMAND Planimeter
-  --input-string "89,0.1;89,90.1;89,-179.9")
+  --input-string "89 0.1;89 90.1;89 -179.9")
 set_tests_properties (Planimeter5 PROPERTIES PASS_REGULAR_EXPRESSION
   "3 539297\\.[0-9]+ 1247615283[89]\\.[0-9]+")
 # Check fix for Planimeter lon12 rounding bug found 2012-12-03

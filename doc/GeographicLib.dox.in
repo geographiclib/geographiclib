@@ -4036,7 +4036,7 @@ the vantage-point tree described by
   Satisfying general proximity/similarity queries with metric trees</a>,
   Information Processing Letters 40 175--179 (1991).
 - P. N. Yianilos,
-  <a href="http://pnylab.com/pny/papers/vptree/vptree/">
+  <a href="https://dl.acm.org/doi/10.5555/313559.313789">
   Data structures and algorithms for nearest neighbor search in general
   metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
   (SIAM, 1993). pp. 311--321.
@@ -5978,7 +5978,9 @@ References:
    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    Part V, pp. 67--101,
    <a href="https://doi.org/10.3138/X687-1574-4325-WM62">Conformal
-   Projections Based On Jacobian Elliptic Functions</a>.
+   Projections Based On Jacobian Elliptic Functions</a>;
+   <a href="https://archive.org/details/conformalproject0000leel/page/92">
+   borrow from archive.org</a>.
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,

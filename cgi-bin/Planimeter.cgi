@@ -184,11 +184,7 @@ cat <<EOF
         16d47' -3d1'
         W3&deg;0'34" N16&deg;46'33"
         3:0:34W 16:46:33N</pre>
-      The coordinates can also be given in UTM, UPS, or MGRS coordinates (see
-      the documentation on the
-      <a href="https://geographiclib.sourceforge.io/C++/doc/GeoConvert.1.html">
-        GeoConvert</a>
-      utility).  A blank line or a coordinate which cannot be understood
+      A blank line or a coordinate which cannot be understood
       causes the reading of vertices to be stopped.
     </p>
     <p>
