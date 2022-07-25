@@ -105,13 +105,18 @@ run windows build
 copy windows installers to data-distrib/distrib-C++
 fix permissions on installers
 remove alpha/rc versions of installers
+switch C++/doc link to latest version
 make stage-{doc,dist}
 make deploy-{doc,dist}
 checkin and tag release branch & push
 tag main branch
 
 trigger build on build-open
+
 update binaries for cgi applications
+  make stage-cgi deploy-cgi
+  ssh -t karney,geographiclib@shell.sourceforge.net create
+  update VERSION in compile.sh and compile
 
 Local install
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
@@ -119,6 +124,8 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 set default downloads for distrib-C++ on sourceforge
 
 post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
+
+VERSION=2.1.1
 
 Brew...
 
@@ -135,10 +142,10 @@ Brew...
   brew audit --strict geographiclib
   brew style geographiclib
 
-  git checkout -b geographiclib/2.0
+  git checkout -b geographiclib/$VERSION
   git add geographiclib.rb
-  git commit -m "geographiclib 2.0"
-  git push --set-upstream cffk geographiclib/2.0
+  git commit -m "geographiclib $VERSION"
+  git push --set-upstream cffk geographiclib/$VERSION
 
   trigger a PR
 
@@ -147,27 +154,29 @@ conda-forge...
   geographiclib-cpp-feedstock
   edit recipe/bld.bat recipe/build.sh recipe/meta.yaml
 
-  [conda remove -y -n build --all]
+  conda remove -y -n build --all
   conda create -y -n build
   conda activate build
   conda install -y conda-build conda-verify conda-forge-pinning
 
   conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
-  Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-2.0-h924138e_0.tar.bz2
+  Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.tar.bz2
 
   conda deactivate
-  conda create -y -n geog20-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-2.0-h924138e_0.tar.bz2
-  conda activate geog20-test
+  conda remove -y -n geog-test --all
+  conda create -y -n geog-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.tar.bz2
+  conda activate geog-test
   type GeoConvert
 
-  git checkout -b v2.0
+  git checkout -b v$VERSION
   conda install -c conda-forge conda-smithy
   conda smithy rerender
   commit changes
-  git push --set-upstream cffk v2.0
+  git push --set-upstream cffk v$VERSION
 
 vcpkg...
   git pull
+  git branch -b geographiclib/$VERSION
   update ports/geographiclib
 
   ./vcpkg remove geographiclib
@@ -177,8 +186,9 @@ vcpkg...
 
   commit changes
 
-  ./vcpkg x-add-version geographiclib
+  # ./vcpkg x-add-version geographiclib
+  ./vcpkg x-add-version --all
 
   commit again
   commit message = [geographiclib] Update to version $VERSION
-  git push --set-upstream cffk geographiclib/2.0
+  git push --set-upstream cffk geographiclib/$VERSION
