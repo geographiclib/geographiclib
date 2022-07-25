@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2022-06-09
+\date 2022-07-25
 
 \section abstract Abstract
 
@@ -4036,7 +4036,7 @@ the vantage-point tree described by
   Satisfying general proximity/similarity queries with metric trees</a>,
   Information Processing Letters 40 175--179 (1991).
 - P. N. Yianilos,
-  <a href="http://pnylab.com/pny/papers/vptree/vptree/">
+  <a href="https://dl.acm.org/doi/10.5555/313559.313789">
   Data structures and algorithms for nearest neighbor search in general
   metric spaces</a>, Proc. 4th ACM-SIAM Symposium on Discrete Algorithms,
   (SIAM, 1993). pp. 311--321.
@@ -5062,7 +5062,7 @@ References:
  - W. M. Kahan and R. J. Fateman,
    <a href="https://www.cs.berkeley.edu/~fateman/papers/divdiff.pdf">
    Symbolic computation of divided differences</a>,
-   SIGSAM Bull. 33(3), 7--28 (1999)
+   SIGSAM Bull. 33(2), 7--28 (1999)
    DOI: <a href="https://doi.org/10.1145/334714.334716">
    10.1145/334714.334716</a>.
  - C. F. F. Karney,
@@ -5978,7 +5978,9 @@ References:
    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
    Part V, pp. 67--101,
    <a href="https://doi.org/10.3138/X687-1574-4325-WM62">Conformal
-   Projections Based On Jacobian Elliptic Functions</a>.
+   Projections Based On Jacobian Elliptic Functions</a>;
+   <a href="https://archive.org/details/conformalproject0000leel/page/92">
+   borrow from archive.org</a>.
  - C. F. F. Karney,
    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    Transverse Mercator with an accuracy of a few nanometers</a>,
@@ -7473,6 +7475,23 @@ git repository for GeographicLib</a>.
      splits as necessary).
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.1.1">Version 2.1.1</a>
+   (released 2022-07-25)
+   - The <a href="Planimeter.1.html">Planimeter</a> utility used to
+     accept polygon vertices as UTM/UPS or MGRS coordinates.  However,
+     since these are converted to latitude and longitude using the WGS84
+     ellipoid, this convention is incompatible with the -e option to
+     specify the ellipsoid.  So now, you have to provide the
+     \--geoconvert-input option to allow vertices to be specified in
+     this way.
+   - Fix sign error in DST::refine.
+   - Relax overly strict convergence test for inverse problem in
+     Geodesic and GeodesicExact.
+   - Minor:
+     - Use lookup table for selecting number of points for DST in
+       GeodesicExact.
+     - Relax one of the test thresholds in geodtest.cpp.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1">Version 2.1</a>
    (released 2022-06-09)

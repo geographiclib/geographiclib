@@ -8,7 +8,9 @@
  *
  * The relevant section of Lee's paper is part V, pp 67--101,
  * <a href="https://doi.org/10.3138/X687-1574-4325-WM62">Conformal
- * Projections Based On Jacobian Elliptic Functions</a>.
+ * Projections Based On Jacobian Elliptic Functions</a>;
+ * <a href="https://archive.org/details/conformalproject0000leel/page/92">
+ * borrow from archive.org</a>.
  *
  * The method entails using the Thompson Transverse Mercator as an
  * intermediate projection.  The projections from the intermediate

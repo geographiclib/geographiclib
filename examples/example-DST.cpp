@@ -11,7 +11,7 @@ using namespace GeographicLib;
 
 class sawtooth {
 private:
-  double _a, _b;
+  double _a;
 public:
   sawtooth(double a) : _a(a) {}
   // only called for x in (0, pi/2].  DST assumes function is periodic, period
@@ -23,29 +23,34 @@ int main() {
   try {
     sawtooth f(Math::pi()/4);
     DST dst;
-    int N = 8;
+    int N = 5, K = 2*N;
     vector<double> tx(N), txa(2*N);
     dst.reset(N);
     dst.transform(f, tx.data());
     cout << "Transform of sawtooth based on " << N << " points\n"
          << "approx 1, -1/9, 1/25, -1/49, ...\n";
-    for (int i = 0; i < min(10,N); ++i)
-      cout << tx[i] << "\n";
+    for (int i = 0; i < min(K,N); ++i) {
+      int j = (2*i+1)*(2*i+1)*(1-((i&1)<<1));
+      cout << i << " " << tx[i] << " " << tx[i]*j << "\n";
+    }
     tx.resize(2*N);
     dst.refine(f, tx.data());
     cout << "Add another " << N << " points\n";
-    for (int i = 0; i < min(10,N); ++i)
-      cout << tx[i] << "\n";
+    for (int i = 0; i < min(K,2*N); ++i) {
+      int j = (2*i+1)*(2*i+1)*(1-((i&1)<<1));
+      cout << i << " " << tx[i] << " " << tx[i]*j << "\n";
+    }
     dst.reset(2*N);
     dst.transform(f, txa.data());
     cout << "Retransform of sawtooth based on " << 2*N << " points\n";
-    for (int i = 0; i < min(10,N); ++i)
-      cout << txa[i] << "\n";
-    int M = 10;
+    for (int i = 0; i < min(K,2*N); ++i) {
+      int j = (2*i+1)*(2*i+1)*(1-((i&1)<<1));
+      cout << i << " " << txa[i] << " " << txa[i]*j << "\n";
+    }
     cout << "Table of values and integral\n";
-    for (int i = 0; i <= M; ++i) {
-      double x = i*Math::pi()/(2*M), sinx = sin(x), cosx = cos(x);
-      cout << x << " "
+    for (int i = 0; i <= K; ++i) {
+      double x = i*Math::pi()/(2*K), sinx = sin(x), cosx = cos(x);
+      cout << x << " " << f(x) << " "
            << DST::eval(sinx, cosx, txa.data(), 2*N) << " "
            << DST::integral(sinx, cosx, txa.data(), 2*N) << "\n";
     }

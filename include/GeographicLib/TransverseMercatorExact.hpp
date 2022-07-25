@@ -26,7 +26,9 @@ namespace GeographicLib {
    *    (B. V. Gutsell, Toronto, 1976), 128pp.,
    *    ISBN: 0919870163
    *    (also appeared as:
-   *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13).
+   *    Monograph 16, Suppl. No. 1 to Canadian Cartographer, Vol 13);
+   *    <a href="https://archive.org/details/conformalproject0000leel/page/92">
+   *    borrow from archive.org</a>.
    *  - C. F. F. Karney,
    *    <a href="https://doi.org/10.1007/s00190-011-0445-3">
    *    Transverse Mercator with an accuracy of a few nanometers,</a>

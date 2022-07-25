@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PLANIMETER 1"
-.TH PLANIMETER 1 "2022-06-09" "GeographicLib 2.1" "GeographicLib Utilities"
+.TH PLANIMETER 1 "2022-07-25" "GeographicLib 2.1.1" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -144,6 +144,7 @@ Planimeter \-\- compute the area of geodesic polygons
 .IX Header "SYNOPSIS"
 \&\fBPlanimeter\fR [ \fB\-r\fR ] [ \fB\-s\fR ] [ \fB\-l\fR ] [ \fB\-e\fR \fIa\fR \fIf\fR ]
 [ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-G\fR | \fB\-E\fR | \fB\-Q\fR | \fB\-R\fR ]
+[ \fB\-\-geoconvert\-input\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -152,14 +153,14 @@ Planimeter \-\- compute the area of geodesic polygons
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 Measure the area of a geodesic polygon.  Reads polygon vertices from
-standard input, one per line.  Vertices may be given as latitude and
-longitude, \s-1UTM/UPS,\s0 or \s-1MGRS\s0 coordinates, interpreted in the same way as
-\&\fBGeoConvert\fR\|(1).  (\s-1MGRS\s0 coordinates signify the center of the
-corresponding \s-1MGRS\s0 square.)  The end of input, a blank line, or a line
-which can't be interpreted as a vertex signals the end of one polygon
-and the start of the next.  For each polygon print a summary line with
-the number of points, the perimeter (in meters), and the area (in
-meters^2).
+standard input, one per line.  Vertices are be given as latitude and
+longitude.  By default latitude precedes longitude, however this
+convention is reversed with the \fB\-w\fR flag and a hemisphere designator
+(\fIN\fR, \fIS\fR, \fIE\fR, \fIW\fR) can be used to disambiguate the coordinates.
+The end of input, a blank line, or a line which can't be interpreted
+as a vertex signals the end of one polygon and the start of the next.
+For each polygon print a summary line with the number of points, the
+perimeter (in meters), and the area (in meters^2).
 .PP
 The edges of the polygon are given by the \fIshortest\fR geodesic (or
 rhumb line) between consecutive vertices.  In certain cases, there may
@@ -246,6 +247,14 @@ sufficiently short.  The perimeter calculation is not accurate.
 .IP "\fB\-R\fR" 4
 .IX Item "-R"
 The lines joining the vertices are rhumb lines instead of geodesics.
+.IP "\fB\-\-geoconvert\-input\fR" 4
+.IX Item "--geoconvert-input"
+The input lines are interpreted in the same way as \fBGeoConvert\fR\|(1)
+allowing the coordinates for the vertices to be given as \s-1UTM/UPS\s0 or
+\&\s-1MGRS\s0 coordinates, as well as latitude and longitude.  \fB\s-1CAUTION\s0\fR:
+GeoConvert assumes the coordinates refer to the \s-1WGS84\s0 ellipsoid
+(disregarding the \fB\-e\fR flag) and \s-1MGRS\s0 coordinates signify the center
+of the corresponding \s-1MGRS\s0 square.
 .IP "\fB\-\-comment\-delimiter\fR \fIcommentdelim\fR" 4
 .IX Item "--comment-delimiter commentdelim"
 set the comment delimiter to \fIcommentdelim\fR (e.g., \*(L"#\*(R" or \*(L"//\*(R").  If
@@ -284,13 +293,13 @@ file name of \*(L"\-\*(R" stands for standard output.
 Example (the area of the 100km \s-1MGRS\s0 square 18SWK)
 .PP
 .Vb 7
-\&   Planimeter <<EOF
+\&   Planimeter \-\-geoconvert\-input <<EOF
 \&   18n 500000 4400000
 \&   18n 600000 4400000
 \&   18n 600000 4500000
 \&   18n 500000 4500000
 \&   EOF
-\&   => 4 400139.53295860 10007388597.1913
+\&   => 4 400139.532959 10007388597.2
 .Ve
 .PP
 The following code takes the output from gdalinfo and reports the area
