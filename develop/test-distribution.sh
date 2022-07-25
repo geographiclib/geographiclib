@@ -37,10 +37,10 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.2
+VERSION=2.1.1
 SUFFIX=-alpha
 DISTVERSION=$VERSION$SUFFIX
-BRANCH=main
+BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
     DEVELSOURCE=$HOME/geographiclib
@@ -446,22 +446,6 @@ cd $TEMP/relx/GeographicLib-$VERSION
 ) > $TEMP/badfiles.txt
 cat $TEMP/badfiles.txt
 cat > $TEMP/tasks.txt <<EOF
-# deploy documentation
-test -d $WEBDIST/htdocs/C++/$VERSION-pre &&
-rm -rf $WEBDIST/htdocs/C++/$VERSION &&
-mv $WEBDIST/htdocs/C++/$VERSION{-pre,} &&
-make -C $DEVELSOURCE -f makefile-admin distrib-doc
-
-rm -f $WEBDIST/htdocs/C++/latest &&
-ln -s $VERSION $WEBDIST/htdocs/C++/latest &&
-make -C $DEVELSOURCE -f makefile-admin distrib-doc
-
-# deploy release packages
-chmod 755 $DEVELSOURCE/GeographicLib-$VERSION-win{32,64}.exe
-chmod 644 $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip}
-mv $DEVELSOURCE/GeographicLib-$VERSION{.tar.gz,.zip,-win{32,64}.exe} $DEVELSOURCE/distrib
-make -C $DEVELSOURCE -f makefile-admin distrib-files
-
 # install built version
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 

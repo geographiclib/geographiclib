@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2022-06-09
+\date 2022-mm-dd
 
 \section abstract Abstract
 
@@ -7475,6 +7475,17 @@ git repository for GeographicLib</a>.
      splits as necessary).
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.1.1">Version 2.1.1</a>
+   (released 2022-mm-dd)
+   - Add --geoconvert-input option to
+     <a href="Planimeter.1.html">Planimeter</a>.
+   - Fix sign error in DST class.
+   - Relax convergence test for inverse problem in Geodesic and
+     GeodesicExact.
+   - Use lookup table for selecting number of points for DST in
+     GeodesicExact.
+   - Relax test threshold geodtest.cpp.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1">Version 2.1</a>
    (released 2022-06-09)

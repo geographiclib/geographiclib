@@ -168,7 +168,7 @@ int main(int argc, const char* const argv[]) {
     unsigned num;
     std::istringstream str;
     std::string slat, slon, junk;
-    real lat, lon;
+    real lat = 0, lon = 0;
     while (std::getline(*input, s)) {
       if (!cdelim.empty()) {
         std::string::size_type m = s.find(cdelim);
