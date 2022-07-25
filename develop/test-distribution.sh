@@ -38,9 +38,9 @@ umask 0022
 START=`date +%s`
 DATE=`date +%F`
 VERSION=2.1.1
-SUFFIX=-alpha
+SUFFIX=
 DISTVERSION=$VERSION$SUFFIX
-BRANCH=devel
+BRANCH=main
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
     DEVELSOURCE=$HOME/geographiclib
@@ -419,7 +419,7 @@ cd $TEMP/relx/GeographicLib-$VERSION
     find . -type f |
         egrep -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
         egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
-        xargs grep -l  '        ' || true
+        xargs grep -l  '	' || true
     echo
     echo Files with multiple newlines:
     find . -type f |
@@ -458,10 +458,8 @@ git tag -m "Version $VERSION ($DATE)" r$VERSION
 git push
 git push --tags
 
-# tag master branch
+# tag main branch
 cd $DEVELSOURCE
-git checkout master
-git merge --no-ff $BRANCH -m "Merge from devel for version $VERSION"
 git tag -m "Version $VERSION ($DATE)" v$VERSION
 git push --all
 git push --tags

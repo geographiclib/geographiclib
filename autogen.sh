@@ -27,4 +27,4 @@ run automake --add-missing --copy --force-missing --foreign
 run autoconf
 run autoreconf
 
-rm -rf autom4te.cache
+rm -rf autom4te.cache configure~

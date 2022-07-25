@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2022-mm-dd
+\date 2022-07-25
 
 \section abstract Abstract
 
@@ -7477,15 +7477,21 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.1">Version 2.1.1</a>
-   (released 2022-mm-dd)
-   - Add --geoconvert-input option to
-     <a href="Planimeter.1.html">Planimeter</a>.
-   - Fix sign error in DST class.
-   - Relax convergence test for inverse problem in Geodesic and
-     GeodesicExact.
-   - Use lookup table for selecting number of points for DST in
-     GeodesicExact.
-   - Relax test threshold geodtest.cpp.
+   (released 2022-07-25)
+   - The <a href="Planimeter.1.html">Planimeter</a> utility used to
+     accept polygon vertices as UTM/UPS or MGRS coordinates.  However,
+     since these are converted to latitude and longitude using the WGS84
+     ellipoid, this convention is incompatible with the -e option to
+     specify the ellipsoid.  So now, you have to provide the
+     \--geoconvert-input option to allow vertices to be specified in
+     this way.
+   - Fix sign error in DST::refine.
+   - Relax overly strict convergence test for inverse problem in
+     Geodesic and GeodesicExact.
+   - Minor:
+     - Use lookup table for selecting number of points for DST in
+       GeodesicExact.
+     - Relax one of the test thresholds in geodtest.cpp.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1">Version 2.1</a>
    (released 2022-06-09)

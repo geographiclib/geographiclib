@@ -95,9 +95,15 @@ update binaries for cgi applications
 
 Release checklist:
 
+Merge all changes to main
+test-distribution.sh: set SUFFIX= and BRANCH=main
+CMakeLists.txt set PROJECT_VERSION_SUFFIX suffix to ""
+Update NEWS
+Set date in NEWS and GeographicLib.dox.in
 run develop/test-distribution.sh
 run windows build
 copy windows installers to data-distrib/distrib-C++
+fix permissions on installers
 remove alpha/rc versions of installers
 make stage-{doc,dist}
 make deploy-{doc,dist}

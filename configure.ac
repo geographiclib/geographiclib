@@ -2,8 +2,8 @@ dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
 AC_INIT([GeographicLib],[2.1.1],[charles@karney.com])
-AC_CANONICAL_SYSTEM
-AC_PREREQ(2.61)
+AC_CANONICAL_TARGET
+AC_PREREQ([2.71])
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
 AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
@@ -48,7 +48,7 @@ AC_PROG_INSTALL
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
 AC_PROG_LIBTOOL
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 
 # Checks for long double
 AC_TYPE_LONG_DOUBLE

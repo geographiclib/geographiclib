@@ -4,7 +4,26 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.1
+The current version of the library is 2.1.1
+
+Changes between 2.1.1 (released 2022-07-25) and 2.1 versions:
+
+   * The Planimeter utility used to accept polygon vertices as UTM/UPS
+     or MGRS coordinates.  However, since these are converted to
+     latitude and longitude using the WGS84 ellipoid, this convention
+     is incompatible with the -e option to specify the ellipsoid.  So
+     now, you have to provide the --geoconvert-input option to allow
+     vertices to be specified in this way.
+
+   * Fix sign error in DST::refine.
+
+   * Relax overly strict convergence test for inverse problem in
+     Geodesic and GeodesicExact.
+
+   * Minor:
+     + Use lookup table for selecting number of points for DST in
+       GeodesicExact.
+     + Relax one of the test thresholds in geodtest.cpp.
 
 Changes between 2.1 (released 2022-06-09) and 2.0 versions:
 
