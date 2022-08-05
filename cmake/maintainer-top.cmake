@@ -106,7 +106,7 @@ if (NOT WIN32)
     COMMENT "Looking for trailing spaces")
   add_custom_target (checktabs
     COMMAND git ls-files |
-    egrep -v '\([Mm]akefile|\\.\(${BINARY_EXT}\)$$\)' |
+    egrep -v '\([Mm]akefile|test-distribution.sh|\\.\(${BINARY_EXT}\)$$\)' |
     xargs grep -l '\t' || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for tabs")

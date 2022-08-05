@@ -448,7 +448,8 @@ namespace GeographicLib {
      * @param[in] equals character representing "equals" to separate KEY and
      *   VALUE, if NULL (the default) use first space character.
      * @param[in] comment character to use as the comment character; if
-     *   non-NULL everything after this character is discarded; default is '#'.
+     *   non-NULL, this character and everything after it is discarded; default
+     *   is '#'.
      * @exception std::bad_alloc if memory for the internal strings can't be
      *   allocated.
      * @return whether a key was found.

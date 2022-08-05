@@ -3550,16 +3550,11 @@ GeodesicExact and GeodesicLineExact solve the geodesic problem using
 elliptic integrals.  The formulation of geodesic in terms of incomplete
 elliptic integrals is given in
  - C. F. F. Karney,
-   <a href="https://arxiv.org/abs/1102.1215v1">Geodesics
-   on an ellipsoid of revolution</a>,
-   Feb. 2011; preprint
-   <a href="https://arxiv.org/abs/1102.1215v1">arxiv:1102.1215v1</a>.
+   <a href="https://arxiv.org/abs/2208.00492">
+   Geodesics on an arbitrary ellipsoid of revolution</a>, Aug. 2022;
+   preprint <a href="https://arxiv.org/abs/2208.00492">
+   arxiv:2208.00492</a>.
  .
-It is most convenient to use the form derived for a prolate ellipsoid in
-Appendix D.  For an oblate ellipsoid this results in elliptic integrals
-with an imaginary modulus.  However, the integrals themselves are real
-and the algorithms used to compute the elliptic integrals handles the
-case of an imaginary modulus using real arithmetic.
 
 The key relations used by GeographicLib are
 \f[
@@ -7478,6 +7473,8 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.1">Version 2.1.1</a>
    (released 2022-07-25)
+   - Paper describing algorithms in GeodesicExact class is available at
+     <a href="https://arxiv.org/abs/2208.00492">arxiv:2208.00492</a>.
    - The <a href="Planimeter.1.html">Planimeter</a> utility used to
      accept polygon vertices as UTM/UPS or MGRS coordinates.  However,
      since these are converted to latitude and longitude using the WGS84

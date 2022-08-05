@@ -63,6 +63,13 @@ namespace GeographicLib {
    * spaced points in &sigma;.  \e N chosen to ensure full accuracy for
    * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [&minus;99, 0.99].
    *
+   * The algorithms are described in
+   * - C. F. F. Karney,
+   *   <a href="https://arxiv.org/abs/2208.00492">
+   *   Geodesics on an arbitrary ellipsoid of revolution</a>, Aug. 2022;
+   *   preprint <a href="https://arxiv.org/abs/2208.00492">
+   *   arxiv:2208.00492</a>.
+   * .
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesic problems.
    *

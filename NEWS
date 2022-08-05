@@ -8,6 +8,9 @@ The current version of the library is 2.1.1
 
 Changes between 2.1.1 (released 2022-07-25) and 2.1 versions:
 
+   * Paper describing algorithms in GeodesicExact class is available at
+     https://arxiv.org/abs/2208.00492
+
    * The Planimeter utility used to accept polygon vertices as UTM/UPS
      or MGRS coordinates.  However, since these are converted to
      latitude and longitude using the WGS84 ellipoid, this convention
