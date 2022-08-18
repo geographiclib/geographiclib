@@ -177,8 +177,8 @@ namespace GeographicLib {
      **********************************************************************/
     enum convertflag {
       /**
-       * The multiplier for converting from heights above the geoid to heights
-       * above the ellipsoid.
+       * The multiplier for converting from heights above the ellipsoid to
+       * heights above the geoid.
        **********************************************************************/
       ELLIPSOIDTOGEOID = -1,
       /**
@@ -186,8 +186,8 @@ namespace GeographicLib {
        **********************************************************************/
       NONE = 0,
       /**
-       * The multiplier for converting from heights above the ellipsoid to
-       * heights above the geoid.
+       * The multiplier for converting from heights above the geoid to heights
+       * above the ellipsoid.
        **********************************************************************/
       GEOIDTOELLIPSOID = 1,
     };
