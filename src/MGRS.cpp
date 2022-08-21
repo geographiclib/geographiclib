@@ -29,6 +29,8 @@ namespace GeographicLib {
   const char* const MGRS::latband_ = "CDEFGHJKLMNPQRSTUVWX";
   const char* const MGRS::upsband_ = "ABYZ";
   const char* const MGRS::digits_ = "0123456789";
+  const char* const MGRS::alpha_ = // Omit I+O
+    "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz";
 
   const int MGRS::mineasting_[] =
     { minupsSind_, minupsNind_, minutmcol_, minutmcol_ };
@@ -411,6 +413,35 @@ namespace GeographicLib {
         irow = maxutmSrow_;
     }
     return irow;
+  }
+
+  void MGRS::Decode(const string& mgrs,
+                    string& gridzone, string& block,
+                    string& easting, string& northing) {
+    string::size_type n = mgrs.size(),
+      p0 = mgrs.find_first_not_of(digits_);
+    if (p0 == string::npos)
+      throw GeographicErr("MGRS::Decode: ref does not contain alpha chars");
+    if (!(p0 <= 2))
+      throw GeographicErr("MGRS::Decode: ref does not start with 0-2 digits");
+    string::size_type p1 = mgrs.find_first_of(alpha_, p0);
+    if (p1 != p0)
+      throw GeographicErr("MGRS::Decode: ref contains non alphanumeric chars");
+    p1 = min(mgrs.find_first_not_of(alpha_, p0), n);
+    if (!(p1 == p0 + 1 || p1 == p0 + 3))
+      throw GeographicErr("MGRS::Decode: ref must contain 1 or 3 alpha chars");
+    if (p1 == p0 + 1 && p1 < n)
+      throw GeographicErr("MGRS::Decode: ref contains junk after 1 alpha char");
+    if (p1 < n && (mgrs.find_first_of(digits_, p1) != p1 ||
+                   mgrs.find_first_not_of(digits_, p1) != string::npos))
+      throw GeographicErr("MGRS::Decode: ref contains junk at end");
+    if ((n - p1) & 1u)
+      throw GeographicErr("MGRS::Decode: ref must end with even no of digits");
+    // Here [0, p0) = initial digits; [p0, p1) = alpha; [p1, n) = end digits
+    gridzone = mgrs.substr(0, p0+1);
+    block = mgrs.substr(p0+1, p1 - (p0 + 1));
+    easting = mgrs.substr(p1, (n - p1) / 2);
+    northing = mgrs.substr(p1 + (n - p1) / 2);
   }
 
   void MGRS::Check() {
