@@ -418,8 +418,16 @@ namespace GeographicLib {
   void MGRS::Decode(const string& mgrs,
                     string& gridzone, string& block,
                     string& easting, string& northing) {
-    string::size_type n = mgrs.size(),
-      p0 = mgrs.find_first_not_of(digits_);
+    string::size_type n = mgrs.length();
+    if (n >= 3 &&
+        toupper(mgrs[0]) == 'I' &&
+        toupper(mgrs[1]) == 'N' &&
+        toupper(mgrs[2]) == 'V') {
+      gridzone = mgrs.substr(0, 3);
+      block = easting = northing = "";
+      return;
+    }
+    string::size_type p0 = mgrs.find_first_not_of(digits_);
     if (p0 == string::npos)
       throw GeographicErr("MGRS::Decode: ref does not contain alpha chars");
     if (!(p0 <= 2))

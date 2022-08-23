@@ -343,19 +343,23 @@ namespace GeographicLib {
     /**
      * Split a MGRS grid reference into its components.
      *
-     * @param[in] mgrs MGRS string.
-     * @param[out] gridzone, the grid zone, e.g., 38S.
-     * @param[out] block, the 100km block id, e.g., MB.
-     * @param[out] easting, the leading digits of the block easting, e.g., 44.
-     * @param[out] northing, the leading digits of the block easting, e.g., 88.
+     * @param[in] mgrs MGRS string, e.g., 38SMB4488.
+     * @param[out] gridzone the grid zone, e.g., 38S.
+     * @param[out] block the 100km block id, e.g., MB.
+     * @param[out] easting the leading digits of the block easting, e.g., 44.
+     * @param[out] northing the leading digits of the block easting, e.g., 88.
      * @exception GeographicErr if \e mgrs is illegal.
      *
      * Only the most rudimentary checking of MGRS grid ref is done: it is
      * expected to consist of 0-2 digits followed by 1 or 3 letters, followed
      * (in the case of 3 letters) by an even number (possibly 0) of digits.  In
-     * reporting errors the letters I and O (illegal in MSRS) are regarded as
+     * reporting errors, the letters I and O (illegal in MSRS) are regarded as
      * non-alphabetic.  The returned \e gridzone will always be non-empty.  The
      * other output arguments may be empty strings.
+     *
+     * If the first 3 characters of \e mgrs are "INV", then \e gridzone is set
+     * to those 3 characters and the other return arguments are set to empty
+     * strings..
      *
      * If an exception is thrown, then the arguments are unchanged.
      **********************************************************************/
