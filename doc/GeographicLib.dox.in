@@ -114,7 +114,7 @@ Forward to \ref install.  Up to \ref contents.
 
 GeographicLib offers a C++ interfaces to a small (but important!) set
 of geographic transformations.  It grew out of a desire to improve on
-the <a href="http://earth-info.nga.mil/GandG/geotrans/">GEOTRANS</a>
+the GEOTRANS
 package for transforming between geographic and MGRS coordinates.  At
 present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local
 cartesian projections, gravity and geomagnetic models, and classes for
@@ -5605,7 +5605,7 @@ ellipses.
 
 References:
  - P. D. Thomas,
-   <a href="https://apps.dtic.mil/docs/citations/AD0627893">
+   <a href="https://apps.dtic.mil/sti/citations/AD0627893">
    Mathematical Models for Navigation Systems</a>,
    TR-182 (U.S. Naval Oceanographic Office, 1965).
  - B. R. Bowring,
@@ -5665,7 +5665,7 @@ entail scaling the ellipsoid in the \f$\hat z\f$ direction, the
 direction of the axis of rotation, scaling the ellipsoid radially, or a
 combination of the two.
 
-One such combination (scaling by \f$a^2/b\f$ in the \f$\hat z\f$
+One such combination (scaling by \f$a^2/b^2\f$ in the \f$\hat z\f$
 direction, following by a radial scaling to the sphere) preserves the
 geographical latitude \f$\phi\f$.  This enables a great ellipse to be
 plotted on a chart merely by determining way points on the corresponding
@@ -6502,7 +6502,7 @@ Here we give the complete matrix of relations between all six latitudes;
 there are 30 (=&nbsp;6&nbsp;&times;&nbsp;5) such relations.  These
 expansions complement the work of
 - O. S. Adams,
-  <a href="https://docs.lib.noaa.gov/rescue/cgs_specpubs/QB275U35no671921.pdf">
+  <a href="https://geodesy.noaa.gov/library/pdfs/Special_Publication_No_67.pdf">
   Latitude developments connected with geodesy and cartography</a>,
   Spec. Pub. 67 (US Coast and Geodetic Survey, 1921).
 - P. Osborne,
