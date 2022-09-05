@@ -44,12 +44,17 @@ if (BUILD_DOCUMENTATION)
   if (NOT RELEASE)
     add_dependencies (doc htmlman)
   endif ()
+  if (CMAKE_VERSION VERSION_LESS 3.17.0)
+    set (RMDIR remove_directory)
+  else ()
+    set (RMDIR rm -rf)
+  endif ()
   add_custom_command (OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/html/index.html
     DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doxyfile
       ${CMAKE_CURRENT_BINARY_DIR}/GeographicLib.dox
       ${CXXSOURCES} ${EXTRA_FILES} ${FIGURES} ${HTMLMAN}
     COMMAND ${CMAKE_COMMAND} -E copy ${HTMLMAN} html-stage
-    COMMAND ${CMAKE_COMMAND} -E rm -rf html
+    COMMAND ${CMAKE_COMMAND} -E ${RMDIR} html
     COMMAND ${CMAKE_COMMAND} -E copy_directory html-stage html
     COMMAND ${DOXYGEN_EXECUTABLE} doxyfile > doxygen.log
     COMMENT "Generating C++ documentation tree")
