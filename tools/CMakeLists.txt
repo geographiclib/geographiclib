@@ -63,7 +63,7 @@ set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
 # default data directory.  These are installed under sbin, because it is
 # expected to be run with write access to /usr/local.
-if (NOT WIN32)
+if (NOT CMAKE_HOST_WIN32)
   foreach (SCRIPT ${SCRIPTS})
     configure_file (${SCRIPT}.sh scripts/${SCRIPT} @ONLY)
     add_custom_command (OUTPUT ${SCRIPT}
