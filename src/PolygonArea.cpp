@@ -18,7 +18,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  template <class GeodType>
+  template<class GeodType>
   int PolygonAreaT<GeodType>::transit(real lon1, real lon2) {
     // Return 1 or -1 if crossing prime meridian in east or west direction.
     // Otherwise return zero.  longitude = +/-0 considered to be positive.
@@ -46,7 +46,7 @@ namespace GeographicLib {
 
   // an alternate version of transit to deal with longitudes in the direct
   // problem.
-  template <class GeodType>
+  template<class GeodType>
   int PolygonAreaT<GeodType>::transitdirect(real lon1, real lon2) {
     // Compute exactly the parity of
     //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
@@ -66,7 +66,7 @@ namespace GeographicLib {
              (lon1 >= 0 && lon1 < Math::td ? 0 : 1) );
   }
 
-  template <class GeodType>
+  template<class GeodType>
   void PolygonAreaT<GeodType>::AddPoint(real lat, real lon) {
     if (_num == 0) {
       _lat0 = _lat1 = lat;
@@ -85,7 +85,7 @@ namespace GeographicLib {
     ++_num;
   }
 
-  template <class GeodType>
+  template<class GeodType>
   void PolygonAreaT<GeodType>::AddEdge(real azi, real s) {
     if (_num) {                 // Do nothing if _num is zero
       real lat, lon, S12, t;
@@ -101,7 +101,7 @@ namespace GeographicLib {
     }
   }
 
-  template <class GeodType>
+  template<class GeodType>
   unsigned PolygonAreaT<GeodType>::Compute(bool reverse, bool sign,
                                            real& perimeter, real& area) const
   {
@@ -127,7 +127,7 @@ namespace GeographicLib {
     return _num;
   }
 
-  template <class GeodType>
+  template<class GeodType>
   unsigned PolygonAreaT<GeodType>::TestPoint(real lat, real lon,
                                              bool reverse, bool sign,
                                              real& perimeter, real& area) const
@@ -163,7 +163,7 @@ namespace GeographicLib {
     return num;
   }
 
-  template <class GeodType>
+  template<class GeodType>
   unsigned PolygonAreaT<GeodType>::TestEdge(real azi, real s,
                                             bool reverse, bool sign,
                                             real& perimeter, real& area) const
@@ -199,8 +199,8 @@ namespace GeographicLib {
     return num;
   }
 
-  template <class GeodType>
-  template <typename T>
+  template<class GeodType>
+  template<typename T>
   void PolygonAreaT<GeodType>::AreaReduce(T& area, int crossings,
                                           bool reverse, bool sign) const {
     Remainder(area);

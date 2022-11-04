@@ -437,7 +437,7 @@ namespace GeographicLib {
      * @param[in] x
      * @return atan(<i>x</i>) in degrees.
      **********************************************************************/
-   template<typename T> static T atand(T x);
+    template<typename T> static T atand(T x);
 
     /**
      * Evaluate <i>e</i> atanh(<i>e x</i>)

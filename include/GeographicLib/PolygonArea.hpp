@@ -93,7 +93,7 @@ namespace GeographicLib {
    * providing access to the functionality of PolygonAreaT.
    **********************************************************************/
 
-  template <class GeodType = Geodesic>
+  template<class GeodType = Geodesic>
   class PolygonAreaT {
   private:
     typedef Math::real real;
@@ -114,7 +114,7 @@ namespace GeographicLib {
       using std::remainder;
       a = remainder(a, _area0);
     }
-    template <typename T>
+    template<typename T>
     void AreaReduce(T& area, int crossings, bool reverse, bool sign) const;
   public:
 

@@ -94,11 +94,12 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::RG(real x, real y, real z) {
-    if (z == 0)
-      swap(y, z);
-    // Carlson, eq 1.7
-    return (z * RF(x, y, z) - (x-z) * (y-z) * RD(x, y, z) / 3
-            + sqrt(x * y / z)) / 2;
+    return (x == 0 ? RG(y, z) :
+            (y == 0 ? RG(z, x) :
+             (z == 0 ? RG(x, y) :
+              // Carlson, eq 1.7
+              (z * RF(x, y, z) - (x-z) * (y-z) * RD(x, y, z) / 3
+               + sqrt(x * y / z)) / 2 )));
   }
 
   Math::real EllipticFunction::RG(real x, real y) {

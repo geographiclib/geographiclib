@@ -112,17 +112,39 @@ namespace GeographicLib {
     // y = -sum(F[i]/(2*i+1) * cos((2*i+1) * x), i, 0, N-1)
     // using Clenshaw summation.
     // Approx operation count = (N + 5) mult and (2 * N + 2) add
-    int l = N;
     real
       ar = 2 * (cosx - sinx) * (cosx + sinx), // 2 * cos(2 * x)
-      y0 = N & 1 ? F[--N]/(2*(--l)+1) : 0, y1 = 0; // accumulators for sum
-    // Now N is even
-    while (N > 0) {
-      // Unroll loop x 2, so accumulators return to their original role
-      y1 = ar * y0 - y1 + F[--N]/(2*(--l)+1);
-      y0 = ar * y1 - y0 + F[--N]/(2*(--l)+1);
+      y0 = 0, y1 = 0;                         // accumulators for sum
+    for (--N; N >= 0; --N) {
+      real t = ar * y0 - y1 + F[N]/(2*N+1);
+      y1 = y0; y0 = t;
     }
     return cosx * (y1 - y0);    // cos(x) * (y1 - y0)
+  }
+
+  Math::real DST::integral(real sinx, real cosx, real siny, real cosy,
+                           const real F[], int N) {
+    // return integral(siny, cosy, F, N) - integral(sinx, cosx, F, N);
+    real
+      // 2*cos(y-x)*cos(y+x) -> 2 * cos(2 * x)
+      ac = +2 * (cosy * cosx + siny * sinx) * (cosy * cosx - siny * sinx),
+      // -2*sin(y-x)*sin(y+x) -> 0
+      as = -2 * (siny * cosx - cosy * sinx) * (siny * cosx + cosy * sinx),
+      y0 = 0, y1 = 0, z0 = 0, z1 = 0; // accumulators for sum
+    for (--N; N >= 0; --N) {
+      real
+        ty = ac * y0 + as * z0 - y1 + F[N]/(2*N+1),
+        tz = as * y0 + ac * z0 - z1;
+      y1 = y0; y0 = ty;
+      z1 = z0; z0 = tz;
+    }
+    // B[0] - B[1] = [y0-y1, z0-z1]
+    // F[0] = [cosy + cosx, cosy - cosx] -> [2 * cosx, 0]
+    // (B[0] - B[1]) . F[0]
+    // = [(y0 - y1) * (cosy + cosx) + (z0 - z1) * (cosy - cosx),
+    //    (y0 - y1) * (cosy - cosx) + (z0 - z1) * (cosy + cosx),
+    // return -(2nd element)
+    return (y1 - y0) * (cosy - cosx) + (z1 - z0) * (cosy + cosx);
   }
 
 } // namespace GeographicLib

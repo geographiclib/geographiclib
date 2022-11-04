@@ -7474,6 +7474,7 @@ git repository for GeographicLib</a>.
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.2">Version 2.1.2</a>
    (released 2022-mm-dd)
    - Add MGRS::Decode
+   - Add definite integral overload for DST::integral
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.1">Version 2.1.1</a>
    (released 2022-07-25)

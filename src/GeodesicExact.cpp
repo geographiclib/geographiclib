@@ -742,10 +742,7 @@ namespace GeographicLib {
         I4Integrand i4(_ep2, k2);
         vector<real> C4a(_nC4);
         _fft.transform(i4, C4a.data());
-        real
-          B41 = DST::integral(ssig1, csig1, C4a.data(), _nC4),
-          B42 = DST::integral(ssig2, csig2, C4a.data(), _nC4);
-        S12 = A4 * (B42 - B41);
+        S12 = A4 * DST::integral(ssig1, csig1, ssig2, csig2, C4a.data(), _nC4);
       } else
         // Avoid problems with indeterminate sig1, sig2 on equator
         S12 = 0;

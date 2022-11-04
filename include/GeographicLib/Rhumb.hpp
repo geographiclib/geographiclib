@@ -26,7 +26,7 @@
 namespace GeographicLib {
 
   class RhumbLine;
-  template <class T> class PolygonAreaT;
+  template<class T> class PolygonAreaT;
 
   /**
    * \brief Solve of the direct and inverse rhumb problems.
@@ -67,7 +67,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class RhumbLine;
-    template <class T> friend class PolygonAreaT;
+    template<class T> friend class PolygonAreaT;
     Ellipsoid _ell;
     bool _exact;
     real _c2;
