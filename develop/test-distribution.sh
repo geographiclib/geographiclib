@@ -336,6 +336,7 @@ for p in 1 3 5; do
             make test
         fi
         make -j$NUMCPUS develprograms
+        make -j$NUMCPUS exampleprograms
     )
 done
 

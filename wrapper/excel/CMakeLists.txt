@@ -1,6 +1,5 @@
+cmake_minimum_required (VERSION 3.13.0)
 project (cgeodesic)
-
-cmake_minimum_required (VERSION 3.7.0)
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
