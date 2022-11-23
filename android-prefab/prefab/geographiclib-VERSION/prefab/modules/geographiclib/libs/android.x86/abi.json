@@ -1,7 +1,7 @@
 {
     "abi": "x86",
     "api": 19,
-    "ndk": 24,
+    "ndk": 25,
     "stl": "c++_shared",
     "static": true
 }

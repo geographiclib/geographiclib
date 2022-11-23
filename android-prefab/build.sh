@@ -6,7 +6,7 @@ set -e
 PATH=$PATH:$HOME/devel/prefab/cli/build/install/prefab/bin/
 
 #Path to Android NDK
-export ANDROID_NDK=$HOME/Android/Sdk/ndk/24.0.8215888/
+export ANDROID_NDK=$HOME/Android/Sdk/ndk/25.1.8937393/
 
 pushd  "$( dirname -- "$0"; )"
 
