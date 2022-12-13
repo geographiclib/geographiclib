@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2022-mm-dd
+\date 2022-12-13
 
 \section abstract Abstract
 
@@ -7491,7 +7491,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.2">Version 2.1.2</a>
-   (released 2022-mm-dd)
+   (released 2022-12-13)
    - Add MGRS::Decode to break an MGRS string into its components.
    - Add definite integral overload for DST::integral.  This is used in
      GeodesicExact.
