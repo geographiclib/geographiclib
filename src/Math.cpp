@@ -247,27 +247,27 @@ namespace GeographicLib {
     return tau;
   }
 
-    template<typename T> T Math::NaN() {
+  template<typename T> T Math::NaN() {
 #if defined(_MSC_VER)
-      return numeric_limits<T>::has_quiet_NaN ?
-        numeric_limits<T>::quiet_NaN() :
-        (numeric_limits<T>::max)();
+    return numeric_limits<T>::has_quiet_NaN ?
+      numeric_limits<T>::quiet_NaN() :
+      (numeric_limits<T>::max)();
 #else
-      return numeric_limits<T>::has_quiet_NaN ?
-        numeric_limits<T>::quiet_NaN() :
-        numeric_limits<T>::max();
+    return numeric_limits<T>::has_quiet_NaN ?
+      numeric_limits<T>::quiet_NaN() :
+      numeric_limits<T>::max();
 #endif
-    }
+  }
 
   template<typename T> T Math::infinity() {
 #if defined(_MSC_VER)
-      return numeric_limits<T>::has_infinity ?
+    return numeric_limits<T>::has_infinity ?
         numeric_limits<T>::infinity() :
         (numeric_limits<T>::max)();
 #else
-      return numeric_limits<T>::has_infinity ?
-        numeric_limits<T>::infinity() :
-        numeric_limits<T>::max();
+    return numeric_limits<T>::has_infinity ?
+      numeric_limits<T>::infinity() :
+      numeric_limits<T>::max();
 #endif
     }
 

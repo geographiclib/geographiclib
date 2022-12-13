@@ -1,6 +1,5 @@
+cmake_minimum_required (VERSION 3.13.0)
 project (geoidtest)
-
-cmake_minimum_required (VERSION 3.1.0)
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.

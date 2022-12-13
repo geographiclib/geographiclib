@@ -19,6 +19,8 @@
 #
 #   -D GeographicLib_DIR=${PROJECT_BINARY_DIR}
 
+cmake_minimum_required (VERSION 3.13.0)
+
 set (EXAMPLES0
   example-Accumulator.cpp
   example-AlbersEqualArea.cpp
@@ -67,8 +69,9 @@ set (EXAMPLES0
   example-UTMUPS.cpp
   example-Utility.cpp
   )
-set (EXAMPLES1 GeoidToGTX.cpp make-egmcof.cpp JacobiConformal.cpp)
-set (EXAMPLEHEADERS JacobiConformal.hpp)
+set (EXAMPLES1
+  GeoidToGTX.cpp make-egmcof.cpp JacobiConformal.cpp example-AuxLatitude.cpp)
+set (EXAMPLEHEADERS JacobiConformal.hpp AuxLatitude.cpp AuxLatitude.hpp)
 
 if (CALLED_FROM_TOPLEVEL)
   if (EXAMPLEDIR)
@@ -80,7 +83,6 @@ if (CALLED_FROM_TOPLEVEL)
 endif ()
 
 project (GeographicLib-examples)
-cmake_minimum_required (VERSION 3.7.0) # This version was released 2016-11-11
 
 # Set a default build type for single-configuration cmake generators if
 # no build type is set.
@@ -135,14 +137,16 @@ set (EXAMPLES)
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  if (EXISTS ${EXAMPLE}.hpp)
-    set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} ${EXAMPLE}.hpp)
+  if (EXAMPLE STREQUAL "JacobiConformal")
+    set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} JacobiConformal.hpp)
+  endif ()
+  if (EXAMPLE STREQUAL "example-AuxLatitude")
+    set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} AuxLatitude.cpp AuxLatitude.hpp)
   endif ()
   add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
   target_link_libraries (${EXAMPLE}
-    ${GeographicLib_LIBRARIES} ${HIGHPREC_LIBRARIES})
+    ${GeographicLib_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
 endforeach ()
-
 if (Boost_FOUND AND GEOGRAPHICLIB_PRECISION EQUAL 2)
   target_link_libraries (example-NearestNeighbor ${Boost_LIBRARIES})
 endif ()

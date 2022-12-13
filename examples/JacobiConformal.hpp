@@ -2,13 +2,16 @@
  * \file JacobiConformal.hpp
  * \brief Header for GeographicLib::JacobiConformal class
  *
- * <b>NOTE:</b> This is just sample code.  It is not part of GeographicLib
+ * \note This is just sample code.  It is not part of GeographicLib
  * itself.
  *
  * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
+
+#if !defined(GEOGRAPHICLIB_JACOBICONFORMAL_HPP)
+#define GEOGRAPHICLIB_JACOBICONFORMAL_HPP 1
 
 #include <GeographicLib/EllipticFunction.hpp>
 
@@ -169,3 +172,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#endif  // GEOGRAPHICLIB_JACOBICONFORMAL_HPP

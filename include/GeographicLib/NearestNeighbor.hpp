@@ -99,7 +99,7 @@ namespace GeographicLib {
    * Example of use:
    * \include example-NearestNeighbor.cpp
    **********************************************************************/
-  template <typename dist_t, typename pos_t, class distfun_t>
+  template<typename dist_t, typename pos_t, class distfun_t>
   class NearestNeighbor {
     // For tracking changes to the I/O format
     static const int version = 1;
@@ -822,7 +822,7 @@ namespace std {
    * @param[in,out] a the first GeographicLib::NearestNeighbor to swap.
    * @param[in,out] b the second GeographicLib::NearestNeighbor to swap.
    **********************************************************************/
-  template <typename dist_t, typename pos_t, class distfun_t>
+  template<typename dist_t, typename pos_t, class distfun_t>
   void swap(GeographicLib::NearestNeighbor<dist_t, pos_t, distfun_t>& a,
             GeographicLib::NearestNeighbor<dist_t, pos_t, distfun_t>& b) {
     a.swap(b);

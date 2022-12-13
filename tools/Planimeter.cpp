@@ -217,8 +217,8 @@ int main(int argc, const char* const argv[]) {
       } else {
         linetype == EXACT ? polye.AddPoint(lat, lon) :
           linetype == RHUMB ? polyr.AddPoint(lat, lon) :
-          poly.AddPoint(linetype == AUTHALIC ? ellip.AuthalicLatitude(lat) : lat,
-                        lon);
+          poly.AddPoint(linetype == AUTHALIC ? ellip.AuthalicLatitude(lat) :
+                        lat, lon);
       }
     }
     num =

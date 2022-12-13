@@ -4,9 +4,31 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.1.1
+The current version of the library is 2.1.2
+
+Changes between 2.1.2 (released 2022-12-13) and 2.1.1 versions:
+
+   * Add MGRS::Decode to break an MGRS string into its components.
+
+   * Add definite integral overload for DST::integral.  This is used in
+     GeodesicExact.
+
+   * Add example code examples/AuxLatitude.[hc]pp implementating the
+     AuxAngle and AuxLatitude classes.  These classes implement the
+     methods documented in the paper "On auxiliary latitudes",
+     https://arxiv.org/abs/2212.05818.  They are *not* part of
+     GeographicLib.  See Auxiliary latitudes for more details.
+
+   * Minor cmake issues:
+     + fix cross-compile build on Windows;
+     + check cmake version for "cmake rm -rf";
+     + move cmake_minimum_required to the beginning of the cmake file
+       and update minimum version to 3.13.0.
 
 Changes between 2.1.1 (released 2022-07-25) and 2.1 versions:
+
+   * Paper describing algorithms in GeodesicExact class is available at
+     https://arxiv.org/abs/2208.00492
 
    * The Planimeter utility used to accept polygon vertices as UTM/UPS
      or MGRS coordinates.  However, since these are converted to

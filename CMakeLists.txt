@@ -1,9 +1,10 @@
+cmake_minimum_required (VERSION 3.13.0)
 project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
 set (PROJECT_VERSION_MINOR 1)
-set (PROJECT_VERSION_PATCH 1)
+set (PROJECT_VERSION_PATCH 2)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
@@ -49,11 +50,9 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 23)
-set (LIBVERSION_BUILD 23.0.1)
+set (LIBVERSION_BUILD 23.1.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
-
-cmake_minimum_required (VERSION 3.7.0) # This version was released 2016-11-11
 
 if (EXISTS ${PROJECT_SOURCE_DIR}/VERSION)
   # If the file, VERSION, exists then this is a released version of
