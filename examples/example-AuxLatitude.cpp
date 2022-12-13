@@ -3,6 +3,7 @@
 // - C. F. F. Karney,
 //   On auxiliary latitudes,
 //   Technical Report, SRI International, December 2022.
+//   https://arxiv.org/abs/2212.05818
 
 #include <iostream>
 #include <iomanip>

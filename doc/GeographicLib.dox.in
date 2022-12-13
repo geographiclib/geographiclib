@@ -6451,20 +6451,29 @@ Back to \ref transversemercator.  Forward to \ref auxlat.  Up to \ref contents.
 Back to \ref geocentric.  Forward to \ref highprec.  Up to \ref contents.
 </center>
 
-Go to
- - \ref auxlatformula
- - \ref auxlattable
- - \ref auxlaterror
-
 This material is now written up as
- - C. F. F. Karney,
-   On auxiliary latitudes,
-   Technical Report, SRI International, December 2022.
+ - C. F. F. Karney,<br>
+   <a href="https://arxiv.org/abs/2212.05818">On auxiliary latitudes</a>,<br>
+   Technical Report, SRI International, December 2022.<br>
+   <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
  .
 An implementation of the methods described in this paper is available in
 the files <code>examples/AuxLatitude.[hc]pp</code> which provides the
 classes AuxAngle and AuxLatitude.  These classes are <b>not</b> yet part
 of GeographicLib.
+The series expansions described in the paper are available in
+ - C. F. F. Karney,<br>
+   <a href="https://doi.org/10.5281/zenodo.7382666">Series expansions
+   for converting between auxiliary latitudes</a>,<br>
+   December 2022.<br>
+   <a href="https://doi.org/10.5281/zenodo.7382666">
+   doi:10.5281/zenodo.7382666</a>
+ .
+
+Go to
+ - \ref auxlatformula
+ - \ref auxlattable
+ - \ref auxlaterror
 
 Six latitudes are used by GeographicLib:
 - &phi;, the (geographic) latitude;
@@ -7488,8 +7497,10 @@ git repository for GeographicLib</a>.
      GeodesicExact.
    - Add example code <code>examples/AuxLatitude.[hc]pp</code>
      implementating the AuxAngle and AuxLatitude classes.  These classes
-     implement the methods documented in <it>On auxiliary
-     latitudes</it>.  They are <b>not</b> part of GeographicLib.œ
+     implement the methods documented in the paper
+     <a href="https://arxiv.org/abs/2212.05818">On auxiliary
+     latitudes</a>.  They are <b>not</b> part of GeographicLib.  See
+     \ref auxlat for more details.
    - Minor cmake issues:
      - fix cross-compile build on Windows;
      - check cmake version for "cmake rm -rf";

@@ -9,6 +9,7 @@
  * - C. F. F. Karney,
  *   On auxiliary latitudes,
  *   Technical Report, SRI International, December 2022.
+ *   https://arxiv.org/abs/2212.05818
  * .
  * Copyright (c) Charles Karney (2022) <charles@karney.com> and licensed under
  * the MIT/X11 License.  For more information, see
@@ -39,6 +40,7 @@ namespace GeographicLib {
    * - C. F. F. Karney,
    *   On auxiliary latitudes,
    *   Technical Report, SRI International, December 2022.
+   *   https://arxiv.org/abs/2212.05818
    *
    * An angle is represented be the \e y and \e x coordinates of a point in the
    * 2d plane.  The two coordinates are proportional to the sine and cosine of
@@ -234,6 +236,7 @@ namespace GeographicLib {
    * - C. F. F. Karney,
    *   On auxiliary latitudes,
    *   Technical Report, SRI International, December 2022.
+   *   https://arxiv.org/abs/2212.05818
    *
    * The provides accurate conversions between geographic (\e phi, &phi;),
    * parametric (\e beta, &beta;), geocentric (\e theta, &theta;), rectifying
