@@ -137,7 +137,7 @@ VERSION=2.1.2
 
 Brew...
 
-  brew update
+  brew update + brew upgrade
   cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
   git checkout master; git pull?
   edit geographiclib.rb
@@ -160,7 +160,8 @@ Brew...
 conda-forge...
 
   geographiclib-cpp-feedstock
-  edit recipe/bld.bat recipe/build.sh recipe/meta.yaml
+  edit README.md recipe/bld.bat recipe/build.sh recipe/meta.yaml
+  needs patch file to turn off tests in signtest.cpp
 
   conda remove -y -n build --all
   conda create -y -n build
@@ -184,7 +185,7 @@ conda-forge...
 
 vcpkg...
   git pull
-  git branch -b geographiclib/$VERSION
+  git checkout -b geographiclib/$VERSION
   update ports/geographiclib
 
   ./vcpkg remove geographiclib
@@ -194,8 +195,8 @@ vcpkg...
 
   commit changes
 
-  # ./vcpkg x-add-version geographiclib
-  ./vcpkg x-add-version --all
+  ./vcpkg x-add-version geographiclib
+  # ./vcpkg x-add-version --all
 
   commit again
   commit message = [geographiclib] Update to version $VERSION

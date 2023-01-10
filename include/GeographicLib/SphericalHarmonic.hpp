@@ -51,7 +51,9 @@ namespace GeographicLib {
    * - R. E. Deakin, Derivatives of the earth's potentials, Geomatics
    *   Research Australasia 68, 31--60, (June 1998).
    * - W. A. Heiskanen and H. Moritz, Physical Geodesy, (Freeman, San
-   *   Francisco, 1967).  (See Sec. 1-14, for a definition of Pbar.)
+   *   Francisco, 1967).
+   *   https://archive.org/details/HeiskanenMoritz1967PhysicalGeodesy
+   *   (See Sec. 1-14, for a definition of Pbar.)
    * - S. A. Holmes and W. E. Featherstone,
    *   <a href="https://doi.org/10.1007/s00190-002-0216-2">
    *   A unified approach to the Clenshaw summation and the recursive

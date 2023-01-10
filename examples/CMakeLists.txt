@@ -101,6 +101,9 @@ endif ()
 find_package (GeographicLib 2.0 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
 
+set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
+
 option (USE_BOOST_FOR_EXAMPLES
   "Look for Boost library when compiling examples" ON)
 
@@ -156,10 +159,15 @@ find_package (OpenMP QUIET)
 if (OPENMP_FOUND OR OpenMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES
     COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+  if (OpenMP_CXX_INCLUDE_DIRS)
+    set_target_properties (GeoidToGTX PROPERTIES
+      INCLUDE_DIRECTORIES ${OpenMP_CXX_INCLUDE_DIRS})
+  endif ()
   if (NOT WIN32)
     set_target_properties (GeoidToGTX PROPERTIES
       LINK_FLAGS ${OpenMP_CXX_FLAGS})
   endif ()
+  target_link_libraries (GeoidToGTX ${OpenMP_CXX_LIBRARIES})
 endif ()
 
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
