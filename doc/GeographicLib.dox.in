@@ -5042,7 +5042,7 @@ References:
    </a> (Methods for direct and inverse geodesic problems
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
- - K. C. Carlton-Wippern
+ - K. C. Carlton-Wippern,
    <a href="https://doi.org/10.1017/S0373463300010791">
    On Loxodromic Navigation</a>,
    J. Navigation 45(2), 292--297 (1992).
@@ -5092,11 +5092,11 @@ References:
    The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5;
    DOI: <a href="https://doi.org/10.5281/zenodo.35392">
    10.5281/zenodo.35392</a>.
- - W. M. Smart
+ - W. M. Smart,
    <a href="https://doi.org/10.1093/mnras/106.2.124">
    On a Problem in Navigation</a>
    MNRAS 106(2), 124--127 (1946).
- - J. E. D. Williams
+ - J. E. D. Williams,
    <a href="https://doi.org/10.1017/S0373463300045549">
    Loxodromic Distances on the Terrestrial Spheroid Journal</a>,
    J. Navigation 3(2), 133--140 (1950)
@@ -5615,7 +5615,8 @@ References:
    The direct and inverse solutions for the great elliptic line on the
    reference ellipsoid</a>, Bull. Geod. 58, 101--108 (1984).
  - M. A. Earle,
-   A vector solution for navigation on a great ellipse,
+   <a href="https://doi.org/10.1017/S0373463300008948">
+   A vector solution for navigation on a great ellipse</a>,
    J. Navigation 53(3), 473--481 (2000).
  - M. A. Earle,
    <a href="https://doi.org/10.1017/S037346330800475X">
