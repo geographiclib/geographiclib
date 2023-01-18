@@ -16,6 +16,7 @@
 #include <GeographicLib/EllipticFunction.hpp>
 
 namespace GeographicLib {
+namespace experimental {
   /**
    * \brief Jacobi's conformal projection of a triaxial ellipsoid
    *
@@ -171,6 +172,7 @@ namespace GeographicLib {
     }
   };
 
+} // namespace experimental
 } // namespace GeographicLib
 
 #endif  // GEOGRAPHICLIB_JACOBICONFORMAL_HPP

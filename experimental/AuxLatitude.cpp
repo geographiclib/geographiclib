@@ -45,6 +45,7 @@
 #endif
 
 namespace GeographicLib {
+namespace experimental {
 
   using namespace std;
 
@@ -426,7 +427,8 @@ namespace GeographicLib {
       return zetan;
     } else {
       if (auxin < 3 && auxout < 3)
-        return angle(zeta.y() * pow(_fm1, auxout - auxin), zeta.x());
+        // Need extra real because, since C++11, pow(float, int) returns double
+        return angle(zeta.y() * real(pow(_fm1, auxout - auxin)), zeta.x());
       else
         return ToAuxiliary(auxout, FromAuxiliary(auxin, zeta));
     }
@@ -1518,4 +1520,5 @@ namespace GeographicLib {
   template class AuxLatitude<double>;
 #endif
 
+} // namespace experimental
 } // namespace GeographicLib

@@ -37,10 +37,10 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.1.2
-SUFFIX=
+VERSION=2.1.3
+SUFFIX=-alpha
 DISTVERSION=$VERSION$SUFFIX
-BRANCH=main
+BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
     DEVELSOURCE=$HOME/geographiclib
@@ -134,6 +134,7 @@ for ver in 14 15 16; do
             echo cmake --build \$b --config Debug   --target INSTALL
             echo cmake --build \$b --config Release --target ALL_BUILD
             echo cmake --build \$b --config Release --target exampleprograms
+            echo cmake --build \$b --config Release --target experimental
             echo cmake --build \$b --config Release --target RUN_TESTS
             echo cmake --build \$b --config Release --target INSTALL
             echo cmake --build \$b --config Release --target PACKAGE
@@ -223,6 +224,7 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
     make -j$NUMCPUS all
     make test
     make exampleprograms
+    make -j$NUMCPUS experimental
     make install
     # rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$VERSION/
 )
@@ -266,6 +268,7 @@ if test "$HAVEINTEL"; then
         make -j$NUMCPUS all
         make test
         make exampleprograms
+        make -j$NUMCPUS experimental
     )
 fi
 
@@ -300,7 +303,7 @@ cd BUILD-dist
 make dist-gzip
 
 echo ==============================================================
-echo Unpack release autoconf distribution in $TEMP/rely and list in $TEMP/files.z
+echo Unpack release autoconf distribution in $TEMP/rely and list in $TEMP/files.y
 
 mkdir $TEMP/rely
 tar xfpzC geographiclib-$VERSION.tar.gz $TEMP/rely
@@ -336,7 +339,8 @@ for p in 1 3 5; do
             make test
         fi
         make -j$NUMCPUS develprograms
-        make -j$NUMCPUS exampleprograms
+        make exampleprograms
+        make -j$NUMCPUS experimental
     )
 done
 
