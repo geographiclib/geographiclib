@@ -14,7 +14,7 @@ using namespace std;
 
 int main() {
   try {
-    typedef GeographicLib::AuxLatitude<double> latitude;
+    typedef GeographicLib::experimental::AuxLatitude<double> latitude;
     typedef latitude::angle angle;
     double a = 2, b = 1;        // Equatorial radius and polar semi-axis
     latitude aux(a, b);

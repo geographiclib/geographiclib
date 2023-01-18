@@ -70,8 +70,7 @@ set (EXAMPLES0
   example-Utility.cpp
   )
 set (EXAMPLES1
-  GeoidToGTX.cpp make-egmcof.cpp JacobiConformal.cpp example-AuxLatitude.cpp)
-set (EXAMPLEHEADERS JacobiConformal.hpp AuxLatitude.cpp AuxLatitude.hpp)
+  GeoidToGTX.cpp make-egmcof.cpp)
 
 if (CALLED_FROM_TOPLEVEL)
   if (EXAMPLEDIR)
@@ -140,12 +139,6 @@ set (EXAMPLES)
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  if (EXAMPLE STREQUAL "JacobiConformal")
-    set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} JacobiConformal.hpp)
-  endif ()
-  if (EXAMPLE STREQUAL "example-AuxLatitude")
-    set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} AuxLatitude.cpp AuxLatitude.hpp)
-  endif ()
   add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
   target_link_libraries (${EXAMPLE}
     ${GeographicLib_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})

@@ -34,7 +34,7 @@ if (BUILD_DOCUMENTATION)
   file (GLOB CXXSOURCES
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
-    ../examples/[A-Za-z]*.hpp)
+    ../experimental/[A-Za-z]*.[hc]pp)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac
     tmseries30.html geodseries30.html ../LICENSE.txt)
   file (GLOB FIGURES *.png *.svg *.gif)

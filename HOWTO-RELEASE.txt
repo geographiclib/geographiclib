@@ -56,6 +56,7 @@ release mode
   all test
   sanitize hygiene check on source files (trailing blanks, etc)
   exampleprograms compile example programs (this is separate cmake config)
+  experimental compile experimental code
   package make binary package for Windows
   package_source make source package
 

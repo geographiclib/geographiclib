@@ -1,7 +1,7 @@
 /**
  * \file AuxLatitude.hpp
- * \brief Header for the GeographicLib::AuxLatitude and GeographicLib::AuxAngle
- * classes.
+ * \brief Header for the GeographicLib::experimental::AuxLatitude and
+ * GeographicLib::experimental::AuxAngle classes.
  *
  * \note This is just sample code.  It is not part of GeographicLib itself.
  *
@@ -26,10 +26,24 @@
  * The order of the series approximation used in AuxLatitude.
  * GEOGRAPHICLIB_AUXLATITUDE_ORDER can be set to one of [4, 6, 8].
  **********************************************************************/
-#  define GEOGRAPHICLIB_AUXLATITUDE_ORDER 6
+#  if GEOGRAPHICLIB_PRECISION == 1
+#    define GEOGRAPHICLIB_AUXLATITUDE_ORDER 4
+#  else
+#    define GEOGRAPHICLIB_AUXLATITUDE_ORDER 6
+#  endif
 #endif
 
 namespace GeographicLib {
+
+/**
+ * \brief Namespace for experimental code
+ *
+ * The namespace includes experimental code which is not part of GeographicLib
+ * itself, but may, someday, be included.  This code is included in the library
+ * and is not installed.
+ **********************************************************************/
+
+namespace experimental {
 
   /**
    * \brief An accurate representation of angles.
@@ -500,6 +514,7 @@ namespace GeographicLib {
                          bool alt = true);
   };
 
+} // namespace experimental
 } // namespace GeographicLib
 
 #endif  // AUXLATITUDE_HPP
