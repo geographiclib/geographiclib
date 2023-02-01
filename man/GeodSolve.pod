@@ -62,8 +62,7 @@ perform an inverse geodesic calculation (see 2 above).
 line mode (see 3 above); generate a sequence of points along the
 geodesic specified by I<lat1> I<lon1> I<azi1>.  The B<-w> flag can be
 used to swap the default order of the 2 geographic coordinates, provided
-that it appears before B<-L>.  (B<-l> is an alternative, deprecated,
-spelling of this flag.)
+that it appears before B<-L>.
 
 =item B<-D> I<lat1> I<lon1> I<azi1> I<s13>
 

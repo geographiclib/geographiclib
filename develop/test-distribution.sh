@@ -257,7 +257,7 @@ echo ==============================================================
 echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD-system install to /usr/local
 
 cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
-(cd BUILD-system && make -j$NUMCPUS all&& make test)
+(cd BUILD-system && make -j$NUMCPUS all && make test)
 
 if test "$HAVEINTEL"; then
     echo ==============================================================
