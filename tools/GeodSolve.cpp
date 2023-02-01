@@ -2,7 +2,7 @@
  * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -94,7 +94,7 @@ int main(int argc, const char* const argv[]) {
         arcmode = !arcmode;
       else if (arg == "-F")
         fraction = true;
-      else if (arg == "-L" || arg == "-l") { // -l is DEPRECATED
+      else if (arg == "-L") {
         inverse = false;
         linecalc = LINE;
         if (m + 3 >= argc) return usage(1, true);

@@ -3,7 +3,7 @@
  * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
  * classes
  *
- * Copyright (c) Charles Karney (2014-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -339,9 +339,7 @@ namespace GeographicLib {
     , _lon1(lon1)
     , _azi12(Math::AngNormalize(azi12))
   {
-    real alp12 = _azi12 * Math::degree();
-    _salp =      _azi12  == -Math::hd ? 0 : sin(alp12);
-    _calp = fabs(_azi12) ==  Math::qd ? 0 : cos(alp12);
+    Math::sincosd(_azi12, _salp, _calp);
     _mu1 = _rh._ell.RectifyingLatitude(lat1);
     _psi1 = _rh._ell.IsometricLatitude(lat1);
     _r1 = _rh._ell.CircleRadius(lat1);

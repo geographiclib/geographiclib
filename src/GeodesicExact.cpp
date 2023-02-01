@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -28,6 +28,7 @@
 
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/GeodesicLineExact.hpp>
+#include <vector>
 
 #if defined(_MSC_VER)
 // Squelch warnings about potentially uninitialized local variables,
@@ -1174,7 +1175,6 @@ namespace GeographicLib {
 
   Math::real GeodesicExact::I4Integrand::asinhsqrt(real x) {
     // return asinh(sqrt(x))/sqrt(x)
-    using std::sqrt; using std::asinh; using std::asin;
     return x == 0 ? 1 :
       (x > 0 ? asinh(sqrt(x))/sqrt(x) :
        asin(sqrt(-x))/sqrt(-x)); // NaNs end up here
@@ -1183,7 +1183,6 @@ namespace GeographicLib {
     // This differs by from t as defined following Eq 61 in Karney (2013) by
     // the final subtraction of 1.  This changes nothing since Eq 61 uses the
     // difference of two evaluations of t and improves the accuracy(?).
-    using std::sqrt;
     // Group terms to minimize roundoff
     // with x = ep2, this is the same as
     // e2/(1-e2) + (atanh(e)/e - 1)
@@ -1191,14 +1190,12 @@ namespace GeographicLib {
   }
   Math::real GeodesicExact::I4Integrand::td(real x) {
     // d t(x) / dx
-    using std::sqrt;
     return x == 0 ? 4/real(3) :
       // Group terms to minimize roundoff
       1 + (1 - asinhsqrt(x) / sqrt(1+x)) / (2*x);
   }
   // Math::real GeodesicExact::I4Integrand::Dt(real x, real y) {
   //   // ( t(x) - t(y) ) / (x - y)
-  //   using std::sqrt; using std::fabs; using std::asinh; using std::asin;
   //   if (x == y) return td(x);
   //   if (x * y <= 0) return ( t(x) - t(y) ) / (x - y);
   //   real
@@ -1215,7 +1212,6 @@ namespace GeographicLib {
   Math::real GeodesicExact::I4Integrand::DtX(real y) const {
     // idiot version:
     // return ( tX - t(y) ) / (X - y);
-    using std::sqrt; using std::fabs; using std::asinh; using std::asin;
     if (X == y) return tdX;
     if (X * y <= 0) return ( tX - t(y) ) / (X - y);
     real
@@ -1234,14 +1230,12 @@ namespace GeographicLib {
     , tdX( td(X) )
     , _k2( k2 )
   {
-    using std::fabs; using std::sqrt; using std::asinh; using std::asin;
     sX = sqrt(fabs(X));     // ep
     sX1 =  sqrt(1 + X);     // 1/(1-f)
     sXX1 = sX * sX1;
     asinhsX = X > 0 ? asinh(sX) : asin(sX); // atanh(e)
   }
   Math::real GeodesicExact::I4Integrand::operator()(real sig) const {
-    using std::sin;
     real ssig = sin(sig);
     return - DtX(_k2 * Math::sq(ssig)) * ssig/2;
   }

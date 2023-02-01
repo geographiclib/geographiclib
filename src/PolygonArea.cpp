@@ -2,7 +2,7 @@
  * \file PolygonArea.cpp
  * \brief Implementation for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -50,7 +50,6 @@ namespace GeographicLib {
   int PolygonAreaT<GeodType>::transitdirect(real lon1, real lon2) {
     // Compute exactly the parity of
     //   int(floor(lon2 / 360)) - int(floor(lon1 / 360))
-    using std::remainder;
     // C++ C remainder -> [-360, 360]
     // Java % -> (-720, 720) switch to IEEEremainder -> [-360, 360]
     // JS % -> (-720, 720)

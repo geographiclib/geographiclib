@@ -2,7 +2,7 @@
  * \file RhumbSolve.cpp
  * \brief Command line utility for rhumb line calculations
  *
- * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -65,7 +65,7 @@ int main(int argc, const char* const argv[]) {
       if (arg == "-i") {
         inverse = true;
         linecalc = false;
-      } else if (arg == "-L" || arg == "-l") { // -l is DEPRECATED
+      } else if (arg == "-L") {
         inverse = false;
         linecalc = true;
         if (m + 3 >= argc) return usage(1, true);

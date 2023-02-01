@@ -2,8 +2,8 @@
  * \file DST.hpp
  * \brief Header for GeographicLib::DST class
  *
- * Copyright (c) Charles Karney (2022) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -96,7 +96,7 @@ namespace GeographicLib {
      * Determine first \e N terms in the Fourier series
      *
      * @param[in] f the function used for evaluation.
-     * @param[out] F  the first \e N coefficients of the Fourier series.
+     * @param[out] F the first \e N coefficients of the Fourier series.
      *
      * The evaluates \f$ f(\sigma) \f$ at \f$ \sigma = (j + 1) \pi / (2 N) \f$
      * for integer \f$ j \in [0, N) \f$.  \e F should be an array of length at
