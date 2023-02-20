@@ -1,7 +1,7 @@
 /**
  * \file AuxLatitude.cpp
- * \brief Implementation for the GeographicLib::experimental::AuxLatitude and
- * GeographicLib::experimental::AuxAngle classes.
+ * \brief Implementation for the GeographicLib::experimental::AuxLatitude
+ * class.
  *
  * \note This is just sample code.  It is not part of GeographicLib itself.
  *
@@ -11,12 +11,13 @@
  *   Technical Report, SRI International, December 2022.
  *   https://arxiv.org/abs/2212.05818
  * .
- * Copyright (c) Charles Karney (2022) <charles@karney.com> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include "AuxLatitude.hpp"
+#include <iostream>
 
 /// \cond SKIP
 
@@ -50,52 +51,14 @@ namespace experimental {
   using namespace std;
 
   template<typename T>
-  AuxAngle<T> AuxAngle<T>::NaN() {
-    return AuxAngle(std::numeric_limits<real>::quiet_NaN(),
-                    std::numeric_limits<real>::quiet_NaN());
-  }
-
-  template<typename T>
-  AuxAngle<T> AuxAngle<T>::normalized() const {
-    if ( isnan( tan() ) ||
-         (fabs(_y) > std::numeric_limits<real>::max()/2 &&
-          fabs(_x) > std::numeric_limits<real>::max()/2) )
-      // deal with
-      // (0,0), (inf,inf), (nan,nan), (nan,x), (y,nan), (toobig,toobig)
-      return NaN();
-    real r = hypot(_y, _x),
-      y = _y/r, x = _x/r;
-    // deal with r = inf, then one of y,x
-    if (isnan(y)) y = copysign(real(1), _y);
-    if (isnan(x)) x = copysign(real(1), _x);
-    return AuxAngle(y, x);
-  }
-
-  template<typename T>
-  AuxAngle<T> AuxAngle<T>::copyquadrant(const AuxAngle& p) const {
-    return AuxAngle(copysign(y(), p.y()), copysign(x(), p.x()));
-  }
-
-  template<typename T>
-  AuxAngle<T>& AuxAngle<T>::operator+=(const AuxAngle& p) {
-    // Do nothing if p.tan() == 0 to preserve signs of y() and x()
-    if (p.tan() != 0) {
-      real x = _x * p._x - _y * p._y;
-      _y = _y * p._x + _x * p._y;
-      _x = x;
-    }
-    return *this;
-  }
-
-  template<typename T>
-  AuxLatitude<T>::AuxLatitude(real f)
-    : tol_( sqrt(numeric_limits<real>::epsilon()) )
+  AuxLatitude<T>::AuxLatitude(T f)
+    : tol_( sqrt(numeric_limits<T>::epsilon()) )
 #if AUXLATITUDE_UNOPT
-    , bmin_( numeric_limits<real>::min() )
-    , bmax_( numeric_limits<real>::max() )
+    , bmin_( numeric_limits<T>::min() )
+    , bmax_( numeric_limits<T>::max() )
 #else
-    , bmin_( log2(numeric_limits<real>::min()) )
-    , bmax_( log2(numeric_limits<real>::max()) )
+    , bmin_( log2(numeric_limits<T>::min()) )
+    , bmax_( log2(numeric_limits<T>::max()) )
 #endif
     , _f( f )
     , _fm1( 1 - _f )
@@ -117,18 +80,18 @@ namespace experimental {
           isfinite(_n) && fabs(_n) < 1))
       throw GeographicErr("Bad ellipsoid parameters");
     fill(_c, _c + Lmax * AUXNUMBER * AUXNUMBER,
-         numeric_limits<real>::quiet_NaN());
+         numeric_limits<T>::quiet_NaN());
   }
 
   template<typename T>
-  AuxLatitude<T>::AuxLatitude(real a, real b)
-    : tol_( sqrt(numeric_limits<real>::epsilon()) )
+  AuxLatitude<T>::AuxLatitude(T a, T b)
+    : tol_( sqrt(numeric_limits<T>::epsilon()) )
 #if AUXLATITUDE_UNOPT
-    , bmin_( numeric_limits<real>::min() )
-    , bmax_( numeric_limits<real>::max() )
+    , bmin_( numeric_limits<T>::min() )
+    , bmax_( numeric_limits<T>::max() )
 #else
-    , bmin_( log2(numeric_limits<real>::min()) )
-    , bmax_( log2(numeric_limits<real>::max()) )
+    , bmin_( log2(numeric_limits<T>::min()) )
+    , bmax_( log2(numeric_limits<T>::max()) )
 #endif
     , _f( (a - b) / a )
     , _fm1( b / a )
@@ -150,26 +113,26 @@ namespace experimental {
           isfinite(_n) && fabs(_n) < 1))
       throw GeographicErr("Bad ellipsoid parameters");
     fill(_c, _c + Lmax * AUXNUMBER * AUXNUMBER,
-         numeric_limits<real>::quiet_NaN());
+         numeric_limits<T>::quiet_NaN());
   }
 
   template<typename T>
-  AuxAngle<T> AuxLatitude<T>::Parametric(const angle& phi, real* diff) const {
+  AuxAngle<T> AuxLatitude<T>::Parametric(const angle& phi, T* diff) const {
     if (diff) *diff = _fm1;
     return angle(phi.y() * _fm1, phi.x());
   }
 
   template<typename T>
-  AuxAngle<T> AuxLatitude<T>::Geocentric(const angle& phi, real* diff) const {
+  AuxAngle<T> AuxLatitude<T>::Geocentric(const angle& phi, T* diff) const {
     if (diff) *diff = _e2m1;
     return angle(phi.y() * _e2m1, phi.x());
   }
 
   template<typename T>
-  AuxAngle<T> AuxLatitude<T>::Rectifying(const angle& phi, real* diff) const {
+  AuxAngle<T> AuxLatitude<T>::Rectifying(const angle& phi, T* diff) const {
     angle beta(Parametric(phi).normalized());
-    real sbeta = fabs(beta.y()), cbeta = fabs(beta.x());
-    real a = 1, b = _fm1, ka = _e2, kb = -_e12, ka1 = _e2m1, kb1 = _e12p1,
+    T sbeta = fabs(beta.y()), cbeta = fabs(beta.x());
+    T a = 1, b = _fm1, ka = _e2, kb = -_e12, ka1 = _e2m1, kb1 = _e12p1,
       smu, cmu, mr;
     if (_f < 0) {
       swap(a, b); swap(ka, kb); swap(ka1, kb1); swap(sbeta, cbeta);
@@ -180,7 +143,7 @@ namespace experimental {
     // NB kb <= 0; 0 <= ka <= 1
     // sa = b*E(beta,sqrt(kb)), sb = a*E(beta',sqrt(ka))
     //    1 - ka * (1 - sb2) = 1 -ka + ka*sb2
-    real
+    T
       sb2 = sbeta * sbeta,
       cb2 = cbeta * cbeta,
       db2 = 1 - kb * sb2,
@@ -193,15 +156,15 @@ namespace experimental {
                          + ka * sbeta / sqrt(da2) );
     // sa + sb  = 2*EllipticFunction::RG(a*a, b*b) = a*E(e) = b*E(i*e')
     // mr = a*E(e)*(2/pi) = b*E(i*e')*(2/pi)
-    mr = (2 * (sa + sb)) / Math::pi<real>();
+    mr = (2 * (sa + sb)) / Math::pi<T>();
     smu = sin(sa / mr);
     cmu = sin(sb / mr);
     if (_f < 0) { swap(smu, cmu); swap(a, b); }
     // mu is normalized
     angle mu(angle(smu, cmu).copyquadrant(phi));
     if (diff) {
-      real cphi = phi.normalized().x(), tphi = phi.tan();
-      if (isfinite(tphi) || isnan(tphi)) {
+      T cphi = phi.normalized().x(), tphi = phi.tan();
+      if (!isinf(tphi)) {
         cmu = mu.x(); cbeta = beta.x();
         *diff = _fm1 * b/mr * Math::sq(cbeta / cmu) * (cbeta / cphi);
       } else
@@ -211,10 +174,10 @@ namespace experimental {
   }
 
   template<typename T>
-  AuxAngle<T> AuxLatitude<T>::Conformal(const angle& phi, real* diff) const {
-    real tphi = fabs(phi.tan()), tchi = tphi;
+  AuxAngle<T> AuxLatitude<T>::Conformal(const angle& phi, T* diff) const {
+    T tphi = fabs(phi.tan()), tchi = tphi;
     if ( !( !isfinite(tphi) || tphi == 0 || _f == 0 ) ) {
-      real scphi = sc(tphi),
+      T scphi = sc(tphi),
         sig = sinh(_e2 * atanhee(tphi) ),
         scsig = sc(sig);
 #if AUXLATITUDE_UNOPT
@@ -229,7 +192,7 @@ namespace experimental {
         //   (tphi - sig) * (tphi + sig) / (tphi * scsig + sig * scphi)
         // To control overflow, write as (sigtphi = sig / tphi)
         //   (tphi - sig) * (1 + sigtphi) / (scsig + sigtphi * scphi)
-        real sigtphi = sig / tphi, tphimsig;
+        T sigtphi = sig / tphi, tphimsig;
         if (sig < tphi / 2)
           tphimsig = tphi - sig;
         else {
@@ -242,8 +205,7 @@ namespace experimental {
           // Turn the crank on divided differences, substitute
           //   sphi = tphi/sc(tphi)
           //   atanh(x) = asinh(x/sqrt(1-x^2))
-          real
-            em1 = _e2m1 / (1 + _e),              // 1 - e
+          T em1 = _e2m1 / (1 + _e),              // 1 - e
             atanhs = asinh(tphi),                // atanh(sphi)
             scbeta = sc(_fm1 * tphi),            // sec(beta)
             scphibeta = sc(tphi) / scbeta,       // sec(phi)/sec(beta)
@@ -260,17 +222,17 @@ namespace experimental {
     }
     angle chi(angle(tchi).copyquadrant(phi));
     if (diff) {
-      if (isfinite(tphi) || isnan(tphi)) {
-        real cchi = chi.normalized().x(),
+      if (!isinf(tphi)) {
+        T cchi = chi.normalized().x(),
           cphi = phi.normalized().x(),
           cbeta = Parametric(phi).normalized().x();
         *diff = _e2m1 * (cbeta / cchi) * (cbeta / cphi);
       } else {
 #if AUXLATITUDE_UNOPT
-        real ss = _f > 0 ? sinh(_e * asinh(_e1)) : sinh(-_e * atan(_e));
+        T ss = _f > 0 ? sinh(_e * asinh(_e1)) : sinh(-_e * atan(_e));
         *diff = _f > 0 ? 1/( sc(ss) + ss ) : sc(ss) - ss;
 #else
-        real ss = _f > 0 ? sinh(_e * atanh(_e)) : sinh(-_e * atan(_e));
+        T ss = _f > 0 ? sinh(_e * atanh(_e)) : sinh(-_e * atan(_e));
         *diff = sc(ss) - ss;
 #endif
       }
@@ -279,19 +241,18 @@ namespace experimental {
   }
 
   template<typename T>
-  AuxAngle<T> AuxLatitude<T>::Authalic(const angle& phi, real* diff) const {
-    real tphi = fabs(phi.tan());
+  AuxAngle<T> AuxLatitude<T>::Authalic(const angle& phi, T* diff) const {
+    T tphi = fabs(phi.tan());
     angle xi(phi), phin(phi.normalized());
     if ( !( !isfinite(tphi) || tphi == 0 || _f == 0 ) ) {
-      real qv = q(tphi),
+      T qv = q(tphi),
         Dqp = Dq(tphi),
         Dqm = (_q + qv) / (1 + fabs(phin.y())); // Dq(-tphi)
       xi = angle( copysign(qv, phi.y()), phin.x() * sqrt(Dqp * Dqm) );
     }
     if (diff) {
-      if (isfinite(tphi) || isnan(tphi)) {
-        real
-          cbeta = Parametric(phi).normalized().x(),
+      if (!isnan(tphi)) {
+        T cbeta = Parametric(phi).normalized().x(),
           cxi = xi.normalized().x();
         *diff =
           (2/_q) * Math::sq(cbeta / cxi) * (cbeta / cxi) * (cbeta / phin.x());
@@ -303,7 +264,7 @@ namespace experimental {
 
   template<typename T>
   AuxAngle<T> AuxLatitude<T>::ToAuxiliary(int auxout, const angle& phi,
-                                          real* diff) const {
+                                          T* diff) const {
     switch (auxout) {
     case GEOGRAPHIC: if (diff) *diff = 1; return phi; break;
     case PARAMETRIC: return Parametric(phi, diff); break;
@@ -312,7 +273,7 @@ namespace experimental {
     case CONFORMAL : return Conformal (phi, diff); break;
     case AUTHALIC  : return Authalic  (phi, diff); break;
     default:
-      if (diff) *diff = numeric_limits<real>::quiet_NaN();
+      if (diff) *diff = numeric_limits<T>::quiet_NaN();
       return angle::NaN();
       break;
     }
@@ -322,7 +283,7 @@ namespace experimental {
   AuxAngle<T> AuxLatitude<T>::FromAuxiliary(int auxin, const angle& zeta,
                                             int* niter) const {
     int n = 0; if (niter) *niter = n;
-    real tphi = _fm1;
+    T tphi = _fm1;
     switch (auxin) {
     case GEOGRAPHIC: return zeta; break;
       // case PARAMETRIC:                   break;
@@ -337,15 +298,15 @@ namespace experimental {
 
     // Drop through to solution by Newton's method
 #if AUXLATITUDE_UNOPT
-    real tzeta = fabs(zeta.tan());
+    T tzeta = fabs(zeta.tan());
     if (!isfinite(tzeta)) return zeta;
     tphi = tzeta / tphi;
-    real bmin = fmin(tphi, bmin_), bmax = fmax(tphi, bmax_);
+    T bmin = fmin(tphi, bmin_), bmax = fmax(tphi, bmax_);
     for (int sign = 0, osign = 0, ntrip = 0; n < numit_;) {
       ++n;
-      real diff;
+      T diff;
       angle zeta1(ToAuxiliary(auxin, angle(tphi), &diff));
-      real tzeta1 = zeta1.tan();
+      T tzeta1 = zeta1.tan();
       osign = sign;
       if (tzeta1 == tzeta)
         break;
@@ -356,7 +317,7 @@ namespace experimental {
         sign = -1;
         bmin = tphi;
       }
-      real dtphi = -(tzeta1 - tzeta) / diff;
+      T dtphi = -(tzeta1 - tzeta) / diff;
       tphi += dtphi;
       if (!(fabs(dtphi) >= tol_ * tphi))
         break;
@@ -368,16 +329,16 @@ namespace experimental {
       }
     }
 #else
-    real tzeta = fabs(zeta.tan()), ltzeta = log2(tzeta);
+    T tzeta = fabs(zeta.tan()), ltzeta = log2(tzeta);
     if (!isfinite(ltzeta)) return zeta;
     tphi = tzeta / tphi;
-    real ltphi = log2(tphi),
+    T ltphi = log2(tphi),
       bmin = fmin(ltphi, bmin_), bmax = fmax(ltphi, bmax_);
     for (int sign = 0, osign = 0, ntrip = 0; n < numit_;) {
       ++n;
-      real diff;
+      T diff;
       angle zeta1(ToAuxiliary(auxin, angle(tphi), &diff));
-      real tzeta1 = zeta1.tan(), ltzeta1 = log2(tzeta1);
+      T tzeta1 = zeta1.tan(), ltzeta1 = log2(tzeta1);
       // Convert derivative from dtan(zeta)/dtan(phi) to
       // dlog(tan(zeta))/dlog(tan(phi))
       diff *= tphi/tzeta1;
@@ -391,7 +352,7 @@ namespace experimental {
         sign = -1;
         bmin = ltphi;
       }
-      real dltphi = -(ltzeta1 - ltzeta) / diff;
+      T dltphi = -(ltzeta1 - ltzeta) / diff;
       ltphi += dltphi;
       tphi = exp2(ltphi);
       if (!(fabs(dltphi) >= tol_)) {
@@ -420,29 +381,104 @@ namespace experimental {
     if (k < 0) return angle::NaN();
     if (auxin == auxout) return zeta;
     if (series) {
-      if ( isnan(_c[Lmax * k]) ) fillcoeff(auxin, auxout, k);
+      if ( isnan(_c[Lmax * (k + 1) - 1]) ) fillcoeff(auxin, auxout, k);
       angle zetan(zeta.normalized());
-      real d = Clenshaw(zetan.y(), zetan.x(), _c + Lmax * k, Lmax);
+      T d = Clenshaw(true, zetan.y(), zetan.x(), _c + Lmax * k, Lmax);
       zetan += angle::radians(d);
       return zetan;
     } else {
       if (auxin < 3 && auxout < 3)
-        // Need extra real because, since C++11, pow(float, int) returns double
-        return angle(zeta.y() * real(pow(_fm1, auxout - auxin)), zeta.x());
+        // Need extra T because, since C++11, pow(float, int) returns double
+        return angle(zeta.y() * T(pow(_fm1, auxout - auxin)), zeta.x());
       else
         return ToAuxiliary(auxout, FromAuxiliary(auxin, zeta));
     }
   }
 
   template<typename T>
-  typename AuxLatitude<T>::real AuxLatitude<T>::RD(real x, real y, real z) {
+  T AuxLatitude<T>::RectifyingRadius(T a, bool series) const {
+    T b = a * _fm1;
+    if (series) {
+      // Maxima code for these coefficients:
+      // df[i]:=if i<0 then df[i+2]/(i+2) else i!!$
+      // R(Lmax):=sum((df[2*j-3]/df[2*j])^2*n^(2*j),j,0,floor(Lmax/2))$
+      // cf(Lmax):=block([t:R(Lmax)],
+      //  t:makelist(coeff(t,n,2*(floor(Lmax/2)-j)),j,0,floor(Lmax/2)),
+      //  map(lambda([x],num(x)/
+      //         (if denom(x) = 1 then 1 else T(denom(x)))),t))$
+#if GEOGRAPHICLIB_AUXLATITUDE_ORDER == 4
+      static const T coeff[] = {1/real(64), 1/real(4), 1};
+#elif GEOGRAPHICLIB_AUXLATITUDE_ORDER == 6
+      static const T coeff[] = {1/real(256), 1/real(64), 1/real(4), 1};
+#elif GEOGRAPHICLIB_AUXLATITUDE_ORDER == 8
+      static const T coeff[] = {
+        25/real(16384), 1/real(256), 1/real(64), 1/real(4), 1
+      };
+#else
+#error "Unsupported value for GEOGRAPHICLIB_AUXLATITUDE_ORDER"
+#endif
+      int m = Lmax/2;
+      return (a + b) / 2 * Math::polyval(m, coeff, _n2);
+    } else {
+      return RG(Math::sq(a), Math::sq(b)) * 4 / Math::pi<T>();
+    }
+  }
+
+  template<typename T>
+  T AuxLatitude<T>::AuthalicRadiusSquared(T a, bool series) const {
+    T b = a * _fm1;
+    if (series) {
+      // Using a * (a + b) / 2 as the multiplying factor leads to a rapidly
+      // converging series in n.  Of course, using this series isn't really
+      // necessary, since the exact expression is simple to evaluate.  However,
+      // we do it for consistency with RectifyingRadius; and, presumably, the
+      // roundoff error is smaller compared to that for the exact expression.
+      //
+      // Maxima code for these coefficients:
+      // c2:subst(e=2*sqrt(n)/(1+n),
+      //          (atanh(e)/e * (1-n)^2 + (1+n)^2)/(2*(1+n)))$
+      // cf(Lmax):=block([t:expand(ratdisrep(taylor(c2,n,0,Lmax)))],
+      //  t:makelist(coeff(t,n,Lmax-j),j,0,Lmax),
+      //  map(lambda([x],num(x)/
+      //         (if denom(x) = 1 then 1 else real(denom(x)))),t))$
+      // N.B. Coeff of n^j = 1                     for j = 0
+      //                     -1/3                  for j = 1
+      //                     4*(2*j-5)!!/(2*j+1)!! for j > 1
+#if GEOGRAPHICLIB_AUXLATITUDE_ORDER == 4
+      static const T coeff[] = {
+        4/real(315), 4/real(105), 4/real(15), -1/real(3), 1
+      };
+#elif GEOGRAPHICLIB_AUXLATITUDE_ORDER == 6
+      static const T coeff[] = {
+        4/real(1287), 4/real(693), 4/real(315), 4/real(105), 4/real(15),
+        -1/real(3), 1
+      };
+#elif GEOGRAPHICLIB_AUXLATITUDE_ORDER == 8
+      static const T coeff[] = {
+        4/real(3315), 4/real(2145), 4/real(1287), 4/real(693), 4/real(315),
+        4/real(105), 4/real(15), -1/real(3), 1
+      };
+#else
+#error "Unsupported value for GEOGRAPHICLIB_AUXLATITUDE_ORDER"
+#endif
+      int m = Lmax;
+      return a * (a + b) / 2 *  Math::polyval(m, coeff, _n);
+    } else {
+      return (Math::sq(a) + Math::sq(b) *
+              (_f == 0 ? 1 :
+               (_f > 0 ? asinh(sqrt(_e12)) : atan(sqrt(-_e2))) /
+               sqrt(fabs(_e2))))/2;
+    }
+  }
+
+  template<typename T>
+  T AuxLatitude<T>::RD(T x, T y, T z) {
 #if AUXLATITUDE_NATIVE_ELLIPTIC
     // Carlson, eqs 2.28 - 2.34
-    static const real
-      tolRD = pow(real(0.2) * (numeric_limits<real>::epsilon() * real(0.01)),
-                  1/real(8));
-    real
-      A0 = (x + y + 3*z)/5,
+    static const T
+      tolRD = pow(T(0.2) * (numeric_limits<T>::epsilon() * T(0.01)),
+                  1/T(8));
+    T A0 = (x + y + 3*z)/5,
       An = A0,
       Q = fmax(fmax(fabs(A0-x), fabs(A0-y)), fabs(A0-z)) / tolRD,
       x0 = x,
@@ -452,7 +488,7 @@ namespace experimental {
       s = 0;
     while (Q >= mul * fabs(An)) {
       // Max 7 trips
-      real lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
+      T lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
       s += 1/(mul * sqrt(z0) * (z0 + lam));
       An = (An + lam)/4;
       x0 = (x0 + lam)/4;
@@ -460,8 +496,7 @@ namespace experimental {
       z0 = (z0 + lam)/4;
       mul *= 4;
     }
-    real
-      X = (A0 - x) / (mul * An),
+    T X = (A0 - x) / (mul * An),
       Y = (A0 - y) / (mul * An),
       Z = -(X + Y) / 3,
       E2 = X*Y - 6*Z*Z,
@@ -479,19 +514,18 @@ namespace experimental {
             E2 * ((417690 - 255255 * E2) * E2 - 875160) + 4084080) /
       (4084080 * mul * An * sqrt(An)) + 3 * s;
 #else
-    return real(EllipticFunction::RD(Math::real(x), Math::real(y),
-                                     Math::real(z)));
+    return T(EllipticFunction::RD(Math::real(x), Math::real(y),
+                                  Math::real(z)));
 #endif
   }
 
   template<typename T>
-  typename AuxLatitude<T>::real AuxLatitude<T>::RF(real x, real y, real z) {
+  T AuxLatitude<T>::RF(T x, T y, T z) {
 #if AUXLATITUDE_NATIVE_ELLIPTIC
     // Carlson, eqs 2.2 - 2.7
-    static const real tolRF =
-      pow(3 * numeric_limits<real>::epsilon() * real(0.01), 1/real(8));
-    real
-      A0 = (x + y + z)/3,
+    static const T tolRF =
+      pow(3 * numeric_limits<T>::epsilon() * T(0.01), 1/T(8));
+    T A0 = (x + y + z)/3,
       An = A0,
       Q = fmax(fmax(fabs(A0-x), fabs(A0-y)), fabs(A0-z)) / tolRF,
       x0 = x,
@@ -500,15 +534,14 @@ namespace experimental {
       mul = 1;
     while (Q >= mul * fabs(An)) {
       // Max 6 trips
-      real lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
+      T lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
       An = (An + lam)/4;
       x0 = (x0 + lam)/4;
       y0 = (y0 + lam)/4;
       z0 = (z0 + lam)/4;
       mul *= 4;
     }
-    real
-      X = (A0 - x) / (mul * An),
+    T X = (A0 - x) / (mul * An),
       Y = (A0 - y) / (mul * An),
       Z = - (X + Y),
       E2 = X*Y - Z*Z,
@@ -522,19 +555,46 @@ namespace experimental {
             E2 * ((10010 - 5775 * E2) * E2 - 24024) + 240240) /
       (240240 * sqrt(An));
 #else
-    return real(EllipticFunction::RF(Math::real(x), Math::real(y),
-                                     Math::real(z)));
+    return T(EllipticFunction::RF(Math::real(x), Math::real(y),
+                                  Math::real(z)));
 #endif
   }
 
   template<typename T>
-  typename AuxLatitude<T>::real AuxLatitude<T>::atanhee(real tphi) const {
+  T AuxLatitude<T>::RG(T x, T y) {
+#if AUXLATITUDE_NATIVE_ELLIPTIC
+    // Carlson, eqs 2.36 - 2.39
+    static const T tolRG0 =
+      T(2.7) * sqrt((numeric_limits<T>::epsilon() * T(0.01)));
+    T x0 = sqrt(fmax(x, y)),
+      y0 = sqrt(fmin(x, y)),
+      xn = x0,
+      yn = y0,
+      s = 0,
+      mul = T(0.25);
+    while (fabs(xn-yn) > tolRG0 * xn) {
+      // Max 4 trips
+      T t = (xn + yn) /2;
+      yn = sqrt(xn * yn);
+      xn = t;
+      mul *= 2;
+      t = xn - yn;
+      s += mul * t * t;
+    }
+    return (Math::sq( (x0 + y0)/2 ) - s) * Math::pi<T>() / (2 * (xn + yn));
+#else
+    return T(EllipticFunction::RG(Math::real(x), Math::real(y)));
+#endif
+  }
+
+  template<typename T>
+  T AuxLatitude<T>::atanhee(T tphi) const {
 #if AUXLATITUDE_UNOPT
-    real sphi = sn(tphi);
+    T sphi = sn(tphi);
     return _f == 0 ? sphi :
       (_f < 0 ? atan( _e * sphi ) : atanh( _e * sphi )) / _e;
 #else
-    real s = _f <= 0 ? sn(tphi) : sn(_fm1 * tphi);
+    T s = _f <= 0 ? sn(tphi) : sn(_fm1 * tphi);
     return _f == 0 ? s :
       // atanh(e * sphi) = asinh(e' * sbeta)
       (_f < 0 ? atan( _e * s ) : asinh( _e1 * s )) / _e;
@@ -542,20 +602,20 @@ namespace experimental {
   }
 
   template<typename T>
-  typename AuxLatitude<T>::real AuxLatitude<T>::q(real tphi) const {
+  T AuxLatitude<T>::q(T tphi) const {
 #if AUXLATITUDE_UNOPT
-    real sphi = sn(tphi);
+    T sphi = sn(tphi);
     return atanhee(tphi) + sphi / (1 - _e2 * sphi*sphi);
 #else
-    real scbeta = sc(_fm1 * tphi);
+    T scbeta = sc(_fm1 * tphi);
     return atanhee(tphi) + (tphi / scbeta) * (sc(tphi) / scbeta);
 #endif
   }
 
   template<typename T>
-  typename AuxLatitude<T>::real AuxLatitude<T>::Dq(real tphi) const {
+  T AuxLatitude<T>::Dq(T tphi) const {
 #if AUXLATITUDE_UNOPT
-    real sphi = sn(tphi), d = 1 - sphi;
+    T sphi = sn(tphi), d = 1 - sphi;
     if (tphi <= 0)
       // This branch is not reached; this case is open-coded in Authalic.
       return (_q - q(tphi)) / d;
@@ -567,7 +627,7 @@ namespace experimental {
                atanh(_e * d / (1 - _e2 * sphi)) / (_e * d) )) +
         (1 + _e2 * sphi) / ((1 - _e2 * sphi*sphi) * _e2m1);
 #else
-    real scphi = sc(tphi), sphi = sn(tphi),
+    T scphi = sc(tphi), sphi = sn(tphi),
       // d = (1 - sphi) can underflow to zero for large tphi
       d = tphi > 0 ? 1 / (scphi * scphi * (1 + sphi)) : 1 - sphi;
     if (tphi <= 0)
@@ -582,7 +642,7 @@ namespace experimental {
       // atanh( e * d / (1 - e2 * sphi))
       // = atanh( e * d * scphi/(scphi - e2 * tphi))
       // =
-      real scbeta = sc(_fm1 * tphi);
+      T scbeta = sc(_fm1 * tphi);
       return (_f == 0 ? 1 :
               (_f > 0 ? asinh(_e1 * d * scphi / scbeta) :
                atan(_e * d / (1 - _e2 * sphi))) / (_e * d) ) +
@@ -1414,7 +1474,7 @@ namespace experimental {
       -793693009/real(9807557760LL), 453002260127LL/real(7846046208000LL),
       -53583096419057LL/real(500185445760000LL),
       103558761539LL/real(1426553856000LL),
-      12272105438887727LL/real(128047474114560000LL),
+      real(12272105438887727LL)/real(128047474114560000LL),
       // C[xi,chi]
       -64724382148LL/real(97692469875LL), 16676974/real(30405375),
       2706758/real(42567525), -55222/real(93555), 2458/real(4725),
@@ -1479,46 +1539,32 @@ namespace experimental {
   }
 
   template<typename T>
-  typename AuxLatitude<T>::real
-  AuxLatitude<T>::Clenshaw(real szeta, real czeta,
-                           const real c[], int K, bool alt) {
+  T AuxLatitude<T>::Clenshaw(bool sinp, T szeta, T czeta, const T c[], int K) {
     // Evaluate
-    // y = sum(c[k] * sin( (2*k+2) * zeta), i, 0, K-1)
+    // y = sum(c[k] * sin( (2*k+2) * zeta), i, 0, K-1) if  sinp
+    // y = sum(c[k] * cos( (2*k+2) * zeta), i, 0, K-1) if !sinp
     // Approx operation count = (K + 5) mult and (2 * K + 2) add
-    // If alt, use the Reinsch optimizations for small szeta and small czeta.
     int k = K;
-    real u0 = 0;                // accumulator for sum
-    if        (alt && 2*fabs(szeta) < 1) {
-      real X = -4 * szeta * szeta,
-        d0 = 0;                 // other accumulator for sum
-      for (; k > 0;) {
-        d0 = X * u0 + d0 + c[--k];
-        u0 = d0 + u0;
-      }
-    } else if (alt && 2*fabs(czeta) < 1) {
-      real X = 4 * czeta * czeta,
-        d0 = 0;                 // other accumulator for sum
-      for (; k > 0;) {
-        d0 = X * u0 - d0 + c[--k];
-        u0 = d0 - u0;
-      }
-    } else {
-      real X = 2 * (czeta - szeta) * (czeta + szeta), // 2 * cos(2*zeta)
-        u1 = 0;                 // other accumulator for sum
-      for (; k > 0;) {
-        real t = X * u0 - u1 + c[--k];
-        u1 = u0; u0 = t;
-      }
+    T u0 = 0, u1 = 0,        // accumulators for sum
+      x = 2 * (czeta - szeta) * (czeta + szeta); // 2 * cos(2*zeta)
+    for (; k > 0;) {
+      T t = x * u0 - u1 + c[--k];
+      u1 = u0; u0 = t;
     }
-    return 2 * szeta * czeta * u0; // sin(2*zeta) * u0
+    // u0*f0(zeta) - u1*fm1(zeta)
+    // f0 = sinp ? sin(2*zeta) : cos(2*zeta)
+    // fm1 = sinp ? 0 : 1
+    T f0 = sinp ? 2 * szeta * czeta : x / 2, fm1 = sinp ? 0 : 1;
+    return f0 * u0 - fm1 * u1;
   }
 
-  template class AuxAngle<Math::real>;
+  /// \cond SKIP
+  // Instantiate
   template class AuxLatitude<Math::real>;
 #if GEOGRAPHICLIB_PRECISION != 2
-  template class AuxAngle<double>;
   template class AuxLatitude<double>;
 #endif
+  /// \endcond
 
 } // namespace experimental
 } // namespace GeographicLib

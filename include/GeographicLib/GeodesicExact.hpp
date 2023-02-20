@@ -16,9 +16,9 @@
 
 namespace GeographicLib {
 
-  // TODO: check if this is needed...
-  //  class GEOGRAPHICLIB_EXPORT DST;
   class GeodesicLineExact;
+  // Visual Studio needs this forward declaration...
+  class GEOGRAPHICLIB_EXPORT DST;
 
   /**
    * \brief Exact geodesic calculations
