@@ -26,7 +26,6 @@
 #endif
 
 #include "RhumbSolve.usage"
-
 using namespace GeographicLib;
 typedef Math::real real;
 
@@ -50,7 +49,7 @@ std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
 int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
-    bool linecalc = false, inverse = false, dms = false, exact = true,
+    bool linecalc = false, inverse = false, dms = false, exact = false,
       longfirst = false;
     real
       a = Constants::WGS84_a(),
@@ -108,8 +107,8 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-      } else if (arg == "-s")
-        exact = false;
+      } else if (arg == "-E")
+        exact = true;
       else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];

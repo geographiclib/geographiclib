@@ -65,7 +65,7 @@ namespace experimental {
    * \include example-Rhumb.cpp
    **********************************************************************/
 
-  class GEOGRAPHICLIB_EXPORT Rhumb {
+  class Rhumb {
   private:
     typedef Math::real real;
     /// \cond SKIP
@@ -355,7 +355,7 @@ namespace experimental {
    * \include example-RhumbLine.cpp
    **********************************************************************/
 
-  class GEOGRAPHICLIB_EXPORT RhumbLine {
+  class RhumbLine {
   private:
     typedef Math::real real;
     /// \cond SKIP

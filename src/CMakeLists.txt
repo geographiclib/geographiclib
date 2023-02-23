@@ -4,9 +4,12 @@
 set (SOURCES
   Accumulator.cpp
   AlbersEqualArea.cpp
+  AuxAngle.cpp
+  AuxLatitude.cpp
   AzimuthalEquidistant.cpp
   CassiniSoldner.cpp
   CircularEngine.cpp
+  DAuxLatitude.cpp
   DMS.cpp
   DST.cpp
   Ellipsoid.cpp

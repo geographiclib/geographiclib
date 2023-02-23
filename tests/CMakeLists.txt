@@ -796,23 +796,16 @@ set_tests_properties (TransverseMercatorProj6 TransverseMercatorProj7
 add_test (NAME RhumbSolve0 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0")
 add_test (NAME RhumbSolve1 COMMAND RhumbSolve
-  -p 3 -i --input-string "0 0 90 0" -s)
-# Treatment of the pole depends on the precision, so only check the area
-# for doubles
-if (GEOGRAPHICLIB_PRECISION EQUAL 2)
-  set_tests_properties (RhumbSolve0 RhumbSolve1
-    PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 0[\r\n]")
-  add_test (NAME RhumbSolve2 COMMAND RhumbSolve
-    -p 3 -i --input-string "0 0 90 30")
-  add_test (NAME RhumbSolve3 COMMAND RhumbSolve
-    -p 3 -i --input-string "0 0 90 30" -s)
-  set_tests_properties (RhumbSolve2 RhumbSolve3
-    PROPERTIES PASS_REGULAR_EXPRESSION
-    "^0.41222947 10002224.609 21050634712282[\r\n]")
-else ()
-  set_tests_properties (RhumbSolve0 RhumbSolve1
-    PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 ")
-endif ()
+  -p 3 -i --input-string "0 0 90 0" -E)
+set_tests_properties (RhumbSolve0 RhumbSolve1
+  PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 0[\r\n]")
+add_test (NAME RhumbSolve2 COMMAND RhumbSolve
+  -p 3 -i --input-string "0 0 90 30")
+add_test (NAME RhumbSolve3 COMMAND RhumbSolve
+  -p 3 -i --input-string "0 0 90 30" -E)
+set_tests_properties (RhumbSolve2 RhumbSolve3
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^0\\.0+ 10001965\\.729 21252734238504[\r\n]")
 
 # Test fix to CassiniSoldner::Forward bug found 2015-06-20
 add_test (NAME GeodesicProj0 COMMAND GeodesicProj

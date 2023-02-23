@@ -3,10 +3,13 @@
 set (HEADERS
   Accumulator.hpp
   AlbersEqualArea.hpp
+  AuxAngle.hpp
+  AuxLatitude.hpp
   AzimuthalEquidistant.hpp
   CassiniSoldner.hpp
   CircularEngine.hpp
   Constants.hpp
+  DAuxLatitude.hpp
   DMS.hpp
   DST.hpp
   Ellipsoid.hpp

@@ -15,9 +15,12 @@ FIGURES = \
 HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/Accumulator.hpp \
 	$(top_srcdir)/include/GeographicLib/AlbersEqualArea.hpp \
+	$(top_srcdir)/include/GeographicLib/AuxAngle.hpp \
+	$(top_srcdir)/include/GeographicLib/AuxLatitude.hpp \
 	$(top_srcdir)/include/GeographicLib/AzimuthalEquidistant.hpp \
 	$(top_srcdir)/include/GeographicLib/CassiniSoldner.hpp \
 	$(top_srcdir)/include/GeographicLib/Constants.hpp \
+	$(top_srcdir)/include/GeographicLib/DAuxLatitude.hpp \
 	$(top_srcdir)/include/GeographicLib/DMS.hpp \
 	$(top_srcdir)/include/GeographicLib/Ellipsoid.hpp \
 	$(top_srcdir)/include/GeographicLib/EllipticFunction.hpp \
@@ -45,8 +48,11 @@ HPPFILES = \
 
 ALLSOURCES = \
 	$(top_srcdir)/src/AlbersEqualArea.cpp \
+	$(top_srcdir)/src/AuxAngle.cpp \
+	$(top_srcdir)/src/AuxLatitude.cpp \
 	$(top_srcdir)/src/AzimuthalEquidistant.cpp \
 	$(top_srcdir)/src/CassiniSoldner.cpp \
+	$(top_srcdir)/src/DAuxLatitude.cpp \
 	$(top_srcdir)/src/DMS.cpp \
 	$(top_srcdir)/src/Ellipsoid.cpp \
 	$(top_srcdir)/src/EllipticFunction.cpp \

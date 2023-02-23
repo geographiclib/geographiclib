@@ -37,7 +37,7 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.1.3
+VERSION=2.2
 SUFFIX=-alpha
 DISTVERSION=$VERSION$SUFFIX
 BRANCH=devel
@@ -396,7 +396,7 @@ echo ==============================================================
 echo Verify library versions of cmake and autoconf builds are the same and other checks
 
 libversion=`find $TEMP/instc/lib -type f \
--name 'libGeographicLib.so.*' -printf "%f" |
+-name 'libGeographicLib.so.*.*' -printf "%f" |
 sed 's/libGeographicLib\.so\.//'`
 test -f $TEMP/instb/lib/libGeographicLib.so.$libversion ||
 echo autoconf/cmake library so mismatch
