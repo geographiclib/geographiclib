@@ -13,7 +13,7 @@
 
 int main(int argc, const char* const argv[]) {
   try {
-    typedef GeographicLib::AuxLatitude<double> latitude;
+    typedef GeographicLib::AuxLatitude latitude;
     typedef latitude::angle angle;
     if (argc != 3) {
       std::cerr << "Usage: example-AuxLatitude <n> <base-lat>\n";

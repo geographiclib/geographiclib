@@ -32,43 +32,33 @@ namespace GeographicLib {
    *   On auxiliary latitudes,
    *   Technical Report, SRI International, December 2022.
    *   https://arxiv.org/abs/2212.05818
-   *
-   * @tparam T the floating-point type to use.
    **********************************************************************/
-  template<typename T
-           /// \cond SKIP
-           = Math::real
-           /// \endcond
-           >
-  class DAuxLatitude : public AuxLatitude<T> {
+  class GEOGRAPHICLIB_EXPORT DAuxLatitude : public AuxLatitude {
+  private:
+    typedef Math::real real;
   public:
-    /**
-     * The floating-point type for real numbers.  This just connects to the
-     * template parameters for the class.
-     **********************************************************************/
-    typedef T real;
     /**
      * The type used to represent angles.
      **********************************************************************/
-    typedef AuxAngle<T> angle;
+    typedef AuxAngle angle;
     /**
      * The base class.
      **********************************************************************/
-    typedef AuxLatitude<T> aux;
+    typedef AuxLatitude aux;
     /**
      * Constructor
      *
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.
      **********************************************************************/
-    DAuxLatitude(T f) : AuxLatitude<T>(f) {}
+    DAuxLatitude(real f) : AuxLatitude(f) {}
     /**
      * Constructor
      *
      * @param[in] a equatorial radius.
      * @param[in] b polar semi-axis.
      **********************************************************************/
-    DAuxLatitude(T a, T b) : AuxLatitude<T>(a, b) {}
+    DAuxLatitude(real a, real b) : AuxLatitude(a, b) {}
     /**
      * The divided difference of one auxiliary latitude with respect to
      * another.
@@ -93,66 +83,56 @@ namespace GeographicLib {
      * subsequent calls.  The series method is accurate for abs(\e f) &le;
      * 1/150.
      **********************************************************************/
-    T DConvert(int auxin, int auxout,
+    real DConvert(int auxin, int auxout,
                const angle& zeta1, const angle& zeta2) const;
-    T DRectifying(const angle& phi1, const angle& phi2) const;
+    real DRectifying(const angle& phi1, const angle& phi2) const;
     // overflow for tphi1, tphi2 >~ sqrt(mx)
-    T DIsometric(const angle& phi1, const angle& phi2) const;
-    T DParametric(const angle& phi1, const angle& phi2) const;
+    real DIsometric(const angle& phi1, const angle& phi2) const;
+    real DParametric(const angle& phi1, const angle& phi2) const;
     // Divided difference: (eta2 - eta1) / Delta.  Delta is EITHER 1, giving
     // the plain difference OR (zeta2 - zeta1) in radians, giving the divided
     // difference.  Other values will give nonsense.
-    static T DClenshaw(bool sinp, T Delta,
-                       T szet1, T czet1, T szet2, T czet2,
-                       const T c[], int K);
+    static real DClenshaw(bool sinp, real Delta,
+                       real szet1, real czet1, real szet2, real czet2,
+                       const real c[], int K);
     // Dasinh(x, y) / Datan(x, y)
     // overflow for x, y >~ sqrt(mx)
-    static T Dlam(T x, T y) {
+    static real Dlam(real x, real y) {
       using std::isnan; using std::isinf;
       return x == y ? aux::sc(x) :
-        (isnan(x) || isnan(y) ? std::numeric_limits<T>::quiet_NaN() :
-         (isinf(x) || isinf(y) ? std::numeric_limits<T>::infinity() :
+        (isnan(x) || isnan(y) ? std::numeric_limits<real>::quiet_NaN() :
+         (isinf(x) || isinf(y) ? std::numeric_limits<real>::infinity() :
           Dasinh(x, y) / Datan(x, y)));
     }
     // Dp0Dpsi in terms of chi
-    static T Dp0Dpsi(T x, T y) {
+    static real Dp0Dpsi(real x, real y) {
       using std::isnan; using std::isinf; using std::copysign;
       return x == y ? aux::sn(x) :
         (isnan(x + y) ? x + y : // N.B. nan for inf-inf
-         (isinf(x) ? copysign(T(1), x) :
-          (isinf(y) ? copysign(T(1), y) :
+         (isinf(x) ? copysign(real(1), x) :
+          (isinf(y) ? copysign(real(1), y) :
            Dasinh(h(x), h(y)) * Dh(x, y) / Dasinh(x, y))));
     }
   protected:                    // so TestAux can access these functions
-    /* NOT USED!
-    // (sc(y) - sc(x)) / (y - x)
-    static T Dsc(T x, T y) {
-      using std::isnan; using std::isinf; using std::copysign;
-      return isnan(x + y) ? x + y : // N.B. nan for inf-inf
-        (isinf(x) ? copysign(T(1), x) :
-         (isinf(y) ? copysign(T(1), y) :
-          (x + y) / (aux::sc(x) + aux::sc(y))));
-    }
-    */
     // (sn(y) - sn(x)) / (y - x)
-    static T Dsn(T x, T y) {
-      T sc1 = aux::sc(x);
+    static real Dsn(real x, real y) {
+      real sc1 = aux::sc(x);
       if (x == y) return 1 / (sc1 * (1 + x*x));
-      T sc2 = aux::sc(y), sn1 = aux::sn(x), sn2 = aux::sn(y);
+      real sc2 = aux::sc(y), sn1 = aux::sn(x), sn2 = aux::sn(y);
       return x * y > 0 ?
         (sn1/sc2 + sn2/sc1) / ((sn1 + sn2) * sc1 * sc2) :
         (sn2 - sn1) / (y - x);
     }
-    static T Datan(T x, T y) {
+    static real Datan(real x, real y) {
       using std::isinf; using std::atan;
-      T d = y - x, xy = x*y;
+      real d = y - x, xy = x*y;
       return x == y ? 1 / (1 + xy) :
         (isinf(xy) && xy > 0 ? 0 :
          (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(y) - atan(x)) / d);
     }
-    static T Dasinh(T x, T y) {
+    static real Dasinh(real x, real y) {
       using std::isinf; using std::asinh;
-      T d = y - x, xy = x*y, hx = aux::sc(x), hy = aux::sc(y);
+      real d = y - x, xy = x*y, hx = aux::sc(x), hy = aux::sc(y);
       // KF formula for x*y < 0 is asinh(y*hx - x*hy) / (y - x)
       // but this has problem if x*y overflows to -inf
       return x == y ? 1 / hx :
@@ -161,34 +141,34 @@ namespace GeographicLib {
                               (1/x + 1/y) / (hy/y + hx/x))) :
           asinh(y) - asinh(x)) / d);
     }
-    T Datanhee(T tphi1, T tphi2) const;
+    real Datanhee(real tphi1, real tphi2) const;
     // h(tan(x)) = tan(x) * sin(x) / 2
-    static T h(T x) { return x * aux::sn(x) / 2; }
-    static T Dh(T x, T y) {
+    static real h(real x) { return x * aux::sn(x) / 2; }
+    static real Dh(real x, real y) {
       using std::isnan; using std::isinf; using std::copysign;
       if (isnan(x + y))
         return x + y;           // N.B. nan for inf-inf
       if (isinf(x))
-        return copysign(1/T(2), x);
+        return copysign(1/real(2), x);
       if (isinf(y))
-        return copysign(1/T(2), y);
-      T sx = aux::sn(x), sy = aux::sn(y), d = sx*x + sy*y;
+        return copysign(1/real(2), y);
+      real sx = aux::sn(x), sy = aux::sn(y), d = sx*x + sy*y;
       if (d / 2 == 0)
         return (x + y) / 2;     // Handle underflow
       if (x * y <= 0)
         return (h(y) - h(x)) / (y - x); // Does not include x = y = 0
-      T scx = aux::sc(x), scy = aux::sc(y);
+      real scx = aux::sc(x), scy = aux::sc(y);
       return ((x + y) / (2 * d)) *
         (Math::sq(sx*sy) + Math::sq(sy/scx) + Math::sq(sx/scy));
     }
   private:
-    static T Dsin(T x, T y) {
+    static real Dsin(real x, real y) {
       using std::sin; using std::cos;
-      T d = (x - y) / 2;
+      real d = (x - y) / 2;
       return cos((x + y)/2) * (d != 0 ? sin(d) / d : 1);
     }
     // (E(x) - E(y)) / (x - y)
-    T DE(const angle& X, const angle& Y) const;
+    real DE(const angle& X, const angle& Y) const;
   };
 
 } // namespace GeographicLib

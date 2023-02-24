@@ -40,17 +40,14 @@ namespace GeographicLib {
    * trigonometric functions of the angle.  Only angles in [&minus;180&deg;,
    * 180&deg;] can be represented.  (A possible extension would be to keep
    * count of the number of turns.)
-   *
-   * @tparam T the floating-point type to use for real numbers.
    **********************************************************************/
-  template<typename T = Math::real>
-  class AuxAngle {
+  class GEOGRAPHICLIB_EXPORT AuxAngle {
   public:
     /**
      * The floating-point type for real numbers.  This just connects to the
      * template parameters for the class.
      **********************************************************************/
-    typedef T real;
+    typedef Math::real real;
     /**
      * The constructor.
      *
@@ -64,49 +61,49 @@ namespace GeographicLib {
      * + no arguments gives an angle of 0;
      * + 1 argument specifies the tangent of the angle.
      **********************************************************************/
-    AuxAngle(T y = 0, T x = 1) : _y(y), _x(x) {}
+    AuxAngle(real y = 0, real x = 1) : _y(y), _x(x) {}
     /**
      * @return the \e y component.  This is the sine of the angle if the
      *   AuxAngle has been normalized.
      **********************************************************************/
-    T y() const { return _y; }
+    real y() const { return _y; }
     /**
      * @return the \e x component.  This is the cosine of the angle if the
      *   AuxAngle has been normalized.
      **********************************************************************/
-    T x() const { return _x; }
+    real x() const { return _x; }
     /**
      * @return a reference to the \e y component.  This allows this component
      *   to be altered.
      **********************************************************************/
-    T& y() { return _y; }
+    real& y() { return _y; }
     /**
      * @return a reference to the \e x component.  This allows this component
      *   to be altered.
      **********************************************************************/
-    T& x() { return _x; }
+    real& x() { return _x; }
     /**
      * @return the AuxAngle converted to the conventional angle measured in
      *   degrees.
      **********************************************************************/
-    T degrees() const;
+    real degrees() const;
     /**
      * @return the AuxAngle converted to the conventional angle measured in
      *   radians.
      **********************************************************************/
-    T radians() const;
+    real radians() const;
     /**
      * @return the lambertian of the AuxAngle.
      **********************************************************************/
-    T lam() const;
+    real lam() const;
     /**
      * @return the lambertian of the AuxAngle in degrees.
      **********************************************************************/
-    T lamd() const;
+    real lamd() const;
     /**
      * @return the tangent of the angle.
      **********************************************************************/
-    T tan() const { return _y / _x; }
+    real tan() const { return _y / _x; }
     /**
      * @return a new normalized AuxAngle with the point lying on the unit
      *   circle and the \e y and \e x components are equal to the sine and
@@ -145,11 +142,11 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized as an angle in degrees with
      * @code
-     *   AuxAngle<real> phi = AuxAngle<real>::degrees(d);
+     *   AuxAngle phi = AuxAngle::degrees(d);
      * @endcode
      * This is the so-called "named constructor" idiom.
      **********************************************************************/
-    static AuxAngle degrees(T d);
+    static AuxAngle degrees(real d);
     /**
      * Convert radians to an AuxAngle.
      *
@@ -158,11 +155,11 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized as an angle in radians with
      * @code
-     *   AuxAngle<real> phi = AuxAngle<real>::radians(r);
+     *   AuxAngle phi = AuxAngle::radians(r);
      * @endcode
      * This is the so-called "named constructor" idiom.
      **********************************************************************/
-    static AuxAngle radians(T r);
+    static AuxAngle radians(real r);
     /**
      * Convert lambertian to an AuxAngle.
      *
@@ -171,11 +168,11 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized given the lambertian with
      * @code
-     *   AuxAngle<real> chi = AuxAngle<real>::lam(psi);
+     *   AuxAngle chi = AuxAngle::lam(psi);
      * @endcode
      * This is the so-called "named constructor" idiom.
      **********************************************************************/
-    static AuxAngle lam(T psi);
+    static AuxAngle lam(real psi);
     /**
      * Convert lambertian in degrees to an AuxAngle.
      *
@@ -184,11 +181,11 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized given the lambertian with
      * @code
-     *   AuxAngle<real> chi = AuxAngle<real>::lamd(psid);
+     *   AuxAngle chi = AuxAngle::lamd(psid);
      * @endcode
      * This is the so-called "named constructor" idiom.
      **********************************************************************/
-    static AuxAngle lamd(T psid);
+    static AuxAngle lamd(real psid);
     /**
      * @return a "NaN" AuxAngle.
      **********************************************************************/
@@ -201,8 +198,7 @@ namespace GeographicLib {
      * @return the absolute error between p and *this considered as angles in
      *   radians.
      **********************************************************************/
-    template<typename T1>
-    T AbsError(const AuxAngle<T1>& p) const;
+    real AbsError(const AuxAngle& p) const;
     /**
      * Compute the relative error in another angle.
      *
@@ -210,68 +206,57 @@ namespace GeographicLib {
      * @param[in] p the other angle
      * @return the relative error between p.tan() and this->tan().
      **********************************************************************/
-    template<typename T1>
-    T RelError(const AuxAngle<T1>& p) const;
+    real RelError(const AuxAngle& p) const;
   private:
-    T _y, _x;
+    real _y, _x;
   };
 
   /// \cond SKIP
-  template<typename T>
-  inline AuxAngle<T> AuxAngle<T>::degrees(T d) {
-    T y, x;
+  inline AuxAngle AuxAngle::degrees(real d) {
+    real y, x;
     Math::sincosd(d, y, x);
     return AuxAngle(y, x);
   }
 
-  template<typename T>
-  inline AuxAngle<T> AuxAngle<T>::radians(T r) {
+  inline AuxAngle AuxAngle::radians(real r) {
     using std::sin; using std::cos;
     return AuxAngle(sin(r), cos(r));
   }
 
-  template<typename T>
-  inline AuxAngle<T> AuxAngle<T>::lam(T psi) {
+  inline AuxAngle AuxAngle::lam(real psi) {
     using std::sinh;
     return AuxAngle(sinh(psi));
   }
 
-  template<typename T>
-  inline AuxAngle<T> AuxAngle<T>::lamd(T psid) {
+  inline AuxAngle AuxAngle::lamd(real psid) {
     using std::sinh;
-    return AuxAngle(sinh(psid * Math::degree<T>()));
+    return AuxAngle(sinh(psid * Math::degree()));
   }
 
-  template<typename T>
-  inline T AuxAngle<T>::degrees() const {
+  inline Math::real AuxAngle::degrees() const {
     return Math::atan2d(_y, _x);
   }
 
-  template<typename T>
-  inline T AuxAngle<T>::radians() const {
+  inline Math::real AuxAngle::radians() const {
     using std::atan2; return atan2(_y, _x);
   }
 
-  template<typename T>
-  inline T AuxAngle<T>::lam() const {
+  inline Math::real AuxAngle::lam() const {
     using std::asinh; return asinh( tan() );
   }
 
-  template<typename T>
-  inline T AuxAngle<T>::lamd() const {
-    using std::asinh; return asinh( tan() ) / Math::degree<T>();
+  inline Math::real AuxAngle::lamd() const {
+    using std::asinh; return asinh( tan() ) / Math::degree();
   }
 
-  template<typename T> template<typename T1>
-  inline T AuxAngle<T>::AbsError(const AuxAngle<T1>& p) const {
+  inline Math::real AuxAngle::AbsError(const AuxAngle& p) const {
     using std::fabs;
-    return fabs((AuxAngle(-T(p.y()), T(p.x())) += *this).radians());
+    return fabs((AuxAngle(-p.y(), p.x()) += *this).radians());
   }
 
-  template<typename T> template<typename T1>
-  inline T AuxAngle<T>::RelError(const AuxAngle<T1>& p) const {
+  inline Math::real AuxAngle::RelError(const AuxAngle& p) const {
     using std::fabs;
-    return fabs((T(p.y()) / T(p.x()) - tan()) / tan());
+    return fabs((p.tan() - tan()) / tan());
   }
   /// \endcond
 

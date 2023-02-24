@@ -25,6 +25,12 @@
    (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
 #endif
 
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs vector
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
+#endif
+
 namespace GeographicLib {
 
   class RhumbLine;
@@ -68,8 +74,8 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     /// \cond SKIP
-    typedef AuxAngle<real> angle;
-    typedef DAuxLatitude<real> auxlat;
+    typedef AuxAngle angle;
+    typedef DAuxLatitude auxlat;
     /// \endcond
     friend class RhumbLine;
     template<class T> friend class PolygonAreaT;
@@ -367,8 +373,8 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     /// \cond SKIP
-    typedef AuxAngle<real> angle;
-    typedef DAuxLatitude<real> auxlat;
+    typedef AuxAngle angle;
+    typedef DAuxLatitude auxlat;
     /// \endcond
     friend class Rhumb;
     const Rhumb& _rh;
