@@ -28,33 +28,35 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Math::real DAuxLatitude::DRectifying(const angle& phi1, const angle& phi2)
+  Math::real DAuxLatitude::DRectifying(const AuxAngle& phi1,
+                                       const AuxAngle& phi2)
     const {
     // Stipulate that phi1 and phi2 are in [-90d, 90d]
     real x = phi1.radians(), y = phi2.radians();
     if (x == y) {
       if (1) {
         real d;
-        angle mu1(aux::Rectifying(phi1, &d));
+        AuxAngle mu1(base::Rectifying(phi1, &d));
         real tphi1 = phi1.tan(), tmu1 = mu1.tan();
         return
-          isfinite(tphi1) ? d * Math::sq(aux::sc(tphi1)/aux::sc(tmu1)) : 1/d;
+          isfinite(tphi1) ? d * Math::sq(base::sc(tphi1)/base::sc(tmu1)) : 1/d;
       } else {
-        angle phin(phi1.normalized());
-        real d = Math::sq(phin.x()) + aux::_e2m1 * Math::sq(phin.y());
-        return aux::_e2m1 / (d * sqrt(d)) / aux::RectifyingRadius(1, false);
+        AuxAngle phin(phi1.normalized());
+        real d = Math::sq(phin.x()) + base::_e2m1 * Math::sq(phin.y());
+        return base::_e2m1 / (d * sqrt(d)) / base::RectifyingRadius(1, false);
       }
     } else if (x * y < 0)
-      return (aux::Rectifying(phi2).radians() -
-              aux::Rectifying(phi1).radians()) / (y - x);
+      return (base::Rectifying(phi2).radians() -
+              base::Rectifying(phi1).radians()) / (y - x);
     else {
-      angle bet1(aux::Parametric(phi1)), bet2(aux::Parametric(phi2));
+      AuxAngle bet1(base::Parametric(phi1)), bet2(base::Parametric(phi2));
       real dEdbet = DE(bet1, bet2), dbetdphi = DParametric(phi1, phi2);
-      return aux::_fm1 * dEdbet / aux::RectifyingRadius(1, false) * dbetdphi;
+      return base::_fm1 * dEdbet / base::RectifyingRadius(1, false) * dbetdphi;
     }
   }
 
-  Math::real DAuxLatitude::DParametric(const angle& phi1, const angle& phi2)
+  Math::real DAuxLatitude::DParametric(const AuxAngle& phi1,
+                                       const AuxAngle& phi2)
     const {
     real tx = phi1.tan(), ty = phi2.tan(), r;
     // DbetaDphi = Datan(fm1*tx, fm1*ty) * fm1 / Datan(tx, ty)
@@ -62,31 +64,31 @@ namespace GeographicLib {
     //             = (atan(y) - atan(x)) / (y-x),       for x*y < 0
     //             = atan( (y-x) / (1 + x*y) ) / (y-x), for x*y > 0
     if (!(tx * ty >= 0))        // This includes, e.g., tx = 0, ty = inf
-      r = (atan(aux::_fm1 * ty) - atan(aux::_fm1 * tx)) /
+      r = (atan(base::_fm1 * ty) - atan(base::_fm1 * tx)) /
         (atan(ty) - atan(tx));
     else if (tx == ty) {        // This includes the case tx = ty = inf
       tx *= tx;
       if (tx <= 1)
-        r = aux::_fm1 * (1 + tx) / (1 + aux::_e2m1 * tx);
+        r = base::_fm1 * (1 + tx) / (1 + base::_e2m1 * tx);
       else {
         tx = 1/tx;
-        r = aux::_fm1 * (1 + tx) / (aux::_e2m1 + tx);
+        r = base::_fm1 * (1 + tx) / (base::_e2m1 + tx);
       }
     } else {
       if (tx * ty <= 1)
-        r = atan2(aux::_fm1 * (ty - tx), 1 + aux::_e2m1 * tx * ty)
+        r = atan2(base::_fm1 * (ty - tx), 1 + base::_e2m1 * tx * ty)
           / atan2(        ty - tx , 1 +         tx * ty);
       else {
         tx = 1/tx; ty = 1/ty;
-        r = atan2(aux::_fm1 * (ty - tx), aux::_e2m1 + tx * ty)
+        r = atan2(base::_fm1 * (ty - tx), base::_e2m1 + tx * ty)
           / atan2(        ty - tx ,   1   + tx * ty);
       }
     }
     return r;
   }
 
-  Math::real DAuxLatitude::DE(const angle& X, const angle& Y) const {
-    angle Xn(X.normalized()), Yn(Y.normalized());
+  Math::real DAuxLatitude::DE(const AuxAngle& X, const AuxAngle& Y) const {
+    AuxAngle Xn(X.normalized()), Yn(Y.normalized());
     // We assume that X and Y are in [-90d, 90d] and have the same sign
     // If not we would include
     //    if (Xn.y() * Yn.y() < 0)
@@ -102,11 +104,11 @@ namespace GeographicLib {
       sx = Xn.y(), sy = Yn.y(), cx = Xn.x(), cy = Yn.x(),
       k2;
     // Switch prolate to oblate; we then can use the formulas for k2 < 0
-    if (false && aux::_f < 0) {
+    if (false && base::_f < 0) {
       d = -d; swap(sx, cx); swap(sy, cy);
-      k2 = aux::_e2;
+      k2 = base::_e2;
     } else {
-      k2 = -aux::_e12;
+      k2 = -base::_e12;
     }
     // See DLMF: Eqs (19.11.2) and (19.11.4) letting
     // theta -> x, phi -> -y, psi -> z
@@ -125,7 +127,8 @@ namespace GeographicLib {
       sz = d * Dsz, cz = (1 - t) * (1 + t) / (1 + t*t),
       sz2 = sz*sz, cz2 = cz*cz, dz2 = 1 - k2 * sz2,
       // E(z)/sin(z)
-      Ezbsz = EllipticFunction::RF(cz2, dz2, 1) - k2 * sz2 * EllipticFunction::RD(cz2, dz2, 1) / 3;
+      Ezbsz = (EllipticFunction::RF(cz2, dz2, 1)
+               - k2 * sz2 * EllipticFunction::RD(cz2, dz2, 1) / 3);
     return (Ezbsz - k2 * sx * sy) * Dsz;
   }
 
@@ -137,36 +140,38 @@ namespace GeographicLib {
     // e1 * Dsn(fm1*x, fm1*y) *fm1 / (e * Datan(x,y))
     // = Dasinh(e1*sn(fm1*x)), e1*sn(fm1*y)) *
     //  Dsn(fm1*x, fm1*y) / Datan(x,y)
-    return aux::_f < 0 ?
-      Datan(aux::_e * aux::sn(x),
-            aux::_e * aux::sn(y)) * Dsn(x, y) :
-      Dasinh(aux::_e1 * aux::sn(aux::_fm1 * x),
-             aux::_e1 * aux::sn(aux::_fm1 * y)) *
-      Dsn(aux::_fm1 * x, aux::_fm1 * y);
+    return base::_f < 0 ?
+      Datan(base::_e * base::sn(x),
+            base::_e * base::sn(y)) * Dsn(x, y) :
+      Dasinh(base::_e1 * base::sn(base::_fm1 * x),
+             base::_e1 * base::sn(base::_fm1 * y)) *
+      Dsn(base::_fm1 * x, base::_fm1 * y);
   }
 
-  Math::real DAuxLatitude::DIsometric(const angle& phi1, const angle& phi2)
+  Math::real DAuxLatitude::DIsometric(const AuxAngle& phi1,
+                                      const AuxAngle& phi2)
     const {
     // psi = asinh(tan(phi)) - e^2 * atanhee(tan(phi))
     real tphi1 = phi1.tan(), tphi2 = phi2.tan();
     return isnan(tphi1) || isnan(tphi2) ? numeric_limits<real>::quiet_NaN() :
       (isinf(tphi1) || isinf(tphi2) ? numeric_limits<real>::infinity() :
-       (Dasinh(tphi1, tphi2) - aux::_e2 * Datanhee(tphi1, tphi2)) /
+       (Dasinh(tphi1, tphi2) - base::_e2 * Datanhee(tphi1, tphi2)) /
        Datan(tphi1, tphi2));
   }
 
   Math::real DAuxLatitude::DConvert(int auxin, int auxout,
-                                    const angle& zeta1, const angle& zeta2)
+                                    const AuxAngle& zeta1,
+                                    const AuxAngle& zeta2)
     const {
-    int k = aux::ind(auxout, auxin);
+    int k = base::ind(auxout, auxin);
     if (k < 0) return numeric_limits<real>::quiet_NaN();
     if (auxin == auxout) return 1;
-    if ( isnan(aux::_c[aux::Lmax * (k + 1) - 1]) )
-      aux::fillcoeff(auxin, auxout, k);
-    angle zeta1n(zeta1.normalized()), zeta2n(zeta2.normalized());
+    if ( isnan(base::_c[base::Lmax * (k + 1) - 1]) )
+      base::fillcoeff(auxin, auxout, k);
+    AuxAngle zeta1n(zeta1.normalized()), zeta2n(zeta2.normalized());
     return 1 + DClenshaw(true, zeta2n.radians() - zeta1n.radians(),
                          zeta1n.y(), zeta1n.x(), zeta2n.y(), zeta2n.x(),
-                         aux::_c + aux::Lmax * k, aux::Lmax);
+                         base::_c + base::Lmax * k, base::Lmax);
   }
 
   Math::real DAuxLatitude::DClenshaw(bool sinp, real Delta,

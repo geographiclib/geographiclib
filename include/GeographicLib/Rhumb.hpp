@@ -1,7 +1,6 @@
 /**
  * \file Rhumb.hpp
- * \brief Header for GeographicLib::experimental::Rhumb and
- * GeographicLib::experimental::RhumbLine classes
+ * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
  * Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -73,13 +72,9 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Rhumb {
   private:
     typedef Math::real real;
-    /// \cond SKIP
-    typedef AuxAngle angle;
-    typedef DAuxLatitude auxlat;
-    /// \endcond
     friend class RhumbLine;
     template<class T> friend class PolygonAreaT;
-    auxlat _aux;
+    DAuxLatitude _aux;
     bool _exact;
     real _a, _f, _n, _rm, _c2;
     int _lL;             // N.B. names of the form _[A-Z].* are reserved in C++
@@ -88,13 +83,13 @@ namespace GeographicLib {
     static const int Lfftmax_ = 1<<16; // Actual max for doubles is 2163
     void AreaCoeffs();
     class qIntegrand {
-      const auxlat& _aux;
+      const AuxLatitude& _aux;
     public:
-      qIntegrand(const auxlat& aux);
+      qIntegrand(const AuxLatitude& aux);
       real operator()(real chi) const;
     };
 
-    real MeanSinXi(const angle& chix, const angle& chiy) const;
+    real MeanSinXi(const AuxAngle& chix, const AuxAngle& chiy) const;
 
     // The following two functions (with lots of ignored arguments) mimic the
     // interface to the corresponding Geodesic function.  These are needed by
@@ -341,7 +336,10 @@ namespace GeographicLib {
      *   Geodesic::EllipsoidArea()/2 to the sum of \e S12 for each side of the
      *   polygon.
      **********************************************************************/
-    Math::real EllipsoidArea() const { return 2 * real(Math::td) * _c2; }
+    Math::real EllipsoidArea() const {
+      // _c2 contains a Math::degrees() factor, so 4*pi -> 2*Math::td.
+      return 2 * real(Math::td) * _c2;
+    }
     ///@}
 
     /**
@@ -372,22 +370,13 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT RhumbLine {
   private:
     typedef Math::real real;
-    /// \cond SKIP
-    typedef AuxAngle angle;
-    typedef DAuxLatitude auxlat;
-    /// \endcond
     friend class Rhumb;
     const Rhumb& _rh;
     real _lat1, _lon1, _azi12, _salp, _calp, _mu1, _psi1;
-    angle _phi1, _chi1;
+    AuxAngle _phi1, _chi1;
     // copy assignment not allowed
     RhumbLine& operator=(const RhumbLine&) = delete;
     RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12);
-    class DeltaQIntegrand {
-    public:
-      DeltaQIntegrand(real ep2, real k2);
-      real operator()(real chi) const;
-    };
 
   public:
     /**

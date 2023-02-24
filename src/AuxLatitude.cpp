@@ -19,16 +19,6 @@
 #include <GeographicLib/AuxLatitude.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 
-/// \cond SKIP
-
-#if !defined(AUXLATITUDE_UNOPT)
-// If 1 use the unoptimized formulas in the paper.  Otherwise use the
-// optimizations to improve roundoff for high eccentricity.
-#define AUXLATITUDE_UNOPT 0
-#endif
-
-/// \endcond
-
 #if defined(_MSC_VER)
 // Squelch warnings about constant conditional expressions
 #  pragma warning (disable: 4127)
@@ -40,13 +30,8 @@ namespace GeographicLib {
 
   AuxLatitude::AuxLatitude(real f)
     : tol_( sqrt(numeric_limits<real>::epsilon()) )
-#if AUXLATITUDE_UNOPT
-    , bmin_( numeric_limits<real>::min() )
-    , bmax_( numeric_limits<real>::max() )
-#else
     , bmin_( log2(numeric_limits<real>::min()) )
     , bmax_( log2(numeric_limits<real>::max()) )
-#endif
     , _f( f )
     , _fm1( 1 - _f )
     , _e2( _f * (2 - _f) )
@@ -57,11 +42,7 @@ namespace GeographicLib {
     , _e( sqrt(fabs(_e2)) )
     , _e1( sqrt(fabs(_e12)) )
     , _n2( _n * _n )
-#if AUXLATITUDE_UNOPT
     , _q( _e12p1 + (_f == 0 ? 1 : (_f > 0 ? asinh(_e1) : atan(_e)) / _e) )
-#else
-    , _q( _e12p1 + (_f == 0 ? 1 : (_f > 0 ? atanh(_e) : atan(_e)) / _e) )
-#endif
   {
     if (!(isfinite(_f) && _f < 1 &&
           isfinite(_n) && fabs(_n) < 1))
@@ -72,13 +53,8 @@ namespace GeographicLib {
 
   AuxLatitude::AuxLatitude(real a, real b)
     : tol_( sqrt(numeric_limits<real>::epsilon()) )
-#if AUXLATITUDE_UNOPT
-    , bmin_( numeric_limits<real>::min() )
-    , bmax_( numeric_limits<real>::max() )
-#else
     , bmin_( log2(numeric_limits<real>::min()) )
     , bmax_( log2(numeric_limits<real>::max()) )
-#endif
     , _f( (a - b) / a )
     , _fm1( b / a )
     , _e2( ((a - b) * (a + b)) / (a * a) )
@@ -89,11 +65,7 @@ namespace GeographicLib {
     , _e( sqrt(fabs(a - b) * (a + b)) / a )
     , _e1( sqrt(fabs(a - b) * (a + b)) / b )
     , _n2( _n * _n )
-#if AUXLATITUDE_UNOPT
     , _q( _e12p1 + (_f == 0 ? 1 : (_f > 0 ? asinh(_e1) : atan(_e)) / _e) )
-#else
-    , _q( _e12p1 + (_f == 0 ? 1 : (_f > 0 ? atanh(_e) : atan(_e)) / _e) )
-#endif
   {
     if (!(isfinite(_f) && _f < 1 &&
           isfinite(_n) && fabs(_n) < 1))
@@ -102,18 +74,18 @@ namespace GeographicLib {
          numeric_limits<real>::quiet_NaN());
   }
 
-  AuxAngle AuxLatitude::Parametric(const angle& phi, real* diff) const {
+  AuxAngle AuxLatitude::Parametric(const AuxAngle& phi, real* diff) const {
     if (diff) *diff = _fm1;
-    return angle(phi.y() * _fm1, phi.x());
+    return AuxAngle(phi.y() * _fm1, phi.x());
   }
 
-  AuxAngle AuxLatitude::Geocentric(const angle& phi, real* diff) const {
+  AuxAngle AuxLatitude::Geocentric(const AuxAngle& phi, real* diff) const {
     if (diff) *diff = _e2m1;
-    return angle(phi.y() * _e2m1, phi.x());
+    return AuxAngle(phi.y() * _e2m1, phi.x());
   }
 
-  AuxAngle AuxLatitude::Rectifying(const angle& phi, real* diff) const {
-    angle beta(Parametric(phi).normalized());
+  AuxAngle AuxLatitude::Rectifying(const AuxAngle& phi, real* diff) const {
+    AuxAngle beta(Parametric(phi).normalized());
     real sbeta = fabs(beta.y()), cbeta = fabs(beta.x());
     real a = 1, b = _fm1, ka = _e2, kb = -_e12, ka1 = _e2m1, kb1 = _e12p1,
       smu, cmu, mr;
@@ -132,10 +104,11 @@ namespace GeographicLib {
       db2 = 1 - kb * sb2,
       da2 = ka1 + ka * sb2,
       // DLMF Eq. 19.25.9
-      sa = b * sbeta * ( EllipticFunction::RF(cb2, db2, 1) - kb * sb2 * EllipticFunction::RD(cb2, db2, 1) / 3 ),
+      sa = b * sbeta * ( EllipticFunction::RF(cb2, db2, 1) -
+                         kb * sb2 * EllipticFunction::RD(cb2, db2, 1)/3 ),
       // DLMF Eq. 19.25.10 with complementary angles
       sb = a * cbeta * ( ka1 * EllipticFunction::RF(sb2, da2, 1)
-                         + ka * ka1 * cb2 * EllipticFunction::RD(sb2, 1, da2) / 3
+                         + ka * ka1 * cb2 * EllipticFunction::RD(sb2, 1, da2)/3
                          + ka * sbeta / sqrt(da2) );
     // sa + sb  = 2*EllipticFunction::RG(a*a, b*b) = a*E(e) = b*E(i*e')
     // mr = a*E(e)*(2/pi) = b*E(i*e')*(2/pi)
@@ -144,7 +117,7 @@ namespace GeographicLib {
     cmu = sin(sb / mr);
     if (_f < 0) { swap(smu, cmu); swap(a, b); }
     // mu is normalized
-    angle mu(angle(smu, cmu).copyquadrant(phi));
+    AuxAngle mu(AuxAngle(smu, cmu).copyquadrant(phi));
     if (diff) {
       real cphi = phi.normalized().x(), tphi = phi.tan();
       if (!isinf(tphi)) {
@@ -156,15 +129,12 @@ namespace GeographicLib {
     return mu;
   }
 
-  AuxAngle AuxLatitude::Conformal(const angle& phi, real* diff) const {
+  AuxAngle AuxLatitude::Conformal(const AuxAngle& phi, real* diff) const {
     real tphi = fabs(phi.tan()), tchi = tphi;
     if ( !( !isfinite(tphi) || tphi == 0 || _f == 0 ) ) {
       real scphi = sc(tphi),
         sig = sinh(_e2 * atanhee(tphi) ),
         scsig = sc(sig);
-#if AUXLATITUDE_UNOPT
-        tchi = tphi * scsig - sig * scphi;
-#else
       if (_f <= 0) {
         tchi = tphi * scsig - sig * scphi;
       } else {
@@ -200,9 +170,8 @@ namespace GeographicLib {
         }
         tchi = tphimsig * (1 + sigtphi) / (scsig + sigtphi * scphi);
       }
-#endif
     }
-    angle chi(angle(tchi).copyquadrant(phi));
+    AuxAngle chi(AuxAngle(tchi).copyquadrant(phi));
     if (diff) {
       if (!isinf(tphi)) {
         real cchi = chi.normalized().x(),
@@ -210,26 +179,21 @@ namespace GeographicLib {
           cbeta = Parametric(phi).normalized().x();
         *diff = _e2m1 * (cbeta / cchi) * (cbeta / cphi);
       } else {
-#if AUXLATITUDE_UNOPT
         real ss = _f > 0 ? sinh(_e * asinh(_e1)) : sinh(-_e * atan(_e));
         *diff = _f > 0 ? 1/( sc(ss) + ss ) : sc(ss) - ss;
-#else
-        real ss = _f > 0 ? sinh(_e * atanh(_e)) : sinh(-_e * atan(_e));
-        *diff = sc(ss) - ss;
-#endif
       }
     }
     return chi;
   }
 
-  AuxAngle AuxLatitude::Authalic(const angle& phi, real* diff) const {
+  AuxAngle AuxLatitude::Authalic(const AuxAngle& phi, real* diff) const {
     real tphi = fabs(phi.tan());
-    angle xi(phi), phin(phi.normalized());
+    AuxAngle xi(phi), phin(phi.normalized());
     if ( !( !isfinite(tphi) || tphi == 0 || _f == 0 ) ) {
       real qv = q(tphi),
         Dqp = Dq(tphi),
         Dqm = (_q + qv) / (1 + fabs(phin.y())); // Dq(-tphi)
-      xi = angle( copysign(qv, phi.y()), phin.x() * sqrt(Dqp * Dqm) );
+      xi = AuxAngle( copysign(qv, phi.y()), phin.x() * sqrt(Dqp * Dqm) );
     }
     if (diff) {
       if (!isnan(tphi)) {
@@ -243,7 +207,7 @@ namespace GeographicLib {
     return xi;
   }
 
-  AuxAngle AuxLatitude::ToAuxiliary(int auxout, const angle& phi,
+  AuxAngle AuxLatitude::ToAuxiliary(int auxout, const AuxAngle& phi,
                                           real* diff) const {
     switch (auxout) {
     case GEOGRAPHIC: if (diff) *diff = 1; return phi; break;
@@ -254,60 +218,28 @@ namespace GeographicLib {
     case AUTHALIC  : return Authalic  (phi, diff); break;
     default:
       if (diff) *diff = numeric_limits<real>::quiet_NaN();
-      return angle::NaN();
+      return AuxAngle::NaN();
       break;
     }
   }
 
-  AuxAngle AuxLatitude::FromAuxiliary(int auxin, const angle& zeta,
+  AuxAngle AuxLatitude::FromAuxiliary(int auxin, const AuxAngle& zeta,
                                             int* niter) const {
     int n = 0; if (niter) *niter = n;
     real tphi = _fm1;
     switch (auxin) {
     case GEOGRAPHIC: return zeta; break;
       // case PARAMETRIC:                   break;
-    case PARAMETRIC: return angle(zeta.y() / _fm1, zeta.x()); break;
+    case PARAMETRIC: return AuxAngle(zeta.y() / _fm1, zeta.x()); break;
       // case GEOCENTRIC: tphi *= _fm1  ; break;
-    case GEOCENTRIC: return angle(zeta.y() / _e2m1, zeta.x()); break;
+    case GEOCENTRIC: return AuxAngle(zeta.y() / _e2m1, zeta.x()); break;
     case RECTIFYING: tphi *= sqrt(_fm1); break;
     case CONFORMAL : tphi *= _fm1  ; break;
     case AUTHALIC  : tphi *= cbrt(_fm1); break;
-    default: return angle::NaN(); break;
+    default: return AuxAngle::NaN(); break;
     }
 
     // Drop through to solution by Newton's method
-#if AUXLATITUDE_UNOPT
-    real tzeta = fabs(zeta.tan());
-    if (!isfinite(tzeta)) return zeta;
-    tphi = tzeta / tphi;
-    real bmin = fmin(tphi, bmin_), bmax = fmax(tphi, bmax_);
-    for (int sign = 0, osign = 0, ntrip = 0; n < numit_;) {
-      ++n;
-      real diff;
-      angle zeta1(ToAuxiliary(auxin, angle(tphi), &diff));
-      real tzeta1 = zeta1.tan();
-      osign = sign;
-      if (tzeta1 == tzeta)
-        break;
-      else if (tzeta1 > tzeta) {
-        sign = 1;
-        bmax = tphi;
-      } else {
-        sign = -1;
-        bmin = tphi;
-      }
-      real dtphi = -(tzeta1 - tzeta) / diff;
-      tphi += dtphi;
-      if (!(fabs(dtphi) >= tol_ * tphi))
-        break;
-      // Skip the Newton guards if UNOPT
-      if (false && ((sign * osign < 0 && n - ntrip > 2) ||
-                    tphi >= bmax || tphi <= bmin)) {
-        sign = 0; ntrip = n;
-        tphi = sqrt(bmin * bmax);
-      }
-    }
-#else
     real tzeta = fabs(zeta.tan()), ltzeta = log2(tzeta);
     if (!isfinite(ltzeta)) return zeta;
     tphi = tzeta / tphi;
@@ -316,7 +248,7 @@ namespace GeographicLib {
     for (int sign = 0, osign = 0, ntrip = 0; n < numit_;) {
       ++n;
       real diff;
-      angle zeta1(ToAuxiliary(auxin, angle(tphi), &diff));
+      AuxAngle zeta1(ToAuxiliary(auxin, AuxAngle(tphi), &diff));
       real tzeta1 = zeta1.tan(), ltzeta1 = log2(tzeta1);
       // Convert derivative from dtan(zeta)/dtan(phi) to
       // dlog(tan(zeta))/dlog(tan(phi))
@@ -337,7 +269,7 @@ namespace GeographicLib {
       if (!(fabs(dltphi) >= tol_)) {
         ++n;
         // Final Newton iteration without the logs
-        zeta1 = ToAuxiliary(auxin, angle(tphi), &diff);
+        zeta1 = ToAuxiliary(auxin, AuxAngle(tphi), &diff);
         tphi -= (zeta1.tan() - tzeta) / diff;
         break;
       }
@@ -348,26 +280,25 @@ namespace GeographicLib {
         tphi = exp2(ltphi);
       }
     }
-#endif
     if (niter) *niter = n;
-    return angle(tphi).copyquadrant(zeta);
+    return AuxAngle(tphi).copyquadrant(zeta);
   }
 
-  AuxAngle AuxLatitude::Convert(int auxin, int auxout, const angle& zeta,
+  AuxAngle AuxLatitude::Convert(int auxin, int auxout, const AuxAngle& zeta,
                                       bool series) const {
     int k = ind(auxout, auxin);
-    if (k < 0) return angle::NaN();
+    if (k < 0) return AuxAngle::NaN();
     if (auxin == auxout) return zeta;
     if (series) {
       if ( isnan(_c[Lmax * (k + 1) - 1]) ) fillcoeff(auxin, auxout, k);
-      angle zetan(zeta.normalized());
+      AuxAngle zetan(zeta.normalized());
       real d = Clenshaw(true, zetan.y(), zetan.x(), _c + Lmax * k, Lmax);
-      zetan += angle::radians(d);
+      zetan += AuxAngle::radians(d);
       return zetan;
     } else {
       if (auxin < 3 && auxout < 3)
         // Need extra real because, since C++11, pow(float, int) returns double
-        return angle(zeta.y() * real(pow(_fm1, auxout - auxin)), zeta.x());
+        return AuxAngle(zeta.y() * real(pow(_fm1, auxout - auxin)), zeta.x());
       else
         return ToAuxiliary(auxout, FromAuxiliary(auxin, zeta));
     }
@@ -448,42 +379,18 @@ namespace GeographicLib {
   }
 
   Math::real AuxLatitude::atanhee(real tphi) const {
-#if AUXLATITUDE_UNOPT
-    real sphi = sn(tphi);
-    return _f == 0 ? sphi :
-      (_f < 0 ? atan( _e * sphi ) : atanh( _e * sphi )) / _e;
-#else
     real s = _f <= 0 ? sn(tphi) : sn(_fm1 * tphi);
     return _f == 0 ? s :
       // atanh(e * sphi) = asinh(e' * sbeta)
       (_f < 0 ? atan( _e * s ) : asinh( _e1 * s )) / _e;
-#endif
   }
 
   Math::real AuxLatitude::q(real tphi) const {
-#if AUXLATITUDE_UNOPT
-    real sphi = sn(tphi);
-    return atanhee(tphi) + sphi / (1 - _e2 * sphi*sphi);
-#else
     real scbeta = sc(_fm1 * tphi);
     return atanhee(tphi) + (tphi / scbeta) * (sc(tphi) / scbeta);
-#endif
   }
 
   Math::real AuxLatitude::Dq(real tphi) const {
-#if AUXLATITUDE_UNOPT
-    real sphi = sn(tphi), d = 1 - sphi;
-    if (tphi <= 0)
-      // This branch is not reached; this case is open-coded in Authalic.
-      return (_q - q(tphi)) / d;
-    else if (d == 0)
-      return 2 / Math::sq(_e2m1);
-    else
-      return (_f == 0 ? 1 / (1 - _e2 * sphi) :
-              (_f < 0 ? atan(_e * d / (1 - _e2 * sphi)) / (_e * d) :
-               atanh(_e * d / (1 - _e2 * sphi)) / (_e * d) )) +
-        (1 + _e2 * sphi) / ((1 - _e2 * sphi*sphi) * _e2m1);
-#else
     real scphi = sc(tphi), sphi = sn(tphi),
       // d = (1 - sphi) can underflow to zero for large tphi
       d = tphi > 0 ? 1 / (scphi * scphi * (1 + sphi)) : 1 - sphi;
@@ -507,7 +414,6 @@ namespace GeographicLib {
          ((scphi + _e2 * tphi) / (_e2m1 * scbeta)) * (scphi / scbeta) :
         (1 + _e2 * sphi) / ((1 - _e2 * sphi*sphi) * _e2m1) );
     }
-#endif
   }
 
   void AuxLatitude::fillcoeff(int auxin, int auxout, int k) const {
@@ -1394,7 +1300,8 @@ namespace GeographicLib {
     }
   }
 
-  Math::real AuxLatitude::Clenshaw(bool sinp, real szeta, real czeta, const real c[], int K) {
+  Math::real AuxLatitude::Clenshaw(bool sinp, real szeta, real czeta,
+                                   const real c[], int K) {
     // Evaluate
     // y = sum(c[k] * sin( (2*k+2) * zeta), i, 0, K-1) if  sinp
     // y = sum(c[k] * cos( (2*k+2) * zeta), i, 0, K-1) if !sinp

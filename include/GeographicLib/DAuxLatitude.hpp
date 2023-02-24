@@ -1,8 +1,6 @@
 /**
  * \file DAuxLatitude.hpp
- * \brief Header for the GeographicLib::experimental::DAuxLatitude class.
- *
- * \note This is just sample code.  It is not part of GeographicLib itself.
+ * \brief Header for the GeographicLib::DAuxLatitude class.
  *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
@@ -25,8 +23,6 @@ namespace GeographicLib {
   /**
    * \brief Divided differences of auxiliary latitudes.
    *
-   * \note This is just sample code.  It is not part of GeographicLib itself.
-   *
    * This class is an implementation of the methods described in
    * - C. F. F. Karney,
    *   On auxiliary latitudes,
@@ -36,15 +32,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT DAuxLatitude : public AuxLatitude {
   private:
     typedef Math::real real;
+    typedef AuxLatitude base;
   public:
-    /**
-     * The type used to represent angles.
-     **********************************************************************/
-    typedef AuxAngle angle;
-    /**
-     * The base class.
-     **********************************************************************/
-    typedef AuxLatitude aux;
     /**
      * Constructor
      *
@@ -84,22 +73,22 @@ namespace GeographicLib {
      * 1/150.
      **********************************************************************/
     real DConvert(int auxin, int auxout,
-               const angle& zeta1, const angle& zeta2) const;
-    real DRectifying(const angle& phi1, const angle& phi2) const;
+                  const AuxAngle& zeta1, const AuxAngle& zeta2) const;
+    real DRectifying(const AuxAngle& phi1, const AuxAngle& phi2) const;
     // overflow for tphi1, tphi2 >~ sqrt(mx)
-    real DIsometric(const angle& phi1, const angle& phi2) const;
-    real DParametric(const angle& phi1, const angle& phi2) const;
+    real DIsometric(const AuxAngle& phi1, const AuxAngle& phi2) const;
+    real DParametric(const AuxAngle& phi1, const AuxAngle& phi2) const;
     // Divided difference: (eta2 - eta1) / Delta.  Delta is EITHER 1, giving
     // the plain difference OR (zeta2 - zeta1) in radians, giving the divided
     // difference.  Other values will give nonsense.
     static real DClenshaw(bool sinp, real Delta,
-                       real szet1, real czet1, real szet2, real czet2,
-                       const real c[], int K);
+                          real szet1, real czet1, real szet2, real czet2,
+                          const real c[], int K);
     // Dasinh(x, y) / Datan(x, y)
     // overflow for x, y >~ sqrt(mx)
     static real Dlam(real x, real y) {
       using std::isnan; using std::isinf;
-      return x == y ? aux::sc(x) :
+      return x == y ? base::sc(x) :
         (isnan(x) || isnan(y) ? std::numeric_limits<real>::quiet_NaN() :
          (isinf(x) || isinf(y) ? std::numeric_limits<real>::infinity() :
           Dasinh(x, y) / Datan(x, y)));
@@ -107,18 +96,19 @@ namespace GeographicLib {
     // Dp0Dpsi in terms of chi
     static real Dp0Dpsi(real x, real y) {
       using std::isnan; using std::isinf; using std::copysign;
-      return x == y ? aux::sn(x) :
+      return x == y ? base::sn(x) :
         (isnan(x + y) ? x + y : // N.B. nan for inf-inf
          (isinf(x) ? copysign(real(1), x) :
           (isinf(y) ? copysign(real(1), y) :
            Dasinh(h(x), h(y)) * Dh(x, y) / Dasinh(x, y))));
     }
   protected:                    // so TestAux can access these functions
+    /// \cond SKIP
     // (sn(y) - sn(x)) / (y - x)
     static real Dsn(real x, real y) {
-      real sc1 = aux::sc(x);
+      real sc1 = base::sc(x);
       if (x == y) return 1 / (sc1 * (1 + x*x));
-      real sc2 = aux::sc(y), sn1 = aux::sn(x), sn2 = aux::sn(y);
+      real sc2 = base::sc(y), sn1 = base::sn(x), sn2 = base::sn(y);
       return x * y > 0 ?
         (sn1/sc2 + sn2/sc1) / ((sn1 + sn2) * sc1 * sc2) :
         (sn2 - sn1) / (y - x);
@@ -132,7 +122,7 @@ namespace GeographicLib {
     }
     static real Dasinh(real x, real y) {
       using std::isinf; using std::asinh;
-      real d = y - x, xy = x*y, hx = aux::sc(x), hy = aux::sc(y);
+      real d = y - x, xy = x*y, hx = base::sc(x), hy = base::sc(y);
       // KF formula for x*y < 0 is asinh(y*hx - x*hy) / (y - x)
       // but this has problem if x*y overflows to -inf
       return x == y ? 1 / hx :
@@ -143,7 +133,7 @@ namespace GeographicLib {
     }
     real Datanhee(real tphi1, real tphi2) const;
     // h(tan(x)) = tan(x) * sin(x) / 2
-    static real h(real x) { return x * aux::sn(x) / 2; }
+    static real h(real x) { return x * base::sn(x) / 2; }
     static real Dh(real x, real y) {
       using std::isnan; using std::isinf; using std::copysign;
       if (isnan(x + y))
@@ -152,15 +142,16 @@ namespace GeographicLib {
         return copysign(1/real(2), x);
       if (isinf(y))
         return copysign(1/real(2), y);
-      real sx = aux::sn(x), sy = aux::sn(y), d = sx*x + sy*y;
+      real sx = base::sn(x), sy = base::sn(y), d = sx*x + sy*y;
       if (d / 2 == 0)
         return (x + y) / 2;     // Handle underflow
       if (x * y <= 0)
         return (h(y) - h(x)) / (y - x); // Does not include x = y = 0
-      real scx = aux::sc(x), scy = aux::sc(y);
+      real scx = base::sc(x), scy = base::sc(y);
       return ((x + y) / (2 * d)) *
         (Math::sq(sx*sy) + Math::sq(sy/scx) + Math::sq(sx/scy));
     }
+    /// \endcond
   private:
     static real Dsin(real x, real y) {
       using std::sin; using std::cos;
@@ -168,7 +159,7 @@ namespace GeographicLib {
       return cos((x + y)/2) * (d != 0 ? sin(d) / d : 1);
     }
     // (E(x) - E(y)) / (x - y)
-    real DE(const angle& X, const angle& Y) const;
+    real DE(const AuxAngle& X, const AuxAngle& Y) const;
   };
 
 } // namespace GeographicLib

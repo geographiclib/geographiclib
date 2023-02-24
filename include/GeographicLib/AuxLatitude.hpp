@@ -1,8 +1,6 @@
 /**
  * \file AuxLatitude.hpp
- * \brief Header for the GeographicLib::experimental::AuxLatitude class.
- *
- * \note This is just sample code.  It is not part of GeographicLib itself.
+ * \brief Header for the GeographicLib::AuxLatitude class.
  *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
@@ -38,8 +36,6 @@ namespace GeographicLib {
   /**
    * \brief Conversions between auxiliary latitudes.
    *
-   * \note This is just sample code.  It is not part of GeographicLib itself.
-   *
    * This class is an implementation of the methods described in
    * - C. F. F. Karney,
    *   On auxiliary latitudes,
@@ -58,7 +54,7 @@ namespace GeographicLib {
    *   tangent of the latitude, ensuring high accuracy near the equator and the
    *   poles.  Newton's method is used for those conversions that can't be
    *   expressed in closed form.
-   * - Expansions in powers of &e n, the third flattening, the \e series
+   * - Expansions in powers of \e n, the third flattening, the \e series
    *   method.  This delivers full accuracy for abs(\e f) &le; 1/150.  Here, \e
    *   f is the flattening of the ellipsoid.
    *
@@ -76,10 +72,6 @@ namespace GeographicLib {
      * The floating-point type for real numbers.  This just connects to the
      * template parameters for the class.
      **********************************************************************/
-    /**
-     * The type used to represent angles.
-     **********************************************************************/
-    typedef AuxAngle angle;
     /**
      * The different auxiliary latitudes.
      **********************************************************************/
@@ -205,7 +197,7 @@ namespace GeographicLib {
      * accurate for abs(\e f) &le; 1/150; for other \e f, the exact method
      * should be used.
      **********************************************************************/
-    angle Convert(int auxin, int auxout, const angle& zeta,
+    AuxAngle Convert(int auxin, int auxout, const AuxAngle& zeta,
                   bool series = false) const;
     /**
      * Convert geographic latitude to an auxiliary latitude \e eta.
@@ -219,7 +211,7 @@ namespace GeographicLib {
      *
      * This uses the exact equations.
      **********************************************************************/
-    angle ToAuxiliary(int auxout, const angle& phi,
+    AuxAngle ToAuxiliary(int auxout, const AuxAngle& phi,
                       real* diff = nullptr) const;
     /**
      * Convert an auxiliary latitude \e zeta to geographic latitude.
@@ -232,7 +224,7 @@ namespace GeographicLib {
      *
      * This uses the exact equations.
      **********************************************************************/
-    angle FromAuxiliary(int auxin, const angle& zeta,
+    AuxAngle FromAuxiliary(int auxin, const AuxAngle& zeta,
                         int* niter = nullptr) const;
     /**
      * Return the rectifying radius.
@@ -269,6 +261,7 @@ namespace GeographicLib {
     real tol_, bmin_, bmax_;       // Static consts for Newton's method
     // the function atanh(e * sphi)/e + sphi / (1 - (e * sphi)^2);
   protected:
+    /// \cond SKIP
     /**
      * Convert geographic latitude to parametric latitude
      *
@@ -277,7 +270,7 @@ namespace GeographicLib {
      *   tan(\e phi).
      * @return \e beta, the parametric latitude
      **********************************************************************/
-    angle Parametric(const angle& phi, real* diff = nullptr) const;
+    AuxAngle Parametric(const AuxAngle& phi, real* diff = nullptr) const;
     /**
      * Convert geographic latitude to geocentric latitude
      *
@@ -286,7 +279,7 @@ namespace GeographicLib {
      *   tan(\e phi).
      * @return \e theta, the geocentric latitude.
      **********************************************************************/
-    angle Geocentric(const angle& phi, real* diff = nullptr) const;
+    AuxAngle Geocentric(const AuxAngle& phi, real* diff = nullptr) const;
     /**
      * Convert geographic latitude to rectifying latitude
      *
@@ -295,7 +288,7 @@ namespace GeographicLib {
      *   tan(\e phi).
      * @return \e mu, the rectifying latitude.
      **********************************************************************/
-    angle Rectifying(const angle& phi, real* diff = nullptr) const;
+    AuxAngle Rectifying(const AuxAngle& phi, real* diff = nullptr) const;
     /**
      * Convert geographic latitude to conformal latitude
      *
@@ -304,7 +297,7 @@ namespace GeographicLib {
      *   tan(\e phi).
      * @return \e chi, the conformal latitude.
      **********************************************************************/
-    angle Conformal(const angle& phi, real* diff = nullptr) const;
+    AuxAngle Conformal(const AuxAngle& phi, real* diff = nullptr) const;
     /**
      * Convert geographic latitude to authalic latitude
      *
@@ -313,7 +306,7 @@ namespace GeographicLib {
      *   tan(\e phi).
      * @return \e xi, the authalic latitude.
      **********************************************************************/
-    angle Authalic(const angle& phi, real* diff = nullptr) const;
+    AuxAngle Authalic(const AuxAngle& phi, real* diff = nullptr) const;
     // Ellipsoid parameters
     real _f, _fm1, _e2, _e2m1, _e12, _e12p1, _n, _e, _e1, _n2, _q;
     // To hold computed Fourier coefficients
@@ -336,10 +329,13 @@ namespace GeographicLib {
     void fillcoeff(int auxin, int auxout, int k) const;
     // Clenshaw applied to sum(c[k] * sin( (2*k+2) * zeta), i, 0, K-1);
     // if !sinp then subst sine->cosine.
-    static real Clenshaw(bool sinp, real szeta, real czeta, const real c[], int K);
+    static real Clenshaw(bool sinp, real szeta, real czeta,
+                         const real c[], int K);
     // the function atanh(e * sphi)/e; works for e^2 = 0 and e^2 < 0
     real atanhee(real tphi) const;
+    /// \endcond
   private:
+    // the function atanh(e * sphi)/e + sphi / (1 - (e * sphi)^2);
     real q(real tphi) const;
     // The divided difference of (q(1) - q(sphi)) / (1 - sphi)
     real Dq(real tphi) const;

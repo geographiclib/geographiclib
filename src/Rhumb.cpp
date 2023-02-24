@@ -153,7 +153,7 @@ namespace GeographicLib {
     // Post condition: o == sizeof(coeffs) / sizeof(real)
   }
 
-  Rhumb::qIntegrand::qIntegrand(const auxlat& aux)
+  Rhumb::qIntegrand::qIntegrand(const AuxLatitude& aux)
     : _aux(aux) {}
 
   Math::real Rhumb::qIntegrand::operator()(real chi) const {
@@ -169,10 +169,13 @@ namespace GeographicLib {
     // where
     //   d[k] = -1/(4*(k+1)) * (c[k] + c[k+1]) for k in 0..K-2
     //   d[K-1] = -1/(4*K) * c[K-1]
-    angle betaa(angle::radians(beta)),
-      phia(_aux.Convert(auxlat::BETA, auxlat::PHI, betaa, false).normalized()),
-      chia(_aux.Convert(auxlat::PHI , auxlat::CHI, phia , false).normalized()),
-      xia (_aux.Convert(auxlat::PHI , auxlat::XI , phia , false).normalized());
+    AuxAngle betaa(AuxAngle::radians(beta)),
+      phia(_aux.Convert(AuxLatitude::BETA, AuxLatitude::PHI,
+                        betaa, false).normalized()),
+      chia(_aux.Convert(AuxLatitude::PHI , AuxLatitude::CHI,
+                        phia , false).normalized()),
+      xia (_aux.Convert(AuxLatitude::PHI , AuxLatitude::XI ,
+                        phia , false).normalized());
     real schi = chia.y(), cchi = chia.x(), sxi = xia.y(), cxi = xia.x(),
       cphi = phia.x(), cbeta = betaa.x();
     return (1 - _aux.Flattening()) *
@@ -196,7 +199,7 @@ namespace GeographicLib {
   void Rhumb::GenInverse(real lat1, real lon1, real lat2, real lon2,
                          unsigned outmask,
                          real& s12, real& azi12, real& S12) const {
-    angle phi1(angle::degrees(lat1)), phi2(angle::degrees(lat2)),
+    AuxAngle phi1(AuxAngle::degrees(lat1)), phi2(AuxAngle::degrees(lat2)),
       chi1(_aux.Convert(_aux.PHI, _aux.CHI, phi1, !_exact)),
       chi2(_aux.Convert(_aux.PHI, _aux.CHI, phi2, !_exact));
     real
@@ -209,17 +212,17 @@ namespace GeographicLib {
       azi12 = Math::atan2d(lam12, psi12);
     if (outmask & DISTANCE) {
       if (isinf(psi1) || isinf(psi2)) {
-        s12 = fabs(_aux.Convert(auxlat::PHI, auxlat::MU,
+        s12 = fabs(_aux.Convert(AuxLatitude::PHI, AuxLatitude::MU,
                                 phi2, !_exact).radians() -
-                   _aux.Convert(auxlat::PHI, auxlat::MU,
+                   _aux.Convert(AuxLatitude::PHI, AuxLatitude::MU,
                                 phi1, !_exact).radians()) * _rm;
       } else {
       real h = hypot(lam12, psi12);
       // dmu/dpsi = dmu/dchi / dpsi/dchi
       real dmudpsi = _exact ?
         _aux.DRectifying(phi1, phi2) / _aux.DIsometric(phi1, phi2) :
-        _aux.DConvert(auxlat::CHI, auxlat::MU, chi1, chi2)
-        / auxlat::Dlam(chi1.tan(), chi2.tan());
+        _aux.DConvert(AuxLatitude::CHI, AuxLatitude::MU, chi1, chi2)
+        / DAuxLatitude::Dlam(chi1.tan(), chi2.tan());
       s12 = h * dmudpsi * _rm;
       }
     }
@@ -235,23 +238,24 @@ namespace GeographicLib {
                         real& lat2, real& lon2, real& S12) const
   { Line(lat1, lon1, azi12).GenPosition(s12, outmask, lat2, lon2, S12); }
 
-  Math::real Rhumb::MeanSinXi(const angle& chix, const angle& chiy) const {
-    angle
+  Math::real Rhumb::MeanSinXi(const AuxAngle& chix, const AuxAngle& chiy)
+    const {
+    AuxAngle
       phix (_aux.Convert(_aux.CHI, _aux.PHI , chix, !_exact)),
       phiy (_aux.Convert(_aux.CHI, _aux.PHI , chiy, !_exact)),
       betax(_aux.Convert(_aux.PHI, _aux.BETA, phix, !_exact).normalized()),
       betay(_aux.Convert(_aux.PHI, _aux.BETA, phiy, !_exact).normalized());
     real DpbetaDbeta =
-      auxlat::DClenshaw(false,
+      DAuxLatitude::DClenshaw(false,
                         betay.radians() - betax.radians(),
                         betax.y(), betax.x(), betay.y(), betay.x(),
                         _pP.data(), _lL),
       tx = chix.tan(), ty = chiy.tan(),
       DbetaDpsi = _exact ?
       _aux.DParametric(phix, phiy) / _aux.DIsometric(phix, phiy) :
-      _aux.DConvert(auxlat::CHI, auxlat::BETA, chix, chiy) /
-      auxlat::Dlam(tx, ty);
-    return auxlat::Dp0Dpsi(tx, ty) + DpbetaDbeta * DbetaDpsi;
+      _aux.DConvert(AuxLatitude::CHI, AuxLatitude::BETA, chix, chiy) /
+      DAuxLatitude::Dlam(tx, ty);
+    return DAuxLatitude::Dp0Dpsi(tx, ty) + DpbetaDbeta * DbetaDpsi;
   }
 
   RhumbLine::RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12)
@@ -261,10 +265,11 @@ namespace GeographicLib {
     , _azi12(Math::AngNormalize(azi12))
   {
     Math::sincosd(_azi12, _salp, _calp);
-    _phi1 = angle::degrees(lat1);
-    _mu1 = _rh._aux.Convert(auxlat::PHI, auxlat::MU, _phi1, !_rh._exact)
-      .degrees();
-    _chi1 = _rh._aux.Convert(auxlat::PHI, auxlat::CHI, _phi1, !_rh._exact);
+    _phi1 = AuxAngle::degrees(lat1);
+    _mu1 = _rh._aux.Convert(AuxLatitude::PHI, AuxLatitude::MU,
+                            _phi1, !_rh._exact).degrees();
+    _chi1 = _rh._aux.Convert(AuxLatitude::PHI, AuxLatitude::CHI,
+                             _phi1, !_rh._exact);
     _psi1 = _chi1.lam();
   }
 
@@ -276,14 +281,16 @@ namespace GeographicLib {
       mu2 = _mu1 + mu12;
     real lat2x, lon2x;
     if (fabs(mu2) <= Math::qd) {
-      angle mu2a(angle::degrees(mu2)),
-        chi2(_rh._aux.Convert(auxlat::MU, auxlat::CHI, mu2a, !_rh._exact)),
-        phi2(_rh._aux.Convert(auxlat::MU, auxlat::PHI, mu2a, !_rh._exact));
+      AuxAngle mu2a(AuxAngle::degrees(mu2)),
+        phi2(_rh._aux.Convert(AuxLatitude::MU, AuxLatitude::PHI,
+                              mu2a, !_rh._exact)),
+        chi2(_rh._aux.Convert(AuxLatitude::PHI, AuxLatitude::CHI,
+                              phi2, !_rh._exact));
       lat2x = phi2.degrees();
       real dmudpsi = _rh._exact ?
         _rh._aux.DRectifying(_phi1, phi2) / _rh._aux.DIsometric(_phi1, phi2) :
-        _rh._aux.DConvert(auxlat::CHI, auxlat::MU, _chi1, chi2)
-        / Rhumb::auxlat::Dlam(_chi1.tan(), chi2.tan());
+        _rh._aux.DConvert(AuxLatitude::CHI, AuxLatitude::MU, _chi1, chi2)
+        / DAuxLatitude::Dlam(_chi1.tan(), chi2.tan());
       lon2x = r12 * _salp / dmudpsi;
       if (outmask & AREA)
         S12 = _rh._c2 * lon2x * _rh.MeanSinXi(_chi1, chi2);
@@ -294,8 +301,8 @@ namespace GeographicLib {
       mu2 = Math::AngNormalize(mu2);
       // Deal with points on the anti-meridian
       if (fabs(mu2) > Math::qd) mu2 = Math::AngNormalize(Math::hd - mu2);
-      lat2x = _rh._aux.Convert(auxlat::MU, auxlat::PHI,
-                               angle::degrees(mu2), !_rh._exact).degrees();
+      lat2x = _rh._aux.Convert(AuxLatitude::MU, AuxLatitude::PHI,
+                               AuxAngle::degrees(mu2), !_rh._exact).degrees();
       lon2x = Math::NaN();
       if (outmask & AREA)
         S12 = Math::NaN();

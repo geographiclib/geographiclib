@@ -1,8 +1,6 @@
 /**
  * \file AuxAngle.hpp
- * \brief Header for the GeographicLib::experimental::AuxAngle class.
- *
- * \note This is just sample code.  It is not part of GeographicLib itself.
+ * \brief Header for the GeographicLib::AuxAngle class.
  *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
@@ -25,8 +23,6 @@ namespace GeographicLib {
   /**
    * \brief An accurate representation of angles.
    *
-   * \note This is just sample code.  It is not part of GeographicLib itself.
-   *
    * This class is an implementation of the methods described in
    * - C. F. F. Karney,
    *   On auxiliary latitudes,
@@ -42,12 +38,10 @@ namespace GeographicLib {
    * count of the number of turns.)
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT AuxAngle {
-  public:
-    /**
-     * The floating-point type for real numbers.  This just connects to the
-     * template parameters for the class.
-     **********************************************************************/
+  private:
     typedef Math::real real;
+    real _y, _x;
+  public:
     /**
      * The constructor.
      *
@@ -94,10 +88,16 @@ namespace GeographicLib {
     real radians() const;
     /**
      * @return the lambertian of the AuxAngle.
+     *
+     * \note the lambertian of an angle &chi; is
+     * lam(&chi;) = asinh(tan(&chi;)).
      **********************************************************************/
     real lam() const;
     /**
      * @return the lambertian of the AuxAngle in degrees.
+     *
+     * \note the lambertian of an angle &chi; is
+     * lam(&chi;) = asinh(tan(&chi;)).
      **********************************************************************/
     real lamd() const;
     /**
@@ -171,6 +171,8 @@ namespace GeographicLib {
      *   AuxAngle chi = AuxAngle::lam(psi);
      * @endcode
      * This is the so-called "named constructor" idiom.
+     *
+     * \note this sets the angle &chi; to gd(&psi;) = atan(sinh(&psi;)).
      **********************************************************************/
     static AuxAngle lam(real psi);
     /**
@@ -184,34 +186,16 @@ namespace GeographicLib {
      *   AuxAngle chi = AuxAngle::lamd(psid);
      * @endcode
      * This is the so-called "named constructor" idiom.
+     *
+     * \note this sets the angle &chi; to gd(&psi;) = atan(sinh(&psi;)).
      **********************************************************************/
     static AuxAngle lamd(real psid);
     /**
      * @return a "NaN" AuxAngle.
      **********************************************************************/
     static AuxAngle NaN();
-    /**
-     * Compute the absolute error in another angle.
-     *
-     * @tparam T1 the floating-point type of the other angle.
-     * @param[in] p the other angle
-     * @return the absolute error between p and *this considered as angles in
-     *   radians.
-     **********************************************************************/
-    real AbsError(const AuxAngle& p) const;
-    /**
-     * Compute the relative error in another angle.
-     *
-     * @tparam T1 the floating-point type of the other angle.
-     * @param[in] p the other angle
-     * @return the relative error between p.tan() and this->tan().
-     **********************************************************************/
-    real RelError(const AuxAngle& p) const;
-  private:
-    real _y, _x;
   };
 
-  /// \cond SKIP
   inline AuxAngle AuxAngle::degrees(real d) {
     real y, x;
     Math::sincosd(d, y, x);
@@ -248,17 +232,6 @@ namespace GeographicLib {
   inline Math::real AuxAngle::lamd() const {
     using std::asinh; return asinh( tan() ) / Math::degree();
   }
-
-  inline Math::real AuxAngle::AbsError(const AuxAngle& p) const {
-    using std::fabs;
-    return fabs((AuxAngle(-p.y(), p.x()) += *this).radians());
-  }
-
-  inline Math::real AuxAngle::RelError(const AuxAngle& p) const {
-    using std::fabs;
-    return fabs((p.tan() - tan()) / tan());
-  }
-  /// \endcond
 
 } // namespace GeographicLib
 
