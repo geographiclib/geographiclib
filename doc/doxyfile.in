@@ -903,15 +903,7 @@ INPUT                  = @PROJECT_SOURCE_DIR@/src \
                          @PROJECT_SOURCE_DIR@/include/GeographicLib \
                          @PROJECT_SOURCE_DIR@/tools \
                          @PROJECT_BINARY_DIR@/doc/GeographicLib.dox \
-                         @PROJECT_SOURCE_DIR@/experimental/JacobiConformal.hpp \
-                         @PROJECT_SOURCE_DIR@/experimental/AuxAngle.hpp \
-                         @PROJECT_SOURCE_DIR@/experimental/AuxAngle.cpp \
-                         @PROJECT_SOURCE_DIR@/experimental/AuxLatitude.hpp \
-                         @PROJECT_SOURCE_DIR@/experimental/AuxLatitude.cpp \
-                         @PROJECT_SOURCE_DIR@/experimental/DAuxLatitude.hpp \
-                         @PROJECT_SOURCE_DIR@/experimental/DAuxLatitude.cpp \
-                         @PROJECT_SOURCE_DIR@/experimental/Rhumb.hpp \
-                         @PROJECT_SOURCE_DIR@/experimental/Rhumb.cpp
+                         @PROJECT_SOURCE_DIR@/experimental/JacobiConformal.hpp
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

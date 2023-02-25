@@ -1,7 +1,6 @@
 /**
  * \file AuxLatitude.cpp
- * \brief Implementation for the GeographicLib::experimental::AuxLatitude
- * class.
+ * \brief Implementation for the GeographicLib::AuxLatitude class.
  *
  * \note This is just sample code.  It is not part of GeographicLib itself.
  *
@@ -20,18 +19,20 @@
 #include <GeographicLib/EllipticFunction.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
+// Squelch warnings about constant conditional and enum-float expressions
+#  pragma warning (disable: 4127 5055)
 #endif
 
 namespace GeographicLib {
 
   using namespace std;
 
-  AuxLatitude::AuxLatitude(real f)
+  AuxLatitude::AuxLatitude(real a, real f)
     : tol_( sqrt(numeric_limits<real>::epsilon()) )
     , bmin_( log2(numeric_limits<real>::min()) )
     , bmax_( log2(numeric_limits<real>::max()) )
+    , _a(a)
+    , _b(_a * (1 - f))
     , _f( f )
     , _fm1( 1 - _f )
     , _e2( _f * (2 - _f) )
@@ -51,19 +52,22 @@ namespace GeographicLib {
          numeric_limits<real>::quiet_NaN());
   }
 
-  AuxLatitude::AuxLatitude(real a, real b)
+  /// \cond SKIP
+  AuxLatitude::AuxLatitude(const pair<real, real>& axes)
     : tol_( sqrt(numeric_limits<real>::epsilon()) )
     , bmin_( log2(numeric_limits<real>::min()) )
     , bmax_( log2(numeric_limits<real>::max()) )
-    , _f( (a - b) / a )
-    , _fm1( b / a )
-    , _e2( ((a - b) * (a + b)) / (a * a) )
-    , _e2m1( (b * b) / (a * a) )
-    , _e12( ((a - b) * (a + b)) / (b * b) )
-    , _e12p1( (a * a) / (b * b) )
-    , _n( (a - b) / (a + b) )
-    , _e( sqrt(fabs(a - b) * (a + b)) / a )
-    , _e1( sqrt(fabs(a - b) * (a + b)) / b )
+    , _a(axes.first)
+    , _b(axes.second)
+    , _f( (_a - _b) / _a )
+    , _fm1( _b / _a )
+    , _e2( ((_a - _b) * (_a + _b)) / (_a * _a) )
+    , _e2m1( (_b * _b) / (_a * _a) )
+    , _e12( ((_a - _b) * (_a + _b)) / (_b * _b) )
+    , _e12p1( (_a * _a) / (_b * _b) )
+    , _n( (_a - _b) / (_a + _b) )
+    , _e( sqrt(fabs(_a - _b) * (_a + _b)) / _a )
+    , _e1( sqrt(fabs(_a - _b) * (_a + _b)) / _b )
     , _n2( _n * _n )
     , _q( _e12p1 + (_f == 0 ? 1 : (_f > 0 ? asinh(_e1) : atan(_e)) / _e) )
   {
@@ -73,6 +77,7 @@ namespace GeographicLib {
     fill(_c, _c + Lmax * AUXNUMBER * AUXNUMBER,
          numeric_limits<real>::quiet_NaN());
   }
+  /// \endcond
 
   AuxAngle AuxLatitude::Parametric(const AuxAngle& phi, real* diff) const {
     if (diff) *diff = _fm1;
@@ -285,28 +290,36 @@ namespace GeographicLib {
   }
 
   AuxAngle AuxLatitude::Convert(int auxin, int auxout, const AuxAngle& zeta,
-                                      bool series) const {
+                                bool exact) const {
     int k = ind(auxout, auxin);
     if (k < 0) return AuxAngle::NaN();
     if (auxin == auxout) return zeta;
-    if (series) {
-      if ( isnan(_c[Lmax * (k + 1) - 1]) ) fillcoeff(auxin, auxout, k);
-      AuxAngle zetan(zeta.normalized());
-      real d = Clenshaw(true, zetan.y(), zetan.x(), _c + Lmax * k, Lmax);
-      zetan += AuxAngle::radians(d);
-      return zetan;
-    } else {
+    if (exact) {
       if (auxin < 3 && auxout < 3)
         // Need extra real because, since C++11, pow(float, int) returns double
         return AuxAngle(zeta.y() * real(pow(_fm1, auxout - auxin)), zeta.x());
       else
         return ToAuxiliary(auxout, FromAuxiliary(auxin, zeta));
+    } else {
+      if ( isnan(_c[Lmax * (k + 1) - 1]) ) fillcoeff(auxin, auxout, k);
+      AuxAngle zetan(zeta.normalized());
+      real d = Clenshaw(true, zetan.y(), zetan.x(), _c + Lmax * k, Lmax);
+      zetan += AuxAngle::radians(d);
+      return zetan;
     }
   }
 
-  Math::real AuxLatitude::RectifyingRadius(real a, bool series) const {
-    real b = a * _fm1;
-    if (series) {
+  Math::real AuxLatitude::Convert(int auxin, int auxout, real zeta,
+                                  bool exact) const {
+    AuxAngle zetaa(AuxAngle::degrees(zeta));
+    real m = round((zeta - zetaa.degrees()) / Math::td);
+    return Math::td * m + Convert(auxin, auxout, zetaa, exact).degrees();
+  }
+
+  Math::real AuxLatitude::RectifyingRadius(bool exact) const {
+    if (exact) {
+      return EllipticFunction::RG(Math::sq(_a), Math::sq(_b)) * 4 / Math::pi();
+    } else {
       // Maxima code for these coefficients:
       // df[i]:=if i<0 then df[i+2]/(i+2) else i!!$
       // R(Lmax):=sum((df[2*j-3]/df[2*j])^2*n^(2*j),j,0,floor(Lmax/2))$
@@ -326,15 +339,14 @@ namespace GeographicLib {
 #error "Unsupported value for GEOGRAPHICLIB_AUXLATITUDE_ORDER"
 #endif
       int m = Lmax/2;
-      return (a + b) / 2 * Math::polyval(m, coeff, _n2);
-    } else {
-      return EllipticFunction::RG(Math::sq(a), Math::sq(b)) * 4 / Math::pi();
+      return (_a + _b) / 2 * Math::polyval(m, coeff, _n2);
     }
   }
 
-  Math::real AuxLatitude::AuthalicRadiusSquared(real a, bool series) const {
-    real b = a * _fm1;
-    if (series) {
+  Math::real AuxLatitude::AuthalicRadiusSquared(bool exact) const {
+    if (exact) {
+      return Math::sq(_b) * _q / 2;
+    } else {
       // Using a * (a + b) / 2 as the multiplying factor leads to a rapidly
       // converging series in n.  Of course, using this series isn't really
       // necessary, since the exact expression is simple to evaluate.  However,
@@ -369,21 +381,18 @@ namespace GeographicLib {
 #error "Unsupported value for GEOGRAPHICLIB_AUXLATITUDE_ORDER"
 #endif
       int m = Lmax;
-      return a * (a + b) / 2 *  Math::polyval(m, coeff, _n);
-    } else {
-      return (Math::sq(a) + Math::sq(b) *
-              (_f == 0 ? 1 :
-               (_f > 0 ? asinh(sqrt(_e12)) : atan(sqrt(-_e2))) /
-               sqrt(fabs(_e2))))/2;
+      return _a * (_a + _b) / 2 *  Math::polyval(m, coeff, _n);
     }
   }
 
+  /// \cond SKIP
   Math::real AuxLatitude::atanhee(real tphi) const {
     real s = _f <= 0 ? sn(tphi) : sn(_fm1 * tphi);
     return _f == 0 ? s :
       // atanh(e * sphi) = asinh(e' * sbeta)
       (_f < 0 ? atan( _e * s ) : asinh( _e1 * s )) / _e;
   }
+  /// \endcond
 
   Math::real AuxLatitude::q(real tphi) const {
     real scbeta = sc(_fm1 * tphi);
@@ -416,6 +425,7 @@ namespace GeographicLib {
     }
   }
 
+  /// \cond SKIP
   void AuxLatitude::fillcoeff(int auxin, int auxout, int k) const {
 #if GEOGRAPHICLIB_AUXLATITUDE_ORDER == 4
     static const real coeffs[] = {
@@ -1319,5 +1329,6 @@ namespace GeographicLib {
     real f0 = sinp ? 2 * szeta * czeta : x / 2, fm1 = sinp ? 0 : 1;
     return f0 * u0 - fm1 * u1;
   }
+  /// \endcond
 
 } // namespace GeographicLib

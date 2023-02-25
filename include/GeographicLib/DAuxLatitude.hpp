@@ -37,17 +37,13 @@ namespace GeographicLib {
     /**
      * Constructor
      *
+     * @param[in] a equatorial radius.
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.
+     * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
+     *   positive.
      **********************************************************************/
-    DAuxLatitude(real f) : AuxLatitude(f) {}
-    /**
-     * Constructor
-     *
-     * @param[in] a equatorial radius.
-     * @param[in] b polar semi-axis.
-     **********************************************************************/
-    DAuxLatitude(real a, real b) : AuxLatitude(a, b) {}
+    DAuxLatitude(real a, real f) : AuxLatitude(a, f) {}
     /**
      * The divided difference of one auxiliary latitude with respect to
      * another.
@@ -72,21 +68,21 @@ namespace GeographicLib {
      * subsequent calls.  The series method is accurate for abs(\e f) &le;
      * 1/150.
      **********************************************************************/
-    real DConvert(int auxin, int auxout,
-                  const AuxAngle& zeta1, const AuxAngle& zeta2) const;
-    real DRectifying(const AuxAngle& phi1, const AuxAngle& phi2) const;
+    Math::real DConvert(int auxin, int auxout,
+                        const AuxAngle& zeta1, const AuxAngle& zeta2) const;
+    Math::real DRectifying(const AuxAngle& phi1, const AuxAngle& phi2) const;
     // overflow for tphi1, tphi2 >~ sqrt(mx)
-    real DIsometric(const AuxAngle& phi1, const AuxAngle& phi2) const;
-    real DParametric(const AuxAngle& phi1, const AuxAngle& phi2) const;
+    Math::real DIsometric(const AuxAngle& phi1, const AuxAngle& phi2) const;
+    Math::real DParametric(const AuxAngle& phi1, const AuxAngle& phi2) const;
     // Divided difference: (eta2 - eta1) / Delta.  Delta is EITHER 1, giving
     // the plain difference OR (zeta2 - zeta1) in radians, giving the divided
     // difference.  Other values will give nonsense.
-    static real DClenshaw(bool sinp, real Delta,
-                          real szet1, real czet1, real szet2, real czet2,
-                          const real c[], int K);
+    static Math::real DClenshaw(bool sinp, real Delta,
+                                real szet1, real czet1, real szet2, real czet2,
+                                const real c[], int K);
     // Dasinh(x, y) / Datan(x, y)
     // overflow for x, y >~ sqrt(mx)
-    static real Dlam(real x, real y) {
+    static Math::real Dlam(real x, real y) {
       using std::isnan; using std::isinf;
       return x == y ? base::sc(x) :
         (isnan(x) || isnan(y) ? std::numeric_limits<real>::quiet_NaN() :
@@ -94,7 +90,7 @@ namespace GeographicLib {
           Dasinh(x, y) / Datan(x, y)));
     }
     // Dp0Dpsi in terms of chi
-    static real Dp0Dpsi(real x, real y) {
+    static Math::real Dp0Dpsi(real x, real y) {
       using std::isnan; using std::isinf; using std::copysign;
       return x == y ? base::sn(x) :
         (isnan(x + y) ? x + y : // N.B. nan for inf-inf

@@ -14,7 +14,7 @@
 int main(int argc, const char* const argv[]) {
   try {
     typedef GeographicLib::AuxLatitude latitude;
-    typedef latitude::angle angle;
+    typedef GeographicLib::AuxAngle angle;
     if (argc != 3) {
       std::cerr << "Usage: example-AuxLatitude <n> <base-lat>\n";
       return 1;
@@ -22,7 +22,7 @@ int main(int argc, const char* const argv[]) {
     double n = GeographicLib::Utility::fract<double>(std::string(argv[1]));
     int auxin = GeographicLib::Utility::val<int>(std::string(argv[2]));
     double a = 1+n, b = 1-n;    // Equatorial radius and polar semi-axis
-    latitude aux(a, b);
+    latitude aux(latitude::axes(a, b));
     bool series = false;        // Don't use series method
     std::cout << std::setprecision(9) << std::fixed;
     int m = 1;

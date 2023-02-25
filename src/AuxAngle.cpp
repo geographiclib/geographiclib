@@ -1,6 +1,6 @@
 /**
  * \file AuxAngle.cpp
- * \brief Implementation for the GeographicLib::experimental::AuxAngle class.
+ * \brief Implementation for the GeographicLib::AuxAngle class.
  *
  * \note This is just sample code.  It is not part of GeographicLib itself.
  *

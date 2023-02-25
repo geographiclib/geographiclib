@@ -161,13 +161,13 @@ namespace GeographicLib {
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.
-     * @param[in] exact if true (the default) use the eact expressions of the
-     *   auxiliaryu latitudes; otherwise use series expansion (accurate for
-     *   |<i>f</i>| < 0.01).
+     * @param[in] exact if true use the exact expressions for the auxiliary
+     *   latitudes; otherwise use series expansion (accurate for |<i>f</i>| <
+     *   0.01) [default false].
      * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
-    Rhumb(real a, real f, bool exact = true);
+    Rhumb(real a, real f, bool exact = false);
 
     /**
      * Solve the direct rhumb problem returning also the area.

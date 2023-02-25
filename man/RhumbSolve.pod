@@ -5,8 +5,8 @@ RhumbSolve -- perform rhumb line calculations
 =head1 SYNOPSIS
 
 B<RhumbSolve> [ B<-i> | B<-L> I<lat1> I<lon1> I<azi12> ]
-[ B<-e> I<a> I<f> ]
-[ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ] [ B<-s> ]
+[ B<-e> I<a> I<f> ] [ B<-u> ]
+[ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ] [ B<-E> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
 [ B<--input-file> I<infile> | B<--input-string> I<instring> ]
@@ -18,14 +18,13 @@ B<RhumbSolve> [ B<-i> | B<-L> I<lat1> I<lon1> I<azi12> ]
 The path with constant heading between two points on the ellipsoid at
 (I<lat1>, I<lon1>) and (I<lat2>, I<lon2>) is called the rhumb line or
 loxodrome.  Its length is I<s12> and the rhumb line has a forward
-azimuth I<azi12> along its length.  Also computed is I<S12> is the area
-between the rhumb line from point 1 to point 2 and the equator; i.e., it
-is the area, measured counter-clockwise, of the geodesic quadrilateral
-with corners (I<lat1>,I<lon1>), (0,I<lon1>), (0,I<lon2>), and
-(I<lat2>,I<lon2>).  A point at a pole is treated as a point a tiny
-distance away from the pole on the given line of longitude.  The
-longitude becomes indeterminate when a rhumb line passes through a pole,
-and B<RhumbSolve> reports NaNs for the longitude and the area in this
+azimuth I<azi12> along its length.  The quantity I<S12> is the area
+between the rhumb line from point 1 to point 2 and the equator; i.e.,
+it is the area, measured counter-clockwise, of the geodesic
+quadrilateral with corners (I<lat1>,I<lon1>), (0,I<lon1>),
+(0,I<lon2>), and (I<lat2>,I<lon2>).  The longitude becomes
+indeterminate when a rhumb line passes through a pole, and
+B<RhumbSolve> reports NaNs for the longitude and the area in this
 case.
 
 B<NOTE:> the rhumb line is B<not> the shortest path between two points;
@@ -46,8 +45,7 @@ standard output.  This is the direct calculation.
 With the B<-i> command line argument, B<RhumbSolve> performs the inverse
 calculation.  It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2>
 and prints the values of I<azi12> I<s12> I<S12> for the corresponding
-shortest rhumb lines.  If the end points are on opposite meridians,
-there are two shortest rhumb lines and the east-going one is chosen.
+shortest rhumb lines.
 
 =item 3.
 
@@ -81,6 +79,13 @@ I<f> E<lt> 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for I<f>.  By default, the WGS84 ellipsoid is used, I<a> =
 6378137 m, I<f> = 1/298.257223563.
 
+=item B<-u>
+
+unroll the longitude.  Normally, on output longitudes are reduced to lie
+in [-180deg,180deg).  However with this option, the returned longitude
+I<lon2> is "unrolled" so that I<lon2> - I<lon1> indicates how often and
+in what sense the geodesic has encircled the earth.
+
 =item B<-d>
 
 output angles as degrees, minutes, seconds instead of decimal degrees.
@@ -101,15 +106,13 @@ I<W>).
 set the output precision to I<prec> (default 3); I<prec> is the
 precision relative to 1 m.  See L</PRECISION>.
 
-=item B<-s>
+=item B<-E>
 
-By default, the rhumb line calculations are carried out exactly in terms
-of elliptic integrals.  This includes the use of the addition theorem
-for elliptic integrals to compute the divided difference of the
-isometric and rectifying latitudes.  If B<-s> is supplied this divided
-difference is computed using Krueger series for the transverse Mercator
-projection which is only accurate for |I<f>| E<lt> 0.01.  See
-L</ACCURACY>.
+By default, the rhumb line calculations are carried out using series
+expansions valid for |I<f>| E<lt> 0.01.  If B<-E> is supplied, exact
+equations for the rhumb line are used and the area integral is
+computed with an accurate fit based on this exact equations; these are
+valid for arbitrary eccentricities.
 
 =item B<--comment-delimiter> I<commentdelim>
 
@@ -189,19 +192,15 @@ following lines will be converted.
 
 =head1 ACCURACY
 
-The algorithm used by B<RhumbSolve> uses exact formulas for converting
-between the latitude, rectifying latitude (I<mu>), and isometric
-latitude (I<psi>).  These formulas are accurate for any value of the
-flattening.  The computation of rhumb lines involves the ratio (I<psi1>
-- I<psi2>) / (I<mu1> - I<mu2>) and this is subject to large round-off
-errors if I<lat1> is close to I<lat2>.  So this ratio is computed using
-divided differences using one of two methods: by default, this uses the
-addition theorem for elliptic integrals (accurate for all values of
-I<f>); however, with the B<-s> options, it is computed using the series
-expansions used by TransverseMercatorProj(1) for the conversions between
-rectifying and conformal latitudes (accurate for |I<f>| E<lt> 0.01).
-For the WGS84 ellipsoid, the error is about 10 nanometers using either
-method.
+The algorithm used by B<RhumbSolve> uses either series expansions or
+(if B<-E> is specified) exact formulas for computing the rhumb line
+and the area.  These series are formulas are accurate for |I<f>| E<lt>
+0.01 and the exact formulas apply for any value of the flattening.
+The computation of rhumb lines and the area involves the ratio of
+differences and, for nearly east- or west-going rhumb lines, this
+might result in a large loss of accuracy.  However, this problem is
+avoided by the use of divided differences. For the WGS84 ellipsoid,
+the error is about 10 nanometers using either method.
 
 =head1 EXAMPLES
 
@@ -210,7 +209,7 @@ Route from JFK Airport to Singapore Changi Airport:
    echo 40:38:23N 073:46:44W 01:21:33N 103:59:22E |
    RhumbSolve -i -: -p 0
 
-   103:34:58.2 18523563
+   103:34:58.2 18523563 45921660958919
 
 N.B. This is B<not> the route typically taken by aircraft because it's
 considerably longer than the geodesic given by GeodSolve(1).
@@ -234,7 +233,7 @@ Waypoints on the route at intervals of 2000km:
 
 =head1 SEE ALSO
 
-GeoConvert(1), GeodSolve(1), TransverseMercatorProj(1).
+GeoConvert(1), GeodSolve(1).
 
 An online version of this utility is availbable at
 L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
@@ -249,4 +248,5 @@ B<RhumbSolve> was written by Charles Karney.
 =head1 HISTORY
 
 B<RhumbSolve> was added to GeographicLib,
-L<https://geographiclib.sourceforge.io>, in version 1.37.
+L<https://geographiclib.sourceforge.io>, in version 1.37 and
+substantially rewritten in version 2.2.

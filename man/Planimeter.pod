@@ -5,7 +5,7 @@ Planimeter -- compute the area of geodesic polygons
 =head1 SYNOPSIS
 
 B<Planimeter> [ B<-r> ] [ B<-s> ] [ B<-l> ] [ B<-e> I<a> I<f> ]
-[ B<-w> ] [ B<-p> I<prec> ] [ B<-G> | B<-E> | B<-Q> | B<-R> ]
+[ B<-w> ] [ B<-p> I<prec> ] [ B<-G> | B<-Q> | B<-R> ] [ B<-E> ]
 [ B<--geoconvert-input> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -99,29 +99,32 @@ given (in meters^2) with (I<prec> - 5) digits after the decimal point.
 
 =item B<-G>
 
-use the series formulation for the geodesics.  This is the default
+the edges joining the vertices are geodesics.  This is the default
 option and is recommended for terrestrial applications.  This option,
-B<-G>, and the following three options, B<-E>, B<-Q>, and B<-R>, are
-mutually exclusive.
-
-=item B<-E>
-
-use "exact" algorithms (based on elliptic integrals) for the geodesic
-calculations; the area is computed by applying discrete sine
-transforms to the integrand in the expression for the area.  These are
-more accurate, albeit slower, than the (default) series expansions for
-|I<f>| E<gt> 0.02 and will give high accuracy for -99 E<le> I<f> E<le>
-0.99.
+B<-G>, and the following two options, B<-Q> and B<-R>, are mutually
+exclusive.
 
 =item B<-Q>
 
-perform the calculation on the authalic sphere.  The area calculation is
-accurate even if the flattening is large, I<provided> the edges are
-sufficiently short.  The perimeter calculation is not accurate.
+map the points to the authalic sphere and compute the area of the
+resulting spherical polygon.  The area will be reasonable accurate
+I<provided> that the edges are sufficiently short.  The perimeter
+calculation is not accurate.
 
 =item B<-R>
 
-The lines joining the vertices are rhumb lines instead of geodesics.
+the edges joining the vertices are rhumb lines instead of geodesics.
+
+=item B<-E>
+
+use the exact equations for the geodesic B<-G>, authalic B<-Q>, and
+rhumb B<-R> calculations instead of series expansions.  For the
+geodesic and rhumb methods, the area is computed by applying discrete
+sine transforms to the integrand in the expression for the area.
+These are more accurate, albeit slower, than the (default) series
+expansions for |I<f>| E<gt> 0.02 and will give high accuracy for -99
+E<lt> I<f> E<lt> 0.99.  It is not necessary to specify this option for
+terrestrial applications.
 
 =item B<--geoconvert-input>
 

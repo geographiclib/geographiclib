@@ -44,7 +44,8 @@ HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/PolygonArea.hpp \
 	$(top_srcdir)/include/GeographicLib/TransverseMercatorExact.hpp \
 	$(top_srcdir)/include/GeographicLib/TransverseMercator.hpp \
-	$(top_srcdir)/include/GeographicLib/UTMUPS.hpp
+	$(top_srcdir)/include/GeographicLib/UTMUPS.hpp \
+	$(top_srcdir)/experimental/JacobiConformal.hpp
 
 ALLSOURCES = \
 	$(top_srcdir)/src/AlbersEqualArea.cpp \
@@ -82,7 +83,8 @@ ALLSOURCES = \
 	$(top_srcdir)/tools/GeoidEval.cpp \
 	$(top_srcdir)/tools/Gravity.cpp \
 	$(top_srcdir)/tools/Planimeter.cpp \
-	$(top_srcdir)/tools/TransverseMercatorProj.cpp
+	$(top_srcdir)/tools/TransverseMercatorProj.cpp \
+	$(top_srcdir)/experimental/JacobiConformal.cpp
 
 MANPAGES = \
 	../man/CartConvert.1.html \

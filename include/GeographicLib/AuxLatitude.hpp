@@ -16,6 +16,7 @@
 #if !defined(GEOGRAPHICLIB_AUXLATITUDE_HPP)
 #define GEOGRAPHICLIB_AUXLATITUDE_HPP 1
 
+#include <utility>
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/AuxAngle.hpp>
 
@@ -64,9 +65,12 @@ namespace GeographicLib {
    * simple that the exact method should be used for such conversions and also
    * for conversions with with abs(\e f) &gt; 1/150.
    *
+   * Example of use:
+   * \include example-AuxLatitude.cpp
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT AuxLatitude {
     typedef Math::real real;
+    AuxLatitude(const std::pair<real, real>& axes);
   public:
     /**
      * The floating-point type for real numbers.  This just connects to the
@@ -160,45 +164,73 @@ namespace GeographicLib {
     /**
      * Constructor
      *
+     * @param[in] a equatorial radius.
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.
+     * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
+     *   positive.
      *
      * \note the constructor does not precompute the coefficients for the
      * Fourier series for the series conversions.  These are computed and saved
      * when first needed.
      **********************************************************************/
-    AuxLatitude(real f);
+    AuxLatitude(real a, real f);
     /**
-     * Constructor
+     * Return an AuxLatitude object with given semi-axes
      *
      * @param[in] a equatorial radius.
      * @param[in] b polar semi-axis.
+     * @exception GeographicErr if \e a or \e b is not positive.
      *
-     * \note the constructor does not precompute the coefficients for the
-     * Fourier series for the series conversions.  These are computed and saved
-     * when first needed.
+     * This allows a new AuxAngle to be initialized as an angle in radians with
+     * @code
+     *   AuxLatitude aux(AuxLatitude::axes(a, b));
+     * @endcode
+     * This is the so-called "named constructor" idiom.
      **********************************************************************/
-    AuxLatitude(real a, real b);
+    static AuxLatitude axes(real a, real b) {
+      return AuxLatitude(std::pair<real, real>(a, b));
+    }
     /**
-     * Convert between any two auxiliary latitudes.
+     * Convert between any two auxiliary latitudes specified as AuxAngle.
      *
      * @param[in] auxin an AuxLatitude::aux indicating the type of
      *   auxiliary latitude \e zeta.
      * @param[in] auxout an AuxLatitude::aux indicating the type of
      *   auxiliary latitude \e eta.
-     * @param[in] zeta the input auxiliary latitude.
-     * @param[in] series if true use the Taylor series instead of the exact
-     *   equations [default false].
-     * @return the output auxiliary latitude \e eta.
+     * @param[in] zeta the input auxiliary latitude as an AuxAngle
+     * @param[in] exact if true use the exact equations instead of the Taylor
+     *   series [default false].
+     * @return the output auxiliary latitude \e eta as an AuxAngle.
      *
-     * With \e series = true, the Fourier coefficients for a specific \e auxin
+     * With \e exact = false, the Fourier coefficients for a specific \e auxin
      * and \e auxout are computed and saved on the first call; the saved
      * coefficients are used on subsequent calls.  The series method is
      * accurate for abs(\e f) &le; 1/150; for other \e f, the exact method
      * should be used.
      **********************************************************************/
     AuxAngle Convert(int auxin, int auxout, const AuxAngle& zeta,
-                  bool series = false) const;
+                     bool exact = false) const;
+    /**
+     * Convert between any two auxiliary latitudes specified in degrees.
+     *
+     * @param[in] auxin an AuxLatitude::aux indicating the type of
+     *   auxiliary latitude \e zeta.
+     * @param[in] auxout an AuxLatitude::aux indicating the type of
+     *   auxiliary latitude \e eta.
+     * @param[in] zeta the input auxiliary latitude in degrees.
+     * @param[in] exact if true use the exact equations instead of the Taylor
+     *   series [default false].
+     * @return the output auxiliary latitude \e eta in degrees.
+     *
+     * With \e exact = false, the Fourier coefficients for a specific \e auxin
+     * and \e auxout are computed and saved on the first call; the saved
+     * coefficients are used on subsequent calls.  The series method is
+     * accurate for abs(\e f) &le; 1/150; for other \e f, the exact method
+     * should be used.
+     **********************************************************************/
+    Math::real Convert(int auxin, int auxout, real zeta, bool exact = false)
+      const;
     /**
      * Convert geographic latitude to an auxiliary latitude \e eta.
      *
@@ -211,8 +243,8 @@ namespace GeographicLib {
      *
      * This uses the exact equations.
      **********************************************************************/
-    AuxAngle ToAuxiliary(int auxout, const AuxAngle& phi,
-                      real* diff = nullptr) const;
+    AuxAngle ToAuxiliary(int auxout, const AuxAngle& phi, real* diff = nullptr)
+      const;
     /**
      * Convert an auxiliary latitude \e zeta to geographic latitude.
      *
@@ -225,29 +257,35 @@ namespace GeographicLib {
      * This uses the exact equations.
      **********************************************************************/
     AuxAngle FromAuxiliary(int auxin, const AuxAngle& zeta,
-                        int* niter = nullptr) const;
+                           int* niter = nullptr) const;
     /**
      * Return the rectifying radius.
      *
-     * @param[in] a the equatorial radius.
-     * @param[in] series if true use the Taylor series instead of the exact
-     *   expression [default false].
+     * @param[in] exact if true use the exact expression instead of the Taylor
+     *   series [default false].
      * @return the rectifying radius in the same units as \e a.
      **********************************************************************/
-    real RectifyingRadius(real a, bool series = false) const;
+    Math::real RectifyingRadius(bool exact = false) const;
     /**
      * Return the authalic radius squared.
      *
-     * @param[in] a the equatorial radius.
-     * @param[in] series if true use the Taylor series instead of the exact
-     *   expression [default false].
+     * @param[in] exact if true use the exact expression instead of the Taylor
+     *   series [default false].
      * @return the authalic radius squared in the same units as \e a.
      **********************************************************************/
-    real AuthalicRadiusSquared(real a, bool series = false) const;
+    Math::real AuthalicRadiusSquared(bool exact = false) const;
+    /**
+     * @return \e a the equatorial radius of the ellipsoid (meters).
+     **********************************************************************/
+    Math::real EquatorialRadius() const { return _a; }
+    /**
+     * @return \e b the polar semi-axis of the ellipsoid (meters).
+     **********************************************************************/
+    Math::real PolarSemiAxis() const { return _b; }
     /**
      * @return \e f, the flattening of the ellipsoid.
      **********************************************************************/
-    real Flattening() const { return _f; }
+    Math::real Flattening() const { return _f; }
     /**
      * The order of the series expansions.  This is set at compile time to
      * either 4, 6, or 8, by the preprocessor macro
@@ -261,7 +299,6 @@ namespace GeographicLib {
     real tol_, bmin_, bmax_;       // Static consts for Newton's method
     // the function atanh(e * sphi)/e + sphi / (1 - (e * sphi)^2);
   protected:
-    /// \cond SKIP
     /**
      * Convert geographic latitude to parametric latitude
      *
@@ -307,8 +344,9 @@ namespace GeographicLib {
      * @return \e xi, the authalic latitude.
      **********************************************************************/
     AuxAngle Authalic(const AuxAngle& phi, real* diff = nullptr) const;
+    /// \cond SKIP
     // Ellipsoid parameters
-    real _f, _fm1, _e2, _e2m1, _e12, _e12p1, _n, _e, _e1, _n2, _q;
+    real _a, _b, _f, _fm1, _e2, _e2m1, _e12, _e12p1, _n, _e, _e1, _n2, _q;
     // To hold computed Fourier coefficients
     mutable real _c[Lmax * AUXNUMBER * AUXNUMBER];
     // 1d index into AUXNUMBER x AUXNUMBER data

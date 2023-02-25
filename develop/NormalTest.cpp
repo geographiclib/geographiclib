@@ -6,7 +6,6 @@
 #include <algorithm>
 
 #include <GeographicLib/NormalGravity.hpp>
-#include <GeographicLib/Ellipsoid.hpp>
 #include <GeographicLib/Utility.hpp>
 
 using namespace std;

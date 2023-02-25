@@ -60,50 +60,50 @@ namespace GeographicLib {
      * @return the \e y component.  This is the sine of the angle if the
      *   AuxAngle has been normalized.
      **********************************************************************/
-    real y() const { return _y; }
+    Math::real y() const { return _y; }
     /**
      * @return the \e x component.  This is the cosine of the angle if the
      *   AuxAngle has been normalized.
      **********************************************************************/
-    real x() const { return _x; }
+    Math::real x() const { return _x; }
     /**
      * @return a reference to the \e y component.  This allows this component
      *   to be altered.
      **********************************************************************/
-    real& y() { return _y; }
+    Math::real& y() { return _y; }
     /**
      * @return a reference to the \e x component.  This allows this component
      *   to be altered.
      **********************************************************************/
-    real& x() { return _x; }
+    Math::real& x() { return _x; }
     /**
      * @return the AuxAngle converted to the conventional angle measured in
      *   degrees.
      **********************************************************************/
-    real degrees() const;
+    Math::real degrees() const;
     /**
      * @return the AuxAngle converted to the conventional angle measured in
      *   radians.
      **********************************************************************/
-    real radians() const;
+    Math::real radians() const;
     /**
      * @return the lambertian of the AuxAngle.
      *
      * \note the lambertian of an angle &chi; is
      * lam(&chi;) = asinh(tan(&chi;)).
      **********************************************************************/
-    real lam() const;
+    Math::real lam() const;
     /**
      * @return the lambertian of the AuxAngle in degrees.
      *
      * \note the lambertian of an angle &chi; is
      * lam(&chi;) = asinh(tan(&chi;)).
      **********************************************************************/
-    real lamd() const;
+    Math::real lamd() const;
     /**
      * @return the tangent of the angle.
      **********************************************************************/
-    real tan() const { return _y / _x; }
+    Math::real tan() const { return _y / _x; }
     /**
      * @return a new normalized AuxAngle with the point lying on the unit
      *   circle and the \e y and \e x components are equal to the sine and
@@ -142,7 +142,7 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized as an angle in degrees with
      * @code
-     *   AuxAngle phi = AuxAngle::degrees(d);
+     *   AuxAngle phi(AuxAngle::degrees(d));
      * @endcode
      * This is the so-called "named constructor" idiom.
      **********************************************************************/
@@ -155,7 +155,7 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized as an angle in radians with
      * @code
-     *   AuxAngle phi = AuxAngle::radians(r);
+     *   AuxAngle phi(AuxAngle::radians(r));
      * @endcode
      * This is the so-called "named constructor" idiom.
      **********************************************************************/
@@ -168,7 +168,7 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized given the lambertian with
      * @code
-     *   AuxAngle chi = AuxAngle::lam(psi);
+     *   AuxAngle chi(AuxAngle::lam(psi));
      * @endcode
      * This is the so-called "named constructor" idiom.
      *
@@ -183,7 +183,7 @@ namespace GeographicLib {
      *
      * This allows a new AuxAngle to be initialized given the lambertian with
      * @code
-     *   AuxAngle chi = AuxAngle::lamd(psid);
+     *   AuxAngle chi(AuxAngle::lamd(psid));
      * @endcode
      * This is the so-called "named constructor" idiom.
      *

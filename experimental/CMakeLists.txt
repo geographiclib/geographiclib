@@ -5,22 +5,13 @@ add_definitions (${PROJECT_DEFINITIONS})
 
 add_custom_target (experimental)
 
-set (EXPTOOLS JacobiConformal example-AuxLatitude NRhumbSolve)
+set (EXPTOOLS JacobiConformal)
 
 foreach (EXPTOOL ${EXPTOOLS})
 
   set (EXPSOURCE ${EXPTOOL}.cpp)
   if (EXPTOOL STREQUAL "JacobiConformal")
     set (EXPSOURCE ${EXPSOURCE} JacobiConformal.hpp)
-  endif ()
-  if (EXPTOOL STREQUAL "example-AuxLatitude")
-    set (EXPSOURCE ${EXPSOURCE}
-      AuxAngle.cpp AuxAngle.hpp AuxLatitude.cpp AuxLatitude.hpp)
-  endif ()
-  if (EXPTOOL STREQUAL "NRhumbSolve")
-    set (EXPSOURCE NRhumbSolve.cpp NRhumbSolve.usage
-      AuxAngle.cpp AuxAngle.hpp AuxLatitude.cpp AuxLatitude.hpp
-      DAuxLatitude.cpp DAuxLatitude.hpp Rhumb.cpp Rhumb.hpp)
   endif ()
   add_executable (${EXPTOOL} EXCLUDE_FROM_ALL ${EXPSOURCE})
   add_dependencies (experimental ${EXPTOOL})

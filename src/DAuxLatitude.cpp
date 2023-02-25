@@ -1,7 +1,6 @@
 /**
  * \file DAuxLatitude.cpp
- * \brief Implementation for the GeographicLib::experimental::DAuxLatitude
- * class.
+ * \brief Implementation for the GeographicLib::DAuxLatitude class.
  *
  * \note This is just sample code.  It is not part of GeographicLib itself.
  *
@@ -34,24 +33,18 @@ namespace GeographicLib {
     // Stipulate that phi1 and phi2 are in [-90d, 90d]
     real x = phi1.radians(), y = phi2.radians();
     if (x == y) {
-      if (1) {
-        real d;
-        AuxAngle mu1(base::Rectifying(phi1, &d));
-        real tphi1 = phi1.tan(), tmu1 = mu1.tan();
-        return
-          isfinite(tphi1) ? d * Math::sq(base::sc(tphi1)/base::sc(tmu1)) : 1/d;
-      } else {
-        AuxAngle phin(phi1.normalized());
-        real d = Math::sq(phin.x()) + base::_e2m1 * Math::sq(phin.y());
-        return base::_e2m1 / (d * sqrt(d)) / base::RectifyingRadius(1, false);
-      }
+      real d;
+      AuxAngle mu1(base::Rectifying(phi1, &d));
+      real tphi1 = phi1.tan(), tmu1 = mu1.tan();
+      return
+        isfinite(tphi1) ? d * Math::sq(base::sc(tphi1)/base::sc(tmu1)) : 1/d;
     } else if (x * y < 0)
       return (base::Rectifying(phi2).radians() -
               base::Rectifying(phi1).radians()) / (y - x);
     else {
       AuxAngle bet1(base::Parametric(phi1)), bet2(base::Parametric(phi2));
       real dEdbet = DE(bet1, bet2), dbetdphi = DParametric(phi1, phi2);
-      return base::_fm1 * dEdbet / base::RectifyingRadius(1, false) * dbetdphi;
+      return base::_b * dEdbet / base::RectifyingRadius(true) * dbetdphi;
     }
   }
 
@@ -132,6 +125,7 @@ namespace GeographicLib {
     return (Ezbsz - k2 * sx * sy) * Dsz;
   }
 
+  /// \cond SKIP
   Math::real DAuxLatitude::Datanhee(real x, real y) const {
     // atan(e*sn(tphi))/e:
     //  Datan(e*sn(x),e*sn(y))*Dsn(x,y)/Datan(x,y)
@@ -141,12 +135,12 @@ namespace GeographicLib {
     // = Dasinh(e1*sn(fm1*x)), e1*sn(fm1*y)) *
     //  Dsn(fm1*x, fm1*y) / Datan(x,y)
     return base::_f < 0 ?
-      Datan(base::_e * base::sn(x),
-            base::_e * base::sn(y)) * Dsn(x, y) :
+      Datan(base::_e * base::sn(x), base::_e * base::sn(y)) * Dsn(x, y) :
       Dasinh(base::_e1 * base::sn(base::_fm1 * x),
              base::_e1 * base::sn(base::_fm1 * y)) *
       Dsn(base::_fm1 * x, base::_fm1 * y);
   }
+  /// \endcond
 
   Math::real DAuxLatitude::DIsometric(const AuxAngle& phi1,
                                       const AuxAngle& phi2)

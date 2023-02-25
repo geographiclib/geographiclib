@@ -21,13 +21,13 @@ namespace GeographicLib {
   using namespace std;
 
   Rhumb::Rhumb(real a, real f, bool exact)
-    : _aux(f)
+    : _aux(a, f)
     , _exact(exact)
     , _a(a)
     , _f(f)
     , _n(_f / (2 - _f))
-    , _rm(_aux.RectifyingRadius(_a, !_exact))
-    , _c2(_aux.AuthalicRadiusSquared(_a, !_exact) * Math::degree())
+    , _rm(_aux.RectifyingRadius(_exact))
+    , _c2(_aux.AuthalicRadiusSquared(_exact) * Math::degree())
     , _lL(_exact ? 8 : Lmax_)   // 8 is starting size for DFT fit
     , _pP(_lL)
   {
@@ -200,8 +200,8 @@ namespace GeographicLib {
                          unsigned outmask,
                          real& s12, real& azi12, real& S12) const {
     AuxAngle phi1(AuxAngle::degrees(lat1)), phi2(AuxAngle::degrees(lat2)),
-      chi1(_aux.Convert(_aux.PHI, _aux.CHI, phi1, !_exact)),
-      chi2(_aux.Convert(_aux.PHI, _aux.CHI, phi2, !_exact));
+      chi1(_aux.Convert(_aux.PHI, _aux.CHI, phi1, _exact)),
+      chi2(_aux.Convert(_aux.PHI, _aux.CHI, phi2, _exact));
     real
       lon12 = Math::AngDiff(lon1, lon2),
       lam12 = lon12 * Math::degree<real>(),
@@ -213,9 +213,9 @@ namespace GeographicLib {
     if (outmask & DISTANCE) {
       if (isinf(psi1) || isinf(psi2)) {
         s12 = fabs(_aux.Convert(AuxLatitude::PHI, AuxLatitude::MU,
-                                phi2, !_exact).radians() -
+                                phi2, _exact).radians() -
                    _aux.Convert(AuxLatitude::PHI, AuxLatitude::MU,
-                                phi1, !_exact).radians()) * _rm;
+                                phi1, _exact).radians()) * _rm;
       } else {
       real h = hypot(lam12, psi12);
       // dmu/dpsi = dmu/dchi / dpsi/dchi
@@ -241,10 +241,10 @@ namespace GeographicLib {
   Math::real Rhumb::MeanSinXi(const AuxAngle& chix, const AuxAngle& chiy)
     const {
     AuxAngle
-      phix (_aux.Convert(_aux.CHI, _aux.PHI , chix, !_exact)),
-      phiy (_aux.Convert(_aux.CHI, _aux.PHI , chiy, !_exact)),
-      betax(_aux.Convert(_aux.PHI, _aux.BETA, phix, !_exact).normalized()),
-      betay(_aux.Convert(_aux.PHI, _aux.BETA, phiy, !_exact).normalized());
+      phix (_aux.Convert(_aux.CHI, _aux.PHI , chix, _exact)),
+      phiy (_aux.Convert(_aux.CHI, _aux.PHI , chiy, _exact)),
+      betax(_aux.Convert(_aux.PHI, _aux.BETA, phix, _exact).normalized()),
+      betay(_aux.Convert(_aux.PHI, _aux.BETA, phiy, _exact).normalized());
     real DpbetaDbeta =
       DAuxLatitude::DClenshaw(false,
                         betay.radians() - betax.radians(),
@@ -267,9 +267,9 @@ namespace GeographicLib {
     Math::sincosd(_azi12, _salp, _calp);
     _phi1 = AuxAngle::degrees(lat1);
     _mu1 = _rh._aux.Convert(AuxLatitude::PHI, AuxLatitude::MU,
-                            _phi1, !_rh._exact).degrees();
+                            _phi1, _rh._exact).degrees();
     _chi1 = _rh._aux.Convert(AuxLatitude::PHI, AuxLatitude::CHI,
-                             _phi1, !_rh._exact);
+                             _phi1, _rh._exact);
     _psi1 = _chi1.lam();
   }
 
@@ -283,9 +283,9 @@ namespace GeographicLib {
     if (fabs(mu2) <= Math::qd) {
       AuxAngle mu2a(AuxAngle::degrees(mu2)),
         phi2(_rh._aux.Convert(AuxLatitude::MU, AuxLatitude::PHI,
-                              mu2a, !_rh._exact)),
+                              mu2a, _rh._exact)),
         chi2(_rh._aux.Convert(AuxLatitude::PHI, AuxLatitude::CHI,
-                              phi2, !_rh._exact));
+                              phi2, _rh._exact));
       lat2x = phi2.degrees();
       real dmudpsi = _rh._exact ?
         _rh._aux.DRectifying(_phi1, phi2) / _rh._aux.DIsometric(_phi1, phi2) :
@@ -302,7 +302,7 @@ namespace GeographicLib {
       // Deal with points on the anti-meridian
       if (fabs(mu2) > Math::qd) mu2 = Math::AngNormalize(Math::hd - mu2);
       lat2x = _rh._aux.Convert(AuxLatitude::MU, AuxLatitude::PHI,
-                               AuxAngle::degrees(mu2), !_rh._exact).degrees();
+                               AuxAngle::degrees(mu2), _rh._exact).degrees();
       lon2x = Math::NaN();
       if (outmask & AREA)
         S12 = Math::NaN();

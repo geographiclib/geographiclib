@@ -11,7 +11,6 @@
 #define GEOGRAPHICLIB_ELLIPSOID_HPP 1
 
 #include <GeographicLib/Constants.hpp>
-#include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/AlbersEqualArea.hpp>
 
@@ -42,16 +41,9 @@ namespace GeographicLib {
     static const int numit_ = 10;
     real stol_;
     real _a, _f, _f1, _f12, _e2, _es, _e12, _n, _b;
-    TransverseMercator _tm;
     EllipticFunction _ell;
     AlbersEqualArea _au;
 
-    // These are the alpha and beta coefficients in the Krueger series from
-    // TransverseMercator.  Thy are used by RhumbSolve to compute
-    // (psi2-psi1)/(mu2-mu1).
-    const Math::real* ConformalToRectifyingCoeffs() const { return _tm._alp; }
-    const Math::real* RectifyingToConformalCoeffs() const { return _tm._bet; }
-    friend class Rhumb; friend class RhumbLine;
   public:
     /** \name Constructor
      **********************************************************************/

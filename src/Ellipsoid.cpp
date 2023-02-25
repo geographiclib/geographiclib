@@ -29,7 +29,6 @@ namespace GeographicLib {
     , _e12(_e2 / (1 - _e2))
     , _n(_f / (2  - _f))
     , _b(_a * _f1)
-    , _tm(_a, _f, real(1))
     , _ell(-_e12)
     , _au(_a, _f, real(0), real(1), real(0), real(1), real(1))
   {}

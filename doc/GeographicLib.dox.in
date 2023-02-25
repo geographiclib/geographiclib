@@ -7495,9 +7495,12 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-mm-dd)
-   - Create experimental namespace and move AuxLatitude +
-     JacobiConformal there.
+   - Create experimental namespace and move JacobiConformal there.
    - Remove deprecated -l option for GeodSolve and RhumbSolve.
+   - Redo Rhumb routines; meaning of exact has changed.
+   - Planimeter options change: -E is separate toggle
+   - RhumbSolve: -u supported; inf, nan accepted for distance
+   - Ellipsoid class soon to be deprecated.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.2">Version 2.1.2</a>
    (released 2022-12-13)

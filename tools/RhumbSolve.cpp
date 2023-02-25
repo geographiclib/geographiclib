@@ -50,7 +50,7 @@ int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
     bool linecalc = false, inverse = false, dms = false, exact = false,
-      longfirst = false;
+      unroll = false, longfirst = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
@@ -89,7 +89,8 @@ int main(int argc, const char* const argv[]) {
           return 1;
         }
         m += 2;
-      }
+      } else if (arg == "-u")
+        unroll = true;
       else if (arg == "-d") {
         dms = true;
         dmssep = '\0';
@@ -194,11 +195,13 @@ int main(int argc, const char* const argv[]) {
         }
         str.clear(); str.str(s);
         if (linecalc) {
-          if (!(str >> s12))
+          if (!(str >> ss12))
             throw GeographicErr("Incomplete input: " + s);
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          rhl.Position(s12, lat2, lon2, S12);
+          s12 = Utility::val<real>(ss12);
+          rhl.GenPosition(s12, Rhumb::ALL | (unroll ? Rhumb::LONG_UNROLL : 0),
+                          lat2, lon2, S12);
           *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                   << " " << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else if (inverse) {
@@ -213,13 +216,16 @@ int main(int argc, const char* const argv[]) {
                   << Utility::str(s12, prec) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else {                // direct
-          if (!(str >> slat1 >> slon1 >> sazi >> s12))
+          if (!(str >> slat1 >> slon1 >> sazi >> ss12))
             throw GeographicErr("Incomplete input: " + s);
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);
           azi12 = DMS::DecodeAzimuth(sazi);
-          rh.Direct(lat1, lon1, azi12, s12, lat2, lon2, S12);
+          s12 = Utility::val<real>(ss12);
+          rh.GenDirect(lat1, lon1, azi12, s12,
+                       Rhumb::ALL | (unroll ? Rhumb::LONG_UNROLL : 0),
+                       lat2, lon2, S12);
           *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                   << " " << Utility::str(S12, std::max(prec-7, 0)) << eol;
         }
