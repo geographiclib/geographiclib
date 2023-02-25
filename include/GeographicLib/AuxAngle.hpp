@@ -135,7 +135,7 @@ namespace GeographicLib {
      **********************************************************************/
     AuxAngle& operator+=(const AuxAngle& p);
     /**
-     * Convert degrees to an AuxAngle.
+     * Construct and return an AuxAngle specied as an angle in degrees.
      *
      * @param[in] d the angle measured in degrees.
      * @return the corresponding AuxAngle.
@@ -144,11 +144,10 @@ namespace GeographicLib {
      * @code
      *   AuxAngle phi(AuxAngle::degrees(d));
      * @endcode
-     * This is the so-called "named constructor" idiom.
      **********************************************************************/
     static AuxAngle degrees(real d);
     /**
-     * Convert radians to an AuxAngle.
+     * Construct and return an AuxAngle specied as an angle in radians.
      *
      * @param[in] r the angle measured in radians.
      * @return the corresponding AuxAngle.
@@ -157,11 +156,10 @@ namespace GeographicLib {
      * @code
      *   AuxAngle phi(AuxAngle::radians(r));
      * @endcode
-     * This is the so-called "named constructor" idiom.
      **********************************************************************/
     static AuxAngle radians(real r);
     /**
-     * Convert lambertian to an AuxAngle.
+     * Construct and return an AuxAngle specied by the lambertian of the angle.
      *
      * @param[in] psi the lambertian of the angle.
      * @return the corresponding AuxAngle.
@@ -170,13 +168,13 @@ namespace GeographicLib {
      * @code
      *   AuxAngle chi(AuxAngle::lam(psi));
      * @endcode
-     * This is the so-called "named constructor" idiom.
      *
      * \note this sets the angle &chi; to gd(&psi;) = atan(sinh(&psi;)).
      **********************************************************************/
     static AuxAngle lam(real psi);
     /**
-     * Convert lambertian in degrees to an AuxAngle.
+     * Construct and return an AuxAngle specied by the lambertian of the angle
+     * in degrees.
      *
      * @param[in] psid the lambertian of the angle in degrees.
      * @return the corresponding AuxAngle.
@@ -185,7 +183,6 @@ namespace GeographicLib {
      * @code
      *   AuxAngle chi(AuxAngle::lamd(psid));
      * @endcode
-     * This is the so-called "named constructor" idiom.
      *
      * \note this sets the angle &chi; to gd(&psi;) = atan(sinh(&psi;)).
      **********************************************************************/

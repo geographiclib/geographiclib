@@ -79,6 +79,11 @@ namespace GeographicLib {
   }
   /// \endcond
 
+  const AuxLatitude& AuxLatitude::WGS84() {
+    static const AuxLatitude wgs84(Constants::WGS84_a(), Constants::WGS84_f());
+    return wgs84;
+  }
+
   AuxAngle AuxLatitude::Parametric(const AuxAngle& phi, real* diff) const {
     if (diff) *diff = _fm1;
     return AuxAngle(phi.y() * _fm1, phi.x());

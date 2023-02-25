@@ -7500,7 +7500,8 @@ git repository for GeographicLib</a>.
    - Redo Rhumb routines; meaning of exact has changed.
    - Planimeter options change: -E is separate toggle
    - RhumbSolve: -u supported; inf, nan accepted for distance
-   - Ellipsoid class soon to be deprecated.
+   - Reimplement Ellipsoid class in terms of AuxLatitude
+   - TODO: add Rhumb tests
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.2">Version 2.1.2</a>
    (released 2022-12-13)

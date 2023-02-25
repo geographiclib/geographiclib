@@ -176,7 +176,8 @@ namespace GeographicLib {
      **********************************************************************/
     AuxLatitude(real a, real f);
     /**
-     * Return an AuxLatitude object with given semi-axes
+     * Construct and return an AuxLatitude object specified in terms of the
+     * semi-axes
      *
      * @param[in] a equatorial radius.
      * @param[in] b polar semi-axis.
@@ -186,7 +187,6 @@ namespace GeographicLib {
      * @code
      *   AuxLatitude aux(AuxLatitude::axes(a, b));
      * @endcode
-     * This is the so-called "named constructor" idiom.
      **********************************************************************/
     static AuxLatitude axes(real a, real b) {
       return AuxLatitude(std::pair<real, real>(a, b));
@@ -293,6 +293,11 @@ namespace GeographicLib {
      * @hideinitializer
      **********************************************************************/
     static const int Lmax = GEOGRAPHICLIB_AUXLATITUDE_ORDER;
+    /**
+     * A global instantiation of Ellipsoid with the parameters for the WGS84
+     * ellipsoid.
+     **********************************************************************/
+    static const AuxLatitude& WGS84();
   private:
     // Maximum number of iterations for Newton's method
     static const int numit_ = 1000;
