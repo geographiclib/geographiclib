@@ -171,11 +171,11 @@ namespace GeographicLib {
     //   d[K-1] = -1/(4*K) * c[K-1]
     AuxAngle betaa(AuxAngle::radians(beta)),
       phia(_aux.Convert(AuxLatitude::BETA, AuxLatitude::PHI,
-                        betaa, false).normalized()),
+                        betaa, true).normalized()),
       chia(_aux.Convert(AuxLatitude::PHI , AuxLatitude::CHI,
-                        phia , false).normalized()),
+                        phia , true).normalized()),
       xia (_aux.Convert(AuxLatitude::PHI , AuxLatitude::XI ,
-                        phia , false).normalized());
+                        phia , true).normalized());
     real schi = chia.y(), cchi = chia.x(), sxi = xia.y(), cxi = xia.x(),
       cphi = phia.x(), cbeta = betaa.x();
     return (1 - _aux.Flattening()) *

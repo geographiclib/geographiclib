@@ -8,17 +8,30 @@
 # https://geographiclib.sourceforge.io/
 
 . ./utils.sh
+DEFAULTRADIUS=6378137
+DEFAULTFLATTENING=1/298.257223563
 OPTION=`lookupkey "$QUERY_STRING" option`
 if test "$OPTION" = Reset; then
     INPUT=
+    RADIUS=
+    FLATTENING=
 else
     INPUT=`lookupcheckkey "$QUERY_STRING" input`
+    RADIUS=`lookupellipsoid "$QUERY_STRING" radius`
+    FLATTENING=`lookupellipsoid "$QUERY_STRING" flattening`
     NORM=`lookupkey "$QUERY_STRING" norm`
     TYPE=`lookupkey "$QUERY_STRING" type`
     RHUMB=`lookupkey "$QUERY_STRING" rhumb`
 fi
-env > /tmp/env
-
+test "$RADIUS" || RADIUS=$DEFAULTRADIUS
+test "$FLATTENING" || FLATTENING=$DEFAULTFLATTENING
+TAG=
+if test "$RADIUS" = "$DEFAULTRADIUS" -a \
+  "$FLATTENING" = "$DEFAULTFLATTENING"; then
+  TAG=" (WGS84)"
+fi
+ELL="-e $RADIUS $FLATTENING"
+# ELL="$ELL -E"
 INPUTENC=`encodevalue "$INPUT"`
 if test "$TYPE" = "polyline"; then
   LINEFLAG=-l
@@ -31,7 +44,6 @@ else
   RHUMBFLAG=
 fi
 EXECDIR=../bin
-# Don't add -E flag since this utility only treats the WGS84 ellipsoid
 COMMAND="Planimeter"
 VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 STATUS=
@@ -42,7 +54,7 @@ if test "$INPUT"; then
     STATUS=`echo "$INPUT" | head -1 | $EXECDIR/GeoConvert`
     if test $? -eq 0; then
         STATUS=OK
-        OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $LINEFLAG $RHUMBFLAG |
+        OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $ELL $LINEFLAG $RHUMBFLAG |
             head -1`
         NUM="`echo $OUTPUT | cut -f1 -d' '`"
         LEN="`echo $OUTPUT | cut -f2 -d' '`"
@@ -120,6 +132,19 @@ cat <<EOF
                 Rhumb line</label>
             </td>
           </tr>
+          <tr>
+            <td>Equatorial radius:</td>
+            <td>
+              <input type=text name="radius" size=20 value="$RADIUS">
+            </td>
+            <td>meters</td>
+          </tr>
+          <tr>
+            <td>Flattening:</td>
+            <td>
+              <input type=text name="flattening" size=20 value="$FLATTENING">
+            </td>
+          </tr>
         </table>
       </p>
       <p>
@@ -142,7 +167,8 @@ cat <<EOF
       <p>
         Results:<br>
         <font size="4"><pre>
-    STATUS             = $STATUS
+    ellipsoid (a f)    = `encodevalue "$RADIUS"` `encodevalue "$FLATTENING"`$TAG
+    status             = $STATUS
     number of vertices = $NUM
     Perimeter (m)      = $LEN
     area (m^2)         = $AREA</pre></font>
@@ -154,7 +180,9 @@ cat <<EOF
       <a href="https://geographiclib.sourceforge.io/C++/doc/Planimeter.1.html">
         Planimeter (version $VERSION)</a>
       calculates the perimeter and area of a polygon whose edges are
-      either geodesics or rhumb lines on the WGS84 ellipsoid.
+      either geodesics or rhumb lines on the WGS84 ellipsoid.  In
+      polyline mode, it calculates the length of the geodesic or rhumb
+      line path joining the points.
     </p>
     <p>
       The edges of the polygon are given by the <i>shortest</i> geodesic
@@ -170,11 +198,7 @@ cat <<EOF
       self-intersecting polygons the area is accumulated
       "algebraically", i.e., the areas of the 2 loops in a figure-8
       polygon will partially cancel.  There is no need to close the
-      polygon.  Polygons may include one or both poles.  In polyline
-      mode,
-      <a href="https://geographiclib.sourceforge.io/C++/doc/Planimeter.1.html">
-        Planimeter</a>
-      calculates the length of the geodesic path joining the points.
+      polygon.  Polygons may include one or both poles.
     </p>
     <p>
       Give the vertices in terms of latitude and longitude, for example

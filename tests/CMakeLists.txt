@@ -789,16 +789,14 @@ set_tests_properties (TransverseMercatorProj6 TransverseMercatorProj7
   PROPERTIES PASS_REGULAR_EXPRESSION
   "19\\.80370996793 30\\.24919702282 11\\.214378172893 1\\.137025775759")
 
-# Test fix to bad handling of pole by RhumbSolve -i
-# Reported 2015-02-24 by Thomas Murray <thomas.murray56@gmail.com>
-# Supplement with tests of fix to bad areas (nan or inf) for this case
-# Reported 2018-02-08 by Natalia Sabourova <natalia.sabourova@ltu.se>
+# Paths between equator and pole
 add_test (NAME RhumbSolve0 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0")
 add_test (NAME RhumbSolve1 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 0" -E)
 set_tests_properties (RhumbSolve0 RhumbSolve1
   PROPERTIES PASS_REGULAR_EXPRESSION "^0\\.0+ 10001965\\.729 0[\r\n]")
+# 1/24 of ellipsoid area
 add_test (NAME RhumbSolve2 COMMAND RhumbSolve
   -p 3 -i --input-string "0 0 90 30")
 add_test (NAME RhumbSolve3 COMMAND RhumbSolve
@@ -806,6 +804,43 @@ add_test (NAME RhumbSolve3 COMMAND RhumbSolve
 set_tests_properties (RhumbSolve2 RhumbSolve3
   PROPERTIES PASS_REGULAR_EXPRESSION
   "^0\\.0+ 10001965\\.729 21252734238504[\r\n]")
+
+# Test sphere highly oblate/prolate
+add_test (NAME RhumbSolve4 COMMAND RhumbSolve
+  -p 6 -e 6.4e6 0 --input-string "20 0 37.1 8399000")
+add_test (NAME RhumbSolve5 COMMAND RhumbSolve
+  -p 6 -e 6.4e6 0 --input-string "20 0 37.1 8399000" -E)
+set_tests_properties (RhumbSolve4 RhumbSolve5
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^79\\.97173787686 90\\.00285375451 52220156106664[\r\n]")
+add_test (NAME RhumbSolve6 COMMAND RhumbSolve
+  -p 6 -e 6.4e6 1/2 --input-string "20 0 51.5 8083000" -E)
+set_tests_properties (RhumbSolve6
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^80\\.02647493551 90\\.02807944939 29256421226004[\r\n]")
+add_test (NAME RhumbSolve7 COMMAND RhumbSolve
+  -p 6 -e 6.4e6 -1 --input-string "20 0 30.0 8229000" -E)
+set_tests_properties (RhumbSolve7
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^77\\.59323119420 90\\.39005992280 100655035400805[\r\n]")
+
+# rhumb lines with destinations close to pole
+add_test (NAME RhumbSolve8 COMMAND RhumbSolve
+  -p 3 --input-string "0 0 0 10001965")
+set_tests_properties (RhumbSolve8
+  PROPERTIES PASS_REGULAR_EXPRESSION "^89\\.99999347 0.0+ 0[\r\n]")
+add_test (NAME RhumbSolve9 COMMAND RhumbSolve
+  -p 3 --input-string "0 0 60 20003930" -u)
+set_tests_properties (RhumbSolve9
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^89\\.99999347 1654.69811[0-9]+ 1123576495[0-9]+[\r\n]")
+
+add_test (NAME RhumbSolve10 COMMAND RhumbSolve
+  -p 3 --input-string "0 0 0 10001966")
+add_test (NAME RhumbSolve11 COMMAND RhumbSolve
+  -p 3 --input-string "0 0 60 20003932" -u)
+set_tests_properties (RhumbSolve10 RhumbSolve11
+  PROPERTIES PASS_REGULAR_EXPRESSION "^89\\.99999758 nan nan[\r\n]")
 
 # Test fix to CassiniSoldner::Forward bug found 2015-06-20
 add_test (NAME GeodesicProj0 COMMAND GeodesicProj
