@@ -1,11 +1,11 @@
 /**
  * \file JacobiConformal.hpp
- * \brief Header for GeographicLib::JacobiConformal class
+ * \brief Header for GeographicLib::experimental::JacobiConformal class
  *
  * \note This is just sample code.  It is not part of GeographicLib
  * itself.
  *
- * Copyright (c) Charles Karney (2014-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/

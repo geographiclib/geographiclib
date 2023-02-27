@@ -1,13 +1,7 @@
 /**
  * \file DAuxLatitude.hpp
- * \brief Header for the GeographicLib::DAuxLatitude class.
+ * \brief Header for the GeographicLib::DAuxLatitude class
  *
- * This file is an implementation of the methods described in
- * - C. F. F. Karney,
- *   On auxiliary latitudes,
- *   Technical Report, SRI International, December 2022.
- *   https://arxiv.org/abs/2212.05818
- * .
  * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
@@ -23,11 +17,8 @@ namespace GeographicLib {
   /**
    * \brief Divided differences of auxiliary latitudes.
    *
-   * This class is an implementation of the methods described in
-   * - C. F. F. Karney,
-   *   On auxiliary latitudes,
-   *   Technical Report, SRI International, December 2022.
-   *   https://arxiv.org/abs/2212.05818
+   * This class computed the divided differences of auxiliary latitudes and
+   * some other divided differences needed to support rhumb line calculations.
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT DAuxLatitude : public AuxLatitude {
   private:
@@ -70,18 +61,86 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real DConvert(int auxin, int auxout,
                         const AuxAngle& zeta1, const AuxAngle& zeta2) const;
-    Math::real DRectifying(const AuxAngle& phi1, const AuxAngle& phi2) const;
-    // overflow for tphi1, tphi2 >~ sqrt(mx)
-    Math::real DIsometric(const AuxAngle& phi1, const AuxAngle& phi2) const;
+    /**
+     * The divided difference of the parametric latitude with respect to the
+     * geographic latitude.
+     *
+     * @param[in] phi1 the first geographic latitude as an AuxAngle.
+     * @param[in] phi2 the second geographic latitude as an AuxAngle.
+     * @return the divided difference (\e beta2 - \e beta1) / (\e phi2 - \e
+     *   phi1), where \e beta is the parametric latitude.
+     *
+     * \note This routine uses the exact formulas and is valid for arbitrary
+     * latitude.
+     **********************************************************************/
     Math::real DParametric(const AuxAngle& phi1, const AuxAngle& phi2) const;
-    // Divided difference: (eta2 - eta1) / Delta.  Delta is EITHER 1, giving
-    // the plain difference OR (zeta2 - zeta1) in radians, giving the divided
-    // difference.  Other values will give nonsense.
+    /**
+     * The divided difference of the rectifying latitude with respect to the
+     * geographic latitude.
+     *
+     * @param[in] phi1 the first geographic latitude as an AuxAngle.
+     * @param[in] phi2 the second geographic latitude as an AuxAngle.
+     * @return the divided difference (\e mu2 - \e mu1) / (\e phi2 - \e
+     *   phi1), where \e mu is the rectifying latitude.
+     *
+     * \note This routine uses the exact formulas and is valid for arbitrary
+     * latitude.
+     **********************************************************************/
+    Math::real DRectifying(const AuxAngle& phi1, const AuxAngle& phi2) const;
+    /**
+     * The divided difference of the isometric latitude with respect to the
+     * geographic latitude.
+     *
+     * @param[in] phi1 the first geographic latitude as an AuxAngle.
+     * @param[in] phi2 the second geographic latitude as an AuxAngle.
+     * @return the divided difference (\e psi2 - \e psi1) / (\e phi2 - \e
+     *   phi1), where \e psi = asinh( tan(\e chi) ) is the isometric latitude
+     *   and \e chi is the conformal latitude.
+     *
+     * \note This routine uses the exact formulas and is valid for arbitrary
+     * latitude.
+     **********************************************************************/
+    Math::real DIsometric(const AuxAngle& phi1, const AuxAngle& phi2) const;
+    /**
+     * The divided difference of AuxLatitude::Clenshaw.
+     *
+     * @param[in] sinp if true sum the sine series, else sum the cosine series.
+     * @param[in] Delta either 1 \e or (zeta2 - zeta1) in radians.
+     * @param[in] szeta1 sin(\e zeta1).
+     * @param[in] czeta1 cos(\e zeta1).
+     * @param[in] szeta2 sin(\e zeta2).
+     * @param[in] czeta2 cos(\e zeta2).
+     * @param[in] c the array of coefficients.
+     * @param[in] K the number of coefficients.
+     * @return the divided difference.
+     *
+     * The result is
+     *  <pre>
+     *    ( AuxLatitude::Clenshaw(sinp, szeta2, czeta2, c, K) -
+     *      AuxLatitude::Clenshaw(sinp, szeta1, czeta1, c, K) ) / Delta
+     * </pre>
+     *
+     * \warning \e Delta must be either 1 \e or (zeta2 - zeta1); other values
+     * will return nonsense.
+     **********************************************************************/
     static Math::real DClenshaw(bool sinp, real Delta,
-                                real szet1, real czet1, real szet2, real czet2,
+                                real szeta1, real czeta1,
+                                real szeta2, real czeta2,
                                 const real c[], int K);
-    // Dasinh(x, y) / Datan(x, y)
-    // overflow for x, y >~ sqrt(mx)
+    /**
+     * The divided difference of the isometric latitude with respect to the
+     * conformal latitude.
+     *
+     * @param[in] x tan(\e chi1).
+     * @param[in] y tan(\e chi2).
+     * @return the divided difference (\e psi2 - \e psi1) / (\e chi2 - \e
+     *   chi1), where \e psi = asinh( tan(\e chi) ).
+     *
+     * \note This parameters for this routine are the \e tangents of conformal
+     * latitude.
+     *
+     * This routine computes Dasinh(x, y) / Datan(x, y).
+     **********************************************************************/
     static Math::real Dlam(real x, real y) {
       using std::isnan; using std::isinf;
       return x == y ? base::sc(x) :
@@ -90,6 +149,19 @@ namespace GeographicLib {
           Dasinh(x, y) / Datan(x, y)));
     }
     // Dp0Dpsi in terms of chi
+    /**
+     * The divided difference of the spherical rhumb area term with respect to
+     * the isometric latitude.
+     *
+     * @param[in] x tan(\e chi1).
+     * @param[in] y tan(\e chi2).
+     * @return the divided difference (p0(\e chi2) - p0(\e chi1)) / (\e psi2 -
+     *   \e psi1), where p0(\e chi) = log( sec(\e chi) ) and \e psi = asinh(
+     *   tan(\e chi) ).
+     *
+     * \note This parameters for this routine are the \e tangents of conformal
+     * latitude.
+     **********************************************************************/
     static Math::real Dp0Dpsi(real x, real y) {
       using std::isnan; using std::isinf; using std::copysign;
       return x == y ? base::sn(x) :
@@ -101,52 +173,13 @@ namespace GeographicLib {
   protected:                    // so TestAux can access these functions
     /// \cond SKIP
     // (sn(y) - sn(x)) / (y - x)
-    static real Dsn(real x, real y) {
-      real sc1 = base::sc(x);
-      if (x == y) return 1 / (sc1 * (1 + x*x));
-      real sc2 = base::sc(y), sn1 = base::sn(x), sn2 = base::sn(y);
-      return x * y > 0 ?
-        (sn1/sc2 + sn2/sc1) / ((sn1 + sn2) * sc1 * sc2) :
-        (sn2 - sn1) / (y - x);
-    }
-    static real Datan(real x, real y) {
-      using std::isinf; using std::atan;
-      real d = y - x, xy = x*y;
-      return x == y ? 1 / (1 + xy) :
-        (isinf(xy) && xy > 0 ? 0 :
-         (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(y) - atan(x)) / d);
-    }
-    static real Dasinh(real x, real y) {
-      using std::isinf; using std::asinh;
-      real d = y - x, xy = x*y, hx = base::sc(x), hy = base::sc(y);
-      // KF formula for x*y < 0 is asinh(y*hx - x*hy) / (y - x)
-      // but this has problem if x*y overflows to -inf
-      return x == y ? 1 / hx :
-        (isinf(d) ? 0 :
-         (xy > 0 ? asinh(d * (x*y < 1 ? (x + y) / (x*hy + y*hx) :
-                              (1/x + 1/y) / (hy/y + hx/x))) :
-          asinh(y) - asinh(x)) / d);
-    }
-    real Datanhee(real tphi1, real tphi2) const;
+    static real Dsn(real x, real y);
+    static real Datan(real x, real y);
+    static real Dasinh(real x, real y);
     // h(tan(x)) = tan(x) * sin(x) / 2
     static real h(real x) { return x * base::sn(x) / 2; }
-    static real Dh(real x, real y) {
-      using std::isnan; using std::isinf; using std::copysign;
-      if (isnan(x + y))
-        return x + y;           // N.B. nan for inf-inf
-      if (isinf(x))
-        return copysign(1/real(2), x);
-      if (isinf(y))
-        return copysign(1/real(2), y);
-      real sx = base::sn(x), sy = base::sn(y), d = sx*x + sy*y;
-      if (d / 2 == 0)
-        return (x + y) / 2;     // Handle underflow
-      if (x * y <= 0)
-        return (h(y) - h(x)) / (y - x); // Does not include x = y = 0
-      real scx = base::sc(x), scy = base::sc(y);
-      return ((x + y) / (2 * d)) *
-        (Math::sq(sx*sy) + Math::sq(sy/scx) + Math::sq(sx/scy));
-    }
+    static real Dh(real x, real y);
+    real Datanhee(real tphi1, real tphi2) const;
     /// \endcond
   private:
     static real Dsin(real x, real y) {

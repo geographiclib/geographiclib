@@ -1,6 +1,6 @@
 /**
  * \file AuxAngle.hpp
- * \brief Header for the GeographicLib::AuxAngle class.
+ * \brief Header for the GeographicLib::AuxAngle class
  *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
@@ -36,6 +36,9 @@ namespace GeographicLib {
    * trigonometric functions of the angle.  Only angles in [&minus;180&deg;,
    * 180&deg;] can be represented.  (A possible extension would be to keep
    * count of the number of turns.)
+   *
+   * Example of use:
+   * \include example-AuxAngle.cpp
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT AuxAngle {
   private:

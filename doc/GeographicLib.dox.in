@@ -4992,6 +4992,13 @@ Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 </center>
 
+This material is now written up in
+ - C. F. F. Karney,<br>
+   <a href="https://arxiv.org/abs/2203.NNNNN">The area of rhumb
+   polygons</a>,<br>
+   Technical Report, SRI International, mmm 2023.<br>
+   <a href="https://arxiv.org/abs/2203.NNNNN">arxiv:2203.NNNNN</a>
+
 The Rhumb and RhumbLine classes together with the
 <a href="RhumbSolve.1.html">RhumbSolve</a> utility perform rhumb line
 calculations.  A rhumb line (also called a loxodrome) is a line of
@@ -6460,10 +6467,8 @@ This material is now written up as
    Technical Report, SRI International, December 2022.<br>
    <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
  .
-An implementation of the methods described in this paper is available in
-the files <code>examples/AuxLatitude.[hc]pp</code> which provides the
-classes AuxAngle and AuxLatitude.  These classes are <b>not</b> yet part
-of GeographicLib.
+The implementation of the methods described in this paper is available
+as the classes AuxAngle, AuxLatitude, and DAuxLatitude.
 The series expansions described in the paper are available in
  - C. F. F. Karney,<br>
    <a href="https://doi.org/10.5281/zenodo.7382666">Series expansions
@@ -7495,14 +7500,46 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-mm-dd)
-   - Create experimental namespace and move JacobiConformal there.
-   - Remove deprecated -l option for GeodSolve and RhumbSolve.
-   - Redo Rhumb routines; meaning of exact has changed.
-   - Planimeter options change: -E is separate toggle
-   - RhumbSolve: -u supported; inf, nan accepted for distance
-   - Reimplement Ellipsoid class in terms of AuxLatitude
-   - TODO: add Rhumb tests
-
+   - Completely redo Rhumb and RhumbLine classes to yield accurate
+     results for the course and the area even for very eccentric
+     ellipsoids:
+     - these methods are accuract for 1/100 &lt; <i>b</i>/<i>a</i> &lt;
+       100 (the previous methods for the course were limited to 1/4 &lt;
+       <i>b</i>/<i>a</i> &lt; 4 for the course and the area calculation
+       was only valid for |<i>f</i>| &lt; 0.01);
+     - the meaning of the \e exact flag in the constructor is now more
+       straightforward: \e exact = false (the default) consistently uses
+       series expansions valid for |<i>f</i>| &lt; 0.01; \e exact = true
+       uses exact equations for the course of the rhumb line and an
+       accurate DFT fit for the area computation;
+     - <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity accepts the
+       -u to unroll the longitudes for the results of direct
+       calculations;
+     - rhumb lines which include a pole as one of the endpoints are
+       treated properly (previously point at the pole were moved slight
+       away from the pole);
+     - this treatment of rhumb areas is described in
+       <a href="https://arxiv.org/abs/2203.NNNNN">The area of rhumb
+       polygons</a>.
+   - The -E option for <a href="RhumbSolve.1.html">Planimeter(1)</a> is
+     now a toggle switching on exact treatment for geodesics (-G
+     option), rhumb lines (-R option), authlatic lines (-Q option).
+     Previously -E has turned on the exact treatment for geodesics.
+   - The online version of
+     <a href="https://geographiclib.sourceforge.io/cgi-bin/Planimeter">
+     Planimeter</a> now allows the ellipsoid to be specified.
+   - The deprecated -l option for GeodSolve and RhumbSolve has been
+     removed.
+   - Add AuxAngle and AuxLatitude classes to perform accurate
+     conversions between auxiliary latitudes.  The Ellipsoid class has
+     been mostly reimplimented in terms of the AuxLatitude class.  The
+     DAuxLatitude class computes the divides differences of auxiliary
+     latitude. and implements additional divided difference formulas
+     needed by Rhumb.
+   - Create experimental directory + namespace and move
+     experimental::JacobiConformal class there.  Use the cmake target
+     "experimental" to build this class.
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.2">Version 2.1.2</a>
    (released 2022-12-13)
    - Add MGRS::Decode to break an MGRS string into its components.
@@ -7519,7 +7556,7 @@ git repository for GeographicLib</a>.
      - check cmake version for "cmake rm -rf";
      - move cmake_minimum_required to the beginning of the cmake file
        and update minimum version to 3.13.0.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.1">Version 2.1.1</a>
    (released 2022-07-25)
    - Paper describing algorithms in GeodesicExact class is available at
@@ -7538,7 +7575,7 @@ git repository for GeographicLib</a>.
      - Use lookup table for selecting number of points for DST in
        GeodesicExact.
      - Relax one of the test thresholds in geodtest.cpp.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.1">Version 2.1</a>
    (released 2022-06-09)
    - Improve the accuracy of the area calculations in GeodesicExact and

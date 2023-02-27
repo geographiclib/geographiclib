@@ -1,11 +1,13 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011, Charles Karney <charles@karney.com>
+# Copyright (C) 2011-2023, Charles Karney <charles@karney.com>
 
 EXAMPLE_FILES = \
 	example-Accumulator.cpp \
 	example-AlbersEqualArea.cpp \
+	example-AuxAngle.cpp \
+	example-AuxLatitude.cpp \
 	example-AzimuthalEquidistant.cpp \
 	example-CassiniSoldner.cpp \
 	example-CircularEngine.cpp \

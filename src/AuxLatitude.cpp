@@ -45,9 +45,10 @@ namespace GeographicLib {
     , _n2( _n * _n )
     , _q( _e12p1 + (_f == 0 ? 1 : (_f > 0 ? asinh(_e1) : atan(_e)) / _e) )
   {
-    if (!(isfinite(_f) && _f < 1 &&
-          isfinite(_n) && fabs(_n) < 1))
-      throw GeographicErr("Bad ellipsoid parameters");
+    if (!(isfinite(_a) && _a > 0))
+      throw GeographicErr("Equatorial radius is not positive");
+    if (!(isfinite(_b) && _b > 0))
+      throw GeographicErr("Polar semi-axis is not positive");
     fill(_c, _c + Lmax * AUXNUMBER * AUXNUMBER,
          numeric_limits<real>::quiet_NaN());
   }
@@ -71,9 +72,10 @@ namespace GeographicLib {
     , _n2( _n * _n )
     , _q( _e12p1 + (_f == 0 ? 1 : (_f > 0 ? asinh(_e1) : atan(_e)) / _e) )
   {
-    if (!(isfinite(_f) && _f < 1 &&
-          isfinite(_n) && fabs(_n) < 1))
-      throw GeographicErr("Bad ellipsoid parameters");
+    if (!(isfinite(_a) && _a > 0))
+      throw GeographicErr("Equatorial radius is not positive");
+    if (!(isfinite(_b) && _b > 0))
+      throw GeographicErr("Polar semi-axis is not positive");
     fill(_c, _c + Lmax * AUXNUMBER * AUXNUMBER,
          numeric_limits<real>::quiet_NaN());
   }

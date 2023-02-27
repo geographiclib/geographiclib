@@ -1,6 +1,6 @@
 /**
  * \file AuxLatitude.hpp
- * \brief Header for the GeographicLib::AuxLatitude class.
+ * \brief Header for the GeographicLib::AuxLatitude class
  *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
@@ -287,6 +287,23 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const { return _f; }
     /**
+     * Use Clenshaw to sum a Fouier series.
+     *
+     * @param[in] sinp if true sum the sine series, else sum the cosine series.
+     * @param[in] szeta sin(\e zeta).
+     * @param[in] czeta cos(\e zeta).
+     * @param[in] c the array of coefficients.
+     * @param[in] K the number of coefficients.
+     * @return the Clenshaw sum.
+     *
+     * The result returned is \f$ \sum_0^{K-1} c_k \sin (2k+2)\zeta \f$, if \e
+     * sinp is true; with \e sinp false, replace sin by cos.
+     **********************************************************************/
+    // Clenshaw applied to sum(c[k] * sin( (2*k+2) * zeta), i, 0, K-1);
+    // if !sinp then subst sine->cosine.
+    static Math::real Clenshaw(bool sinp, real szeta, real czeta,
+                         const real c[], int K);
+    /**
      * The order of the series expansions.  This is set at compile time to
      * either 4, 6, or 8, by the preprocessor macro
      * GEOGRAPHICLIB_AUXLATITUDE_ORDER.
@@ -370,10 +387,6 @@ namespace GeographicLib {
     }
     // Populate [_c[Lmax * k], _c[Lmax * (k + 1)])
     void fillcoeff(int auxin, int auxout, int k) const;
-    // Clenshaw applied to sum(c[k] * sin( (2*k+2) * zeta), i, 0, K-1);
-    // if !sinp then subst sine->cosine.
-    static real Clenshaw(bool sinp, real szeta, real czeta,
-                         const real c[], int K);
     // the function atanh(e * sphi)/e; works for e^2 = 0 and e^2 < 0
     real atanhee(real tphi) const;
     /// \endcond

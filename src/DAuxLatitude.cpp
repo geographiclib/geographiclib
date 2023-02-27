@@ -126,6 +126,49 @@ namespace GeographicLib {
   }
 
   /// \cond SKIP
+  Math::real DAuxLatitude::Dsn(real x, real y) {
+    real sc1 = base::sc(x);
+    if (x == y) return 1 / (sc1 * (1 + x*x));
+    real sc2 = base::sc(y), sn1 = base::sn(x), sn2 = base::sn(y);
+    return x * y > 0 ?
+      (sn1/sc2 + sn2/sc1) / ((sn1 + sn2) * sc1 * sc2) :
+      (sn2 - sn1) / (y - x);
+  }
+  Math::real DAuxLatitude::Datan(real x, real y) {
+    using std::isinf; using std::atan;
+    real d = y - x, xy = x*y;
+    return x == y ? 1 / (1 + xy) :
+      (isinf(xy) && xy > 0 ? 0 :
+       (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(y) - atan(x)) / d);
+  }
+  Math::real DAuxLatitude::Dasinh(real x, real y) {
+    using std::isinf; using std::asinh;
+    real d = y - x, xy = x*y, hx = base::sc(x), hy = base::sc(y);
+    // KF formula for x*y < 0 is asinh(y*hx - x*hy) / (y - x)
+    // but this has problem if x*y overflows to -inf
+    return x == y ? 1 / hx :
+      (isinf(d) ? 0 :
+       (xy > 0 ? asinh(d * (x*y < 1 ? (x + y) / (x*hy + y*hx) :
+                            (1/x + 1/y) / (hy/y + hx/x))) :
+        asinh(y) - asinh(x)) / d);
+  }
+  Math::real DAuxLatitude::Dh(real x, real y) {
+    using std::isnan; using std::isinf; using std::copysign;
+    if (isnan(x + y))
+      return x + y;           // N.B. nan for inf-inf
+    if (isinf(x))
+      return copysign(1/real(2), x);
+    if (isinf(y))
+      return copysign(1/real(2), y);
+    real sx = base::sn(x), sy = base::sn(y), d = sx*x + sy*y;
+    if (d / 2 == 0)
+      return (x + y) / 2;     // Handle underflow
+    if (x * y <= 0)
+      return (h(y) - h(x)) / (y - x); // Does not include x = y = 0
+    real scx = base::sc(x), scy = base::sc(y);
+    return ((x + y) / (2 * d)) *
+      (Math::sq(sx*sy) + Math::sq(sy/scx) + Math::sq(sx/scy));
+  }
   Math::real DAuxLatitude::Datanhee(real x, real y) const {
     // atan(e*sn(tphi))/e:
     //  Datan(e*sn(x),e*sn(y))*Dsn(x,y)/Datan(x,y)
@@ -169,14 +212,14 @@ namespace GeographicLib {
   }
 
   Math::real DAuxLatitude::DClenshaw(bool sinp, real Delta,
-                                     real szet1, real czet1,
-                                     real szet2, real czet2,
+                                     real szeta1, real czeta1,
+                                     real szeta2, real czeta2,
                                      const real c[], int K) {
     // Evaluate
-    // (Clenshaw(sinp, szet2, czet2, c, K) -
-    //  Clenshaw(sinp, szet1, czet1, c, K)) / Delta
+    // (Clenshaw(sinp, szeta2, czeta2, c, K) -
+    //  Clenshaw(sinp, szeta1, czeta1, c, K)) / Delta
     // or
-    // sum(c[k] * (sin( (2*k+2) * zet2) - sin( (2*k+2) * zet2)), i, 0, K-1)
+    // sum(c[k] * (sin( (2*k+2) * zeta2) - sin( (2*k+2) * zeta2)), i, 0, K-1)
     //   / Delta
     // (if !sinp, then change sin->cos here.)
     //
@@ -187,14 +230,14 @@ namespace GeographicLib {
     int k = K;
     // suffices a b denote [1,1], [2,1] elements of matrix/vector
     real D2 = Delta * Delta,
-      czetp = czet2 * czet1 - szet2 * szet1,
-      szetp = szet2 * czet1 + czet2 * szet1,
-      czetm = czet2 * czet1 + szet2 * szet1,
-      // sin(zetm) / Delta
-      szetmd =  (Delta == 1 ? szet2 * czet1 - czet2 * szet1 :
+      czetap = czeta2 * czeta1 - szeta2 * szeta1,
+      szetap = szeta2 * czeta1 + czeta2 * szeta1,
+      czetam = czeta2 * czeta1 + szeta2 * szeta1,
+      // sin(zetam) / Delta
+      szetamd =  (Delta == 1 ? szeta2 * czeta1 - czeta2 * szeta1 :
                  (Delta != 0 ? sin(Delta) / Delta : 1)),
-      Xa =  2 * czetp * czetm,
-      Xb = -2 * szetp * szetmd,
+      Xa =  2 * czetap * czetam,
+      Xb = -2 * szetap * szetamd,
       u0a = 0, u0b = 0, u1a = 0, u1b = 0; // accumulators for sum
     for (--k; k >= 0; --k) {
       // temporary real = X . U0 - U1 + c[k] * I
@@ -206,17 +249,17 @@ namespace GeographicLib {
     }
     // P = U0 . F[0] - U1 . F[-1]
     // if sinp:
-    //   F[0] = [ sin(2*zet2) + sin(2*zet1),
-    //           (sin(2*zet2) - sin(2*zet1)) / Delta]
-    //        = 2 * [ szetp * czetm, czetp * szetmd ]
+    //   F[0] = [ sin(2*zeta2) + sin(2*zeta1),
+    //           (sin(2*zeta2) - sin(2*zeta1)) / Delta]
+    //        = 2 * [ szetap * czetam, czetap * szetamd ]
     //   F[-1] = [0, 0]
     // else:
-    //   F[0] = [ cos(2*zet2) + cos(2*zet1),
-    //           (cos(2*zet2) - cos(2*zet1)) / Delta]
-    //        = 2 * [ czetp * czetm, -szetp * szetmd ]
+    //   F[0] = [ cos(2*zeta2) + cos(2*zeta1),
+    //           (cos(2*zeta2) - cos(2*zeta1)) / Delta]
+    //        = 2 * [ czetap * czetam, -szetap * szetamd ]
     //   F[-1] = [2, 0]
-    real F0a = (sinp ? szetp :  czetp) * czetm,
-      F0b = (sinp ? czetp : -szetp) * szetmd,
+    real F0a = (sinp ? szetap :  czetap) * czetam,
+      F0b = (sinp ? czetap : -szetap) * szetamd,
       Fm1a = sinp ? 0 : 1;  // Fm1b = 0;
     // Don't both to compute sum...
     // divided difference (or difference if Delta == 1)

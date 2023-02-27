@@ -3,7 +3,7 @@
 # Planimeter.cgi
 # cgi script for measuring the area of geodesic polygons
 #
-# Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and
+# Copyright (c) Charles Karney (2011-2023) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -30,8 +30,6 @@ if test "$RADIUS" = "$DEFAULTRADIUS" -a \
   "$FLATTENING" = "$DEFAULTFLATTENING"; then
   TAG=" (WGS84)"
 fi
-ELL="-e $RADIUS $FLATTENING"
-# ELL="$ELL -E"
 INPUTENC=`encodevalue "$INPUT"`
 if test "$TYPE" = "polyline"; then
   LINEFLAG=-l
@@ -46,16 +44,17 @@ fi
 EXECDIR=../bin
 COMMAND="Planimeter"
 VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
+COMMAND="$COMMAND -E -e $RADIUS $FLATTENING"
 STATUS=
 NUM=
 LEN=
 AREA=
+set -o pipefail
 if test "$INPUT"; then
-    STATUS=`echo "$INPUT" | head -1 | $EXECDIR/GeoConvert`
+    OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $LINEFLAG $RHUMBFLAG 2>&1 |
+            head -1`
     if test $? -eq 0; then
         STATUS=OK
-        OUTPUT=`echo "$INPUT" | $EXECDIR/$COMMAND $ELL $LINEFLAG $RHUMBFLAG |
-            head -1`
         NUM="`echo $OUTPUT | cut -f1 -d' '`"
         LEN="`echo $OUTPUT | cut -f2 -d' '`"
         AREA="`echo $OUTPUT | cut -f3 -d' '`"
@@ -64,6 +63,8 @@ if test "$INPUT"; then
             sed '/^ERROR/,$d'`
             INPUTENC=`encodevalue "$TRANSFORMEDINPUT"`
         fi
+    else
+        STATUS="$OUTPUT"
     fi
     # echo `date +"%F %T"` "$COMMAND: $INPUT" >> ../persistent/utilities.log
 fi
@@ -210,6 +211,18 @@ cat <<EOF
         3:0:34W 16:46:33N</pre>
       A blank line or a coordinate which cannot be understood
       causes the reading of vertices to be stopped.
+    </p>
+    <p>
+      The ellipsoid is specified by its equatorial radius, <em>a</em>,
+      and its flattening, <em>f</em>&nbsp;=
+      (<em>a</em>&nbsp;&minus;&nbsp;<em>b</em>)/<em>a</em>,
+      where <em>b</em> is the polar semi-axis.  The default values for
+      these parameters correspond to the WGS84 ellipsoid.  The method is
+      accurate for &minus;99&nbsp;&le; <em>f</em>&nbsp;&le; 0.99
+      (corresponding to 0.01&nbsp;&le; <em>b</em>/<em>a</em>&nbsp;&le;
+      100).  Note that <em>f</em> is negative for a prolate ellipsoid
+      (<em>b</em>&nbsp;&gt; <em>a</em>) and that it can be entered as a
+      fraction, e.g., 1/297.
     </p>
     <p>
       For moderately complex polygons, the perimeter is accurate to

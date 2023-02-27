@@ -24,6 +24,7 @@ cmake_minimum_required (VERSION 3.13.0)
 set (EXAMPLES0
   example-Accumulator.cpp
   example-AlbersEqualArea.cpp
+  example-AuxAngle.cpp
   example-AuxLatitude.cpp
   example-AzimuthalEquidistant.cpp
   example-CassiniSoldner.cpp

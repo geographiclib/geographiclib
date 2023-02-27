@@ -3,7 +3,7 @@
 # RhumbSolve.cgi
 # cgi script for rhumb line calculations
 #
-# Copyright (c) Charles Karney (2014-2022) <charles@karney.com> and
+# Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and
 # licensed under the MIT/X11 License.  For more information, see
 # https://geographiclib.sourceforge.io/
 
@@ -296,13 +296,6 @@ cat <<EOF
         <li> <em>S12</em>, the area between the rhumb line
           and the equator (m<sup>2</sup>).
       </ul>
-    </p>
-    <p>
-      A point at a pole is treated as a point a tiny distance away from
-      the pole on the given line of longitude.  The longitude becomes
-      indeterminate when a rhumb line passes through a pole, and
-      RhumbSolve reports NaNs for the longitude and the area in this
-      case.
     </p>
     <p>
       The ellipsoid is specified by its equatorial radius, <em>a</em>,
