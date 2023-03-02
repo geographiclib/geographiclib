@@ -36,7 +36,7 @@ fi
 
 INPUTENC=`encodevalue "$INPUT"`
 EXECDIR=../bin
-COMMAND="RhumbSolve"
+COMMAND="RhumbSolve -E"
 VERSION=`$EXECDIR/$COMMAND --version | cut -f4 -d" "`
 F='<font color="blue">'
 G='</font>'

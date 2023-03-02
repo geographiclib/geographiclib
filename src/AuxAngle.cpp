@@ -27,6 +27,7 @@ namespace GeographicLib {
   }
 
   AuxAngle AuxAngle::normalized() const {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if ( isnan( tan() ) ||
          (fabs(_y) > std::numeric_limits<real>::max()/2 &&
           fabs(_x) > std::numeric_limits<real>::max()/2) )

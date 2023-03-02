@@ -199,6 +199,7 @@ namespace GeographicLib {
   }
 
   AuxAngle AuxLatitude::Authalic(const AuxAngle& phi, real* diff) const {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     real tphi = fabs(phi.tan());
     AuxAngle xi(phi), phin(phi.normalized());
     if ( !( !isfinite(tphi) || tphi == 0 || _f == 0 ) ) {
@@ -298,6 +299,7 @@ namespace GeographicLib {
 
   AuxAngle AuxLatitude::Convert(int auxin, int auxout, const AuxAngle& zeta,
                                 bool exact) const {
+    using std::isnan;           // Needed for Centos 7, ubuntu 14
     int k = ind(auxout, auxin);
     if (k < 0) return AuxAngle::NaN();
     if (auxin == auxout) return zeta;

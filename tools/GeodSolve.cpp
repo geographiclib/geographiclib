@@ -252,7 +252,7 @@ int main(int argc, const char* const argv[]) {
       Geodesic::NONE;
 
     const Geodesic      geods(a, f);
-    const GeodesicExact geode(a, f);
+    const GeodesicExact geode(a, exact ? f : 0);
     GeodesicLine      ls;
     GeodesicLineExact le;
     if (linecalc) {

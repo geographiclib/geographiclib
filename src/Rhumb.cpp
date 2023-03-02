@@ -49,7 +49,7 @@ namespace GeographicLib {
       int L = 4;
       vector<real> c(L);
       DST fft(L); fft.transform(f, c.data()); L *= 2;
-      for (; L <= Lfftmax_; L *=2) {
+      for (_lL = 0; L <= Lfftmax_ && _lL == 0; L *=2) {
         fft.reset(L/2); c.resize(L); fft.refine(f, c.data());
         _pP.resize(L);
         for (int l = 0, k = -1; l < L; ++l) {
@@ -65,6 +65,8 @@ namespace GeographicLib {
           }
         }
       }
+      if (_lL == 0)          // Hasn't converged -- just use the values we have
+        _lL = int(_pP.size());
     } else {
       // Use series expansions in n for Fourier coeffients of the integral
 #if GEOGRAPHICLIB_RHUMBAREA_ORDER == 4
@@ -156,16 +158,15 @@ namespace GeographicLib {
   Rhumb::qIntegrand::qIntegrand(const AuxLatitude& aux)
     : _aux(aux) {}
 
-  Math::real Rhumb::qIntegrand::operator()(real chi) const {
-    real beta = chi;  // N.B. argument is beta not chi!
-    // Delta Q(beta) = integrate(q(beta) * cos(beta), beta)
-    //   q(chi) = (1-f) * (sin(xi) - sin(chi)) / (cos(phi)*cos(beta))
-    //          = (1-f) * (cos(chi) - cos(xi)) / (cos(phi)*cos(beta)) *
+  Math::real Rhumb::qIntegrand::operator()(real beta) const {
+    // pbeta(beta) = integrate(q(beta), beta)
+    //   q(beta) = (1-f) * (sin(xi) - sin(chi)) / cos(phi)
+    //           = (1-f) * (cos(chi) - cos(xi)) / cos(phi) *
     //   (cos(xi) + cos(chi)) / (sin(xi) + sin(chi))
-    // Fit q(chi) with Fourier transform
-    //   q(chi) = sum(c[k] * sin(2*k+1), k, 0, K-1)
+    // Fit q(beta)/cos(beta) with Fourier transform
+    //   q(beta)/cos(beta) = sum(c[k] * sin((2*k+1)*beta), k, 0, K-1)
     // then the integral is
-    //   Delta Q = sum(d[k] * cos(2*k+2), k, 0, K-1)
+    //   pbeta = sum(d[k] * cos((2*k+2)*beta), k, 0, K-1)
     // where
     //   d[k] = -1/(4*(k+1)) * (c[k] + c[k+1]) for k in 0..K-2
     //   d[K-1] = -1/(4*K) * c[K-1]

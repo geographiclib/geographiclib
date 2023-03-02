@@ -33,7 +33,7 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int numit_ = 10;
     real stol_;
-    real _a, _f, _f1, _f12, _e2, _es, _e12, _n, _b;
+    real _a, _f,_b, _e2, _e12, _n;
     AuxLatitude _aux;
     real _rm, _c2;
 
