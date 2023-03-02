@@ -97,6 +97,7 @@ namespace GeographicLib {
   }
 
   AuxAngle AuxLatitude::Rectifying(const AuxAngle& phi, real* diff) const {
+    using std::isinf;           // Needed for Centos 7, ubuntu 14
     AuxAngle beta(Parametric(phi).normalized());
     real sbeta = fabs(beta.y()), cbeta = fabs(beta.x());
     real a = 1, b = _fm1, ka = _e2, kb = -_e12, ka1 = _e2m1, kb1 = _e12p1,
@@ -142,6 +143,7 @@ namespace GeographicLib {
   }
 
   AuxAngle AuxLatitude::Conformal(const AuxAngle& phi, real* diff) const {
+    using std::isinf;           // Needed for Centos 7, ubuntu 14
     real tphi = fabs(phi.tan()), tchi = tphi;
     if ( !( !isfinite(tphi) || tphi == 0 || _f == 0 ) ) {
       real scphi = sc(tphi),

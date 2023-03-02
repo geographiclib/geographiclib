@@ -200,6 +200,7 @@ namespace GeographicLib {
   void Rhumb::GenInverse(real lat1, real lon1, real lat2, real lon2,
                          unsigned outmask,
                          real& s12, real& azi12, real& S12) const {
+    using std::isinf;           // Needed for Centos 7, ubuntu 14
     AuxAngle phi1(AuxAngle::degrees(lat1)), phi2(AuxAngle::degrees(lat2)),
       chi1(_aux.Convert(_aux.PHI, _aux.CHI, phi1, _exact)),
       chi2(_aux.Convert(_aux.PHI, _aux.CHI, phi2, _exact));
