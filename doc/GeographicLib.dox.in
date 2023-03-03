@@ -977,7 +977,8 @@ utility to provide access to this class.  This class requires
 installation of data files for the various geoid models; see \ref
 geoidinst for details.
 
-Ellipsoid is a class which performs latitude
+AuxAngle, AuxLatitude, and
+Ellipsoid are classes which performs latitude
 conversions and returns various properties of the ellipsoid.
 
 GravityModel evaluates the earth's gravitational field using a
@@ -1046,10 +1047,8 @@ format they can be easily plotted in MATLAB.
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
 compiler.  System dependencies come into
- - Math -- GeographicLib needs to define functions such
-   as atanh for systems that lack them.  The system dependence will
-   disappear with the adoption of C++11 because the needed functions are
-   part of that standard.
+ - Math -- GeographicLib requires support of C++11 mathematical
+   functions.
  - use of long double -- the type is used only for testing.  On systems
    which lack this data type the cmake and autoconf configuration
    methods should detect its absence and omit the code that depends on
@@ -4994,10 +4993,17 @@ Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 
 This material is now written up in
  - C. F. F. Karney,<br>
-   <a href="https://arxiv.org/abs/2203.NNNNN">The area of rhumb
+   <a href="https://arxiv.org/abs/2303.NNNNN">The area of rhumb
    polygons</a>,<br>
-   Technical Report, SRI International, mmm 2023.<br>
-   <a href="https://arxiv.org/abs/2203.NNNNN">arxiv:2203.NNNNN</a>
+   Technical Report, SRI International, March 2023.<br>
+   <a href="https://arxiv.org/abs/2303.NNNNN">arxiv:2303.NNNNN</a>
+ .
+The series expansions described in the paper are available in
+ - C. F. F. Karney,<br>
+   <a href="https://doi.org/10.5281/zenodo.7685484">Series expansions
+   for computing rhumb areas</a>,<br> March 2023.<br>
+   <a href="https://doi.org/10.5281/zenodo.7685484">
+   doi:10.5281/zenodo.7685484</a>
 
 The Rhumb and RhumbLine classes together with the
 <a href="RhumbSolve.1.html">RhumbSolve</a> utility perform rhumb line
@@ -7516,10 +7522,10 @@ git repository for GeographicLib</a>.
        -u to unroll the longitudes for the results of direct
        calculations;
      - rhumb lines which include a pole as one of the endpoints are
-       treated properly (previously point at the pole were moved slight
-       away from the pole);
+       treated properly (previously point at the pole were moved
+       slightly away from the pole);
      - this treatment of rhumb areas is described in
-       <a href="https://arxiv.org/abs/2203.NNNNN">The area of rhumb
+       <a href="https://arxiv.org/abs/2303.NNNNN">The area of rhumb
        polygons</a>.
    - The -E option for <a href="RhumbSolve.1.html">Planimeter(1)</a> is
      now a toggle switching on exact treatment for geodesics (-G

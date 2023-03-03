@@ -1,6 +1,5 @@
 /*
- *
- * Maxima code to Compute series expansions for the auxiliary
+ * Maxima code to compute the series expansions for the auxiliary
  * latitudes.  This generates the series given in the appendix of the
  * paper
  *

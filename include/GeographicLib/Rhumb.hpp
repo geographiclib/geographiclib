@@ -63,6 +63,13 @@ namespace GeographicLib {
    * and Tokyo Narita via the rhumb line is 11400 km which is 18% longer than
    * the geodesic distance 9600 km.
    *
+   * This implementation is described in
+   * - C. F. F. Karney,<br>
+   *   <a href="https://arxiv.org/abs/2303.NNNNN">The area of rhumb
+   *   polygons</a>,<br>
+   *   Technical Report, SRI International, March 2023.<br>
+   *   <a href="https://arxiv.org/abs/2303.NNNNN">arxiv:2303.NNNNN</a>
+   * .
    * For more information on rhumb lines see \ref rhumb.
    *
    * Example of use:

@@ -134,7 +134,7 @@ set default downloads for distrib-C++ on sourceforge
 
 post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
 
-VERSION=2.1.2
+VERSION=2.2
 
 Brew...
 

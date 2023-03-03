@@ -69,6 +69,8 @@ namespace GeographicLib {
         _lL = int(_pP.size());
     } else {
       // Use series expansions in n for Fourier coeffients of the integral
+      // See "Series expansions for computing rhumb areas"
+      // https://doi.org/10.5281/zenodo.7685484
 #if GEOGRAPHICLIB_RHUMBAREA_ORDER == 4
       static const real coeffs[] = {
         // Coefficients in matrix Q

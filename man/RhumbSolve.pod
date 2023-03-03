@@ -238,6 +238,17 @@ GeoConvert(1), GeodSolve(1).
 An online version of this utility is availbable at
 L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 
+=head1 SEE ALSO
+
+GeoConvert(1).
+
+An online version of this utility is availbable at
+L<https://geographiclib.sourceforge.io/cgi-bin/GeodSolve>.
+
+This solution for rhumb line is described in C. F. F. Karney,
+I<The area of rhumb polygons>, Technical Report, SRI International
+(2023); URL: L<https://arxiv.org/abs/2303.NNNNN>.
+
 The Wikipedia page, Rhumb line,
 L<https://en.wikipedia.org/wiki/Rhumb_line>.
 

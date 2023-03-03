@@ -22,15 +22,15 @@ namespace GeographicLib {
   using namespace std;
 
   AuxAngle AuxAngle::NaN() {
-    return AuxAngle(std::numeric_limits<real>::quiet_NaN(),
-                    std::numeric_limits<real>::quiet_NaN());
+    return AuxAngle(numeric_limits<real>::quiet_NaN(),
+                    numeric_limits<real>::quiet_NaN());
   }
 
   AuxAngle AuxAngle::normalized() const {
     using std::isnan;           // Needed for Centos 7, ubuntu 14
     if ( isnan( tan() ) ||
-         (fabs(_y) > std::numeric_limits<real>::max()/2 &&
-          fabs(_x) > std::numeric_limits<real>::max()/2) )
+         (fabs(_y) > numeric_limits<real>::max()/2 &&
+          fabs(_x) > numeric_limits<real>::max()/2) )
       // deal with
       // (0,0), (inf,inf), (nan,nan), (nan,x), (y,nan), (toobig,toobig)
       return NaN();

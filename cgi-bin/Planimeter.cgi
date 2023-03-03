@@ -253,7 +253,12 @@ cat <<EOF
         10.1007/s00190-012-0578-z</a>;
       addenda:
       <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
-        geod-addenda.html</a>.
+        geod-addenda.html</a> and
+      C. F. F. Karney,
+      <a href="https://arxiv.org/abs/2303.NNNNN">The area of rhumb
+        polygons</a>,
+      Technical Report, SRI International, March 2023; URL
+      <a href="https://arxiv.org/abs/2303.NNNNN">arxiv:2303.NNNNN</a>.
     </p>
     <hr>
     <address>Charles Karney
