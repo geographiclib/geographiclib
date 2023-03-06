@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2023-mm-dd
+\date 2023-03-07
 
 \section abstract Abstract
 
@@ -7505,11 +7505,11 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
-   (released 2023-mm-dd)
+   (released 2023-03-07)
    - Completely redo Rhumb and RhumbLine classes to yield accurate
      results for the course and the area even for very eccentric
      ellipsoids:
-     - these methods are accuract for 1/100 &lt; <i>b</i>/<i>a</i> &lt;
+     - these methods are accurate for 1/100 &lt; <i>b</i>/<i>a</i> &lt;
        100 (the previous methods for the course were limited to 1/4 &lt;
        <i>b</i>/<i>a</i> &lt; 4 for the course and the area calculation
        was only valid for |<i>f</i>| &lt; 0.01);
@@ -7518,8 +7518,8 @@ git repository for GeographicLib</a>.
        series expansions valid for |<i>f</i>| &lt; 0.01; \e exact = true
        uses exact equations for the course of the rhumb line and an
        accurate DFT fit for the area computation;
-     - <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity accepts the
-       -u to unroll the longitudes for the results of direct
+     - the <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity accepts
+       the u to unroll the longitudes for the results of direct
        calculations;
      - rhumb lines which include a pole as one of the endpoints are
        treated properly (previously point at the pole were moved
@@ -7527,7 +7527,7 @@ git repository for GeographicLib</a>.
      - this treatment of rhumb areas is described in
        <a href="https://arxiv.org/abs/2303.NNNNN">The area of rhumb
        polygons</a>.
-   - The -E option for <a href="RhumbSolve.1.html">Planimeter(1)</a> is
+   - The -E option for <a href="Planimeter.1.html">Planimeter(1)</a> is
      now a toggle switching on exact treatment for geodesics (-G
      option), rhumb lines (-R option), authlatic lines (-Q option).
      Previously -E has turned on the exact treatment for geodesics.
@@ -7542,9 +7542,9 @@ git repository for GeographicLib</a>.
      DAuxLatitude class computes the divides differences of auxiliary
      latitude. and implements additional divided difference formulas
      needed by Rhumb.
-   - Create experimental directory + namespace and move
+   - Created an "experimental" directory + namespace and moved the
      experimental::JacobiConformal class there.  Use the cmake target
-     "experimental" to build this class.
+     "experimental" to build this directory.
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.2">Version 2.1.2</a>
    (released 2022-12-13)

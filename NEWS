@@ -6,6 +6,49 @@ For more information, see
 
 The current version of the library is 2.1.2
 
+Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
+
+   * Completely redo Rhumb and RhumbLine classes to yield accurate
+     results for the course and the area even for very eccentric
+     ellipsoids:
+     + these methods are accurate for 1/100 < b/a < 100 (the previous
+       methods for the course were limited to 1/4 < b/a < 4 for the
+       course and the area calculation was only valid for |f| < 0.01);
+     + the meaning of the exact flag in the constructor is now more
+       straightforward: exact = false (the default) consistently uses
+       series expansions valid for |f| < 0.01; exact = true uses exact
+       equations for the course of the rhumb line and an accurate DFT
+       fit for the area computation;
+     + the RhumbSolve(1) utiity accepts the -u to unroll the
+       longitudes for the results of direct calculations;
+     + rhumb lines which include a pole as one of the endpoints are
+       treated properly (previously point at the pole were moved
+       slightly away from the pole);
+     + this treatment of rhumb areas is described in polygons,
+       https://arxiv.org/abs/2303.NNNNN.
+
+   * The -E option for Planimeter(1) is now a toggle switching on
+     exact treatment for geodesics (-G option), rhumb lines (-R
+     option), authlatic lines (-Q option).  Previously -E has turned
+     on the exact treatment for geodesics.
+
+   * The online version of Planimeter now allows the ellipsoid to be
+     specified.
+
+   * The deprecated -l option for GeodSolve and RhumbSolve has been
+     removed.
+
+   * Add AuxAngle and AuxLatitude classes to perform accurate
+     conversions between auxiliary latitudes.  The Ellipsoid class has
+     been mostly reimplimented in terms of the AuxLatitude class.  The
+     DAuxLatitude class computes the divides differences of auxiliary
+     latitude. and implements additional divided difference formulas
+     needed by Rhumb.
+
+   * Created an "experimental" directory + namespace and moved the
+     JacobiConformal class there.  Use the cmake target "experimental"
+     to build this directory.
+
 Changes between 2.1.2 (released 2022-12-13) and 2.1.1 versions:
 
    * Add MGRS::Decode to break an MGRS string into its components.
