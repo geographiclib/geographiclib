@@ -49,7 +49,14 @@ namespace GeographicLib {
       int L = 4;
       vector<real> c(L);
       DST fft(L); fft.transform(f, c.data()); L *= 2;
-      for (_lL = 0; L <= Lfftmax_ && _lL == 0; L *=2) {
+      // For |n| <= 0.99, actual max for doubles is 2163.  This scales as
+      // Math::digits() and for long doubles (GEOGRAPHICLIB_PRECISION = 3,
+      // digits = 64), this becomes 2163 * 64 / 53 = 2612.  Round this up to
+      // 2^12 = 4096 and scale this by Math::digits()/64 if digits() > 64.
+      //
+      // 64 = digits for long double, 6 = 12 - log2(64)
+      int Lmax = 1<<(int(ceil(log2(max(Math::digits(), 64)))) + 6);
+      for (_lL = 0; L <= Lmax && _lL == 0; L *=2) {
         fft.reset(L/2); c.resize(L); fft.refine(f, c.data());
         _pP.resize(L);
         for (int l = 0, k = -1; l < L; ++l) {
@@ -64,6 +71,7 @@ namespace GeographicLib {
             _lL = l + 1; _pP.resize(_lL); break;
           }
         }
+        // loop exits if _lL > 0
       }
       if (_lL == 0)          // Hasn't converged -- just use the values we have
         _lL = int(_pP.size());

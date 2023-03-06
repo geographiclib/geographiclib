@@ -87,7 +87,6 @@ namespace GeographicLib {
     int _lL;             // N.B. names of the form _[A-Z].* are reserved in C++
     std::vector<real> _pP;      // The Fourier coefficients P_l
     static const int Lmax_ = GEOGRAPHICLIB_RHUMBAREA_ORDER;
-    static const int Lfftmax_ = 1<<16; // Actual max for doubles is 2163
     void AreaCoeffs();
     class qIntegrand {
       const AuxLatitude& _aux;

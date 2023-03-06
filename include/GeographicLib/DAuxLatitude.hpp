@@ -120,8 +120,8 @@ namespace GeographicLib {
      *      AuxLatitude::Clenshaw(sinp, szeta1, czeta1, c, K) ) / Delta
      * </pre>
      *
-     * \warning \e Delta must be either 1 \e or (zeta2 - zeta1); other values
-     * will return nonsense.
+     * \warning \e Delta **must** be either 1 or (\e zeta2 - \e zeta1);
+     * other values will return nonsense.
      **********************************************************************/
     static Math::real DClenshaw(bool sinp, real Delta,
                                 real szeta1, real czeta1,
