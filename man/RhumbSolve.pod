@@ -247,7 +247,7 @@ L<https://geographiclib.sourceforge.io/cgi-bin/GeodSolve>.
 
 This solution for rhumb line is described in C. F. F. Karney,
 I<The area of rhumb polygons>, Technical Report, SRI International
-(2023); URL: L<https://arxiv.org/abs/2303.NNNNN>.
+(2023); URL: L<https://arxiv.org/abs/2303.03219>.
 
 The Wikipedia page, Rhumb line,
 L<https://en.wikipedia.org/wiki/Rhumb_line>.

@@ -325,10 +325,10 @@ cat <<EOF
       with <a href="https://geographiclib.sourceforge.io/">
       GeographicLib</a>.  This methods are described in
       C. F. F. Karney,
-      <a href="https://arxiv.org/abs/2303.NNNNN">The area of rhumb
+      <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
         polygons</a>,
       Technical Report, SRI International, March 2023; URL
-      <a href="https://arxiv.org/abs/2303.NNNNN">arxiv:2303.NNNNN</a>.
+      <a href="https://arxiv.org/abs/2303.03219">arxiv:2303.03219</a>.
     </p>
     <hr>
     <address>Charles Karney

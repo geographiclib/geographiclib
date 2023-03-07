@@ -4,7 +4,7 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.1.2
+The current version of the library is 2.2
 
 Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
 
@@ -25,7 +25,7 @@ Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
        treated properly (previously point at the pole were moved
        slightly away from the pole);
      + this treatment of rhumb areas is described in polygons,
-       https://arxiv.org/abs/2303.NNNNN.
+       https://arxiv.org/abs/2303.03219.
 
    * The -E option for Planimeter(1) is now a toggle switching on
      exact treatment for geodesics (-G option), rhumb lines (-R
