@@ -17,7 +17,7 @@
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
-<p><b>Planimeter</b> [ <b>-r</b> ] [ <b>-s</b> ] [ <b>-l</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-G</b> | <b>-E</b> | <b>-Q</b> | <b>-R</b> ] [ <b>--geoconvert-input</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+<p><b>Planimeter</b> [ <b>-r</b> ] [ <b>-s</b> ] [ <b>-l</b> ] [ <b>-e</b> <i>a</i> <i>f</i> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>-G</b> | <b>-Q</b> | <b>-R</b> ] [ <b>-E</b> ] [ <b>--geoconvert-input</b> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
@@ -74,25 +74,25 @@
 <dt id="G"><b>-G</b></dt>
 <dd>
 
-<p>use the series formulation for the geodesics. This is the default option and is recommended for terrestrial applications. This option, <b>-G</b>, and the following three options, <b>-E</b>, <b>-Q</b>, and <b>-R</b>, are mutually exclusive.</p>
-
-</dd>
-<dt id="E"><b>-E</b></dt>
-<dd>
-
-<p>use &quot;exact&quot; algorithms (based on elliptic integrals) for the geodesic calculations; the area is computed by applying discrete sine transforms to the integrand in the expression for the area. These are more accurate, albeit slower, than the (default) series expansions for |<i>f</i>| &gt; 0.02 and will give high accuracy for -99 &le; <i>f</i> &le; 0.99.</p>
+<p>the edges joining the vertices are geodesics. This is the default option and is recommended for terrestrial applications. This option, <b>-G</b>, and the following two options, <b>-Q</b> and <b>-R</b>, are mutually exclusive.</p>
 
 </dd>
 <dt id="Q"><b>-Q</b></dt>
 <dd>
 
-<p>perform the calculation on the authalic sphere. The area calculation is accurate even if the flattening is large, <i>provided</i> the edges are sufficiently short. The perimeter calculation is not accurate.</p>
+<p>map the points to the authalic sphere and compute the area of the resulting spherical polygon. The area will be reasonable accurate <i>provided</i> that the edges are sufficiently short. The perimeter calculation is not accurate.</p>
 
 </dd>
 <dt id="R"><b>-R</b></dt>
 <dd>
 
-<p>The lines joining the vertices are rhumb lines instead of geodesics.</p>
+<p>the edges joining the vertices are rhumb lines instead of geodesics.</p>
+
+</dd>
+<dt id="E"><b>-E</b></dt>
+<dd>
+
+<p>use the exact equations for the geodesic <b>-G</b>, authalic <b>-Q</b>, and rhumb <b>-R</b> calculations instead of series expansions. For the geodesic and rhumb methods, the area is computed by applying discrete sine transforms to the integrand in the expression for the area. These are more accurate, albeit slower, than the (default) series expansions for |<i>f</i>| &gt; 0.02 and will give high accuracy for -99 &lt; <i>f</i> &lt; 0.99. It is not necessary to specify this option for terrestrial applications.</p>
 
 </dd>
 <dt id="geoconvert-input"><b>--geoconvert-input</b></dt>
@@ -201,6 +201,8 @@ sed -e &#39;s/d /d/g&#39; -e &quot;s/&#39; /&#39;/g&quot; | tr -s &#39;(),\r\t&#
 <p>An online version of this utility is availbable at <a href="https://geographiclib.sourceforge.io/cgi-bin/Planimeter">https://geographiclib.sourceforge.io/cgi-bin/Planimeter</a>.</p>
 
 <p>The algorithm for the area of geodesic polygon is given in Section 6 of C. F. F. Karney, <i>Algorithms for geodesics</i>, J. Geodesy 87, 43-55 (2013); DOI <a href="https://doi.org/10.1007/s00190-012-0578-z">https://doi.org/10.1007/s00190-012-0578-z</a>; addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">https://geographiclib.sourceforge.io/geod-addenda.html</a>.</p>
+
+<p>The algorithm for the area of a rhumb polygon is given in Section 3 of C. F. F. Karney, <i>The area of rhumb polygons</i>, Technical Report, SRI International (2023); URL: <a href="https://arxiv.org/abs/2303.03219">https://arxiv.org/abs/2303.03219</a>.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

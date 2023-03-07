@@ -2,7 +2,7 @@
  * \file GeodesicLineExact.hpp
  * \brief Header for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -13,7 +13,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-
 #include <vector>
 
 namespace GeographicLib {

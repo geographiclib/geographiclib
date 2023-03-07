@@ -24,6 +24,8 @@ cmake_minimum_required (VERSION 3.13.0)
 set (EXAMPLES0
   example-Accumulator.cpp
   example-AlbersEqualArea.cpp
+  example-AuxAngle.cpp
+  example-AuxLatitude.cpp
   example-AzimuthalEquidistant.cpp
   example-CassiniSoldner.cpp
   example-CircularEngine.cpp
@@ -70,8 +72,7 @@ set (EXAMPLES0
   example-Utility.cpp
   )
 set (EXAMPLES1
-  GeoidToGTX.cpp make-egmcof.cpp JacobiConformal.cpp example-AuxLatitude.cpp)
-set (EXAMPLEHEADERS JacobiConformal.hpp AuxLatitude.cpp AuxLatitude.hpp)
+  GeoidToGTX.cpp make-egmcof.cpp)
 
 if (CALLED_FROM_TOPLEVEL)
   if (EXAMPLEDIR)
@@ -100,6 +101,9 @@ endif ()
 
 find_package (GeographicLib 2.0 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
+
+set (CMAKE_CXX_STANDARD 11)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option (USE_BOOST_FOR_EXAMPLES
   "Look for Boost library when compiling examples" ON)
@@ -137,12 +141,6 @@ set (EXAMPLES)
 foreach (EXAMPLE_SOURCE ${EXAMPLE_SOURCES})
   get_filename_component (EXAMPLE ${EXAMPLE_SOURCE} NAME_WE)
   set (EXAMPLES ${EXAMPLES} ${EXAMPLE})
-  if (EXAMPLE STREQUAL "JacobiConformal")
-    set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} JacobiConformal.hpp)
-  endif ()
-  if (EXAMPLE STREQUAL "example-AuxLatitude")
-    set (EXAMPLE_SOURCE ${EXAMPLE_SOURCE} AuxLatitude.cpp AuxLatitude.hpp)
-  endif ()
   add_executable (${EXAMPLE} ${EXAMPLE_SOURCE})
   target_link_libraries (${EXAMPLE}
     ${GeographicLib_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
@@ -156,10 +154,15 @@ find_package (OpenMP QUIET)
 if (OPENMP_FOUND OR OpenMP_FOUND)
   set_target_properties (GeoidToGTX PROPERTIES
     COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+  if (OpenMP_CXX_INCLUDE_DIRS)
+    set_target_properties (GeoidToGTX PROPERTIES
+      INCLUDE_DIRECTORIES ${OpenMP_CXX_INCLUDE_DIRS})
+  endif ()
   if (NOT WIN32)
     set_target_properties (GeoidToGTX PROPERTIES
       LINK_FLAGS ${OpenMP_CXX_FLAGS})
   endif ()
+  target_link_libraries (GeoidToGTX ${OpenMP_CXX_LIBRARIES})
 endif ()
 
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)

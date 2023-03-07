@@ -2,7 +2,7 @@
  * \file GravityModel.cpp
  * \brief Implementation for GeographicLib::GravityModel class
  *
- * Copyright (c) Charles Karney (2011-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -271,12 +271,12 @@ namespace GeographicLib {
       clam = M[3], slam = -M[0],
       P = hypot(X, Y),
       R = hypot(P, Z),
-      // psi is geocentric latitude
-      cpsi = R != 0 ? P / R : M[7],
-      spsi = R != 0 ? Z / R : M[8];
+      // theta is geocentric latitude
+      ctheta = R != 0 ? P / R : M[7],
+      stheta = R != 0 ? Z / R : M[8];
     // Rotate cartesian into spherical coordinates
     real MC[Geocentric::dim2_];
-    Geocentric::Rotation(spsi, cpsi, slam, clam, MC);
+    Geocentric::Rotation(stheta, ctheta, slam, clam, MC);
     Geocentric::Unrotate(MC, deltax, deltay, deltaz, deltax, deltay, deltaz);
     // H+M, Eq 2-151c
     Dg01 = - deltaz - 2 * T / R;

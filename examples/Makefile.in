@@ -17,7 +17,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011, Charles Karney <charles@karney.com>
+# Copyright (C) 2011-2023, Charles Karney <charles@karney.com>
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -273,6 +273,8 @@ top_srcdir = @top_srcdir@
 EXAMPLE_FILES = \
 	example-Accumulator.cpp \
 	example-AlbersEqualArea.cpp \
+	example-AuxAngle.cpp \
+	example-AuxLatitude.cpp \
 	example-AzimuthalEquidistant.cpp \
 	example-CassiniSoldner.cpp \
 	example-CircularEngine.cpp \
@@ -318,7 +320,6 @@ EXAMPLE_FILES = \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
 	GeoidToGTX.cpp \
-	JacobiConformal.cpp JacobiConformal.hpp \
 	make-egmcof.cpp
 
 EXTRA_DIST = CMakeLists.txt $(EXAMPLE_FILES)

@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "RHUMBSOLVE 1"
-.TH RHUMBSOLVE 1 "2022-12-13" "GeographicLib 2.1.2" "GeographicLib Utilities"
+.TH RHUMBSOLVE 1 "2023-03-07" "GeographicLib 2.2" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -143,8 +143,8 @@ RhumbSolve \-\- perform rhumb line calculations
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 \&\fBRhumbSolve\fR [ \fB\-i\fR | \fB\-L\fR \fIlat1\fR \fIlon1\fR \fIazi12\fR ]
-[ \fB\-e\fR \fIa\fR \fIf\fR ]
-[ \fB\-d\fR | \fB\-:\fR ] [ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-s\fR ]
+[ \fB\-e\fR \fIa\fR \fIf\fR ] [ \fB\-u\fR ]
+[ \fB\-d\fR | \fB\-:\fR ] [ \fB\-w\fR ] [ \fB\-p\fR \fIprec\fR ] [ \fB\-E\fR ]
 [ \fB\-\-comment\-delimiter\fR \fIcommentdelim\fR ]
 [ \fB\-\-version\fR | \fB\-h\fR | \fB\-\-help\fR ]
 [ \fB\-\-input\-file\fR \fIinfile\fR | \fB\-\-input\-string\fR \fIinstring\fR ]
@@ -155,14 +155,13 @@ RhumbSolve \-\- perform rhumb line calculations
 The path with constant heading between two points on the ellipsoid at
 (\fIlat1\fR, \fIlon1\fR) and (\fIlat2\fR, \fIlon2\fR) is called the rhumb line or
 loxodrome.  Its length is \fIs12\fR and the rhumb line has a forward
-azimuth \fIazi12\fR along its length.  Also computed is \fIS12\fR is the area
-between the rhumb line from point 1 to point 2 and the equator; i.e., it
-is the area, measured counter-clockwise, of the geodesic quadrilateral
-with corners (\fIlat1\fR,\fIlon1\fR), (0,\fIlon1\fR), (0,\fIlon2\fR), and
-(\fIlat2\fR,\fIlon2\fR).  A point at a pole is treated as a point a tiny
-distance away from the pole on the given line of longitude.  The
-longitude becomes indeterminate when a rhumb line passes through a pole,
-and \fBRhumbSolve\fR reports NaNs for the longitude and the area in this
+azimuth \fIazi12\fR along its length.  The quantity \fIS12\fR is the area
+between the rhumb line from point 1 to point 2 and the equator; i.e.,
+it is the area, measured counter-clockwise, of the geodesic
+quadrilateral with corners (\fIlat1\fR,\fIlon1\fR), (0,\fIlon1\fR),
+(0,\fIlon2\fR), and (\fIlat2\fR,\fIlon2\fR).  The longitude becomes
+indeterminate when a rhumb line passes through a pole, and
+\&\fBRhumbSolve\fR reports NaNs for the longitude and the area in this
 case.
 .PP
 \&\fB\s-1NOTE:\s0\fR the rhumb line is \fBnot\fR the shortest path between two points;
@@ -177,8 +176,7 @@ standard output.  This is the direct calculation.
 With the \fB\-i\fR command line argument, \fBRhumbSolve\fR performs the inverse
 calculation.  It reads lines containing \fIlat1\fR \fIlon1\fR \fIlat2\fR \fIlon2\fR
 and prints the values of \fIazi12\fR \fIs12\fR \fIS12\fR for the corresponding
-shortest rhumb lines.  If the end points are on opposite meridians,
-there are two shortest rhumb lines and the east-going one is chosen.
+shortest rhumb lines.
 .IP "3." 4
 Command line arguments \fB\-L\fR \fIlat1\fR \fIlon1\fR \fIazi12\fR specify a rhumb
 line.  \fBRhumbSolve\fR then accepts a sequence of \fIs12\fR values (one per
@@ -194,8 +192,7 @@ perform an inverse calculation (see 2 above).
 line mode (see 3 above); generate a sequence of points along the rhumb
 line specified by \fIlat1\fR \fIlon1\fR \fIazi12\fR.  The \fB\-w\fR flag can be used
 to swap the default order of the 2 geographic coordinates, provided that
-it appears before \fB\-L\fR.  (\fB\-l\fR is an alternative, deprecated, spelling
-of this flag.)
+it appears before \fB\-L\fR.
 .IP "\fB\-e\fR \fIa\fR \fIf\fR" 4
 .IX Item "-e a f"
 specify the ellipsoid via the equatorial radius, \fIa\fR and
@@ -203,6 +200,12 @@ the flattening, \fIf\fR.  Setting \fIf\fR = 0 results in a sphere.  Specify
 \&\fIf\fR < 0 for a prolate ellipsoid.  A simple fraction, e.g., 1/297,
 is allowed for \fIf\fR.  By default, the \s-1WGS84\s0 ellipsoid is used, \fIa\fR =
 6378137 m, \fIf\fR = 1/298.257223563.
+.IP "\fB\-u\fR" 4
+.IX Item "-u"
+unroll the longitude.  Normally, on output longitudes are reduced to lie
+in [\-180deg,180deg).  However with this option, the returned longitude
+\&\fIlon2\fR is \*(L"unrolled\*(R" so that \fIlon2\fR \- \fIlon1\fR indicates how often and
+in what sense the geodesic has encircled the earth.
 .IP "\fB\-d\fR" 4
 .IX Item "-d"
 output angles as degrees, minutes, seconds instead of decimal degrees.
@@ -219,15 +222,13 @@ this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
 .IX Item "-p prec"
 set the output precision to \fIprec\fR (default 3); \fIprec\fR is the
 precision relative to 1 m.  See \*(L"\s-1PRECISION\*(R"\s0.
-.IP "\fB\-s\fR" 4
-.IX Item "-s"
-By default, the rhumb line calculations are carried out exactly in terms
-of elliptic integrals.  This includes the use of the addition theorem
-for elliptic integrals to compute the divided difference of the
-isometric and rectifying latitudes.  If \fB\-s\fR is supplied this divided
-difference is computed using Krueger series for the transverse Mercator
-projection which is only accurate for |\fIf\fR| < 0.01.  See
-\&\*(L"\s-1ACCURACY\*(R"\s0.
+.IP "\fB\-E\fR" 4
+.IX Item "-E"
+By default, the rhumb line calculations are carried out using series
+expansions valid for |\fIf\fR| < 0.01.  If \fB\-E\fR is supplied, exact
+equations for the rhumb line are used and the area integral is
+computed with an accurate fit based on this exact equations; these are
+valid for arbitrary eccentricities.
 .IP "\fB\-\-comment\-delimiter\fR \fIcommentdelim\fR" 4
 .IX Item "--comment-delimiter commentdelim"
 set the comment delimiter to \fIcommentdelim\fR (e.g., \*(L"#\*(R" or \*(L"//\*(R").  If
@@ -293,19 +294,15 @@ of 1.  However, an error does not cause \fBRhumbSolve\fR to terminate;
 following lines will be converted.
 .SH "ACCURACY"
 .IX Header "ACCURACY"
-The algorithm used by \fBRhumbSolve\fR uses exact formulas for converting
-between the latitude, rectifying latitude (\fImu\fR), and isometric
-latitude (\fIpsi\fR).  These formulas are accurate for any value of the
-flattening.  The computation of rhumb lines involves the ratio (\fIpsi1\fR
-\&\- \fIpsi2\fR) / (\fImu1\fR \- \fImu2\fR) and this is subject to large round-off
-errors if \fIlat1\fR is close to \fIlat2\fR.  So this ratio is computed using
-divided differences using one of two methods: by default, this uses the
-addition theorem for elliptic integrals (accurate for all values of
-\&\fIf\fR); however, with the \fB\-s\fR options, it is computed using the series
-expansions used by \fBTransverseMercatorProj\fR\|(1) for the conversions between
-rectifying and conformal latitudes (accurate for |\fIf\fR| < 0.01).
-For the \s-1WGS84\s0 ellipsoid, the error is about 10 nanometers using either
-method.
+The algorithm used by \fBRhumbSolve\fR uses either series expansions or
+(if \fB\-E\fR is specified) exact formulas for computing the rhumb line
+and the area.  These series are formulas are accurate for |\fIf\fR| <
+0.01 and the exact formulas apply for any value of the flattening.
+The computation of rhumb lines and the area involves the ratio of
+differences and, for nearly east\- or west-going rhumb lines, this
+might result in a large loss of accuracy.  However, this problem is
+avoided by the use of divided differences. For the \s-1WGS84\s0 ellipsoid,
+the error is about 10 nanometers using either method.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 Route from \s-1JFK\s0 Airport to Singapore Changi Airport:
@@ -314,7 +311,7 @@ Route from \s-1JFK\s0 Airport to Singapore Changi Airport:
 \&   echo 40:38:23N 073:46:44W 01:21:33N 103:59:22E |
 \&   RhumbSolve \-i \-: \-p 0
 \&
-\&   103:34:58.2 18523563
+\&   103:34:58.2 18523563 45921660958919
 .Ve
 .PP
 N.B. This is \fBnot\fR the route typically taken by aircraft because it's
@@ -340,10 +337,20 @@ Waypoints on the route at intervals of 2000km:
 .Ve
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
-\&\fBGeoConvert\fR\|(1), \fBGeodSolve\fR\|(1), \fBTransverseMercatorProj\fR\|(1).
+\&\fBGeoConvert\fR\|(1), \fBGeodSolve\fR\|(1).
 .PP
 An online version of this utility is availbable at
 <https://geographiclib.sourceforge.io/cgi\-bin/RhumbSolve>.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"
+\&\fBGeoConvert\fR\|(1).
+.PP
+An online version of this utility is availbable at
+<https://geographiclib.sourceforge.io/cgi\-bin/GeodSolve>.
+.PP
+This solution for rhumb line is described in C. F. F. Karney,
+\&\fIThe area of rhumb polygons\fR, Technical Report, \s-1SRI\s0 International
+(2023); \s-1URL:\s0 <https://arxiv.org/abs/2303.03219>.
 .PP
 The Wikipedia page, Rhumb line,
 <https://en.wikipedia.org/wiki/Rhumb_line>.
@@ -353,4 +360,5 @@ The Wikipedia page, Rhumb line,
 .SH "HISTORY"
 .IX Header "HISTORY"
 \&\fBRhumbSolve\fR was added to GeographicLib,
-<https://geographiclib.sourceforge.io>, in version 1.37.
+<https://geographiclib.sourceforge.io>, in version 1.37 and
+substantially rewritten in version 2.2.

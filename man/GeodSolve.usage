@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodSolve --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.1.2/GeodSolve.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.2/GeodSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -53,8 +53,7 @@ int usage(int retval, bool brief) {
 "           line mode (see 3 above); generate a sequence of points along the\n"
 "           geodesic specified by lat1 lon1 azi1.  The -w flag can be used to\n"
 "           swap the default order of the 2 geographic coordinates, provided\n"
-"           that it appears before -L.  (-l is an alternative, deprecated,\n"
-"           spelling of this flag.)\n"
+"           that it appears before -L.\n"
 "\n"
 "       -D lat1 lon1 azi1 s13\n"
 "           line mode (see 3 above); generate a sequence of points along the\n"

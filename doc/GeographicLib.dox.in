@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2022-12-13
+\date 2023-03-07
 
 \section abstract Abstract
 
@@ -977,7 +977,8 @@ utility to provide access to this class.  This class requires
 installation of data files for the various geoid models; see \ref
 geoidinst for details.
 
-Ellipsoid is a class which performs latitude
+AuxAngle, AuxLatitude, and
+Ellipsoid are classes which performs latitude
 conversions and returns various properties of the ellipsoid.
 
 GravityModel evaluates the earth's gravitational field using a
@@ -1046,10 +1047,8 @@ format they can be easily plotted in MATLAB.
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
 compiler.  System dependencies come into
- - Math -- GeographicLib needs to define functions such
-   as atanh for systems that lack them.  The system dependence will
-   disappear with the adoption of C++11 because the needed functions are
-   part of that standard.
+ - Math -- GeographicLib requires support of C++11 mathematical
+   functions.
  - use of long double -- the type is used only for testing.  On systems
    which lack this data type the cmake and autoconf configuration
    methods should detect its absence and omit the code that depends on
@@ -1791,6 +1790,7 @@ The supported models are
 See
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    Francisco, 1967).
+   https://archive.org/details/HeiskanenMoritz1967PhysicalGeodesy
  .
 for more information.
 
@@ -2294,6 +2294,7 @@ References:
    di rotazione, Mem. Soc. Astron. Ital, <b>4</b>, 541--599 (1929).
  - W. A. Heiskanen and H. Moritz, Physical Geodesy (Freeman, San
    Francisco, 1967), Secs. 1-19, 2-7, 2-8 (2-9, 2-10), 6-2 (6-3).
+   https://archive.org/details/HeiskanenMoritz1967PhysicalGeodesy
  - B. Hofmann-Wellenhof, H. Moritz, Physical Geodesy (Second edition,
    Springer, 2006). https://doi.org/10.1007/978-3-211-33545-1
  - H. Moritz, Geodetic Reference System 1980, J. Geodesy 54(3), 395--405
@@ -4990,6 +4991,20 @@ Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
 Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 </center>
 
+This material is now written up in
+ - C. F. F. Karney,<br>
+   <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
+   polygons</a>,<br>
+   Technical Report, SRI International, March 2023.<br>
+   <a href="https://arxiv.org/abs/2303.03219">arxiv:2303.03219</a>
+ .
+The series expansions described in the paper are available in
+ - C. F. F. Karney,<br>
+   <a href="https://doi.org/10.5281/zenodo.7685484">Series expansions
+   for computing rhumb areas</a>,<br> March 2023.<br>
+   <a href="https://doi.org/10.5281/zenodo.7685484">
+   doi:10.5281/zenodo.7685484</a>
+
 The Rhumb and RhumbLine classes together with the
 <a href="RhumbSolve.1.html">RhumbSolve</a> utility perform rhumb line
 calculations.  A rhumb line (also called a loxodrome) is a line of
@@ -5040,7 +5055,7 @@ References:
    </a> (Methods for direct and inverse geodesic problems
    solving with high precision), St. Petersburg State Polytechnical
    University Journal 3(198), 49--58 (2014).
- - K. C. Carlton-Wippern
+ - K. C. Carlton-Wippern,
    <a href="https://doi.org/10.1017/S0373463300010791">
    On Loxodromic Navigation</a>,
    J. Navigation 45(2), 292--297 (1992).
@@ -5090,11 +5105,11 @@ References:
    The Mercator Projections</a> (2013), &sect;2.5 and &sect;6.5;
    DOI: <a href="https://doi.org/10.5281/zenodo.35392">
    10.5281/zenodo.35392</a>.
- - W. M. Smart
+ - W. M. Smart,
    <a href="https://doi.org/10.1093/mnras/106.2.124">
    On a Problem in Navigation</a>
    MNRAS 106(2), 124--127 (1946).
- - J. E. D. Williams
+ - J. E. D. Williams,
    <a href="https://doi.org/10.1017/S0373463300045549">
    Loxodromic Distances on the Terrestrial Spheroid Journal</a>,
    J. Navigation 3(2), 133--140 (1950)
@@ -5613,7 +5628,8 @@ References:
    The direct and inverse solutions for the great elliptic line on the
    reference ellipsoid</a>, Bull. Geod. 58, 101--108 (1984).
  - M. A. Earle,
-   A vector solution for navigation on a great ellipse,
+   <a href="https://doi.org/10.1017/S0373463300008948">
+   A vector solution for navigation on a great ellipse</a>,
    J. Navigation 53(3), 473--481 (2000).
  - M. A. Earle,
    <a href="https://doi.org/10.1017/S037346330800475X">
@@ -6457,10 +6473,8 @@ This material is now written up as
    Technical Report, SRI International, December 2022.<br>
    <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
  .
-An implementation of the methods described in this paper is available in
-the files <code>examples/AuxLatitude.[hc]pp</code> which provides the
-classes AuxAngle and AuxLatitude.  These classes are <b>not</b> yet part
-of GeographicLib.
+The implementation of the methods described in this paper is available
+as the classes AuxAngle, AuxLatitude, and DAuxLatitude.
 The series expansions described in the paper are available in
  - C. F. F. Karney,<br>
    <a href="https://doi.org/10.5281/zenodo.7382666">Series expansions
@@ -7490,6 +7504,48 @@ git repository for GeographicLib</a>.
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
 \endif
 
+ - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
+   (released 2023-03-07)
+   - Completely redo Rhumb and RhumbLine classes to yield accurate
+     results for the course and the area even for very eccentric
+     ellipsoids:
+     - these methods are accurate for 1/100 &lt; <i>b</i>/<i>a</i> &lt;
+       100 (the previous methods for the course were limited to 1/4 &lt;
+       <i>b</i>/<i>a</i> &lt; 4 for the course and the area calculation
+       was only valid for |<i>f</i>| &lt; 0.01);
+     - the meaning of the \e exact flag in the constructor is now more
+       straightforward: \e exact = false (the default) consistently uses
+       series expansions valid for |<i>f</i>| &lt; 0.01; \e exact = true
+       uses exact equations for the course of the rhumb line and an
+       accurate DFT fit for the area computation;
+     - the <a href="RhumbSolve.1.html">RhumbSolve(1)</a> utiity accepts
+       the u to unroll the longitudes for the results of direct
+       calculations;
+     - rhumb lines which include a pole as one of the endpoints are
+       treated properly (previously point at the pole were moved
+       slightly away from the pole);
+     - this treatment of rhumb areas is described in
+       <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
+       polygons</a>.
+   - The -E option for <a href="Planimeter.1.html">Planimeter(1)</a> is
+     now a toggle switching on exact treatment for geodesics (-G
+     option), rhumb lines (-R option), authlatic lines (-Q option).
+     Previously -E has turned on the exact treatment for geodesics.
+   - The online version of
+     <a href="https://geographiclib.sourceforge.io/cgi-bin/Planimeter">
+     Planimeter</a> now allows the ellipsoid to be specified.
+   - The deprecated -l option for GeodSolve and RhumbSolve has been
+     removed.
+   - Add AuxAngle and AuxLatitude classes to perform accurate
+     conversions between auxiliary latitudes.  The Ellipsoid class has
+     been mostly reimplimented in terms of the AuxLatitude class.  The
+     DAuxLatitude class computes the divides differences of auxiliary
+     latitude. and implements additional divided difference formulas
+     needed by Rhumb.
+   - Created an "experimental" directory + namespace and moved the
+     experimental::JacobiConformal class there.  Use the cmake target
+     "experimental" to build this directory.
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.2">Version 2.1.2</a>
    (released 2022-12-13)
    - Add MGRS::Decode to break an MGRS string into its components.
@@ -7506,7 +7562,7 @@ git repository for GeographicLib</a>.
      - check cmake version for "cmake rm -rf";
      - move cmake_minimum_required to the beginning of the cmake file
        and update minimum version to 3.13.0.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.1.1">Version 2.1.1</a>
    (released 2022-07-25)
    - Paper describing algorithms in GeodesicExact class is available at
@@ -7525,7 +7581,7 @@ git repository for GeographicLib</a>.
      - Use lookup table for selecting number of points for DST in
        GeodesicExact.
      - Relax one of the test thresholds in geodtest.cpp.
-
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.1">Version 2.1</a>
    (released 2022-06-09)
    - Improve the accuracy of the area calculations in GeodesicExact and

@@ -2,7 +2,7 @@
  * \file RhumbSolve.cpp
  * \brief Command line utility for rhumb line calculations
  *
- * Copyright (c) Charles Karney (2014-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -26,7 +26,6 @@
 #endif
 
 #include "RhumbSolve.usage"
-
 using namespace GeographicLib;
 typedef Math::real real;
 
@@ -50,8 +49,8 @@ std::string AzimuthString(real azi, int prec, bool dms, char dmssep) {
 int main(int argc, const char* const argv[]) {
   try {
     Utility::set_digits();
-    bool linecalc = false, inverse = false, dms = false, exact = true,
-      longfirst = false;
+    bool linecalc = false, inverse = false, dms = false, exact = false,
+      unroll = false, longfirst = false;
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
@@ -65,7 +64,7 @@ int main(int argc, const char* const argv[]) {
       if (arg == "-i") {
         inverse = true;
         linecalc = false;
-      } else if (arg == "-L" || arg == "-l") { // -l is DEPRECATED
+      } else if (arg == "-L") {
         inverse = false;
         linecalc = true;
         if (m + 3 >= argc) return usage(1, true);
@@ -90,7 +89,8 @@ int main(int argc, const char* const argv[]) {
           return 1;
         }
         m += 2;
-      }
+      } else if (arg == "-u")
+        unroll = true;
       else if (arg == "-d") {
         dms = true;
         dmssep = '\0';
@@ -108,8 +108,8 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
           return 1;
         }
-      } else if (arg == "-s")
-        exact = false;
+      } else if (arg == "-E")
+        exact = true;
       else if (arg == "--input-string") {
         if (++m == argc) return usage(1, true);
         istring = argv[m];
@@ -195,11 +195,13 @@ int main(int argc, const char* const argv[]) {
         }
         str.clear(); str.str(s);
         if (linecalc) {
-          if (!(str >> s12))
+          if (!(str >> ss12))
             throw GeographicErr("Incomplete input: " + s);
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          rhl.Position(s12, lat2, lon2, S12);
+          s12 = Utility::val<real>(ss12);
+          rhl.GenPosition(s12, Rhumb::ALL | (unroll ? Rhumb::LONG_UNROLL : 0),
+                          lat2, lon2, S12);
           *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                   << " " << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else if (inverse) {
@@ -214,13 +216,16 @@ int main(int argc, const char* const argv[]) {
                   << Utility::str(s12, prec) << " "
                   << Utility::str(S12, std::max(prec-7, 0)) << eol;
         } else {                // direct
-          if (!(str >> slat1 >> slon1 >> sazi >> s12))
+          if (!(str >> slat1 >> slon1 >> sazi >> ss12))
             throw GeographicErr("Incomplete input: " + s);
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);
           azi12 = DMS::DecodeAzimuth(sazi);
-          rh.Direct(lat1, lon1, azi12, s12, lat2, lon2, S12);
+          s12 = Utility::val<real>(ss12);
+          rh.GenDirect(lat1, lon1, azi12, s12,
+                       Rhumb::ALL | (unroll ? Rhumb::LONG_UNROLL : 0),
+                       lat2, lon2, S12);
           *output << LatLonString(lat2, lon2, prec, dms, dmssep, longfirst)
                   << " " << Utility::str(S12, std::max(prec-7, 0)) << eol;
         }

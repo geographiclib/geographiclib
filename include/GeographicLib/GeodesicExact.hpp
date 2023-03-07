@@ -2,7 +2,7 @@
  * \file GeodesicExact.hpp
  * \brief Header for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -13,12 +13,12 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/DST.hpp>
-#include <vector>
 
 namespace GeographicLib {
 
-  class GEOGRAPHICLIB_EXPORT DST;
   class GeodesicLineExact;
+  // Visual Studio needs this forward declaration...
+  class GEOGRAPHICLIB_EXPORT DST;
 
   /**
    * \brief Exact geodesic calculations

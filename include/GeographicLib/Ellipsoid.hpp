@@ -2,7 +2,7 @@
  * \file Ellipsoid.hpp
  * \brief Header for GeographicLib::Ellipsoid class
  *
- * Copyright (c) Charles Karney (2012-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -11,9 +11,7 @@
 #define GEOGRAPHICLIB_ELLIPSOID_HPP 1
 
 #include <GeographicLib/Constants.hpp>
-#include <GeographicLib/TransverseMercator.hpp>
-#include <GeographicLib/EllipticFunction.hpp>
-#include <GeographicLib/AlbersEqualArea.hpp>
+#include <GeographicLib/AuxLatitude.hpp>
 
 namespace GeographicLib {
 
@@ -21,16 +19,10 @@ namespace GeographicLib {
    * \brief Properties of an ellipsoid
    *
    * This class returns various properties of the ellipsoid and converts
-   * between various types of latitudes.  The latitude conversions are also
-   * possible using the various projections supported by %GeographicLib; but
-   * Ellipsoid provides more direct access (sometimes using private functions
-   * of the projection classes).  Ellipsoid::RectifyingLatitude,
-   * Ellipsoid::InverseRectifyingLatitude, and Ellipsoid::MeridianDistance
-   * provide functionality which can be provided by the Geodesic class.
-   * However Geodesic uses a series approximation (valid for abs \e f < 1/150),
-   * whereas Ellipsoid computes these quantities using EllipticFunction which
-   * provides accurate results even when \e f is large.  Use of this class
-   * should be limited to &minus;3 < \e f < 3/4 (i.e., 1/4 < b/a < 4).
+   * between various types of latitudes.  This is for the most part a thin
+   * wrapper on top of the AuxLatitude class which is called with \e exact =
+   * true so that the results are valid for arbitrary flattenings &minus;100 <
+   * \e f < 99/100 (i.e., 1/100 < b/a < 100).
    *
    * Example of use:
    * \include example-Ellipsoid.cpp
@@ -41,17 +33,10 @@ namespace GeographicLib {
     typedef Math::real real;
     static const int numit_ = 10;
     real stol_;
-    real _a, _f, _f1, _f12, _e2, _es, _e12, _n, _b;
-    TransverseMercator _tm;
-    EllipticFunction _ell;
-    AlbersEqualArea _au;
+    real _a, _f,_b, _e2, _e12, _n;
+    AuxLatitude _aux;
+    real _rm, _c2;
 
-    // These are the alpha and beta coefficients in the Krueger series from
-    // TransverseMercator.  Thy are used by RhumbSolve to compute
-    // (psi2-psi1)/(mu2-mu1).
-    const Math::real* ConformalToRectifyingCoeffs() const { return _tm._alp; }
-    const Math::real* RectifyingToConformalCoeffs() const { return _tm._bet; }
-    friend class Rhumb; friend class RhumbLine;
   public:
     /** \name Constructor
      **********************************************************************/

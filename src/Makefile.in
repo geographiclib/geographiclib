@@ -138,16 +138,17 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libGeographicLib_la_LIBADD =
 am_libGeographicLib_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
-	AzimuthalEquidistant.lo CassiniSoldner.lo CircularEngine.lo \
-	DMS.lo DST.lo Ellipsoid.lo EllipticFunction.lo GARS.lo \
-	GeoCoords.lo Geocentric.lo Geodesic.lo GeodesicExact.lo \
-	GeodesicLine.lo GeodesicLineExact.lo Geohash.lo Geoid.lo \
-	Georef.lo Gnomonic.lo GravityCircle.lo GravityModel.lo \
-	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
-	MagneticCircle.lo MagneticModel.lo Math.lo NormalGravity.lo \
-	OSGB.lo PolarStereographic.lo PolygonArea.lo Rhumb.lo \
-	SphericalEngine.lo TransverseMercator.lo \
-	TransverseMercatorExact.lo UTMUPS.lo Utility.lo
+	AuxAngle.lo AuxLatitude.lo AzimuthalEquidistant.lo \
+	CassiniSoldner.lo CircularEngine.lo DAuxLatitude.lo DMS.lo \
+	DST.lo Ellipsoid.lo EllipticFunction.lo GARS.lo GeoCoords.lo \
+	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicLine.lo \
+	GeodesicLineExact.lo Geohash.lo Geoid.lo Georef.lo Gnomonic.lo \
+	GravityCircle.lo GravityModel.lo LambertConformalConic.lo \
+	LocalCartesian.lo MGRS.lo MagneticCircle.lo MagneticModel.lo \
+	Math.lo NormalGravity.lo OSGB.lo PolarStereographic.lo \
+	PolygonArea.lo Rhumb.lo SphericalEngine.lo \
+	TransverseMercator.lo TransverseMercatorExact.lo UTMUPS.lo \
+	Utility.lo
 libGeographicLib_la_OBJECTS = $(am_libGeographicLib_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -173,18 +174,19 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include/GeographicLib
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/Accumulator.Plo \
-	./$(DEPDIR)/AlbersEqualArea.Plo \
+	./$(DEPDIR)/AlbersEqualArea.Plo ./$(DEPDIR)/AuxAngle.Plo \
+	./$(DEPDIR)/AuxLatitude.Plo \
 	./$(DEPDIR)/AzimuthalEquidistant.Plo \
 	./$(DEPDIR)/CassiniSoldner.Plo ./$(DEPDIR)/CircularEngine.Plo \
-	./$(DEPDIR)/DMS.Plo ./$(DEPDIR)/DST.Plo \
-	./$(DEPDIR)/Ellipsoid.Plo ./$(DEPDIR)/EllipticFunction.Plo \
-	./$(DEPDIR)/GARS.Plo ./$(DEPDIR)/GeoCoords.Plo \
-	./$(DEPDIR)/Geocentric.Plo ./$(DEPDIR)/Geodesic.Plo \
-	./$(DEPDIR)/GeodesicExact.Plo ./$(DEPDIR)/GeodesicLine.Plo \
-	./$(DEPDIR)/GeodesicLineExact.Plo ./$(DEPDIR)/Geohash.Plo \
-	./$(DEPDIR)/Geoid.Plo ./$(DEPDIR)/Georef.Plo \
-	./$(DEPDIR)/Gnomonic.Plo ./$(DEPDIR)/GravityCircle.Plo \
-	./$(DEPDIR)/GravityModel.Plo \
+	./$(DEPDIR)/DAuxLatitude.Plo ./$(DEPDIR)/DMS.Plo \
+	./$(DEPDIR)/DST.Plo ./$(DEPDIR)/Ellipsoid.Plo \
+	./$(DEPDIR)/EllipticFunction.Plo ./$(DEPDIR)/GARS.Plo \
+	./$(DEPDIR)/GeoCoords.Plo ./$(DEPDIR)/Geocentric.Plo \
+	./$(DEPDIR)/Geodesic.Plo ./$(DEPDIR)/GeodesicExact.Plo \
+	./$(DEPDIR)/GeodesicLine.Plo ./$(DEPDIR)/GeodesicLineExact.Plo \
+	./$(DEPDIR)/Geohash.Plo ./$(DEPDIR)/Geoid.Plo \
+	./$(DEPDIR)/Georef.Plo ./$(DEPDIR)/Gnomonic.Plo \
+	./$(DEPDIR)/GravityCircle.Plo ./$(DEPDIR)/GravityModel.Plo \
 	./$(DEPDIR)/LambertConformalConic.Plo \
 	./$(DEPDIR)/LocalCartesian.Plo ./$(DEPDIR)/MGRS.Plo \
 	./$(DEPDIR)/MagneticCircle.Plo ./$(DEPDIR)/MagneticModel.Plo \
@@ -406,87 +408,93 @@ libGeographicLib_la_LDFLAGS = \
 		-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
 libGeographicLib_la_SOURCES = Accumulator.cpp \
-		AlbersEqualArea.cpp \
-		AzimuthalEquidistant.cpp \
-		CassiniSoldner.cpp \
-		CircularEngine.cpp \
-		DMS.cpp \
-		DST.cpp \
-		Ellipsoid.cpp \
-		EllipticFunction.cpp \
-		GARS.cpp \
-		GeoCoords.cpp \
-		Geocentric.cpp \
-		Geodesic.cpp \
-		GeodesicExact.cpp \
-		GeodesicLine.cpp \
-		GeodesicLineExact.cpp \
-		Geohash.cpp \
-		Geoid.cpp \
-		Georef.cpp \
-		Gnomonic.cpp \
-		GravityCircle.cpp \
-		GravityModel.cpp \
-		LambertConformalConic.cpp \
-		LocalCartesian.cpp \
-		MGRS.cpp \
-		MagneticCircle.cpp \
-		MagneticModel.cpp \
-		Math.cpp \
-		NormalGravity.cpp \
-		OSGB.cpp \
-		PolarStereographic.cpp \
-		PolygonArea.cpp \
-		Rhumb.cpp \
-		SphericalEngine.cpp \
-		TransverseMercator.cpp \
-		TransverseMercatorExact.cpp \
-		UTMUPS.cpp \
-		Utility.cpp \
-		kissfft.hh \
-		../include/GeographicLib/Accumulator.hpp \
-		../include/GeographicLib/AlbersEqualArea.hpp \
-		../include/GeographicLib/AzimuthalEquidistant.hpp \
-		../include/GeographicLib/CassiniSoldner.hpp \
-		../include/GeographicLib/CircularEngine.hpp \
-		../include/GeographicLib/Constants.hpp \
-		../include/GeographicLib/DMS.hpp \
-		../include/GeographicLib/Ellipsoid.hpp \
-		../include/GeographicLib/EllipticFunction.hpp \
-		../include/GeographicLib/GARS.hpp \
-		../include/GeographicLib/GeoCoords.hpp \
-		../include/GeographicLib/Geocentric.hpp \
-		../include/GeographicLib/Geodesic.hpp \
-		../include/GeographicLib/GeodesicExact.hpp \
-		../include/GeographicLib/GeodesicLine.hpp \
-		../include/GeographicLib/GeodesicLineExact.hpp \
-		../include/GeographicLib/Geohash.hpp \
-		../include/GeographicLib/Geoid.hpp \
-		../include/GeographicLib/Georef.hpp \
-		../include/GeographicLib/Gnomonic.hpp \
-		../include/GeographicLib/GravityCircle.hpp \
-		../include/GeographicLib/GravityModel.hpp \
-		../include/GeographicLib/LambertConformalConic.hpp \
-		../include/GeographicLib/LocalCartesian.hpp \
-		../include/GeographicLib/MGRS.hpp \
-		../include/GeographicLib/MagneticCircle.hpp \
-		../include/GeographicLib/MagneticModel.hpp \
-		../include/GeographicLib/Math.hpp \
-		../include/GeographicLib/NearestNeighbor.hpp \
-		../include/GeographicLib/NormalGravity.hpp \
-		../include/GeographicLib/OSGB.hpp \
-		../include/GeographicLib/PolarStereographic.hpp \
-		../include/GeographicLib/PolygonArea.hpp \
-		../include/GeographicLib/Rhumb.hpp \
-		../include/GeographicLib/SphericalEngine.hpp \
-		../include/GeographicLib/SphericalHarmonic.hpp \
-		../include/GeographicLib/SphericalHarmonic1.hpp \
-		../include/GeographicLib/SphericalHarmonic2.hpp \
-		../include/GeographicLib/TransverseMercator.hpp \
-		../include/GeographicLib/TransverseMercatorExact.hpp \
-		../include/GeographicLib/UTMUPS.hpp \
-		../include/GeographicLib/Utility.hpp \
-		../include/GeographicLib/Config.h
+	AlbersEqualArea.cpp \
+	AuxAngle.cpp \
+	AuxLatitude.cpp \
+	AzimuthalEquidistant.cpp \
+	CassiniSoldner.cpp \
+	CircularEngine.cpp \
+	DAuxLatitude.cpp \
+	DMS.cpp \
+	DST.cpp \
+	Ellipsoid.cpp \
+	EllipticFunction.cpp \
+	GARS.cpp \
+	GeoCoords.cpp \
+	Geocentric.cpp \
+	Geodesic.cpp \
+	GeodesicExact.cpp \
+	GeodesicLine.cpp \
+	GeodesicLineExact.cpp \
+	Geohash.cpp \
+	Geoid.cpp \
+	Georef.cpp \
+	Gnomonic.cpp \
+	GravityCircle.cpp \
+	GravityModel.cpp \
+	LambertConformalConic.cpp \
+	LocalCartesian.cpp \
+	MGRS.cpp \
+	MagneticCircle.cpp \
+	MagneticModel.cpp \
+	Math.cpp \
+	NormalGravity.cpp \
+	OSGB.cpp \
+	PolarStereographic.cpp \
+	PolygonArea.cpp \
+	Rhumb.cpp \
+	SphericalEngine.cpp \
+	TransverseMercator.cpp \
+	TransverseMercatorExact.cpp \
+	UTMUPS.cpp \
+	Utility.cpp \
+	kissfft.hh \
+	../include/GeographicLib/Accumulator.hpp \
+	../include/GeographicLib/AlbersEqualArea.hpp \
+	../include/GeographicLib/AuxAngle.hpp \
+	../include/GeographicLib/AuxLatitude.hpp \
+	../include/GeographicLib/AzimuthalEquidistant.hpp \
+	../include/GeographicLib/CassiniSoldner.hpp \
+	../include/GeographicLib/CircularEngine.hpp \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DAuxLatitude.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Ellipsoid.hpp \
+	../include/GeographicLib/EllipticFunction.hpp \
+	../include/GeographicLib/GARS.hpp \
+	../include/GeographicLib/GeoCoords.hpp \
+	../include/GeographicLib/Geocentric.hpp \
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicExact.hpp \
+	../include/GeographicLib/GeodesicLine.hpp \
+	../include/GeographicLib/GeodesicLineExact.hpp \
+	../include/GeographicLib/Geohash.hpp \
+	../include/GeographicLib/Geoid.hpp \
+	../include/GeographicLib/Georef.hpp \
+	../include/GeographicLib/Gnomonic.hpp \
+	../include/GeographicLib/GravityCircle.hpp \
+	../include/GeographicLib/GravityModel.hpp \
+	../include/GeographicLib/LambertConformalConic.hpp \
+	../include/GeographicLib/LocalCartesian.hpp \
+	../include/GeographicLib/MGRS.hpp \
+	../include/GeographicLib/MagneticCircle.hpp \
+	../include/GeographicLib/MagneticModel.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/NearestNeighbor.hpp \
+	../include/GeographicLib/NormalGravity.hpp \
+	../include/GeographicLib/OSGB.hpp \
+	../include/GeographicLib/PolarStereographic.hpp \
+	../include/GeographicLib/PolygonArea.hpp \
+	../include/GeographicLib/Rhumb.hpp \
+	../include/GeographicLib/SphericalEngine.hpp \
+	../include/GeographicLib/SphericalHarmonic.hpp \
+	../include/GeographicLib/SphericalHarmonic1.hpp \
+	../include/GeographicLib/SphericalHarmonic2.hpp \
+	../include/GeographicLib/TransverseMercator.hpp \
+	../include/GeographicLib/TransverseMercatorExact.hpp \
+	../include/GeographicLib/UTMUPS.hpp \
+	../include/GeographicLib/Utility.hpp \
+	../include/GeographicLib/Config.h
 
 geographiclib_data = $(datadir)/GeographicLib
 EXTRA_DIST = CMakeLists.txt kissfft.hh
@@ -570,9 +578,12 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Accumulator.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AlbersEqualArea.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AuxAngle.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AuxLatitude.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AzimuthalEquidistant.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CassiniSoldner.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CircularEngine.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DAuxLatitude.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DMS.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DST.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Ellipsoid.Plo@am__quote@ # am--include-marker
@@ -769,9 +780,12 @@ clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 distclean: distclean-am
 		-rm -f ./$(DEPDIR)/Accumulator.Plo
 	-rm -f ./$(DEPDIR)/AlbersEqualArea.Plo
+	-rm -f ./$(DEPDIR)/AuxAngle.Plo
+	-rm -f ./$(DEPDIR)/AuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/AzimuthalEquidistant.Plo
 	-rm -f ./$(DEPDIR)/CassiniSoldner.Plo
 	-rm -f ./$(DEPDIR)/CircularEngine.Plo
+	-rm -f ./$(DEPDIR)/DAuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/DMS.Plo
 	-rm -f ./$(DEPDIR)/DST.Plo
 	-rm -f ./$(DEPDIR)/Ellipsoid.Plo
@@ -852,9 +866,12 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 		-rm -f ./$(DEPDIR)/Accumulator.Plo
 	-rm -f ./$(DEPDIR)/AlbersEqualArea.Plo
+	-rm -f ./$(DEPDIR)/AuxAngle.Plo
+	-rm -f ./$(DEPDIR)/AuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/AzimuthalEquidistant.Plo
 	-rm -f ./$(DEPDIR)/CassiniSoldner.Plo
 	-rm -f ./$(DEPDIR)/CircularEngine.Plo
+	-rm -f ./$(DEPDIR)/DAuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/DMS.Plo
 	-rm -f ./$(DEPDIR)/DST.Plo
 	-rm -f ./$(DEPDIR)/Ellipsoid.Plo
