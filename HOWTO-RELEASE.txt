@@ -115,8 +115,11 @@ copy windows installers to data-distrib/distrib-C++
 fix permissions on installers
 remove alpha/rc versions of installers
 switch C++/doc link to latest version
-make stage-{doc,dist}
-make deploy-{doc,dist}
+In build directory:
+  make clean
+  make -j10 all
+  make stage-{doc,dist}
+  make deploy-{doc,dist}
 checkin and tag release branch & push
 tag main branch
 
@@ -144,6 +147,7 @@ Brew...
   edit geographiclib.rb
   changing url and sha256
 
+  export HOMEBREW_NO_INSTALL_FROM_API=1
   brew uninstall geographiclib
   brew install --build-from-source geographiclib
   brew reinstall --build-from-source geographiclib
@@ -177,8 +181,11 @@ conda-forge...
   conda create -y -n geog-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.tar.bz2
   conda activate geog-test
   type GeoConvert
+  GeoConvert --version
 
   git checkout -b v$VERSION
+  conda deactivate
+  conda activate build
   conda install -c conda-forge conda-smithy
   conda smithy rerender
   commit changes

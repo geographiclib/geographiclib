@@ -15,6 +15,7 @@ foreach (TOOL ${TOOLS})
     # A maintainer can transform these to man, html, and usage formats.
     add_custom_command (OUTPUT ${TOOL}.1
       COMMAND ${POD2MAN} --center=\"GeographicLib Utilities\"
+      --date `date +%Y-%m-%d`
       --release=\"GeographicLib ${PROJECT_VERSION}\"
       ${CMAKE_CURRENT_SOURCE_DIR}/${TOOL}.pod > ${TOOL}.1
       COMMENT "Building man page for ${TOOL}"
