@@ -40,6 +40,7 @@
 #include <limits>
 
 #if GEOGRAPHICLIB_PRECISION == 4
+#include <memory>
 #include <boost/version.hpp>
 #include <boost/multiprecision/float128.hpp>
 #include <boost/math/special_functions.hpp>

@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (charles@karney.com)
 \version @PROJECT_VERSION@
-\date 2023-03-07
+\date 2023-mm-dd
 
 \section abstract Abstract
 
@@ -7502,7 +7502,12 @@ git repository for GeographicLib</a>.
      allowing larger buckets on construction or by just do additional
      splits as necessary).
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
+   - Introduce typedefs to interconnect Geodesic(,Line),
+     Geodesic{,Line}Exact, Rhumb{,Line}.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
+   (released 2023-mm-dd)
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-03-07)

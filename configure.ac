@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[2.2],[charles@karney.com])
+AC_INIT([GeographicLib],[2.3],[charles@karney.com])
 AC_CANONICAL_TARGET
 AC_PREREQ([2.71])
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -9,7 +9,7 @@ AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
 
 GEOGRAPHICLIB_VERSION_MAJOR=2
-GEOGRAPHICLIB_VERSION_MINOR=2
+GEOGRAPHICLIB_VERSION_MINOR=3
 GEOGRAPHICLIB_VERSION_PATCH=0
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
         [$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
@@ -35,7 +35,7 @@ dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
 LT_CURRENT=25
-LT_REVISION=0
+LT_REVISION=1
 LT_AGE=1
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)

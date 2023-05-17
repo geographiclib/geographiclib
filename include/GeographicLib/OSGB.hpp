@@ -200,7 +200,7 @@ namespace GeographicLib {
      * coordinate systems in Great Britain</i>, v3.6 (2020).
      **********************************************************************/
     static Math::real EquatorialRadius() {
-    // result is about 6377563.3960320664406 m
+      // result is about 6377563.3960320664406 m
       using std::pow;
       return pow(real(10), real(48401603 - 100000000) / 100000000)
         * real(20923713);
