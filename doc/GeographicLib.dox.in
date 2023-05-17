@@ -3,14 +3,14 @@
  * \file GeographicLib.dox
  * \brief Documentation for GeographicLib
  *
- * Written by Charles Karney <charles@karney.com> and licensed under the
+ * Written by Charles Karney <karney@alum.mit.edu> and licensed under the
  * MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 namespace GeographicLib {
 /**
 \mainpage GeographicLib library
-\author Charles F. F. Karney (charles@karney.com)
+\author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
 \date 2023-mm-dd
 
@@ -178,7 +178,7 @@ problems may occur with larger values of <i>f</i>:
    inversion may be incorrect if \e f is large.
 
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
-report any you find to charles@karney.com.
+report any you find to karney@alum.mit.edu.
 
 <center>
 Forward to \ref install.  Up to \ref contents.

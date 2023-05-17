@@ -30,4 +30,4 @@ It is licensed under the MIT License; see
 * GeographicLib: https://geographiclib.sourceforge.io
 * GeographicLib in various languages:
   https://geographiclib.sourceforge.io/doc/library.html#languages
-* Author: Charles Karney, <charles@karney.com>
+* Author: Charles Karney, <karney@alum.mit.edu>

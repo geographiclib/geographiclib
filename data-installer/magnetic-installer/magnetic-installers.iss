@@ -39,7 +39,7 @@ VersionInfoTextVersion={#Version}
 VersionInfoCopyright=Public Domain
 AppVersion={#Version}
 AppComments={#NAME} magnetic model
-AppContact=charles@karney.com
+AppContact=karney@alum.mit.edu
 UninstallDisplayName={#Project} magnetic model {#NAME}
 DiskSpanning=no
 

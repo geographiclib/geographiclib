@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2022, Charles Karney <charles@karney.com>
+# Copyright (C) 2022, Charles Karney <karney@alum.mit.edu>
 
 TEST_FILES = geodtest.cpp signtest.cpp polygontest.cpp
 

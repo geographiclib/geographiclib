@@ -5,7 +5,7 @@
   <configuration build-checksum="" file="$ROOT/geographiclib.prj" location="$ROOT" name="geographiclib" target="target.toolbox" target-name="Package Toolbox">
     <param.appname>geographiclib</param.appname>
     <param.authnamewatermark>Charles Karney</param.authnamewatermark>
-    <param.email>charles@karney.com</param.email>
+    <param.email>karney@alum.mit.edu</param.email>
     <param.company />
     <param.summary>MATLAB implementations of a subset of the C++ library, GeographicLib</param.summary>
     <param.description>GeographicLib toolbox

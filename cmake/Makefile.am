@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011-2022, Charles Karney <charles@karney.com>
+# Copyright (C) 2011-2022, Charles Karney <karney@alum.mit.edu>
 
 cmakedir=$(datadir)/cmake/GeographicLib
 

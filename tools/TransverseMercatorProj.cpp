@@ -2,7 +2,7 @@
  * \file TransverseMercatorProj.cpp
  * \brief Command line utility for transverse Mercator projections
  *
- * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2017) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *

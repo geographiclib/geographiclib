@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[2.3],[charles@karney.com])
+AC_INIT([GeographicLib],[2.3],[karney@alum.mit.edu])
 AC_CANONICAL_TARGET
 AC_PREREQ([2.71])
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)

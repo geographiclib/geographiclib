@@ -511,7 +511,7 @@ include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variables that need to be set before
 # the include (CPack).
-set (CPACK_PACKAGE_CONTACT charles@karney.com)
+set (CPACK_PACKAGE_CONTACT karney@alum.mit.edu)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
   "GeographicLib library, utilities, and documentation")
@@ -538,9 +538,9 @@ set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PACKAGE_DIR}")
 if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
   # for this.
-  set (CPACK_NSIS_CONTACT "charles@karney.com")
+  set (CPACK_NSIS_CONTACT "karney@alum.mit.edu")
   set (CPACK_NSIS_URL_INFO_ABOUT "https://geographiclib.sourceforge.io")
-  set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
+  set (CPACK_NSIS_HELP_LINK "mailto:karney@alum.mit.edu")
   # No provision for accommodating different compiler versions.  However
   # the Visual Studio 14 2015 build works also with Visual Studio 15
   # 2017, Visual Studio 16 2019, and Visual Studio 17 2022.

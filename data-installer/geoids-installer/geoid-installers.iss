@@ -43,7 +43,7 @@ VersionInfoTextVersion={#Version}
 VersionInfoCopyright=Public Domain
 AppVersion={#Version}
 AppComments={#NAME} geoid data
-AppContact=charles@karney.com
+AppContact=karney@alum.mit.edu
 UninstallDisplayName={#Project} geoid {#NAME}
 DiskSpanning=no
 

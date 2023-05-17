@@ -161,7 +161,7 @@ echo Set up release branch in $TEMP/gitr/geographiclib
 
 cd $TEMP/gitr/geographiclib
 git checkout release
-git config user.email charles@karney.com
+git config user.email karney@alum.mit.edu
 git ls-files | sort > ../files.old
 (
     cd $TEMP/gitb/geographiclib
