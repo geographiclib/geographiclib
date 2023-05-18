@@ -805,6 +805,11 @@ namespace GeographicLib {
     ///@{
 
     /**
+     * Typedef for the class for computing multiple points on a geodesic.
+     **********************************************************************/
+    typedef GeodesicLine LineClass;
+
+    /**
      * Set up to compute several points on a single geodesic.
      *
      * @param[in] lat1 latitude of point 1 (degrees).

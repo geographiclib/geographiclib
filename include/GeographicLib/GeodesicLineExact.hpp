@@ -150,6 +150,11 @@ namespace GeographicLib {
       ALL           = GeodesicExact::ALL,
     };
 
+    /**
+     * Typedef for the base class implementing geodesics.
+     **********************************************************************/
+    typedef GeodesicExact BaseClass;
+
     /** \name Constructors
      **********************************************************************/
     ///@{
