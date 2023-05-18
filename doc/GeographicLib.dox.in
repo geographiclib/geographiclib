@@ -7511,6 +7511,11 @@ git repository for GeographicLib</a>.
    - Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
      Rhumb::LineClass, GeodesicLine::BaseClass,
      GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
+   - Geodesic constructor accepts optional third argument \e exact,
+     default false.  If true, then the calculations are forwarded to
+     GeodesicExact.  GeodSolve and Planimeter have now been simplified.
+   - PolygonAreaExact is deprecated; use PolygonArea instead.
+   - Bug in Planimeter -Q (introduced in version 2.2) has been fixed.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-03-07)

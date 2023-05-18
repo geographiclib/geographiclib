@@ -37,6 +37,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicExact;
+    friend class GeodesicLine;
     int _nC4;
 
     real tiny_;
@@ -71,6 +72,7 @@ namespace GeographicLib {
       OUT_ALL  = GeodesicExact::OUT_ALL,
       OUT_MASK = GeodesicExact::OUT_MASK,
     };
+
   public:
 
     /**

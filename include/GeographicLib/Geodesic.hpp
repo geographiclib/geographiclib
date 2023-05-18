@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2022) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_GEODESIC_HPP 1
 
 #include <GeographicLib/Constants.hpp>
+#include <GeographicLib/GeodesicExact.hpp>
 
 #if !defined(GEOGRAPHICLIB_GEODESIC_ORDER)
 /**
@@ -210,6 +211,8 @@ namespace GeographicLib {
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
     real _aA3x[nA3x_], _cC3x[nC3x_], _cC4x[nC4x_];
+    bool _exact;
+    GeodesicExact _geodexact;
 
     void Lengths(real eps, real sig12,
                  real ssig1, real csig1, real dn1,
@@ -338,10 +341,12 @@ namespace GeographicLib {
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.
+     * @param[in] exact if true use exact formulation in terms of elliptic
+     *   integral instead of series expansions (default false).
      * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      **********************************************************************/
-    Geodesic(real a, real f);
+    Geodesic(real a, real f, bool exact = false);
     ///@}
 
     /** \name Direct geodesic problem specified in terms of distance.
@@ -958,6 +963,12 @@ namespace GeographicLib {
      *   value used in the constructor.
      **********************************************************************/
     Math::real Flattening() const { return _f; }
+
+    /**
+     * @return \e exact whether the exact formulation is used.  This is the
+     *   value used in the constructor.
+     **********************************************************************/
+    bool Exact() const { return _exact; }
 
     /**
      * @return total area of ellipsoid in meters<sup>2</sup>.  The area of a

@@ -2,7 +2,7 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2022) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicLineExact.hpp>
 
 namespace GeographicLib {
 
@@ -88,6 +89,8 @@ namespace GeographicLib {
     real _cC1a[nC1_ + 1], _cC1pa[nC1p_ + 1], _cC2a[nC2_ + 1], _cC3a[nC3_],
       _cC4a[nC4_];              // all the elements of _cC4a are used
     unsigned _caps;
+    bool _exact;
+    GeodesicLineExact _lineexact;
 
     void LineInit(const Geodesic& g,
                   real lat1, real lon1,
@@ -667,6 +670,12 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const
     { return Init() ? _f : Math::NaN(); }
+
+    /**
+     * @return \e exact whether the exact formulation is used.  This is the
+     *   value used in the constructor.
+     **********************************************************************/
+    bool Exact() const { return _exact; }
 
     /**
      * @return \e caps the computational capabilities that this object was

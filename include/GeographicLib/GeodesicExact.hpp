@@ -146,6 +146,10 @@ namespace GeographicLib {
       real operator()(real sig) const;
     };
 
+    // Private constructor with no arguments to support Geodesic(a, f, exact)
+    friend class Geodesic;
+    GeodesicExact() {};         // Do nothing; used with exact = false.
+
   public:
 
     /**
