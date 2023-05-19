@@ -390,6 +390,7 @@ namespace GeographicLib {
     RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12);
 
   public:
+
     /**
      * Construction is via default copy constructor.
      **********************************************************************/

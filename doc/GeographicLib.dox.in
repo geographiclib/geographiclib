@@ -7512,10 +7512,22 @@ git repository for GeographicLib</a>.
      Rhumb::LineClass, GeodesicLine::BaseClass,
      GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
    - Geodesic constructor accepts optional third argument \e exact,
-     default false.  If true, then the calculations are forwarded to
-     GeodesicExact.  GeodSolve and Planimeter have now been simplified.
+     default false.  If true, then the calculations are delegated to
+     GeodesicExact.  The code in GeodSolve and Planimeter now uses this
+     simplified interface.
    - PolygonAreaExact is deprecated; use PolygonArea instead.
    - Bug in Planimeter -Q (introduced in version 2.2) has been fixed.
+   - TransverseMercator constructor accept optional arguments \e exact
+     and \e extend (default false for both).  If \e exact = true, then
+     the calculations are delegated to TransverseMercatorExact.  The
+     code in TransverseMercatorProj now uses this simplified interface.
+   - Fix documentation bug for TransverseMercatorProj (incorrectly
+     stated that -t for the extended domain was the default).
+   - Remove unnecessary friend declarations for Ellipsoid in
+     AlbersEqualArea and TransverseMercator. (As of version 2.2,
+     Ellipsoid uses the AuxLatitude class for this functionality.)
+   - Small change in EllipticFunction to speed up the default
+     contructor.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-03-07)

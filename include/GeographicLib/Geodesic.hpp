@@ -255,7 +255,6 @@ namespace GeographicLib {
     void C3f(real eps, real c[]) const;
     void C4coeff();
     void C4f(real k2, real c[]) const;
-
   public:
 
     /**
@@ -345,7 +344,7 @@ namespace GeographicLib {
      * @param[in] f flattening of ellipsoid.  Setting \e f = 0 gives a sphere.
      *   Negative \e f gives a prolate ellipsoid.
      * @param[in] exact if true use exact formulation in terms of elliptic
-     *   integral instead of series expansions (default false).
+     *   integrals instead of series expansions (default false).
      * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
      *

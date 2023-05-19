@@ -72,7 +72,6 @@ namespace GeographicLib {
       OUT_ALL  = GeodesicExact::OUT_ALL,
       OUT_MASK = GeodesicExact::OUT_MASK,
     };
-
   public:
 
     /**
