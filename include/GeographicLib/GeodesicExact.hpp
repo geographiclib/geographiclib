@@ -85,6 +85,10 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;
+    friend class Geodesic;    // Allow Geodesic to call the default constructor
+    // Private default constructor to support Geodesic(a, f, exact)
+    GeodesicExact() {};         // Do nothing; used with exact = false.
+
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
@@ -145,10 +149,6 @@ namespace GeographicLib {
       I4Integrand(real ep2, real k2);
       real operator()(real sig) const;
     };
-
-    // Private constructor with no arguments to support Geodesic(a, f, exact)
-    friend class Geodesic;
-    GeodesicExact() {};         // Do nothing; used with exact = false.
 
   public:
 

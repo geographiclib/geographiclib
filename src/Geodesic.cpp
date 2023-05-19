@@ -55,6 +55,7 @@ namespace GeographicLib {
     , xthresh_(1000 * tol2_)
     , _a(a)
     , _f(f)
+    , _exact(exact)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / Math::sq(_f1)) // e2 / (1 - e2)
@@ -76,7 +77,6 @@ namespace GeographicLib {
       // spherical case.
     , _etol2(real(0.1) * tol2_ /
              sqrt( fmax(real(0.001), fabs(_f)) * fmin(real(1), 1 - _f/2) / 2 ))
-    , _exact(exact)
     , _geodexact(_exact ? GeodesicExact(a, f) : GeodesicExact())
   {
     if (_exact)

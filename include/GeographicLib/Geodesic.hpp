@@ -134,7 +134,8 @@ namespace GeographicLib {
    * The calculations are accurate to better than 15 nm (15 nanometers) for the
    * WGS84 ellipsoid.  See Sec. 9 of
    * <a href="https://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
-   * details.  The algorithms used by this class are based on series expansions
+   * details.  With \e exact = false (the default) in the constructor,
+   * the algorithms used by this class are based on series expansions
    * using the flattening \e f as a small parameter.  These are only accurate
    * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
    * obtained for |<i>f</i>| &lt; 0.2.  Here is a table of the approximate
@@ -148,7 +149,8 @@ namespace GeographicLib {
    *     0.1     1.5 mm
    *     0.2     300 mm
    * </pre>
-   * For very eccentric ellipsoids, use GeodesicExact instead.
+   * For very eccentric ellipsoids, set \e exact to true in the constructor;
+   * this will delegate the calculations to the GeodesicExact class.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -209,9 +211,10 @@ namespace GeographicLib {
                              real sinx, real cosx, const real c[], int n);
     static real Astroid(real x, real y);
 
-    real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _aA3x[nA3x_], _cC3x[nC3x_], _cC4x[nC4x_];
+    real _a, _f;
     bool _exact;
+    real _f1, _e2, _ep2, _n, _b, _c2, _etol2;
+    real _aA3x[nA3x_], _cC3x[nC3x_], _cC4x[nC4x_];
     GeodesicExact _geodexact;
 
     void Lengths(real eps, real sig12,
@@ -345,6 +348,10 @@ namespace GeographicLib {
      *   integral instead of series expansions (default false).
      * @exception GeographicErr if \e a or (1 &minus; \e f) \e a is not
      *   positive.
+     *
+     * With \e exact = true, this class delegates the calculations to the
+     * GeodesicExact and GeodesicLineExact classes which solve the geodesic
+     * problems in terms of elliptic integrals.
      **********************************************************************/
     Geodesic(real a, real f, bool exact = false);
     ///@}
