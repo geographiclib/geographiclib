@@ -92,6 +92,7 @@ endif ()
 # Support for pkgconfig/geographiclib.pc
 set (prefix ${CMAKE_INSTALL_PREFIX})
 set (exec_prefix "\${prefix}")
+set (lib_postfix ${CMAKE_DEBUG_POSTFIX})
 set (libdir "\${exec_prefix}/${LIBDIR}")
 set (includedir "\${prefix}/${INCDIR}")
 set (bindir "\${exec_prefix}/${BINDIR}")
