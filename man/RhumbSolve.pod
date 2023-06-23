@@ -42,10 +42,10 @@ standard output.  This is the direct calculation.
 
 =item 2.
 
-With the B<-i> command line argument, B<RhumbSolve> performs the inverse
-calculation.  It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2>
-and prints the values of I<azi12> I<s12> I<S12> for the corresponding
-shortest rhumb lines.
+With the B<-i> option, B<RhumbSolve> performs the inverse calculation.
+It reads lines containing I<lat1> I<lon1> I<lat2> I<lon2> and prints
+the values of I<azi12> I<s12> I<S12> for the corresponding shortest
+rhumb lines.
 
 =item 3.
 
@@ -243,7 +243,7 @@ L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 GeoConvert(1).
 
 An online version of this utility is availbable at
-L<https://geographiclib.sourceforge.io/cgi-bin/GeodSolve>.
+L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 
 This solution for rhumb line is described in C. F. F. Karney,
 I<The area of rhumb polygons>, Technical Report, SRI International

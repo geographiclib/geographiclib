@@ -4975,9 +4975,9 @@ standard construction in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 
-The JacobiConformal class provides an implementation of the Jacobi
-conformal projection is given here.  <b>NOTE:</b> This is just sample
-code.  It is not part of GeographicLib itself.
+The experimental::JacobiConformal class provides an implementation of
+the Jacobi conformal projection is given here.  <b>NOTE:</b> This is
+just sample code.  It is not part of GeographicLib itself.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
@@ -5002,8 +5002,8 @@ The series expansions described in the paper are available in
  - C. F. F. Karney,<br>
    <a href="https://doi.org/10.5281/zenodo.7685484">Series expansions
    for computing rhumb areas</a>,<br> March 2023.<br>
-   <a href="https://doi.org/10.5281/zenodo.7685484">
-   doi:10.5281/zenodo.7685484</a>
+   DOI: <a href="https://doi.org/10.5281/zenodo.7685484">
+   10.5281/zenodo.7685484</a>
 
 The Rhumb and RhumbLine classes together with the
 <a href="RhumbSolve.1.html">RhumbSolve</a> utility perform rhumb line
@@ -6469,9 +6469,12 @@ Back to \ref geocentric.  Forward to \ref highprec.  Up to \ref contents.
 
 This material is now written up as
  - C. F. F. Karney,<br>
-   <a href="https://arxiv.org/abs/2212.05818">On auxiliary latitudes</a>,<br>
-   Technical Report, SRI International, December 2022.<br>
-   <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
+   <a href="https://doi.org/10.1080/00396265.2023.2217604">
+   On auxiliary latitudes</a>,<br>
+   Survey Review, 2023. Technical Report, SRI International, December 2022.<br>
+   DOI: <a href="https://doi.org/10.1080/00396265.2023.2217604">
+   10.1080/00396265.2023.2217604</a><br>
+   preprint: <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
  .
 The implementation of the methods described in this paper is available
 as the classes AuxAngle, AuxLatitude, and DAuxLatitude.
@@ -7579,7 +7582,7 @@ git repository for GeographicLib</a>.
    - Add example code <code>examples/AuxLatitude.[hc]pp</code>
      implementating the AuxAngle and AuxLatitude classes.  These classes
      implement the methods documented in the paper
-     <a href="https://arxiv.org/abs/2212.05818">On auxiliary
+     <a href="https://doi.org/10.1080/00396265.2023.2217604">On auxiliary
      latitudes</a>.  They are <b>not</b> part of GeographicLib.  See
      \ref auxlat for more details.
    - Minor cmake issues:
