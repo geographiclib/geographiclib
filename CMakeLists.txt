@@ -453,7 +453,8 @@ endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
-  GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj)
+  GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
+  TransverseMercatorProj)
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
   geographiclib-get-magnetic)
@@ -479,7 +480,7 @@ if (NOT RELEASE)
 endif ()
 
 # make exampleprograms does a fresh cmake configuration and so uses
-# find_package to find the just-built version og GeographicLib (via the
+# find_package to find the just-built version of GeographicLib (via the
 # GeographicLib_DIR option to cmake).
 if (CMAKE_GENERATOR_PLATFORM)
   set (PLATFORM_FLAG "-A")

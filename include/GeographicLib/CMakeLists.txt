@@ -27,6 +27,7 @@ set (HEADERS
   Gnomonic.hpp
   GravityCircle.hpp
   GravityModel.hpp
+  Intersect.hpp
   LambertConformalConic.hpp
   LocalCartesian.hpp
   MGRS.hpp

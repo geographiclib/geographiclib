@@ -851,6 +851,8 @@ The utilities are
  - <a href="RhumbSolve.1.html">
    <b>RhumbSolve</b></a>: perform rhumb line calculations using Rhumb
    and RhumbLine.  See \ref RhumbSolve.cpp.
+ - <a href="IntersectTool.1.html"> <b>IntersectTool</b></a>: find
+   intersections between two geodesics.  See \ref IntersectTool.cpp.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -7509,6 +7511,8 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-mm-dd)
+   - Add Intersect class and <a href="IntersectTool.1.html">
+     IntersectTool</a> utility.
    - Remove workaround for boost 1.76 with enums (not needed for boost
      1.78).
    - Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
