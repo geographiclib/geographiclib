@@ -238,10 +238,6 @@ GeoConvert(1), GeodSolve(1).
 An online version of this utility is availbable at
 L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 
-=head1 SEE ALSO
-
-GeoConvert(1).
-
 An online version of this utility is availbable at
 L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 

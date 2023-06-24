@@ -262,7 +262,7 @@ namespace GeographicLib {
      * the function value.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
-			real& m12, real& M12, real& M21, real& S12) const {
+                        real& m12, real& M12, real& M21, real& S12) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH |
@@ -295,7 +295,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
-			real& m12) const {
+                        real& m12) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE |
@@ -307,7 +307,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
-			real& M12, real& M21) const {
+                        real& M12, real& M21) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE |
@@ -319,7 +319,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
     Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
-			real& m12, real& M12, real& M21) const {
+                        real& m12, real& M12, real& M21) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH |
@@ -370,7 +370,7 @@ namespace GeographicLib {
      * GeodesicLineExact::ArcPosition which omit some of the output parameters.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-		     real& s12, real& m12, real& M12, real& M21, real& S12)
+                     real& s12, real& m12, real& M12, real& M21, real& S12)
     const {
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
@@ -413,7 +413,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-		     real& s12, real& m12) const {
+                     real& s12, real& m12) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -425,7 +425,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-		     real& s12, real& M12, real& M21) const {
+                     real& s12, real& M12, real& M21) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -437,7 +437,7 @@ namespace GeographicLib {
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
     void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-		     real& s12, real& m12, real& M12, real& M21) const {
+                     real& s12, real& m12, real& M12, real& M21) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -509,9 +509,9 @@ namespace GeographicLib {
      * encircles the ellipsoid.
      **********************************************************************/
     Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
-			   real& lat2, real& lon2, real& azi2,
-			   real& s12, real& m12, real& M12, real& M21,
-			   real& S12) const;
+                           real& lat2, real& lon2, real& azi2,
+                           real& s12, real& m12, real& M12, real& M21,
+                           real& S12) const;
     ///@}
 
     /** \name Setting point 3

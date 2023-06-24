@@ -103,7 +103,8 @@ B<-n>, the midpoints of the segments for B<-i>, and [I<x0>, I<y0>] for
 B<-o>.  Each intersection is preceded by its L1 distance and the
 intersections are sorted by the distances.  A line "nan nan nan" is
 added after the intersections, so that the output can be associated
-with the correct lines of the input.
+with the correct lines of the input.  The number of intersections
+scales as (I<maxdist>/(pi I<a>))^2.
 
 =item B<-C>
 
@@ -121,10 +122,9 @@ is allowed for I<f>.  By default, the WGS84 ellipsoid is used, I<a> =
 
 =item B<-E>
 
-By default, the geodesic calculations are carried out using series
-expansions valid for |I<f>| E<lt> 0.01.  If B<-E> is supplied, exact
-equations for geodesics are used; these are valid for arbitrary
-eccentricities.
+use "exact" algorithms (based on elliptic integrals) for the geodesic
+calculations.  These are more accurate than the (default) series
+expansions for |I<f>| E<gt> 0.02.
 
 =item B<-w>
 
@@ -198,9 +198,10 @@ COORDINATES> section of GeoConvert(1).
 
 I<prec> gives precision of the output with I<prec> = 0 giving 1 m
 precision, I<prec> = 3 giving 1 mm precision, etc.  I<prec> is the
-number of digits after the decimal point for lengths.  For decimal
-degrees, the number of digits after the decimal point is I<prec> + 5.
-The minimum value of I<prec> is 0 and the maximum is 10.
+number of digits after the decimal point for lengths.  The latitude
+and longitude printed to standard error with the B<-C> option are
+given in decimal degrees with I<prec> + 5 digits after the decimal
+point.  The minimum value of I<prec> is 0 and the maximum is 10.
 
 =head1 ERRORS
 
@@ -209,45 +210,49 @@ beginning with C<ERROR:> and causes B<IntersectTool> to return an exit code
 of 1.  However, an error does not cause B<IntersectTool> to terminate;
 following lines will be converted.
 
+=head1 ACCURACY
+
+This tool will give nearly full double precision accuracy for |I<f>|
+E<lt> 0.02.  If the B<-E> option is given, full accuracy is achieved
+for -1/4 E<lt> f E<lt> 1/5.  The tool had not been tested outside this
+range.
+
 =head1 EXAMPLES
 
-Route from JFK Airport to Singapore Changi Airport:
+A vessel leaves Plymouth 50N 4W on a geodesic path with initial
+heading 147.7W.  When will it first cross the equator?
 
-   echo 40:38:23N 073:46:44W 01:21:33N 103:59:22E |
-   IntersectTool -i -: -p 0
+   echo 50N 4W 147.7W 0 0 90 | IntersectTool -c -C
 
-   103:34:58.2 18523563 45921660958919
+   6058048.653 -3311252.996
+   0.000 -29.745 -0.000 -29.745
 
-N.B. This is B<not> the route typically taken by aircraft because it's
-considerably longer than the geodesic given by GeodSolve(1).
+Answer: after 6058km at longitude 29.7W.  When will it cross the date
+line, longitude 180E?  Here we need to use B<-R> because there a
+closer intersection on the prime meridian:
 
-Waypoints on the route at intervals of 2000km:
+   echo 50N 4W 147.7W 0 180 0 | IntersectTool -c -C -R 2.6e7
 
-   for ((i = 0; i <= 20; i += 2)); do echo ${i}000000;done |
-   IntersectTool -L 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
+   14546812.457 -494582.492 14052229.965
+   53.693 0.000 53.693 0.000
+   25461454.302 19529110.043 -5932344.259
+   -53.519 180.000 -53.519 180.000
+   nan nan nan
+   nan nan nan nan
 
-   40:38:23.0N 073:46:44.0W 0
-   36:24:30.3N 051:28:26.4W 9817078307821
-   32:10:26.8N 030:20:57.3W 18224745682005
-   27:56:13.2N 010:10:54.2W 25358020327741
-   23:41:50.1N 009:12:45.5E 31321269267102
-   19:27:18.7N 027:59:22.1E 36195163180159
-   15:12:40.2N 046:17:01.1E 40041499143669
-   10:57:55.9N 064:12:52.8E 42906570007050
-   06:43:07.3N 081:53:28.8E 44823504180200
-   02:28:16.2N 099:24:54.5E 45813843358737
-   01:46:36.0S 116:52:59.7E 45888525219677
+We want the second result: after 19529 km at latitude 53.5S.
 
 =head1 SEE ALSO
 
 GeoConvert(1), GeodSolve(1).
 
-An online version of this utility is availbable at
-L<https://geographiclib.sourceforge.io/cgi-bin/IntersectTool>.
-
-=head1 SEE ALSO
-
-GeoConvert(1).
+This solution for intersections is described in C. F. F. Karney,
+I<Geodesic intersections>, Technical Report, SRI International (in
+preparation).  It is based on the work of
+S. Baseldga and J. C. Martinez-Llario, I<Intersection and
+point-to-line solutions for geodesics on the ellipsoid>,
+Stud. Geophys. Geod. 62, 353-363 (2018); DOI:
+L<https://doi.org/10.1007/s11200-017-1020-z>;
 
 =head1 AUTHOR
 

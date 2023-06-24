@@ -3,8 +3,6 @@
 #include <utility>
 #include <algorithm>
 #include <set>
-#include <cassert>
-#include <iomanip>
 
 using namespace std;
 
@@ -14,12 +12,11 @@ namespace GeographicLib {
     : _geod(geod)
     , _a(_geod.EquatorialRadius())
     , _f(_geod.Flattening())
-    , _n(_f / (2 - _f))
     , _R(sqrt(_geod.EllipsoidArea() / (4 * Math::pi())))
     , _d(_R * Math::pi())       // Used to normalize intersection points
+    , _eps(3 * numeric_limits<real>::epsilon())
     , _tol(_d * pow(numeric_limits<real>::epsilon(), 3/real(4)))
-    , _slop(_d / 1000)
-    , _debug(true)
+    , _slop(_d * pow(numeric_limits<real>::epsilon(), 1/real(5)))
     , _comp(_slop)
     , cnt0(0)
     , cnt1(0)
@@ -171,7 +168,7 @@ namespace GeographicLib {
     const int ix[num] = { -1, -1,  1,  1, -2,  0,  2,  0 };
     const int iy[num] = { -1,  1, -1,  1,  0,  2,  0, -2 };
     bool    skip[num] = {  0,  0,  0,  0,  0,  0,  0,  0 };
-    XPoint z(0,0),               // for excluding the origin
+    XPoint z(0,0),              // for excluding the origin
       q;                        // Best intersection so far
     for (int n = 0; n < num; ++n) {
       if (skip[n]) continue;
@@ -212,7 +209,6 @@ namespace GeographicLib {
                     const Intersect::XPoint& p, int& flag) const {
     // threshold for coincident geodesics and intersections; this corresponds
     // to about 4.3 nm on WGS84.
-    static const real eps = 3*numeric_limits<real>::epsilon();
     real latX, lonX, aziX, latY, lonY, aziY;
     lineX.Position(p.x , latX, lonX, aziX);
     lineY.Position(p.y, latY, lonY, aziY);
@@ -233,16 +229,16 @@ namespace GeographicLib {
     real sinX, cosX; Math::sincosde(s*X, s*dX, sinX, cosX);
     real sinY, cosY; Math::sincosde(s*Y, s*dY, sinY, cosY);
     real sX, sY;
-    if (z <= eps * _R) {
+    if (z <= _eps * _R) {
       sX = sY = 0;              // Already at intersection
       // Determine whether lineX and lineY are parallel or antiparallel
-      if (fabs(sinX - sinY) <= eps && fabs(cosX - cosY) <= eps)
+      if (fabs(sinX - sinY) <= _eps && fabs(cosX - cosY) <= _eps)
         flag = 1;
-      else if (fabs(sinX + sinY) <= eps && fabs(cosX + cosY) <= eps)
+      else if (fabs(sinX + sinY) <= _eps && fabs(cosX + cosY) <= _eps)
         flag = -1;
       else
         flag = 0;
-    } else if (fabs((sinX) <= eps && fabs(sinY) <= eps)) {
+    } else if (fabs(sinX) <= _eps && fabs(sinY) <= _eps) {
       flag = cosX * cosY > 0 ? 1 : -1;
       // Coincident geodesics, place intersection at midpoint
       sX =  cosX * z/2; sY = -cosY * z/2;
@@ -265,14 +261,11 @@ namespace GeographicLib {
                     const GeodesicLine& lineY,
                     Math::real maxdist, const XPoint& p0,
                     int& flag)  const {
-    bool debug = false;
-    real maxdistx = fmax(maxdist, _slop);
+    real maxdistx = maxdist + _slop;
     const int m = int(ceil(maxdistx/_c3)), // process m x m set of tiles
       m2 = m*m + (m - 1) % 2,              // add center tile if m is even
       n = m - 1;                           // Range of i, j = [-n:2:n]
     real c3 = maxdistx/m;                  // c3 <= _c3
-    if (debug) cerr << setprecision(16) << "BEGIN "
-                    << _d << " " << _s4 << " " << _c3 << " " << c3 << "\n";
     vector<XPoint> start(m2);
     vector<bool> skip(m2, false);
     int h = 0, flag0 = 0;
@@ -282,17 +275,13 @@ namespace GeographicLib {
         if (!(i == 0 && j == 0))
           start[h++] = p0 + XPoint( c3 * (i + j) / 2, c3 * (i - j) / 2);
       }
-    if (debug) cerr << "0 " << m << " "  << n << " " <<  h << " " << m2 << "\n";
-    assert(h == m2);
+    // assert(h == m2);
     set<XPoint, SetComp> r(_comp); // Intersections found
     set<XPoint, SetComp> c(_comp); // Closest coincident intersections
     vector<XPoint> added;
     for (int k = 0; k < m2; ++k) {
       if (skip[k]) continue;
       XPoint q = Solve1(lineX, lineY, start[k], flag);
-      if (debug) cerr << "MAIN " << k << " "
-                      << start[k].x << " " << start[k].y << " "
-                      << q.x << " " << q.y << " " << flag << "\n";
       if (r.find(q) != r.end()  // intersection already found
           // or it's on a line of coincident intersections already processed
           || (flag0 != 0 && c.find(fixcoincident(p0, q, flag0)) != c.end()))
@@ -300,24 +289,19 @@ namespace GeographicLib {
       added.clear();
       if (flag != 0) {
         // This value of flag must be constitent with flag0
-        assert(flag0 == 0 || flag0 == flag);
+        // assert(flag0 == 0 || flag0 == flag);
         flag0 = flag;
-        if (debug) cerr << "A " << q.x << " " << q.y << "\n";
         // Process coincident intersections
         q = fixcoincident(p0, q, flag0);
         c.insert(q);
-        if (debug) cerr << "B " << q.x << " " << q.y << "\n";
         // Elimate all existing intersections on this line (which
         // didn't set flag0).
-        if (1) {
         for (auto qp = r.begin(); qp != r.end(); ) {
           if (_comp.eq(fixcoincident(p0, *qp, flag0), q)) {
-            if (debug) cerr << "C " << qp->x << " " << qp->y << "\n";
             qp = r.erase(qp);
           }
           else
             ++qp;
-        }
         }
         real s0 = q.x;
         XPoint qc;
@@ -332,21 +316,17 @@ namespace GeographicLib {
           do {
             sa = ConjugateDist(lineX, s0 + sa + sgn*_d, false, m12, M12, M21)
               - s0;
-            if (debug) cerr << "X " << sgn << " " << sa-s0 << "\n";
             qc = q + XPoint(sa, flag0*sa);
             added.push_back(qc);
             r.insert(qc);
-            if (debug) cerr << "D " << qc.x << " " << qc.y << "\n";
           } while (qc.Dist(p0) <= maxdistx);
         }
       }
       added.push_back(q);
       r.insert(q);
-      if (1) {
-        for (auto qp = added.cbegin();  qp != added.cend(); ++qp) {
-          for (int l = k + 1; l < m2; ++l)
-            skip[l] = skip[l] || qp->Dist(start[l]) < 2*_s1 - c3 - _slop;
-        }
+      for (auto qp = added.cbegin(); qp != added.cend(); ++qp) {
+        for (int l = k + 1; l < m2; ++l)
+          skip[l] = skip[l] || qp->Dist(start[l]) < 2*_s1 - c3 - _slop;
       }
     }
     // Trim intersections to maxdist
