@@ -94,6 +94,7 @@ MANPAGES = \
 	../man/GeodSolve.1.html \
 	../man/GeoidEval.1.html \
 	../man/Gravity.1.html \
+	../man/IntersectTool.1.html \
 	../man/MagneticField.1.html \
 	../man/Planimeter.1.html \
 	../man/RhumbSolve.1.html \

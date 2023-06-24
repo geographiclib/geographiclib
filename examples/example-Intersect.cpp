@@ -16,7 +16,7 @@ int main() {
     GeodesicLine lineX(geod, 0, 0, 45, Intersect::LineCaps);
     GeodesicLine lineY(geod, 45, 10, 135, Intersect::LineCaps);
     // Find displacement to closest intersection
-    Intersect::Intersection point = intersect.Closest(lineX, lineY);
+    Intersect::Point point = intersect.Closest(lineX, lineY);
     // Check position at intersection
     double latx, lonx, laty, lony;
     lineX.Position(point.first, latx, lonx);

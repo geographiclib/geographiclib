@@ -49,8 +49,8 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION_API 24)
-set (LIBVERSION_BUILD 24.1.1)
+set (LIBVERSION_API 26)
+set (LIBVERSION_BUILD 26.0.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 

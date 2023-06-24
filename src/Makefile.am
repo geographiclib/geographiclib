@@ -34,6 +34,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	Gnomonic.cpp \
 	GravityCircle.cpp \
 	GravityModel.cpp \
+	Intersect.cpp \
 	LambertConformalConic.cpp \
 	LocalCartesian.cpp \
 	MGRS.cpp \
@@ -76,6 +77,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/GravityCircle.hpp \
 	../include/GeographicLib/GravityModel.hpp \
+	../include/GeographicLib/Intersect.hpp \
 	../include/GeographicLib/LambertConformalConic.hpp \
 	../include/GeographicLib/LocalCartesian.hpp \
 	../include/GeographicLib/MGRS.hpp \
