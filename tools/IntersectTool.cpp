@@ -208,7 +208,7 @@ int main(int argc, const char* const argv[]) {
         }
         std::pair<real, real> p0(x0, y0);
         if (maxdist < 0) {
-          int segmode;
+          int segmode = 0;
           auto p = mode == CLOSE || mode == OFFSET ?
             intersect.Closest(lineX, lineY, p0) :
             mode == NEXT ? intersect.Next(lineX, lineY) :
@@ -228,7 +228,7 @@ int main(int argc, const char* const argv[]) {
           }
         } else {
           auto v = intersect.All(lineX, lineY, maxdist, p0);
-          unsigned n = v.size();
+          unsigned n = unsigned(v.size());
           for (unsigned i = 0; i < n; ++i) {
             x = v[i].first; y = v[i].second;
             *output << Utility::str(Intersect::Dist(v[i], p0), prec) << " "

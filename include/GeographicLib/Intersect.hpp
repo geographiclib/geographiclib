@@ -47,7 +47,7 @@ namespace GeographicLib {
    * providing access to the functionality of this class.
    **********************************************************************/
 
-  class  GEOGRAPHICLIB_EXPORT Intersect {
+  class GEOGRAPHICLIB_EXPORT Intersect {
   private:
     typedef Math::real real;
   public:
@@ -94,7 +94,7 @@ namespace GeographicLib {
     };
     // Comparing XPoints for insertions into sets, but ensure that close
     // XPoints test equal.
-    class SetComp {
+    class GEOGRAPHICLIB_EXPORT SetComp {
     private:
       const real _eps;
     public:

@@ -275,15 +275,15 @@ namespace GeographicLib {
                     << _d << " " << _s4 << " " << _c3 << " " << c3 << "\n";
     vector<XPoint> start(m2);
     vector<bool> skip(m2, false);
-    int k = 0, flag0 = 0;
-    start[k++] = p0;
+    int h = 0, flag0 = 0;
+    start[h++] = p0;
     for (int i = -n; i <= n; i += 2)
       for (int j = -n; j <= n; j += 2) {
         if (!(i == 0 && j == 0))
-          start[k++] = p0 + XPoint( c3 * (i + j) / 2, c3 * (i - j) / 2);
+          start[h++] = p0 + XPoint( c3 * (i + j) / 2, c3 * (i - j) / 2);
       }
-    if (debug) cerr << "0 " << m << " "  << n << " " <<  k << " " << m2 << "\n";
-    assert(k == m2);
+    if (debug) cerr << "0 " << m << " "  << n << " " <<  h << " " << m2 << "\n";
+    assert(h == m2);
     set<XPoint, SetComp> r(_comp); // Intersections found
     set<XPoint, SetComp> c(_comp); // Closest coincident intersections
     vector<XPoint> added;
