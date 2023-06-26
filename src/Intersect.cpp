@@ -3,6 +3,7 @@
 #include <utility>
 #include <algorithm>
 #include <set>
+#include <iostream>
 
 using namespace std;
 
@@ -44,17 +45,19 @@ namespace GeographicLib {
   Intersect::Point
   Intersect::Closest(Math::real latX, Math::real lonX, Math::real aziX,
                      Math::real latY, Math::real lonY, Math::real aziY,
-                     const Intersect::Point& p0) const {
+                     const Intersect::Point& p0, int* flag) const {
     return Closest(_geod.Line(latX, lonX, aziX, LineCaps),
                    _geod.Line(latY, lonY, aziY, LineCaps),
-                   p0);
+                   p0, flag);
   }
 
   Intersect::Point
   Intersect::Closest(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                     const Intersect::Point& p0) const {
-    int flag;
-    return Solve2(lineX, lineY, XPoint(p0), flag).data();
+                     const Intersect::Point& p0, int* flag) const {
+    int flagx;
+    Point p = Solve2(lineX, lineY, XPoint(p0), flagx).data();
+    if (flag) *flag = flagx;
+    return p;
   }
 
   Intersect::Point
@@ -62,76 +65,81 @@ namespace GeographicLib {
                      Math::real latX2, Math::real lonX2,
                      Math::real latY1, Math::real lonY1,
                      Math::real latY2, Math::real lonY2,
-                     int& segmode) const {
+                     int& segmode, int* flag) const {
     return Segment(_geod.InverseLine(latX1, lonX1, latX2, lonX2, LineCaps),
                    _geod.InverseLine(latY1, lonY1, latY2, lonY2, LineCaps),
-                   segmode);
+                   segmode, flag);
   }
 
   Intersect::Point
   Intersect::Segment(const GeodesicLine& lineX,
-                     const GeodesicLine& lineY, int& segmode) const {
-    int flag;
-    return Solve4(lineX, lineY, segmode, flag).data();
+                     const GeodesicLine& lineY, int& segmode, int* flag) const {
+    int flagx;
+    Point p = Solve4(lineX, lineY, segmode, flagx).data();
+    if (flag) *flag = flagx;
+    return p;
   }
 
   Intersect::Point
   Intersect::Next(Math::real latX, Math::real lonX,
-                  Math::real aziX, Math::real aziY) const {
+                  Math::real aziX, Math::real aziY, int* flag) const {
     return Next(_geod.Line(latX, lonX, aziX, LineCaps),
-                _geod.Line(latX, lonX, aziY, LineCaps));
+                _geod.Line(latX, lonX, aziY, LineCaps), flag);
   }
 
   Intersect::Point
-  Intersect::Next(const GeodesicLine& lineX, const GeodesicLine& lineY)
-    const {
-    int flag;
-    return Solve3(lineX, lineY, flag).data();
+  Intersect::Next(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                  int* flag) const {
+    int flagx;
+    Point p = Solve3(lineX, lineY, flagx).data();
+    if (flag) *flag = flagx;
+    return p;
   }
 
   std::vector<Intersect::Point>
   Intersect::All(Math::real latX, Math::real lonX, Math::real aziX,
                  Math::real latY, Math::real lonY, Math::real aziY,
-                 Math::real maxdist, const Point& p0) const {
+                 Math::real maxdist, const Point& p0, int* flag) const {
     return All(_geod.Line(latX, lonX, aziX, LineCaps),
                _geod.Line(latY, lonY, aziY, LineCaps),
-               maxdist, p0);
+               maxdist, p0, flag);
   }
 
   std::vector<Intersect::Point>
   Intersect::All(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                 Math::real maxdist, const Point& p0) const {
-    int flag;
-    auto s = Solve5(lineX, lineY, fmax(real(0), maxdist), XPoint(p0), flag);
+                 Math::real maxdist, const Point& p0, int* flag) const {
+    int flagx;
+    auto s = Solve5(lineX, lineY, fmax(real(0), maxdist), XPoint(p0), flagx);
     std::vector<Intersect::Point> v(s.size());
     int i = 0;
     for (auto p = s.cbegin(); p != s.cend(); ++p)
       v[i++] = (*p).data();
     sort(v.begin(), v.end(), RankPoint(p0));
+    if (flag) *flag = flagx;
     return v;
   }
 
   Intersect::XPoint
   Intersect::Solve4(const GeodesicLine& lineX, const GeodesicLine& lineY,
                     int& segmode, int& flag) const {
-    real sx = lineX.Distance()/2, sy = lineY.Distance()/2;
+    real sx = lineX.Distance(), sy = lineY.Distance();
     XPoint p0 = XPoint(sx/2, sy/2), q = Solve2(lineX, lineY, p0, flag);
     q = fixsegment(sx, sy, q, flag);
     segmode = segmentmode(sx, sy, q);
     if (segmode != 0 && q.Dist(p0) <= (sx + sy)/2) {
-      int flag1 = 0, segmode1 = 1;
-      XPoint q1;
-      for (int ix = 0; ix < 2 && segmode1 != 0; ++ix) {
-        for (int iy = 0; iy < 2 && segmode1 != 0; ++iy) {
+      int flagx = 0, segmodex = 1;
+      XPoint qx;
+      for (int ix = 0; ix < 2 && segmodex != 0; ++ix) {
+        for (int iy = 0; iy < 2 && segmodex != 0; ++iy) {
           XPoint t(ix * sx, iy * sy);
           if (q.Dist(t) >= 2 *_s1) {
-            q1 = Solve1(lineX, lineY, t, flag1);
-            q1 = fixcoincident(t, q1, flag1);
-            segmode1 = segmentmode(sx, sy, q1);
+            qx = Solve1(lineX, lineY, t, flagx);
+            qx = fixcoincident(t, qx, flagx);
+            segmodex = segmentmode(sx, sy, qx);
           }
         }
       }
-      if (segmode1 == 0) { segmode = 0; q = q1; }
+      if (segmodex == 0) { segmode = 0; q = qx; flag = flagx; }
     }
     return q;
   }
@@ -144,18 +152,18 @@ namespace GeographicLib {
     const int iy[num] = { 0,  0,  1,  0, -1 };
     bool    skip[num] = { 0,  0,  0,  0,  0 };
     XPoint q;                    // Best intersection so far
+    int flagx;
     for (int n = 0; n < num; ++n) {
       if (skip[n]) continue;
-      XPoint q1 = Solve1(lineX, lineY, p0 + XPoint(ix[n] * _c1, iy[n] * _c1),
-                        flag);
-      q1 = fixcoincident(p0, q1, flag);
-      if (_comp.eq(q, q1)) continue;
-      if (q1.Dist(p0) < _s1) { q = q1; ++cnt2; break; }
-      if (n == 0 || q1.Dist(p0) < q.Dist(p0)) { q = q1; ++cnt2; }
+      XPoint qx = Solve1(lineX, lineY, p0 + XPoint(ix[n] * _c1, iy[n] * _c1),
+                        flagx);
+      qx = fixcoincident(p0, qx, flagx);
+      if (_comp.eq(q, qx)) continue;
+      if (qx.Dist(p0) < _s1) { q = qx; ++cnt2; flag = flagx; break; }
+      if (n == 0 || qx.Dist(p0) < q.Dist(p0)) { q = qx; ++cnt2; flag = flagx; }
       for (int m = n + 1; m < num; ++m)
         skip[m] = skip[m] ||
-          q1.Dist(p0 + XPoint(ix[m] * _c1, iy[m] * _c1))
-          < 2*_s1 - _c1 - _slop;
+          qx.Dist(p0 + XPoint(ix[m] * _c1, iy[m] * _c1)) < 2*_s1 - _c1 - _slop;
     }
     return q;
   }
@@ -169,23 +177,38 @@ namespace GeographicLib {
     const int iy[num] = { -1,  1, -1,  1,  0,  2,  0, -2 };
     bool    skip[num] = {  0,  0,  0,  0,  0,  0,  0,  0 };
     XPoint z(0,0),              // for excluding the origin
-      q;                        // Best intersection so far
+      q(Math::infinity(), 0);   // Best intersection so far
     for (int n = 0; n < num; ++n) {
       if (skip[n]) continue;
-      XPoint q1 = Solve1(lineX, lineY, XPoint(ix[n] * _c2, iy[n] * _c2), flag);
-      if (_comp.eq(z, q1)) continue;
-      if (flag && n < num/2) {
-        // For coincident geodesics, 2 out of first four trials will return
-        // flag != 0; replace intersection with conjugate point.
-        real s = ConjugateDist(lineX, q1.x, false);
-        q1 = XPoint(s, flag*s);
+      int flagx;
+      XPoint qx = Solve1(lineX, lineY, XPoint(ix[n] * _c2, iy[n] * _c2), flagx);
+      qx = fixcoincident(z, qx, flagx);
+      //      cout << "X " << n << " " << qx.x << " " << qx.y << " " << flagx << "\n";
+      bool zerop = _comp.eq(z, qx);
+      if (flagx == 0 && zerop) continue;
+      if (flagx && zerop) {
+        for (int sgn = -1; sgn <= 1; sgn+=2) {
+          real s = ConjugateDist(lineX, sgn * _d, false);
+          XPoint qa(s, flagx*s);
+          //      cout << "Y " << n << " " << qa.x << " " << qa.y << " " << flagx << "\n";
+          if (qa.Dist() < q.Dist()) { q = qa, flag = flagx; ++cnt2;
+            //            cout << "Z\n";
+          }
+        }
+      } else {
+        if (qx.Dist() < q.Dist()) { q = qx, flag = flagx; ++cnt2;
+          //            cout << "Z\n";
+}
       }
-      //      if (_comp.eq(q, q1)) continue;
-      if (n == 0 || q1.Dist() < q.Dist()) { q = q1; ++cnt2;}
-      for (int m = n + 1; m < num; ++m)
-        skip[m] = skip[m] ||
-          q1.Dist(XPoint(ix[m] * _c2, iy[m] * _c2))
-          < 2*_s1 - _c2 - _slop;
+      for (int sgn = -1; sgn <= 1; ++sgn) {
+        // if flagx == 0 only process sgn == 0
+        // if zerop skip sgn == 0
+        if ((flagx == 0 && sgn != 0) || (zerop && sgn == 0)) continue;
+        XPoint qy = flagx ? qx + Point(sgn * _c2, flagx * sgn *_c2) : qx;
+        for (int m = n + 1; m < num; ++m)
+          skip[m] = skip[m] ||
+            qy.Dist(XPoint(ix[m] * _c2, iy[m] * _c2)) < 2*_s1 - _c2 - _slop;
+      }
     }
     return q;
   }
@@ -496,6 +519,11 @@ namespace GeographicLib {
       gb = 0 <= pyb && pyb <= sy,
       gc = 0 <= pxc && pxc <= sx,
       gd = 0 <= pxd && pxd <= sx;
+    /*
+    cout << sx << " " << sy << " "
+         << p.x << " " << p.y << " "
+         << ga << " " << gb << " " << gc << " " << gd << "\n";
+    */
     real s;
     // Test opposite sides of the rectangle first
     if      (ga && gb) s = (sa + sb) / 2;

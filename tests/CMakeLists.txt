@@ -1,5 +1,5 @@
 # Compile test programs
-set (TESTPROGRAMS geodtest signtest polygontest)
+set (TESTPROGRAMS geodtest signtest polygontest intersecttest)
 
 if (GEOGRAPHICLIB_PRECISION GREATER 1)
 
@@ -918,3 +918,13 @@ if (EXISTS "${_DATADIR}/gravity/grs80.egm")
   set_tests_properties (Gravity3 PROPERTIES PASS_REGULAR_EXPRESSION
     "^-?0\\.000 -?0\\.000 -?0.000")
 endif ()
+
+add_test (NAME Intersect1 COMMAND IntersectTool
+  -p 0 --input-string "50N 4W 147.7W 0 0 90" -c)
+set_tests_properties (Intersect1
+  PROPERTIES PASS_REGULAR_EXPRESSION "^6058049 -3311253[\r\n]")
+
+add_test (NAME Intersect2 COMMAND IntersectTool
+  -p 0 --input-string "50N 4W 147.7W 0 180 0" -c -R 2.6e7)
+set_tests_properties (Intersect2
+  PROPERTIES PASS_REGULAR_EXPRESSION "^14546812 -494582 14052230[\r\n]25461454 19529110 -5932344[\r\n]nan nan nan[\r\n]")

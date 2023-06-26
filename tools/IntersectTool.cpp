@@ -237,10 +237,10 @@ int main(int argc, const char* const argv[]) {
             if (check) {
               lineX.Position(x, latX2, lonX2);
               lineY.Position(y, latY2, lonY2);
-              std::cerr << Utility::str(latX2, prec) << " "
-                        << Utility::str(lonX2, prec) << " "
-                        << Utility::str(latY2, prec) << " "
-                        << Utility::str(lonY2, prec) << eol;
+              std::cerr << Utility::str(latX2, prec + 5) << " "
+                        << Utility::str(lonX2, prec + 5) << " "
+                        << Utility::str(latY2, prec + 5) << " "
+                        << Utility::str(lonY2, prec + 5) << eol;
             }
           }
           *output << "nan nan nan" << eol;
