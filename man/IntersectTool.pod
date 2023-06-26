@@ -36,6 +36,11 @@ midpoints of the segments; I<x0> is half the distance from I<X1> to
 I<X2>.  In addition a flag is returned specifying whether the
 intersection is "within" the segments.
 
+The tool also returns a "coincidence indicator" I<c>.  This is
+typically 0.  However if the geodesics lie on top of one another at
+the point of intersection, then I<c> is set to 1, if they are
+parallel, and -1, if they are anti-parallel.
+
 B<IntersectTool> operates in one of three modes:
 
 =over
@@ -45,14 +50,14 @@ B<IntersectTool> operates in one of three modes:
 With the B<-c> option (the default), B<IntersectTool> accepts lines on
 the standard input containing I<latX> I<lonX> I<aziX> I<latY> I<lonY>
 I<aziY>, specifying two geodesic lines I<X> and I<Y>, and prints the
-location of the closest intersection I<x> I<y> on standard output.
+location of the closest intersection I<x> I<y> I<c> on standard output.
 
 =item 2.
 
 With the B<-n> option, B<IntersectTool> accepts lines on the standard
 input containing I<latX> I<lonX> I<aziX> I<aziY> I<aziY>, specifying a
 point where two geodesic lines I<X> and I<Y> intersect, and prints the
-location of the next closest intersection I<x> I<y> on standard
+location of the next closest intersection I<x> I<y> I<c> on standard
 output.
 
 =item 3.
@@ -60,18 +65,18 @@ output.
 With the B<-i> option, B<IntersectTool> accepts lines on the standard
 input containing I<latX1> I<lonX1> I<latX2> I<lonX2> I<latY1> I<lonY1>
 I<latY2> I<lonY2>, specifying two geodesic segments I<X1>-I<X2> and
-I<Y1>-I<Y2>, and prints a flag and the position of intersection I<k>
-I<x> I<y> on standard output.  Here I<k> is a flag in [-4,4] specifying
-whether the intersection is within the segments (0) or not (non-zero).
-I<x> and I<y> give the distances from I<X1> and I<X2> respectively.
+I<Y1>-I<Y2>, and prints I<x> I<y> I<c> I<k> on standard output.  Here
+I<k> is a flag in [-4,4] specifying whether the intersection is within
+the segments (0) or not (non-zero).  I<x> and I<y> give the distances
+from I<X1> and I<X2> respectively.
 
 =item 4.
 
 With the B<-o> option, B<IntersectTool> accepts lines on the standard
 input containing I<latX> I<lonX> I<aziX> I<latY> I<lonY> I<aziY> I<x0>
 I<y0>, specifying two geodesic lines I<X> and I<Y> and two offsets,
-and prints the location of the intersection [I<x>, I<y>] closest to
-[I<x0>, I<y0>] on standard output.
+and prints I<x> I<y> I<c> on standard output where [I<x>, I<y>] is the
+intersection closest to [I<x0>, I<y0>].
 
 =back
 
@@ -97,14 +102,15 @@ find the closest intersection with an offset.
 
 =item B<-R> I<maxdist>
 
-modifies the four modes to return all the intersections with an L1
-distance, I<maxdist>, of the relevant origion: [0, 0] for B<-c> and
+modifies the four modes to return all the intersections within an L1
+distance, I<maxdist>, of the relevant origin: [0, 0] for B<-c> and
 B<-n>, the midpoints of the segments for B<-i>, and [I<x0>, I<y0>] for
-B<-o>.  Each intersection is preceded by its L1 distance and the
-intersections are sorted by the distances.  A line "nan nan nan" is
-added after the intersections, so that the output can be associated
-with the correct lines of the input.  The number of intersections
-scales as (I<maxdist>/(pi I<a>))^2.
+B<-o>.  For each intersection, I<x> I<y> I<c> I<z> is printed on
+standard output.  Here I<z> is the L1 distance of the intersection
+from the origin and the intersections are sorted by the distances.  A
+line "nan nan 0 nan" is added after the intersections, so that the
+output can be associated with the correct lines of the input.  The
+number of intersections scales as (I<maxdist>/(pi I<a>))^2.
 
 =item B<-C>
 
@@ -222,22 +228,22 @@ range.
 A vessel leaves Plymouth 50N 4W on a geodesic path with initial
 heading 147.7W.  When will it first cross the equator?
 
-   echo 50N 4W 147.7W 0 0 90 | IntersectTool -c -C
+   echo 50N 4W 147.7W 0 0 90 | IntersectTool -c -p 0 -C
 
-   6058048.653 -3311252.996
-   0.000 -29.745 -0.000 -29.745
+   6058049 -3311253 0
+   0.00000 -29.74549 -0.00000 -29.74549
 
 Answer: after 6058km at longitude 29.7W.  When will it cross the date
 line, longitude 180E?  Here we need to use B<-R> because there a
 closer intersection on the prime meridian:
 
-   echo 50N 4W 147.7W 0 180 0 | IntersectTool -c -C -R 2.6e7
+   echo 50N 4W 147.7W 0 180 0 | IntersectTool -c -p 0 -C -R 2.6e7
 
-   14546812.457 -494582.492 14052229.965
-   53.693 0.000 53.693 0.000
-   25461454.302 19529110.043 -5932344.259
-   -53.519 180.000 -53.519 180.000
-   nan nan nan
+   -494582 14052230 0 14546812
+   53.69260 0.00000 53.69260 0.00000
+   19529110 -5932344 0 25461454
+   -53.51867 180.00000 -53.51867 180.00000
+   nan nan 0 nan
    nan nan nan nan
 
 We want the second result: after 19529 km at latitude 53.5S.

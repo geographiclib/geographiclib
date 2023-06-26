@@ -13,6 +13,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <vector>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
@@ -208,31 +209,34 @@ int main(int argc, const char* const argv[]) {
         }
         std::pair<real, real> p0(x0, y0);
         if (maxdist < 0) {
-          int segmode = 0;
+          int segmode = 0, c;
           auto p = mode == CLOSE || mode == OFFSET ?
-            intersect.Closest(lineX, lineY, p0) :
-            mode == NEXT ? intersect.Next(lineX, lineY) :
-            intersect.Segment(lineX, lineY, segmode);
-          if (mode == SEGMENT)
-            *output << segmode << " ";
+            intersect.Closest(lineX, lineY, p0, &c) :
+            mode == NEXT ? intersect.Next(lineX, lineY, &c) :
+            intersect.Segment(lineX, lineY, segmode, &c);
           x = p.first; y = p.second;
           *output << Utility::str(x, prec) << " "
-                  << Utility::str(y, prec) << eol;
+                  << Utility::str(y, prec) << " " << c;
+          if (mode == SEGMENT)
+            *output << " " << segmode;
+          *output << eol;
           if (check) {
             lineX.Position(x, latX2, lonX2);
             lineY.Position(y, latY2, lonY2);
-            std::cerr << Utility::str(latX2, prec) << " "
-                      << Utility::str(lonX2, prec) << " "
-                      << Utility::str(latY2, prec) << " "
-                      << Utility::str(lonY2, prec) << eol;
+            std::cerr << Utility::str(latX2, prec + 5) << " "
+                      << Utility::str(lonX2, prec + 5) << " "
+                      << Utility::str(latY2, prec + 5) << " "
+                      << Utility::str(lonY2, prec + 5) << eol;
           }
         } else {
-          auto v = intersect.All(lineX, lineY, maxdist, p0);
+          std::vector<int> c;
+          auto v = intersect.All(lineX, lineY, maxdist, c, p0);
           unsigned n = unsigned(v.size());
           for (unsigned i = 0; i < n; ++i) {
             x = v[i].first; y = v[i].second;
-            *output << Utility::str(Intersect::Dist(v[i], p0), prec) << " "
-                    << Utility::str(x, prec) << " " << Utility::str(y, prec)
+            *output << Utility::str(x, prec) << " " << Utility::str(y, prec)
+                    << " " << c[i] << " "
+                    << Utility::str(Intersect::Dist(v[i], p0), prec)
                     << eol;
             if (check) {
               lineX.Position(x, latX2, lonX2);
@@ -243,7 +247,7 @@ int main(int argc, const char* const argv[]) {
                         << Utility::str(lonY2, prec + 5) << eol;
             }
           }
-          *output << "nan nan nan" << eol;
+          *output << "nan nan 0 nan" << eol;
           if (check)
             std::cerr << "nan nan nan nan" << eol;
         }

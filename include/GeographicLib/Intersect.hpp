@@ -27,7 +27,7 @@ namespace GeographicLib {
    *   azimuth.  In this case the \e closest intersection is found.
    * - The geodesics are defined by two endpoints.  The intersection of the two
    *   segments is found.  It they don't intersect, the the closest
-   *   intersection is returned
+   *   intersection is returned.
    * - The geodesics are defined as an intersection point, a single position
    *   and two azimuths.  In this case, the next closest intersection is found.
    * - The geodesics are defined as in the first case and all intersection
@@ -38,6 +38,11 @@ namespace GeographicLib {
    * (the first point in the case of a geodesic segment).  The closest
    * itersection is defined as the one that minimizes the L1 distance, |\e x| +
    * |\e y|.
+   *
+   * The routines also optionally return a coincidence indicator \e c.  This is
+   * typically 0.  However if the geodesics lie on top of one another at the
+   * point of intersection, then I<c> is set to 1, if they are parallel, and
+   * &minus;1, if they are anti-parallel.
    *
    * Example of use:
    * \include example-Intersect.cpp
@@ -89,9 +94,9 @@ namespace GeographicLib {
       _s3,                      // furthest dist to closest intersection
       _s4,                      // capture radius for spherical sol in Solve0
       _s5,                      // longest shortest geodesic
-      _c1,                      // tiling spacing for Closest
-      _c2,                      // tiling spacing for Next
-      _c3;                      // tiling spacing for All
+      _d1,                      // tiling spacing for Closest
+      _d2,                      // tiling spacing for Next
+      _d3;                      // tiling spacing for All
     // The L1 distance
     static Math::real d1(Math::real x, Math::real y)
     { using std::fabs; return fabs(x) + fabs(y); }
@@ -99,16 +104,21 @@ namespace GeographicLib {
     class XPoint {
     public:
       real x, y;
-      XPoint(Math::real x, Math::real y)
-        : x(x), y(y)
+      int c;
+      XPoint(Math::real x, Math::real y, int c = 0)
+        : x(x), y(y), c(c)
       {}
       XPoint()
-        : x(Math::NaN()), y(Math::NaN())
+        : x(Math::NaN()), y(Math::NaN()), c(0)
       {}
       XPoint(const Point& p)
-        : x(p.first), y(p.second)
+        : x(p.first), y(p.second), c(0)
       {}
-      XPoint& operator+=(const XPoint& p) { x += p.x; y += p.y; return *this; }
+      XPoint& operator+=(const XPoint& p) {
+        x += p.x; y += p.y;
+        if (p.c) c = p.c;       // pass along a nonzero c from either operand
+        return *this;
+      }
       XPoint operator+(const XPoint& p) const {
         XPoint t = *this; t += p; return t;
       }
@@ -131,40 +141,43 @@ namespace GeographicLib {
       }
     };
     SetComp _comp;
-    // For ranking Points by closeness
+    // For ranking XPoints by closeness
     class RankPoint {
     private:
       const real _x, _y;
     public:
       RankPoint(const Point& p0) : _x(p0.first), _y(p0.second) {}
-      bool operator()(const Point& p,
-                      const Point& q) const {
-        real dp = d1(p.first - _x, p.second - _y),
-          dq = d1(q.first - _x, q.second - _y);
+      RankPoint(const XPoint& p0) : _x(p0.x), _y(p0.y) {}
+      bool operator()(const XPoint& p, const XPoint& q) const {
+        real dp = d1(p.x - _x, p.y - _y),
+          dq = d1(q.x - _x, q.y - _y);
         return dp != dq ? (dp < dq) :
-          (p.first != q.first ? (p.first < q.first) : (p.second < q.second));
+          (p.x != q.x ? (p.x < q.x) : (p.y < q.y));
       }
     };
 
     // The spherical solution
     XPoint Solve0(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  const XPoint& p, int& flag) const;
+                  const XPoint& p) const;
     // The iterated spherical solution
     XPoint Solve1(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  const XPoint& p0, int& flag) const;
+                  const XPoint& p0) const;
     // The closest intersecton
     XPoint Solve2(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  const XPoint& p0, int& flag) const;
+                  const XPoint& p0) const;
     // The next intersecton
-    XPoint Solve3(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  int& flag) const;
+    XPoint Solve3(const GeodesicLine& lineX, const GeodesicLine& lineY) const;
     // Segment intersecton
     XPoint Solve4(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  int& segmode, int& flag) const;
+                  int& segmode) const;
     // All intersectons
     std::set<XPoint, SetComp>
     Solve5(const GeodesicLine& lineX, const GeodesicLine& lineY,
-           Math::real maxdist, const XPoint& p0, int& flag) const;
+           Math::real maxdist, const XPoint& p0) const;
+    std::vector<Intersect::Point>
+    AllInternal(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                Math::real maxdist, const Point& p0,
+                std::vector<int>& c, bool cp) const;
     // Find {semi-,}conjugate point which is close to s3.  Optional m12, M12,
     // M21 use {semi-,}conjugacy relative to point 2
     Math::real ConjugateDist(const GeodesicLine& line, Math::real s3, bool semi,
@@ -178,12 +191,12 @@ namespace GeographicLib {
       const;
     Math::real distoblique(Math::real* azi = nullptr, Math::real* sp = nullptr,
                            Math::real* sm = nullptr) const;
-    // p is intersection point on coincident lines orientation = flag; p0 is
+    // p is intersection point on coincident lines orientation = c; p0 is
     // origin point.  Change p to center point wrt p0, i.e, abs((p-p0)_x) =
     // abs((p-p0)_y)
-    static XPoint fixcoincident(const XPoint& p0, const XPoint& p, int flag);
-    static XPoint fixsegment(Math::real sx, Math::real sy,
-                            const XPoint& p, int flag);
+    static XPoint fixcoincident(const XPoint& p0, const XPoint& p);
+    static XPoint fixcoincident(const XPoint& p0, const XPoint& p, int c);
+    static XPoint fixsegment(Math::real sx, Math::real sy, const XPoint& p);
     static int segmentmode(Math::real sx, Math::real sy, const XPoint& p) {
       return (p.x < 0 ? -1 : p.x <= sx ? 0 : 1) * 3
         + (p.y < 0 ? -1 : p.y <= sy ? 0 : 1);
@@ -227,7 +240,7 @@ namespace GeographicLib {
      * @param[in] aziY azimuth at starting point for geodesic \e Y (degrees).
      * @param[in] p0 an optional offset for the starting points (meters),
      *   default = [0,0].
-     * @param[out] flag optional pointer to an integer coincidence flag.
+     * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point closest to \e p0.
      *
      * The returned intersection minimizes |<i>p</i>.x &minus; <i>p0</i>.x| +
@@ -235,7 +248,7 @@ namespace GeographicLib {
      **********************************************************************/
     Point Closest(Math::real latX, Math::real lonX, Math::real aziX,
                   Math::real latY, Math::real lonY, Math::real aziY,
-                  const Point& p0 = Point(0, 0), int* flag = nullptr) const;
+                  const Point& p0 = Point(0, 0), int* c = nullptr) const;
     /**
      * Find the closest intersection point, each geodesic given as a
      *   GeodesicLine.
@@ -244,7 +257,7 @@ namespace GeographicLib {
      * @param[in] lineY geodesic \e Y.
      * @param[in] p0 an optional offset for the starting points (meters),
      *   default = [0,0].
-     * @param[out] flag optional pointer to an integer coincidence flag.
+     * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point closest to \e p0.
      *
      * The returned intersection minimizes |<i>p</i>.x &minus; <i>p0</i>.x| +
@@ -255,7 +268,7 @@ namespace GeographicLib {
      * all these capabilities by default.
      **********************************************************************/
     Point Closest(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  const Point& p0 = Point(0, 0), int* flag = nullptr) const;
+                  const Point& p0 = Point(0, 0), int* c = nullptr) const;
     /**
      * Find the intersection of two geodesic segments defined by their
      *   endpoints.
@@ -270,7 +283,7 @@ namespace GeographicLib {
      * @param[in] lonY2 longitude of second point for segment \e Y (degrees).
      * @param[out] segmode an indicator equal to zero if the segments
      *   intersect (see below).
-     * @param[out] flag optional pointer to an integer coincidence flag.
+     * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point if the segments intersect, otherwise
      *   the intersection point closest to the midpoints of the two
      *   intersections.
@@ -293,7 +306,7 @@ namespace GeographicLib {
                   Math::real latX2, Math::real lonX2,
                   Math::real latY1, Math::real lonY1,
                   Math::real latY2, Math::real lonY2,
-                  int& segmode, int* flag = nullptr) const;
+                  int& segmode, int* c = nullptr) const;
     /**
      * Find the intersection of two geodesic segments each defined by a
      *   GeodesicLine.
@@ -302,7 +315,7 @@ namespace GeographicLib {
      * @param[in] lineY segment \e Y.
      * @param[out] segmode an indicator equal to zero if the segments
      *   intersect (see below).
-     * @param[out] flag optional pointer to an integer coincidence flag.
+     * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point if the segments intersect, otherwise
      *   the intersection point closest to the midpoints of the two
      *   intersections.
@@ -314,7 +327,7 @@ namespace GeographicLib {
      * segmode.
      **********************************************************************/
     Point Segment(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  int& segmode, int* flag = nullptr) const;
+                  int& segmode, int* c = nullptr) const;
     /**
      * Find the next closest intersection point to a given intersection,
      *   specified by position and two azimuths.
@@ -325,7 +338,7 @@ namespace GeographicLib {
      *   (degrees).
      * @param[in] aziX azimuth at starting point for geodesic \e X (degrees).
      * @param[in] aziY azimuth at starting point for geodesic \e Y (degrees).
-     * @param[out] flag optional pointer to an integer coincidence flag.
+     * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the next closest intersection point.
      *
      * The returned intersection minimizes |<i>p</i>.x| + |<i>p</i>.y|
@@ -336,14 +349,14 @@ namespace GeographicLib {
      * maxdist to capture close intersections.
      **********************************************************************/
     Point Next(Math::real latX, Math::real lonX,
-               Math::real aziX, Math::real aziY, int* flag = nullptr) const;
+               Math::real aziX, Math::real aziY, int* c = nullptr) const;
     /**
      * Find the next closest intersection point to a given intersection,
      *   with each geodesic specified a GeodesicLine.
      *
      * @param[in] lineX geodesic \e X.
      * @param[in] lineY geodesic \e Y.
-     * @param[out] flag optional pointer to an integer coincidence flag.
+     * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the next closest intersection point.
      *
      * \note \e lineX and \e lineY must both have the same starting point,
@@ -356,7 +369,7 @@ namespace GeographicLib {
      * all these capabilities by default.
      **********************************************************************/
     Point Next(const GeodesicLine& lineX, const GeodesicLine& lineY,
-               int* flag = nullptr) const;
+               int* c = nullptr) const;
     /**
      * Find all intersections within a certain distance, with each geodesic
      *   specified by position and azimuth.
@@ -369,9 +382,9 @@ namespace GeographicLib {
      * @param[in] aziY azimuth at starting point for geodesic \e Y (degrees).
      * @param[in] maxdist the maximum distance for the returned intersections
      *   (meters).
+     * @param[out] c vector of coincidences.
      * @param[in] p0 an optional offset for the starting points (meters),
      *   default = [0,0].
-     * @param[out] flag optional pointer to an integer coincidence flag.
      * @return \e plist a vector for the intersections closest to \e p0.
      *
      * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
@@ -380,8 +393,33 @@ namespace GeographicLib {
      **********************************************************************/
     std::vector<Point> All(Math::real latX, Math::real lonX, Math::real aziX,
                            Math::real latY, Math::real lonY, Math::real aziY,
-                           Math::real maxdist, const Point& p0 = Point(0, 0),
-                           int* flag = nullptr)
+                           Math::real maxdist, std::vector<int>& c,
+                           const Point& p0 = Point(0, 0))
+      const;
+    /**
+     * Find all intersections within a certain distance, with each geodesic
+     *   specified by position and azimuth.  Don't return vector of
+     *   coincidences.
+     *
+     * @param[in] latX latitude of starting point for geodesic \e X (degrees).
+     * @param[in] lonX longitude of starting point for geodesic \e X  (degrees).
+     * @param[in] aziX azimuth at starting point for geodesic \e X (degrees).
+     * @param[in] latY latitude of starting point for geodesic \e Y (degrees).
+     * @param[in] lonY longitude of starting point for geodesic \e Y  (degrees).
+     * @param[in] aziY azimuth at starting point for geodesic \e Y (degrees).
+     * @param[in] maxdist the maximum distance for the returned intersections
+     *   (meters).
+     * @param[in] p0 an optional offset for the starting points (meters),
+     *   default = [0,0].
+     * @return \e plist a vector for the intersections closest to \e p0.
+     *
+     * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
+     * |<i>p</i>.y &minus; <i>p0</i>.y| &le; \e maxdist.  The vector of
+     * returned intersections is sorted on the distance from \e p0.
+     **********************************************************************/
+    std::vector<Point> All(Math::real latX, Math::real lonX, Math::real aziX,
+                           Math::real latY, Math::real lonY, Math::real aziY,
+                           Math::real maxdist, const Point& p0 = Point(0, 0))
       const;
     /**
      * Find all intersections within a certain distance, with each geodesic
@@ -391,9 +429,9 @@ namespace GeographicLib {
      * @param[in] lineY geodesic \e Y.
      * @param[in] maxdist the maximum distance for the returned intersections
      *   (meters).
+     * @param[out] c vector of coincidences.
      * @param[in] p0 an optional offset for the starting points (meters),
      *   default = [0,0].
-     * @param[out] flag optional pointer to an integer coincidence flag.
      * @return \e plist a vector for the intersections closest to \e p0.
      *
      * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
@@ -405,8 +443,31 @@ namespace GeographicLib {
      * all these capabilities by default.
      **********************************************************************/
     std::vector<Point> All(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                           Math::real maxdist, const Point& p0 = Point(0, 0),
-                           int* flag = nullptr)
+                           Math::real maxdist, std::vector<int>& c,
+                           const Point& p0 = Point(0, 0))
+      const;
+    /**
+     * Find all intersections within a certain distance, with each geodesic
+     *   specified by a GeodesicLine.  Don't return vector or coincidences.
+     *
+     * @param[in] lineX geodesic \e X.
+     * @param[in] lineY geodesic \e Y.
+     * @param[in] maxdist the maximum distance for the returned intersections
+     *   (meters).
+     * @param[in] p0 an optional offset for the starting points (meters),
+     *   default = [0,0].
+     * @return \e plist a vector for the intersections closest to \e p0.
+     *
+     * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
+     * |<i>p</i>.y &minus; <i>p0</i>.y| &le; \e maxdist.  The vector of
+     * returned intersections is sorted on the distance from \e p0.
+     *
+     * \e lineX and \e lineY should be created with minimum capabilities
+     * Intersect::LineCaps.  The methods for creating a GeodesicLine include
+     * all these capabilities by default.
+     **********************************************************************/
+    std::vector<Point> All(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                           Math::real maxdist, const Point& p0 = Point(0, 0))
       const;
     ///@}
     /**
