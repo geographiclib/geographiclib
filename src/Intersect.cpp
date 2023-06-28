@@ -34,11 +34,10 @@ namespace GeographicLib {
       _s4 = polarb();
       swap(_s1, _s3);
     }
-    _d1 = _s3/2 + _slop;
-    _d2 = 2*_s2/3 + _slop;
+    _d1 = _s3 / 2;
+    _d2 = 2 * _s2 / 3;
     _d3 = _s4 - _slop;
-    if (! (2 * _d1 > _s3 && _d1 < _s4 &&
-           3 * _d2 > _s2 && _d2 < _s4 && _d2 < 2 * _s1) )
+    if (! (_d1 < _d3 && _d2 < _d3 && _d2 < 2 * _s1) )
       throw GeographicErr("Ellipsoid too eccentric for Closest");
   }
 
