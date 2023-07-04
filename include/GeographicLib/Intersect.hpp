@@ -201,7 +201,7 @@ namespace GeographicLib {
       return (p.x < 0 ? -1 : p.x <= sx ? 0 : 1) * 3
         + (p.y < 0 ? -1 : p.y <= sy ? 0 : 1);
     }
-    mutable long long cnt0, cnt1, cnt2;
+    mutable long long cnt0, cnt1, cnt2, cnt3, cnt4;
   public:
     /** \name Constructor
      **********************************************************************/
@@ -485,12 +485,16 @@ namespace GeographicLib {
     Math::real Norm() const { return _d; }
     // # of calls to spherical solution, i.e., # inverse geodesic calculations
     long long NumInverse() const { return cnt0; }
-    // # of interated spherical solutions, i.e., # invocation of BML algo
+    // # of interated spherical solutions, i.e., # invocation of basic algo
     // If incremented by 1, then spherical solution immediately accepted
     long long NumBasic() const { return cnt1; }
     // # of times intersection point was changed
     // If incremented by 1, initial spherical solution eventually accepted
     long long NumChange() const { return cnt2; }
+    // If incremented by 1, if corner is checked in Segment
+    long long NumCorner() const { return cnt3; }
+    // If incremented by 1, if corner beats closest in Segment
+    long long NumOverride() const { return cnt4; }
     /// \endcond
   };
 
