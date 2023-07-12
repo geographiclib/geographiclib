@@ -171,10 +171,10 @@ namespace GeographicLib {
     XPoint Solve4(const GeodesicLine& lineX, const GeodesicLine& lineY,
                   int& segmode) const;
     // All intersectons
-    std::set<XPoint, SetComp>
+    std::vector<XPoint>
     Solve5(const GeodesicLine& lineX, const GeodesicLine& lineY,
            Math::real maxdist, const XPoint& p0) const;
-    std::vector<Intersect::Point>
+    std::vector<Point>
     AllInternal(const GeodesicLine& lineX, const GeodesicLine& lineY,
                 Math::real maxdist, const Point& p0,
                 std::vector<int>& c, bool cp) const;

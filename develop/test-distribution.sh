@@ -113,7 +113,7 @@ chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
 cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
 # for ver in 10 11 12 14 15 16; do
-for ver in 14 15 16; do
+for ver in 14 15 16 17; do
     for arch in win32 x64; do
         pkg=vc$ver-$arch
         gen="Visual Studio $ver"

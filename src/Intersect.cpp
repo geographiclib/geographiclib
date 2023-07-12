@@ -96,7 +96,7 @@ namespace GeographicLib {
     return p.data();
   }
 
-  vector<Intersect::Point>
+  std::vector<Intersect::Point>
   Intersect::All(Math::real latX, Math::real lonX, Math::real aziX,
                  Math::real latY, Math::real lonY, Math::real aziY,
                  Math::real maxdist, const Point& p0) const {
@@ -105,7 +105,7 @@ namespace GeographicLib {
                maxdist, p0);
   }
 
-  vector<Intersect::Point>
+  std::vector<Intersect::Point>
   Intersect::All(Math::real latX, Math::real lonX, Math::real aziX,
                  Math::real latY, Math::real lonY, Math::real aziY,
                  Math::real maxdist, std::vector<int>& c, const Point& p0)
@@ -115,37 +115,18 @@ namespace GeographicLib {
                maxdist, c, p0);
   }
 
-  vector<Intersect::Point>
+  std::vector<Intersect::Point>
   Intersect::All(const GeodesicLine& lineX, const GeodesicLine& lineY,
                  Math::real maxdist, const Point& p0) const {
     vector<int> c;
     return AllInternal(lineX, lineY, maxdist, p0, c, false);
   }
 
-  vector<Intersect::Point>
+  std::vector<Intersect::Point>
   Intersect::All(const GeodesicLine& lineX, const GeodesicLine& lineY,
                  Math::real maxdist, std::vector<int>& c, const Point& p0)
     const {
     return AllInternal(lineX, lineY, maxdist, p0, c, true);
-  }
-
-  vector<Intersect::Point>
-  Intersect::AllInternal(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                         Math::real maxdist, const Point& p0,
-                         vector<int>& c, bool cp) const {
-    auto s = Solve5(lineX, lineY, fmax(real(0), maxdist), XPoint(p0));
-    vector<XPoint> v(s.size());
-    int i = 0;
-    for (auto p = s.cbegin(); p != s.cend(); ++p)
-      v[i++] = *p;
-    sort(v.begin(), v.end(), RankPoint(p0));
-    vector<Point> u(i);
-    if (cp) c.resize(i);
-    for (int j = 0; j < i; ++j) {
-      u[j] = v[j].data();
-      if (cp) c[j] = v[j].c;
-    }
-    return u;
   }
 
   Intersect::XPoint
@@ -171,6 +152,8 @@ namespace GeographicLib {
             // fixsegment is not needed because the coincidence line must just
             // slice off a corner of the sx x sy rectangle.
             qx = fixcoincident(t, qx);
+            // No need to check if equal to q, because result is only accepted
+            // if segmode != 0 && segmodex == 0.
             segmodex = segmentmode(sx, sy, qx);
           }
         }
@@ -309,14 +292,14 @@ namespace GeographicLib {
       // underflow in {sinX,sinY}*sinz; this is probably not necessary].
       // Definitely need to treat sinz < 0 (z > pi*R) correctly.  Without
       // this we have some convergence failures in Solve.
-      sX = _R * atan2( sinY * sinz,  sinY*cosX*cosz - cosY*sinX);
-      sY = _R * atan2( sinX * sinz, -sinX*cosY*cosz + cosX*sinY);
+      sX = _R * atan2(sinY * sinz,  sinY*cosX*cosz - cosY*sinX);
+      sY = _R * atan2(sinX * sinz, -sinX*cosY*cosz + cosX*sinY);
       c = 0;
     }
     return XPoint(sX, sY, c);
   }
 
-  set<Intersect::XPoint, Intersect::SetComp>
+  std::vector<Intersect::XPoint>
   Intersect::Solve5(const GeodesicLine& lineX,
                     const GeodesicLine& lineY,
                     Math::real maxdist, const XPoint& p0)  const {
@@ -395,7 +378,28 @@ namespace GeographicLib {
       else
         ++qp;
     }
-    return r;
+    vector<XPoint> v(r.size());
+    int i = 0;
+    for (auto p = r.cbegin(); p != r.cend(); ++p)
+      v[i++] = *p;
+    sort(v.begin(), v.end(), RankPoint(p0));
+    return v;
+  }
+
+  std::vector<Intersect::Point>
+  Intersect::AllInternal(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                         Math::real maxdist, const Point& p0,
+                         std::vector<int>& c, bool cp) const {
+    const vector<XPoint>
+      v = Solve5(lineX, lineY, fmax(real(0), maxdist), XPoint(p0));
+    int i = int(v.size());
+    vector<Point> u(i);
+    if (cp) c.resize(i);
+    for (int j = 0; j < i; ++j) {
+      u[j] = v[j].data();
+      if (cp) c[j] = v[j].c;
+    }
+    return u;
   }
 
   Math::real Intersect::distpolar(Math::real lat1, Math::real* lat2)
@@ -526,14 +530,14 @@ namespace GeographicLib {
   Intersect::fixcoincident(const Intersect::XPoint& p0,
                            const Intersect::XPoint& p, int c) {
     if (c == 0) return p;
-    // eqs : [p0x-p1x = -f*(p0y-p1y), p1x = px+s, p1y = py+f*s]$
+    // eqs : [p0x-p1x = -c*(p0y-p1y), p1x = px+s, p1y = py+c*s]$
     // sol : solve(eqs,[s,p1x,p1y]);
     // =>
-    // sol:[ s = ((p0x+f*p0y) - (px+f*py))/2,
-    //       p1x = px +     ((p0x+f*p0y) - (px+f*py))/2,
-    //       p1y = py + f * ((p0x+f*p0y) - (px+f*py))/2
+    // sol:[ s = ((p0x+c*p0y) - (px+c*py))/2,
+    //       p1x = px +     ((p0x+c*p0y) - (px+c*py))/2,
+    //       p1y = py + c * ((p0x+c*p0y) - (px+c*py))/2
     // ];
-    real s = ((p0.x + c * p0.y) - (p.x+ c * p.y))/2;
+    real s = ((p0.x + c * p0.y) - (p.x + c * p.y))/2;
     return p + XPoint(s, c*s);
   }
 
