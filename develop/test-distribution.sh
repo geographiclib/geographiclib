@@ -415,20 +415,21 @@ test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 cd $TEMP/relx/GeographicLib-$VERSION
 (
     echo Files with trailing spaces:
-    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif' |
+    find . -type f | grep -E -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif' |
         while read f; do
             tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
         done
     echo
     echo Files with tabs:
     find . -type f |
-        egrep -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
-        egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
+        grep -E -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
+        grep -E -v \
+             '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
         xargs grep -l  '	' || true
     echo
     echo Files with multiple newlines:
     find . -type f |
-        egrep -v \
+        grep -E -v \
            '/Makefile\.in|\.1\.html|\.png|\.gif|/ltmain|/config|\.m4' |
         while read f; do
             tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
@@ -436,14 +437,14 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo
     echo Files with no newline at end:
     find . -type f |
-        egrep -v '\.png|\.gif' |
+        grep -E -v '\.png|\.gif' |
         while read f; do
             n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
         done
     echo
     echo Files with extra newlines at end:
     find . -type f |
-        egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.1\.html' |
+        grep -E -v '/configure|/ltmain.sh|\.png|\.gif|\.1\.html' |
         while read f; do
             n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
         done
