@@ -1,3 +1,12 @@
+/**
+ * \file Intersect.cpp
+ * \brief Implementation for GeographicLib::Intersect class
+ *
+ * Copyright (c) Charles Karney (2023) <karney@alum.mit.edu> and licensed under
+ * the MIT/X11 License.  For more information, see
+ * https://geographiclib.sourceforge.io/
+ **********************************************************************/
+
 #include <iostream>
 #include <GeographicLib/Intersect.hpp>
 #include <limits>
@@ -19,29 +28,29 @@ namespace GeographicLib {
     , _d(_R * Math::pi())       // Used to normalize intersection points
     , _eps(3 * numeric_limits<real>::epsilon())
     , _tol(_d * pow(numeric_limits<real>::epsilon(), 3/real(4)))
-    , _slop(_d * pow(numeric_limits<real>::epsilon(), 1/real(5)))
-    , _comp(_slop)
+    , _delta(_d * pow(numeric_limits<real>::epsilon(), 1/real(5)))
+    , _comp(_delta)
     , cnt0(0)
     , cnt1(0)
     , cnt2(0)
     , cnt3(0)
     , cnt4(0)
   {
-    _s1 = _s4 = _a * (1 - _f) * Math::pi();
-    _s3 = 2 * distpolar(90);
-    _geod.Inverse(0, 0, 90, 0, _s5); _s5 *= 2;
+    _t1 = _t4 = _a * (1 - _f) * Math::pi();
+    _t2 = 2 * distpolar(90);
+    _geod.Inverse(0, 0, 90, 0, _t5); _t5 *= 2;
     if (_f > 0) {
-      _s2 = distoblique();
-      _s4 = _s1;
+      _t3 = distoblique();
+      _t4 = _t1;
     } else {
-      _s2 = _s5;
-      _s4 = polarb();
-      swap(_s1, _s3);
+      _t3 = _t5;
+      _t4 = polarb();
+      swap(_t1, _t2);
     }
-    _d1 = _s3 / 2;
-    _d2 = 2 * _s2 / 3;
-    _d3 = _s4 - _slop;
-    if (! (_d1 < _d3 && _d2 < _d3 && _d2 < 2 * _s1) )
+    _d1 = _t2 / 2;
+    _d2 = 2 * _t3 / 3;
+    _d3 = _t4 - _delta;
+    if (! (_d1 < _d3 && _d2 < _d3 && _d2 < 2 * _t1) )
       throw GeographicErr("Ellipsoid too eccentric for Closest");
   }
 
@@ -130,123 +139,6 @@ namespace GeographicLib {
   }
 
   Intersect::XPoint
-  Intersect::Solve4(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                    int& segmode) const {
-    real sx = lineX.Distance(), sy = lineY.Distance();
-    // p0 is center of [sx,sy] rectangle, q is intersection closest to p0
-    XPoint p0 = XPoint(sx/2, sy/2), q = Solve2(lineX, lineY, p0);
-    q = fixsegment(sx, sy, q);
-    segmode = segmentmode(sx, sy, q);
-    // Are corners of [sx,sy] rectangle further from p0 than q?
-    if (segmode != 0 && p0.Dist() >= p0.Dist(q) ) {
-      int segmodex = 1;
-      XPoint qx;
-      // Cycle through 4 corners of [sx,sy] rectangle
-      for (int ix = 0; ix < 2 && segmodex != 0; ++ix) {
-        for (int iy = 0; iy < 2 && segmodex != 0; ++iy) {
-          XPoint t(ix * sx, iy * sy); // corner point
-          // Is corner outside next intersection exclusion circle?
-          if (q.Dist(t) >= 2 * _s1) {
-            ++cnt3;
-            qx = Solve1(lineX, lineY, t);
-            // fixsegment is not needed because the coincidence line must just
-            // slice off a corner of the sx x sy rectangle.
-            qx = fixcoincident(t, qx);
-            // No need to check if equal to q, because result is only accepted
-            // if segmode != 0 && segmodex == 0.
-            segmodex = segmentmode(sx, sy, qx);
-          }
-        }
-      }
-      if (segmodex == 0) { ++cnt4; segmode = 0; q = qx; }
-    }
-    return q;
-  }
-
-  Intersect::XPoint
-  Intersect::Solve2(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                    const Intersect::XPoint& p0) const {
-    const int num = 5;
-    const int ix[num] = { 0,  1, -1,  0,  0 };
-    const int iy[num] = { 0,  0,  0,  1, -1 };
-    bool    skip[num] = { 0,  0,  0,  0,  0 };
-    bool debug = false;
-    XPoint q;                    // Best intersection so far
-    for (int n = 0; n < num; ++n) {
-      if (skip[n]) continue;
-      XPoint qx = Solve1(lineX, lineY, p0 + XPoint(ix[n] * _d1, iy[n] * _d1));
-      qx = fixcoincident(p0, qx);
-      if (debug)
-        cerr << fixed << setprecision(4)
-             << "Solve2a " << n << " " << qx.x / _d << " " << qx.y / _d << "\n";
-      if (_comp.eq(q, qx)) continue;
-      if (qx.Dist(p0) < _s1) { q = qx; ++cnt2; break; }
-      if (n == 0 || qx.Dist(p0) < q.Dist(p0)) { q = qx; ++cnt2; }
-      for (int m = n + 1; m < num; ++m) {
-        if (debug) {
-          cerr << "Solve2b " << n << " " << m << " "
-               << (qx.Dist(p0 + XPoint(ix[m] * _d1, iy[m] * _d1))
-                   < 2*_s1 - _d1 - _slop) << "\n";
-        }
-        skip[m] = skip[m] ||
-          qx.Dist(p0 + XPoint(ix[m] * _d1, iy[m] * _d1)) < 2*_s1 - _d1 - _slop;
-      }
-    }
-    return q;
-  }
-
-  Intersect::XPoint
-  Intersect::Solve3(const GeodesicLine& lineX, const GeodesicLine& lineY)
-    const {
-    const int num = 8;
-    const int ix[num] = { -1, -1,  1,  1, -2,  0,  2,  0 };
-    const int iy[num] = { -1,  1, -1,  1,  0,  2,  0, -2 };
-    bool    skip[num] = {  0,  0,  0,  0,  0,  0,  0,  0 };
-    XPoint z(0,0),              // for excluding the origin
-      q(Math::infinity(), 0);   // Best intersection so far
-    for (int n = 0; n < num; ++n) {
-      if (skip[n]) continue;
-      XPoint qx = Solve1(lineX, lineY, XPoint(ix[n] * _d2, iy[n] * _d2));
-      qx = fixcoincident(z, qx);
-      bool zerop = _comp.eq(z, qx);
-      if (qx.c == 0 && zerop) continue;
-      if (qx.c && zerop) {
-        for (int sgn = -1; sgn <= 1; sgn+=2) {
-          real s = ConjugateDist(lineX, sgn * _d, false);
-          XPoint qa(s, qx.c*s, qx.c);
-          if (qa.Dist() < q.Dist()) { q = qa; ++cnt2; }
-        }
-      } else {
-        if (qx.Dist() < q.Dist()) { q = qx; ++cnt2; }
-      }
-      for (int sgn = -1; sgn <= 1; ++sgn) {
-        // if qx.c == 0 only process sgn == 0
-        // if zerop skip sgn == 0
-        if ((qx.c == 0 && sgn != 0) || (zerop && sgn == 0)) continue;
-        XPoint qy = qx.c ? qx + Point(sgn * _d2, qx.c * sgn *_d2) : qx;
-        for (int m = n + 1; m < num; ++m)
-          skip[m] = skip[m] ||
-            qy.Dist(XPoint(ix[m] * _d2, iy[m] * _d2)) < 2*_s1 - _d2 - _slop;
-      }
-    }
-    return q;
-  }
-
-  Intersect::XPoint
-  Intersect::Solve1(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                    const Intersect::XPoint& p0) const {
-    ++cnt1;
-    XPoint q = p0;
-    for (int n = 0; n < 100; ++n) {
-      ++cnt0;
-      XPoint dq = Solve0(lineX, lineY, q);
-      q += dq;
-      if (q.c || !(dq.Dist() > _tol)) break; // break if nan
-    }
-    return q;
-  }
-
-  Intersect::XPoint
   Intersect::Solve0(const GeodesicLine& lineX, const GeodesicLine& lineY,
                     const Intersect::XPoint& p) const {
     // threshold for coincident geodesics and intersections; this corresponds
@@ -291,19 +183,136 @@ namespace GeographicLib {
       // General case.  [SKIP: Divide args by |sinz| to avoid possible
       // underflow in {sinX,sinY}*sinz; this is probably not necessary].
       // Definitely need to treat sinz < 0 (z > pi*R) correctly.  Without
-      // this we have some convergence failures in Solve.
-      sX = _R * atan2(sinY * sinz,  sinY*cosX*cosz - cosY*sinX);
-      sY = _R * atan2(sinX * sinz, -sinX*cosY*cosz + cosX*sinY);
+      // this we have some convergence failures in Solve1.
+      sX = _R * atan2(sinY * sinz,  sinY * cosX * cosz - cosY * sinX);
+      sY = _R * atan2(sinX * sinz, -sinX * cosY * cosz + cosX * sinY);
       c = 0;
     }
     return XPoint(sX, sY, c);
   }
 
+  Intersect::XPoint
+  Intersect::Solve1(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                    const Intersect::XPoint& p0) const {
+    ++cnt1;
+    XPoint q = p0;
+    for (int n = 0; n < numit_ || GEOGRAPHICLIB_PANIC; ++n) {
+      ++cnt0;
+      XPoint dq = Solve0(lineX, lineY, q);
+      q += dq;
+      if (q.c || !(dq.Dist() > _tol)) break; // break if nan
+    }
+    return q;
+  }
+
+  Intersect::XPoint
+  Intersect::Solve2(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                    const Intersect::XPoint& p0) const {
+    const int num = 5;
+    const int ix[num] = { 0,  1, -1,  0,  0 };
+    const int iy[num] = { 0,  0,  0,  1, -1 };
+    bool    skip[num] = { 0,  0,  0,  0,  0 };
+    bool debug = false;
+    XPoint q;                    // Best intersection so far
+    for (int n = 0; n < num; ++n) {
+      if (skip[n]) continue;
+      XPoint qx = Solve1(lineX, lineY, p0 + XPoint(ix[n] * _d1, iy[n] * _d1));
+      qx = fixcoincident(p0, qx);
+      if (debug)
+        cerr << fixed << setprecision(4)
+             << "Solve2a " << n << " " << qx.x / _d << " " << qx.y / _d << "\n";
+      if (_comp.eq(q, qx)) continue;
+      if (qx.Dist(p0) < _t1) { q = qx; ++cnt2; break; }
+      if (n == 0 || qx.Dist(p0) < q.Dist(p0)) { q = qx; ++cnt2; }
+      for (int m = n + 1; m < num; ++m) {
+        if (debug) {
+          cerr << "Solve2b " << n << " " << m << " "
+               << (qx.Dist(p0 + XPoint(ix[m] * _d1, iy[m] * _d1))
+                   < 2*_t1 - _d1 - _delta) << "\n";
+        }
+        skip[m] = skip[m] ||
+          qx.Dist(p0 + XPoint(ix[m]*_d1, iy[m]*_d1)) < 2*_t1 - _d1 - _delta;
+      }
+    }
+    return q;
+  }
+
+  Intersect::XPoint
+  Intersect::Solve3(const GeodesicLine& lineX, const GeodesicLine& lineY)
+    const {
+    const int num = 8;
+    const int ix[num] = { -1, -1,  1,  1, -2,  0,  2,  0 };
+    const int iy[num] = { -1,  1, -1,  1,  0,  2,  0, -2 };
+    bool    skip[num] = {  0,  0,  0,  0,  0,  0,  0,  0 };
+    XPoint z(0,0),              // for excluding the origin
+      q(Math::infinity(), 0);   // Best intersection so far
+    for (int n = 0; n < num; ++n) {
+      if (skip[n]) continue;
+      XPoint qx = Solve1(lineX, lineY, XPoint(ix[n] * _d2, iy[n] * _d2));
+      qx = fixcoincident(z, qx);
+      bool zerop = _comp.eq(z, qx);
+      if (qx.c == 0 && zerop) continue;
+      if (qx.c && zerop) {
+        for (int sgn = -1; sgn <= 1; sgn+=2) {
+          real s = ConjugateDist(lineX, sgn * _d, false);
+          XPoint qa(s, qx.c*s, qx.c);
+          if (qa.Dist() < q.Dist()) { q = qa; ++cnt2; }
+        }
+      } else {
+        if (qx.Dist() < q.Dist()) { q = qx; ++cnt2; }
+      }
+      for (int sgn = -1; sgn <= 1; ++sgn) {
+        // if qx.c == 0 only process sgn == 0
+        // if zerop skip sgn == 0
+        if ((qx.c == 0 && sgn != 0) || (zerop && sgn == 0)) continue;
+        XPoint qy = qx.c ? qx + Point(sgn * _d2, qx.c * sgn *_d2) : qx;
+        for (int m = n + 1; m < num; ++m)
+          skip[m] = skip[m] ||
+            qy.Dist(XPoint(ix[m]*_d2, iy[m]*_d2)) < 2*_t1 - _d2 - _delta;
+      }
+    }
+    return q;
+  }
+
+  Intersect::XPoint
+  Intersect::Solve4(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                    int& segmode) const {
+    real sx = lineX.Distance(), sy = lineY.Distance();
+    // p0 is center of [sx,sy] rectangle, q is intersection closest to p0
+    XPoint p0 = XPoint(sx/2, sy/2), q = Solve2(lineX, lineY, p0);
+    q = fixsegment(sx, sy, q);
+    segmode = segmentmode(sx, sy, q);
+    // Are corners of [sx,sy] rectangle further from p0 than q?
+    if (segmode != 0 && p0.Dist() >= p0.Dist(q) ) {
+      int segmodex = 1;
+      XPoint qx;
+      // Cycle through 4 corners of [sx,sy] rectangle
+      for (int ix = 0; ix < 2 && segmodex != 0; ++ix) {
+        for (int iy = 0; iy < 2 && segmodex != 0; ++iy) {
+          XPoint t(ix * sx, iy * sy); // corner point
+          // Is corner outside next intersection exclusion circle?
+          if (q.Dist(t) >= 2 * _t1) {
+            ++cnt3;
+            qx = Solve1(lineX, lineY, t);
+            // fixsegment is not needed because the coincidence line must just
+            // slice off a corner of the sx x sy rectangle.
+            qx = fixcoincident(t, qx);
+            // No need to check if equal to q, because result is only accepted
+            // if segmode != 0 && segmodex == 0.
+            segmodex = segmentmode(sx, sy, qx);
+          }
+        }
+      }
+      if (segmodex == 0) { ++cnt4; segmode = 0; q = qx; }
+    }
+    return q;
+  }
+
   std::vector<Intersect::XPoint>
   Intersect::Solve5(const GeodesicLine& lineX,
                     const GeodesicLine& lineY,
-                    Math::real maxdist, const XPoint& p0)  const {
-    real maxdistx = maxdist + _slop;
+                    Math::real maxdist, const XPoint& p0) const {
+    real maxdistx = maxdist + _delta;
     const int m = int(ceil(maxdistx / _d3)), // process m x m set of tiles
       m2 = m*m + (m - 1) % 2,                // add center tile if m is even
       n = m - 1;                             // Range of i, j = [-n:2:n]
@@ -368,7 +377,7 @@ namespace GeographicLib {
       r.insert(q);
       for (auto qp = added.cbegin(); qp != added.cend(); ++qp) {
         for (int l = k + 1; l < m2; ++l)
-          skip[l] = skip[l] || qp->Dist(start[l]) < 2*_s1 - d3 - _slop;
+          skip[l] = skip[l] || qp->Dist(start[l]) < 2*_t1 - d3 - _delta;
       }
     }
     // Trim intersections to maxdist

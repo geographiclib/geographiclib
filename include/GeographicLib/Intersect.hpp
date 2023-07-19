@@ -1,5 +1,5 @@
 /**
- * \file Geodesic.hpp
+ * \file Intersect.hpp
  * \brief Header for GeographicLib::Intersect class
  *
  * Copyright (c) Charles Karney (2023) <karney@alum.mit.edu> and licensed under
@@ -51,9 +51,11 @@ namespace GeographicLib {
    * providing access to the functionality of this class.
    *
    * This solution for intersections is described in
-   * - C. F. F. Karney,
-   *   Geodesic intersections,
-   *   Technical Report, SRI International (in preparation).
+   * - C. F. F. Karney,<br>
+   *   <a href="https://arxiv.org/abs/yymm.nnnnn">
+   *   Geodesic intersections</a>,<br>
+   *   Technical Report, SRI International, MMM 2023.<br>
+   *   <a href="https://arxiv.org/abs/yymm.nnnnn">arxiv:yymm.nnnnn</a>
    * .
    * It is based on the work of
    * - S. Baseldga and J. C. Martinez-Llario,
@@ -75,25 +77,26 @@ namespace GeographicLib {
      **********************************************************************/
     typedef std::pair<Math::real, Math::real> Point;
     /**
-     * The miniumum capabilities for GeodesicLine objects which are passed to
+     * The minimum capabilities for GeodesicLine objects which are passed to
      * this class.
      **********************************************************************/
     static const unsigned LineCaps = Geodesic::LATITUDE | Geodesic::LONGITUDE |
       Geodesic::AZIMUTH | Geodesic::REDUCEDLENGTH | Geodesic::GEODESICSCALE |
       Geodesic::DISTANCE_IN;
   private:
+    static const int numit_ = 100;
     const Geodesic& _geod;
     real _a, _f,                // equatorial radius, flattening
       _R,                       // authalic radius
       _d,                       // pi*_R
       _eps,                     // criterion for intersection + coincidence
       _tol,                     // convergence for Newton in Solve1
-      _slop,                    // for equality tests, safety margin for tiling
-      _s1,                      // min distance between intersections
-      _s2,                      // 1/2 furthest min dist to next intersection
-      _s3,                      // furthest dist to closest intersection
-      _s4,                      // capture radius for spherical sol in Solve0
-      _s5,                      // longest shortest geodesic
+      _delta,                   // for equality tests, safety margin for tiling
+      _t1,                      // min distance between intersections
+      _t2,                      // furthest dist to closest intersection
+      _t3,                      // 1/2 furthest min dist to next intersection
+      _t4,                      // capture radius for spherical sol in Solve0
+      _t5,                      // longest shortest geodesic
       _d1,                      // tiling spacing for Closest
       _d2,                      // tiling spacing for Next
       _d3;                      // tiling spacing for All
@@ -130,11 +133,11 @@ namespace GeographicLib {
     // XPoints test equal.
     class GEOGRAPHICLIB_EXPORT SetComp {
     private:
-      const real _slop;
+      const real _delta;
     public:
-      SetComp(Math::real slop) : _slop(slop) {}
+      SetComp(Math::real delta) : _delta(delta) {}
       bool eq(const XPoint& p, const XPoint& q) const {
-        return d1(p.x - q.x, p.y - q.y) <= _slop;
+        return d1(p.x - q.x, p.y - q.y) <= _delta;
       }
       bool operator()(const XPoint& p, const XPoint& q) const {
         return !eq(p, q) && ( p.x != q.x ? p.x < q.x : p.y < q.y );

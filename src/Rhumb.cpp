@@ -1,7 +1,7 @@
 /**
  * \file Rhumb.cpp
- * \brief Implementation for GeographicLib::experimental::Rhumb and
- * GeographicLib::experimental::RhumbLine classes
+ * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
+ * classes
  *
  * Copyright (c) Charles Karney (2014-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see

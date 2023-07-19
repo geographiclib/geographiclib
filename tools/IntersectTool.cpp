@@ -223,10 +223,13 @@ int main(int argc, const char* const argv[]) {
           if (check) {
             lineX.Position(x, latX2, lonX2);
             lineY.Position(y, latY2, lonY2);
-            std::cerr << Utility::str(latX2, prec + 5) << " "
-                      << Utility::str(lonX2, prec + 5) << " "
-                      << Utility::str(latY2, prec + 5) << " "
-                      << Utility::str(lonY2, prec + 5) << eol;
+            real sXY;
+            geod.Inverse(latX2, lonX2, latY2, lonY2, sXY);
+            std::cerr << Utility::str(longfirst ? lonX2 : latX2, prec+5) << " "
+                      << Utility::str(longfirst ? latX2 : lonX2, prec+5) << " "
+                      << Utility::str(longfirst ? lonY2 : latY2, prec+5) << " "
+                      << Utility::str(longfirst ? latY2 : lonY2, prec+5) << " "
+                      << Utility::str(sXY, prec) << eol;
           }
         } else {
           std::vector<int> c;
@@ -241,15 +244,18 @@ int main(int argc, const char* const argv[]) {
             if (check) {
               lineX.Position(x, latX2, lonX2);
               lineY.Position(y, latY2, lonY2);
-              std::cerr << Utility::str(latX2, prec + 5) << " "
-                        << Utility::str(lonX2, prec + 5) << " "
-                        << Utility::str(latY2, prec + 5) << " "
-                        << Utility::str(lonY2, prec + 5) << eol;
+              real sXY;
+              geod.Inverse(latX2, lonX2, latY2, lonY2, sXY);
+              std::cerr << Utility::str(longfirst ? lonX2 : latX2, prec+5) << " "
+                        << Utility::str(longfirst ? latX2 : lonX2, prec+5) << " "
+                        << Utility::str(longfirst ? lonY2 : latY2, prec+5) << " "
+                        << Utility::str(longfirst ? latY2 : lonY2, prec+5) << " "
+                        << Utility::str(sXY, prec) << eol;
             }
           }
           *output << "nan nan 0 nan" << eol;
           if (check)
-            std::cerr << "nan nan nan nan" << eol;
+            std::cerr << "nan nan nan nan nan" << eol;
         }
       }
       catch (const std::exception& e) {
