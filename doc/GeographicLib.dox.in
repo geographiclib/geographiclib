@@ -7511,31 +7511,38 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-mm-dd)
-   - Add Intersect class and <a href="IntersectTool.1.html">
-     IntersectTool</a> utility.
-   - Remove workaround for boost 1.76 with enums (not needed for boost
-     1.78).
+   - Add the Intersect class and the
+     <a href="IntersectTool.1.html">IntersectTool</a> utility.
    - Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
      Rhumb::LineClass, GeodesicLine::BaseClass,
      GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
    - Geodesic constructor accepts optional third argument \e exact,
      default false.  If true, then the calculations are delegated to
-     GeodesicExact.  The code in GeodSolve and Planimeter now uses this
+     GeodesicExact.
+     <a href="GeodSolve.1.html">GeodSolve</a> and
+     <a href="Planimeter.1.html">Planimeter</a> now use this
      simplified interface.
    - PolygonAreaExact is deprecated; use PolygonArea instead.
-   - Bug in Planimeter -Q (introduced in version 2.2) has been fixed.
-   - TransverseMercator constructor accept optional arguments \e exact
+   - Bug in <a href="Planimeter.1.html">Planimeter</a> -Q (introduced in
+     version 2.2) has been fixed.
+   - TransverseMercator constructor accepts optional arguments \e exact
      and \e extend (default false for both).  If \e exact = true, then
-     the calculations are delegated to TransverseMercatorExact.  The
-     code in TransverseMercatorProj now uses this simplified interface.
-   - Fix documentation bug for TransverseMercatorProj (incorrectly
-     stated that -t for the extended domain was the default).
-   - Remove unnecessary friend declarations for Ellipsoid in
-     AlbersEqualArea and TransverseMercator. (As of version 2.2,
-     Ellipsoid uses the AuxLatitude class for this functionality.)
-   - Small change in EllipticFunction to speed up the default
-     contructor.
-
+     the calculations are delegated to TransverseMercatorExact.
+     <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+     now uses this simplified interface.
+   - Minor fixes:
+     - Fix documentation bug for
+       <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+       (incorrectly stated that -t for the extended domain was the
+       default).
+     - Remove unnecessary friend declarations for Ellipsoid in
+       AlbersEqualArea and TransverseMercator. (As of version 2.2,
+       Ellipsoid uses the AuxLatitude class for this functionality.)
+     - Small change in EllipticFunction to speed up the default
+       contructor.
+     - Remove workaround for boost 1.76 with enums (not needed for boost
+       1.78).
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-03-07)
    - Completely redo Rhumb and RhumbLine classes to yield accurate

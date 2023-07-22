@@ -39,7 +39,7 @@ intersection is "within" the segments.
 The tool also returns a "coincidence indicator" I<c>.  This is
 typically 0.  However if the geodesics lie on top of one another at
 the point of intersection, then I<c> is set to 1, if they are
-parallel, and -1, if they are anti-parallel.
+parallel, and -1, if they are antiparallel.
 
 B<IntersectTool> operates in one of three modes:
 
@@ -68,7 +68,10 @@ I<latY2> I<lonY2>, specifying two geodesic segments I<X1>-I<X2> and
 I<Y1>-I<Y2>, and prints I<x> I<y> I<c> I<k> on standard output.  Here
 I<k> is a flag in [-4,4] specifying whether the intersection is within
 the segments (0) or not (non-zero).  I<x> and I<y> give the distances
-from I<X1> and I<X2> respectively.
+from I<X1> and I<Y1> respectively.  I<k> is set to 3 I<kx> + I<ky>
+where I<kx> = -1 if I<x> < 0, 0 if 0 <= I<x> <= I<sx>, 1 if I<sx> <
+I<x>, and similarly for I<ky>; I<sx> is the length of the segment
+I<X1>-I<X2>.
 
 =item 4.
 
@@ -117,7 +120,7 @@ number of intersections scales as (I<maxdist>/(pi I<a>))^2.
 check the intersections.  For each computed intersection, print on
 B<standard error> a line I<latX> I<lonX> I<latY> I<lonY> I<sXY> giving
 the computed positions of the intersections points on I<X> and I<Y>
-and the distance between them.  If B[-w] is specified, the longitude
+and the distance between them.  If B<-w> is specified, the longitude
 is given before the latitude.
 
 =item B<-e> I<a> I<f>

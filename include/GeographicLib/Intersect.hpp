@@ -42,7 +42,7 @@ namespace GeographicLib {
    * The routines also optionally return a coincidence indicator \e c.  This is
    * typically 0.  However if the geodesics lie on top of one another at the
    * point of intersection, then I<c> is set to 1, if they are parallel, and
-   * &minus;1, if they are anti-parallel.
+   * &minus;1, if they are antiparallel.
    *
    * Example of use:
    * \include example-Intersect.cpp
@@ -73,7 +73,7 @@ namespace GeographicLib {
   public:
     /**
      * The type used to hold the two displacement along the geodesics.  This is
-     * just a std::pair with the \e x = \e first and \e y = \e second.
+     * just a std::pair with \e x = \e first and \e y = \e second.
      **********************************************************************/
     typedef std::pair<Math::real, Math::real> Point;
     /**
@@ -212,8 +212,8 @@ namespace GeographicLib {
     /**
      * Constructor for an ellipsoid with
      *
-     * @param[in] geod a Geodesic object.  This sets the parameters \e and \e f
-     *   for the ellipsoid.
+     * @param[in] geod a Geodesic object.  This sets the parameters \e a and \e
+     *   f for the ellipsoid.
      * @exception GeographicErr if the eccentricity of the elliposdoid is too
      *   large.
      *
@@ -222,8 +222,8 @@ namespace GeographicLib {
      * sufficient far outside the range, some internal checks will fail and an
      * exception thrown.
      *
-     * \note If |\e f| > 1/50, then the Geodesic object should be constructed
-     * with \e exact = true.
+     * \note If |<i>f</i>| > 1/50, then the Geodesic object should be
+     * constructed with \e exact = true.
      **********************************************************************/
     Intersect(const Geodesic& geod);
     ///@}
@@ -232,7 +232,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Find the closest intersection point, each geodesic specified by
+     * Find the closest intersection point, with each geodesic specified by
      *   position and azimuth.
      *
      * @param[in] latX latitude of starting point for geodesic \e X (degrees).
@@ -253,7 +253,7 @@ namespace GeographicLib {
                   Math::real latY, Math::real lonY, Math::real aziY,
                   const Point& p0 = Point(0, 0), int* c = nullptr) const;
     /**
-     * Find the closest intersection point, each geodesic given as a
+     * Find the closest intersection point, with each geodesic given as a
      *   GeodesicLine.
      *
      * @param[in] lineX geodesic \e X.
@@ -291,7 +291,7 @@ namespace GeographicLib {
      *   the intersection point closest to the midpoints of the two
      *   intersections.
      *
-     * \warning The results are only well defined if there's a \e single
+     * \warning The results are only well defined if there's a \e unique
      * shortest geodesic between the endpoints of the two geodesics.
      *
      * \e segmode codes up information about the closest intersection in the
