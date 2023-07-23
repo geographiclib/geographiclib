@@ -17,7 +17,6 @@
 #include <cstring>
 #include <limits>
 #include <cmath>
-#include <iostream>
 #include <sstream>
 // Only for GeographicLib::GeographicErr
 #include <GeographicLib/Constants.hpp>

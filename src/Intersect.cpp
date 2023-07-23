@@ -7,14 +7,11 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include <iostream>
 #include <GeographicLib/Intersect.hpp>
 #include <limits>
 #include <utility>
 #include <algorithm>
 #include <set>
-#include <iostream>
-#include <iomanip>
 
 using namespace std;
 
@@ -30,11 +27,11 @@ namespace GeographicLib {
     , _tol(_d * pow(numeric_limits<real>::epsilon(), 3/real(4)))
     , _delta(_d * pow(numeric_limits<real>::epsilon(), 1/real(5)))
     , _comp(_delta)
-    , cnt0(0)
-    , cnt1(0)
-    , cnt2(0)
-    , cnt3(0)
-    , cnt4(0)
+    , _cnt0(0)
+    , _cnt1(0)
+    , _cnt2(0)
+    , _cnt3(0)
+    , _cnt4(0)
   {
     _t1 = _t4 = _a * (1 - _f) * Math::pi();
     _t2 = 2 * distpolar(90);
@@ -194,10 +191,10 @@ namespace GeographicLib {
   Intersect::XPoint
   Intersect::Solve1(const GeodesicLine& lineX, const GeodesicLine& lineY,
                     const Intersect::XPoint& p0) const {
-    ++cnt1;
+    ++_cnt1;
     XPoint q = p0;
     for (int n = 0; n < numit_ || GEOGRAPHICLIB_PANIC; ++n) {
-      ++cnt0;
+      ++_cnt0;
       XPoint dq = Solve0(lineX, lineY, q);
       q += dq;
       if (q.c || !(dq.Dist() > _tol)) break; // break if nan
@@ -212,27 +209,17 @@ namespace GeographicLib {
     const int ix[num] = { 0,  1, -1,  0,  0 };
     const int iy[num] = { 0,  0,  0,  1, -1 };
     bool    skip[num] = { 0,  0,  0,  0,  0 };
-    bool debug = false;
     XPoint q;                    // Best intersection so far
     for (int n = 0; n < num; ++n) {
       if (skip[n]) continue;
       XPoint qx = Solve1(lineX, lineY, p0 + XPoint(ix[n] * _d1, iy[n] * _d1));
       qx = fixcoincident(p0, qx);
-      if (debug)
-        cerr << fixed << setprecision(4)
-             << "Solve2a " << n << " " << qx.x / _d << " " << qx.y / _d << "\n";
       if (_comp.eq(q, qx)) continue;
-      if (qx.Dist(p0) < _t1) { q = qx; ++cnt2; break; }
-      if (n == 0 || qx.Dist(p0) < q.Dist(p0)) { q = qx; ++cnt2; }
-      for (int m = n + 1; m < num; ++m) {
-        if (debug) {
-          cerr << "Solve2b " << n << " " << m << " "
-               << (qx.Dist(p0 + XPoint(ix[m] * _d1, iy[m] * _d1))
-                   < 2*_t1 - _d1 - _delta) << "\n";
-        }
+      if (qx.Dist(p0) < _t1) { q = qx; ++_cnt2; break; }
+      if (n == 0 || qx.Dist(p0) < q.Dist(p0)) { q = qx; ++_cnt2; }
+      for (int m = n + 1; m < num; ++m)
         skip[m] = skip[m] ||
           qx.Dist(p0 + XPoint(ix[m]*_d1, iy[m]*_d1)) < 2*_t1 - _d1 - _delta;
-      }
     }
     return q;
   }
@@ -256,10 +243,10 @@ namespace GeographicLib {
         for (int sgn = -1; sgn <= 1; sgn+=2) {
           real s = ConjugateDist(lineX, sgn * _d, false);
           XPoint qa(s, qx.c*s, qx.c);
-          if (qa.Dist() < q.Dist()) { q = qa; ++cnt2; }
+          if (qa.Dist() < q.Dist()) { q = qa; ++_cnt2; }
         }
       } else {
-        if (qx.Dist() < q.Dist()) { q = qx; ++cnt2; }
+        if (qx.Dist() < q.Dist()) { q = qx; ++_cnt2; }
       }
       for (int sgn = -1; sgn <= 1; ++sgn) {
         // if qx.c == 0 only process sgn == 0
@@ -292,7 +279,7 @@ namespace GeographicLib {
           XPoint t(ix * sx, iy * sy); // corner point
           // Is corner outside next intersection exclusion circle?
           if (q.Dist(t) >= 2 * _t1) {
-            ++cnt3;
+            ++_cnt3;
             qx = Solve1(lineX, lineY, t);
             // fixsegment is not needed because the coincidence line must just
             // slice off a corner of the sx x sy rectangle.
@@ -303,7 +290,7 @@ namespace GeographicLib {
           }
         }
       }
-      if (segmodex == 0) { ++cnt4; segmode = 0; q = qx; }
+      if (segmodex == 0) { ++_cnt4; segmode = 0; q = qx; }
     }
     return q;
   }

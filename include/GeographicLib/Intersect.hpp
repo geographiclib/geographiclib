@@ -36,12 +36,12 @@ namespace GeographicLib {
    * In all cases the position of the intersection is given by the signed
    * displacements \e x and \e y along the geodesics from the starting point
    * (the first point in the case of a geodesic segment).  The closest
-   * itersection is defined as the one that minimizes the L1 distance, |\e x| +
-   * |\e y|.
+   * itersection is defined as the one that minimizes the L1 distance,
+   * Intersect::Dist([<i>x</i>, <i>y</i>) = |<i>x</i>| + |<i>y</i>|.
    *
    * The routines also optionally return a coincidence indicator \e c.  This is
    * typically 0.  However if the geodesics lie on top of one another at the
-   * point of intersection, then I<c> is set to 1, if they are parallel, and
+   * point of intersection, then \e c is set to 1, if they are parallel, and
    * &minus;1, if they are antiparallel.
    *
    * Example of use:
@@ -85,7 +85,7 @@ namespace GeographicLib {
       Geodesic::DISTANCE_IN;
   private:
     static const int numit_ = 100;
-    const Geodesic& _geod;
+    const Geodesic _geod;
     real _a, _f,                // equatorial radius, flattening
       _R,                       // authalic radius
       _d,                       // pi*_R
@@ -97,9 +97,9 @@ namespace GeographicLib {
       _t3,                      // 1/2 furthest min dist to next intersection
       _t4,                      // capture radius for spherical sol in Solve0
       _t5,                      // longest shortest geodesic
-      _d1,                      // tiling spacing for Closest
-      _d2,                      // tiling spacing for Next
-      _d3;                      // tiling spacing for All
+      _d1,                      // tile spacing for Closest
+      _d2,                      // tile spacing for Next
+      _d3;                      // tile spacing for All
     // The L1 distance
     static Math::real d1(Math::real x, Math::real y)
     { using std::fabs; return fabs(x) + fabs(y); }
@@ -204,7 +204,7 @@ namespace GeographicLib {
       return (p.x < 0 ? -1 : p.x <= sx ? 0 : 1) * 3
         + (p.y < 0 ? -1 : p.y <= sy ? 0 : 1);
     }
-    mutable long long cnt0, cnt1, cnt2, cnt3, cnt4;
+    mutable long long _cnt0, _cnt1, _cnt2, _cnt3, _cnt4;
   public:
     /** \name Constructor
      **********************************************************************/
@@ -246,8 +246,7 @@ namespace GeographicLib {
      * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point closest to \e p0.
      *
-     * The returned intersection minimizes |<i>p</i>.x &minus; <i>p0</i>.x| +
-     * |<i>p</i>.y &minus; <i>p0</i>.y|.
+     * The returned intersection minimizes Intersect::Dist(\e p, \e p0).
      **********************************************************************/
     Point Closest(Math::real latX, Math::real lonX, Math::real aziX,
                   Math::real latY, Math::real lonY, Math::real aziY,
@@ -263,10 +262,9 @@ namespace GeographicLib {
      * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point closest to \e p0.
      *
-     * The returned intersection minimizes |<i>p</i>.x &minus; <i>p0</i>.x| +
-     * |<i>p</i>.y &minus; <i>p0</i>.y|.
+     * The returned intersection minimizes Intersect::Dist(\e p, \e p0).
      *
-     * \e lineX and \e lineY should be created with minimum capabilities
+     * \note \e lineX and \e lineY should be created with minimum capabilities
      * Intersect::LineCaps.  The methods for creating a GeodesicLine include
      * all these capabilities by default.
      **********************************************************************/
@@ -289,21 +287,22 @@ namespace GeographicLib {
      * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point if the segments intersect, otherwise
      *   the intersection point closest to the midpoints of the two
-     *   intersections.
+     *   segments.
      *
      * \warning The results are only well defined if there's a \e unique
-     * shortest geodesic between the endpoints of the two geodesics.
+     * shortest geodesic between the endpoints of the two segments.
      *
      * \e segmode codes up information about the closest intersection in the
      * case where the segments intersect.  Let <i>x</i><sub>12</sub> be the
      * length of the segment \e X and \e x = <i>p</i>.first, the position of
      * the intersection on segment \e X.  Define
-     * - \e k<sub>x</sub> = &minus;1, if \e x < 0,
-     * - \e k<sub>x</sub> = 0, if 0 &le; \e x &le; <i>x</i><sub>12</sub>,
-     * - \e k<sub>x</sub> = 1, if <i>x</i><sub>12</sub> < \e x.
+     * - \e k<sub><i>x</i></sub> = &minus;1, if \e x < 0,
+     * - \e k<sub><i>x</i></sub> = 0,
+     *   if 0 &le; \e x &le; <i>x</i><sub>12</sub>,
+     * - \e k<sub><i>x</i></sub> = 1, if <i>x</i><sub>12</sub> < \e x.
      * .
      * and similarly for segment \e Y.  Then
-     * \e segmode = 3 \e k<sub>x</sub> + \e k<sub>y</sub>.
+     * \e segmode = 3 \e k<sub><i>x</i></sub> + \e k<sub><i>y</i></sub>.
      **********************************************************************/
     Point Segment(Math::real latX1, Math::real lonX1,
                   Math::real latX2, Math::real lonX2,
@@ -321,10 +320,16 @@ namespace GeographicLib {
      * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the intersection point if the segments intersect, otherwise
      *   the intersection point closest to the midpoints of the two
-     *   intersections.
+     *   segments.
      *
-     * \note \e lineX and \e lineY should be created by Geodesic::InverseLine
-     * with minimum capabilities Intersect::LineCaps.
+     * \warning \e lineX and \e lineY must represent shortest geodesics, e.g.,
+     * they can be created by Geodesic::InverseLine.  The results are only well
+     * defined if there's a \e unique shortest geodesic between the endpoints
+     * of the two segments.
+     *
+     * \note \e lineX and \e lineY should be created with minimum capabilities
+     * Intersect::LineCaps.  The methods for creating a GeodesicLine include
+     * all these capabilities by default.
      *
      * See previous definition of Intersect::Segment for more information on \e
      * segmode.
@@ -344,8 +349,8 @@ namespace GeographicLib {
      * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the next closest intersection point.
      *
-     * The returned intersection minimizes |<i>p</i>.x| + |<i>p</i>.y|
-     * (excluding \e p = [0,0]).
+     * The returned intersection minimizes Intersect::Dist(\e p) (excluding \e
+     * p = [0,0]).
      *
      * \note Equidistant closest intersections are surprisingly common.  If
      * this may be a problem, use Intersect::All with a sufficiently large \e
@@ -362,17 +367,26 @@ namespace GeographicLib {
      * @param[out] c optional pointer to an integer coincidence indicator.
      * @return \e p the next closest intersection point.
      *
-     * \note \e lineX and \e lineY must both have the same starting point,
+     * \warning \e lineX and \e lineY must both have the same starting point,
      * i.e., the distance between [<i>lineX</i>.Latitude(),
      * <i>lineX</i>.Longitude()] and [<i>lineY</i>.Latitude(),
      * <i>lineY</i>.Longitude()] must be zero.
      *
-     * \e lineX and \e lineY should be created with minimum capabilities
+     * \note \e lineX and \e lineY should be created with minimum capabilities
      * Intersect::LineCaps.  The methods for creating a GeodesicLine include
      * all these capabilities by default.
+     *
+     * \note Equidistant closest intersections are surprisingly common.  If
+     * this may be a problem, use Intersect::All with a sufficiently large \e
+     * maxdist to capture close intersections.
      **********************************************************************/
     Point Next(const GeodesicLine& lineX, const GeodesicLine& lineY,
                int* c = nullptr) const;
+    ///@}
+
+    /** \name Finding all intersections
+     **********************************************************************/
+    ///@{
     /**
      * Find all intersections within a certain distance, with each geodesic
      *   specified by position and azimuth.
@@ -390,9 +404,9 @@ namespace GeographicLib {
      *   default = [0,0].
      * @return \e plist a vector for the intersections closest to \e p0.
      *
-     * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
-     * |<i>p</i>.y &minus; <i>p0</i>.y| &le; \e maxdist.  The vector of
-     * returned intersections is sorted on the distance from \e p0.
+     * Each intersection point satisfies Intersect::Dist(\e p, \e p0) &le; \e
+     * maxdist.  The vector of returned intersections is sorted on the distance
+     * from \e p0.
      **********************************************************************/
     std::vector<Point> All(Math::real latX, Math::real lonX, Math::real aziX,
                            Math::real latY, Math::real lonY, Math::real aziY,
@@ -416,9 +430,9 @@ namespace GeographicLib {
      *   default = [0,0].
      * @return \e plist a vector for the intersections closest to \e p0.
      *
-     * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
-     * |<i>p</i>.y &minus; <i>p0</i>.y| &le; \e maxdist.  The vector of
-     * returned intersections is sorted on the distance from \e p0.
+     * Each intersection point satisfies Intersect::Dist(\e p, \e p0) &le; \e
+     * maxdist.  The vector of returned intersections is sorted on the distance
+     * from \e p0.
      **********************************************************************/
     std::vector<Point> All(Math::real latX, Math::real lonX, Math::real aziX,
                            Math::real latY, Math::real lonY, Math::real aziY,
@@ -437,11 +451,11 @@ namespace GeographicLib {
      *   default = [0,0].
      * @return \e plist a vector for the intersections closest to \e p0.
      *
-     * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
-     * |<i>p</i>.y &minus; <i>p0</i>.y| &le; \e maxdist.  The vector of
-     * returned intersections is sorted on the distance from \e p0.
+     * Each intersection point satisfies Intersect::Dist(\e p, \e p0) &le; \e
+     * maxdist.  The vector of returned intersections is sorted on the distance
+     * from \e p0.
      *
-     * \e lineX and \e lineY should be created with minimum capabilities
+     * \note \e lineX and \e lineY should be created with minimum capabilities
      * Intersect::LineCaps.  The methods for creating a GeodesicLine include
      * all these capabilities by default.
      **********************************************************************/
@@ -461,11 +475,11 @@ namespace GeographicLib {
      *   default = [0,0].
      * @return \e plist a vector for the intersections closest to \e p0.
      *
-     * Each intersection point satisfies |<i>p</i>.x &minus; <i>p0</i>.x| +
-     * |<i>p</i>.y &minus; <i>p0</i>.y| &le; \e maxdist.  The vector of
-     * returned intersections is sorted on the distance from \e p0.
+     * Each intersection point satisfies Intersect::Dist(\e p, \e p0) &le; \e
+     * maxdist.  The vector of returned intersections is sorted on the distance
+     * from \e p0.
      *
-     * \e lineX and \e lineY should be created with minimum capabilities
+     * \note \e lineX and \e lineY should be created with minimum capabilities
      * Intersect::LineCaps.  The methods for creating a GeodesicLine include
      * all these capabilities by default.
      **********************************************************************/
@@ -473,32 +487,83 @@ namespace GeographicLib {
                            Math::real maxdist, const Point& p0 = Point(0, 0))
       const;
     ///@}
+
+    /** \name Diagnostic counters
+     **********************************************************************/
+    ///@{
+    /**
+     * @return the cumulative number of invocations of **h**.
+     *
+     * This counter is set to zero by the constructor.
+     *
+     * \warning The counter is a mutable variable and so is not thread safe.
+     **********************************************************************/
+    long long NumInverse() const { return _cnt0; }
+    /**
+     * @return the cumulative number of invocations of **b**.
+     *
+     * This counter is set to zero by the constructor.
+     *
+     * \warning The counter is a mutable variable and so is not thread safe.
+     **********************************************************************/
+    long long NumBasic() const { return _cnt1; }
+    /**
+     * @return times intersection point was changed; If incremented by 1,
+     * initial spherical solution eventually accepted.
+     *
+     * This counter is set to zero by the constructor.
+     *
+     * \warning The counter is a mutable variable and so is not thread safe.
+     **********************************************************************/
+    long long NumChange() const { return _cnt2; }
+    /**
+     * @return times intersection point was changed; If incremented by 1, if
+     * corner is checked in Segment.
+     *
+     * This counter is set to zero by the constructor.
+     *
+     * \warning The counter is a mutable variable and so is not thread safe.
+     **********************************************************************/
+    // 
+    long long NumCorner() const { return _cnt3; }
+    /**
+     * @return times intersection point was changed; If incremented by 1, if
+     * corner is checked in Segment.
+     *
+     * This counter is set to zero by the constructor.
+     *
+     * \warning The counter is a mutable variable and so is not thread safe.
+     **********************************************************************/
+    long long NumOverride() const { return _cnt4; }
+    ///@}
+
+    /** \name Insepctor function
+     **********************************************************************/
+    ///@{
+    /**
+     * @return \e geod the Geodesic object used in the constructor.
+     *
+     * This can be used to query Geodesic::EquatorialRadius(),
+     * Geodesic::Flattening(), Geodesic::Exact(), and
+     * Geodesic::EllipsoidArea().
+     **********************************************************************/
+    const Geodesic& GeodesicObject() const  { return _geod; }
+    ///@}
+
     /**
      * The L1 distance.
      *
      * @param[in] p the position along geodesics \e X and \e Y.
-     * @param[in] p0 [optional] the reference position.
-     * @return the L1 distance of \e p from \e p0.
+     * @param[in] p0 [optional] the reference position, default = [0, 0].
+
+     * @return the L1 distance of \e p from \e p0, i.e.,
+     *  |<i>p</i><sub><i>x</i></sub> &minus; <i>p0</i><sub><i>x</i></sub>| +
+     *  |<i>p</i><sub><i>y</i></sub> &minus; <i>p0</i><sub><i>y</i></sub>|.
      **********************************************************************/
     static Math::real Dist(const Point& p, const Point& p0 = Point(0, 0)) {
       using std::fabs;
       return fabs(p.first - p0.first) + fabs(p.second - p0.second);
     }
-    /// \cond SKIP
-    Math::real Norm() const { return _d; }
-    // # of calls to spherical solution, i.e., # inverse geodesic calculations
-    long long NumInverse() const { return cnt0; }
-    // # of interated spherical solutions, i.e., # invocation of basic algo
-    // If incremented by 1, then spherical solution immediately accepted
-    long long NumBasic() const { return cnt1; }
-    // # of times intersection point was changed
-    // If incremented by 1, initial spherical solution eventually accepted
-    long long NumChange() const { return cnt2; }
-    // If incremented by 1, if corner is checked in Segment
-    long long NumCorner() const { return cnt3; }
-    // If incremented by 1, if corner beats closest in Segment
-    long long NumOverride() const { return cnt4; }
-    /// \endcond
   };
 
 } // namespace GeographicLib

@@ -7542,6 +7542,7 @@ git repository for GeographicLib</a>.
        contructor.
      - Remove workaround for boost 1.76 with enums (not needed for boost
        1.78).
+     - Remove unused header from NearestNeighbor.
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-03-07)

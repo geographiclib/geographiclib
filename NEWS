@@ -39,6 +39,7 @@ Changes between 2.3 (released 2023-mm-dd) and 2.2 versions:
        contructor.
      + Remove workaround for boost 1.76 with enums (not needed for boost
        1.78).
+     + Remove unused header from NearestNeighbor.
 
 Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
 
