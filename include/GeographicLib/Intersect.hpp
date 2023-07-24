@@ -41,7 +41,7 @@ namespace GeographicLib {
    *
    * The routines also optionally return a coincidence indicator \e c.  This is
    * typically 0.  However if the geodesics lie on top of one another at the
-   * point of intersection, then \e c is set to 1, if they are parallel, and
+   * point of intersection, then \e c is set to +1, if they are parallel, and
    * &minus;1, if they are antiparallel.
    *
    * Example of use:
@@ -158,24 +158,23 @@ namespace GeographicLib {
           (p.x != q.x ? (p.x < q.x) : (p.y < q.y));
       }
     };
-
-    // The spherical solution
-    XPoint Solve0(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  const XPoint& p) const;
-    // The iterated spherical solution
-    XPoint Solve1(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  const XPoint& p0) const;
+// The spherical solution
+    XPoint Spherical(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                     const XPoint& p) const;
+    // The basic algorithm
+    XPoint Basic(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                 const XPoint& p0) const;
     // The closest intersecton
-    XPoint Solve2(const GeodesicLine& lineX, const GeodesicLine& lineY,
+    XPoint ClosestInt(const GeodesicLine& lineX, const GeodesicLine& lineY,
                   const XPoint& p0) const;
     // The next intersecton
-    XPoint Solve3(const GeodesicLine& lineX, const GeodesicLine& lineY) const;
+    XPoint NextInt(const GeodesicLine& lineX, const GeodesicLine& lineY) const;
     // Segment intersecton
-    XPoint Solve4(const GeodesicLine& lineX, const GeodesicLine& lineY,
-                  int& segmode) const;
+    XPoint SegmentInt(const GeodesicLine& lineX, const GeodesicLine& lineY,
+                      int& segmode) const;
     // All intersectons
     std::vector<XPoint>
-    Solve5(const GeodesicLine& lineX, const GeodesicLine& lineY,
+    AllInt0(const GeodesicLine& lineX, const GeodesicLine& lineY,
            Math::real maxdist, const XPoint& p0) const;
     std::vector<Point>
     AllInternal(const GeodesicLine& lineX, const GeodesicLine& lineY,
@@ -494,7 +493,10 @@ namespace GeographicLib {
     /**
      * @return the cumulative number of invocations of **h**.
      *
-     * This counter is set to zero by the constructor.
+     * This is a count of the number of times the spherical triangle needs to
+     * be solved.  Each involves a call to Geodesic::Inverse and this is a good
+     * metric for the overall cost. This counter is set to zero by the
+     * constructor.
      *
      * \warning The counter is a mutable variable and so is not thread safe.
      **********************************************************************/
@@ -502,35 +504,45 @@ namespace GeographicLib {
     /**
      * @return the cumulative number of invocations of **b**.
      *
-     * This counter is set to zero by the constructor.
+     * This is a count of the number of invocations of the basic algorithm,
+     * which is used by all the intersection methods.  This counter is set to
+     * zero by the constructor.
      *
      * \warning The counter is a mutable variable and so is not thread safe.
      **********************************************************************/
     long long NumBasic() const { return _cnt1; }
     /**
-     * @return times intersection point was changed; If incremented by 1,
-     * initial spherical solution eventually accepted.
+     * @return the number of times intersection point was changed in
+     *   Intersect::Closest and Intersect::Next.
      *
-     * This counter is set to zero by the constructor.
+     * If this counter is incremented by just 1 in Intersect::Closest, then the
+     * initial result of the basic algorithm was eventually accepted.  This
+     * counter is set to zero by the constructor.
+     *
+     * \note This counter is also incremented by Intersect::Segment, which
+     * calls Intersect::Closest.
      *
      * \warning The counter is a mutable variable and so is not thread safe.
      **********************************************************************/
     long long NumChange() const { return _cnt2; }
     /**
-     * @return times intersection point was changed; If incremented by 1, if
-     * corner is checked in Segment.
+     * @return the number of times a corner point is checked in
+     *   Intersect::Segment.
      *
      * This counter is set to zero by the constructor.
      *
      * \warning The counter is a mutable variable and so is not thread safe.
      **********************************************************************/
-    // 
     long long NumCorner() const { return _cnt3; }
     /**
-     * @return times intersection point was changed; If incremented by 1, if
-     * corner is checked in Segment.
+     * @return the number of times a corner point is returned by
+     *   Intersect::Segment.
      *
      * This counter is set to zero by the constructor.
+     *
+     * \note A conjecture is that a corner point never results in an
+     * intersection that overrides the intersection closest to the midpoints of
+     * the segments; i.e., NumCorner() always returns 0.
      *
      * \warning The counter is a mutable variable and so is not thread safe.
      **********************************************************************/

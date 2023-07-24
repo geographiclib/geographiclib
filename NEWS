@@ -8,7 +8,9 @@ The current version of the library is 2.3
 
 Changes between 2.3 (released 2023-mm-dd) and 2.2 versions:
 
-   * Add the Intersect class and the IntersectTool utility.
+   * Add the Intersect class and the IntersectTool utility.  The
+     methods are described in "Geodesic intersections",
+     https://arxiv.org/abs/yymm.nnnn.
 
    * Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
      Rhumb::LineClass, GeodesicLine::BaseClass,
@@ -59,8 +61,8 @@ Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
      + rhumb lines which include a pole as one of the endpoints are
        treated properly (previously point at the pole were moved
        slightly away from the pole);
-     + this treatment of rhumb areas is described in polygons,
-       https://arxiv.org/abs/2303.03219.
+     + this treatment of rhumb areas is described in "The area of
+       rhumb polygons", https://arxiv.org/abs/2303.03219.
 
    * The -E option for Planimeter(1) is now a toggle switching on
      exact treatment for geodesics (-G option), rhumb lines (-R
