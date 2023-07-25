@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2023-mm-dd
+\date 2023-07-25
 
 \section abstract Abstract
 
@@ -7510,7 +7510,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
-   (released 2023-mm-dd)
+   (released 2023-07-25)
    - Add the Intersect class and the
      <a href="IntersectTool.1.html">IntersectTool</a> utility.  The
      methods are described in

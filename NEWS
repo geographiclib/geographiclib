@@ -6,7 +6,7 @@ For more information, see
 
 The current version of the library is 2.3
 
-Changes between 2.3 (released 2023-mm-dd) and 2.2 versions:
+Changes between 2.3 (released 2023-07-25) and 2.2 versions:
 
    * Add the Intersect class and the IntersectTool utility.  The
      methods are described in "Geodesic intersections",
