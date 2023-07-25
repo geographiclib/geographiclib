@@ -4,11 +4,13 @@
  *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
- *   On auxiliary latitudes,
- *   Technical Report, SRI International, December 2022.
- *   https://arxiv.org/abs/2212.05818
+ *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
+ *   On auxiliary latitudes,</a>
+ *   Survey Review (2023);
+ *   preprint
+ *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
  * .
- * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2022-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -38,11 +40,12 @@ namespace GeographicLib {
    * \brief Conversions between auxiliary latitudes.
    *
    * This class is an implementation of the methods described in
-   * - C. F. F. Karney,<br>
-   *   <a href="https://arxiv.org/abs/2212.05818">On
-   *    auxiliary latitudes</a>,<br>
-   *   Technical Report, SRI International, December 2023.<br>
-   *   <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
+   * - C. F. F. Karney,
+   *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
+   *   On auxiliary latitudes,</a>
+   *   Survey Review (2023);
+   *   preprint
+   *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
    *
    * The provides accurate conversions between geographic (\e phi, &phi;),
    * parametric (\e beta, &beta;), geocentric (\e theta, &theta;), rectifying

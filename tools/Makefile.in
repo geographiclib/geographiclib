@@ -97,8 +97,8 @@ host_triplet = @host@
 target_triplet = @target@
 bin_PROGRAMS = CartConvert$(EXEEXT) ConicProj$(EXEEXT) \
 	GeoConvert$(EXEEXT) GeodSolve$(EXEEXT) GeodesicProj$(EXEEXT) \
-	GeoidEval$(EXEEXT) Gravity$(EXEEXT) MagneticField$(EXEEXT) \
-	Planimeter$(EXEEXT) RhumbSolve$(EXEEXT) \
+	GeoidEval$(EXEEXT) Gravity$(EXEEXT) IntersectTool$(EXEEXT) \
+	MagneticField$(EXEEXT) Planimeter$(EXEEXT) RhumbSolve$(EXEEXT) \
 	TransverseMercatorProj$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -147,6 +147,10 @@ am_Gravity_OBJECTS = Gravity.$(OBJEXT)
 Gravity_OBJECTS = $(am_Gravity_OBJECTS)
 Gravity_LDADD = $(LDADD)
 Gravity_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
+am_IntersectTool_OBJECTS = IntersectTool.$(OBJEXT)
+IntersectTool_OBJECTS = $(am_IntersectTool_OBJECTS)
+IntersectTool_LDADD = $(LDADD)
+IntersectTool_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_MagneticField_OBJECTS = MagneticField.$(OBJEXT)
 MagneticField_OBJECTS = $(am_MagneticField_OBJECTS)
 MagneticField_LDADD = $(LDADD)
@@ -211,8 +215,8 @@ am__depfiles_remade = ./$(DEPDIR)/CartConvert.Po \
 	./$(DEPDIR)/ConicProj.Po ./$(DEPDIR)/GeoConvert.Po \
 	./$(DEPDIR)/GeodSolve.Po ./$(DEPDIR)/GeodesicProj.Po \
 	./$(DEPDIR)/GeoidEval.Po ./$(DEPDIR)/Gravity.Po \
-	./$(DEPDIR)/MagneticField.Po ./$(DEPDIR)/Planimeter.Po \
-	./$(DEPDIR)/RhumbSolve.Po \
+	./$(DEPDIR)/IntersectTool.Po ./$(DEPDIR)/MagneticField.Po \
+	./$(DEPDIR)/Planimeter.Po ./$(DEPDIR)/RhumbSolve.Po \
 	./$(DEPDIR)/TransverseMercatorProj.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -254,15 +258,15 @@ am__v_CCLD_1 =
 SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
 	$(GeoConvert_SOURCES) $(GeodSolve_SOURCES) \
 	$(GeodesicProj_SOURCES) $(GeoidEval_SOURCES) \
-	$(Gravity_SOURCES) $(MagneticField_SOURCES) \
-	$(Planimeter_SOURCES) $(RhumbSolve_SOURCES) \
-	$(TransverseMercatorProj_SOURCES)
+	$(Gravity_SOURCES) $(IntersectTool_SOURCES) \
+	$(MagneticField_SOURCES) $(Planimeter_SOURCES) \
+	$(RhumbSolve_SOURCES) $(TransverseMercatorProj_SOURCES)
 DIST_SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
 	$(GeoConvert_SOURCES) $(GeodSolve_SOURCES) \
 	$(GeodesicProj_SOURCES) $(GeoidEval_SOURCES) \
-	$(Gravity_SOURCES) $(MagneticField_SOURCES) \
-	$(Planimeter_SOURCES) $(RhumbSolve_SOURCES) \
-	$(TransverseMercatorProj_SOURCES)
+	$(Gravity_SOURCES) $(IntersectTool_SOURCES) \
+	$(MagneticField_SOURCES) $(Planimeter_SOURCES) \
+	$(RhumbSolve_SOURCES) $(TransverseMercatorProj_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -516,6 +520,19 @@ Gravity_SOURCES = Gravity.cpp \
 	../include/GeographicLib/SphericalHarmonic1.hpp \
 	../include/GeographicLib/Utility.hpp
 
+IntersectTool_SOURCES = IntersectTool.cpp \
+	../man/IntersectTool.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicExact.hpp \
+	../include/GeographicLib/GeodesicLine.hpp \
+	../include/GeographicLib/GeodesicLineExact.hpp \
+	../include/GeographicLib/Intersect.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
+
 MagneticField_SOURCES = MagneticField.cpp \
 	../man/MagneticField.usage \
 	../include/GeographicLib/Config.h \
@@ -552,6 +569,7 @@ RhumbSolve_SOURCES = RhumbSolve.cpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Ellipsoid.hpp \
 	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Rhumb.hpp \
 	../include/GeographicLib/Utility.hpp
 
 TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
@@ -686,6 +704,10 @@ Gravity$(EXEEXT): $(Gravity_OBJECTS) $(Gravity_DEPENDENCIES) $(EXTRA_Gravity_DEP
 	@rm -f Gravity$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(Gravity_OBJECTS) $(Gravity_LDADD) $(LIBS)
 
+IntersectTool$(EXEEXT): $(IntersectTool_OBJECTS) $(IntersectTool_DEPENDENCIES) $(EXTRA_IntersectTool_DEPENDENCIES) 
+	@rm -f IntersectTool$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(IntersectTool_OBJECTS) $(IntersectTool_LDADD) $(LIBS)
+
 MagneticField$(EXEEXT): $(MagneticField_OBJECTS) $(MagneticField_DEPENDENCIES) $(EXTRA_MagneticField_DEPENDENCIES) 
 	@rm -f MagneticField$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(MagneticField_OBJECTS) $(MagneticField_LDADD) $(LIBS)
@@ -750,6 +772,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicProj.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoidEval.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Gravity.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/IntersectTool.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MagneticField.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Planimeter.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RhumbSolve.Po@am__quote@ # am--include-marker
@@ -922,6 +945,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/GeodesicProj.Po
 	-rm -f ./$(DEPDIR)/GeoidEval.Po
 	-rm -f ./$(DEPDIR)/Gravity.Po
+	-rm -f ./$(DEPDIR)/IntersectTool.Po
 	-rm -f ./$(DEPDIR)/MagneticField.Po
 	-rm -f ./$(DEPDIR)/Planimeter.Po
 	-rm -f ./$(DEPDIR)/RhumbSolve.Po
@@ -978,6 +1002,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/GeodesicProj.Po
 	-rm -f ./$(DEPDIR)/GeoidEval.Po
 	-rm -f ./$(DEPDIR)/Gravity.Po
+	-rm -f ./$(DEPDIR)/IntersectTool.Po
 	-rm -f ./$(DEPDIR)/MagneticField.Po
 	-rm -f ./$(DEPDIR)/Planimeter.Po
 	-rm -f ./$(DEPDIR)/RhumbSolve.Po

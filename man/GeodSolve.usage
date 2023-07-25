@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodSolve --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.2/GeodSolve.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.3/GeodSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -35,9 +35,9 @@ int usage(int retval, bool brief) {
 "           containing lat1 lon1 azi1 s12 and prints lat2 lon2 azi2 on standard\n"
 "           output.  This is the direct geodesic calculation.\n"
 "\n"
-"       2.  With the -i command line argument, GeodSolve performs the inverse\n"
-"           geodesic calculation.  It reads lines containing lat1 lon1 lat2\n"
-"           lon2 and prints the corresponding values of azi1 azi2 s12.\n"
+"       2.  With the -i option, GeodSolve performs the inverse geodesic\n"
+"           calculation.  It reads lines containing lat1 lon1 lat2 lon2 and\n"
+"           prints the corresponding values of azi1 azi2 s12.\n"
 "\n"
 "       3.  Command line arguments -L lat1 lon1 azi1 specify a geodesic line.\n"
 "           GeodSolve then accepts a sequence of s12 values (one per line) on\n"

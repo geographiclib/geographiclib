@@ -13,10 +13,13 @@ It is licensed under the MIT License; see
 
 ## Links:
 
-* Library documentation: https://geographiclib.sourceforge.io/C++/doc
+* Library documentation (latest release):
+  https://geographiclib.sourceforge.io/C++/doc
+* Library documentation (all versions):
+  https://geographiclib.sourceforge.io/C++
 * Change log: https://geographiclib.sourceforge.io/C++/doc/changes.html
 * Git repository: https://github.com/geographiclib/geographiclib
-  * Releases are on the [`release`](../../release) branch, and specific
+  * Releases are on the [`release`](../../tree/release) branch, and specific
     releases are tagged as, e.g., [`r1.52`](../../tree/r1.52),
     [`r2.0`](../../tree/r2.0), etc.  This is the appropriate branch
     for most *users* of GeographicLib.
@@ -30,4 +33,4 @@ It is licensed under the MIT License; see
 * GeographicLib: https://geographiclib.sourceforge.io
 * GeographicLib in various languages:
   https://geographiclib.sourceforge.io/doc/library.html#languages
-* Author: Charles Karney, <charles@karney.com>
+* Author: Charles Karney, <karney@alum.mit.edu>

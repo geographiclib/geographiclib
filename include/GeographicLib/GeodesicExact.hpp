@@ -2,7 +2,7 @@
  * \file GeodesicExact.hpp
  * \brief Header for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -85,6 +85,10 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;
+    friend class Geodesic;    // Allow Geodesic to call the default constructor
+    // Private default constructor to support Geodesic(a, f, exact)
+    GeodesicExact() {};         // Do nothing; used with exact = false.
+
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
@@ -697,6 +701,11 @@ namespace GeographicLib {
     /** \name Interface to GeodesicLineExact.
      **********************************************************************/
     ///@{
+
+    /**
+     * Typedef for the class for computing multiple points on a geodesic.
+     **********************************************************************/
+    typedef GeodesicLineExact LineClass;
 
     /**
      * Set up to compute several points on a single geodesic.

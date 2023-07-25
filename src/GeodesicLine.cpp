@@ -2,7 +2,7 @@
  * \file GeodesicLine.cpp
  * \brief Implementation for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -80,6 +80,13 @@ namespace GeographicLib {
     Math::norm(_ssig1, _csig1); // sig1 in (-pi, pi]
     // Math::norm(_somg1, _comg1); -- don't need to normalize!
 
+    _a13 = _s13 = Math::NaN();
+    _exact = g._exact;
+    if (_exact) {
+      _lineexact.LineInit(g._geodexact, lat1, lon1, azi1, salp1, calp1, caps);
+      return;
+    }
+
     _k2 = Math::sq(_calp0) * g._ep2;
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
 
@@ -117,7 +124,6 @@ namespace GeographicLib {
       _bB41 = Geodesic::SinCosSeries(false, _ssig1, _csig1, _cC4a, nC4_);
     }
 
-    _a13 = _s13 = Math::NaN();
   }
 
   GeodesicLine::GeodesicLine(const Geodesic& g,
@@ -144,6 +150,10 @@ namespace GeographicLib {
                                        real& s12, real& m12,
                                        real& M12, real& M21,
                                        real& S12) const {
+    if (_exact)
+      return _lineexact.GenPosition(arcmode, s12_a12, outmask,
+                                    lat2, lon2, azi2,
+                                    s12, m12, M12, M21, S12);
     outmask &= _caps & OUT_MASK;
     if (!( Init() && (arcmode || (_caps & (OUT_MASK & DISTANCE_IN))) ))
       // Uninitialized or impossible distance calculation requested

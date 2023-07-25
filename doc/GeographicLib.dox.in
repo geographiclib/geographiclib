@@ -3,16 +3,16 @@
  * \file GeographicLib.dox
  * \brief Documentation for GeographicLib
  *
- * Written by Charles Karney <charles@karney.com> and licensed under the
+ * Written by Charles Karney <karney@alum.mit.edu> and licensed under the
  * MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 namespace GeographicLib {
 /**
 \mainpage GeographicLib library
-\author Charles F. F. Karney (charles@karney.com)
+\author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2023-03-07
+\date 2023-07-25
 
 \section abstract Abstract
 
@@ -178,7 +178,7 @@ problems may occur with larger values of <i>f</i>:
    inversion may be incorrect if \e f is large.
 
 Undoubtedly, bugs lurk in this code and in the documentation.  Please
-report any you find to charles@karney.com.
+report any you find to karney@alum.mit.edu.
 
 <center>
 Forward to \ref install.  Up to \ref contents.
@@ -851,6 +851,8 @@ The utilities are
  - <a href="RhumbSolve.1.html">
    <b>RhumbSolve</b></a>: perform rhumb line calculations using Rhumb
    and RhumbLine.  See \ref RhumbSolve.cpp.
+ - <a href="IntersectTool.1.html"> <b>IntersectTool</b></a>: find
+   intersections between two geodesics.  See \ref IntersectTool.cpp.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -4975,9 +4977,9 @@ standard construction in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 
-The JacobiConformal class provides an implementation of the Jacobi
-conformal projection is given here.  <b>NOTE:</b> This is just sample
-code.  It is not part of GeographicLib itself.
+The experimental::JacobiConformal class provides an implementation of
+the Jacobi conformal projection is given here.  <b>NOTE:</b> This is
+just sample code.  It is not part of GeographicLib itself.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
@@ -5002,8 +5004,8 @@ The series expansions described in the paper are available in
  - C. F. F. Karney,<br>
    <a href="https://doi.org/10.5281/zenodo.7685484">Series expansions
    for computing rhumb areas</a>,<br> March 2023.<br>
-   <a href="https://doi.org/10.5281/zenodo.7685484">
-   doi:10.5281/zenodo.7685484</a>
+   DOI: <a href="https://doi.org/10.5281/zenodo.7685484">
+   10.5281/zenodo.7685484</a>
 
 The Rhumb and RhumbLine classes together with the
 <a href="RhumbSolve.1.html">RhumbSolve</a> utility perform rhumb line
@@ -6469,9 +6471,12 @@ Back to \ref geocentric.  Forward to \ref highprec.  Up to \ref contents.
 
 This material is now written up as
  - C. F. F. Karney,<br>
-   <a href="https://arxiv.org/abs/2212.05818">On auxiliary latitudes</a>,<br>
-   Technical Report, SRI International, December 2022.<br>
-   <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
+   <a href="https://doi.org/10.1080/00396265.2023.2217604">
+   On auxiliary latitudes</a>,<br>
+   Survey Review, 2023. Technical Report, SRI International, December 2022.<br>
+   DOI: <a href="https://doi.org/10.1080/00396265.2023.2217604">
+   10.1080/00396265.2023.2217604</a><br>
+   preprint: <a href="https://arxiv.org/abs/2212.05818">arxiv:2212.05818</a>
  .
 The implementation of the methods described in this paper is available
 as the classes AuxAngle, AuxLatitude, and DAuxLatitude.
@@ -7504,6 +7509,44 @@ git repository for GeographicLib</a>.
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
 \endif
 
+ - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
+   (released 2023-07-25)
+   - Add the Intersect class and the
+     <a href="IntersectTool.1.html">IntersectTool</a> utility.  The
+     methods are described in
+     <a href="https://arxiv.org/abs/yymm.nnnn">Geodesic
+     intersections</a>.
+   - Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
+     Rhumb::LineClass, GeodesicLine::BaseClass,
+     GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
+   - Geodesic constructor accepts optional third argument \e exact,
+     default false.  If true, then the calculations are delegated to
+     GeodesicExact.
+     <a href="GeodSolve.1.html">GeodSolve</a> and
+     <a href="Planimeter.1.html">Planimeter</a> now use this
+     simplified interface.
+   - PolygonAreaExact is deprecated; use PolygonArea instead.
+   - Bug in <a href="Planimeter.1.html">Planimeter</a> -Q (introduced in
+     version 2.2) has been fixed.
+   - TransverseMercator constructor accepts optional arguments \e exact
+     and \e extend (default false for both).  If \e exact = true, then
+     the calculations are delegated to TransverseMercatorExact.
+     <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+     now uses this simplified interface.
+   - Minor fixes:
+     - Fix documentation bug for
+       <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
+       (incorrectly stated that -t for the extended domain was the
+       default).
+     - Remove unnecessary friend declarations for Ellipsoid in
+       AlbersEqualArea and TransverseMercator. (As of version 2.2,
+       Ellipsoid uses the AuxLatitude class for this functionality.)
+     - Small change in EllipticFunction to speed up the default
+       contructor.
+     - Remove workaround for boost 1.76 with enums (not needed for boost
+       1.78).
+     - Remove unused header from NearestNeighbor.
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.2">Version 2.2</a>
    (released 2023-03-07)
    - Completely redo Rhumb and RhumbLine classes to yield accurate
@@ -7554,7 +7597,7 @@ git repository for GeographicLib</a>.
    - Add example code <code>examples/AuxLatitude.[hc]pp</code>
      implementating the AuxAngle and AuxLatitude classes.  These classes
      implement the methods documented in the paper
-     <a href="https://arxiv.org/abs/2212.05818">On auxiliary
+     <a href="https://doi.org/10.1080/00396265.2023.2217604">On auxiliary
      latitudes</a>.  They are <b>not</b> part of GeographicLib.  See
      \ref auxlat for more details.
    - Minor cmake issues:

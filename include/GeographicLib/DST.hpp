@@ -2,7 +2,7 @@
  * \file DST.hpp
  * \brief Header for GeographicLib::DST class
  *
- * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2022-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/

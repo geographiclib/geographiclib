@@ -27,6 +27,7 @@ set (SOURCES
   Gnomonic.cpp
   GravityCircle.cpp
   GravityModel.cpp
+  Intersect.cpp
   LambertConformalConic.cpp
   LocalCartesian.cpp
   MGRS.cpp

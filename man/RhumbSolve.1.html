@@ -32,7 +32,7 @@
 <li><p>By default, <b>RhumbSolve</b> accepts lines on the standard input containing <i>lat1</i> <i>lon1</i> <i>azi12</i> <i>s12</i> and prints <i>lat2</i> <i>lon2</i> <i>S12</i> on standard output. This is the direct calculation.</p>
 
 </li>
-<li><p>With the <b>-i</b> command line argument, <b>RhumbSolve</b> performs the inverse calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the values of <i>azi12</i> <i>s12</i> <i>S12</i> for the corresponding shortest rhumb lines.</p>
+<li><p>With the <b>-i</b> option, <b>RhumbSolve</b> performs the inverse calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the values of <i>azi12</i> <i>s12</i> <i>S12</i> for the corresponding shortest rhumb lines.</p>
 
 </li>
 <li><p>Command line arguments <b>-L</b> <i>lat1</i> <i>lon1</i> <i>azi12</i> specify a rhumb line. <b>RhumbSolve</b> then accepts a sequence of <i>s12</i> values (one per line) on standard input and prints <i>lat2</i> <i>lon2</i> <i>S12</i> for each. This generates a sequence of points on a rhumb line.</p>
@@ -200,11 +200,7 @@ RhumbSolve -L 40:38:23N 073:46:44W 103:34:58.2 -: -p 0
 
 <p>An online version of this utility is availbable at <a href="https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve">https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve</a>.</p>
 
-<h1 id="SEE-ALSO1">SEE ALSO</h1>
-
-<p>GeoConvert(1).</p>
-
-<p>An online version of this utility is availbable at <a href="https://geographiclib.sourceforge.io/cgi-bin/GeodSolve">https://geographiclib.sourceforge.io/cgi-bin/GeodSolve</a>.</p>
+<p>An online version of this utility is availbable at <a href="https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve">https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve</a>.</p>
 
 <p>This solution for rhumb line is described in C. F. F. Karney, <i>The area of rhumb polygons</i>, Technical Report, SRI International (2023); URL: <a href="https://arxiv.org/abs/2303.03219">https://arxiv.org/abs/2303.03219</a>.</p>
 

@@ -2,7 +2,7 @@
  * \file Geodesic.cpp
  * \brief Implementation for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -39,7 +39,7 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Geodesic::Geodesic(real a, real f)
+  Geodesic::Geodesic(real a, real f, bool exact)
     : maxit2_(maxit1_ + Math::digits() + 10)
       // Underflow guard.  We require
       //   tiny_ * epsilon() > 0
@@ -55,6 +55,7 @@ namespace GeographicLib {
     , xthresh_(1000 * tol2_)
     , _a(a)
     , _f(f)
+    , _exact(exact)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))
     , _ep2(_e2 / Math::sq(_f1)) // e2 / (1 - e2)
@@ -76,14 +77,19 @@ namespace GeographicLib {
       // spherical case.
     , _etol2(real(0.1) * tol2_ /
              sqrt( fmax(real(0.001), fabs(_f)) * fmin(real(1), 1 - _f/2) / 2 ))
+    , _geodexact(_exact ? GeodesicExact(a, f) : GeodesicExact())
   {
-    if (!(isfinite(_a) && _a > 0))
-      throw GeographicErr("Equatorial radius is not positive");
-    if (!(isfinite(_b) && _b > 0))
-      throw GeographicErr("Polar semi-axis is not positive");
-    A3coeff();
-    C3coeff();
-    C4coeff();
+    if (_exact)
+      _c2 = _geodexact._c2;
+    else {
+      if (!(isfinite(_a) && _a > 0))
+        throw GeographicErr("Equatorial radius is not positive");
+      if (!(isfinite(_b) && _b > 0))
+        throw GeographicErr("Polar semi-axis is not positive");
+      A3coeff();
+      C3coeff();
+      C4coeff();
+    }
   }
 
   const Geodesic& Geodesic::WGS84() {
@@ -125,6 +131,10 @@ namespace GeographicLib {
                                  real& lat2, real& lon2, real& azi2,
                                  real& s12, real& m12, real& M12, real& M21,
                                  real& S12) const {
+    if (_exact)
+      return _geodexact.GenDirect(lat1, lon1, azi1, arcmode, s12_a12, outmask,
+                                  lat2, lon2, azi2,
+                                  s12, m12, M12, M21, S12);
     // Automatically supply DISTANCE_IN if necessary
     if (!arcmode) outmask |= DISTANCE_IN;
     return GeodesicLine(*this, lat1, lon1, azi1, outmask)
@@ -162,6 +172,11 @@ namespace GeographicLib {
                                   real& salp2, real& calp2,
                                   real& m12, real& M12, real& M21,
                                   real& S12) const {
+    if (_exact)
+      return _geodexact.GenInverse(lat1, lon1, lat2, lon2,
+                                   outmask, s12,
+                                   salp1, calp1, salp2, calp2,
+                                   m12, M12, M21, S12);
     // Compute longitude difference (AngDiff does this carefully).
     using std::isnan;           // Needed for Centos 7, ubuntu 14
     real lon12s, lon12 = Math::AngDiff(lon1, lon2, lon12s);

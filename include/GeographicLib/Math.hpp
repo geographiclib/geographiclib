@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -40,6 +40,7 @@
 #include <limits>
 
 #if GEOGRAPHICLIB_PRECISION == 4
+#include <memory>
 #include <boost/version.hpp>
 #include <boost/multiprecision/float128.hpp>
 #include <boost/math/special_functions.hpp>
@@ -133,22 +134,14 @@ namespace GeographicLib {
      * break most of the tests.  Also the normal definition of degree is baked
      * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
      **********************************************************************/
-#if GEOGRAPHICLIB_PRECISION == 4
-    static const int
-#else
     enum dms {
-#endif
       qd = 90,                  ///< degrees per quarter turn
       dm = 60,                  ///< minutes per degree
       ms = 60,                  ///< seconds per minute
       hd = 2 * qd,              ///< degrees per half turn
       td = 2 * hd,              ///< degrees per turn
       ds = dm * ms              ///< seconds per degree
-#if GEOGRAPHICLIB_PRECISION == 4
-      ;
-#else
     };
-#endif
 
     /**
      * @return the number of bits of precision in a real number.

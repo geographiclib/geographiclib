@@ -2,7 +2,7 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -12,6 +12,7 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Geodesic.hpp>
+#include <GeographicLib/GeodesicLineExact.hpp>
 
 namespace GeographicLib {
 
@@ -42,11 +43,13 @@ namespace GeographicLib {
    * The calculations are accurate to better than 15 nm (15 nanometers).  See
    * Sec. 9 of
    * <a href="https://arxiv.org/abs/1102.1215v1">arXiv:1102.1215v1</a> for
-   * details.  The algorithms used by this class are based on series expansions
-   * using the flattening \e f as a small parameter.  These are only accurate
-   * for |<i>f</i>| &lt; 0.02; however reasonably accurate results will be
-   * obtained for |<i>f</i>| &lt; 0.2.  For very eccentric ellipsoids, use
-   * GeodesicLineExact instead.
+   * details.  With \e exact = false (the default) in the constructor for the
+   * Geodesic object, the algorithms used by this class are based on series
+   * expansions using the flattening \e f as a small parameter.  These are only
+   * accurate for |<i>f</i>| &lt; 0.02; however reasonably accurate results
+   * will be obtained for |<i>f</i>| &lt; 0.2.  For very eccentric ellipsoids,
+   * set \e exact = true in the constructor for the Geodesic object; this will
+   * delegate the calculations to GeodesicLineExact.
    *
    * The algorithms are described in
    * - C. F. F. Karney,
@@ -80,7 +83,9 @@ namespace GeographicLib {
 
     real tiny_;
     real _lat1, _lon1, _azi1;
-    real _a, _f, _b, _c2, _f1, _salp0, _calp0, _k2,
+    real _a, _f;
+    bool _exact;
+    real _b, _c2, _f1, _salp0, _calp0, _k2,
       _salp1, _calp1, _ssig1, _csig1, _dn1, _stau1, _ctau1, _somg1, _comg1,
       _aA1m1, _aA2m1, _aA3c, _bB11, _bB21, _bB31, _aA4, _bB41;
     real _a13, _s13;
@@ -88,6 +93,7 @@ namespace GeographicLib {
     real _cC1a[nC1_ + 1], _cC1pa[nC1p_ + 1], _cC2a[nC2_ + 1], _cC3a[nC3_],
       _cC4a[nC4_];              // all the elements of _cC4a are used
     unsigned _caps;
+    GeodesicLineExact _lineexact;
 
     void LineInit(const Geodesic& g,
                   real lat1, real lon1,
@@ -186,6 +192,11 @@ namespace GeographicLib {
        **********************************************************************/
       ALL           = Geodesic::ALL,
     };
+
+    /**
+     * Typedef for the base class implementing geodesics.
+     **********************************************************************/
+    typedef Geodesic BaseClass;
 
     /** \name Constructors
      **********************************************************************/
@@ -662,6 +673,12 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real Flattening() const
     { return Init() ? _f : Math::NaN(); }
+
+    /**
+     * @return \e exact whether the exact formulation is used.  This is the
+     *   value returned by the Geodesic object used in the constructor.
+     **********************************************************************/
+    bool Exact() const { return _exact; }
 
     /**
      * @return \e caps the computational capabilities that this object was

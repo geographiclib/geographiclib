@@ -4,7 +4,44 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.2
+The current version of the library is 2.3
+
+Changes between 2.3 (released 2023-07-25) and 2.2 versions:
+
+   * Add the Intersect class and the IntersectTool utility.  The
+     methods are described in "Geodesic intersections",
+     https://arxiv.org/abs/yymm.nnnn.
+
+   * Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
+     Rhumb::LineClass, GeodesicLine::BaseClass,
+     GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
+
+   * Geodesic constructor accepts optional third argument \e exact,
+     default false.  If true, then the calculations are delegated to
+     GeodesicExact.  GeodSolve and Planimeter now use this simplified
+     interface.
+
+   * PolygonAreaExact is deprecated; use PolygonArea instead.
+
+   * Bug in Planimeter -Q (introduced in version 2.2) has been fixed.
+
+   * TransverseMercator constructor accepts optional arguments \e
+     exact and \e extend (default false for both).  If \e exact =
+     true, then the calculations are delegated to
+     TransverseMercatorExact.  TransverseMercatorProj now uses this
+     simplified interface.
+
+   * Minor fixes:
+     + Fix documentation bug for TransverseMercatorProj (incorrectly
+       stated that -t for the extended domain was the default).
+     + Remove unnecessary friend declarations for Ellipsoid in
+       AlbersEqualArea and TransverseMercator. (As of version 2.2,
+       Ellipsoid uses the AuxLatitude class for this functionality.)
+     + Small change in EllipticFunction to speed up the default
+       contructor.
+     + Remove workaround for boost 1.76 with enums (not needed for boost
+       1.78).
+     + Remove unused header from NearestNeighbor.
 
 Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
 
@@ -24,8 +61,8 @@ Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
      + rhumb lines which include a pole as one of the endpoints are
        treated properly (previously point at the pole were moved
        slightly away from the pole);
-     + this treatment of rhumb areas is described in polygons,
-       https://arxiv.org/abs/2303.03219.
+     + this treatment of rhumb areas is described in "The area of
+       rhumb polygons", https://arxiv.org/abs/2303.03219.
 
    * The -E option for Planimeter(1) is now a toggle switching on
      exact treatment for geodesics (-G option), rhumb lines (-R
@@ -871,8 +908,7 @@ Changes between 1.42 (released 2015-04-28) and 1.41 versions:
     versions 1.40 and 1.41).
 
   * Mark the computation of the gradient of the geoid height in the
-    Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a> utility
-    as deprecated.
+    Geoid class and the GeoidEval utility as deprecated.
 
   * Work around the boost-quadmath bug with setprecision(0).
 

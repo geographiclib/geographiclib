@@ -4,11 +4,13 @@
  *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
- *   On auxiliary latitudes,
- *   Technical Report, SRI International, December 2022.
- *   https://arxiv.org/abs/2212.05818
+ *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
+ *   On auxiliary latitudes,</a>
+ *   Survey Review (2023);
+ *   preprint
+ *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
  * .
- * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2022-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -25,9 +27,11 @@ namespace GeographicLib {
    *
    * This class is an implementation of the methods described in
    * - C. F. F. Karney,
-   *   On auxiliary latitudes,
-   *   Technical Report, SRI International, December 2022.
-   *   https://arxiv.org/abs/2212.05818
+   *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
+   *   On auxiliary latitudes,</a>
+   *   Survey Review (2023);
+   *   preprint
+   *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
    *
    * An angle is represented be the \e y and \e x coordinates of a point in the
    * 2d plane.  The two coordinates are proportional to the sine and cosine of

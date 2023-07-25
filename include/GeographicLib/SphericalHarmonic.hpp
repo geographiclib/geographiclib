@@ -2,7 +2,7 @@
  * \file SphericalHarmonic.hpp
  * \brief Header for GeographicLib::SphericalHarmonic class
  *
- * Copyright (c) Charles Karney (2011-2019) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2019) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/

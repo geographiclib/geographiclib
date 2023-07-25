@@ -41,6 +41,26 @@ int main() {
        cout << i << " " << lat << " " << lon << "\n";
       }
     }
+    {
+      // Check that the inspection functions for exact = true return the same
+      // as for GeodesicLineExact.
+      Geodesic geoda(6.4e6, 0.5, true);
+      GeodesicExact geodb(6.4e6, 0.5);
+      GeodesicLine linea = geoda.InverseLine(lat1, lon1, lat2, lon2);
+      GeodesicLineExact lineb = geodb.InverseLine(lat1, lon1, lat2, lon2);
+      if (! (linea.Init() == lineb.Init() &&
+             linea.Latitude() == lineb.Latitude() &&
+             linea.Longitude() == lineb.Longitude() &&
+             linea.Azimuth() == lineb.Azimuth() &&
+             linea.EquatorialAzimuth() == lineb.EquatorialAzimuth() &&
+             linea.EquatorialArc() == lineb.EquatorialArc() &&
+             linea.EquatorialRadius() == lineb.EquatorialRadius() &&
+             linea.Flattening() == lineb.Flattening() &&
+             linea.Capabilities() == lineb.Capabilities() &&
+             linea.Distance() == lineb.Distance() &&
+             linea.Arc() == lineb.Arc()) )
+        cerr << "Incompatible results compared to GeodesicLineExact\n";
+    }
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";

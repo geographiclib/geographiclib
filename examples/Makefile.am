@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011-2023, Charles Karney <charles@karney.com>
+# Copyright (C) 2011-2023, Charles Karney <karney@alum.mit.edu>
 
 EXAMPLE_FILES = \
 	example-Accumulator.cpp \
@@ -31,6 +31,7 @@ EXAMPLE_FILES = \
 	example-Gnomonic.cpp \
 	example-GravityCircle.cpp \
 	example-GravityModel.cpp \
+	example-Intersect.cpp \
 	example-LambertConformalConic.cpp \
 	example-LocalCartesian.cpp \
 	example-MGRS.cpp \

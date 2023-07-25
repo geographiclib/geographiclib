@@ -143,12 +143,12 @@ am_libGeographicLib_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
 	DST.lo Ellipsoid.lo EllipticFunction.lo GARS.lo GeoCoords.lo \
 	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicLine.lo \
 	GeodesicLineExact.lo Geohash.lo Geoid.lo Georef.lo Gnomonic.lo \
-	GravityCircle.lo GravityModel.lo LambertConformalConic.lo \
-	LocalCartesian.lo MGRS.lo MagneticCircle.lo MagneticModel.lo \
-	Math.lo NormalGravity.lo OSGB.lo PolarStereographic.lo \
-	PolygonArea.lo Rhumb.lo SphericalEngine.lo \
-	TransverseMercator.lo TransverseMercatorExact.lo UTMUPS.lo \
-	Utility.lo
+	GravityCircle.lo GravityModel.lo Intersect.lo \
+	LambertConformalConic.lo LocalCartesian.lo MGRS.lo \
+	MagneticCircle.lo MagneticModel.lo Math.lo NormalGravity.lo \
+	OSGB.lo PolarStereographic.lo PolygonArea.lo Rhumb.lo \
+	SphericalEngine.lo TransverseMercator.lo \
+	TransverseMercatorExact.lo UTMUPS.lo Utility.lo
 libGeographicLib_la_OBJECTS = $(am_libGeographicLib_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -187,6 +187,7 @@ am__depfiles_remade = ./$(DEPDIR)/Accumulator.Plo \
 	./$(DEPDIR)/Geohash.Plo ./$(DEPDIR)/Geoid.Plo \
 	./$(DEPDIR)/Georef.Plo ./$(DEPDIR)/Gnomonic.Plo \
 	./$(DEPDIR)/GravityCircle.Plo ./$(DEPDIR)/GravityModel.Plo \
+	./$(DEPDIR)/Intersect.Plo \
 	./$(DEPDIR)/LambertConformalConic.Plo \
 	./$(DEPDIR)/LocalCartesian.Plo ./$(DEPDIR)/MGRS.Plo \
 	./$(DEPDIR)/MagneticCircle.Plo ./$(DEPDIR)/MagneticModel.Plo \
@@ -432,6 +433,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	Gnomonic.cpp \
 	GravityCircle.cpp \
 	GravityModel.cpp \
+	Intersect.cpp \
 	LambertConformalConic.cpp \
 	LocalCartesian.cpp \
 	MGRS.cpp \
@@ -474,6 +476,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	../include/GeographicLib/Gnomonic.hpp \
 	../include/GeographicLib/GravityCircle.hpp \
 	../include/GeographicLib/GravityModel.hpp \
+	../include/GeographicLib/Intersect.hpp \
 	../include/GeographicLib/LambertConformalConic.hpp \
 	../include/GeographicLib/LocalCartesian.hpp \
 	../include/GeographicLib/MGRS.hpp \
@@ -601,6 +604,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Gnomonic.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GravityCircle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GravityModel.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Intersect.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LambertConformalConic.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LocalCartesian.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/MGRS.Plo@am__quote@ # am--include-marker
@@ -803,6 +807,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/Gnomonic.Plo
 	-rm -f ./$(DEPDIR)/GravityCircle.Plo
 	-rm -f ./$(DEPDIR)/GravityModel.Plo
+	-rm -f ./$(DEPDIR)/Intersect.Plo
 	-rm -f ./$(DEPDIR)/LambertConformalConic.Plo
 	-rm -f ./$(DEPDIR)/LocalCartesian.Plo
 	-rm -f ./$(DEPDIR)/MGRS.Plo
@@ -889,6 +894,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/Gnomonic.Plo
 	-rm -f ./$(DEPDIR)/GravityCircle.Plo
 	-rm -f ./$(DEPDIR)/GravityModel.Plo
+	-rm -f ./$(DEPDIR)/Intersect.Plo
 	-rm -f ./$(DEPDIR)/LambertConformalConic.Plo
 	-rm -f ./$(DEPDIR)/LocalCartesian.Plo
 	-rm -f ./$(DEPDIR)/MGRS.Plo
@@ -943,7 +949,7 @@ uninstall-am: uninstall-libLTLIBRARIES
 
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h
-	( egrep '\bVERSION\b|\bGEOGRAPHICLIB_|\bHAVE_LONG_DOUBLE\b' $< | \
+	( grep -E '\bVERSION\b|\bGEOGRAPHICLIB_|\bHAVE_LONG_DOUBLE\b' $< | \
 	  sed -e 's/ VERSION / GEOGRAPHICLIB_VERSION_STRING /' \
 	      -e 's/ HAVE_LONG_DOUBLE / GEOGRAPHICLIB_HAVE_LONG_DOUBLE /'; \
 	  grep WORDS_BIGENDIAN $< | tail -1 | \

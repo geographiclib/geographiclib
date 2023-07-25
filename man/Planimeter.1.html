@@ -166,7 +166,7 @@ EOF
 <p>The following code takes the output from gdalinfo and reports the area covered by the data (assuming the edges of the image are geodesics).</p>
 
 <pre><code>#! /bin/sh
-egrep &#39;^((Upper|Lower) (Left|Right)|Center) &#39; |
+grep -E &#39;^((Upper|Lower) (Left|Right)|Center) &#39; |
 sed -e &#39;s/d /d/g&#39; -e &quot;s/&#39; /&#39;/g&quot; | tr -s &#39;(),\r\t&#39; &#39; &#39; | awk &#39;{
     if ($1 $2 == &quot;UpperLeft&quot;)
         ul = $6 &quot; &quot; $5;

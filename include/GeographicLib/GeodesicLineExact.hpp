@@ -2,7 +2,7 @@
  * \file GeodesicLineExact.hpp
  * \brief Header for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -14,6 +14,12 @@
 #include <GeographicLib/GeodesicExact.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include <vector>
+
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs vector
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
+#endif
 
 namespace GeographicLib {
 
@@ -33,10 +39,11 @@ namespace GeographicLib {
    * GeodesicLineExact (via the -E option).
    **********************************************************************/
 
-  class GeodesicLineExact {
+  class GEOGRAPHICLIB_EXPORT GeodesicLineExact {
   private:
     typedef Math::real real;
     friend class GeodesicExact;
+    friend class GeodesicLine;
     int _nC4;
 
     real tiny_;
@@ -150,6 +157,11 @@ namespace GeographicLib {
       ALL           = GeodesicExact::ALL,
     };
 
+    /**
+     * Typedef for the base class implementing geodesics.
+     **********************************************************************/
+    typedef GeodesicExact BaseClass;
+
     /** \name Constructors
      **********************************************************************/
     ///@{
@@ -193,7 +205,6 @@ namespace GeographicLib {
      * fixed, writing \e lat1 = &plusmn;(90&deg; &minus; &epsilon;), and taking
      * the limit &epsilon; &rarr; 0+.
      **********************************************************************/
-    GEOGRAPHICLIB_EXPORT
     GeodesicLineExact(const GeodesicExact& g, real lat1, real lon1, real azi1,
                       unsigned caps = ALL);
 
@@ -204,7 +215,7 @@ namespace GeographicLib {
      * GeodesicExact::Line.  Use Init() to test whether object is still in this
      * uninitialized state.
      **********************************************************************/
-    GEOGRAPHICLIB_EXPORT GeodesicLineExact() : _caps(0U) {}
+    GeodesicLineExact() : _caps(0U) {}
     ///@}
 
     /** \name Position in terms of distance
@@ -250,10 +261,8 @@ namespace GeographicLib {
      * Note, however, that the arc length is always computed and returned as
      * the function value.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Position(real s12, real& lat2, real& lon2,
-                                             real& azi2,
-                                             real& m12, real& M12, real& M21,
-                                             real& S12) const {
+    Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
+                        real& m12, real& M12, real& M21, real& S12) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH |
@@ -264,7 +273,7 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Position(real s12, real& lat2, real& lon2)
+    Math::real Position(real s12, real& lat2, real& lon2)
       const {
       real t;
       return GenPosition(false, s12,
@@ -275,8 +284,7 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Position(real s12, real& lat2, real& lon2,
-                                             real& azi2) const {
+    Math::real Position(real s12, real& lat2, real& lon2, real& azi2) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH,
@@ -286,8 +294,8 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Position(real s12, real& lat2, real& lon2,
-                                             real& azi2, real& m12) const {
+    Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
+                        real& m12) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE |
@@ -298,9 +306,8 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Position(real s12, real& lat2, real& lon2,
-                                             real& azi2, real& M12, real& M21)
-      const {
+    Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
+                        real& M12, real& M21) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE |
@@ -311,10 +318,8 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::Position.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Position(real s12,
-                                             real& lat2, real& lon2, real& azi2,
-                                             real& m12, real& M12, real& M21)
-      const {
+    Math::real Position(real s12, real& lat2, real& lon2, real& azi2,
+                        real& m12, real& M12, real& M21) const {
       real t;
       return GenPosition(false, s12,
                          LATITUDE | LONGITUDE | AZIMUTH |
@@ -364,10 +369,9 @@ namespace GeographicLib {
      * The following functions are overloaded versions of
      * GeodesicLineExact::ArcPosition which omit some of the output parameters.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT
-    ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                real& s12, real& m12, real& M12, real& M21,
-                real& S12) const {
+    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                     real& s12, real& m12, real& M12, real& M21, real& S12)
+    const {
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE |
                   REDUCEDLENGTH | GEODESICSCALE | AREA,
@@ -377,8 +381,7 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT ArcPosition(real a12, real& lat2, real& lon2)
-      const {
+    void ArcPosition(real a12, real& lat2, real& lon2) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE,
@@ -388,9 +391,7 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT ArcPosition(real a12,
-                                          real& lat2, real& lon2, real& azi2)
-      const {
+    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH,
@@ -400,9 +401,8 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT ArcPosition(real a12,
-                                          real& lat2, real& lon2, real& azi2,
-                                          real& s12) const {
+    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2, real& s12)
+    const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH | DISTANCE,
@@ -412,9 +412,8 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT ArcPosition(real a12,
-                                          real& lat2, real& lon2, real& azi2,
-                                          real& s12, real& m12) const {
+    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                     real& s12, real& m12) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -425,10 +424,8 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT ArcPosition(real a12,
-                                          real& lat2, real& lon2, real& azi2,
-                                          real& s12, real& M12, real& M21)
-      const {
+    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                     real& s12, real& M12, real& M21) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -439,10 +436,8 @@ namespace GeographicLib {
     /**
      * See the documentation for GeodesicLineExact::ArcPosition.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT
-    ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
-                real& s12, real& m12, real& M12, real& M21)
-      const {
+    void ArcPosition(real a12, real& lat2, real& lon2, real& azi2,
+                     real& s12, real& m12, real& M12, real& M21) const {
       real t;
       GenPosition(true, a12,
                   LATITUDE | LONGITUDE | AZIMUTH |
@@ -513,10 +508,10 @@ namespace GeographicLib {
      * &minus; \e lon1 indicates how many times and in what sense the geodesic
      * encircles the ellipsoid.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT
-    GenPosition(bool arcmode, real s12_a12, unsigned outmask,
-                real& lat2, real& lon2, real& azi2,
-                real& s12, real& m12, real& M12, real& M21, real& S12) const;
+    Math::real GenPosition(bool arcmode, real s12_a12, unsigned outmask,
+                           real& lat2, real& lon2, real& azi2,
+                           real& s12, real& m12, real& M12, real& M21,
+                           real& S12) const;
     ///@}
 
     /** \name Setting point 3
@@ -532,7 +527,7 @@ namespace GeographicLib {
      * This is only useful if the GeodesicLineExact object has been constructed
      * with \e caps |= GeodesicLineExact::DISTANCE_IN.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT SetDistance(real s13);
+    void SetDistance(real s13);
 
     /**
      * Specify position of point 3 in terms of arc length.
@@ -543,7 +538,7 @@ namespace GeographicLib {
      * The distance \e s13 is only set if the GeodesicLineExact object has been
      * constructed with \e caps |= GeodesicLineExact::DISTANCE.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT SetArc(real a13);
+    void SetArc(real a13);
 
     /**
      * Specify position of point 3 in terms of either distance or arc length.
@@ -556,7 +551,7 @@ namespace GeographicLib {
      *   point 1 to point 3 (meters); otherwise it is the arc length from
      *   point 1 to point 3 (degrees); it can be negative.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT GenSetDistance(bool arcmode, real s13_a13);
+    void GenSetDistance(bool arcmode, real s13_a13);
 
     /** \name Inspector functions
      **********************************************************************/
@@ -565,24 +560,24 @@ namespace GeographicLib {
     /**
      * @return true if the object has been initialized.
      **********************************************************************/
-    bool GEOGRAPHICLIB_EXPORT Init() const { return _caps != 0U; }
+    bool Init() const { return _caps != 0U; }
 
     /**
      * @return \e lat1 the latitude of point 1 (degrees).
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Latitude() const
+    Math::real Latitude() const
     { return Init() ? _lat1 : Math::NaN(); }
 
     /**
      * @return \e lon1 the longitude of point 1 (degrees).
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Longitude() const
+    Math::real Longitude() const
     { return Init() ? _lon1 : Math::NaN(); }
 
     /**
      * @return \e azi1 the azimuth (degrees) of the geodesic line at point 1.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Azimuth() const
+    Math::real Azimuth() const
     { return Init() ? _azi1 : Math::NaN(); }
 
     /**
@@ -591,7 +586,7 @@ namespace GeographicLib {
      * @param[out] sazi1 the sine of \e azi1.
      * @param[out] cazi1 the cosine of \e azi1.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT Azimuth(real& sazi1, real& cazi1) const
+    void Azimuth(real& sazi1, real& cazi1) const
     { if (Init()) { sazi1 = _salp1; cazi1 = _calp1; } }
 
     /**
@@ -600,7 +595,7 @@ namespace GeographicLib {
      *
      * The result lies in [&minus;90&deg;, 90&deg;].
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT EquatorialAzimuth() const
+    Math::real EquatorialAzimuth() const
     { return Init() ? Math::atan2d(_salp0, _calp0) : Math::NaN(); }
 
     /**
@@ -609,7 +604,7 @@ namespace GeographicLib {
      * @param[out] sazi0 the sine of \e azi0.
      * @param[out] cazi0 the cosine of \e azi0.
      **********************************************************************/
-    void GEOGRAPHICLIB_EXPORT EquatorialAzimuth(real& sazi0, real& cazi0) const
+    void EquatorialAzimuth(real& sazi0, real& cazi0) const
     { if (Init()) { sazi0 = _salp0; cazi0 = _calp0; } }
 
     /**
@@ -618,7 +613,7 @@ namespace GeographicLib {
      *
      * The result lies in [&minus;180&deg;, 180&deg;].
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT EquatorialArc() const {
+    Math::real EquatorialArc() const {
       using std::atan2;
       return Init() ? atan2(_ssig1, _csig1) / Math::degree() : Math::NaN();
     }
@@ -628,21 +623,21 @@ namespace GeographicLib {
      *   the value inherited from the GeodesicExact object used in the
      *   constructor.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT EquatorialRadius() const
+    Math::real EquatorialRadius() const
     { return Init() ? _a : Math::NaN(); }
 
     /**
      * @return \e f the flattening of the ellipsoid.  This is the value
      *   inherited from the GeodesicExact object used in the constructor.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Flattening() const
+    Math::real Flattening() const
     { return Init() ? _f : Math::NaN(); }
 
     /**
      * @return \e caps the computational capabilities that this object was
      *   constructed with.  LATITUDE and AZIMUTH are always included.
      **********************************************************************/
-    unsigned GEOGRAPHICLIB_EXPORT Capabilities() const { return _caps; }
+    unsigned Capabilities() const { return _caps; }
 
     /**
      * Test what capabilities are available.
@@ -650,7 +645,7 @@ namespace GeographicLib {
      * @param[in] testcaps a set of bitor'ed GeodesicLineExact::mask values.
      * @return true if the GeodesicLineExact object has all these capabilities.
      **********************************************************************/
-    bool GEOGRAPHICLIB_EXPORT Capabilities(unsigned testcaps) const {
+    bool Capabilities(unsigned testcaps) const {
       testcaps &= OUT_ALL;
       return (_caps & testcaps) == testcaps;
     }
@@ -662,23 +657,27 @@ namespace GeographicLib {
      *   value.
      * @return \e s13 if \e arcmode is false; \e a13 if \e arcmode is true.
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT GenDistance(bool arcmode) const
+    Math::real GenDistance(bool arcmode) const
     { return Init() ? (arcmode ? _a13 : _s13) : Math::NaN(); }
 
     /**
      * @return \e s13, the distance to point 3 (meters).
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Distance() const
+    Math::real Distance() const
     { return GenDistance(false); }
 
     /**
      * @return \e a13, the arc length to point 3 (degrees).
      **********************************************************************/
-    Math::real GEOGRAPHICLIB_EXPORT Arc() const { return GenDistance(true); }
+    Math::real Arc() const { return GenDistance(true); }
     ///@}
 
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_GEODESICLINEEXACT_HPP

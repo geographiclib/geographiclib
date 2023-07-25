@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Planimeter --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.2/Planimeter.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.3/Planimeter.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "NAME\n"
@@ -171,7 +171,7 @@ int usage(int retval, bool brief) {
 "       covered by the data (assuming the edges of the image are geodesics).\n"
 "\n"
 "          #! /bin/sh\n"
-"          egrep '^((Upper|Lower) (Left|Right)|Center) ' |\n"
+"          grep -E '^((Upper|Lower) (Left|Right)|Center) ' |\n"
 "          sed -e 's/d /d/g' -e \"s/' /'/g\" | tr -s '(),\\r\\t' ' ' | awk '{\n"
 "              if ($1 $2 == \"UpperLeft\")\n"
 "                  ul = $6 \" \" $5;\n"

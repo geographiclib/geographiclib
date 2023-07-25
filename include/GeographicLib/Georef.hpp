@@ -2,7 +2,7 @@
  * \file Georef.hpp
  * \brief Header for GeographicLib::Georef class
  *
- * Copyright (c) Charles Karney (2015-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -42,15 +42,7 @@ namespace GeographicLib {
     static const char* const lontile_;
     static const char* const lattile_;
     static const char* const degrees_;
-#if GEOGRAPHICLIB_PRECISION == 4
-    // Work around an enum lossage introduced in boost 1.76
-    //   https://github.com/boostorg/multiprecision/issues/324
-    // and fixed in
-    //   https://github.com/boostorg/multiprecision/pull/333
-    static const int
-#else
     enum {
-#endif
       tile_ = 15,               // The size of tile in degrees
       lonorig_ = -Math::hd,     // Origin for longitude
       latorig_ = -Math::qd,     // Origin for latitude
@@ -58,11 +50,7 @@ namespace GeographicLib {
       baselen_ = 4,
       maxprec_ = 11,            // approximately equivalent to MGRS class
       maxlen_ = baselen_ + 2 * maxprec_
-#if GEOGRAPHICLIB_PRECISION == 4
-      ;
-#else
     };
-#endif
     Georef() = delete;          // Disable constructor
 
   public:

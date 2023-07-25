@@ -2,7 +2,7 @@
  * \file PolygonArea.hpp
  * \brief Header for GeographicLib::PolygonAreaT class
  *
- * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -296,9 +296,8 @@ namespace GeographicLib {
   /**
    * @relates PolygonAreaT
    *
-   * Polygon areas using GeodesicExact.  (But note that the implementation of
-   * areas in GeodesicExact uses a high order series and this is only accurate
-   * for modest flattenings.)
+   * \deprecated Polygon areas using GeodesicExact.  Instead use PolygonArea
+   *   with a Geodesic object specified with \e exact = true.
    **********************************************************************/
   typedef PolygonAreaT<GeodesicExact> PolygonAreaExact;
 

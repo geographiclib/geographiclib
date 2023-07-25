@@ -17,7 +17,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2022, Charles Karney <charles@karney.com>
+# Copyright (C) 2022, Charles Karney <karney@alum.mit.edu>
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -270,7 +270,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-TEST_FILES = geodtest.cpp signtest.cpp polygontest.cpp
+TEST_FILES = geodtest.cpp signtest.cpp polygontest.cpp intersecttest.cpp
 EXTRA_DIST = CMakeLists.txt $(TEST_FILES)
 all: all-am
 

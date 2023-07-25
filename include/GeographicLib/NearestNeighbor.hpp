@@ -2,7 +2,7 @@
  * \file NearestNeighbor.hpp
  * \brief Header for GeographicLib::NearestNeighbor class
  *
- * Copyright (c) Charles Karney (2016-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2016-2020) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -17,7 +17,6 @@
 #include <cstring>
 #include <limits>
 #include <cmath>
-#include <iostream>
 #include <sstream>
 // Only for GeographicLib::GeographicErr
 #include <GeographicLib/Constants.hpp>

@@ -2,7 +2,7 @@
  * \file Rhumb.hpp
  * \brief Header for GeographicLib::Rhumb and GeographicLib::RhumbLine classes
  *
- * Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -304,6 +304,11 @@ namespace GeographicLib {
                     real& s12, real& azi12, real& S12) const;
 
     /**
+     * Typedef for the class for computing multiple points on a rhumb line.
+     **********************************************************************/
+    typedef RhumbLine LineClass;
+
+    /**
      * Set up to compute several points on a single rhumb line.
      *
      * @param[in] lat1 latitude of point 1 (degrees).
@@ -385,6 +390,7 @@ namespace GeographicLib {
     RhumbLine(const Rhumb& rh, real lat1, real lon1, real azi12);
 
   public:
+
     /**
      * Construction is via default copy constructor.
      **********************************************************************/
@@ -434,6 +440,11 @@ namespace GeographicLib {
        **********************************************************************/
       ALL           = Rhumb::ALL,
     };
+
+    /**
+     * Typedef for the base class implementing rhumb lines.
+     **********************************************************************/
+    typedef Rhumb BaseClass;
 
     /**
      * Compute the position of point 2 which is a distance \e s12 (meters) from

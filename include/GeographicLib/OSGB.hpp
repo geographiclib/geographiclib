@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -47,15 +47,7 @@ namespace GeographicLib {
     static const char* const letters_;
     static const char* const digits_;
     static const TransverseMercator& OSGBTM();
-#if GEOGRAPHICLIB_PRECISION == 4
-    // Work around an enum lossage introduced in boost 1.76
-    //   https://github.com/boostorg/multiprecision/issues/324
-    // and fixed in
-    //   https://github.com/boostorg/multiprecision/pull/333
-    static const int
-#else
     enum {
-#endif
       base_ = 10,
       tile_ = 100000,
       tilelevel_ = 5,
@@ -68,11 +60,7 @@ namespace GeographicLib {
       maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_,
       // Maximum precision is um
       maxprec_ = 5 + 6
-#if GEOGRAPHICLIB_PRECISION == 4
-      ;
-#else
     };
-#endif
     static real computenorthoffset();
     static void CheckCoords(real x, real y);
     OSGB() = delete;            // Disable constructor
@@ -200,7 +188,7 @@ namespace GeographicLib {
      * coordinate systems in Great Britain</i>, v3.6 (2020).
      **********************************************************************/
     static Math::real EquatorialRadius() {
-    // result is about 6377563.3960320664406 m
+      // result is about 6377563.3960320664406 m
       using std::pow;
       return pow(real(10), real(48401603 - 100000000) / 100000000)
         * real(20923713);

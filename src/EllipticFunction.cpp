@@ -2,7 +2,7 @@
  * \file EllipticFunction.cpp
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -300,9 +300,12 @@ namespace GeographicLib {
       // using https://dlmf.nist.gov/19.20.E18
       // Equivalently
       //   RF(x, 1) - RD(0, x, 1)/3 = x * RD(0, 1, x)/3 for x > 0
+      // For k2 = 0 and alpha2 = 0, we have
+      //   Hc = int(cos(phi)^2,...) = pi/4
       // For k2 = 1 and alpha2 = 0, we have
       //   Hc = int(cos(phi),...) = 1
-      _hHc = _kp2 != 0 ? _kp2 * RD(0, 1, _kp2) / 3 : 1;
+      _hHc = _kp2 == 1 ? Math::pi()/4 :
+        (_kp2 == 0 ? 1 : _kp2 * RD(0, 1, _kp2) / 3);
     }
   }
 

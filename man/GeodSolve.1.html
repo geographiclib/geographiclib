@@ -30,7 +30,7 @@
 <li><p>By default, <b>GeodSolve</b> accepts lines on the standard input containing <i>lat1</i> <i>lon1</i> <i>azi1</i> <i>s12</i> and prints <i>lat2</i> <i>lon2</i> <i>azi2</i> on standard output. This is the direct geodesic calculation.</p>
 
 </li>
-<li><p>With the <b>-i</b> command line argument, <b>GeodSolve</b> performs the inverse geodesic calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the corresponding values of <i>azi1</i> <i>azi2</i> <i>s12</i>.</p>
+<li><p>With the <b>-i</b> option, <b>GeodSolve</b> performs the inverse geodesic calculation. It reads lines containing <i>lat1</i> <i>lon1</i> <i>lat2</i> <i>lon2</i> and prints the corresponding values of <i>azi1</i> <i>azi2</i> <i>s12</i>.</p>
 
 </li>
 <li><p>Command line arguments <b>-L</b> <i>lat1</i> <i>lon1</i> <i>azi1</i> specify a geodesic line. <b>GeodSolve</b> then accepts a sequence of <i>s12</i> values (one per line) on standard input and prints <i>lat2</i> <i>lon2</i> <i>azi2</i> for each. This generates a sequence of points on a single geodesic. Command line arguments <b>-D</b> and <b>-I</b> work similarly with the geodesic line defined in terms of a direct or inverse geodesic calculation, respectively.</p>

@@ -49,6 +49,7 @@ set (EXAMPLES0
   example-Gnomonic.cpp
   example-GravityCircle.cpp
   example-GravityModel.cpp
+  example-Intersect.cpp
   example-LambertConformalConic.cpp
   example-LocalCartesian.cpp
   example-MGRS.cpp
