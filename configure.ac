@@ -89,6 +89,7 @@ experimental/Makefile
 PKG_PROG_PKG_CONFIG
 PKG_INSTALLDIR
 
+AC_SUBST(lib_postfix,"")
 AC_CONFIG_FILES([cmake/geographiclib.pc:cmake/project.pc.in])
 
 AC_OUTPUT
