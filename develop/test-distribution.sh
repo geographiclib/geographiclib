@@ -473,7 +473,6 @@ git push --tags
 # Also to do
 # post release notices
 # set default download files
-# make -f makefile-admin distrib-{cgi,html}
 # update home brew
 #   dir = /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
 #   branch = geographiclib/$VERSION

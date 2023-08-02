@@ -10,14 +10,14 @@ Changes between 2.3 (released 2023-07-25) and 2.2 versions:
 
    * Add the Intersect class and the IntersectTool utility.  The
      methods are described in "Geodesic intersections",
-     https://arxiv.org/abs/yymm.nnnn.
+     https://arxiv.org/abs/2308.00495.
 
    * Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
      Rhumb::LineClass, GeodesicLine::BaseClass,
      GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
 
-   * Geodesic constructor accepts optional third argument \e exact,
-     default false.  If true, then the calculations are delegated to
+   * Geodesic constructor accepts optional third argument exact, default
+     false.  If true, then the calculations are delegated to
      GeodesicExact.  GeodSolve and Planimeter now use this simplified
      interface.
 
@@ -25,11 +25,10 @@ Changes between 2.3 (released 2023-07-25) and 2.2 versions:
 
    * Bug in Planimeter -Q (introduced in version 2.2) has been fixed.
 
-   * TransverseMercator constructor accepts optional arguments \e
-     exact and \e extend (default false for both).  If \e exact =
-     true, then the calculations are delegated to
-     TransverseMercatorExact.  TransverseMercatorProj now uses this
-     simplified interface.
+   * TransverseMercator constructor accepts optional arguments exact
+     and extendp (default false for both).  If exact = true, then the
+     calculations are delegated to TransverseMercatorExact.
+     TransverseMercatorProj now uses this simplified interface.
 
    * Minor fixes:
      + Fix documentation bug for TransverseMercatorProj (incorrectly

@@ -7514,7 +7514,7 @@ git repository for GeographicLib</a>.
    - Add the Intersect class and the
      <a href="IntersectTool.1.html">IntersectTool</a> utility.  The
      methods are described in
-     <a href="https://arxiv.org/abs/yymm.nnnn">Geodesic
+     <a href="https://arxiv.org/abs/2308.00495">Geodesic
      intersections</a>.
    - Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
      Rhumb::LineClass, GeodesicLine::BaseClass,
@@ -7529,7 +7529,7 @@ git repository for GeographicLib</a>.
    - Bug in <a href="Planimeter.1.html">Planimeter</a> -Q (introduced in
      version 2.2) has been fixed.
    - TransverseMercator constructor accepts optional arguments \e exact
-     and \e extend (default false for both).  If \e exact = true, then
+     and \e extendp (default false for both).  If \e exact = true, then
      the calculations are delegated to TransverseMercatorExact.
      <a href="TransverseMercatorProj.1.html">TransverseMercatorProj</a>
      now uses this simplified interface.

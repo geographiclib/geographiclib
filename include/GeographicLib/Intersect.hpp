@@ -52,10 +52,10 @@ namespace GeographicLib {
    *
    * This solution for intersections is described in
    * - C. F. F. Karney,<br>
-   *   <a href="https://arxiv.org/abs/yymm.nnnnn">
+   *   <a href="https://arxiv.org/abs/2308.00495">
    *   Geodesic intersections</a>,<br>
-   *   Technical Report, SRI International, MMM 2023.<br>
-   *   <a href="https://arxiv.org/abs/yymm.nnnnn">arxiv:yymm.nnnnn</a>
+   *   Technical Report, SRI International (2023).<br>
+   *   <a href="https://arxiv.org/abs/2308.00495">arxiv:2308.00495</a>
    * .
    * It is based on the work of
    * - S. Baseldga and J. C. Martinez-Llario,

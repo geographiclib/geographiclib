@@ -137,7 +137,7 @@ set default downloads for distrib-C++ on sourceforge
 
 post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
 
-VERSION=2.2
+VERSION=2.3
 
 Brew...
 
@@ -145,7 +145,7 @@ Brew...
   cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
   git checkout master; git pull?
   edit geographiclib.rb
-  changing url and sha256
+  changing url (use github release tag) and shasum -a 256
 
   export HOMEBREW_NO_INSTALL_FROM_API=1
   brew uninstall geographiclib
@@ -166,6 +166,7 @@ conda-forge...
 
   geographiclib-cpp-feedstock
   edit README.md recipe/bld.bat recipe/build.sh recipe/meta.yaml
+  check build number in meta.yaml
   needs patch file to turn off tests in signtest.cpp
 
   conda remove -y -n build --all
@@ -184,12 +185,14 @@ conda-forge...
   GeoConvert --version
 
   git checkout -b v$VERSION
+  commit changes
   conda deactivate
   conda activate build
-  conda install -c conda-forge conda-smithy
+  conda install -y -c conda-forge conda-smithy
   conda smithy rerender
   commit changes
   git push --set-upstream cffk v$VERSION
+  conda deactivate
 
 vcpkg...
   git pull
