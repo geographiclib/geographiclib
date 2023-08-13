@@ -4131,8 +4131,8 @@ Go to
     measuring distances on the earth using a triaxial ellipsoid, you
     should also be worrying about the shape of the geoid, which
     essentially makes the geodesic problem a hopeless mess; see, for
-    example, <a href="https://arxiv.org/abs/1112.3231"> Waters
-    (2011)</a>.
+    example, <a href="https://doi.org/10.1016/j.physd.2011.11.010"> Waters
+    (2011)</a> (<a href="https://arxiv.org/abs/1112.3231">preprint</a>).
  -# There is nothing new in this section.  It is just an exercise in
     exploring Jacobi's solution.  My interest here is in generating long
     geodesics with the correct long-time behavior.  Arnold gives a
@@ -4232,9 +4232,9 @@ Fig. 1
 </center>\n
 Fig. 1:
 The ellipsoidal grid.  The blue (resp. green) lines are lines of constant
-\f$\beta\f$ (resp. \f$\omega\f$); the grid spacing is 10&deg;.  Also
+\f$\beta\f$ (resp. \f$\omega\f$); the grid spacing is 15&deg;.  Also
 shown in red are two of the principal sections of the ellipsoid, defined
-by \f$x = 0\f$ and \f$z = 0\f$.  The third principal section, \f$y =
+by \f$X = 0\f$ and \f$Z = 0\f$.  The third principal section, \f$Y =
 0\f$, is covered by the lines \f$\beta = \pm 90^\circ\f$ and \f$\omega =
 90^\circ \pm 90^\circ\f$.  These lines meet at four umbilical points (two
 of which are visible in this figure) where the principal radii of
@@ -4286,7 +4286,7 @@ where \f$\alpha\f$ is the heading of a path, relative to a line of
 constant \f$\omega\f$.
 
 In the limit \f$b\rightarrow a\f$ (resp. \f$b\rightarrow c\f$), the
-umbilic points converge on the \f$z\f$ (resp. \f$x\f$) axis and an
+umbilic points converge on the \f$Z\f$ (resp. \f$X\f$) axis and an
 oblate (resp. prolate) ellipsoid is obtained with \f$\beta\f$
 (resp. \f$\omega\f$) becoming the standard parametric latitude and
 \f$\omega\f$ (resp. \f$\beta\f$) becoming the standard longitude.  The
@@ -4347,7 +4347,7 @@ Abelian integrals&hellip;&quot; Two constants \f$\delta\f$ and \f$\gamma\f$
 appear in the solution.  Typically \f$\delta\f$ is zero if the lower
 limits of the integrals are taken to be the starting point of the geodesic
 and the direction of the geodesics is determined by \f$\gamma\f$.
-However for geodesics that start at an umbilical points, we have \f$\gamma
+However for geodesics that go through an umbilical point, we have \f$\gamma
 = 0\f$ and \f$\delta\f$ determines the direction at the umbilical point.
 Incidentally the constant \f$\gamma\f$ may be expressed as
 \f[
@@ -4363,7 +4363,7 @@ relation.  A nice derivation of Jacobi's result is given by Darboux
 distance along the geodesic, \f$s\f$, is also found using
 \f[
 \begin{align}
-\frac{ds}{(b^2-c^2)\cos^2\beta + (a^2-b^2)\sin^2\omega}
+\frac{ds}{(a^2-b^2)\sin^2\omega + (b^2-c^2)\cos^2\beta}
 &= \frac
 {\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
 {\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
@@ -4396,14 +4396,14 @@ are determined by the initial azimuth of the geodesic).  Also if
 (resp. \f$\omega\f$) integrand diverges.  The integrand can be
 transformed into a finite one by a change of variable, e.g.,
 \f$\sin\beta = \sin\sigma \sqrt{1 - \gamma/(b^2-c^2)}\f$.  The resulting
-integrals are periodic, so the behavior of an arbitrarily long geodesic
+integrands are periodic, so the behavior of an arbitrarily long geodesic
 is entirely captured by tabulating the integrals over a single period.
 
 The situation is more complicated if \f$\gamma = 0\f$ (corresponding to
 umbilical geodesics).  Both integrands have simple poles at the umbilical
 points.  However, this behavior may be subtracted from the integrands to
 yield (for example) the sum of a term involving
-\f$\tanh^{-1}\sin\beta\f$ and a finite integral.  Since both integrals
+\f$\sinh^{-1}\tan\beta\f$ and a finite integral.  Since both integrals
 contain similar logarithmic singularities they can be equated (thus
 fixing the ratio \f$\cos\beta/\sin\omega\f$ at the umbilical point) and
 connection formulas can be found which allow the geodesic to be followed
@@ -4425,9 +4425,9 @@ longitude.
 
 Turning to the triaxial case, we find that there are only 3 simple
 closed geodesics, the three principal sections of the ellipsoid given by
-\f$x = 0\f$, \f$y = 0\f$, and \f$z = 0\f$.  To survey the other
+\f$X = 0\f$, \f$Y = 0\f$, and \f$Z = 0\f$.  To survey the other
 geodesics, it is convenient to consider geodesics which intersect the
-middle principal section, \f$y = 0\f$, at right angles.  Such geodesics
+middle principal section, \f$Y = 0\f$, at right angles.  Such geodesics
 are shown in Figs. 2--6, where I use the same ellipsoid parameters as in
 Fig. 1 and the same viewing direction.  In addition, the three principal
 ellipses are shown in red in each of these figures.
@@ -4469,7 +4469,7 @@ starting point of this geodesic is \f$\beta_1 = 87.48^\circ\f$, \f$\omega_1 =
 If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 \in
 (0^\circ, 180^\circ)\f$, and \f$\alpha_1 = 180^\circ\f$, then the geodesic
 encircles the ellipsoid in a "transpolar" sense.  The geodesic
-oscillates east and west of the ellipse \f$x = 0\f$; on each oscillation
+oscillates east and west of the ellipse \f$X = 0\f$; on each oscillation
 it completes slightly more that a full circuit around the ellipsoid
 resulting in the geodesic filling the area bounded by the two longitude
 lines \f$\omega = \omega_1\f$ and \f$\omega = 180^\circ - \omega_1\f$.
@@ -4501,12 +4501,12 @@ starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 
 If the starting point is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 0^\circ\f$ (an umbilical point), and \f$\alpha_1 = 135^\circ\f$ (the
-geodesic leaves the ellipse \f$y = 0\f$ at right angles), then the
+geodesic leaves the ellipse \f$Y = 0\f$ at right angles), then the
 geodesic repeatedly intersects the opposite umbilical point and returns to
 its starting point.  However on each circuit the angle at which it
-intersects \f$y = 0\f$ becomes closer to \f$0^\circ\f$ or
+intersects \f$Y = 0\f$ becomes closer to \f$0^\circ\f$ or
 \f$180^\circ\f$ so that asymptotically the geodesic lies on the ellipse
-\f$y = 0\f$.  This is shown in Fig. 6.  Note that a single geodesic does
+\f$Y = 0\f$.  This is shown in Fig. 6.  Note that a single geodesic does
 not fill an area on the ellipsoid.
 
 <center>
@@ -4519,18 +4519,18 @@ Fig. 6:
 Example of an umbilical geodesic on a triaxial ellipsoid.  The
 starting point of this geodesic is \f$\beta_1 = 90^\circ\f$, \f$\omega_1 =
 0^\circ\f$, and \f$\alpha_1 = 135^\circ\f$ and the geodesics is followed
-forwards and backwards until it lies close to the plane \f$y = 0\f$ in
+forwards and backwards until it lies close to the plane \f$Y = 0\f$ in
 both directions.
 
 Umbilical geodesics enjoy several interesting properties.
  - Through any point on the ellipsoid, there are two umbilical geodesics.
  - The geodesic distance between opposite umbilical points is the same
    regardless of the initial direction of the geodesic.
- - Whereas the closed geodesics on the ellipses \f$x = 0\f$ and \f$z =
+ - Whereas the closed geodesics on the ellipses \f$X = 0\f$ and \f$Z =
    0\f$ are stable (an geodesic initially close to and nearly parallel to
    the ellipse remains close to the ellipse), the closed geodesic on the
-   ellipse \f$y = 0\f$, which goes through all 4 umbilical points, is \e
-   unstable.  If it is perturbed, it will swing out of the plane \f$y =
+   ellipse \f$Y = 0\f$, which goes through all 4 umbilical points, is \e
+   unstable.  If it is perturbed, it will swing out of the plane \f$Y =
    0\f$ and flip around before returning to close to the plane.  (This
    behavior may repeat depending on the nature of the initial
    perturbation.).
@@ -4574,7 +4574,7 @@ is (exponentially) unstable.  In the transition case,
 provided that the off-diagonal elements of \f${\cal M}\f$ are zero;
 otherwise the solution is linearly unstable.
 
-The exponential instability of the geodesic on the ellipse \f$y = 0\f$
+The exponential instability of the geodesic on the ellipse \f$Y = 0\f$
 is confirmed by this analysis and results from the resonance between the
 natural frequency of the equation for \f$m\f$ and the driving frequency
 when \f$b\f$ lies in \f$(c, a)\f$.  If \f$b\f$ is equal to either of the
@@ -4632,14 +4632,14 @@ geodesics</a>).
  - If the points are opposite umbilical points, an arbitrary
    \f$\alpha_1\f$ may be chosen.
  - If the points are neighboring umbilical points, the shortest path
-   lies on the ellipse \f$y = 0\f$.
+   lies on the ellipse \f$Y = 0\f$.
  - If only one point is an umbilicial point, the azimuth at the
    non-umbilical point is found using the generalization of Clairaut's
    equation (given above) with \f$\gamma = 0\f$.
  - Treat the cases where the geodesic might follow a line of constant
    \f$\beta\f$.  There are two such cases: (a)&nbsp;the points lie on
-   the ellipse \f$z = 0\f$ on a general ellipsoid and (b)&nbsp;the
-   points lie on an ellipse whose major axis is the \f$x\f$ axis on a
+   the ellipse \f$Z = 0\f$ on a general ellipsoid and (b)&nbsp;the
+   points lie on an ellipse whose major axis is the \f$X\f$ axis on a
    prolate ellipsoid (\f$a = b > c\f$).  Determine the reduced length
    \f$m_{12}\f$ for the geodesic which is the shorter path along the
    ellipse.  If \f$m_{12} \ge 0\f$, then this is the shortest path on
