@@ -158,7 +158,7 @@ namespace GeographicLib {
           (p.x != q.x ? (p.x < q.x) : (p.y < q.y));
       }
     };
-// The spherical solution
+    // The spherical solution
     XPoint Spherical(const GeodesicLine& lineX, const GeodesicLine& lineY,
                      const XPoint& p) const;
     // The basic algorithm

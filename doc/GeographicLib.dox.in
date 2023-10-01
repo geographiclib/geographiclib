@@ -4069,7 +4069,7 @@ condition, \e N is large, should be taken to mean that \f$ N \gg 2^D
   nodes lower down on the priority queue to be skipped.
 - This technique also allows non-exhaustive searchs to be performed (to
   answer questions such as "are there any points within 1km of the query
-  point?).
+  point?").
 - When building the tree, the first vantage point is (arbitrarily)
   chosen as the middle element of the set.  Thereafter, the points
   furthest from the parent vantage point in both the inside and outside
@@ -7507,6 +7507,8 @@ git repository for GeographicLib</a>.
      allowing larger buckets on construction or by just do additional
      splits as necessary).
    - Check whether boost/quadmath workarounds can be removed with boost 1.79.
+   - Improve documentation for Intersect class + tool to treat case of
+     equally close intersectons.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>

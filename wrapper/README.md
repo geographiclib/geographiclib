@@ -6,7 +6,7 @@ such as C, Octave, and Python.
 Although the geodesic capabilities of GeographicLib have been
 implemented natively in several languages.  There are no plans to do the
 same for its other capabilities since this leads to a large continuing
-obligation for maintenance and documentation.  (Note however that thet
+obligation for maintenance and documentation.  (Note however that the
 Octave/MATLAB library includes additional capabilities, UTM, MGRS, etc.)
 
 An alternative strategy is to call the C++ library directly from
