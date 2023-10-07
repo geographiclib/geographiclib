@@ -5267,6 +5267,10 @@ out simply and accurately.  The approaches using series apply only if
 
 \section rhumbarea The area under a rhumb line
 
+<b>NOTE:</b> Section 3 of the report,
+<a href="https://arxiv.org/abs/2303.03219">The area of rhumb polygons</a>,
+provides an improved treatment of this problem.
+
 The area between a rhumb line and the equator is given by
 \f[
 S_{12} = \int_{\lambda_1}^{\lambda_2} c^2 \sin\xi \,d\lambda,
@@ -5314,8 +5318,7 @@ divided differences (see the \ref divideddiffs "next section") and use
 Clenshaw summation to evaluate the sum (see the \ref dividedclenshaw
 "last section").
 
-Here is the series expansion accurate to 10th order, found by the Maxima
-script <a href="rhumbarea.mac">rhumbarea.mac</a>:
+Here is the series expansion accurate to 10th order:
 
 \verbatim
 R[1] = - 1/3 * n
