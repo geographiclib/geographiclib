@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2023-07-25
+\date 2023-mm-dd
 
 \section abstract Abstract
 
@@ -7513,6 +7513,9 @@ git repository for GeographicLib</a>.
    - Improve documentation for Intersect class + tool to treat case of
      equally close intersectons.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.4</a>
+   (released 2023-mm-dd)
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-07-25)
