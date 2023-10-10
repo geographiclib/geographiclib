@@ -87,8 +87,8 @@ namespace GeographicLib {
     static const int numit_ = 100;
     const Geodesic _geod;
     real _a, _f,                // equatorial radius, flattening
-      _R,                       // authalic radius
-      _d,                       // pi*_R
+      _rR,                      // authalic radius
+      _d,                       // pi*_rR
       _eps,                     // criterion for intersection + coincidence
       _tol,                     // convergence for Newton in Solve1
       _delta,                   // for equality tests, safety margin for tiling

@@ -63,7 +63,7 @@ namespace GeographicLib {
   class DST {
   private:
     typedef Math::real real;
-    int _N;
+    int _nN;
     typedef kissfft<real> fft_t;
     std::shared_ptr<fft_t> _fft;
     // Implement DST-III (centerp = false) or DST-IV (centerp = true)
@@ -90,7 +90,7 @@ namespace GeographicLib {
      *
      * @return the number of points to use.
      **********************************************************************/
-    int N() const { return _N; }
+    int N() const { return _nN; }
 
     /**
      * Determine first \e N terms in the Fourier series
