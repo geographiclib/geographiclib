@@ -14,13 +14,6 @@ if (MSVC)
   # digit.
   math (EXPR MSVC_TOOLSET_MAJOR "${MSVC_TOOLSET_VERSION}/10")
 endif ()
-if (CMAKE_CROSSCOMPILING)
-  # Ensure that all "true" (resp. "false") settings are represented by
-  # the same string.
-  set (CMAKE_CROSSCOMPILING_STR "ON")
-else ()
-  set (CMAKE_CROSSCOMPILING_STR "OFF")
-endif ()
 
 if (NOT PACKAGE_FIND_NAME STREQUAL "@PROJECT_NAME@")
   # Check package name (in particular, because of the way cmake finds
