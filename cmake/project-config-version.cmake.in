@@ -14,13 +14,6 @@ if (MSVC)
   # digit.
   math (EXPR MSVC_TOOLSET_MAJOR "${MSVC_TOOLSET_VERSION}/10")
 endif ()
-if (CMAKE_CROSSCOMPILING)
-  # Ensure that all "true" (resp. "false") settings are represented by
-  # the same string.
-  set (CMAKE_CROSSCOMPILING_STR "ON")
-else ()
-  set (CMAKE_CROSSCOMPILING_STR "OFF")
-endif ()
 
 if (NOT PACKAGE_FIND_NAME STREQUAL "@PROJECT_NAME@")
   # Check package name (in particular, because of the way cmake finds
@@ -47,10 +40,6 @@ elseif (GEOGRAPHICLIB_PRECISION MATCHES "^[1-5]\$" AND NOT (
       GEOGRAPHICLIB_PRECISION EQUAL @GEOGRAPHICLIB_PRECISION@ ))
   # Reject if the user asks for an incompatible precsision.
   set (REASON "GEOGRAPHICLIB_PRECISION = @GEOGRAPHICLIB_PRECISION@")
-  set (PACKAGE_VERSION_UNSUITABLE TRUE)
-elseif (NOT CMAKE_CROSSCOMPILING_STR STREQUAL "@CMAKE_CROSSCOMPILING_STR@")
-  # Reject if there's a mismatch in ${CMAKE_CROSSCOMPILING}.
-  set (REASON "cross-compiling = @CMAKE_CROSSCOMPILING@")
   set (PACKAGE_VERSION_UNSUITABLE TRUE)
 elseif (CMAKE_CROSSCOMPILING AND
     NOT (CMAKE_SYSTEM_NAME STREQUAL "@CMAKE_SYSTEM_NAME@" AND
