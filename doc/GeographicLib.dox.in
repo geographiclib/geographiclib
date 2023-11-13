@@ -4161,7 +4161,7 @@ Go to
     him onto Jacobi's solution without having looked at it in detail
     myself; and he quickly implemented the solution for an HP-41
     calculator(!) which is posted
-    <a href="http://hp41programs.yolasite.com/geod3axial.php"> here</a>.
+    <a href="https://hp41programs.yolasite.com/geod3axial.php"> here</a>.
  -# I do not give full citations of the papers here.  You can find these
     in the
     <a href="https://geographiclib.sourceforge.io/geodesic-papers/biblio.html">
@@ -4357,7 +4357,7 @@ where \f$\alpha\f$ is the angle the geodesic makes with lines of
 constant \f$\omega\f$. In the limit \f$b\rightarrow a\f$, this reduces
 to \f$\cos\beta\sin\alpha = \text{const.}\f$, the familiar Clairaut
 relation.  A nice derivation of Jacobi's result is given by Darboux
-(1894) <a href="https://books.google.com/books?id=hGMSAAAAIAAJ&pg=PA9">
+(1894) <a href="https://gallica.bnf.fr/ark:/12148/bpt6k778307/f17">
 &sect;&sect;583--584</a> where he gives the solution found by Liouville
 (1846) for general quadratic surfaces.  In this formulation, the
 distance along the geodesic, \f$s\f$, is also found using
@@ -7516,7 +7516,12 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.4</a>
    (released 2023-mm-dd)
-
+   - Internal code change: stop using reserved identifiers (\e _N in the
+     DST class and \e _R in the Intersect class).
+   - Stop requiring that `CMAKE_CROSSCOMPILING` match with
+     `find_package(GeographicLib)`.
+   - TODO: include notes for area of plate carree polygon
+   .
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-07-25)
    - Add the Intersect class and the
