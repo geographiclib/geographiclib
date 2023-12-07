@@ -230,6 +230,15 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
 )
 
 echo ==============================================================
+echo Test building installed examples in $TEMP/instc
+cd $TEMP/relc/GeographicLib-$VERSION
+env GeographicLib_DIR=$TEMP/instc cmake -S $TEMP/instc/share/doc/GeographicLib-dev -B BUILD-examples
+(
+    cd BUILD-examples
+    make -j$NUMCPUS
+)
+
+echo ==============================================================
 echo List installed files fron cmake build in $TEMP/instc to $TEMP/files.c
 (
     cd $TEMP/instc
