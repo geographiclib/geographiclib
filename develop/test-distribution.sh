@@ -232,10 +232,17 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
 echo ==============================================================
 echo Test building installed examples in $TEMP/instc
 cd $TEMP/relc/GeographicLib-$VERSION
-env GeographicLib_DIR=$TEMP/instc cmake -S $TEMP/instc/share/doc/GeographicLib-dev -B BUILD-examples
+env GeographicLib_DIR=$TEMP/instc cmake -S $TEMP/instc/share/doc/GeographicLib-dev -B BUILD-examples-shared
 (
-    cd BUILD-examples
+    cd BUILD-examples-shared
     make -j$NUMCPUS
+    ./example-Geodesic
+)
+env GeographicLib_DIR=$TEMP/instc cmake -S $TEMP/instc/share/doc/GeographicLib-dev -B BUILD-examples-static -D GeographicLib_USE_STATIC_LIBS=ON
+(
+    cd BUILD-examples-static
+    make -j$NUMCPUS
+    ./example-Geodesic
 )
 
 echo ==============================================================
