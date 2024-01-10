@@ -298,7 +298,7 @@ Here are the steps to compile and install GeographicLib:
   cmake . \endverbatim
   possibly including some options via <code>-D</code> (see the next step).
 - cmake allows you to configure how GeographicLib is built and installed by
-  supplying options, for example `\verbatim
+  supplying options, for example \verbatim
   cmake -D CMAKE_INSTALL_PREFIX=/tmp/geographic . \endverbatim
   The options you might need to change are
   - <code>CMAKE_INSTALL_PREFIX</code> (default: <code>/usr/local</code>
@@ -4638,9 +4638,10 @@ geodesics</a>).
    equation (given above) with \f$\gamma = 0\f$.
  - Treat the cases where the geodesic might follow a line of constant
    \f$\beta\f$.  There are two such cases: (a)&nbsp;the points lie on
-   the ellipse \f$Z = 0\f$ on a general ellipsoid and (b)&nbsp;the
-   points lie on an ellipse whose major axis is the \f$X\f$ axis on a
-   prolate ellipsoid (\f$a = b > c\f$).  Determine the reduced length
+   the ellipse \f$Z = 0\f$, \f$\beta = 0\f$, on a general ellipsoid and
+   (b)&nbsp;the points lie on an ellipse whose major axis is the \f$X\f$
+   axis, \f$\beta\f$ arbitrary, on a prolate ellipsoid (\f$a > b =
+   c\f$).  Determine the reduced length
    \f$m_{12}\f$ for the geodesic which is the shorter path along the
    ellipse.  If \f$m_{12} \ge 0\f$, then this is the shortest path on
    the ellipsoid; otherwise proceed to the general case (next).
@@ -7520,6 +7521,7 @@ git repository for GeographicLib</a>.
      DST class and \e _R in the Intersect class).
    - Stop requiring that `CMAKE_CROSSCOMPILING` match with
      `find_package(GeographicLib)`.
+   - Update cmake_minimum_required to 3.16.0.
    - TODO: include notes for area of plate carree polygon
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>

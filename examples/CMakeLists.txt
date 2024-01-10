@@ -19,7 +19,7 @@
 #
 #   -D GeographicLib_DIR=${PROJECT_BINARY_DIR}
 
-cmake_minimum_required (VERSION 3.13.0)
+cmake_minimum_required (VERSION 3.16.0)
 
 set (EXAMPLES0
   example-Accumulator.cpp
