@@ -1,5 +1,5 @@
-project (trixial)
 cmake_minimum_required (VERSION 3.13.0)
+project (trixial)
 
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2 REQUIRED)
@@ -9,6 +9,9 @@ if (NOT MSVC)
 endif ()
 
 set (CONVERT_WARNINGS_TO_ERRORS ON)
+
+# For kissfft.hh
+set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES "$ENV{HOME}/geographiclib/src")
 
 # Make the compiler more picky.
 include (CheckCXXCompilerFlag)
@@ -40,5 +43,6 @@ add_executable (randgeod randgeod.cpp)
 target_link_libraries (randgeod ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
-
-
+add_executable (TrigfunTest TrigfunTest.cpp Trigfun.cpp Trigfun.hpp)
+target_link_libraries (TrigfunTest ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES})

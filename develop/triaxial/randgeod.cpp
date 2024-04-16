@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <utility>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Utility.hpp>
 
@@ -89,6 +90,8 @@ int usage(int retval, bool /*brief*/) {
 
 int main(int argc, const char* const argv[]) {
   try {
+    using std::swap;
+    using std::remainder;
     typedef Math::real real;
     Utility::set_digits();
     real a = 1, f = 0;
