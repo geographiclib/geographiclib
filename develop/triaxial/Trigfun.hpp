@@ -44,20 +44,21 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Trigfun {
   private:
     typedef Math::real real;
-    int _nN;                    // Number of samples in half/quarter period
+    int _n,                    // Number of samples in half/quarter period
+      _m;                      // Number of coefficients in series
     bool _odd, _sym;
-    std::vector<real> _C;
+    std::vector<real> _coeff;
     real _q, _h, _p;              // quarter, half, whole period
     // Function samples over half/quarter period of !sym/sym
     // odd sym cent  samples            nF  nC
-    //  f   f   f    |-|-|-|-|-|-|-|-|  N+1 N+1 (4)
-    //  t   f   f    --|-|-|-|-|-|-|-|  N   N+1 (1), (2), (3), (7)
-    //  f   t   f    |-|-|-|-|-|-|-|--  N   N   (1)
-    //  t   t   f    --|-|-|-|-|-|-|-|  N   N   (1)
-    //  f   f   t    -|-|-|-|-|-|-|-|-  N   N+1 (4), (6)
-    //  t   f   t    -|-|-|-|-|-|-|-|-  N   N+1 (5)
-    //  f   t   t    -|-|-|-|-|-|-|-|-  N   N  
-    //  t   t   t    -|-|-|-|-|-|-|-|-  N   N  
+    //  f   f   f    |-|-|-|-|-|-|-|-|  n+1 n+1 (4)
+    //  t   f   f    --|-|-|-|-|-|-|-|  n   n+1 (1), (2), (3), (7)
+    //  f   t   f    |-|-|-|-|-|-|-|--  n   n   (1)
+    //  t   t   f    --|-|-|-|-|-|-|-|  n   n   (1)
+    //  f   f   t    -|-|-|-|-|-|-|-|-  n   n+1 (4), (6)
+    //  t   f   t    -|-|-|-|-|-|-|-|-  n   n+1 (5)
+    //  f   t   t    -|-|-|-|-|-|-|-|-  n   n  
+    //  t   t   t    -|-|-|-|-|-|-|-|-  n   n  
     //
     // (1) missing end terms presumed zero
     // (2) included last term is usually zero, if non zero, gives secular term
@@ -67,28 +68,33 @@ namespace GeographicLib {
     // (6) last coeff is zero (but not for centerp)
     // (7) last coeff is zero (but not for !centerp)
     // Function is represented by (y = pi/h * x)
-    // sym = false, sample in f_i = f(h * i/N)
-    // odd = true (N samples, N+1 coeffs)
-    //    f_0 = 0, need f_i for i in (0, N], f_N defines linear contrib
-    // f(x) = c[0] * y + sum(c[k] * sin(k * pi/h * x), k, 1, N)
-    // odd = false (N+1 samples, N+1 coeffs)
-    //   need f_i for i in [0, N]
-    // f(x) = c[0] + sum(c[k] * cos(k * pi/h * x), k, 1, N)
-    // sym = true, sample in f_i = f(q * i/N)
-    // odd = true (N samples, N coeffs)
-    //   f_0 = 0, need f_i for i in (0, N] (N samples)
-    // f(x) = sum(c[k] * sin((k+1/2) * pi/q * x), k, 0, N - 1)
-    // odd = false (N samples, N coeffs)
-    //   f_N = 0, need f_i for i in [0, N) (N samples)
-    // f(x) = sum(c[k] * cos((k+1/2) * pi/q * x), k, 0, N - 1)
+    // sym = false, sample in f_i = f(h * i/n)
+    // odd = true (n samples, n+1 coeffs)
+    //    f_0 = 0, need f_i for i in (0, n], f_n defines linear contrib
+    // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
+    // F(x) = 0 + (-h/pi) * sum( c[k]/k * cos(k * y), k, 1, n)
+    // odd = false (n+1 samples, n+1 coeffs)
+    //   need f_i for i in [0, n]
+    // f(x) = c[0] + sum(c[k] * cos(k * y), k, 1, n)
+    // F(x) = (h/pi) * (c[0] * y + sum( c[k]/k * sin(k * y), k, 1, n))
+    // sym = true, sample in f_i = f(q * i/n)
+    // odd = true (n samples, n coeffs)
+    //   f_0 = 0, need f_i for i in (0, n] (n samples)
+    // f(x) = sum(c[k] * sin(2*(k+1/2) * y), k, 0, n - 1)
+    // F(x) = -(q/pi) * sum(c[k]/(k+1/2) * cos(2*(k+1/2) * y), k, 0, n - 1)
+    // odd = false (n samples, n coeffs)
+    //   f_n = 0, need f_i for i in [0, n) (n samples)
+    // f(x) = sum(c[k] * cos(2*(k+1/2) * y), k, 0, n - 1)
+    // F(x) = (q/pi) * sum(c[k]/(k+1/2) * sin(2*(k+1/2) * y), k, 0, n - 1)
     
   private:
-    Trigfun(int N, bool odd, bool sym, const std::vector<Math::real>& C, real h)
-      : _nN(N)
-      , _odd(odd)
+    Trigfun(const std::vector<Math::real>& c, bool odd, bool sym, real h)
+      : _odd(odd)
       , _sym(sym)
-      , _C(C)
+      , _coeff(c)
       , _h(h) {
+      _m = int(_coeff.size());
+      _n = _sym ? _m : _m - 1;
       _q = _h/2; _p = 2*_h;
     }
 
@@ -96,17 +102,28 @@ namespace GeographicLib {
     /**
      * Constructor specifying the number of points to use.
      *
-     * @param[in] N the number of points to use.
+     * @param[in] n the number of points to use.
      **********************************************************************/
-    Trigfun(int N = 0);
-    static Trigfun initbycoeffs(std::vector<real> C, bool odd, bool sym,
-                                real halfp);
-    static Trigfun initbysamples(std::vector<real> F, bool odd, bool sym,
+    Trigfun(int n = 0);
+    Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
+            bool centerp, real halfp, int n);
+    static Trigfun initbysamples(const std::vector<real>& F, bool odd, bool sym,
                                  bool centerp,
                                  real halfp);
+    static int chop(const std::vector<real>& c, real tol,
+                    bool integral = false);
     real check(const std::vector<real>& F, bool centerp) const;
-    real eval(real x) const;
-    void refine(const Trigfun& tb, const Trigfun& tref);
+    //    real eval(real x) const;
+    real operator()(real x) const;
+    void refine(const Trigfun& tb);
+    Trigfun integral() const;
+    // Solve f(x) - z = 0 for x, fp is the derivative
+    real root(real z, const std::function<real(real)>& fp,
+              int& countn, int& countb) const;
+    // Solve f(x) - z = 0 with x in (xa, xb)
+    real root(real z, const std::function<real(real)>& fp,
+              real x0, real xa, real xb, int& countn, int& countb) const;
+    Trigfun invert(const std::function<real(real)>& fp) const;
 #if 0
     /**
      * Evaluate the Fourier sum given the sine and cosine of the angle
@@ -114,7 +131,7 @@ namespace GeographicLib {
      * @param[in] sinx sin&sigma;.
      * @param[in] cosx cos&sigma;.
      * @param[in] F the array of Fourier coefficients.
-     * @param[in] N the number of Fourier coefficients.
+     * @param[in] n the number of Fourier coefficients.
      * @return the value of the Fourier sum.
      **********************************************************************/
     real eval(int i);

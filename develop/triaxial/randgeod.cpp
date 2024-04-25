@@ -7,6 +7,17 @@
 
 using namespace GeographicLib;
 
+Math::real area0(Math::real a, Math::real b, Math::real c) {
+  return (a*b*c)*
+  EllipticFunction::RG(1/Math::sq(a),1/Math::sq(b),1/Math::sq(c));
+}
+
+Math::real area1(Math::real a, Math::real b, Math::real c) {
+  using std::pow;
+  Math::real p = 1.6075; p = 1.6;
+  return pow( (pow(a*b, p) + pow(b*c, p) + pow(c*a, p)) / 3, 1/p );
+}
+
 class RandLoc {
 private:
   typedef Math::real real;
@@ -94,6 +105,27 @@ int main(int argc, const char* const argv[]) {
     using std::remainder;
     typedef Math::real real;
     Utility::set_digits();
+    {
+      using std::pow;
+      int num = 100;
+      for (int i = 0; i <= num; ++i) {
+        real a = pow(10.0, 2*i/real(num));
+        a = 1 + 0.01 * (i-num)/real(num);
+        for (int j = i; j <= num; ++j) {
+          real b = pow(10.0, 2*j/real(num));
+          b = 1 + 0.01 * (j-num)/real(num);
+          for (int k = j; k <= num; ++k) {
+            real c = pow(10.0, 2*k/real(num));
+            c = 1 + 0.01 * (k-num)/real(num);
+            real a0 = area0(a, b, c);
+            real a1 = area1(a, b, c);
+            std::cout << a << " " << b << " " << c << " "
+                      << (a1 - a0) / a0 << "\n";
+          }
+        }
+      }
+      return 0;
+    }
     real a = 1, f = 0;
     unsigned seed = 0;
     int prec0 = 0,              // Precisions relative to 1m

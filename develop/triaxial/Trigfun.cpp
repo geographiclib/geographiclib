@@ -16,45 +16,77 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Trigfun Trigfun::initbycoeffs(std::vector<real> C,
-                                bool odd, bool sym,
-                                real halfp) {
-    return Trigfun(int(C.size()) - (!odd && !sym ? 1 : 0),
-                   odd, sym, C, halfp);
+  Trigfun::Trigfun(const function<real(real)>& f, bool odd, bool sym,
+                   bool centerp, real halfp, int n) {
+    if (n == 0) {
+      int n = 16;
+      Trigfun t(f, odd, sym, false, halfp, n);
+      while (n < (1 << 17)) {
+        int K = t.chop(t._coeff, numeric_limits<real>::epsilon()),
+          K1 =  t.chop(t._coeff, numeric_limits<real>::epsilon(), true);
+        cout << "Chop " << K << " " << K1 << " " << n << "\n";
+        if (K < n) {
+          t._m = K;
+          t._n = _sym ? K : K - 1;
+          t._coeff.resize(K); 
+          *this = t;
+          return;
+        }
+        Trigfun tx(f, odd, sym, true, halfp, n);
+        t.refine(tx);       // Second tx ignored;
+        n *= 2;
+      }
+      *this = t;
+      return;
+    }
+    int M = n + (!(odd || sym || centerp) ? 1 : 0);
+    real p = halfp / (sym ? 2 : 1), d = p / n,
+      o = centerp ? d/2 : ( odd ? d : 0 );
+    vector<real> F(M);
+    for (int i = 0; i < M; ++i)
+      F[i] = f(o + d * i);
+    *this = initbysamples(F, odd, sym, centerp, halfp);
+    /*
+    cout << F.size() << " "
+         << chop(_coeff, numeric_limits<real>::epsilon()) << "\n";
+    for (int i = 0; i < int(_coeff.size()) ; ++i)
+      cout << i << " " << _coeff[i] << "\n";
+    */
   }
 
-  Trigfun Trigfun::initbysamples(std::vector<real> F,
+  Trigfun Trigfun::initbysamples(const vector<real>& F,
                                  bool odd, bool sym, bool centerp,
                                  Math::real halfp) {
     typedef kissfft<real> fft_t;
-    int N = int(F.size()) - (!odd && !sym && !centerp ? 1 : 0),
-      M = N * (sym ? 4 : 2);    // The size of the sample array over a period
+    bool debug = true;
+    int n = int(F.size()) - (!(odd || sym || centerp) ? 1 : 0),
+      M = n * (sym ? 4 : 2);    // The size of the sample array over a period
     vector<real> H(M, Math::NaN());
     if (!centerp) {
       if (odd) H[0] = 0;
-      // real slope = (odd & !sym) ? F[N-1] / N : 0;
-      for (int i = 0; i < N; ++i)
+      // real slope = (odd & !sym) ? F[n-1] / n : 0;
+      for (int i = 0; i < n; ++i)
         // H[i + (odd ? 1 : 0)] = F[i] - slope * i;
         H[i + (odd ? 1 : 0)] = F[i];
       if (!odd) {
-        H[N] = sym ? 0 : F[N];
+        H[n] = sym ? 0 : F[n];
       }
-      // Now H[0:N] is populated
+      // Now H[0:n] is populated
       if (sym) {
-        for (int i = 0; i < N; ++i)
-          H[2*N - i] = (odd ? 1 : -1) * H[i];
+        for (int i = 0; i < n; ++i)
+          H[2*n - i] = (odd ? 1 : -1) * H[i];
       }
       // Now H[0:M/2] is populated
       for (int i =  1; i < M/2; ++i)
         H[M - i] = (odd ? -1 : 1) * H[i];
       // Now H[0:M-1] is populated
     } else {
-      for (int i = 0; i < N; ++i)
+      for (int i = 0; i < n; ++i)
         H[i] = F[i];
-      // Now H[0:N-1] is populated
+      // Now H[0:n-1] is populated
       if (sym) {
-        for (int i = 0; i < N; ++i)
-          H[2*N - i - 1] = (odd ? 1 : -1) * H[i];
+        for (int i = 0; i < n; ++i)
+          H[2*n - i - 1] = (odd ? 1 : -1) * H[i];
       }
       // Now H[0:M/2-1] is populated
       for (int i =  0; i < M/2; ++i)
@@ -66,6 +98,7 @@ namespace GeographicLib {
     for (int i = 0; i < M; ++i)
       cout << i << " " << H[i] << "\n";
     */
+    //    cout << "FFT size " << M/2 << "\n";
     fft_t fft(M/2, false);
     // Leave an extra slot
     vector<complex<real>> cF(M/2 + 1);
@@ -76,112 +109,106 @@ namespace GeographicLib {
         cF[i] *= exp(complex<real>(0, i * (-Math::pi() / M)));
     }
     if (!sym) {
-      H.resize(N+1);
+      H.resize(n+1);
       if (!odd) {
-        for (int i = 0; i <= N; ++i)
-          H[i] = cF[i].real() / N;
+        for (int i = 0; i <= n; ++i)
+          H[i] = cF[i].real() / n;
         H[0] /= 2;
-        H[N] = centerp ? 0 : H[N]/2;
+        H[n] = centerp ? 0 : H[n]/2;
         /*
           cout << "H\n";
-          for (int i = 0; i <= N; ++i)
+          for (int i = 0; i <= n; ++i)
           cout << i << " " << H[i] << "\n";
         */
       } else {
-        for (int i = 0; i <= N; ++i)
-          H[i] = -cF[i].imag() / N;
+        for (int i = 0; i <= n; ++i)
+          H[i] = -cF[i].imag() / n;
         H[0] = 0;
-        H[N] = !centerp ? 0 : H[N]/2;
+        H[n] = !centerp ? 0 : H[n]/2;
         }
         /*
           cout << "cF\n";
           for (int i = 0; i <= M/2; ++i)
           cout << cF[i] << "\n";
           cout << "H\n";
-          for (int i = 0; i <= N; ++i)
+          for (int i = 0; i <= n; ++i)
           cout << i << " " << H[i] << "\n";
         */
     } else {                    // sym
-      H.resize(N);
+      H.resize(n);
       if (!odd) {
-        for (int i = 0; i < N; ++i)
-          H[i] = cF[2*i+1].real() / (2*N);
+        for (int i = 0; i < n; ++i)
+          H[i] = cF[2*i+1].real() / (2*n);
         /*
         cout << "H\n";
-        for (int i = 0; i < N; ++i)
+        for (int i = 0; i < n; ++i)
           cout << i << " " << H[i] << "\n";
         */
       } else {
-        for (int i = 0; i < N; ++i)
-          H[i] = -cF[2*i+1].imag() / (2*N);
+        for (int i = 0; i < n; ++i)
+          H[i] = -cF[2*i+1].imag() / (2*n);
         /*
         cout << "H\n";
-        for (int i = 0; i < N; ++i)
+        for (int i = 0; i < n; ++i)
           cout << i << " " << H[i] << "\n";
         */
       }
     }
     //    if (centerp) cout << "SIZE " << F.size() << " " << H.size() << "\n";
-    Trigfun t(N, odd, sym, H, halfp);
-    real err = t.check(F, centerp);
-    cout << err << "\n";
+    Trigfun t(H, odd, sym, halfp);
+    if (debug) {
+      real err = t.check(F, centerp);
+      if (err > 10)
+        throw GeographicErr("initbysamples error");
+    }
     return t;
   }
 
   Math::real Trigfun::check(const vector<real>& F, bool centerp) const {
     real err = 0, maxval = 0;
-    real d = (_sym ? _h/2 : _h) / _nN;
-    for (int i = 0; i < (centerp ? _nN : _nN + 1); ++i) {
+    real d = (_sym ? _h/2 : _h) / _n;
+    for (int i = 0; i < (centerp ? _n : _n + 1); ++i) {
       real a = centerp ? F[i] :
         (_odd ? (i == 0 ? 0 : F[i-1]) :
-         (_sym && i == _nN ? 0 : F[i])),
+         (_sym && i == _n ? 0 : F[i])),
         x = d * i + (centerp ? d/2 : 0),
-        b = eval(x);
-      maxval = fmax(maxval, a);
+        b = (*this)(x);
+      maxval = fmax(maxval, fabs(a));
       err = err + fabs(a - b);
     }
+    cout << "Maxval " << maxval << "\n";
     return err / (numeric_limits<real>::epsilon() *
-                  maxval * (centerp ? _nN : _nN + 1));
-  }
-  void Trigfun::refine(const Trigfun& tb, const Trigfun& tref) {
-    bool debug = false;
-    if (debug) {
-      cout << _C.size() << " " << tb._C.size() << " " << tref._C.size() << "\n";
-      for (int i = 0; i < _nN + (_sym ? 0 : 1); ++i)
-        cout << i << " " << _C[i] << " " << tb._C[i] << "\n";
-      for (int i = 0; i < 2*_nN + (_sym ? 0 : 1); ++i)
-        cout << i << " " << tref._C[i] << "\n";
-    }
-    _C.resize(2 * _nN + (_sym ? 0 : 1));
-    for (int i = 0; i < _nN; ++i)
-      _C[2*_nN + (_sym ? 0 : 1) - 1 - i] =
-        (_odd ? -1 : 1) * (_C[i] - tb._C[i])/2;
-    if (_odd && !_sym) _C[_nN] = tb._C[_nN];
-    for (int i = 0; i < _nN; ++i)
-      _C[i] = (_C[i] + tb._C[i])/2;
-    if (debug) {
-    for (int i = 0; i < 2*_nN + (_sym ? 0 : 1); ++i)
-      cout << i << " " << _C[i] << " " << tref._C[i] << " "
-           << _C[i] - tref._C[i] << "\n";
-    }
-    _nN *= 2;
+                  maxval * (centerp ? _n : _n + 1));
   }
 
-  Math::real Trigfun::eval(real z) const {
+  void Trigfun::refine(const Trigfun& tb) {
+    int m = 2 * _n + (_sym ? 0 : 1);
+    _coeff.resize(m);
+    for (int i = 0; i < _n; ++i)
+      _coeff[2*_n + (_sym ? 0 : 1) - 1 - i] =
+        (_odd ? -1 : 1) * (_coeff[i] - tb._coeff[i])/2;
+    if (_odd && !_sym) _coeff[_n] = tb._coeff[_n];
+    for (int i = 0; i < _n; ++i)
+      _coeff[i] = (_coeff[i] + tb._coeff[i])/2;
+    _n *= 2;
+    _m = m;
+  }
+
+  Math::real Trigfun::operator()(real z) const {
     // Evaluate
-    // y = sum(c[k] * sin((k+1/2) * pi/q * z), k, 0, N - 1) if  odd && sym
-    // y = sum(c[k] * cos((k+1/2) * pi/q * z), k, 0, N - 1) if !odd && sym
+    // y = sum(c[k] * sin((k+1/2) * pi/q * z), k, 0, n - 1) if  odd && sym
+    // y = sum(c[k] * cos((k+1/2) * pi/q * z), k, 0, n - 1) if !odd && sym
     // y = c[0] * pi/h * z +
-    //     sum(c[k] * sin(k * pi/h * z), k, 1, N) if odd && !sym
+    //     sum(c[k] * sin(k * pi/h * z), k, 1, n) if odd && !sym
     // y = c[0] +
-    //     sum(c[k] * cos(k * pi/h * z), k, 1, N) if !odd && !sym
+    //     sum(c[k] * cos(k * pi/h * z), k, 1, n) if !odd && !sym
     real y = Math::pi()/(_sym ? _q : _h) * z;
-    int k = !_sym ? _nN+1 : _nN, k0 = !_sym ? 1 : 0;
-    // cout <<"C " << _C[8] << " " << _C.size() << " " << k << " " << k0 << "\n";
+    int k = _m, k0 = !_sym ? 1 : 0;
+    // cout <<"c " << _coeff[8] << " " << _coeff.size() << " " << k << " " << k0 << "\n";
     real u0 = 0, u1 = 0,        // accumulators for sum
       x = 2 * cos(y);
     for (; k > k0;) {
-      real t = x * u0 - u1 + _C[--k];
+      real t = x * u0 - u1 + _coeff[--k];
       u1 = u0; u0 = t;
     }
     // sym
@@ -194,7 +221,283 @@ namespace GeographicLib {
     //   f1 = odd ? sin(y) : cos(y)
     //   f0 = odd ? 0 : 1
     return _sym ? (_odd ? sin(y/2) * (u0 + u1) : cos(y/2) * (u0 - u1)) :
-      _C[0] * (_odd ? y : 1) + (_odd ? sin(y) : x/2) * u0 - (_odd ? 0 : u1);
+      _coeff[0] * (_odd ? y : 1) + (_odd ? sin(y) : x/2) * u0 - (_odd ? 0 : u1);
+  }
+
+  Trigfun Trigfun::integral() const {
+    vector <real> c(_coeff);
+    real mult = (_odd ? -1 : 1) * (_sym ? _q : _h) / Math::pi();
+    for (int i; i < _m; ++i)
+      c[i] *= mult / (i + (_sym ? real(0.5) : 0));
+    if (!_sym)
+      c[0] = _odd ? 0 : _coeff[0] * mult;
+    return Trigfun(c, !_odd, _sym, _h);
+  }
+  Math::real Trigfun::root(real z, const function<real(real)>& fp,
+                           int& countn, int& countb) const {
+    // y = pi/h * x
+    // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
+    real x0 = z * _h / (Math::pi() * _coeff[0]);
+    return root(z, fp, x0, x0 - _h, x0 + _h, countn, countb);
+  }
+  Math::real Trigfun::root(real z, const function<real(real)>& fp,
+                           real x0, real xa, real xb,
+                           int& countn, int& countb) const {
+    if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
+      throw GeographicErr("Can only find root Trigfun with a secular term");
+    // Solve v = f(x) - z = 0
+    bool debug = false;
+    real xscale = _h, zscale = _coeff[0] * Math::pi(),
+      eps = numeric_limits<real>::epsilon(),
+      vtol0 = eps * zscale,
+      vtol1 = pow(eps, real(0.75)) * zscale,
+      xtol = pow(eps, real(0.75)) * xscale,
+      x = x0,
+      s = _coeff[0] > 0 ? 1 : -1;
+    int i = 0, maxit = 50;
+    real p = Math::pi()/2;
+    for (; i < maxit || GEOGRAPHICLIB_PANIC;) {
+      ++i;
+      real v = (*this)(x) - z,
+        vp = fp(x),
+        dx = - v/vp;
+      if (debug)
+        cout << i << " " << xa-p << " " << x-p << " " << xb-p << " "
+             << dx << " " << x + dx-p << " " << v << "\n";
+      if (fabs(v) <= vtol0)
+        break;
+      else if (s*v > 0)
+        xb = fmin(xb, x);
+      else
+        xa = fmax(xa, x);
+      x += dx;
+      if (!(xa <= x && x <= xb)) {
+        if (debug)
+          cout << "bis " << xa-x << " " << x-xb << "\n";
+        x = (xa + xb)/2;
+        ++countb;
+      } else if (!(fabs(dx) > xtol && fabs(v) > vtol1))
+        break;
+    }
+    countn += i;
+    return x;
+  }
+
+  Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp) const {
+    if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
+      throw GeographicErr("Can only invert Trigfun with a secular term");
+    // y = pi/h * x, half period h
+    // z = f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
+    // z = c0 * y + s
+    bool debug = true;
+    real d = 0;
+    for (int k = _n; k > 0; --k)
+      d += fabs(_coeff[k]);
+    // z = c0 * pi/h * x +/- d
+    // y' = pi/h' * z, half period h' = pi*c0
+    // x = h/(pi*c0) * z +/- d*h/pi*c0
+    // x = h/pi * y' +/- d*h/h'
+    int np = 4;
+    real hp = Math::pi() * _coeff[0], c0p = _h / Math::pi(),
+      dp = d * _h/hp;
+    vector<real> F(np, real(0));
+    real z, x;
+    z = hp/2; x = _h/hp * z;
+    int countn = 0, countb = 0;
+    F[1] = (*this).root(z, fp, x, x - dp, x + dp, countn, countb) - x;
+    if (debug)
+      cout << "count0 " << countn << " " << countb << "\n";
+    real dz = hp/2, z0 = dz/2;
+    countn = 0; countb = 0;
+    for (int i = 0; i < np/2; ++i) {
+      z = z0 + i * dz;
+      x = _h/hp * z;
+      real x0 = x + F[1] * sqrt(real(0.5));
+      F[2 * i] = (*this).root(z, fp, x0, x - dp, x + dp, countn, countb) - x;
+    }
+    if (debug)
+      cout << "count1 " << countn/2.0 << " " << countb/2.0 << "\n";
+    Trigfun t(initbysamples(F, _odd, _sym, false, hp));
+    if (debug) {
+      for (int q = 0; q < int(t._coeff.size()); ++q)
+        cout << q << " " << t._coeff[q] << "\n";
+    }
+    for (int k = 2, m = 2; k < 10; ++k) {
+      dz /= 2;  z0 /= 2;
+      m *= 2;
+      F.resize(m);
+      countn = 0; countb = 0;
+      for (int i = 0; i < m; ++i) {
+        z = z0 + i * dz;
+        x = _h/hp * z;
+        real x0 = fmin(x + dp, fmax(x - dp, t(z) + x));
+        F[i] = (*this).root(z, fp, x0, x - dp, x + dp, countn, countb) - x;
+      }
+      if (debug)
+        cout << "count " << k << " "
+             << countn/real(m) << " " << countb/real(m) << "\n";
+      Trigfun tx(initbysamples(F, _odd, _sym, true, hp));
+      t.refine(tx);
+      int K = t.chop(t._coeff, numeric_limits<real>::epsilon());
+      if (debug) {
+        cout << "ChopX "
+             << t.chop(t._coeff, numeric_limits<real>::epsilon()) << " "
+             << 2*m << "\n";
+        /*
+        for (int q = 0; q < int(t._coeff.size()); ++q)
+          cout << q << " " << t._coeff[q] << "\n";
+        */
+      }
+      if (K < int(t._coeff.size())) break;
+    }
+    t._coeff[0] = c0p;
+    return t;
+  }
+
+  int Trigfun::chop(const vector<real>& c, real tol, bool integral) {
+    // This is a clone of Chebfun's standardChop function.  For C++, the return
+    // value is number of terms to retain.  Index of last term is one less than
+    // this.
+    //
+    // See J. L. Aurentz and L. N. Trefethen, "Chopping a Chebyshev series",
+    // https://dx.doi.org/10.1145/2998442 (2017) and
+    // https://arxiv.org/abs/1512.01803 (2015).
+    //
+    // Input:
+    //
+    // COEFFS  A nonempty row or column vector of real or complex numbers
+    //         which typically will be Chebyshev or Fourier coefficients.
+    //
+    // TOL     A number in (0,1) representing a target relative accuracy.
+    //         TOL will typically will be set to the Chebfun EPS parameter,
+    //         sometimes multiplied by a factor such as vglobal/vlocal in
+    //         construction of local pieces of global chebfuns.
+    //         Default value: machine epsilon (MATLAB EPS).
+    //
+    // Output:
+    //
+    // CUTOFF  A positive integer.
+    //         If CUTOFF == length(COEFFS), then we are "not happy":
+    //         a satisfactory chopping point has not been found.
+    //         If CUTOFF < length(COEFFS), we are "happy" and CUTOFF
+    //         represents the last index of COEFFS that should be retained.
+    //
+    // Examples:
+    //
+    // coeffs = 10.^-(1:50); random = cos((1:50).^2);
+    // standardChop(coeffs) // = 18
+    // standardChop(coeffs + 1e-16*random) // = 15
+    // standardChop(coeffs + 1e-13*random) // = 13
+    // standardChop(coeffs + 1e-10*random) // = 50
+    // standardChop(coeffs + 1e-10*random, 1e-10) // = 10
+ 
+    // Jared Aurentz and Nick Trefethen, July 2015.
+    //
+    // Copyright 2017 by The University of Oxford and The Chebfun Developers. 
+    // See http://www.chebfun.org/ for Chebfun information.
+
+    // STANDARDCHOP normally chops COEFFS at a point beyond which it is smaller
+    // than TOL^(2/3).  COEFFS will never be chopped unless it is of length at
+    // least 17 and falls at least below TOL^(1/3).  It will always be chopped
+    // if it has a long enough final segment below TOL, and the final entry
+    // COEFFS(CUTOFF) will never be smaller than TOL^(7/6).  All these
+    // statements are relative to MAX(ABS(COEFFS)) and assume CUTOFF > 1.
+    // These parameters result from extensive experimentation involving
+    // functions such as those presented in the paper cited above.  They are
+    // not derived from first principles and there is no claim that they are
+    // optimal.
+
+    // Check magnitude of TOL:
+    if (tol >= 1) return 1;
+
+    // Make sure c has length at least 17:
+    int n = int(c.size());
+    // Change 17 in original code to 16 to accommodate trig expansions which
+    // may only have 2^n terms.
+    if (n < 16) { return n; }
+  
+    // Step 1: Convert c to a new monotonically nonincreasing
+    //         vector ENVELOPE normalized to begin with the value 1.
+
+    vector<real> m(n);
+    int j = n;
+    m[--j] = fabs(c[n - 1] / (integral ? n : 1));
+    for (; j;) {
+      --j;
+      m[j] = fmax(fabs(c[j] / (integral ? j + 1 : 1)), m[j + 1]);
+    }
+    if (m[0] == 0) return 1;
+    for (j = n; j;)
+      m[--j] /= m[0];
+
+    // Step 2: Scan ENVELOPE for a value PLATEAUPOINT, the first point J-1, if
+    // any, that is followed by a plateau.  A plateau is a stretch of
+    // coefficients ENVELOPE(J),...,ENVELOPE(J2), J2 = round(1.25*J+5) <= n,
+    // with the property that ENVELOPE(J2)/ENVELOPE(J) > R.  The number R
+    // ranges from R = 0 if ENVELOPE(J) = TOL up to R = 1 if ENVELOPE(J) =
+    // TOL^(2/3).  Thus a potential plateau whose starting value is ENVELOPE(J)
+    // ~ TOL^(2/3) has to be perfectly flat to count, whereas with ENVELOPE(J)
+    // ~ TOL it doesn't have to be flat at all.  If a plateau point is found,
+    // then we know we are going to chop the vector, but the precise chopping
+    // point CUTOFF still remains to be determined in Step 3.
+
+    int j2, plateauPoint;
+    real logtol = log(tol);
+    for (j = 2; j <= n; ++j) {  // j is a MATLAB index (starts at 1)
+      j2 = int(round(1.25*j + 5)); 
+      if (j2 > n) return n;
+      real e1 = m[j-1],
+        e2 = m[j2-1],
+        r = 3 * (1 - log(e1)/logtol);
+      if ( e1 == 0 || e2/e1 > r ) {
+        // a plateau has been found: go to Step 3
+        plateauPoint = j - 1;
+        break;
+      }
+    }
+
+    // Step 3: fix CUTOFF at a point where ENVELOPE, plus a linear function
+    // included to bias the result towards the left end, is minimal.
+    //
+    // Some explanation is needed here.  One might imagine that if a plateau is
+    // found, then one should simply set CUTOFF = PLATEAUPOINT and be done,
+    // without the need for a Step 3. However, sometimes CUTOFF should be
+    // smaller or larger than PLATEAUPOINT, and that is what Step 3 achieves.
+    //
+    // CUTOFF should be smaller than PLATEAUPOINT if the last few coefficients
+    // made negligible improvement but just managed to bring the vector
+    // ENVELOPE below the level TOL^(2/3), above which no plateau will ever be
+    // detected.  This part of the code is important for avoiding situations
+    // where a coefficient vector is chopped at a point that looks "obviously
+    // wrong" with PLOTCOEFFS.
+    //
+    // CUTOFF should be larger than PLATEAUPOINT if, although a plateau has
+    // been found, one can nevertheless reduce the amplitude of the
+    // coefficients a good deal further by taking more of them.  This will
+    // happen most often when a plateau is detected at an amplitude close to
+    // TOL, because in this case, the "plateau" need not be very flat.  This
+    // part of the code is important to getting an extra digit or two beyond
+    // the minimal prescribed accuracy when it is easy to do so.
+
+    if ( m[plateauPoint - 1] == 0 ) return plateauPoint;
+    real tol76 = tol * sqrt(cbrt(tol)); // tol^(7/6)
+    int j3 = 0;
+    for (j = 0; j < n; ++j) {
+      if (m[j] >= tol76) ++j3;
+    }
+    if ( j3 < j2 ) {
+      j2 = j3 + 1;
+      m[j2 - 1] = tol76;
+    }
+    vector<real> cc(j2);
+    // Replace log10 by log.  This involved no change in the logic.
+    real tol3 = logtol/(3 * (j2 - 1));
+    int d = 0;
+    for (j = 0; j < j2; ++j) {
+      cc[j] = log(m[j]) - tol3 * j;
+      if (j > 0 && cc[j] < cc[d]) d = j;
+    }
+    return max(d, 1);
   }
 #if 0
   Math::real Trigfun::eval(real x);
