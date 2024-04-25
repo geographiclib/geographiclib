@@ -24,7 +24,7 @@ int main() {
     //    a/(a-b) = 91449 +/- 60
     // which gives: a = 6378171.36, b = 6378101.61, c = 6356751.84
     Math::real a = 6378137+35, b = 6378137-35, c = 6356752;
-    experimental::JacobiConformal jc(a, b, c, a-b, b-c);
+    GeographicLib::experimental::JacobiConformal jc(a, b, c, a-b, b-c);
     cout  << fixed << setprecision(1)
           << "Ellipsoid parameters: a = "
           << a << ", b = " << b << ", c = " << c << "\n"

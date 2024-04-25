@@ -95,8 +95,8 @@ int main() {
   try {
     typedef Math::real real;
     Utility::set_digits();
-    const Geodesic/*Exact*/ g = Geodesic/*Exact*/(Constants::WGS84_a(),
-                                          Constants::WGS84_f());
+    const Geodesic/*Exact*/ geod = Geodesic/*Exact*/(Constants::WGS84_a(),
+						     Constants::WGS84_f());
     real lat1, lon1, azi1, v1;
     real lat2, lon2, azi2, v2;
     real t0;
@@ -110,11 +110,11 @@ int main() {
         // Compute positions at time t
         real lat1a, lon1a, azi1a;
         real lat2a, lon2a, azi2a;
-        g.Direct(lat1, lon1, azi1, t*v1, lat1a, lon1a, azi1a);
-        g.Direct(lat2, lon2, azi2, t*v2, lat2a, lon2a, azi2a);
+        geod.Direct(lat1, lon1, azi1, t*v1, lat1a, lon1a, azi1a);
+        geod.Direct(lat2, lon2, azi2, t*v2, lat2a, lon2a, azi2a);
         // Compute distance at time t
         real s12, azi1c, azi2c, m12, M12, M21;
-        g.Inverse(lat1a, lon1a, lat2a, lon2a,
+        geod.Inverse(lat1a, lon1a, lat2a, lon2a,
                   s12, azi1c, azi2c, m12, M12, M21);
         real
           r12 = s12 / m12,
