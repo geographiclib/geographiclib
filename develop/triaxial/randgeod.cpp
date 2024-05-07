@@ -48,10 +48,10 @@ public:
       Xn = _norm(_gen);
       Yn = _norm(_gen);
       Zn = _norm(_gen);
-      real R = hypot(Xn, Yn, Zn);
+      real R = hypot(Xn, hypot(Yn, Zn));
       Xn /= R; Yn /= R; Zn /= R;
       real Xu = Xn / _a, Yu = Yn / _b, Zu = Zn / _c;
-      g = _d * hypot(Xu, Yu, Zu);
+      g = _d * hypot(Xu, hypot(Yu, Zu));
     } while (_rnd(_gen) > g);
     omega = Math::atan2d(Yn, Xn);
     beta = Math::atan2d(Zn, hypot(Xn, Yn));
@@ -103,6 +103,8 @@ int main(int argc, const char* const argv[]) {
   try {
     using std::swap;
     using std::remainder;
+    using std::round;
+    using std::fabs;
     typedef Math::real real;
     Utility::set_digits();
     {

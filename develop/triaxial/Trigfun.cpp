@@ -22,18 +22,18 @@ namespace GeographicLib {
       int n = 16;
       Trigfun t(f, odd, sym, false, halfp, n);
       while (n < (1 << 17)) {
-        int K = t.chop(t._coeff, numeric_limits<real>::epsilon()),
-          K1 =  t.chop(t._coeff, numeric_limits<real>::epsilon(), true);
-        cout << "Chop " << K << " " << K1 << " " << n << "\n";
+        int K = t.chop(t._coeff, numeric_limits<real>::epsilon())
+          /*, K1 =  t.chop(t._coeff, numeric_limits<real>::epsilon(), true)*/;
+        //        cout << "Chop " << K << " " << n << "\n";
         if (K < n) {
           t._m = K;
           t._n = _sym ? K : K - 1;
-          t._coeff.resize(K); 
+          t._coeff.resize(K);
           *this = t;
           return;
         }
         Trigfun tx(f, odd, sym, true, halfp, n);
-        t.refine(tx);       // Second tx ignored;
+        t.refine(tx);
         n *= 2;
       }
       *this = t;
@@ -58,7 +58,7 @@ namespace GeographicLib {
                                  bool odd, bool sym, bool centerp,
                                  Math::real halfp) {
     typedef kissfft<real> fft_t;
-    bool debug = true;
+    bool debug = false;
     int n = int(F.size()) - (!(odd || sym || centerp) ? 1 : 0),
       M = n * (sym ? 4 : 2);    // The size of the sample array over a period
     vector<real> H(M, Math::NaN());
@@ -158,8 +158,10 @@ namespace GeographicLib {
     Trigfun t(H, odd, sym, halfp);
     if (debug) {
       real err = t.check(F, centerp);
-      if (err > 10)
+      if (err > 100) {
+        cout << t._n << " " << err << endl;
         throw GeographicErr("initbysamples error");
+      }
     }
     return t;
   }
@@ -176,7 +178,7 @@ namespace GeographicLib {
       maxval = fmax(maxval, fabs(a));
       err = err + fabs(a - b);
     }
-    cout << "Maxval " << maxval << "\n";
+    //    cout << "Maxval " << maxval << "\n";
     return err / (numeric_limits<real>::epsilon() *
                   maxval * (centerp ? _n : _n + 1));
   }
@@ -190,8 +192,18 @@ namespace GeographicLib {
     if (_odd && !_sym) _coeff[_n] = tb._coeff[_n];
     for (int i = 0; i < _n; ++i)
       _coeff[i] = (_coeff[i] + tb._coeff[i])/2;
+    _max = -1;
     _n *= 2;
     _m = m;
+  }
+
+  Math::real Trigfun::Max() const {
+    if (_max < 0) {
+      _max = 0;
+      for (int k = _m; k > (_sym ? 0 : 1);)
+        _max += fabs(_coeff[--k]);
+    }
+    return _max;
   }
 
   Math::real Trigfun::operator()(real z) const {
@@ -202,6 +214,7 @@ namespace GeographicLib {
     //     sum(c[k] * sin(k * pi/h * z), k, 1, n) if odd && !sym
     // y = c[0] +
     //     sum(c[k] * cos(k * pi/h * z), k, 1, n) if !odd && !sym
+    if (_coeff.empty()) return 0;
     real y = Math::pi()/(_sym ? _q : _h) * z;
     int k = _m, k0 = !_sym ? 1 : 0;
     // cout <<"c " << _coeff[8] << " " << _coeff.size() << " " << k << " " << k0 << "\n";
@@ -227,7 +240,7 @@ namespace GeographicLib {
   Trigfun Trigfun::integral() const {
     vector <real> c(_coeff);
     real mult = (_odd ? -1 : 1) * (_sym ? _q : _h) / Math::pi();
-    for (int i; i < _m; ++i)
+    for (int i = 0; i < _m; ++i)
       c[i] *= mult / (i + (_sym ? real(0.5) : 0));
     if (!_sym)
       c[0] = _odd ? 0 : _coeff[0] * mult;
@@ -237,8 +250,9 @@ namespace GeographicLib {
                            int& countn, int& countb) const {
     // y = pi/h * x
     // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
-    real x0 = z * _h / (Math::pi() * _coeff[0]);
-    return root(z, fp, x0, x0 - _h, x0 + _h, countn, countb);
+    real s = _h / (Math::pi() * _coeff[0]),
+      x0 = s * z, dx = s * Max();
+    return root(z, fp, x0, x0 - dx, x0 + dx, countn, countb);
   }
   Math::real Trigfun::root(real z, const function<real(real)>& fp,
                            real x0, real xa, real xb,
@@ -283,62 +297,52 @@ namespace GeographicLib {
     return x;
   }
 
-  Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp) const {
+  Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp,
+                          int& countn, int& countb) const {
     if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
       throw GeographicErr("Can only invert Trigfun with a secular term");
     // y = pi/h * x, half period h
     // z = f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
     // z = c0 * y + s
-    bool debug = true;
-    real d = 0;
-    for (int k = _n; k > 0; --k)
-      d += fabs(_coeff[k]);
+    bool debug = false;
     // z = c0 * pi/h * x +/- d
     // y' = pi/h' * z, half period h' = pi*c0
     // x = h/(pi*c0) * z +/- d*h/pi*c0
     // x = h/pi * y' +/- d*h/h'
     int np = 4;
     real hp = Math::pi() * _coeff[0], c0p = _h / Math::pi(),
-      dp = d * _h/hp;
+      dp = Max() * _h/hp;
     vector<real> F(np, real(0));
     real z, x;
     z = hp/2; x = _h/hp * z;
-    int countn = 0, countb = 0;
     F[1] = (*this).root(z, fp, x, x - dp, x + dp, countn, countb) - x;
-    if (debug)
-      cout << "count0 " << countn << " " << countb << "\n";
     real dz = hp/2, z0 = dz/2;
-    countn = 0; countb = 0;
     for (int i = 0; i < np/2; ++i) {
       z = z0 + i * dz;
       x = _h/hp * z;
       real x0 = x + F[1] * sqrt(real(0.5));
       F[2 * i] = (*this).root(z, fp, x0, x - dp, x + dp, countn, countb) - x;
     }
-    if (debug)
-      cout << "count1 " << countn/2.0 << " " << countb/2.0 << "\n";
     Trigfun t(initbysamples(F, _odd, _sym, false, hp));
     if (debug) {
       for (int q = 0; q < int(t._coeff.size()); ++q)
         cout << q << " " << t._coeff[q] << "\n";
     }
-    for (int k = 2, m = 2; k < 10; ++k) {
+    for (int k = 2, m = 2; k < 16; ++k) {
       dz /= 2;  z0 /= 2;
       m *= 2;
       F.resize(m);
-      countn = 0; countb = 0;
       for (int i = 0; i < m; ++i) {
         z = z0 + i * dz;
         x = _h/hp * z;
         real x0 = fmin(x + dp, fmax(x - dp, t(z) + x));
         F[i] = (*this).root(z, fp, x0, x - dp, x + dp, countn, countb) - x;
       }
-      if (debug)
-        cout << "count " << k << " "
-             << countn/real(m) << " " << countb/real(m) << "\n";
       Trigfun tx(initbysamples(F, _odd, _sym, true, hp));
       t.refine(tx);
+      t._coeff[0] = c0p;
       int K = t.chop(t._coeff, numeric_limits<real>::epsilon());
+      t._coeff[0] = 0;
       if (debug) {
         cout << "ChopX "
              << t.chop(t._coeff, numeric_limits<real>::epsilon()) << " "
@@ -348,7 +352,12 @@ namespace GeographicLib {
           cout << q << " " << t._coeff[q] << "\n";
         */
       }
-      if (K < int(t._coeff.size())) break;
+      if (K < int(t._coeff.size())) {
+        t._m = K;
+        t._n = t._sym ? K : K - 1;
+        t._coeff.resize(K);
+        break;
+      }
     }
     t._coeff[0] = c0p;
     return t;
@@ -390,10 +399,10 @@ namespace GeographicLib {
     // standardChop(coeffs + 1e-13*random) // = 13
     // standardChop(coeffs + 1e-10*random) // = 50
     // standardChop(coeffs + 1e-10*random, 1e-10) // = 10
- 
+
     // Jared Aurentz and Nick Trefethen, July 2015.
     //
-    // Copyright 2017 by The University of Oxford and The Chebfun Developers. 
+    // Copyright 2017 by The University of Oxford and The Chebfun Developers.
     // See http://www.chebfun.org/ for Chebfun information.
 
     // STANDARDCHOP normally chops COEFFS at a point beyond which it is smaller
@@ -414,8 +423,8 @@ namespace GeographicLib {
     int n = int(c.size());
     // Change 17 in original code to 16 to accommodate trig expansions which
     // may only have 2^n terms.
-    if (n < 16) { return n; }
-  
+    if (n < 16) return n;
+
     // Step 1: Convert c to a new monotonically nonincreasing
     //         vector ENVELOPE normalized to begin with the value 1.
 
@@ -444,7 +453,7 @@ namespace GeographicLib {
     int j2, plateauPoint;
     real logtol = log(tol);
     for (j = 2; j <= n; ++j) {  // j is a MATLAB index (starts at 1)
-      j2 = int(round(1.25*j + 5)); 
+      j2 = int(round(1.25*j + 5));
       if (j2 > n) return n;
       real e1 = m[j-1],
         e2 = m[j2-1],

@@ -3,6 +3,7 @@ project (trixial)
 
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2 REQUIRED)
+find_package (Boost REQUIRED)
 
 if (NOT MSVC)
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -43,6 +44,23 @@ add_executable (randgeod randgeod.cpp)
 target_link_libraries (randgeod ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
-add_executable (TrigfunTest TrigfunTest.cpp Trigfun.cpp Trigfun.hpp)
-target_link_libraries (TrigfunTest ${GeographicLib_LIBRARIES}
+add_executable (TrigfunTest TrigfunTest.cpp Trigfun.cpp Trigfun.hpp
+   Triaxial.cpp Triaxial.hpp)
+target_link_libraries (TrigfunTest ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES})
+
+add_executable (TriaxialTest TriaxialTest.cpp Trigfun.cpp Trigfun.hpp
+   Triaxial.cpp Triaxial.hpp)
+target_link_libraries (TriaxialTest ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES})
+
+add_executable (elliptic_functions elliptic_functions.cpp)
+target_link_libraries (elliptic_functions ${BOOST_LIBRARIES}
+  ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES}
+)
+
+add_executable (lorenz_mp lorenz_mp.cpp)
+target_link_libraries (lorenz_mp ${BOOST_LIBRARIES}
+# ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})

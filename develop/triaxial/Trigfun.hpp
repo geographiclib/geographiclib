@@ -13,7 +13,7 @@
 #include <GeographicLib/Constants.hpp>
 
 #include <functional>
-#include <memory>
+#include <utility>
 #include <vector>
 
 namespace GeographicLib {
@@ -44,11 +44,12 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Trigfun {
   private:
     typedef Math::real real;
-    int _n,                    // Number of samples in half/quarter period
-      _m;                      // Number of coefficients in series
+    int _m,                     // Number of coefficients in series
+      _n;                       // Number of samples in half/quarter period
     bool _odd, _sym;
     std::vector<real> _coeff;
-    real _q, _h, _p;              // quarter, half, whole period
+    real _h, _q, _p;              // half, quarter, whole period
+    mutable real _max;
     // Function samples over half/quarter period of !sym/sym
     // odd sym cent  samples            nF  nC
     //  f   f   f    |-|-|-|-|-|-|-|-|  n+1 n+1 (4)
@@ -57,8 +58,8 @@ namespace GeographicLib {
     //  t   t   f    --|-|-|-|-|-|-|-|  n   n   (1)
     //  f   f   t    -|-|-|-|-|-|-|-|-  n   n+1 (4), (6)
     //  t   f   t    -|-|-|-|-|-|-|-|-  n   n+1 (5)
-    //  f   t   t    -|-|-|-|-|-|-|-|-  n   n  
-    //  t   t   t    -|-|-|-|-|-|-|-|-  n   n  
+    //  f   t   t    -|-|-|-|-|-|-|-|-  n   n
+    //  t   t   t    -|-|-|-|-|-|-|-|-  n   n
     //
     // (1) missing end terms presumed zero
     // (2) included last term is usually zero, if non zero, gives secular term
@@ -86,17 +87,18 @@ namespace GeographicLib {
     //   f_n = 0, need f_i for i in [0, n) (n samples)
     // f(x) = sum(c[k] * cos(2*(k+1/2) * y), k, 0, n - 1)
     // F(x) = (q/pi) * sum(c[k]/(k+1/2) * sin(2*(k+1/2) * y), k, 0, n - 1)
-    
-  private:
+
     Trigfun(const std::vector<Math::real>& c, bool odd, bool sym, real h)
-      : _odd(odd)
+      : _m(int(c.size()))
+      , _n(sym ? _m : _m - 1)
+      , _odd(odd)
       , _sym(sym)
       , _coeff(c)
-      , _h(h) {
-      _m = int(_coeff.size());
-      _n = _sym ? _m : _m - 1;
-      _q = _h/2; _p = 2*_h;
-    }
+      , _h(h)
+      , _q(_h/2)
+      , _p(2*_h)
+      , _max(-1)
+    {}
 
   public:
     /**
@@ -104,7 +106,7 @@ namespace GeographicLib {
      *
      * @param[in] n the number of points to use.
      **********************************************************************/
-    Trigfun(int n = 0);
+    Trigfun() : _m(0) {}
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
             bool centerp, real halfp, int n);
     static Trigfun initbysamples(const std::vector<real>& F, bool odd, bool sym,
@@ -120,10 +122,32 @@ namespace GeographicLib {
     // Solve f(x) - z = 0 for x, fp is the derivative
     real root(real z, const std::function<real(real)>& fp,
               int& countn, int& countb) const;
+    real root(real z, const std::function<real(real)>& fp) const {
+      int countn = 0, countb = 0;
+      return root(z, fp, countn, countb);
+    }
     // Solve f(x) - z = 0 with x in (xa, xb)
     real root(real z, const std::function<real(real)>& fp,
               real x0, real xa, real xb, int& countn, int& countb) const;
-    Trigfun invert(const std::function<real(real)>& fp) const;
+    real root(real z, const std::function<real(real)>& fp,
+              real x0, real xa, real xb) const {
+      int countn = 0, countb = 0;
+      return root(z, fp, x0, xa, xb, countn, countb);
+    }
+    // fp is the derivative
+    Trigfun invert(const std::function<real(real)>& fp,
+                   int& countn,  int& countb) const;
+    Trigfun invert(const std::function<real(real)>& fp) const {
+      int countn = 0, countb = 0;
+      return invert(fp, countn, countb);
+    }
+
+    int NCoeffs() const { return _m; }
+    real Max() const;
+    real HalfPeriod() const { return _h; }
+    real HalfRange() const {
+      return _odd && !_sym ? _coeff[0] * Math::pi() : Max();
+    }
 #if 0
     /**
      * Evaluate the Fourier sum given the sine and cosine of the angle
@@ -138,6 +162,57 @@ namespace GeographicLib {
     std::vector<real> Coeffs();
     std::vector<real> Samples();
 #endif
+  };
+
+    /**
+   * \brief A function defined by its derivative and its inverse
+   *
+   * This builds on the Trigfun class.
+   **********************************************************************/
+
+  class GEOGRAPHICLIB_EXPORT TrigfunExt {
+  private:
+    typedef Math::real real;
+    std::function<real(real)> _fp;
+    Trigfun _f;
+    mutable bool _invp;
+    mutable Trigfun _finv;
+    mutable int _countn, _countb;
+  public:
+    TrigfunExt() {}
+    /**
+     * Constructor specifying the derivative, an even periodic function
+     *
+     * @param[in] n the number of points to use.
+     **********************************************************************/
+    TrigfunExt(const std::function<real(real)>& fp, real halfp)
+      : _fp(fp)
+      , _f(Trigfun(_fp, false, false, false, halfp, 0).integral())
+      , _invp(false)
+    {}
+    real operator()(real x) const { return _f(x); }
+    real deriv(real x) const { return _fp(x); }
+    real inv1(real z) const {
+      int cn, cb;
+      return _f.root(z, _fp, cn, cb);
+    }
+    void ComputeInverse() const {
+      if (!_invp) {
+        _countn = _countb = 0;
+        _finv = _f.invert(_fp, _countn, _countb);
+        _invp = true;
+      }
+    }
+    real inv(real z) const {
+      ComputeInverse();
+      return _finv(z);
+    }
+    int NCoeffs() const { return _f.NCoeffs(); }
+    int NCoeffsInv() const { ComputeInverse(); return _finv.NCoeffs(); }
+    std::pair<int, int> InvCounts() const {
+      ComputeInverse();
+      return std::pair<int, int>(_countn, _countb);
+    }
   };
 
 } // namespace GeographicLib
