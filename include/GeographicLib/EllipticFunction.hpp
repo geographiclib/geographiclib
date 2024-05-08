@@ -566,12 +566,33 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
+     * The Jacobi amplitude function.
+     *
+     * @param[in] x the argument.
+     * @return the value of am(\e x, \e k)
+     **********************************************************************/
+    Math::real am(real x) const;
+
+    /**
+     * The Jacobi amplitude function and associated elliptic functions.
+     *
+     * @param[in] x the argument.
+     * @param[out] sn sn(\e x, \e k).
+     * @param[out] cn cn(\e x, \e k).
+     * @param[out] dn dn(\e x, \e k).
+     * @return the value of am(\e x, \e k)
+     **********************************************************************/
+    Math::real am(real x, real& sn, real& cn, real& dn) const;
+
+    /**
      * The Jacobi elliptic functions.
      *
      * @param[in] x the argument.
      * @param[out] sn sn(\e x, \e k).
      * @param[out] cn cn(\e x, \e k).
      * @param[out] dn dn(\e x, \e k).
+     *
+     * For this routine <i>k</i> is restricted to the interval [0, 1].
      **********************************************************************/
     void sncndn(real x, real& sn, real& cn, real& dn) const;
 

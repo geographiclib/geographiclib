@@ -208,7 +208,7 @@ namespace GeographicLib {
      *   - U+201d right double quote (&rdquo;)
      *   - U+201f reversed-9 double quote (‟)
      *   - U+02ba modifier letter double prime (ʺ)
-     *   - '&nbsp;' any two consecutive symbols for minutes
+     *   - '&thinsp;' any two consecutive symbols for minutes
      * - plus sign:
      *   - + plus
      *   - U+2795 heavy plus (➕)

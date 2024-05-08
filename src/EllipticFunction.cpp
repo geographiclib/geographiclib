@@ -324,6 +324,9 @@ namespace GeographicLib {
     if (_kp2 != 0) {
       real mc = _kp2, d = 0;
       if (signbit(_kp2)) {
+        // This implements DLMF Eqs 22.17.2 - 22.17.4.  But this only
+        // accomodates kp2 < 0 or k2 > 1 and these are outside the advertized
+        // ranges for the contructor for this class.
         d = 1 - mc;
         mc /= -d;
         d = sqrt(d);
@@ -362,6 +365,7 @@ namespace GeographicLib {
         sn = signbit(sn) ? -a : a;
         cn = c * sn;
         if (signbit(_kp2)) {
+          // See DLMF Eqs 22.17.2 - 22.17.4
           swap(cn, dn);
           sn /= d;
         }
@@ -370,6 +374,56 @@ namespace GeographicLib {
       sn = tanh(x);
       dn = cn = 1 / cosh(x);
     }
+  }
+
+  Math::real EllipticFunction::am(real x) const {
+    // This implements DLMF Sec 22.20(ii).
+    // See also Sala (1989), https://doi.org/10.1137/0520100, Sec 5.
+    static const real tolJAC =
+      pow(numeric_limits<real>::epsilon(), real(0.75));
+    real k2 = _k2, kp2 = _kp2;
+    if (_k2 == 0)
+      return x;
+    else if (_kp2 == 0) {
+      return atan(sinh(x));     // gd(x)
+    } else if (_k2 < 0) {
+      // Sala Eq. 5.8
+      k2 = -_k2 / _kp2; kp2 = 1 / _kp2;
+      x *= sqrt(_kp2);
+    }
+    real a[num_], b, c[num_];
+    a[0] = 1; b = sqrt(kp2); c[0] = sqrt(k2);
+    int l = 1;
+    for (; l < num_ || GEOGRAPHICLIB_PANIC;) {
+      a[l] = (a[l-1] + b) / 2;
+      c[l] = (a[l-1] - b) / 2;
+      b = sqrt(a[l-1] * b);
+      if (!(c[l] > tolJAC * a[l])) break;
+      ++l;
+    }
+    // Now a[l] = pi/(2*K)
+    real phi = a[l] * x * (1 << l), phi1;
+    for (; l > 0; --l) {
+      phi1 = phi;
+      phi = (phi + asin(c[l] * sin(phi) / a[l])) / 2;
+    }
+    // For k2 < 0, see Sala Eq. 5.8
+    return _k2 < 0 ? phi1 - phi : phi;
+  }
+
+  Math::real EllipticFunction::am(real x, real& sn, real& cn, real& dn) const {
+    real phi = am(x);
+    if (_kp2 == 0) {
+      // Could rely on sin(gd(x)) = tanh(x) and cos(gd(x)) = 1 / cosh(x).  But
+      // this is more accurate for large |x|.
+      sn = tanh(x); cn = dn = 1 / cosh(x);
+    } else {
+      sn = sin(phi); cn = cos(phi);
+      // See comment following DLMF Eq. 22.20.5
+      // dn = cn / cos(phi1 - phi)
+      dn = Delta(sn, cn);
+    }
+    return phi;
   }
 
   Math::real EllipticFunction::F(real sn, real cn, real dn) const {
@@ -497,12 +551,22 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::F(real phi) const {
+    if (_k2 == 0)
+      return phi;
+    else if (_kp2 == 0)
+      return asinh(tan(phi));
     real sn = sin(phi), cn = cos(phi), dn = Delta(sn, cn);
     return fabs(phi) < Math::pi() ? F(sn, cn, dn) :
       (deltaF(sn, cn, dn) + phi) * K() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::E(real phi) const {
+    if (_k2 == 0)
+      return phi;
+    // else if (_kp2 == 0)
+    // Despite DLMF Eq 19.6.9 this is probably wrong, since
+    // sqrt(1 - k^2*sin(phi)^2) -> abs(cos(phi)) in the limit k -> 1.
+    //      return sin(phi);
     real sn = sin(phi), cn = cos(phi), dn = Delta(sn, cn);
     return fabs(phi) < Math::pi() ? E(sn, cn, dn) :
       (deltaE(sn, cn, dn) + phi) * E() / (Math::pi()/2);
