@@ -3,7 +3,6 @@
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include "Trigfun.hpp"
-#include "Triaxial.hpp"
 
 using namespace GeographicLib;
 using namespace std;
@@ -90,7 +89,7 @@ void EllipTest(Math::real k2, Math::real kp2) {
   for (int i = 0; i <= 100; ++i) {
     real z = i/real(10),
       x = Finv(z),
-      xa = F.root(z, f, countn, countb),
+      xa = F.root(z, f, &countn, &countb),
       xc = ell.am(z);
     cout << "roots " << z << " " << x << " "
          << z-F(x) << " " << x  - xa <<  " "
@@ -105,110 +104,29 @@ void EllipTest(Math::real k2, Math::real kp2) {
   }
   if (0) {
     real z = 6,
-      x = F.root(z, f, countn, countb);
+      x = F.root(z, f, &countn, &countb);
     cout << "roots " << z << " " << x << " " << z - F(x) << "\n";
     cout << "counts " << countn << " " << countb << "\n";
     return;
   }
   for (int i = 0; i <= 100; ++i) {
     real z = i/real(10),
-      x = F.root(z, f, countn, countb);
+      x = F.root(z, f, &countn, &countb);
     cout << "roots " << z << " " << x << " " << z-F(x) << "\n";
   }
   cout << "counts " << countn << " " << countb << "\n";
 }
 
-void TriaxialTest0() {
-  typedef Math::real real;
-  // Triaxial t(sqrt(real(2)), 1, sqrt(real(0.5)));
-  Triaxial t(1.01,1,0.8);
-  // Triaxial t(sqrt(real(3)), 1, 1/sqrt(real(3)));
-  real mu = real(0.0000001);
-  //  cout << t.k2 << " " << t.kp2 << " " << t.e2 << "\n";
-  geod_fun fa(t.k2, t.kp2, -t.e2, mu, true);
-  fa.NCoeffsInv();
-  cerr << fa.NCoeffs() << " "
-            << fa.NCoeffsInv() << " "
-            << fa.InvCounts().first << "\n";
-  geod_fun fb(t.k2, t.kp2, -t.e2, mu, false);
-  fb.NCoeffsInv();
-  cerr << fb.NCoeffs() << " "
-            << fb.NCoeffsInv() << " "
-            << fb.InvCounts().first << "\n";
-  for (int k = 0; k <= 360; k += 3) {
-    real x = k * Math::degree(),
-      u = fa.ell.F(x),
-      fu = fa.fun(u),
-      fx = fb.fun(x),
-      uu = fa.fun.inv(fu),
-      xx = fb.fun.inv(fx);
-      cout << k << " " << fu << " " << fx << " " << fu - fx << " "
-                << u - uu << " " << x - xx << "\n";
-  }
-}
-
-void TriaxialTest(Math::real a, Math::real b, Math::real c) {
-  typedef Math::real real;
-  Triaxial t(a, b, c);
-  real k2 = t.k2, kp2 = t.kp2, e2 = t.e2;
-  if (0) {
-    int num = 100, numk = int(round(num*k2)), numkp = num-numk;
-    for (int k = -numkp; k <= numk; ++k) {
-      if (k == 0) continue;
-      real gam = k < 0 ?
-        - kp2 * Math::sq(k / real(numkp)) : k2 * Math::sq(k / real(numk));
-      if (0) {
-        geod_fun fphia(k2, kp2, e2, -gam, false); fphia.NCoeffsInv();
-        geod_fun fphib(k2, kp2, e2, -gam, true); fphib.NCoeffsInv();
-        geod_fun fomga(kp2, k2, -e2, gam, false); fomga.NCoeffsInv();
-        geod_fun fomgb(kp2, k2, -e2, gam, true); fomgb.NCoeffsInv();
-         cout << k << " " << gam << " "
-                   << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
-                   << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << " "
-                   << fphib.NCoeffs() << " " << fphib.NCoeffsInv() << " "
-                   << fomgb.NCoeffs() << " " << fomgb.NCoeffsInv() << "\n";
-      } else {
-        geod_fun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
-        geod_fun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
-         cout << k << " " << gam << " "
-                   << fphia.txp() << " "
-                   << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
-                   << fomga.txp() << " "
-                   << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << "\n";
-      }
-    }
-  }
-  for (int k = 3; k <= 16; ++k) {
-    for (int s = -1; s <= 1; s += 2) {
-      real gam = pow(real(10), -k) * s;
-      geod_fun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
-      geod_fun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
-       cout << k << " " << gam << " "
-                 << fphia.ell.K() << " "
-                 << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
-                 << fomga.ell.K() << " "
-                 << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << "\n";
-    }
-  }
-}
 int main() {
   try {
     Utility::set_digits();
     typedef Math::real real;
     if (0) BasicTest();
-    if (0) {
+    if (1) {
       real kp2 = 0.00001, k2 = 1 - kp2;
       //    k2 = -0.1; kp2 = 1 - k2;
       EllipTest(k2, kp2);
     }
-    if (0) {
-      TriaxialTest0();
-    }
-    real a = 1.01, b = 1, c = 0.8;
-    //    a = sqrt(2.0); c = 1/a;
-    //    a = 1.2; c = 0.99;
-    a = 6378172; b = 6378103; c = 6356753;
-    TriaxialTest(a-34, b+34, c);
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";

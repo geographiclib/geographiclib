@@ -50,6 +50,13 @@ namespace GeographicLib {
     std::vector<real> _coeff;
     real _h, _q, _p;              // half, quarter, whole period
     mutable real _max;
+    static int chop(const std::vector<real>& c, real tol,
+                    bool integral = false);
+    static real root(const std::function<real(real)>& f,
+                     real z, const std::function<real(real)>& fp,
+                     real x0, real xa, real xb,
+                     real xscale, real zscale, real s,
+                     int* countn = nullptr, int* countb = nullptr);
     // Function samples over half/quarter period of !sym/sym
     // odd sym cent  samples            nF  nC
     //  f   f   f    |-|-|-|-|-|-|-|-|  n+1 n+1 (4)
@@ -109,38 +116,32 @@ namespace GeographicLib {
     Trigfun() : _m(0) {}
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
             bool centerp, real halfp, int n);
-    static Trigfun initbysamples(const std::vector<real>& F, bool odd, bool sym,
-                                 bool centerp,
-                                 real halfp);
-    static int chop(const std::vector<real>& c, real tol,
-                    bool integral = false);
     real check(const std::vector<real>& F, bool centerp) const;
     //    real eval(real x) const;
     real operator()(real x) const;
+    static Trigfun initbysamples(const std::vector<real>& F, bool odd, bool sym,
+                                 bool centerp,
+                                 real halfp);
     void refine(const Trigfun& tb);
     Trigfun integral() const;
     // Solve f(x) - z = 0 for x, fp is the derivative
     real root(real z, const std::function<real(real)>& fp,
-              int& countn, int& countb) const;
-    real root(real z, const std::function<real(real)>& fp) const {
-      int countn = 0, countb = 0;
-      return root(z, fp, countn, countb);
-    }
+              int* countn = nullptr, int* countb = nullptr) const;
     // Solve f(x) - z = 0 with x in (xa, xb)
     real root(real z, const std::function<real(real)>& fp,
-              real x0, real xa, real xb, int& countn, int& countb) const;
-    real root(real z, const std::function<real(real)>& fp,
-              real x0, real xa, real xb) const {
-      int countn = 0, countb = 0;
-      return root(z, fp, x0, xa, xb, countn, countb);
-    }
-    // fp is the derivative
+              real x0, real xa, real xb,
+              int* countn = nullptr, int* countb = nullptr) const;
+    // f is the function to be inverted (odd periodic with +ve secular term)
+    // fp is its derivative
+    // hp is half period, hr is half range
+    // f(x) - hr/hp * x lies in [minf, maxf].
+    static Trigfun InverseInit(const std::function<real(real)>& f,
+                               const std::function<real(real)>& fp,
+                               real hp, real hr,
+                               real minf, real maxf,
+                               int* countn = nullptr, int* countb = nullptr);
     Trigfun invert(const std::function<real(real)>& fp,
-                   int& countn,  int& countb) const;
-    Trigfun invert(const std::function<real(real)>& fp) const {
-      int countn = 0, countb = 0;
-      return invert(fp, countn, countb);
-    }
+                   int* countn = nullptr, int* countb = nullptr) const;
 
     int NCoeffs() const { return _m; }
     real Max() const;
@@ -174,6 +175,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     std::function<real(real)> _fp;
+    bool _sym;
     Trigfun _f;
     mutable bool _invp;
     mutable Trigfun _finv;
@@ -185,27 +187,28 @@ namespace GeographicLib {
      *
      * @param[in] n the number of points to use.
      **********************************************************************/
-    TrigfunExt(const std::function<real(real)>& fp, real halfp)
+    TrigfunExt(const std::function<real(real)>& fp, real halfp,
+               bool sym = false)
       : _fp(fp)
-      , _f(Trigfun(_fp, false, false, false, halfp, 0).integral())
+      , _sym(sym)
+      , _f(Trigfun(_fp, false, _sym, false, halfp, 0).integral())
       , _invp(false)
     {}
     real operator()(real x) const { return _f(x); }
     real deriv(real x) const { return _fp(x); }
     real inv1(real z) const {
-      int cn, cb;
-      return _f.root(z, _fp, cn, cb);
+      return _sym ? 0 : _f.root(z, _fp);
     }
     void ComputeInverse() const {
-      if (!_invp) {
+      if (!_invp && !_sym) {
         _countn = _countb = 0;
-        _finv = _f.invert(_fp, _countn, _countb);
+        _finv = _f.invert(_fp, &_countn, &_countb);
         _invp = true;
       }
     }
     real inv(real z) const {
       ComputeInverse();
-      return _finv(z);
+      return _sym ? 0 : _finv(z);
     }
     int NCoeffs() const { return _f.NCoeffs(); }
     int NCoeffsInv() const { ComputeInverse(); return _finv.NCoeffs(); }

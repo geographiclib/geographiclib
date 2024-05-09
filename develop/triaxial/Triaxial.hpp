@@ -43,29 +43,23 @@ namespace GeographicLib {
     typedef Math::real real;
     real _kap, _kapp, _eps, _mu;
     bool _tx;
-    static real fphipf(real phi, real kap, real kapp, real eps, real mu) {
-      using std::cos; using std::sqrt;
-      real c2 = kap * Math::sq(cos(phi));
+    static real fphipf(real c, real kap, real kapp, real eps, real mu) {
+      using std::sqrt;
+      real c2 = kap * Math::sq(c);
       return sqrt( (1 - eps * c2) / (( kapp + c2) * (c2 + mu)) );
     }
-    static real fupf(real u, real kap, real kapp, real eps, real mu,
-                     EllipticFunction ell) {
+    static real fupf(real cn, real kap, real kapp, real eps, real mu) {
       using std::sqrt;
-      real sn, cn, dn;
-      ell.am(u, sn, cn, dn);
       real c2 = kap * Math::sq(cn);
       return sqrt( (1 - eps * c2) / (( kapp + c2) * (kap + mu)) );
     }
-    static real fpsipf(real psi, real kap, real kapp, real eps, real mu) {
-      using std::cos; using std::sin; using std::sqrt;
-      real c2 = kap * Math::sq(cos(psi)) - mu * Math::sq(sin(psi));
+    static real fpsipf(real s, real c, real kap, real kapp, real eps, real mu) {
+      using std::sqrt;
+      real c2 = kap * Math::sq(c) - mu * Math::sq(s);
       return sqrt( (1 - eps * c2) / (( kapp + c2) * c2) ) ;
     }
-    static real fvpf(real v, real kap, real kapp, real eps, real /* mu */,
-                     EllipticFunction ell) {
+    static real fvpf(real dn, real kap, real kapp, real eps, real /* mu */) {
       using std::sqrt;
-      real sn, cn, dn;
-      ell.am(v, sn, cn, dn);
       real c2 = kap * Math::sq(dn);
       return sqrt( (1 - eps * c2) / (kapp + c2) * kap );
     }
@@ -91,11 +85,13 @@ namespace GeographicLib {
     typedef Math::real real;
     real _kap, _kapp, _eps;
     bool _tx;
+    int _countn, _countb;
     static real lam(real x) {
       using std::tan; using std::asinh; using std::fabs;
       // A consistent large value for x near pi/2.  Also deals with the issue
       // that tan(pi/2) may be negative, e.g., for long doubles.
-      static real bigval = 10 - log(std::numeric_limits<real>::epsilon());
+      // static real bigval = 10 - log(std::numeric_limits<real>::epsilon());
+      static real bigval = Math::infinity();
       return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
         (x < 0 ? -bigval : bigval);
     }
@@ -103,21 +99,18 @@ namespace GeographicLib {
       using std::atan; using std::sinh;
       return atan(sinh(x));
     }
-    static real dfpf(real phi, real kap, real kapp, real eps) {
+    static real dfpf(real c, real kap, real kapp, real eps) {
       // function dfp = dfpf(phi, kappa, epsilon)
       // return derivative of Delta f
       using std::cos; using std::sqrt;
       // s = sqrt(1 - kap * sin(phi)^2)
-      real c = cos(phi), c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
+      real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
       return (1 + eps*kapp) * kap * c / (s * (sqrt(kapp * (1 - eps*c2)) + s));
     }
-    static real dfvpf(real v, real kap, real kapp, real eps,
-                      EllipticFunction ell) {
+    static real dfvpf(real cn, real dn, real kap, real kapp, real eps) {
       // function dfvp = dfvpf(v, kap, eps)
       // return derivative of Delta f_v
       using std::sqrt;
-      real sn, cn, dn;
-      ell.am(v, sn, cn, dn);
       return (1 + eps*kapp) * kap *
         (cn / (sqrt(kapp * (1 - (eps*kap) * Math::sq(cn))) + dn));
     }
@@ -134,16 +127,19 @@ namespace GeographicLib {
 
     EllipticFunction ell;
     TrigfunExt fun;
+    Trigfun _chiinv;
     geodu_fun(real kap, real kapp, real eps);
     geodu_fun(real kap, real kapp, real eps, bool tx);
-    real val(real u) const { return fun(u); }
-    real inv(real y) const { return fun.inv(y); }
-    real inv1(real y) const { return fun.inv1(y); }
-    real tx(real phi) const { return _tx ? ell.F(phi) : phi; }
-    real txinv(real u) const { return _tx ? ell.am(u) : u; }
+    real val(real u) const {
+      real phi = gd(u);
+      return u - fun(_tx ? ell.F(phi) : phi);
+    }
+    real inv(real y) const { return y + fun(_chiinv(gd(y))); }
     int NCoeffs() const { return fun.NCoeffs(); }
-    int NCoeffsInv() const { return fun.NCoeffsInv(); }
-    std::pair<int, int> InvCounts() const { return fun.InvCounts(); }
+    int NCoeffsInv() const { return _chiinv.NCoeffs(); }
+    std::pair<int, int> InvCounts() const {
+      return std::pair<int, int>(_countn, _countb);
+    }
     bool txp() const { return _tx; }
   };
 
