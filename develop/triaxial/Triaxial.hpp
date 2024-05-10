@@ -36,6 +36,10 @@ namespace GeographicLib {
     void Norm(vec3& r, vec3& v) const;
     int Direct(const vec3& r1, const vec3& v1, real s12, vec3& r2, vec3& v2,
                real eps = 1e-10) const;
+    static real EllipticThresh() {
+      static real thresh = 1/real(8);
+      return thresh;
+    }
   };
 
   class GEOGRAPHICLIB_EXPORT geod_fun {
@@ -132,14 +136,97 @@ namespace GeographicLib {
     geodu_fun(real kap, real kapp, real eps, bool tx);
     real val(real u) const {
       real phi = gd(u);
-      return u - fun(_tx ? ell.F(phi) : phi);
+      return (u - fun(_tx ? ell.F(phi) : phi)) / sqrt(_kap * _kapp);
     }
-    real inv(real y) const { return y + fun(_chiinv(gd(y))); }
+    real inv(real y) const {
+      y *= sqrt(_kap * _kapp);
+      return y + fun(_chiinv(gd(*y)));
+    }
+    real tx(real phi) const { return lam(phi); }
+    real txinv(real u) const { return gd(u); }
     int NCoeffs() const { return fun.NCoeffs(); }
     int NCoeffsInv() const { return _chiinv.NCoeffs(); }
     std::pair<int, int> InvCounts() const {
       return std::pair<int, int>(_countn, _countb);
     }
+    bool txp() const { return _tx; }
+  };
+
+  class GEOGRAPHICLIB_EXPORT dist_fun {
+  private:
+    typedef Math::real real;
+    real _kap, _kapp, _eps, _mu;
+    bool _tx;
+    static real gphipf(real c, real kap, real kapp, real eps, real mu) {
+      using std::sqrt;
+      real c2 = kap * Math::sq(c);
+      return sqrt((c2 + mu) * (1 - eps * c2) / ( kapp + c2) );
+    }
+    static real gfphipf(real c, real kap, real mu) {
+      real c2 = kap * Math::sq(c);
+      return c2 + mu;
+    }
+    static real g0pf(real c, real kap, real kapp, real eps) {
+      using std::sqrt;
+      real c2 = kap * Math::sq(c);
+      return sqrt( (1 - eps * c2) / ( kapp + c2) ) * c;
+    }
+    static real gf0pf(real c, real kap) {
+      real c2 = kap * Math::sq(c);
+      return c2;
+    }
+    static real gf0upf(real u, real kap) {
+      using std::cosh;
+      real c2 = kap / Math::sq(cosh(u));
+      return c2;
+    }
+    static real gupf(real cn, real dn, real kap, real kapp, real eps, real mu) {
+      using std::sqrt;
+      real c2 = kap * Math::sq(cn);
+      return sqrt( (kap + mu) * (1 - eps * c2) / ( kapp + c2) ) * Math::sq(dn);
+    }
+    static real gfupf(real cn, real kap, real mu) {
+      real c2 = kap * Math::sq(cn);
+      return c2 + mu;           // or (kap + mu) * Math::sq(dn);
+    }
+    static real g0vpf(real cn, real kap, real /*kapp*/, real eps) {
+      using std::sqrt;
+      real c2 = kap * Math::sq(cn);
+      return sqrt( kap * (1 - eps * c2) ) * cn;
+    }
+    static real gpsipf(real s, real c, real kap, real kapp, real eps, real mu) {
+      using std::sqrt;
+      // kap * cos(phi)^2
+      real c2 = kap * Math::sq(c) - mu * Math::sq(s);
+      return (kap + mu) *
+        sqrt( (1 - eps * c2) / (( kapp + c2) * c2) ) * Math::sq(c);
+    }
+    static real gfpsipf(real c, real kap, real mu) {
+      using std::sqrt;
+      return (kap + mu) * Math::sq(c);
+    }
+    static real gvpf(real cn, real dn, real kap, real kapp, real eps, real mu) {
+      using std::sqrt;
+      real c2 = kap * Math::sq(dn);
+      return (kap + mu) *
+        sqrt( (1 - eps * c2) / (kap * (kapp + c2))) * Math::sq(cn);
+    }
+    static real gfvpf(real cn, real kap, real mu) {
+      return (kap + mu) * Math::sq(cn);
+    }
+  public:
+    EllipticFunction ell;
+    TrigfunExt fun;
+    dist_fun(real kap, real kapp, real eps, real mu);
+    dist_fun(real kap, real kapp, real eps, real mu, bool tx);
+    real val(real u) const { return fun(u); }
+    real inv(real y) const { return fun.inv(y); }
+    real inv1(real y) const { return fun.inv1(y); }
+    real tx(real phi) const { return _tx ? ell.F(phi) : phi; }
+    real txinv(real u) const { return _tx ? ell.am(u) : u; }
+    int NCoeffs() const { return fun.NCoeffs(); }
+    int NCoeffsInv() const { return fun.NCoeffsInv(); }
+    std::pair<int, int> InvCounts() const { return fun.InvCounts(); }
     bool txp() const { return _tx; }
   };
 

@@ -106,41 +106,10 @@ namespace GeographicLib {
     return n;
   }
 
-  geod_fun::geod_fun(real kap, real kapp, real eps, real mu)
-    : _kap(kap)
-    , _kapp(kapp)
-    , _eps(eps)
-    , _mu(mu)
-  {
-    real k2 = _mu > 0 ? _kap / (_kap + _mu) : (_kap + _mu) / _kap,
-      kp2 = mu > 0 ? mu / (kap + mu) : -mu / kap;
-    _tx = kp2 < 0.125;
-    ell = EllipticFunction(_tx ? k2 : 0, 0, _tx ? kp2 : 1, 1);
-    fun = _mu > 0 ?
-      (_tx ?
-       TrigfunExt([kap = _kap, kapp = _kapp,
-                   eps = _eps, mu = _mu, ell = ell]
-                  (real u) -> real
-       { real sn, cn, dn;
-         (void) ell.am(u, sn, cn, dn);
-         return fupf(cn, kap, kapp, eps, mu); },
-                  ell.K()) :
-       TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                  (real phi) -> real
-       { return fphipf(cos(phi), kap, kapp, eps, mu); },
-                  Math::pi()/2)) :
-      (_tx ?
-       TrigfunExt([kap = _kap, kapp = _kapp,
-                   eps = _eps, mu = _mu, ell = ell]
-                  (real v) -> real
-       { real sn, cn, dn;
-         (void) ell.am(v, sn, cn, dn);
-         return fvpf(dn, kap, kapp, eps, mu); },
-                  ell.K()) :
-       TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                  (real psi) -> real
-       { return fpsipf(sin(psi), cos(psi), kap, kapp, eps, mu); },
-                  Math::pi()/2));
+  geod_fun::geod_fun(real kap, real kapp, real eps, real mu) {
+    real kp2 = mu > 0 ? mu / (kap + mu) : -mu / kap;
+    geod_fun f(kap, kapp, eps, mu, kp2 < Triaxial::EllipticThresh());
+    *this = f;
   }
 
   geod_fun::geod_fun(real kap, real kapp, real eps, real mu, bool tx)
@@ -184,7 +153,7 @@ namespace GeographicLib {
   {}
 
   geodu_fun::geodu_fun(real kap, real kapp, real eps) {
-    geodu_fun f(kap, kapp, eps, kapp < 0.125);
+    geodu_fun f(kap, kapp, eps, kapp < Triaxial::EllipticThresh());
     *this = f;
   }
 
@@ -256,5 +225,62 @@ namespace GeographicLib {
                            Math::pi()/2, Math::pi()/2,
                            -Math::pi()/2, 0, &_countn, &_countb);
   }
+
+  dist_fun::dist_fun(real kap, real kapp, real eps, real mu, bool tx)
+    : _kap(kap)
+    , _kapp(kapp)
+    , _eps(eps)
+    , _mu(mu)
+    , _tx(tx)
+    , ell(_tx ?
+          (_mu == 0 ? _kap : (_mu > 0 ? _kap / (_kap + _mu) :
+                               (_kap + _mu) / _kap)) : 0,
+          0,
+          _tx ?
+          (_mu == 0 ? _kapp : (_mu > 0 ? _mu / (_kap + _mu) :
+                               -_mu / _kap)) : 1,
+          1)
+    , fun(_mu == 0 ?
+          (_tx ?
+           TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, ell = ell]
+                      (real v) -> real
+           { real sn, cn, dn;
+             (void) ell.am(v, sn, cn, dn);
+             return g0vpf(dn, kap, kapp, eps);
+           },
+                      2*ell.K(), true) :
+           TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, ell = ell]
+                      (real phi) -> real
+           {
+             return g0pf(cos(phi), kap, kapp, eps);
+           },
+                      Math::pi(), true)) :
+          (_mu > 0 ?
+           (_tx ?
+            TrigfunExt([kap = _kap, kapp = _kapp,
+                        eps = _eps, mu = _mu, ell = ell]
+                       (real u) -> real
+            { real sn, cn, dn;
+              (void) ell.am(u, sn, cn, dn);
+              return gupf(cn, dn, kap, kapp, eps, mu); },
+                       ell.K()) :
+            TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                       (real phi) -> real
+            { return gphipf(cos(phi), kap, kapp, eps, mu); },
+                       Math::pi()/2)) :
+           (_tx ?
+            TrigfunExt([kap = _kap, kapp = _kapp,
+                        eps = _eps, mu = _mu, ell = ell]
+                       (real v) -> real
+                       { real sn, cn, dn;
+                         (void) ell.am(v, sn, cn, dn);
+                         return gvpf(cn, dn, kap, kapp, eps, mu); },
+                       ell.K()) :
+            TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                       (real psi) -> real
+            { return gpsipf(sin(psi), cos(psi), kap, kapp, eps, mu); },
+                       Math::pi()/2))))
+
+  {}
 
 } // namespace GeographicLib
