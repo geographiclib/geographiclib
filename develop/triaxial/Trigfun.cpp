@@ -2,7 +2,7 @@
  * \file Trigfun.cpp
  * \brief Implementation for GeographicLib::Trigfun class
  *
- * Copyright (c) Charles Karney (2022) <karney@alum.mit.edu> and licensed under
+ * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed under
  * the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -262,7 +262,8 @@ namespace GeographicLib {
     // Solve v = f(x) - z = 0
     bool debug = false;
     if (debug)
-      cout << "r " << xa << " " << x0 << " " << xb << "\n";
+      cout << "r " << xa << " " << x0 << " " << xb << "\n"
+           << "q " << f(xa) - z << " " << f(x0) - z << " " << f(xb) - z << "\n";
     real eps = numeric_limits<real>::epsilon(),
       vtol0 = eps * zscale,
       vtol1 = pow(eps, real(0.75)) * zscale,
@@ -270,7 +271,8 @@ namespace GeographicLib {
       x = x0;
     int i = 0, maxit = 50, b = 0;
     real p = Math::pi()/2 * 0;
-    for (; i < maxit || GEOGRAPHICLIB_PANIC;) {
+    for (; i < maxit || (throw GeographicLib::GeographicErr("Convergence failure"), false)
+           || GEOGRAPHICLIB_PANIC;) {
       ++i;
       real v = f(x) - z,
         vp = fp(x),
@@ -321,6 +323,7 @@ namespace GeographicLib {
     bool debug = false;
     bool odd = true, sym = false;
     if (debug) {
+      cout << "v 00 " << hp << "  " << hr <<  " " << minf << " " << maxf << "\n";
       int num = 100;
       for (int i = 0; i <= num; ++i) {
         real x = i*hp/num;

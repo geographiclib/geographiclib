@@ -2,8 +2,8 @@
  * \file Trigfun.hpp
  * \brief Header for GeographicLib::Trigfun class
  *
- * Copyright (c) Charles Karney (2022-2023) <karney@alum.mit.edu> and licensed
- * under the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed under
+ * the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -149,6 +149,9 @@ namespace GeographicLib {
     real HalfRange() const {
       return _odd && !_sym ? _coeff[0] * Math::pi() : Max();
     }
+    real Slope() const {
+      return _odd && !_sym ? HalfRange() / HalfPeriod() : 0;
+    }
 #if 0
     /**
      * Evaluate the Fourier sum given the sine and cosine of the angle
@@ -216,6 +219,10 @@ namespace GeographicLib {
       ComputeInverse();
       return std::pair<int, int>(_countn, _countb);
     }
+    real Max() const { return _f.Max(); }
+    real HalfPeriod() const { return _f.HalfPeriod(); }
+    real HalfRange() const { return _f.HalfRange(); }
+    real Slope() const { return _f.Slope(); }
   };
 
 } // namespace GeographicLib

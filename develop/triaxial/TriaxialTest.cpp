@@ -2,7 +2,9 @@
 #include <limits>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
+#include <GeographicLib/AuxAngle.hpp>
 #include "Triaxial.hpp"
+#include "TriaxialLine.hpp"
 
 using namespace GeographicLib;
 using namespace std;
@@ -42,6 +44,7 @@ void ODEtest(Math::real a, Math::real b, Math::real c) {
     }
 }
 
+/*
 void TriaxialTest0() {
   typedef Math::real real;
   // Triaxial t(sqrt(real(2)), 1, sqrt(real(0.5)));
@@ -70,7 +73,7 @@ void TriaxialTest0() {
                 << u - uu << " " << x - xx << "\n";
   }
 }
-
+*/
 void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
   Triaxial t(a, b, c);
@@ -108,9 +111,9 @@ void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
       geod_fun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
       geod_fun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
        cout << k << " " << gam << " "
-                 << fphia.ell.K() << " "
+                 << fphia.HalfPeriod() << " "
                  << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
-                 << fomga.ell.K() << " "
+                 << fomga.HalfPeriod() << " "
                  << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << "\n";
     }
   }
@@ -121,7 +124,7 @@ void UmbCheck(const geodu_fun& f) {
   int num = 25; real maxval = 5, dx = maxval/num;
   for (int i = -num; i <= num; ++i) {
     real x = i * dx;
-    cout << "c " << x << " " << x - f.inv(f.val(x)) << "\n";
+    cout << "c " << x << " " << x - f.inv(f(x)) << "\n";
   }
 }
 
@@ -141,6 +144,28 @@ void UmbilicTest(Math::real a, Math::real b, Math::real c) {
   UmbCheck(fomg);
 }
 
+void DirectfunTest(Math::real a, Math::real b, Math::real c) {
+  typedef Math::real real;
+  Triaxial t(a, b, c);
+  // Circumpolar
+  TriaxialLine lca(t, AuxAngle::degrees(real(1)), AuxAngle::degrees(real(0)),
+                  AuxAngle::degrees(real(90)));
+  if (1) {
+  TriaxialLine lcb(t, AuxAngle::degrees(real(89)), AuxAngle::degrees(real(0)),
+                  AuxAngle::degrees(real(90)));
+  }
+  // Umbilic
+  TriaxialLine lu(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(0)),
+                 AuxAngle::degrees(real(135)));
+  if (1) {
+  // Circumpolar
+  TriaxialLine ltb(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(1)),
+                  AuxAngle::degrees(real(180)));
+  }
+  TriaxialLine lta(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(89)),
+                  AuxAngle::degrees(real(180)));
+}
+
 int main() {
   try {
     Utility::set_digits();
@@ -148,8 +173,10 @@ int main() {
     real a = 6378172, b = 6378103, c = 6356753;
     if (0)
       ODEtest(a, b, c);
+    /*
     if (0)
       TriaxialTest0();
+    */
     if (0) {
       real a = 1.01, b = 1, c = 0.8;
       //    a = sqrt(2.0); c = 1/a;
@@ -158,11 +185,19 @@ int main() {
       a -= 34; b += 34;
       TriaxialTest1(a, b, c);
     }
-    if (1) {
+    if (0) {
       real a = 1.01, b = 1, c = 0.8;
       a = 6378172; b = 6378103; c = 6356753;
       // a -= 34; b += 34;
       UmbilicTest(a, b, c);
+    }
+    if (1) {
+      real a = 1.01, b = 1, c = 0.8;
+      a = 6378172; b = 6378103; c = 6356753;
+      //      a -= 34; b += 34;
+      DirectfunTest(a, b, c);
+      a = sqrt(real(2)); b = 1; c = 1/a;
+      DirectfunTest(a, b, c);
     }
   }
   catch (const std::exception& e) {
