@@ -87,7 +87,7 @@ namespace GeographicLib {
     // require abs(x) < 1/2, but better to restrict calls to abs(x) < 1/4
     static const real lg2eps_ = -log2(numeric_limits<real>::epsilon() / 2);
     int e;
-    frexp(x, &e);
+    (void) frexp(x, &e);
     e = max(-e, 1);             // Here's where abs(x) < 1/2 is assumed
     // x = [0.5,1) * 2^(-e)
     // estimate n s.t. x^n/n < 1/7 * epsilon/2

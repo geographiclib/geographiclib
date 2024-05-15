@@ -358,7 +358,7 @@ namespace GeographicLib {
     if (fabs(x) < real(0.5)) {
       static const real lg2eps_ = -log2(numeric_limits<real>::epsilon() / 2);
       int e;
-      frexp(x, &e);
+      (void) frexp(x, &e);
       e = -e;
       // x = [0.5,1) * 2^(-e)
       // estimate n s.t. x^n/(2*n+1) < x/3 * epsilon/2

@@ -263,8 +263,8 @@ endif ()
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
-# We require C++11
-set (CMAKE_CXX_STANDARD 11)
+# We require C++14
+set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 if (GEOGRAPHICLIB_PRECISION EQUAL 4)
   set (CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath

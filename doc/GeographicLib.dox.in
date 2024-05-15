@@ -7522,9 +7522,13 @@ git repository for GeographicLib</a>.
    - Stop requiring that `CMAKE_CROSSCOMPILING` match with
      `find_package(GeographicLib)`.
    - Update cmake_minimum_required to 3.16.0.
+   - C++14 compliant compiler required (this requirement tracks the
+     Boost Math library).
+   - Add AuxAngle::opertor+.
    - TODO: document use of CMake's FetchContent and
      GeographicLib::GeographicLib as target name.
-   - TODO: include notes for area of plate carree polygon.
+   - TODO: include notes for area of plate carree polygon.  See email of
+     2023-10-03 to Anton.Grafstrom@slu.se.
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-07-25)

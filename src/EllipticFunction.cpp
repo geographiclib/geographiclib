@@ -402,7 +402,8 @@ namespace GeographicLib {
       ++l;
     }
     // Now a[l] = pi/(2*K)
-    real phi = a[l] * x * (1 << l), phi1;
+    // Need to initialize phi1 to stop Visual Studio complaining
+    real phi = a[l] * x * real(1 << l), phi1 = 0;
     for (; l > 0; --l) {
       phi1 = phi;
       phi = (phi + asin(c[l] * sin(phi) / a[l])) / 2;

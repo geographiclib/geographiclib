@@ -142,6 +142,16 @@ namespace GeographicLib {
      **********************************************************************/
     AuxAngle& operator+=(const AuxAngle& p);
     /**
+     * Add two AuxAngles.
+     *
+     * @param[in] p the AuxAngle to be added.
+     * @return a *this + p as a new AuxAngle.
+     *
+     * \warning Neither *this nor \e p should have an infinite component.  If
+     * necessary, invoke AuxAngle::normalize on these angles first.
+     **********************************************************************/
+    AuxAngle operator+(const AuxAngle& p) const;
+    /**
      * Construct and return an AuxAngle specied as an angle in degrees.
      *
      * @param[in] d the angle measured in degrees.

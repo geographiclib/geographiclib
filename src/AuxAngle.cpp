@@ -58,4 +58,10 @@ namespace GeographicLib {
     return *this;
   }
 
+  AuxAngle AuxAngle::operator+(const AuxAngle& p) const {
+    AuxAngle z = *this;
+    z += p;
+    return z;
+  }
+
 } // namespace GeographicLib
