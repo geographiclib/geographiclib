@@ -106,54 +106,23 @@ namespace GeographicLib {
     return n;
   }
 
-  geod_fun::geod_fun(real kap, real kapp, real eps, real mu) {
-    real kp2 = mu > 0 ? mu / (kap + mu) :
-      (mu < 0 ? -mu / kap :
-       kapp);                   // mu == 0
-    geod_fun f(kap, kapp, eps, mu, kp2 < Triaxial::EllipticThresh());
-    *this = f;
-  }
+  geod_fun::geod_fun(real kap, real kapp, real eps, real mu,
+                     real epspow, real nmaxmult)
+    : geod_fun(kap, kapp, eps, mu,
+               (mu > 0 ? mu / (kap + mu) :
+                (mu < 0 ? -mu / kap :
+                 kapp)) < Triaxial::EllipticThresh(), epspow, nmaxmult)
+  {}
 
-  geod_fun::geod_fun(real kap, real kapp, real eps, real mu, bool tx)
+  geod_fun::geod_fun(real kap, real kapp, real eps, real mu, bool tx,
+                     real epspow, real nmaxmult)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
     , _mu(mu)
     , _tx(tx)
-      /*
-    , _ell(_tx && _mu != 0 ?
-           (_mu > 0 ? _kap / (_kap + _mu) : (_kap + _mu) / _kap) : 0,
-           0,
-           _tx && _mu != 0 ?
-           (_mu > 0 ? _mu / (_kap + _mu) : -_mu / _kap) : 1,
-           1)
-    , _fun(_mu > 0 ?
-           (_tx ?
-            TrigfunExt([kap = _kap, kapp = _kapp,
-                        eps = _eps, mu = _mu, ell = _ell]
-                       (real u) -> real
-            { real sn, cn, dn;
-              (void) ell.am(u, sn, cn, dn);
-              return fup(cn, kap, kapp, eps, mu); },
-                       ell.K()) :
-            TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                       (real phi) -> real
-            { return fphip(cos(phi), kap, kapp, eps, mu); },
-                       Math::pi()/2)) :
-           (_tx ?
-            TrigfunExt([kap = _kap, kapp = _kapp,
-                        eps = _eps, mu = _mu, ell = _ell]
-                       (real v) -> real
-                       { real sn, cn, dn;
-                         (void) ell.am(v, sn, cn, dn);
-                         return fvp(dn, kap, kapp, eps, mu); },
-                       ell.K()) :
-            TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                       (real psi) -> real
-            { return fpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
-                       Math::pi()/2)))
-      */
-
+    , _tol(pow(numeric_limits<real>::epsilon(), epspow))
+    , _invp(false)
   {
     real k2 = 0, kp2 = 1;
     if (_tx) {
@@ -167,173 +136,165 @@ namespace GeographicLib {
     _ell = EllipticFunction(k2, 0, kp2, 1);
     if (_mu > 0) {
       _fun = _tx ?
-        TrigfunExt([kap = _kap, kapp = _kapp,
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
                     eps = _eps, mu = _mu, ell = _ell]
                    (real u) -> real
-        { real sn, cn, dn;
-          (void) ell.am(u, sn, cn, dn);
-          return fup(cn, kap, kapp, eps, mu); },
-                   _ell.K()) :
-        TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                     return fup(cn, kap, kapp, eps, mu); },
+                   _ell.K(), false, epspow, nmaxmult) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
                    (real phi) -> real
-        { return fphip(cos(phi), kap, kapp, eps, mu); },
-                   Math::pi()/2);
+                   { return fphip(cos(phi), kap, kapp, eps, mu); },
+                   Math::pi()/2, false, epspow, nmaxmult);
     } else if (_mu < 0) {
       _fun = _tx ?
-        TrigfunExt([kap = _kap, kapp = _kapp,
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
                     eps = _eps, mu = _mu, ell = _ell]
                    (real v) -> real
-        { real sn, cn, dn;
-          (void) ell.am(v, sn, cn, dn);
-          return fvp(dn, kap, kapp, eps, mu); },
-                   _ell.K()) :
-        TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                     return fvp(dn, kap, kapp, eps, mu); },
+                   _ell.K(), false, epspow, nmaxmult) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
                    (real psi) -> real
-        { return fpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
+                   { return fpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
                    Math::pi()/2);
     } else {                    // _mu == 0
+      // N.B. Don't compute the inverse of _fun so not really necessary to
+      // supply epspow and nmaxmult args to TrigfunExt.
       _fun = _tx ?
-        TrigfunExt([kap = _kap, kapp = _kapp,
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
                     eps = _eps, ell = _ell]
                    (real v) -> real
-        { real sn, cn, dn;
-          (void) ell.am(v, sn, cn, dn);
-          return dfvp(cn, dn, kap, kapp, eps); },
-                   2 * _ell.K(), true) :
-        TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps]
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                    return dfvp(cn, dn, kap, kapp, eps); },
+                   2 * _ell.K(), true, epspow, nmaxmult) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps]
                    (real phi) -> real
-        { return dfp(cos(phi), kap, kapp, eps); },
-                   Math::pi(), true);
+                   { return dfp(cos(phi), kap, kapp, eps); },
+                   Math::pi(), true, epspow, nmaxmult);
     }
-    if (_mu == 0) {
-      _chiinv = _tx ?
-        // chi maps [-1,1]*K -> [-1,1]*pi/2
-        // dchi/dx = sech(lam(am(x)) - dfv(x)) * (sec(am(x)) * dn(x) - dfvp(x))
-        // cosh(lam(am(x))) = 1/cn, sinh(lam(am(x))) = sn/cn
-        // cosh(lam(x) - dfv(x))
-        //  = cosh(lam(am(x))) * cosh(dfv(x)) - sinh(lam(am(x))) * sinh(dfv(x))
-        //  = 1/cn * cosh(dfv(x)) - sn/cn * sinh(dfv(x))
-        //  = 1/cn * (cosh(dfv(x)) - sn * sinh(dfv(x)))
-        // (sec(am(x)) * dn - dfvp(x)) = 1/cn * (dn - cn * dfvp(x))
-        // dchi/dx = (dn - cn * dfvp(x)) /
-        //           (cosh(dfv(x)) - sn * sinh(dfv(x)))
-        Trigfun::InverseInit(
-                             [fun = _fun, ell = _ell]
-                             (real x) -> real
-                             { return gd(lam(ell.am(x)) - fun(x)); },
-                             [fun = _fun, ell = _ell]
-                             (real x) -> real
-                             { real sn, cn, dn, f = fun(x);
-                               (void) ell.am(x, sn, cn, dn);
-                               return (dn - cn * fun.deriv(x)) /
-                                 (cosh(f) - sn * sinh(f)); },
-                             _ell.K(), Math::pi()/2,
-                             -Math::pi()/2, Math::pi()/2, &_countn, &_countb) :
-        // chi maps [-1,1]*pi/2 -> [-1,1]*pi/2
-        // dchi/dx = sech(lam(x) - df(x)) * (sec(x) - dfp(x))
-        // cosh(lam(x)) = sec(x), sinh(lam(x)) = tan(x)
-        // cosh(lam(x) - df(x))
-        //  = cosh(lam(x)) * cosh(df(x)) - sinh(lam(x)) * sinh(df(x))
-        //  = sec(x) * cosh(df(x)) - tan(x) * sinh(df(x))
-        //  = sec(x) * (cosh(df(x)) - sin(x) * sinh(df(x)))
-        // (sec(x) - dfp(x)) = sec(x) * (1 - cos(x) * dfp(x))
-        // dchi/dx = (1 - cos(x) * dfp(x)) /
-        //           (cosh(df(x)) - sin(x) * sinh(df(x)))
-        Trigfun::InverseInit(
-                             [fun = _fun]
-                             (real x) -> real
-                             { return gd(lam(x) - fun(x)); },
-                             [fun = _fun]
-                             (real x) -> real
-                             { real f = fun(x);
-                               return (1 - cos(x) * fun.deriv(x)) /
-                                 (cosh(f) - sin(x) * sinh(f)); },
-                             Math::pi()/2, Math::pi()/2,
-                             -Math::pi()/2, Math::pi()/2, &_countn, &_countb);
+    _nmax = nmaxmult ? int(ceil(nmaxmult * _fun.NCoeffs())) : 1 << 16;
+    _max = _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
+        _fun.Max();
+  }
+
+  void geod_fun::ComputeInverse() {
+    if (!_invp) {
+      if (_mu == 0) {
+        _chiinv = _tx ?
+          // chi maps [-1,1]*K -> [-1,1]*pi/2
+          // dchi/dx = sech(lam(am(x)) - dfv(x)) * (sec(am(x)) * dn(x) - dfvp(x))
+          // cosh(lam(am(x))) = 1/cn, sinh(lam(am(x))) = sn/cn
+          // cosh(lam(x) - dfv(x))
+          //  = cosh(lam(am(x))) * cosh(dfv(x)) - sinh(lam(am(x))) * sinh(dfv(x))
+          //  = 1/cn * cosh(dfv(x)) - sn/cn * sinh(dfv(x))
+          //  = 1/cn * (cosh(dfv(x)) - sn * sinh(dfv(x)))
+          // (sec(am(x)) * dn - dfvp(x)) = 1/cn * (dn - cn * dfvp(x))
+          // dchi/dx = (dn - cn * dfvp(x)) /
+          //           (cosh(dfv(x)) - sn * sinh(dfv(x)))
+          Trigfun::InverseInit(
+                               [fun = _fun, ell = _ell]
+                               (real x) -> real
+                               { return gd(lam(ell.am(x)) - fun(x)); },
+                               [fun = _fun, ell = _ell]
+                               (real x) -> real
+                               { real sn, cn, dn, f = fun(x);
+                                 (void) ell.am(x, sn, cn, dn);
+                                 return (dn - cn * fun.deriv(x)) /
+                                   (cosh(f) - sn * sinh(f)); },
+                               _ell.K(), Math::pi()/2,
+                               -Math::pi()/2, Math::pi()/2, &_countn, &_countb,
+                               _tol, _nmax) :
+          // chi maps [-1,1]*pi/2 -> [-1,1]*pi/2
+          // dchi/dx = sech(lam(x) - df(x)) * (sec(x) - dfp(x))
+          // cosh(lam(x)) = sec(x), sinh(lam(x)) = tan(x)
+          // cosh(lam(x) - df(x))
+          //  = cosh(lam(x)) * cosh(df(x)) - sinh(lam(x)) * sinh(df(x))
+          //  = sec(x) * cosh(df(x)) - tan(x) * sinh(df(x))
+          //  = sec(x) * (cosh(df(x)) - sin(x) * sinh(df(x)))
+          // (sec(x) - dfp(x)) = sec(x) * (1 - cos(x) * dfp(x))
+          // dchi/dx = (1 - cos(x) * dfp(x)) /
+          //           (cosh(df(x)) - sin(x) * sinh(df(x)))
+          Trigfun::InverseInit(
+                               [fun = _fun]
+                               (real x) -> real
+                               { return gd(lam(x) - fun(x)); },
+                               [fun = _fun]
+                               (real x) -> real
+                               { real f = fun(x);
+                                 return (1 - cos(x) * fun.deriv(x)) /
+                                   (cosh(f) - sin(x) * sinh(f)); },
+                               Math::pi()/2, Math::pi()/2,
+                               -Math::pi()/2, Math::pi()/2, &_countn, &_countb,
+                               _tol, _nmax);
+      }
+      else
+        _fun.ComputeInverse();
     }
+    _invp = true;
   }
 
-  geodu_fun::geodu_fun(real kap, real kapp, real eps) {
-    geodu_fun f(kap, kapp, eps, kapp < Triaxial::EllipticThresh());
-    *this = f;
+  Math::real geod_fun::root(real z, real x0, int* countn, int* countb) const {
+    if (_mu != 0) return Math::NaN();
+    real xa = z - Max(), xb = z + Max();
+    x0 = fmin(xb, fmax(xa, x0));
+    // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
+    // N.B. use default tol for root, because we want accurate answers here
+    return _tx ?
+      Trigfun::root(
+                    [fun = _fun, ell = _ell]
+                    (real u) -> real
+                    { real phi = gd(u);
+                      return u - fun(ell.F(phi)); },
+                    z,
+                    [fun = _fun, ell = _ell]
+                    (real u) -> real
+                    { real phi = gd(u), sch = 1/cosh(u);
+                      return 1 - fun.deriv(ell.F(phi)) * sch /
+                        sqrt(ell.kp2() + ell.k2() * Math::sq(sch)); },
+                    x0, xa, xb,
+                    Math::pi()/2, Math::pi()/2, 1, countn, countb) :
+      Trigfun::root(
+                    [fun = _fun]
+                    (real u) -> real
+                    { real phi = gd(u);
+                      return u - fun(phi); },
+                    z,
+                    [fun = _fun]
+                    (real u) -> real
+                    { real phi = gd(u), sch = 1/cosh(u);
+                      return 1 - fun.deriv(phi) * sch; },
+                    x0, xa, xb,
+                    Math::pi()/2, Math::pi()/2, 1, countn, countb);
+  }
+  // Approximate inverse using _chiinv or _fun.inv0
+  Math::real geod_fun::inv0(real z) const {
+    if (!_invp) return Math::NaN();
+    return _mu == 0 ? _fun(_chiinv(gd(z))) : _fun.inv0(z);
+  }
+  // Accurate inverse by direct Newton (not using _finv)
+  Math::real geod_fun::inv1(real z, int* countn, int* countb) const {
+    return _mu == 0 ? root(z, z, countn, countb) : _fun.inv1(z, countn, countb);
+  }
+  // Accurate inverse correcting result from _finv
+  Math::real geod_fun::inv(real z, int* countn, int* countb) const {
+    if (!_invp) return Math::NaN();
+    return _mu == 0 ? root(z, inv0(z), countn, countb) :
+      _fun.inv(z, countn, countb);
   }
 
-  geodu_fun::geodu_fun(real kap, real kapp, real eps, bool tx)
-    : _kap(kap)
-    , _kapp(kapp)
-    , _eps(eps)
-    , _tx(tx)
-    , _countn(0)
-    , _countb(0)
-    , ell(_tx ? _kap : 0, 0,
-          _tx ? _kapp : 1, 1)
-    , fun(_tx ?
-          TrigfunExt([kap = _kap, kapp = _kapp,
-                      eps = _eps, ell = ell]
-                     (real v) -> real
-          { real sn, cn, dn;
-            (void) ell.am(v, sn, cn, dn);
-            return dfvp(cn, dn, kap, kapp, eps); },
-                     2 * ell.K(), true) :
-          TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps]
-                     (real phi) -> real
-          { return dfp(cos(phi), kap, kapp, eps); },
-                     Math::pi(), true)
-          )
-  {
-    _chiinv = _tx ?
-      // chi maps [-1,1]*K -> [-1,1]*pi/2
-      // dchi/dx = sech(lam(am(x)) - dfv(x)) * (sec(am(x)) * dn(x) - dfvp(x))
-      // cosh(lam(am(x))) = 1/cn, sinh(lam(am(x))) = sn/cn
-      // cosh(lam(x) - dfv(x))
-      //  = cosh(lam(am(x))) * cosh(dfv(x)) - sinh(lam(am(x))) * sinh(dfv(x))
-      //  = 1/cn * cosh(dfv(x)) - sn/cn * sinh(dfv(x))
-      //  = 1/cn * (cosh(dfv(x)) - sn * sinh(dfv(x)))
-      // (sec(am(x)) * dn - dfvp(x)) = 1/cn * (dn - cn * dfvp(x))
-      // dchi/dx = (dn - cn * dfvp(x)) /
-      //           (cosh(dfv(x)) - sn * sinh(dfv(x)))
-      Trigfun::InverseInit(
-                           [fun = fun, ell = ell]
-                           (real x) -> real
-                           { return gd(lam(ell.am(x)) - fun(x)); },
-                           [fun = fun, ell = ell]
-                           (real x) -> real
-                           { real sn, cn, dn, f = fun(x);
-                             (void) ell.am(x, sn, cn, dn);
-                             return (dn - cn * fun.deriv(x)) /
-                               (cosh(f) - sn * sinh(f)); },
-                           ell.K(), Math::pi()/2,
-                           -Math::pi()/2, 0, &_countn, &_countb) :
-      // chi maps [-1,1]*pi/2 -> [-1,1]*pi/2
-      // dchi/dx = sech(lam(x) - df(x)) * (sec(x) - dfp(x))
-      // cosh(lam(x)) = sec(x), sinh(lam(x)) = tan(x)
-      // cosh(lam(x) - df(x))
-      //  = cosh(lam(x)) * cosh(df(x)) - sinh(lam(x)) * sinh(df(x))
-      //  = sec(x) * cosh(df(x)) - tan(x) * sinh(df(x))
-      //  = sec(x) * (cosh(df(x)) - sin(x) * sinh(df(x)))
-      // (sec(x) - dfp(x)) = sec(x) * (1 - cos(x) * dfp(x))
-      // dchi/dx = (1 - cos(x) * dfp(x)) /
-      //           (cosh(df(x)) - sin(x) * sinh(df(x)))
-            Trigfun::InverseInit(
-                           [fun = fun]
-                           (real x) -> real
-                           { return gd(lam(x) - fun(x)); },
-                           [fun = fun]
-                           (real x) -> real
-                           { real f = fun(x);
-                             return (1 - cos(x) * fun.deriv(x)) /
-                               (cosh(f) - sin(x) * sinh(f)); },
-                           Math::pi()/2, Math::pi()/2,
-                           -Math::pi()/2, 0, &_countn, &_countb);
-  }
-
-  dist_fun::dist_fun(real kap, real kapp, real eps, real mu) {
-    real kp2 = mu > 0 ? mu / (kap + mu) :
-      (mu < 0 ? -mu / kap :
-       kapp);                   // mu == 0
-    dist_fun g(kap, kapp, eps, mu, kp2 < Triaxial::EllipticThresh());
-    *this = g;
-  }
+  dist_fun::dist_fun(real kap, real kapp, real eps, real mu)
+    : dist_fun(kap, kapp, eps, mu,
+               (mu > 0 ? mu / (kap + mu) :
+                (mu < 0 ? -mu / kap :
+                 kapp)) < Triaxial::EllipticThresh())
+  {}
 
   dist_fun::dist_fun(real kap, real kapp, real eps, real mu, bool tx)
     : _kap(kap)
@@ -341,56 +302,63 @@ namespace GeographicLib {
     , _eps(eps)
     , _mu(mu)
     , _tx(tx)
-    , _ell(_tx ?
-          (_mu == 0 ? _kap : (_mu > 0 ? _kap / (_kap + _mu) :
-                               (_kap + _mu) / _kap)) : 0,
-          0,
-          _tx ?
-          (_mu == 0 ? _kapp : (_mu > 0 ? _mu / (_kap + _mu) :
-                               -_mu / _kap)) : 1,
-          1)
-    , _fun(_mu == 0 ?
-          (_tx ?
-           TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
-                      (real v) -> real
-           { real sn, cn, dn;
-             (void) ell.am(v, sn, cn, dn);
-             return g0vp(cn, kap, kapp, eps);
-           },
-                      2*_ell.K(), true) :
-           TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
-                      (real phi) -> real
-           {
-             return g0p(cos(phi), kap, kapp, eps);
-           },
-                      Math::pi(), true)) :
-          (_mu > 0 ?
-           (_tx ?
-            TrigfunExt([kap = _kap, kapp = _kapp,
-                        eps = _eps, mu = _mu, ell = _ell]
-                       (real u) -> real
-            { real sn, cn, dn;
-              (void) ell.am(u, sn, cn, dn);
-              return gup(cn, dn, kap, kapp, eps, mu); },
-                       _ell.K()) :
-            TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                       (real phi) -> real
-            { return gphip(cos(phi), kap, kapp, eps, mu); },
-                       Math::pi()/2)) :
-           (_tx ?
-            TrigfunExt([kap = _kap, kapp = _kapp,
-                        eps = _eps, mu = _mu, ell = _ell]
-                       (real v) -> real
-                       { real sn, cn, dn;
-                         (void) ell.am(v, sn, cn, dn);
-                         return gvp(cn, dn, kap, kapp, eps, mu); },
-                       _ell.K()) :
-            TrigfunExt([kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                       (real psi) -> real
-            { return gpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
-                       Math::pi()/2))))
+  {
+    real k2 = 0, kp2 = 1;
+    if (_tx) {
+      k2 = _mu > 0 ? _kap / (_kap + _mu) :
+        (_mu < 0 ? (_kap + _mu) / _kap :
+         _kap);                    // _mu == 0
+      kp2 = _mu > 0 ? _mu / (_kap + _mu) :
+        (_mu < 0 ? -_mu / _kap :
+         _kapp);                // _mu == 0
+    }
+    _ell = EllipticFunction(k2, 0, kp2, 1);
+    if (_mu > 0) {
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
+                    eps = _eps, mu = _mu, ell = _ell]
+                   (real u) -> real
+                   { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                     return gup(cn, dn, kap, kapp, eps, mu); },
+                   _ell.K()) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   (real phi) -> real
+                   { return gphip(cos(phi), kap, kapp, eps, mu); },
+                   Math::pi()/2);
+    } else if (_mu < 0) {
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
+                    eps = _eps, mu = _mu, ell = _ell]
+                   (real v) -> real
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                     return gvp(cn, dn, kap, kapp, eps, mu); },
+                   _ell.K()) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   (real psi) -> real
+                   { return gpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
+                   Math::pi()/2);
+    } else {                    // _mu == 0
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
+                   (real v) -> real
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                     return g0vp(cn, kap, kapp, eps); },
+                   2*_ell.K(), true) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
+                   (real phi) -> real
+                   { return g0p(cos(phi), kap, kapp, eps); },
+                   Math::pi(), true);
+    }
+    _max = _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
+      _fun.Max();
+  }
 
-  {}
   Math::real dist_fun::gfderiv(real u) const {
     real sn = 0, cn = 0, dn = 0;
     if (_mu != 0 && _tx)

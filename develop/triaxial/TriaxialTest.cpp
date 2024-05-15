@@ -119,31 +119,6 @@ void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
   }
 }
 
-void UmbCheck(const geodu_fun& f) {
-  typedef Math::real real;
-  int num = 25; real maxval = 5, dx = maxval/num;
-  for (int i = -num; i <= num; ++i) {
-    real x = i * dx;
-    cout << "c " << x << " " << x - f.inv(f(x)) << "\n";
-  }
-}
-
-void UmbilicTest(Math::real a, Math::real b, Math::real c) {
-  typedef Math::real real;
-  Triaxial t(a, b, c);
-  real k2 = t.k2, kp2 = t.kp2, e2 = t.e2;
-  geodu_fun fbet(k2, kp2, e2);
-  cout << fbet.NCoeffs() << " " << fbet.NCoeffsInv() << " "
-       << fbet.InvCounts().first << " " << fbet.InvCounts().second << "\n";
-  geodu_fun fomg(kp2, k2, -e2);
-  cout << fomg.NCoeffs() << " " << fomg.NCoeffsInv() << " "
-       << fomg.InvCounts().first << " " << fomg.InvCounts().second << "\n";
-  cout << "\n";
-  UmbCheck(fbet);
-  cout << "\n";
-  UmbCheck(fomg);
-}
-
 void DirectfunTest(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
   Triaxial t(a, b, c);
@@ -151,16 +126,18 @@ void DirectfunTest(Math::real a, Math::real b, Math::real c) {
   TriaxialLine lca(t, AuxAngle::degrees(real(1)), AuxAngle::degrees(real(0)),
                   AuxAngle::degrees(real(90)));
   if (1) {
-  TriaxialLine lcb(t, AuxAngle::degrees(real(89)), AuxAngle::degrees(real(0)),
+  TriaxialLine lcb(t, AuxAngle::degrees(real(89.999)),
+                   AuxAngle::degrees(real(0)),
                   AuxAngle::degrees(real(90)));
   }
   // Umbilic
   TriaxialLine lu(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(0)),
-                 AuxAngle::degrees(real(135)));
+                  AuxAngle::degrees(real(135)));
   if (1) {
   // Circumpolar
-  TriaxialLine ltb(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(1)),
-                  AuxAngle::degrees(real(180)));
+  TriaxialLine ltb(t, AuxAngle::degrees(real(90)),
+                   AuxAngle::degrees(real(0.001)),
+                   AuxAngle::degrees(real(180)));
   }
   TriaxialLine lta(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(89)),
                   AuxAngle::degrees(real(180)));
@@ -185,19 +162,13 @@ int main() {
       a -= 34; b += 34;
       TriaxialTest1(a, b, c);
     }
-    if (0) {
-      real a = 1.01, b = 1, c = 0.8;
-      a = 6378172; b = 6378103; c = 6356753;
-      // a -= 34; b += 34;
-      UmbilicTest(a, b, c);
-    }
     if (1) {
       real a = 1.01, b = 1, c = 0.8;
       a = 6378172; b = 6378103; c = 6356753;
-      //      a -= 34; b += 34;
+      a -= 34; b += 34;
       DirectfunTest(a, b, c);
-      a = sqrt(real(2)); b = 1; c = 1/a;
-      DirectfunTest(a, b, c);
+      //      a = sqrt(real(2)); b = 1; c = 1/a;
+      //      DirectfunTest(a, b, c);
     }
   }
   catch (const std::exception& e) {

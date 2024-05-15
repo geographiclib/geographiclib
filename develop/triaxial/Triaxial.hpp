@@ -58,8 +58,12 @@ namespace GeographicLib {
     bool _tx;
     EllipticFunction _ell;
     TrigfunExt _fun;
+    real _tol;
+    int _nmax;
     Trigfun _chiinv;
     int _countn, _countb;
+    real _max;
+    bool _invp;
     // mu > 0
     static real fphip(real c, real kap, real kapp, real eps, real mu) {
       using std::sqrt;
@@ -111,9 +115,13 @@ namespace GeographicLib {
       using std::atan; using std::sinh;
       return atan(sinh(x));
     }
+    real root(real z, real x0, int* countn, int* countb) const;
   public:
-    geod_fun(real kap, real kapp, real eps, real mu);
-    geod_fun(real kap, real kapp, real eps, real mu, bool tx);
+    geod_fun() {}
+    geod_fun(real kap, real kapp, real eps, real mu, real epspow = 1,
+             real nmaxmult = 0);
+    geod_fun(real kap, real kapp, real eps, real mu, bool tx,
+             real epsow, real nmaxmult);
     real operator()(real u) const {
       if (_mu == 0) {
         real phi = gd(u);
@@ -130,12 +138,14 @@ namespace GeographicLib {
       } else
         return _fun.deriv(u);
     }
-    real inv(real y) const {
-      return _mu == 0 ? y + _fun(_chiinv(gd(y))) : _fun.inv(y);
-    }
-    real inv1(real y) const {
-            return _mu == 0 ? y + _fun(_chiinv(gd(y))) : _fun.inv1(y);
-    }
+
+    // Approximate inverse using _finv
+    real inv0(real z) const;
+    // Accurate inverse by direct Newton (not using _finv)
+    real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
+    // Accurate inverse correcting result from _finv
+    real inv(real z, int* countn = nullptr, int* countb = nullptr) const;
+    void ComputeInverse();
     real fwd(real phi) const {
       return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);
     }
@@ -158,8 +168,7 @@ namespace GeographicLib {
       return _mu == 0 ? 1 : _fun.Slope();
     }
     real Max() const {
-      return _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-        _fun.Max();
+      return _max;
     }
   };
 
@@ -170,6 +179,7 @@ namespace GeographicLib {
     bool _tx;
     EllipticFunction _ell;
     TrigfunExt _fun;
+    real _max;
     // _mu > 0
     static real gphip(real c, real kap, real kapp, real eps, real mu) {
       using std::sqrt;
@@ -250,6 +260,7 @@ namespace GeographicLib {
       return atan(sinh(x));
     }
   public:
+    dist_fun() {}
     dist_fun(real kap, real kapp, real eps, real mu);
     dist_fun(real kap, real kapp, real eps, real mu, bool tx);
     real operator()(real u) const {
@@ -269,14 +280,16 @@ namespace GeographicLib {
         return _fun.deriv(u);
     }
     real gfderiv(real u) const;
+    // Don't need these
     // real inv(real y) const { return _fun.inv(y); }
     // real inv1(real y) const { return _fun.inv1(y); }
-    real fwd(real phi) const {
-      return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);
-    }
-    real rev(real u) const {
-      return _mu == 0 ? gd(u) : (_tx ? _ell.am(u) : u);
-    }
+    // Use geod_fun versions of these
+    // real fwd(real phi) const {
+    //   return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);
+    // }
+    // real rev(real u) const {
+    //   return _mu == 0 ? gd(u) : (_tx ? _ell.am(u) : u);
+    // }
     int NCoeffs() const { return _fun.NCoeffs(); }
     //    int NCoeffsInv() const { return _fun.NCoeffsInv(); }
     //    std::pair<int, int> InvCounts() const { return _fun.InvCounts(); }
@@ -288,75 +301,8 @@ namespace GeographicLib {
       return _mu == 0 ? 1 : _fun.Slope();
     }
     real Max() const {
-      return _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-        _fun.Max();
+      return _max;
     }
-  };
-
-  class GEOGRAPHICLIB_EXPORT geodu_fun {
-    // geod_fun for umbilic geodesics mu = 0
-  private:
-    typedef Math::real real;
-    real _kap, _kapp, _eps;
-    bool _tx;
-    int _countn, _countb;
-    static real lam(real x) {
-      using std::tan; using std::asinh; using std::fabs;
-      // A consistent large value for x near pi/2.  Also deals with the issue
-      // that tan(pi/2) may be negative, e.g., for long doubles.
-      // static real bigval = 10 - log(std::numeric_limits<real>::epsilon());
-      static real bigval = Math::infinity();
-      return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
-        (x < 0 ? -bigval : bigval);
-    }
-    static real gd(real x) {
-      using std::atan; using std::sinh;
-      return atan(sinh(x));
-    }
-    static real dfp(real c, real kap, real kapp, real eps) {
-      // function dfp = dfpf(phi, kappa, epsilon)
-      // return derivative of Delta f
-      using std::cos; using std::sqrt;
-      // s = sqrt(1 - kap * sin(phi)^2)
-      real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
-      return (1 + eps*kapp) * kap * c / (s * (sqrt(kapp * (1 - eps*c2)) + s));
-    }
-    static real dfvp(real cn, real dn, real kap, real kapp, real eps) {
-      // function dfvp = dfvpf(v, kap, eps)
-      // return derivative of Delta f_v
-      using std::sqrt;
-      return (1 + eps*kapp) * kap *
-        (cn / (sqrt(kapp * (1 - (eps*kap) * Math::sq(cn))) + dn));
-    }
-  public:
-    // v = F(phi, kap), phi = am(v, kap)
-    // u = lam(phi), phi = gd(u)
-    // Delta_phi f(phi) is even sym periodic period 2*pi
-    // deriv = dfpf
-    // Delta_v f(v) is even sym periodic period 4*K
-    // deriv = dfvpf
-    // ignoring factor of sqrt(kap*kapp)
-    // f(u) = u - Delta_phi f(gd(u))
-    //      = u - Delta_v f(F(gd(u), kap))
-
-    EllipticFunction ell;
-    TrigfunExt fun;
-    Trigfun _chiinv;
-    geodu_fun(real kap, real kapp, real eps);
-    geodu_fun(real kap, real kapp, real eps, bool tx);
-    real operator()(real u) const {
-      real phi = gd(u);
-      return (u - fun(_tx ? ell.F(phi) : phi));
-    }
-    real inv(real y) const { return y + fun(_chiinv(gd(y))); }
-    real fwd(real phi) const { return lam(phi); }
-    real rev(real u) const { return gd(u); }
-    int NCoeffs() const { return fun.NCoeffs(); }
-    int NCoeffsInv() const { return _chiinv.NCoeffs(); }
-    std::pair<int, int> InvCounts() const {
-      return std::pair<int, int>(_countn, _countb);
-    }
-    bool txp() const { return _tx; }
   };
 
 } // namespace GeographicLib

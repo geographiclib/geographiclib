@@ -52,11 +52,6 @@ namespace GeographicLib {
     mutable real _max;
     static int chop(const std::vector<real>& c, real tol,
                     bool integral = false);
-    static real root(const std::function<real(real)>& f,
-                     real z, const std::function<real(real)>& fp,
-                     real x0, real xa, real xb,
-                     real xscale, real zscale, real s,
-                     int* countn = nullptr, int* countb = nullptr);
     // Function samples over half/quarter period of !sym/sym
     // odd sym cent  samples            nF  nC
     //  f   f   f    |-|-|-|-|-|-|-|-|  n+1 n+1 (4)
@@ -115,8 +110,10 @@ namespace GeographicLib {
      **********************************************************************/
     Trigfun() : _m(0) {}
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
-            bool centerp, real halfp, int n);
-    real check(const std::vector<real>& F, bool centerp) const;
+            bool centerp, real halfp, int n,
+            real tol = std::numeric_limits<real>::epsilon());
+    real check(const std::vector<real>& F, bool centerp,
+               real tol = std::numeric_limits<real>::epsilon()) const;
     //    real eval(real x) const;
     real operator()(real x) const;
     static Trigfun initbysamples(const std::vector<real>& F, bool odd, bool sym,
@@ -126,11 +123,17 @@ namespace GeographicLib {
     Trigfun integral() const;
     // Solve f(x) - z = 0 for x, fp is the derivative
     real root(real z, const std::function<real(real)>& fp,
-              int* countn = nullptr, int* countb = nullptr) const;
+              int* countn = nullptr, int* countb = nullptr,
+              real tol = std::numeric_limits<real>::epsilon()) const;
+    real root(real z, const std::function<real(real)>& fp,
+              real x0,
+              int* countn = nullptr, int* countb = nullptr,
+              real tol = std::numeric_limits<real>::epsilon()) const;
     // Solve f(x) - z = 0 with x in (xa, xb)
     real root(real z, const std::function<real(real)>& fp,
               real x0, real xa, real xb,
-              int* countn = nullptr, int* countb = nullptr) const;
+              int* countn = nullptr, int* countb = nullptr,
+              real tol = std::numeric_limits<real>::epsilon()) const;
     // f is the function to be inverted (odd periodic with +ve secular term)
     // fp is its derivative
     // hp is half period, hr is half range
@@ -139,9 +142,23 @@ namespace GeographicLib {
                                const std::function<real(real)>& fp,
                                real hp, real hr,
                                real minf, real maxf,
-                               int* countn = nullptr, int* countb = nullptr);
+                               int* countn = nullptr, int* countb = nullptr,
+                               real tol = std::numeric_limits<real>::epsilon(),
+                               int nmax = 1 << 16);
+    // Solve f(x) = z for x, given x in [xa, xb];
+    // fp(x) = df(x)/dx
+    // s is sign of fp
+    // xscale and zscale of scales for x and f(x).
+    static real root(const std::function<real(real)>& f,
+                     real z, const std::function<real(real)>& fp,
+                     real x0, real xa, real xb,
+                     real xscale = 1, real zscale = 1, int s = 1,
+                     int* countn = nullptr, int* countb = nullptr,
+                     real tol = std::numeric_limits<real>::epsilon());
     Trigfun invert(const std::function<real(real)>& fp,
-                   int* countn = nullptr, int* countb = nullptr) const;
+                   int* countn = nullptr, int* countb = nullptr,
+                   real tol = std::numeric_limits<real>::epsilon(),
+                   int nmax = 1 << 16) const;
 
     int NCoeffs() const { return _m; }
     real Max() const;
@@ -168,7 +185,7 @@ namespace GeographicLib {
 #endif
   };
 
-    /**
+  /**
    * \brief A function defined by its derivative and its inverse
    *
    * This builds on the Trigfun class.
@@ -180,43 +197,49 @@ namespace GeographicLib {
     std::function<real(real)> _fp;
     bool _sym;
     Trigfun _f;
-    mutable bool _invp;
-    mutable Trigfun _finv;
-    mutable int _countn, _countb;
+    real _tol;
+    int _nmax;
+    bool _invp;
+    Trigfun _finv;
+    int _countn, _countb;
   public:
     TrigfunExt() {}
     /**
      * Constructor specifying the derivative, an even periodic function
-     *
-     * @param[in] n the number of points to use.
      **********************************************************************/
     TrigfunExt(const std::function<real(real)>& fp, real halfp,
-               bool sym = false)
-      : _fp(fp)
-      , _sym(sym)
-      , _f(Trigfun(_fp, false, _sym, false, halfp, 0).integral())
-      , _invp(false)
-    {}
+               bool sym = false,
+               real epspow = 1,
+               real nmaxmult = 0);
     real operator()(real x) const { return _f(x); }
     real deriv(real x) const { return _fp(x); }
-    real inv1(real z) const {
-      return _sym ? 0 : _f.root(z, _fp);
-    }
-    void ComputeInverse() const {
+    void ComputeInverse() {
       if (!_invp && !_sym) {
         _countn = _countb = 0;
-        _finv = _f.invert(_fp, &_countn, &_countb);
+        _finv = _f.invert(_fp, &_countn, &_countb, _tol, _nmax);
         _invp = true;
       }
     }
-    real inv(real z) const {
-      ComputeInverse();
-      return _sym ? 0 : _finv(z);
+    // Approximate inverse using _finv
+    real inv0(real z) const {
+      if (!_invp) return Math::NaN();
+      return _sym ? Math::NaN() : _finv(z);
+    }
+    // Accurate inverse by direct Newton (not using _finv)
+    real inv1(real z, int* countn = nullptr, int* countb = nullptr) const {
+      return _sym ? Math::NaN() : _f.root(z, _fp, countn, countb);
+    }
+    // Accurate inverse correcting result from _finv
+    real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
+      if (!_invp) return Math::NaN();
+      return _sym ? Math::NaN() : _f.root(z, _fp, _finv(z), countn, countb);
     }
     int NCoeffs() const { return _f.NCoeffs(); }
-    int NCoeffsInv() const { ComputeInverse(); return _finv.NCoeffs(); }
+    int NCoeffsInv() const {
+      if (!_invp) return -1;
+      return _finv.NCoeffs(); }
     std::pair<int, int> InvCounts() const {
-      ComputeInverse();
+      if (!_invp) return std::pair<int, int>(-1, -1);
       return std::pair<int, int>(_countn, _countb);
     }
     real Max() const { return _f.Max(); }
