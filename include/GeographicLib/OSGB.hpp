@@ -47,20 +47,18 @@ namespace GeographicLib {
     static const char* const letters_;
     static const char* const digits_;
     static const TransverseMercator& OSGBTM();
-    enum {
-      base_ = 10,
-      tile_ = 100000,
-      tilelevel_ = 5,
-      tilegrid_ = 5,
-      tileoffx_ = 2 * tilegrid_,
-      tileoffy_ = 1 * tilegrid_,
-      minx_ = - tileoffx_ * tile_,
-      miny_ = - tileoffy_ * tile_,
-      maxx_ = (tilegrid_*tilegrid_ - tileoffx_) * tile_,
-      maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_,
-      // Maximum precision is um
-      maxprec_ = 5 + 6
-    };
+    static constexpr int base_ = 10;
+    static constexpr int tile_ = 100000;
+    static constexpr int tilelevel_ = 5;
+    static constexpr int tilegrid_ = 5;
+    static constexpr int tileoffx_ = 2 * tilegrid_;
+    static constexpr int tileoffy_ = 1 * tilegrid_;
+    static constexpr int minx_ = - tileoffx_ * tile_;
+    static constexpr int miny_ = - tileoffy_ * tile_;
+    static constexpr int maxx_ = (tilegrid_*tilegrid_ - tileoffx_) * tile_;
+    static constexpr int maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_;
+    // Maximum precision is um
+    static constexpr int maxprec_ = 5 + 6;
     static real computenorthoffset();
     static void CheckCoords(real x, real y);
     OSGB() = delete;            // Disable constructor
