@@ -42,15 +42,13 @@ namespace GeographicLib {
     static const char* const lontile_;
     static const char* const lattile_;
     static const char* const degrees_;
-    enum {
-      tile_ = 15,               // The size of tile in degrees
-      lonorig_ = -Math::hd,     // Origin for longitude
-      latorig_ = -Math::qd,     // Origin for latitude
-      base_ = 10,               // Base for minutes
-      baselen_ = 4,
-      maxprec_ = 11,            // approximately equivalent to MGRS class
-      maxlen_ = baselen_ + 2 * maxprec_
-    };
+    static constexpr int tile_ = 15;           // The size of tile in degrees
+    static constexpr int lonorig_ = -Math::hd; // Origin for longitude
+    static constexpr int latorig_ = -Math::qd; // Origin for latitude
+    static constexpr int base_ = 10;           // Base for minutes
+    static constexpr int baselen_ = 4;
+    static constexpr int maxprec_ = 11;        // approximately equivalent to MGRS class
+    static constexpr int maxlen_ = baselen_ + 2 * maxprec_;
     Georef() = delete;          // Disable constructor
 
   public:
