@@ -134,14 +134,12 @@ namespace GeographicLib {
      * break most of the tests.  Also the normal definition of degree is baked
      * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
      **********************************************************************/
-    enum dms {
-      qd = 90,                  ///< degrees per quarter turn
-      dm = 60,                  ///< minutes per degree
-      ms = 60,                  ///< seconds per minute
-      hd = 2 * qd,              ///< degrees per half turn
-      td = 2 * hd,              ///< degrees per turn
-      ds = dm * ms              ///< seconds per degree
-    };
+    static constexpr int qd = 90;            ///< degrees per quarter turn
+    static constexpr int dm = 60;            ///< minutes per degree
+    static constexpr int ms = 60;            ///< seconds per minute
+    static constexpr int hd = 2 * qd;        ///< degrees per half turn
+    static constexpr int td = 2 * hd;        ///< degrees per turn
+    static constexpr int ds = dm * ms;       ///< seconds per degree
 
     /**
      * @return the number of bits of precision in a real number.

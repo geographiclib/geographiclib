@@ -93,18 +93,16 @@ namespace GeographicLib {
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
 
-    enum captype {
-      CAP_NONE = 0U,
-      CAP_E    = 1U<<0,
-      // Skip 1U<<1 for compatibility with Geodesic (not required)
-      CAP_D    = 1U<<2,
-      CAP_H    = 1U<<3,
-      CAP_C4   = 1U<<4,
-      CAP_ALL  = 0x1FU,
-      CAP_MASK = CAP_ALL,
-      OUT_ALL  = 0x7F80U,
-      OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
-    };
+    static constexpr unsigned CAP_NONE = 0U;
+    static constexpr unsigned CAP_E    = 1U<<0;
+    // Skip 1U<<1 for compatibility with Geodesic (not required)
+    static constexpr unsigned CAP_D    = 1U<<2;
+    static constexpr unsigned CAP_H    = 1U<<3;
+    static constexpr unsigned CAP_C4   = 1U<<4;
+    static constexpr unsigned CAP_ALL  = 0x1FU;
+    static constexpr unsigned CAP_MASK = CAP_ALL;
+    static constexpr unsigned OUT_ALL  = 0x7F80U;
+    static constexpr unsigned OUT_MASK = 0xFF80U;       // Includes LONG_UNROLL
 
     static real Astroid(real x, real y);
 

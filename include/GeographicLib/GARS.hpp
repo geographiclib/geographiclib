@@ -40,21 +40,19 @@ namespace GeographicLib {
     typedef Math::real real;
     static const char* const digits_;
     static const char* const letters_;
-    enum {
-      lonorig_ = -Math::hd,     // Origin for longitude
-      latorig_ = -Math::qd,     // Origin for latitude
-      baselon_ = 10,            // Base for longitude tiles
-      baselat_ = 24,            // Base for latitude tiles
-      lonlen_ = 3,
-      latlen_ = 2,
-      baselen_ = lonlen_ + latlen_,
-      mult1_ = 2,               // base precision = 1/2 degree
-      mult2_ = 2,               // 6th char gives 2x more precision
-      mult3_ = 3,               // 7th char gives 3x more precision
-      m_ = mult1_ * mult2_ * mult3_,
-      maxprec_ = 2,
-      maxlen_ = baselen_ + maxprec_
-    };
+    static constexpr int lonorig_ = -Math::hd; // Origin for longitude
+    static constexpr int latorig_ = -Math::qd; // Origin for latitude
+    static constexpr int baselon_ = 10;        // Base for longitude tiles
+    static constexpr int baselat_ = 24;        // Base for latitude tiles
+    static constexpr int lonlen_ = 3;
+    static constexpr int latlen_ = 2;
+    static constexpr int baselen_ = lonlen_ + latlen_;
+    static constexpr int mult1_ = 2;           // base precision = 1/2 degree
+    static constexpr int mult2_ = 2;           // 6th char gives 2x more precision
+    static constexpr int mult3_ = 3;           // 7th char gives 3x more precision
+    static constexpr int m_ = mult1_ * mult2_ * mult3_;
+    static constexpr int maxprec_ = 2;
+    static constexpr int maxlen_ = baselen_ + maxprec_;
     GARS() = delete;            // Disable constructor
 
   public:
