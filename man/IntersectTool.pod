@@ -258,11 +258,12 @@ We want the second result: after 19529 km at latitude 53.5S.
 GeoConvert(1), GeodSolve(1).
 
 This solution for intersections is described in C. F. F. Karney,
-I<Geodesic intersections>, Technical Report, SRI International
-(2023); URL: L<https://arxiv.org/abs/2308.00495>.  It is based on the
-work of S. Baseldga and J. C. Martinez-Llario, I<Intersection and
+I<Geodesic intersections>, J. Surveying Eng. B<150>(3), 04024005:1-9
+(2024), DOI: L<https://doi.org/10.1061/JSUED2.SUENG-1483>; preprint
+L<https://arxiv.org/abs/2308.00495>.  It is based on the work of
+S. Baseldga and J. C. Martinez-Llario, I<Intersection and
 point-to-line solutions for geodesics on the ellipsoid>,
-Stud. Geophys. Geod. 62, 353-363 (2018); DOI:
+Stud. Geophys. Geod. B<62>, 353-363 (2018); DOI:
 L<https://doi.org/10.1007/s11200-017-1020-z>;
 
 =head1 AUTHOR

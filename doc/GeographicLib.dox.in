@@ -7535,8 +7535,9 @@ git repository for GeographicLib</a>.
    - Add the Intersect class and the
      <a href="IntersectTool.1.html">IntersectTool</a> utility.  The
      methods are described in
-     <a href="https://arxiv.org/abs/2308.00495">Geodesic
-     intersections</a>.
+     <a href="https://doi.org/10.1061/JSUED2.SUENG-1483">Geodesic
+     intersections</a>,
+     <a href="https://arxiv.org/abs/2308.00495">preprint</a>.
    - Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
      Rhumb::LineClass, GeodesicLine::BaseClass,
      GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
