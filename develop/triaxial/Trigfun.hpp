@@ -145,12 +145,26 @@ namespace GeographicLib {
                                int* countn = nullptr, int* countb = nullptr,
                                real tol = std::numeric_limits<real>::epsilon(),
                                int nmax = 1 << 16);
+    static Trigfun InverseInit(const
+                               std::function<std::pair<real, real>(real)>& ffp,
+                               real hp, real hr,
+                               real minf, real maxf,
+                               int* countn = nullptr, int* countb = nullptr,
+                               real tol = std::numeric_limits<real>::epsilon(),
+                               int nmax = 1 << 16);
     // Solve f(x) = z for x, given x in [xa, xb];
     // fp(x) = df(x)/dx
     // s is sign of fp
     // xscale and zscale of scales for x and f(x).
     static real root(const std::function<real(real)>& f,
                      real z, const std::function<real(real)>& fp,
+                     real x0, real xa, real xb,
+                     real xscale = 1, real zscale = 1, int s = 1,
+                     int* countn = nullptr, int* countb = nullptr,
+                     real tol = std::numeric_limits<real>::epsilon());
+    // ffp returns a pair [f(x), fp(x)]
+    static real root(const std::function<std::pair<real, real>(real)>& ffp,
+                     real z,
                      real x0, real xa, real xb,
                      real xscale = 1, real zscale = 1, int s = 1,
                      int* countn = nullptr, int* countb = nullptr,

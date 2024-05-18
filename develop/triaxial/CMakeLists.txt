@@ -54,6 +54,12 @@ add_executable (TriaxialTest TriaxialTest.cpp Trigfun.cpp Trigfun.hpp
 target_link_libraries (TriaxialTest ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
+add_executable (Geod3Solve Geod3Solve.cpp Trigfun.cpp Trigfun.hpp
+   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
+target_link_libraries (Geod3Solve ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES})
+
+
 add_executable (elliptic_functions elliptic_functions.cpp)
 target_link_libraries (elliptic_functions ${BOOST_LIBRARIES}
   ${GeographicLib_LIBRARIES}

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <limits>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
@@ -143,6 +144,30 @@ void DirectfunTest(Math::real a, Math::real b, Math::real c) {
                   AuxAngle::degrees(real(180)));
 }
 
+void PositionTest(Math::real a, Math::real b, Math::real c) {
+  typedef Math::real real;
+  Triaxial t(a, b, c);
+  AuxAngle bet1, omg1, alp1, bet2, omg2, alp2;
+  bet1 = AuxAngle::degrees(45); omg1 = AuxAngle::degrees(0);
+  alp1 = AuxAngle::degrees(90);
+  bet1 = AuxAngle::degrees(90); omg1 = AuxAngle::degrees(45);
+  alp1 = AuxAngle::degrees(180);
+  bet1 = AuxAngle::degrees(90); omg1 = AuxAngle::degrees(0);
+  alp1 = AuxAngle::degrees(135);
+  //  bet1 = AuxAngle::degrees(1); omg1 = AuxAngle::degrees(2);
+  //  alp1 = AuxAngle::degrees(3);
+  TriaxialLine l(t, bet1, omg1, alp1);
+  cout << fixed << setprecision(14);
+  for (int s12 = 0/*-5*/; s12 <= 1/*10*/; ++s12) {
+    l.Position(real(s12), bet2, omg2, alp2);
+    Triaxial::AngNorm(bet2, omg2, alp2);
+    cout << s12 << " "
+         << bet2.degrees() << " "
+         << omg2.degrees() << " "
+         << alp2.degrees() << "\n";
+  }
+}
+
 int main() {
   try {
     Utility::set_digits();
@@ -162,13 +187,19 @@ int main() {
       a -= 34; b += 34;
       TriaxialTest1(a, b, c);
     }
-    if (1) {
+    if (0) {
       real a = 1.01, b = 1, c = 0.8;
       a = 6378172; b = 6378103; c = 6356753;
       a -= 34; b += 34;
       DirectfunTest(a, b, c);
       //      a = sqrt(real(2)); b = 1; c = 1/a;
       //      DirectfunTest(a, b, c);
+    }
+    if (1) {
+      real a = 1.01, b = 1, c = 0.8;
+      //      a = 6378172; b = 6378103; c = 6356753;
+      //      a -= 34; b += 34;
+      PositionTest(a, b, c);
     }
   }
   catch (const std::exception& e) {

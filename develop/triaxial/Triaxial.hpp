@@ -12,9 +12,11 @@
 
 #include <iostream>
 #include <array>
+#include <vector>
 #include <limits>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
+#include <GeographicLib/AuxAngle.hpp>
 #include "Trigfun.hpp"
 
 namespace GeographicLib {
@@ -28,6 +30,11 @@ namespace GeographicLib {
     // with axes = axesn
     vec6 Accel(const vec6& y) const;
     void Norm(vec6& y) const;
+    static void normvec(vec3& r) {
+      using std::sqrt;
+      real h = sqrt(Math::sq(r[0]) + Math::sq(r[1]) + Math::sq(r[2]));
+      r[0] /= h; r[1] /= h; r[2] /= h;
+    }
   public:
     real a, b, c;               // semi-axes
     vec3 axes, axesn, axes2n;
@@ -36,19 +43,42 @@ namespace GeographicLib {
     void Norm(vec3& r) const;
     void Norm(vec3& r, vec3& v) const;
     int Direct(const vec3& r1, const vec3& v1, real s12, vec3& r2, vec3& v2,
-               real eps = 1e-10) const;
+               real eps = 0) const;
+    void Direct(const vec3& r1, const vec3& v1, real ds,
+                long nmin, long nmax,
+                std::vector<vec3>& r2, std::vector<vec3>& v2, real eps = 0)
+      const;
     static real EllipticThresh() {
       static real thresh = 1/real(8);
       return thresh;
     }
     real gamma(real cbet, real somg, real salp, real calp) const {
       using std::fabs;
+      // gamma = (k * cbet * salp)^2 - (kp *somg * calp)^2
       real a = k * cbet * salp, b = kp * somg * calp, gam = (a - b) * (a + b);
       return fabs(gam) <= 2 * std::numeric_limits<real>::epsilon() ? 0 :
         (fabs(k2 - gam) <= std::numeric_limits<real>::epsilon() ? k2 :
          (fabs(kp2 + gam) <= std::numeric_limits<real>::epsilon() ? -kp2 :
           gam));
     }
+    static void AngNorm(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp,
+                        bool alt = false) {
+      using std::signbit;
+      // If !alt, put bet in [-pi/2,pi/2]
+      // If  alt, put omg in [0, pi]
+      if (alt ? signbit(omg.y()) : signbit(bet.x())) {
+        bet.x() *= -1;
+        alp.y() *= -1; alp.x() *= -1;
+        omg.y() *= -1;
+      }
+    }
+    void cart2toellip(const vec3& r, AuxAngle& bet, AuxAngle& omg) const;
+    void cart2toellip(const vec3& r, const vec3& v,
+                      AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const;
+    void elliptocart2(const AuxAngle& bet, const AuxAngle& omg, vec3& r) const;
+    void elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
+                      const AuxAngle& alp,
+                      vec3& r, vec3& v) const;
   };
 
   class GEOGRAPHICLIB_EXPORT geod_fun {

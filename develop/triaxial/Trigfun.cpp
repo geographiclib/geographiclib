@@ -265,17 +265,25 @@ namespace GeographicLib {
     x0 = fmin(x00 + dx, fmax(x00 - dx, x0));
     return root(z, fp, x0, x00 - dx, x00 + dx, countn, countb, tol);
   }
-  Math::real Trigfun::root(const std::function<real(real)>& f,
-                           real z, const std::function<real(real)>& fp,
+  Math::real Trigfun::root(const function<real(real)>& f,
+                           real z, const function<real(real)>& fp,
+                           real x0, real xa, real xb,
+                           real xscale, real zscale, int s,
+                           int* countn, int* countb,
+                           real tol) {
+    return root([&f, &fp] (real x) -> pair<real, real>
+                { return pair<real, real>(f(x), fp(x)); },
+                z, x0, xa, xb, xscale, zscale, s, countn, countb, tol);
+  }
+
+  Math::real Trigfun::root(const function<pair<real, real>(real)>& ffp,
+                           real z,
                            real x0, real xa, real xb,
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
                            real tol) {
     // Solve v = f(x) - z = 0
     bool debug = false;
-    if (debug)
-      cout << "r " << xa << " " << x0 << " " << xb << "\n"
-           << "q " << f(xa) - z << " " << f(x0) - z << " " << f(xb) - z << "\n";
     real vtol0 = tol * zscale,
       vtol1 = pow(tol, real(0.75)) * zscale,
       xtol = pow(tol, real(0.75)) * xscale,
@@ -286,8 +294,9 @@ namespace GeographicLib {
            (throw GeographicLib::GeographicErr("Convergence failure"), false)
            || GEOGRAPHICLIB_PANIC;) {
       ++i;
-      real v = f(x) - z,
-        vp = fp(x),
+      pair<real, real> val = ffp(x);
+      real v = val.first - z,
+        vp = val.second,
         dx = - v/vp;
       if (debug)
         cout << i << " " << xa-p << " " << x-p << " " << xb-p << " "
@@ -325,8 +334,18 @@ namespace GeographicLib {
   // fp is its derivative
   // hp is half period, hr is half range (value at hp)
   // f(x) - hr/hp * x lies in [minf, maxf].
-  Trigfun Trigfun::InverseInit(const std::function<real(real)>& f,
-                               const std::function<real(real)>& fp,
+  Trigfun Trigfun::InverseInit(const function<real(real)>& f,
+                               const function<real(real)>& fp,
+                               real hp, real hr,
+                               real minf, real maxf,
+                               int* countn, int* countb,
+                               real tol, int nmax) {
+    return InverseInit([&f, &fp] (real x) -> pair<real, real>
+                       { return pair<real, real>(f(x), fp(x)); },
+                       hp, hr, minf, maxf, countn, countb, tol, nmax);
+  }
+
+  Trigfun Trigfun::InverseInit(const function<pair<real, real>(real)>& ffp,
                                real hp, real hr,
                                real minf, real maxf,
                                int* countn, int* countb,
@@ -335,14 +354,6 @@ namespace GeographicLib {
     // x = hp/hr * z - hp/hr * d
     bool debug = false, debugcnt = false;
     bool odd = true, sym = false;
-    if (debug) {
-      cout << "v 00 " << hp << "  " << hr <<  " " << minf << " " << maxf << "\n";
-      int num = 100;
-      for (int i = 0; i <= num; ++i) {
-        real x = i*hp/num;
-        cout << "v " << i << " " << x << " " << f(x) << " " << fp(x) << "\n";
-      }
-    }
     int np = 4,
       s = hr > 0 ? 1 : -1;
     real
@@ -352,14 +363,14 @@ namespace GeographicLib {
     vector<real> F(np, real(0));
     real z, x;
     z = nhp/2; x = nhr/nhp * z;
-    F[1] = root(f, z, fp, x + (dxm+dxp)/2, x + dxm, x + dxp,
+    F[1] = root(ffp, z, x + (dxm+dxp)/2, x + dxm, x + dxp,
                 hp, nhp, s, countn, countb, tol) - x;
     real dz = nhp/2, z0 = dz/2;
     for (int i = 0; i < np/2; ++i) {
       z = z0 + i * dz;
       x = nhr/nhp * z;
       real x0 = x + F[1] * sqrt(real(0.5));
-      F[2 * i] = root(f, z, fp, x0, x + dxm, x + dxp,
+      F[2 * i] = root(ffp, z, x0, x + dxm, x + dxp,
                       hp, nhp, s, countn, countb, tol) - x;
     }
     Trigfun t(initbysamples(F, odd, sym, false, nhp));
@@ -377,7 +388,7 @@ namespace GeographicLib {
         z = z0 + i * dz;
         x = nhr/nhp * z;
         real x0 = fmin(x + dxp, fmax(x + dxm, t(z) + x));
-        F[i] = root(f, z, fp, x0, x + dxm, x + dxp,
+        F[i] = root(ffp, z, x0, x + dxm, x + dxp,
                     hp, nhp, s, &cntn, &cntb, tol) - x;
       }
       if (debugcnt)
@@ -571,14 +582,8 @@ namespace GeographicLib {
     }
     return max(d, 1);
   }
-#if 0
-  Math::real Trigfun::eval(real x);
-  Math::real Trigfun::eval(int i);
-  std::vector<Math::real> Trigfun::Coeffs();
-  std::vector<Math::real> Trigfun::Samples();
-#endif
 
-  TrigfunExt::TrigfunExt(const std::function<real(real)>& fp, real halfp,
+  TrigfunExt::TrigfunExt(const function<real(real)>& fp, real halfp,
                bool sym, real epspow, real nmaxmult)
       : _fp(fp)
       , _sym(sym)

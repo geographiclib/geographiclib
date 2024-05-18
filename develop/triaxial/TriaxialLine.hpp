@@ -51,10 +51,11 @@ namespace GeographicLib {
     typedef Math::real real;
     Triaxial _t;
     AuxAngle _bet1, _omg1, _alp1;
+    long _ibet, _iomg, _ialp;
     real _gam;
     TriaxialLineF _f;
     TriaxialLineG _g;
-    int _N, _E,                 // Northgoing / eastgoing
+    int _nN, _eE,                 // Northgoing / eastgoing
       _flip,                    // Is bet or omg on the backside
       _bet0, _omg0, _alp0;      // Reference vals (1 = 0, -1 = 180)
     AuxAngle _psi1;             // nonumbilic constants
@@ -80,15 +81,25 @@ namespace GeographicLib {
       return remx(x, y).second;
     }
     static void solve2(real f0, real g0,
-                        const geod_fun& fx, const geod_fun& fy,
-                        const dist_fun& gx, const dist_fun& gy,
-                        real& x, real& y);
+                       const geod_fun& fx, const geod_fun& fy,
+                       const dist_fun& gx, const dist_fun& gy,
+                       real& x, real& y,
+                       int* countn = nullptr, int* countb = nullptr);
     static void solve2u(real f0, real g0,
                         const geod_fun& fx, const geod_fun& fy,
                         const dist_fun& gx, const dist_fun& gy,
-                        real& x, real& y);
+                        real& x, real& y,
+                        int* countn = nullptr, int* countb = nullptr);
+    static void newt2(real f0, real g0,
+                      const geod_fun& fx, const geod_fun& fy,
+                      const dist_fun& gx, const dist_fun& gy,
+                      real x0, real xa, real xb,
+                      real xscale, real zscale,
+                      real& x, real& y,
+                      int* countn = nullptr, int* countb = nullptr);
 
   public:
+    TriaxialLine(const Triaxial& t) : _t(t) {}
     TriaxialLine(const Triaxial& t,
                  const AuxAngle& bet1,
                  const AuxAngle& omg1,
@@ -98,14 +109,21 @@ namespace GeographicLib {
                      AuxAngle::degrees(bet1),
                      AuxAngle::degrees(omg1),
                      AuxAngle::degrees(alp1))
-    {}
+    {
+      using std::round;
+      _ibet = long(round((bet1 - _bet1.degrees()) / Math::td));
+      _iomg = long(round((omg1 - Math::qd - _omg1.degrees()) / Math::td));
+      _ialp = long(round((alp1 - _alp1.degrees()) / Math::td));
+    }
     const geod_fun& fbet() const { return _f.fbet(); }
     const geod_fun& fomg() const { return _f.fomg(); }
     const dist_fun& gbet() const { return _g.gbet(); }
     const dist_fun& gomg() const { return _g.gomg(); }
     void distinit();
-    void Position(real s12, AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2)
-      const;
+    std::pair<long, long> Position(real s12, AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2,
+                  int* countn = nullptr, int* countb = nullptr) const;
+    void Position(real s12, real& bet2, real& omg2, real& alp2,
+                  int* countn = nullptr, int* countb = nullptr) const;
   };
 } // namespace GeographicLib
 

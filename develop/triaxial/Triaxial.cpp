@@ -9,6 +9,7 @@
 
 #include "Triaxial.hpp"
 #include <iostream>
+#include <algorithm>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 
@@ -84,6 +85,8 @@ namespace GeographicLib {
   int Triaxial::Direct(const vec3& r1, const vec3& v1, real s12,
                        vec3& r2, vec3& v2, real eps) const {
     using namespace boost::numeric::odeint;
+    if (eps == 0)
+      eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
     // Normalize all distances to b.
     vec6 y{r1[0]/b, r1[1]/b, r1[2]/b, v1[0], v1[1], v1[2]};
     Norm(y);
@@ -104,6 +107,38 @@ namespace GeographicLib {
     r2 = {b*y[0], b*y[1], b*y[2]};
     v2 = {y[3], y[4], y[5]};
     return n;
+  }
+
+  void Triaxial::Direct(const vec3& r1, const vec3& v1, real ds,
+                        long nmin, long nmax,
+                        vector<vec3>& r2, vector<vec3>& v2, real eps) const {
+    using namespace boost::numeric::odeint;
+    if (nmin > 0 || nmax < 0) return;
+    if (eps == 0)
+      eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
+    r2.clear(); v2.clear();
+    auto fun = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
+      yp = y; Norm(yp); yp = Accel(yp);
+    };
+    auto observer = [&r2, &v2, b = b](const vec6& y, real /*t*/) -> void {
+      r2.push_back( {b*y[0], b*y[1], b*y[2]} );
+      v2.push_back( {y[3], y[4], y[5]} );
+    };
+    bulirsch_stoer<vec6, real> stepper(eps, real(0));
+    ds /= b;
+    if (nmin < 0) {
+      vec6 y{r1[0]/b, r1[1]/b, r1[2]/b, v1[0], v1[1], v1[2]}; Norm(y);
+      integrate_n_steps(stepper, fun, y, real(0), -ds, abs(nmin), observer);
+      reverse(r2.begin(), r2.end());
+      reverse(v2.begin(), v2.end());
+    }
+    if (nmax > 0) {
+      if (nmin < 0) { r2.pop_back(); v2.pop_back(); }
+      vec6 y{r1[0]/b, r1[1]/b, r1[2]/b, v1[0], v1[1], v1[2]}; Norm(y);
+      integrate_n_steps(stepper, fun, y, real(0), ds, nmax, observer);
+    }
+    for (int i = 0; i <= nmax - nmin; ++i)
+      Norm(r2[i], v2[i]);
   }
 
   geod_fun::geod_fun(real kap, real kapp, real eps, real mu,
@@ -189,10 +224,12 @@ namespace GeographicLib {
       if (_mu == 0) {
         _chiinv = _tx ?
           // chi maps [-1,1]*K -> [-1,1]*pi/2
-          // dchi/dx = sech(lam(am(x)) - dfv(x)) * (sec(am(x)) * dn(x) - dfvp(x))
+          // dchi/dx = sech(lam(am(x)) - dfv(x)) *
+          //           (sec(am(x)) * dn(x) - dfvp(x))
           // cosh(lam(am(x))) = 1/cn, sinh(lam(am(x))) = sn/cn
           // cosh(lam(x) - dfv(x))
-          //  = cosh(lam(am(x))) * cosh(dfv(x)) - sinh(lam(am(x))) * sinh(dfv(x))
+          //  = cosh(lam(am(x))) * cosh(dfv(x)) -
+          //    sinh(lam(am(x))) * sinh(dfv(x))
           //  = 1/cn * cosh(dfv(x)) - sn/cn * sinh(dfv(x))
           //  = 1/cn * (cosh(dfv(x)) - sn * sinh(dfv(x)))
           // (sec(am(x)) * dn - dfvp(x)) = 1/cn * (dn - cn * dfvp(x))
@@ -200,14 +237,13 @@ namespace GeographicLib {
           //           (cosh(dfv(x)) - sn * sinh(dfv(x)))
           Trigfun::InverseInit(
                                [fun = _fun, ell = _ell]
-                               (real x) -> real
-                               { return gd(lam(ell.am(x)) - fun(x)); },
-                               [fun = _fun, ell = _ell]
-                               (real x) -> real
+                               (real x) -> pair<real, real>
                                { real sn, cn, dn, f = fun(x);
                                  (void) ell.am(x, sn, cn, dn);
-                                 return (dn - cn * fun.deriv(x)) /
-                                   (cosh(f) - sn * sinh(f)); },
+                                 return pair<real,real>
+                                   ( gd(lam(ell.am(x)) - f),
+                                     (dn - cn * fun.deriv(x)) /
+                                     (cosh(f) - sn * sinh(f)) ); },
                                _ell.K(), Math::pi()/2,
                                -Math::pi()/2, Math::pi()/2, &_countn, &_countb,
                                _tol, _nmax) :
@@ -223,13 +259,12 @@ namespace GeographicLib {
           //           (cosh(df(x)) - sin(x) * sinh(df(x)))
           Trigfun::InverseInit(
                                [fun = _fun]
-                               (real x) -> real
-                               { return gd(lam(x) - fun(x)); },
-                               [fun = _fun]
-                               (real x) -> real
+                               (real x) -> pair<real, real>
                                { real f = fun(x);
-                                 return (1 - cos(x) * fun.deriv(x)) /
-                                   (cosh(f) - sin(x) * sinh(f)); },
+                                 return pair<real, real>
+                                   ( gd(lam(x) - f),
+                                     (1 - cos(x) * fun.deriv(x)) /
+                                     (cosh(f) - sin(x) * sinh(f)) ); },
                                Math::pi()/2, Math::pi()/2,
                                -Math::pi()/2, Math::pi()/2, &_countn, &_countb,
                                _tol, _nmax);
@@ -249,27 +284,23 @@ namespace GeographicLib {
     return _tx ?
       Trigfun::root(
                     [fun = _fun, ell = _ell]
-                    (real u) -> real
-                    { real phi = gd(u);
-                      return u - fun(ell.F(phi)); },
-                    z,
-                    [fun = _fun, ell = _ell]
-                    (real u) -> real
+                    (real u) -> pair<real, real>
                     { real phi = gd(u), sch = 1/cosh(u);
-                      return 1 - fun.deriv(ell.F(phi)) * sch /
-                        sqrt(ell.kp2() + ell.k2() * Math::sq(sch)); },
+                      return pair<real, real>
+                        (u - fun(ell.F(phi)),
+                         1 - fun.deriv(ell.F(phi)) * sch /
+                         sqrt(ell.kp2() + ell.k2() * Math::sq(sch))); },
+                    z,
                     x0, xa, xb,
                     Math::pi()/2, Math::pi()/2, 1, countn, countb) :
       Trigfun::root(
                     [fun = _fun]
-                    (real u) -> real
-                    { real phi = gd(u);
-                      return u - fun(phi); },
-                    z,
-                    [fun = _fun]
-                    (real u) -> real
+                    (real u) -> pair<real, real>
                     { real phi = gd(u), sch = 1/cosh(u);
-                      return 1 - fun.deriv(phi) * sch; },
+                      return pair<real, real>
+                        (u - fun(phi),
+                         1 - fun.deriv(phi) * sch); },
+                    z,
                     x0, xa, xb,
                     Math::pi()/2, Math::pi()/2, 1, countn, countb);
   }
@@ -369,6 +400,143 @@ namespace GeographicLib {
       return _tx ? gfvp(cn, _kap, _mu) : gfpsip(cos(u), _kap, _mu);
     else                      // _mu == 0
       return gf0up(u, _kap, _kapp);
+  }
+
+  void Triaxial::cart2toellip(const vec3& r, AuxAngle& bet, AuxAngle& omg)
+    const {
+    real xi = r[0]/a, eta = r[1]/b, zeta = r[2]/c,
+      g = k2 * Math::sq(xi)
+      + (k2 - kp2) * Math::sq(eta)
+      - kp2 * Math::sq(zeta);
+    if (fabs(r[0]) == a * kp2 && r[1] == 0 && fabs(r[2]) == c * k2)
+      g = 0;
+    real h = hypot(g, 2 * k * kp * eta);
+    if (h == 0) {
+      omg.y() = 0;
+      bet.x() = 0;
+    } else if (g < 0) {
+      omg.y() = copysign(sqrt( (h - g)/2 ) / kp, eta);
+      bet.x() = fabs(eta / omg.y());
+    } else {
+      bet.x() = sqrt( (h + g)/2 ) / k;
+      omg.y() = eta / bet.x();
+    }
+    real tz = hypot(k, kp * omg.y()),
+      tx = hypot(k * bet.x(), kp);
+    bet.y() = tz == 0 ? -1 : zeta / tz;
+    omg.x() = tx == 0 ?  1 : xi / tx;
+    bet.normalize(); omg.normalize();
+  }
+
+  void Triaxial::cart2toellip(const vec3& r, const vec3& v,
+                              AuxAngle& bet, AuxAngle& omg, AuxAngle& alp)
+    const {
+    cart2toellip(r, bet, omg);
+    real tz = hypot(k, kp * omg.y()),
+      tx = hypot(k * bet.x(), kp);
+    if (!(bet.x() == 0 && omg.y() == 0)) {
+      vec3
+        N = tx == 0 ?
+        vec3{-omg.x() * bet.y(), -omg.y() * bet.y(), tx * bet.y()} :
+        (tz == 0 ?
+         vec3{tz, -bet.y(), bet.x()} :
+         vec3{-a * k2 * bet.x() * bet.y() * omg.x() / tx,
+            -b * bet.y() * omg.y(),
+            c * bet.x() * tz}),
+        E = tx == 0 ?
+        vec3{-omg.y(),  omg.x(), tx} :
+        (tz == 0 ?
+         vec3{tz * omg.x(),  bet.x() * omg.x(), bet.y() * omg.x()} :
+         vec3{-a * tx * omg.y(),
+            b * bet.x() * omg.x(),
+            c * kp2 * bet.y() * omg.x() * omg.y() / tz});
+      normvec(N); normvec(E);
+      alp.x() = v[0] * N[0] + v[1] * N[1] + v[2] * N[2];
+      alp.y() = v[0] * E[0] + v[1] * E[1] + v[2] * E[2];
+    } else {                    // bet.x() == 0 && omg.y() == 0
+      // Special treatment at umbilical points
+      real w = bet.y() * omg.x(),
+        upx = r[0]/Math::sq(a), upz = r[2]/Math::sq(c);
+      Math::norm(upx, upz);
+      // compute direction cosines of v wrt the plane y = 0; angle = 2*alp
+      real s2a = -v[1] * w, c2a = (upz*v[0] - upx*v[2]) * w;
+      // Unnecessary: Math::norm(s2a, c2a)
+      // We have
+      //   2*alp = atan2(s2a, c2a), h2 = hypot(s2a, c2a)
+      //   alp = atan2(sa, ca)
+      //   tan(2*alp) = 2*tan(alp)/(1-tan(alp)^2)
+      // for alp in [-pi/2, pi/2]
+      // c2a>0
+      //   [sa, ca] = [s2a / sqrt(2*(1+c2a)), sqrt((1+c2a)/2)]
+      //           -> [s2a, h2+c2a]
+      // c2a<0
+      //   [sa, ca] = sign(s2a)*[sqrt((1-c2a)/2), s2a / sqrt(2*(1-c2a))]
+      //           -> [sign(s2a) * (h2-c2a), abs(s2a)]
+      // for northern umbilical points, we want to flip alp to alp + pi; so
+      // multiply [sa, ca] by -bet.y().
+      real flip = -bet.y();
+      if (c2a >= 0) {
+        alp.y() = flip * s2a;
+        alp.x() = flip * (1 + c2a);
+      } else {
+        alp.y() = flip * copysign(1 + c2a, s2a);
+        alp.x() = flip * fabs(s2a);
+      }
+    }
+    alp.normalize();
+  }
+
+  void Triaxial::elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
+                              vec3& r) const {
+    AuxAngle betn = bet.normalized(), omgn = omg.normalized();
+    real tx = hypot(k * betn.x(), kp), tz = hypot(k, kp * omgn.y());
+    r = vec3{ a * omgn.x() * tx,
+              b * betn.x() * omgn.y(),
+              c * betn.y() * tz };
+    // Norm(r); r is already normalized
+  }
+
+  void Triaxial::elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
+                              const AuxAngle& alp,
+                              vec3& r, vec3& v) const {
+    elliptocart2(bet, omg, r);
+    AuxAngle betn = bet.normalized(), omgn = omg.normalized();
+    real tx = hypot(k * betn.x(), kp), tz = hypot(k, kp * omgn.y());
+    if (betn.x() == 0 && omgn.y() == 0 && !(k == 0 || kp == 0)) {
+      // umbilical point (not oblate or prolate)
+      real sa2 = 2 * alp.y() * alp.x(),
+        ca2 = (alp.x() - alp.y()) * (alp.x() + alp.y());
+      // sign on 2nd component is -sign(cos(bet)*sin(omg)).  negative sign
+      // gives normal convention of alpha measured clockwise.
+      v = vec3{a*k/b * omgn.x() * ca2,
+               -omgn.x() * betn.y() * sa2,
+               -c*kp/b * betn.y() * ca2};
+    } else {
+      vec3 N, E;
+      if (tx == 0) {
+        // At an oblate pole tx -> cos(bet)
+        N = vec3{-omgn.x() * betn.y(), -omgn.y() * betn.y(), 0};
+        E = vec3{-omgn.y()           ,  omgn.x()           , 0};
+      } else if (tz == 0) {
+        // At a prolate pole tz -> sin(omg)
+        N = vec3{0, -betn.y()           , betn.x()           };
+        E = vec3{0,  betn.x() * omgn.x(), betn.y() * omgn.x()};
+      } else {
+        // The general case
+        N = vec3{ -a * k2 * betn.x() * betn.y() * omgn.x() / tx,
+                  -b * betn.y() * omgn.y(),
+                  c * betn.x() * tz};
+        E = vec3{ -a * tx * omgn.y(),
+                  b * betn.x() * omgn.x(),
+                  c * kp2 * betn.y() * omgn.x() * omgn.y() / tz};
+      }
+      normvec(N);
+      normvec(E);
+      v = vec3{alp.x() * N[0] + alp.y() * E[0],
+               alp.x() * N[1] + alp.y() * E[1],
+               alp.x() * N[2] + alp.y() * E[2]};
+    }
+    // normvec(v); v is already normalized
   }
 
 } // namespace GeographicLib
