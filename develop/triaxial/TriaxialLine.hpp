@@ -50,9 +50,9 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     Triaxial _t;
-    AuxAngle _bet1, _omg1, _alp1;
-    long _ibet, _iomg, _ialp;
     real _gam;
+    AuxAngle _bet1, _omg1, _alp1;
+    int _ibet, _iomg, _ialp;
     TriaxialLineF _f;
     TriaxialLineG _g;
     int _nN, _eE,                 // Northgoing / eastgoing
@@ -101,9 +101,7 @@ namespace GeographicLib {
   public:
     TriaxialLine(const Triaxial& t) : _t(t) {}
     TriaxialLine(const Triaxial& t,
-                 const AuxAngle& bet1,
-                 const AuxAngle& omg1,
-                 const AuxAngle& alp1);
+                 AuxAngle bet1, AuxAngle omg1, AuxAngle alp1);
     TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1)
       : TriaxialLine(t,
                      AuxAngle::degrees(bet1),
@@ -111,18 +109,22 @@ namespace GeographicLib {
                      AuxAngle::degrees(alp1))
     {
       using std::round;
-      _ibet = long(round((bet1 - _bet1.degrees()) / Math::td));
-      _iomg = long(round((omg1 - Math::qd - _omg1.degrees()) / Math::td));
-      _ialp = long(round((alp1 - _alp1.degrees()) / Math::td));
+      _ibet = int(round((bet1 - _bet1.degrees()) / Math::td));
+      _iomg += int(round((omg1 - AuxAngle::degrees(omg1).degrees()) /
+                         Math::td));
+      _ialp = int(round((alp1 - _alp1.degrees()) / Math::td));
     }
     const geod_fun& fbet() const { return _f.fbet(); }
     const geod_fun& fomg() const { return _f.fomg(); }
     const dist_fun& gbet() const { return _g.gbet(); }
     const dist_fun& gomg() const { return _g.gomg(); }
     void distinit();
-    std::pair<long, long> Position(real s12, AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2,
+    void Position(real s12, AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2,
+                  int* ibet2 = nullptr, int* iomg2 = nullptr,
+                  int* ialp2 = nullptr,
                   int* countn = nullptr, int* countb = nullptr) const;
     void Position(real s12, real& bet2, real& omg2, real& alp2,
+                  bool unroll = true,
                   int* countn = nullptr, int* countb = nullptr) const;
   };
 } // namespace GeographicLib

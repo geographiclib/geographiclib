@@ -22,6 +22,40 @@
 
 typedef GeographicLib::Math::real real;
 
+void DecodeLatLon(const std::string& stra, const std::string& strb,
+                  real& lat, real& lon,
+                  bool longfirst) {
+  using namespace GeographicLib;
+  real a, b;
+  DMS::flag ia, ib;
+  a = DMS::Decode(stra, ia);
+  b = DMS::Decode(strb, ib);
+  if (ia == DMS::NONE && ib == DMS::NONE) {
+    // Default to lat, long unless longfirst
+    ia = longfirst ? DMS::LONGITUDE : DMS::LATITUDE;
+    ib = longfirst ? DMS::LATITUDE : DMS::LONGITUDE;
+  } else if (ia == DMS::NONE)
+    ia = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ib);
+  else if (ib == DMS::NONE)
+    ib = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ia);
+  if (ia == ib)
+    throw GeographicErr("Both " + stra + " and "
+                        + strb + " interpreted as "
+                        + (ia == DMS::LATITUDE ? "latitudes" : "longitudes"));
+  lat = ia == DMS::LATITUDE ? a : b;
+  lon = ia == DMS::LATITUDE ? b : a;
+}
+
+real DecodeAzimuth(const std::string& azistr) {
+  using namespace GeographicLib;
+  DMS::flag ind;
+  real azi = DMS::Decode(azistr, ind);
+  if (ind == DMS::LATITUDE)
+    throw GeographicErr("Azimuth " + azistr
+                        + " has a latitude hemisphere, N/S");
+  return azi;
+}
+
 std::string BetOmgString(real bet, real omg, int prec, bool dms, char dmssep,
                          bool longfirst) {
   using namespace GeographicLib;
@@ -86,9 +120,9 @@ int main(int argc, const char* const argv[]) {
         linecalc = LINE;
         if (m + 3 >= argc) return usage(1, true);
         try {
-          DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            bet1, omg1, longfirst);
-          alp1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
+          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                       bet1, omg1, longfirst);
+          alp1 = DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
@@ -100,9 +134,9 @@ int main(int argc, const char* const argv[]) {
         linecalc = DIRECT;
         if (m + 4 >= argc) return usage(1, true);
         try {
-          DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            bet1, omg1, longfirst);
-          alp1 = DMS::DecodeAzimuth(std::string(argv[m + 3]));
+          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                       bet1, omg1, longfirst);
+          alp1 = DecodeAzimuth(std::string(argv[m + 3]));
           s12 = ReadDistance(std::string(argv[m + 4]), arcmode);
         }
         catch (const std::exception& e) {
@@ -115,10 +149,10 @@ int main(int argc, const char* const argv[]) {
         linecalc = INVERSE;
         if (m + 4 >= argc) return usage(1, true);
         try {
-          DMS::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                            bet1, omg1, longfirst);
-          DMS::DecodeLatLon(std::string(argv[m + 3]), std::string(argv[m + 4]),
-                            bet2, omg2, longfirst);
+          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                       bet1, omg1, longfirst);
+          DecodeLatLon(std::string(argv[m + 3]), std::string(argv[m + 4]),
+                       bet2, omg2, longfirst);
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -I: " << e.what() << "\n";
@@ -261,7 +295,7 @@ int main(int argc, const char* const argv[]) {
       } else {
         for (long n = nmin; n <= nmax; ++n) {
           real s12 = n * ds;
-          ls.Position(s12, bet2, omg2, alp2);
+          ls.Position(s12, bet2, omg2, alp2, unroll);
           *output << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
                   << " " << AzimuthString(alp2, prec, dms, dmssep)
                   << "\n";
@@ -292,8 +326,8 @@ int main(int argc, const char* const argv[]) {
             throw GeographicErr("Incomplete input: " + s);
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          DMS::DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
-          DMS::DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
+          DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+          DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
           if (full) {
             if (unroll) {
               real e;
@@ -333,8 +367,8 @@ int main(int argc, const char* const argv[]) {
               throw GeographicErr("Incomplete input: " + s);
             if (str >> strc)
               throw GeographicErr("Extraneous input: " + strc);
-            DMS::DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
-            alp1 = DMS::DecodeAzimuth(salp1);
+            DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+            alp1 = DecodeAzimuth(salp1);
             s12 = ReadDistance(ss12, arcmode);
             ls = TriaxialLine(t, bet1, omg1, alp1);
             ls.Position(s12, bet2, omg2, alp2);

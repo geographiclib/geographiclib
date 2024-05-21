@@ -52,14 +52,30 @@ namespace GeographicLib {
       static real thresh = 1/real(8);
       return thresh;
     }
-    real gamma(real cbet, real somg, real salp, real calp) const {
-      using std::fabs;
-      // gamma = (k * cbet * salp)^2 - (kp *somg * calp)^2
-      real a = k * cbet * salp, b = kp * somg * calp, gam = (a - b) * (a + b);
-      return fabs(gam) <= 2 * std::numeric_limits<real>::epsilon() ? 0 :
-        (fabs(k2 - gam) <= std::numeric_limits<real>::epsilon() ? k2 :
-         (fabs(kp2 + gam) <= std::numeric_limits<real>::epsilon() ? -kp2 :
-          gam));
+    real gamma(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const {
+      using std::fabs; using std::copysign;
+      bet.normalize(); omg.normalize(); alp.normalize();
+      // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
+      real a = k * bet.x() * alp.y(), b = kp * omg.y() * alp.x(), gam = (a - b) * (a + b);
+      // Factor of 8 allows umbilical geodesics with alp in [-180,180] degrees
+      // to return gam = 0.  (If in radians the factor could be reduced to 4.)
+      if (fabs(gam) < 8 * std::numeric_limits<real>::epsilon() && gam != 0) {
+        gam = 0 * gam;
+        // fix alp to be consistent with gamma = 0
+        alp = AuxAngle(copysign( kp * omg.y(), alp.y() ),
+                       copysign( k  * bet.x(), alp.x() )).normalized();
+      } else if (fabs(k2 - gam) <= std::numeric_limits<real>::epsilon()) {
+        gam = k2;
+        // This requires cbet = +/- 1 and salp = +/- 1
+        bet = AuxAngle(copysign(real(0), bet.y()), copysign(real(1), bet.x()));
+        alp = AuxAngle(copysign(real(1), alp.y()), copysign(real(0), alp.x()));
+      } else if (fabs(kp2 + gam) <= std::numeric_limits<real>::epsilon()) {
+        gam = -kp2;
+        // This requires somg = +/- 1 and calp = +/- 1
+        omg = AuxAngle(copysign(real(1), omg.y()), copysign(real(0), omg.x()));
+        alp = AuxAngle(copysign(real(0), alp.y()), copysign(real(1), alp.x()));
+      }
+      return gam;
     }
     static void AngNorm(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp,
                         bool alt = false) {
