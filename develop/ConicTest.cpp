@@ -20,11 +20,6 @@
 #include <iomanip>
 #include <stdexcept>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
-
 GeographicLib::Math::real
 dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat0, GeographicLib::Math::real lon0,

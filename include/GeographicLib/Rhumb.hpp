@@ -541,4 +541,8 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
+
 #endif  // GEOGRAPHICLIB_RHUMB_HPP

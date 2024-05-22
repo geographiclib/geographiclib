@@ -3,11 +3,6 @@
 #include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/Ellipsoid.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
-
 using namespace GeographicLib;
 using namespace std;
 int main() {

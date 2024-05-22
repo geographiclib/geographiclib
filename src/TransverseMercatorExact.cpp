@@ -43,11 +43,6 @@
 
 #include <GeographicLib/TransverseMercatorExact.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional and enum-float expressions
-#  pragma warning (disable: 4127 5055)
-#endif
-
 namespace GeographicLib {
 
   using namespace std;

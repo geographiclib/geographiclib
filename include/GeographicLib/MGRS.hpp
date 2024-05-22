@@ -13,12 +13,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/UTMUPS.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about dll vs string
-#  pragma warning (push)
-#  pragma warning (disable: 4251)
-#endif
-
 namespace GeographicLib {
 
   /**
@@ -370,9 +364,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_MGRS_HPP

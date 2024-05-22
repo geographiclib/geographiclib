@@ -19,9 +19,9 @@
 #include <cstring>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions and unsafe gmtime
+// Squelch warnings about constant conditional expressions
 #  pragma warning (push)
-#  pragma warning (disable: 4127 4996)
+#  pragma warning (disable: 4127)
 #endif
 
 namespace GeographicLib {
@@ -320,6 +320,7 @@ namespace GeographicLib {
     template<typename ExtT, typename IntT, bool bigendp>
       static void readarray(std::istream& str, IntT array[], size_t num) {
 #if GEOGRAPHICLIB_PRECISION < 4
+      // for C++17 use if constexpr
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
           std::numeric_limits<ExtT>::is_integer)
@@ -328,6 +329,7 @@ namespace GeographicLib {
           str.read(reinterpret_cast<char*>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
+          // for C++17 use if constexpr
           if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
             for (size_t i = num; i--;)
               array[i] = Math::swab<IntT>(array[i]);

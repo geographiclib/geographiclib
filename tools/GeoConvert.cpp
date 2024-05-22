@@ -18,11 +18,6 @@
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/MGRS.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
-
 #include "GeoConvert.usage"
 
 int main(int argc, const char* const argv[]) {

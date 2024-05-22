@@ -10,9 +10,8 @@
 #include <GeographicLib/Gnomonic.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about potentially uninitialized local variables and
-// constant conditional expressions
-#  pragma warning (disable: 4701 4127)
+// Squelch warnings about potentially uninitialized local variables
+#  pragma warning (disable: 4701)
 #endif
 
 namespace GeographicLib {

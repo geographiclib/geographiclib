@@ -20,11 +20,6 @@
 #include <GeographicLib/DAuxLatitude.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
-
 namespace GeographicLib {
 
   using namespace std;
@@ -99,7 +94,7 @@ namespace GeographicLib {
       sx = Xn.y(), sy = Yn.y(), cx = Xn.x(), cy = Yn.x(),
       k2;
     // Switch prolate to oblate; we then can use the formulas for k2 < 0
-    if (false && base::_f < 0) {
+    if (base::_f < 0) {
       d = -d; swap(sx, cx); swap(sy, cy);
       k2 = base::_e2;
     } else {
