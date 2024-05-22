@@ -29,12 +29,6 @@
 #include <boost/serialization/vector.hpp>
 #endif
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (push)
-#  pragma warning (disable: 4127)
-#endif
-
 namespace GeographicLib {
 
   /**
@@ -828,9 +822,5 @@ namespace std {
   }
 
 } // namespace std
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_NEARESTNEIGHBOR_HPP

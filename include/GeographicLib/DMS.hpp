@@ -13,12 +13,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about dll vs vector and constant conditional expressions
-#  pragma warning (push)
-#  pragma warning (disable: 4251 4127)
-#endif
-
 namespace GeographicLib {
 
   /**
@@ -389,9 +383,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_DMS_HPP

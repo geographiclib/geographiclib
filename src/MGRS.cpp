@@ -10,11 +10,6 @@
 #include <GeographicLib/MGRS.hpp>
 #include <GeographicLib/Utility.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about enum-float expressions and mixing enums
-#  pragma warning (disable: 5055 5054)
-#endif
-
 namespace GeographicLib {
 
   using namespace std;
