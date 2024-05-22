@@ -24,7 +24,7 @@ class GeodShort {
 private:
   typedef Math::real real;
   real _a, _f, _f1, _b, _e2, _ep2, _e;
-  EllipticFunction _E;
+  EllipticFunction _eE;
   inline real eatanhe(real x) const {
     return _f >= 0 ? _e * atanh(_e * x) : - _e * atan(_e * x);
   }
@@ -71,7 +71,7 @@ public:
     , _e2(_f * (2 - _f))
     , _ep2(_e2/Math::sq(_f1))
     , _e(sqrt(abs(_e2)))
-    , _E(-_ep2) {}
+    , _eE(-_ep2) {}
   real Inverse(real lat1, real lon1, real lat2, real lon2,
                real& azi1, real& azi2) {
     int mode = 1;
@@ -189,9 +189,9 @@ public:
       omg12 = A * lam12,
       phipm = atan(tan(phim)/B),
       R = _a * C/(B*B),
-      m1 = _E.E(sin(bet1), cos(bet1), sqrt(1 + _ep2 * Math::sq(sin(bet1)))),
-      m2 = _E.E(sin(bet2), cos(bet2), sqrt(1 + _ep2 * Math::sq(sin(bet2)))),
-      mm = _E.E(sin(betm), cos(betm), sqrt(1 + _ep2 * Math::sq(sin(betm)))),
+      m1 = _eE.E(sin(bet1), cos(bet1), sqrt(1 + _ep2 * Math::sq(sin(bet1)))),
+      m2 = _eE.E(sin(bet2), cos(bet2), sqrt(1 + _ep2 * Math::sq(sin(bet2)))),
+      mm = _eE.E(sin(betm), cos(betm), sqrt(1 + _ep2 * Math::sq(sin(betm)))),
       phip1 = phipm + (m1 - mm) * _a * _f1 / R,
       phip2 = phipm + (m2 - mm) * _a * _f1 / R;
     return R * GreatCircle(sin(phip1), cos(phip1), sin(phip2), cos(phip2),

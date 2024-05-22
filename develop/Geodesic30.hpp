@@ -108,7 +108,8 @@ namespace GeographicLib {
    *   J. Geodesy <b>87</b>, 43--55 (2013);
    *   DOI: <a href="https://doi.org/10.1007/s00190-012-0578-z">
    *   10.1007/s00190-012-0578-z</a>;
-   *   addenda: <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
+   *   addenda:
+   *   <a href="https://geographiclib.sourceforge.io/geod-addenda.html">
    *   geod-addenda.html</a>.
    * .
    * For more information on geodesics see \ref geodesic.
@@ -172,7 +173,7 @@ namespace GeographicLib {
     static real Astroid(real x, real y);
 
     real _a, _f, _f1, _e2, _ep2, _n, _b, _c2, _etol2;
-    real _A3x[nA3x_], _C3x[nC3x_], _C4x[nC4x_];
+    real _aA3x[nA3x_], _cC3x[nC3x_], _cC4x[nC4x_];
 
     void Lengths(real eps, real sig12,
                  real ssig1, real csig1, real ssig2, real csig2,

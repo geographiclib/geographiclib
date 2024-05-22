@@ -3454,7 +3454,8 @@ Math::real CosSeries(Math::real sinx, Math::real cosx,
   return cosx * (y0 - y1);    // cos(x) * (y0 - y1)
 }
 
-Math::real SinSeries(Math::real sinx, Math::real cosx, const Math::real c[], int n) {
+Math::real SinSeries(Math::real sinx, Math::real cosx, const Math::real c[],
+                     int n) {
   // Evaluate
   // y = sum(c[i] * sin((2*i+1) * x), i, 0, n-1)
   // using Clenshaw summation.
@@ -3662,11 +3663,12 @@ int main(int argc, const char* const argv[]) {
         // prec = 0 means use 30th order taylor series
         // prec = -1 means use N=30 DST
       case -1:
-      case 0: eps = numeric_limits<Math::real>::infinity(); break; // Use TaylorI4
+      case 0: eps = numeric_limits<Math::real>::infinity();
+        break;                  // Use TaylorI4
       case 1: eps = numeric_limits<float>::epsilon() / 2; break;
       case 2: eps = numeric_limits<double>::epsilon() / 2; break;
       case 3: eps = Math::real(numeric_limits<long double>::epsilon()) / 2;
-	break;
+        break;
       case 4: eps = pow(Math::real(0.5), 113); break;
 #if GEOGRAPHICLIB_PRECISION > 1
         // Skip case 5 for float prec to avoid underflow to 0
@@ -3787,11 +3789,12 @@ int main(int argc, const char* const argv[]) {
         // prec = 0 means use 30th order taylor series
         // prec = -1 means use N=30 DST
       case -1:
-      case 0: eps = numeric_limits<Math::real>::infinity(); break; // Use TaylorI4
+      case 0: eps = numeric_limits<Math::real>::infinity();
+        break;                  // Use TaylorI4
       case 1: eps = numeric_limits<float>::epsilon() / 2; break;
       case 2: eps = numeric_limits<double>::epsilon() / 2; break;
       case 3: eps = Math::real(numeric_limits<long double>::epsilon()) / 2;
-	break;
+        break;
       case 4: eps = pow(Math::real(0.5), 113); break;
 #if GEOGRAPHICLIB_PRECISION > 1
         // Skip case 5 for float prec to avoid underflow to 0

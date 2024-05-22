@@ -7,7 +7,8 @@
 // https://sourceforge.net/p/geographiclib/discussion/1026620/thread/33ce09e0/
 
 // Compile with
-// g++ -O3  -std=c++11 -o ClosestApproach ClosestApproach.cpp -lGeographic -L/usr/local/lib -Wl,-rpath=/usr/local/lib
+// g++ -O3  -std=c++11 -o ClosestApproach ClosestApproach.cpp
+//   -lGeographic -L/usr/local/lib -Wl,-rpath=/usr/local/lib
 
 // Example: Planes leave
 
@@ -96,7 +97,7 @@ int main() {
     typedef Math::real real;
     Utility::set_digits();
     const Geodesic/*Exact*/ geod = Geodesic/*Exact*/(Constants::WGS84_a(),
-						     Constants::WGS84_f());
+                                                     Constants::WGS84_f());
     real lat1, lon1, azi1, v1;
     real lat2, lon2, azi2, v2;
     real t0;
