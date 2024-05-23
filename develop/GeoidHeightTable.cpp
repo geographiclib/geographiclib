@@ -1,10 +1,16 @@
-// Compute a table of egm2008 geoid heights on a 1' grid.  This takes about 40
-// mins on a 8-processor Intel 2.66 GHz machine using OpenMP (-DHAVE_OPENMP=1).
+// Compute a table of egm2008 geoid heights on a 1' grid.  This takes about 10
+// mins on a 8-processor Intel 3.0 GHz machine using OpenMP.
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <algorithm>
+
+#if defined(_OPENMP)
+#define HAVE_OPENMP 1
+#else
+#define HAVE_OPENMP 0
+#endif
 
 #if HAVE_OPENMP
 #  include <omp.h>
@@ -27,25 +33,28 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   try {
+    typedef Math::real real;
+    using std::pow;
     enum format {
       PGM = 0,
       PGM4 = 1,
       GTX = 2,
     };
-    format mode = PGM4;
+    format mode = PGM;
 
+    // Will need to set the precision for each thread, so save return value
+    int ndigits = Utility::set_digits();
     std::string model(argv[1]);
     // Number of intervals per degree
-    int ndeg = Utility::num<int>(std::string(argv[2]));
+    int ndeg = Utility::val<int>(std::string(argv[2]));
     std::string filename(argv[3]);
     GravityModel g(model);
     int
       nlat = 180 * ndeg + 1,
       nlon = 360 * ndeg;
-    double delta = 1 / double(ndeg); // Grid spacing
-    double
+    real
       offset = mode == PGM ? -108 : -128,
-      scale = mode == PGM ? 0.003 : std::pow(0.5, 24);
+      scale = mode == PGM ? 3/real(1000) : pow(1/real(2), 24);
     // Write results as floats in binary mode
     ofstream file(filename.c_str(), ios::binary);
 
@@ -55,7 +64,7 @@ int main(int argc, char* argv[]) {
       file << "P5\n"
            << "# Geoid file in PGM format for the GeographicLib::Geoid class\n"
            << "# Description WGS84 " << model
-           << ", " << 60*delta << "-minute grid\n"
+           << ", " << 60/real(ndeg) << "-minute grid\n"
            << "# Offset " << offset << "\n"
            << "# Scale " << scale << "\n"
            << "# Origin 90N 0E\n"
@@ -68,7 +77,7 @@ int main(int argc, char* argv[]) {
            << "P5\n"
            << "# Geoid file in PGM format for the GeographicLib::Geoid class\n"
            << "# Description WGS84 " << model
-           << ", " << 60*delta << "-minute grid\n"
+           << ", " << 60/real(ndeg) << "-minute grid\n"
            << "# Offset " << offset << "\n"
            << "# Scale " << scale << "\n"
            << "# Origin 90N 0E\n"
@@ -95,17 +104,19 @@ int main(int argc, char* argv[]) {
 #  pragma omp parallel for
 #endif
       for (int ilat = ilat0; ilat < nlat0; ++ilat) { // Loop over latitudes
-        double lat = 90 - ilat * delta, h = 0;
+        Utility::set_digits(ndigits);                // Set the precision
+        real lat = (90 * ndeg - ilat) / real(ndeg), h = 0, half = 1/real(2);
         GravityCircle c(g.Circle(lat, h, GravityModel::GEOID_HEIGHT));
         for (int ilon = 0; ilon < nlon; ++ilon) { // Loop over longitudes
-          double lon = ilon * delta, h = c.GeoidHeight(lon);
+          real lon = (2*ilon < nlon ? ilon : ilon - nlon)  / real(ndeg),
+            h = c.GeoidHeight(lon);
           switch (mode) {
           case PGM:
-            Ns[ilat - ilat0][ilon]
-              = std::max(0, std::min((1<<16)-1, int((h - offset)/scale + 0.5)));
+            Ns[ilat - ilat0][ilon] =
+              std::max(0, std::min((1<<16)-1, int((h - offset)/scale + half)));
             break;
           case PGM4:
-            Nu[ilat - ilat0][ilon] = unsigned((h - offset)/scale + 0.5);
+            Nu[ilat - ilat0][ilon] = unsigned((h - offset)/scale + half);
             break;
           case GTX:
             Nf[ilat - ilat0][ilon] = float(h);
@@ -189,5 +200,18 @@ value  count  b%      w%
 -----  -----  ------  ------
     0  9318864   99.8%    100%
     1  16656    100%  0.178%
+
+Times for
+  ./develop/GeoidHeightTable egm2008 60 egm2008-1.pgm
+
+double:
+  real	8m37.894s
+  user	67m6.894s
+  sys	0m3.135s
+
+long double:
+  real	31m49.708s
+  user	246m29.631s
+  sys	0m9.573s
 
  */
