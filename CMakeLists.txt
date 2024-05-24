@@ -141,6 +141,8 @@ endif ()
 option (PACKAGE_DEBUG_LIBS
   "Include debug versions of library in binary package" OFF)
 
+option (BUILD_TOOLS "Build the tools and scripts" ON)
+
 # Figure out which libraries to build and set GEOGRAPHICLIB_LIB_TYPE_VAL
 # (used to initialize GEOGRAPHICLIB_SHARED_LIB in
 # include/GeographicLib/Config.h.in)
@@ -451,20 +453,23 @@ if (WIN32)
   set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 endif ()
 
-# The list of tools (to be installed into, e.g., /usr/local/bin)
-set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
-  GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
-  TransverseMercatorProj)
+if (BUILD_TOOLS)
+  # The list of tools (to be installed into, e.g., /usr/local/bin)
+  set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
+    GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
+    TransverseMercatorProj)
+
+  add_subdirectory (tools)
+endif()
+
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
   geographiclib-get-magnetic)
 
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
-
 # The list of subdirectories to process
 add_subdirectory (src)
 add_subdirectory (include/GeographicLib)
-add_subdirectory (tools)
 add_subdirectory (man)
 add_subdirectory (doc)
 if (EXAMPLEDIR)
