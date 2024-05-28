@@ -167,7 +167,46 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
          << alp2.degrees() << "\n";
   }
 }
-
+void HybridTest(Math::real a, Math::real b, Math::real c,
+            Math::real bet1, Math::real omg1, Math::real bet2) {
+  Triaxial t(a, b, c);
+  AuxAngle bet1a = AuxAngle::degrees(bet1),
+    omg1a = AuxAngle::degrees(omg1),
+    bet2a = AuxAngle::degrees(bet2);
+  cout << fixed << setprecision(4);
+  if (1) {
+    for (int dir = 1; dir >= -1; dir -=2) {
+      for (unsigned q = 0; q < 4; ++q) {
+        for (int p = -1; p <= 1; ++p) {
+          AuxAngle alp1a = AuxAngle( t.kp * omg1a.y(), t.k * bet1a.x() );
+          alp1a.setquadrant(q);
+          alp1a += AuxAngle::degrees(p/Math::real(10000));
+          AuxAngle bet2b, omg2a, alp2a;
+          Math::real s12;
+          TriaxialLine l(t, bet1a, omg1a, alp1a);
+          l.Hybrid(bet2a, dir, bet2b, omg2a, alp2a, s12);
+          cout << dir << " " << alp1a.degrees() << " "
+               << bet2b.degrees() << " "
+               << omg2a.degrees() << " " << alp2a.degrees() << " "
+               << s12 << "\n";
+        }
+      }
+    }
+  }
+  if (0) {
+    int dir = -1;
+    for (int i = -180; i < 180; i += 10) {
+      AuxAngle alp1a = AuxAngle::degrees(i), bet2b, omg2a, alp2a;
+      Math::real s12;
+      TriaxialLine l(t, bet1a, omg1a, alp1a);
+      l.Hybrid(bet2a, dir, bet2b, omg2a, alp2a, s12);
+      cout << i << " " << l.gamma() <<  " "
+           << bet2b.degrees() << " "
+           << omg2a.degrees() << " " << alp2a.degrees() << " "
+           << s12 << "\n";
+    }
+  }
+}
 int main() {
   try {
     Utility::set_digits();
@@ -195,11 +234,20 @@ int main() {
       //      a = sqrt(real(2)); b = 1; c = 1/a;
       //      DirectfunTest(a, b, c);
     }
-    if (1) {
+    if (0) {
       real a = 1.01, b = 1, c = 0.8;
       //      a = 6378172; b = 6378103; c = 6356753;
       //      a -= 34; b += 34;
       PositionTest(a, b, c);
+    }
+    if (1) {
+      using std::sqrt;
+      real a = 1.01, b = 1, c = 0.8;
+      a = sqrt(real(2)); b = 1; c = 1/a;
+      real bet1 = -45, omg1 = 30, bet2 = 30;
+      //      a = 6378172; b = 6378103; c = 6356753;
+      //      a -= 34; b += 34;
+      HybridTest(a, b, c, bet1, omg1, bet2);
     }
   }
   catch (const std::exception& e) {

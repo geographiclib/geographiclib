@@ -30,9 +30,17 @@ namespace GeographicLib {
     // with axes = axesn
     vec6 Accel(const vec6& y) const;
     void Norm(vec6& y) const;
-    static void normvec(vec3& r) {
+    static real hypot3(real x, real y, real z) {
+#if __cplusplus < 201703L || GEOGRAPHICLIB_PRECISION == 4
       using std::sqrt;
-      real h = sqrt(Math::sq(r[0]) + Math::sq(r[1]) + Math::sq(r[2]));
+      return sqrt(x*x + y*y + z*z);
+#else
+      using std::hypot;
+      return hypot(x, y, z);
+#endif
+    }
+    static void normvec(vec3& r) {
+      real h = hypot3(r[0], r[1], r[2]);
       r[0] /= h; r[1] /= h; r[2] /= h;
     }
   public:
@@ -46,17 +54,34 @@ namespace GeographicLib {
                real eps = 0) const;
     void Direct(const vec3& r1, const vec3& v1, real ds,
                 long nmin, long nmax,
-                std::vector<vec3>& r2, std::vector<vec3>& v2, real eps = 0)
-      const;
+                std::vector<vec3>& r2, std::vector<vec3>& v2,
+                real eps = 0) const;
     static real EllipticThresh() {
       static real thresh = 1/real(8);
       return thresh;
     }
     real gamma(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const {
+      // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
+      //       = k2*cb2*sa2 - kp2*so2*ca2
+      // Maybe need accurate expressions for
+      // k2  - gamma = k2*(sb2+ca2*cb2) + kp2*so2*ca2
+      // kp2 + gamma = k2*cb2*sa2 + kp2*(co2+sa2*so2)
+      // If gamma is given eval new alp given new bet and new omg
+      // gamma < 0
+      //   ca2 = (k2*cb2-gamma) / (k2*cb2+kp2*so2)
+      //   sa2 = (kp2+gamma - kp2*co2) / (k2*cb2+kp2*so2)
+      // gamma > 0
+      //   ca2 = (k2-gamma - k2*sb2) / (k2*cb2+kp2*so2)
+      //   sa2 = (kp2*so2+gamma) / (k2*cb2+kp2*so2)
+      // gamma > 0
+      // k2*sb2 = spsi2 * (k2-gamma)
+      // (k2-gamma - k2*sb2) = (k2-gaama)*(1-spsi2) = (k2-gamma)*cpsi2
+      // spsi2 = k2*sb2/(k2-gamma)
+      // cpsi2 = (k2*cb2-gamma)/(k2-gamma)
       using std::fabs; using std::copysign;
       bet.normalize(); omg.normalize(); alp.normalize();
-      // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
-      real a = k * bet.x() * alp.y(), b = kp * omg.y() * alp.x(), gam = (a - b) * (a + b);
+      real a = k * bet.x() * alp.y(), b = kp * omg.y() * alp.x(),
+        gam = (a - b) * (a + b);
       // Factor of 8 allows umbilical geodesics with alp in [-180,180] degrees
       // to return gam = 0.  (If in radians the factor could be reduced to 4.)
       if (fabs(gam) < 8 * std::numeric_limits<real>::epsilon() && gam != 0) {

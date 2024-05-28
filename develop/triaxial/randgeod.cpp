@@ -42,7 +42,7 @@ public:
   }
   // Return random position as parametric latitude and longitude
   void RandPos(Math::real& beta, Math::real& omega) {
-    using std::hypot, std::pow;
+    using std::hypot; using std::pow;
     real Xn, Yn, Zn, g;
     do {
       Xn = _norm(_gen);

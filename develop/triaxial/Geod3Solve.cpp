@@ -14,9 +14,10 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include "TriaxialLine.hpp"
+#include <GeographicLib/Math.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
+#include "TriaxialLine.hpp"
 
 // #include "GeodSolve.usage"
 
@@ -303,6 +304,7 @@ int main(int argc, const char* const argv[]) {
       }
       return 0;
     }
+    using std::round; using std::log10;
     int disprec = int(round(log10(b/6400000)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).

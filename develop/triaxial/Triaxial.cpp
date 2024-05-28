@@ -43,7 +43,7 @@ namespace GeographicLib {
 
   void Triaxial::Norm(vec3& r) const {
     vec3 rn{r[0] / axes[0], r[1] / axes[1], r[2] / axes[2]};
-    real ra = sqrt(Math::sq(rn[0]) + Math::sq(rn[1]) + Math::sq(rn[2]));
+    real ra = hypot3(rn[0], rn[1], rn[2]);
     r = {r[0] / ra, r[1] / ra, r[2] / ra};
   }
 
@@ -55,21 +55,18 @@ namespace GeographicLib {
       uv = up[0] * v[0] + up[1] * v[1] + up[2] * v[2],
       f = uv/u2;
     v = {v[0] - f * up[0], v[1] - f * up[1], v[2] - f * up[2]};
-    f = sqrt(Math::sq(v[0]) + Math::sq(v[1]) + Math::sq(v[2]));
-    v = {v[0]/f, v[1]/f, v[2]/f};
+    normvec(v);
   }
 
   void Triaxial::Norm(vec6& y) const {
-    real ra = sqrt(Math::sq(y[0] / axesn[0]) +
-                   Math::sq(y[1]) +
-                   Math::sq(y[2] /axesn[2]));
+    real ra = hypot3(y[0] / axesn[0], y[1], y[2] / axesn[2]);
     y[0] /= ra; y[1] /= ra; y[2] /= ra;
     vec3 up = {y[0] / axes2n[0], y[1], y[2] / axes2n[2]};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
       uv = up[0] * y[3+0] + up[1] * y[3+1] + up[2] * y[3+2],
       f = uv/u2;
     y[3+0] -= f * up[0]; y[3+1] -= f * up[1]; y[3+2] -= f * up[2];
-    f = sqrt(Math::sq(y[3+0]) + Math::sq(y[3+1]) + Math::sq(y[3+2]));
+    f = hypot3(y[3+0], y[3+1], y[3+2]);
     y[3+0] /= f; y[3+1] /= f; y[3+2] /= f;
   }
 

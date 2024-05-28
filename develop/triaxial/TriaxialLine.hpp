@@ -11,9 +11,10 @@
 #define GEOGRAPHICLIB_TRIAXIALLINE_HPP 1
 
 #include <utility>
+#include <GeographicLib/Constants.hpp>
+#include <GeographicLib/AuxAngle.hpp>
 #include "Trigfun.hpp"
 #include "Triaxial.hpp"
-#include <GeographicLib/AuxAngle.hpp>
 
 namespace GeographicLib {
 
@@ -50,7 +51,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     Triaxial _t;
-    real _gam;
+    real _gam, _rtgam;
     AuxAngle _bet1, _omg1, _alp1;
     int _ibet, _iomg, _ialp;
     TriaxialLineF _f;
@@ -102,18 +103,7 @@ namespace GeographicLib {
     TriaxialLine(const Triaxial& t) : _t(t) {}
     TriaxialLine(const Triaxial& t,
                  AuxAngle bet1, AuxAngle omg1, AuxAngle alp1);
-    TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1)
-      : TriaxialLine(t,
-                     AuxAngle::degrees(bet1),
-                     AuxAngle::degrees(omg1),
-                     AuxAngle::degrees(alp1))
-    {
-      using std::round;
-      _ibet = int(round((bet1 - _bet1.degrees()) / Math::td));
-      _iomg += int(round((omg1 - AuxAngle::degrees(omg1).degrees()) /
-                         Math::td));
-      _ialp = int(round((alp1 - _alp1.degrees()) / Math::td));
-    }
+    TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1);
     const geod_fun& fbet() const { return _f.fbet(); }
     const geod_fun& fomg() const { return _f.fomg(); }
     const dist_fun& gbet() const { return _g.gbet(); }
@@ -126,6 +116,16 @@ namespace GeographicLib {
     void Position(real s12, real& bet2, real& omg2, real& alp2,
                   bool unroll = true,
                   int* countn = nullptr, int* countb = nullptr) const;
+    // Find first crossing of bet = bet2 in the direction dir.  NaN returned if
+    // no crossing.  Assume bet1 in [-90,0] (or maybe (-90,0]) and bet2 in
+    // [bet2, -bet2].   Special cases (dir = +1 assumed), bet2 = bet1...
+    // bet1 < 0, alp1 in [-90,90], omg2 = 0
+    // bet1 == 0, alp1 in (-90,90), omg2 = 0,
+    //                   alp1 = +/-90 omg2 = conj pt
+    void Hybrid(const AuxAngle& bet2, int dir,
+                AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
+                real& s12) const;
+    real gamma() const { return _gam; }
   };
 } // namespace GeographicLib
 

@@ -3,6 +3,7 @@ project (trixial)
 
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2 REQUIRED)
+include_directories (${GeographicLib_INCLUDE_DIRS})
 find_package (Boost REQUIRED)
 
 if (NOT MSVC)
@@ -10,6 +11,9 @@ if (NOT MSVC)
 endif ()
 
 set (CONVERT_WARNINGS_TO_ERRORS ON)
+# We require C++17
+set (CMAKE_CXX_STANDARD 17)
+set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # For kissfft.hh
 set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES "$ENV{HOME}/geographiclib/src")
@@ -57,16 +61,4 @@ target_link_libraries (TriaxialTest ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES
 add_executable (Geod3Solve Geod3Solve.cpp Trigfun.cpp Trigfun.hpp
    Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
 target_link_libraries (Geod3Solve ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
-
-
-add_executable (elliptic_functions elliptic_functions.cpp)
-target_link_libraries (elliptic_functions ${BOOST_LIBRARIES}
-  ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES}
-)
-
-add_executable (lorenz_mp lorenz_mp.cpp)
-target_link_libraries (lorenz_mp ${BOOST_LIBRARIES}
-# ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
