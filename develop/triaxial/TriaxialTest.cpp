@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
+#include <functional>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/AuxAngle.hpp>
@@ -167,46 +168,183 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
          << alp2.degrees() << "\n";
   }
 }
-void HybridTest(Math::real a, Math::real b, Math::real c,
-            Math::real bet1, Math::real omg1, Math::real bet2) {
-  Triaxial t(a, b, c);
-  AuxAngle bet1a = AuxAngle::degrees(bet1),
-    omg1a = AuxAngle::degrees(omg1),
-    bet2a = AuxAngle::degrees(bet2);
-  cout << fixed << setprecision(4);
-  if (1) {
-    for (int dir = 1; dir >= -1; dir -=2) {
-      for (unsigned q = 0; q < 4; ++q) {
-        for (int p = -1; p <= 1; ++p) {
-          AuxAngle alp1a = AuxAngle( t.kp * omg1a.y(), t.k * bet1a.x() );
-          alp1a.setquadrant(q);
-          alp1a += AuxAngle::degrees(p/Math::real(10000));
-          AuxAngle bet2b, omg2a, alp2a;
-          Math::real s12;
-          TriaxialLine l(t, bet1a, omg1a, alp1a);
-          l.Hybrid(bet2a, dir, bet2b, omg2a, alp2a, s12);
-          cout << dir << " " << alp1a.degrees() << " "
-               << bet2b.degrees() << " "
-               << omg2a.degrees() << " " << alp2a.degrees() << " "
-               << s12 << "\n";
-        }
-      }
-    }
-  }
-  if (0) {
-    int dir = -1;
-    for (int i = -180; i < 180; i += 10) {
-      AuxAngle alp1a = AuxAngle::degrees(i), bet2b, omg2a, alp2a;
-      Math::real s12;
-      TriaxialLine l(t, bet1a, omg1a, alp1a);
-      l.Hybrid(bet2a, dir, bet2b, omg2a, alp2a, s12);
-      cout << i << " " << l.gamma() <<  " "
-           << bet2b.degrees() << " "
-           << omg2a.degrees() << " " << alp2a.degrees() << " "
-           << s12 << "\n";
-    }
-  }
+
+Math::real HybridA(const Triaxial& t,
+                   const AuxAngle& bet1, const AuxAngle& omg1,
+                   const AuxAngle& bet2, const AuxAngle& omg2,
+                   const AuxAngle& alp1) {
+  typedef Math::real real;
+  TriaxialLine l(t, bet1, omg1, alp1);
+  real s12;
+  AuxAngle bet2a, omg2a, alp2a;
+  l.Hybrid(bet2, +1, bet2a, omg2a, alp2a, s12);
+  Triaxial::AngNorm(bet2a, omg2a, alp2a);
+  omg2a -= omg2;
+  return omg2a.radians();
 }
+
+// Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference in
+// lontitude on bet2 and the target longitude.
+AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
+                  AuxAngle xa,  AuxAngle xb,
+                  Math::real fa, Math::real fb,
+                  int* countn = nullptr, int* countb = nullptr) {
+  // Implement root finding method of Chandrupatla (1997)
+  // https://doi.org/10.1016/s0965-9978(96)00051-8
+  // Here we follow Scherer (2013), Section 6.1.7.3
+  // https://doi.org/10.1007/978-3-319-00401-3
+
+  // Here the independent variable is an AuxAngle, but the computations on this
+  // variable essentially involve its conversion to radians.  There's no need
+  // to worry about the angle wrapping around because (xb-xa).radians() is in
+  // (0,pi).
+
+  // require xa and xb to be normalized (the result is normalized)
+  // require fa and fb to have opposite signs
+
+  AuxAngle xm;                  // The return value
+  int cntn = 0, cntb = 0;
+  /*
+    cout << xa.degrees() << " " << fa << " "
+       << xb.degrees() << " " << fb << "\n";
+
+  int num = 360;
+  //  for (int i = 0; i <= num; ++i) {
+  { int i = 90;
+    Math::real x = 360*i/Math::real(num),
+      ff = f(AuxAngle::degrees(x));
+    cout << "DAT " << x << " " << ff/Math::degree() << "\n";
+  }
+  return 0;
+  */
+  for (Math::real t = 1/Math::real(2), ab = 0;
+       cntn < 50 || GEOGRAPHICLIB_PANIC;) {
+    AuxAngle xt = 2*t == 1 ?
+      AuxAngle(xa.y() + xb.y(),
+               xa.x() + xb.x(), true) :
+      (2*t < 1 ? xa - AuxAngle::radians(t * ab) :
+       xb + AuxAngle((1 - t) * ab)),
+    /*
+      AuxAngle::radians((1-t)*xa.radians() +
+                                    t*xb.radians()),
+    */
+    /*
+    AuxAngle xt((1-t) * xa.y() + t * xb.y(),
+                (1-t) * xa.x() + t * xb.x(), true),
+    */
+      xc;
+    ++cntn;
+    Math::real ft = f(xt), fm, fc;
+    cout << cntn << " " << xt.degrees() << " " << ft << " " << ab << " " << t << "\n";
+    if (signbit(ft) == signbit(fa)) {
+      xc = xa; xa = xt;
+      fc = fa; fa = ft;
+    } else {
+      xc = xb; xb = xa; xa = xt;
+      fc = fb; fb = fa; fa = ft;
+    }
+    if (fabs(fb) < fabs(fa)) {
+      xm = xb; fm = fb;
+    } else {
+      xm = xa; fm = fa;
+    }
+    // ordering is b - a - c
+    ab = (xa-xb).radians();
+    Math::real
+      ca = (xc-xa).radians(),
+      cb = ca+ab,
+      // Scherer has a fabs(cb).  This should be fabs(ab).
+      tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
+    if (2 * tl > 1 || fabs(fm) <= numeric_limits<Math::real>::epsilon())
+      break;
+    Math::real
+      xi = ab / cb,
+      phi = (fa-fb) / (fc-fb);
+    if ( xi / (1 + sqrt(1 - xi)) < phi && phi < sqrt(xi) ) {
+      t = fa/(fb-fa) * fc/(fb-fc) - ca/ab * fa/(fc-fa) * fb/(fc-fb);
+      // This equation matches the pseudocode in Scherer.  His Eq (6.40) reads
+      // t = fa/(fb-fa) * fc/(fb-fc) + ca/cb * fc/(fc-fa) * fb/(fb-fa); This is
+      // wrong.
+      t = fmin(1 - tl, fmax(tl, t));
+    } else {
+      t = 1/Math::real(2);
+      ++cntb;
+    }
+  }
+  if (countn) *countn += cntn;
+  if (countb) *countb += cntb;
+  return xm;
+}
+
+void HybridTest(Math::real a, Math::real b, Math::real c,
+                Math::real bet1d, Math::real omg1d,
+                Math::real bet2d, Math::real omg2d) {
+  Triaxial t(a, b, c);
+  AuxAngle bet1 = AuxAngle::degrees(bet1d),
+    omg1 = AuxAngle::degrees(omg1d),
+    bet2 = AuxAngle::degrees(bet2d),
+    omg2 = AuxAngle::degrees(omg2d);
+  cout << fixed << setprecision(6);
+  /*
+  for (int i = -180; i <= 180; ++i) {
+  //  {  int i = 101;
+    cout << i << " "
+         << HybridA(t, bet1, omg1, bet2,
+                    AuxAngle{}, AuxAngle::degrees(i)) / Math::degree() << "\n";
+  }
+  return;
+  */
+  cout << a << " " << b << " " << c << "\n";
+  Math::real domg[4];
+  AuxAngle alp1u[4];
+  alp1u[0] = AuxAngle( t.kp * omg1.y(), t.k * bet1.x(), true );
+  for (unsigned q = 1; q < 4; ++q) {
+    alp1u[q] = alp1u[0];
+    alp1u[q].setquadrant(q);
+  }
+  for (unsigned q = 0U; q < 4U; ++q) {
+    domg[q] = HybridA(t, bet1, omg1, bet2, omg2, alp1u[q]);
+    cout << q << " " << alp1u[q].degrees() << " "
+         << domg[q]/Math::degree() << "\n";
+    if (domg[q] == 0) {
+      cout << "Result " << alp1u[q].degrees() << "\n";
+      return;
+    }
+  }
+  AuxAngle xa, xb, xn;
+  Math::real fa, fb;
+  for (unsigned q = 0U; q < 4U; ++q) {
+    if (domg[q] < 0 && domg[(q+1)&3] > 0) {
+      xb = alp1u[q]; xa = alp1u[(q+1)&3];
+      fb = domg[q]; fa = domg[(q+1)&3];
+      break;
+    }
+  }
+
+  bool bisect = false;
+  int countn = 0, countb = 0;
+  if (bisect) {
+    for (; countb < Math::digits() + 10;) {
+      ++countb;
+      xn = AuxAngle(xb.y() + xa.y(), xb.x() + xa.x(), true);
+      Math::real ft =  HybridA(t, bet1, omg1, bet2, omg2, xn);
+      cout << countb << " " << xn.degrees() << " " << ft << "\n";
+      if (ft == 0 || (xa-xn).radians() <= 0 || (xn-xb).radians() <= 0)
+        break;
+      (ft > 0 ? xa : xb) = xn;
+    }
+  } else {
+    xn = findroot(
+                  [&t, &bet1, &omg1, &bet2, &omg2]
+                  (const AuxAngle& x) -> Math::real
+                  { return HybridA(t, bet1, omg1, bet2, omg2, x); },
+                  xa,  xb,
+                  fa, fb,
+                  &countn, &countb);
+  }
+  std::cout << xn.degrees() << " " << countn << " " << countb << "\n";
+}
+
 int main() {
   try {
     Utility::set_digits();
@@ -242,12 +380,22 @@ int main() {
     }
     if (1) {
       using std::sqrt;
+      real bet1 = -45, omg1 = 30, bet2 = 30, omg2 = 60;
+      bet2 = 45;
+      omg2 = -140;
       real a = 1.01, b = 1, c = 0.8;
-      a = sqrt(real(2)); b = 1; c = 1/a;
-      real bet1 = -45, omg1 = 30, bet2 = 30;
-      //      a = 6378172; b = 6378103; c = 6356753;
-      //      a -= 34; b += 34;
-      HybridTest(a, b, c, bet1, omg1, bet2);
+      // s12 = 1.172873690527506
+      // alp1 = 29.936197484667744
+      //        29.936197484667770
+      // alp2 = 26.341535680708272
+      // a = sqrt(real(2)); b = 1; c = 1/a;
+      // s12 = 0.995474462124499
+      // alp1 = 30.275215672294671
+      //        30.275215672295103
+      // alp2 = 48.296592187017524
+      a = 6378172; b = 6378103; c = 6356753;
+      a -= 34; b += 34;
+      HybridTest(a, b, c, bet1, omg1, bet2, omg2);
     }
   }
   catch (const std::exception& e) {

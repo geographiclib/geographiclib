@@ -497,34 +497,37 @@ namespace GeographicLib {
                             AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
                             real& s12)
     const {
+    //    cout << "GG " << _gam << "\n";
     if (_gam > 0) {
-      real c2 = _t.k2 * Math::sq(bet2.x()) - _gam,
-        spsi = _t.k * bet2.y(),
-        cpsi = sqrt(c2);
-      if (c2 < 0) {
-        omg2a = alp2a = AuxAngle::NaN();
-        s12 = Math::NaN();
-        return;
-      }
-      AuxAngle psi2 = AuxAngle(spsi, dir * cpsi, false).normalized();
-      real tau12 = (psi2 - _psi1).radians(),
+      real spsi = _t.k * bet2.y(),
+        cpsi = sqrt(fmax(0, _t.k2 * Math::sq(bet2.x()) - _gam)) + 0;
+      AuxAngle psi2 = AuxAngle(spsi, dir * cpsi, true),
+        psi12 = psi2 - _psi1;
+      psi12.y() = fmax(real(0), psi12.y()) + 0; // convert -180deg to 180deg
+      real tau12 = psi12.radians(),
         psi2r = _psi1.radians() + tau12,
         v2= fbet().fwd(psi2r),
         u2 = fomg().inv(fbet()(v2) - _delta),
         omg2 = _eE * fomg().rev(u2);
+      // cout << "PSI2 " << psi2.degrees() << " " << psi12.degrees() << " "
+      //   << 1/psi12.y()  << " " << tau12 / Math::degree() << "\n";
       omg2a = AuxAngle::radians(omg2);
       bet2a = AuxAngle(_bet0 * _flip * sqrt(_t.k2 - _gam)/_t.k * psi2.y(),
                        _bet0 * hypot(psi2.x(), _rtgam/_t.k * psi2.y()),
-                       false).normalized();
+                       true);
       alp2a = AuxAngle(_alp0 * _eE * hypot(_rtgam, _t.kp * omg2a.x()),
                        _alp0 * _flip * sqrt(_t.k2 - _gam) * psi2.x(),
-                       false).normalized();
+                       true);
       real sig2 = gbet()(v2) + gomg()(u2);
       s12 = (sig2 - _sig1)  * _t.b;
     } else {
       bet2a = AuxAngle(bet2.y(), bet2.x() * dir * _nN, false);
-      real tau12 =  (bet2a - _bet1).radians(),
-        bet2r = _bet1.radians() + tau12;
+      AuxAngle bet12 = bet2a - _bet1;
+      bet12.y() = fmax(real(0), bet12.y()) + 0; // convert -180deg to 180deg
+      real tau12 =  bet12.radians(),
+        bet2r = _bet1.radians() + _nN * tau12;
+      //      cout << "TAU12 " << tau12/Math::degree() << " "
+      //           << bet2r/Math::degree() << "\n";
       if (_gam < 0) {
         real
           u2 = fbet().fwd(_nN * bet2r),
@@ -533,10 +536,10 @@ namespace GeographicLib {
         AuxAngle psi2 = AuxAngle::radians(psi2r);
         omg2a = AuxAngle(_omg0 * _flip * sqrt(_t.kp2 + _gam)/_t.kp * psi2.y(),
                          _omg0 * hypot(psi2.x(), _rtgam/_t.kp * psi2.y()),
-                         false).normalized();
+                         true);
         alp2a = AuxAngle(_alp0 * _nN * _flip * sqrt(_t.kp2 + _gam) * psi2.x(),
                          _alp0 * hypot(_rtgam, _t.k * bet2.x()),
-                         false).normalized();
+                         true);
         real sig2 = gbet()(u2) + gomg()(v2);
         s12 = (sig2 - _sig1)  * _t.b;
       } else {                  // _gam == 0
@@ -554,7 +557,7 @@ namespace GeographicLib {
         alp2a = AuxAngle((alp0 ? -1 : 1) * _nN * _t.kp * _eE * parity  /
                          cosh(v2),
                          (alp0 ? -1 : 1) * _t.k / cosh(u2),
-                         false).normalized();
+                         true);
         if (0)
         cout << "AAA "
              << alp2a.degrees() << " " << alp0 << " "

@@ -64,8 +64,8 @@ namespace GeographicLib {
       // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
       //       = k2*cb2*sa2 - kp2*so2*ca2
       // Maybe need accurate expressions for
-      // k2  - gamma = k2*(sb2+ca2*cb2) + kp2*so2*ca2
-      // kp2 + gamma = k2*cb2*sa2 + kp2*(co2+sa2*so2)
+      //   k2  - gamma = k2*(sb2+ca2*cb2) + kp2*so2*ca2
+      //   kp2 + gamma = k2*cb2*sa2 + kp2*(co2+sa2*so2)
       // If gamma is given eval new alp given new bet and new omg
       // gamma < 0
       //   ca2 = (k2*cb2-gamma) / (k2*cb2+kp2*so2)
@@ -74,10 +74,10 @@ namespace GeographicLib {
       //   ca2 = (k2-gamma - k2*sb2) / (k2*cb2+kp2*so2)
       //   sa2 = (kp2*so2+gamma) / (k2*cb2+kp2*so2)
       // gamma > 0
-      // k2*sb2 = spsi2 * (k2-gamma)
-      // (k2-gamma - k2*sb2) = (k2-gaama)*(1-spsi2) = (k2-gamma)*cpsi2
-      // spsi2 = k2*sb2/(k2-gamma)
-      // cpsi2 = (k2*cb2-gamma)/(k2-gamma)
+      //   k2*sb2 = spsi2 * (k2-gamma)
+      //   (k2-gamma - k2*sb2) = (k2-gamma)*(1-spsi2) = (k2-gamma)*cpsi2
+      //   spsi2 = k2*sb2/(k2-gamma)
+      //   cpsi2 = (k2*cb2-gamma)/(k2-gamma)
       using std::fabs; using std::copysign;
       bet.normalize(); omg.normalize(); alp.normalize();
       real a = k * bet.x() * alp.y(), b = kp * omg.y() * alp.x(),
