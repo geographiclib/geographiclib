@@ -19,6 +19,10 @@ namespace GeographicLib {
 
   using namespace std;
 
+  Triaxial::Triaxial()
+    : Triaxial(Math::NaN(), Math::NaN(), Math::NaN())
+  {}
+    
   Triaxial::Triaxial(Math::real a, Math::real b, Math::real c)
     : a(a)
     , b(b)

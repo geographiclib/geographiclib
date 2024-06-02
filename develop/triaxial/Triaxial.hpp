@@ -47,6 +47,7 @@ namespace GeographicLib {
     real a, b, c;               // semi-axes
     vec3 axes, axesn, axes2n;
     real e2, k2, kp2, k, kp;
+    Triaxial();
     Triaxial(real a, real b, real c);
     void Norm(vec3& r) const;
     void Norm(vec3& r, vec3& v) const;
@@ -102,6 +103,28 @@ namespace GeographicLib {
       }
       return gam;
     }
+    real gammap(real gamma,
+                const AuxAngle& bet, const AuxAngle& omg,
+                const AuxAngle& alp) const {
+      // Return k2 - gamma or kp2 + gamma evaluated carefully
+      using std::hypot;
+      return gamma == 0 ? 0 :
+        (gamma > 0 ? // return k2 - gamma
+         k2 * (Math::sq(bet.y()) + Math::sq(alp.x()*bet.x())) +
+         kp2 * Math::sq(omg.y()*alp.x()) :
+         // return kp2 + gamma
+         k2 *  Math::sq(bet.x()*alp.y()) +
+         kp2 * (Math::sq(omg.x()) + Math::sq(alp.y()*omg.y())));
+    }
+    /*
+    gamblk fillgamma(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const {
+      using std::sqrt; using std::fabs;
+      real gam = gamma(bet, omg, alp),
+        gamp = gammap(gam, bet, omg, alp);
+      //      gamblk g = { gam, sqrt(fabs(gam)), gamp, sqrt(gamp) };
+      return { gam, sqrt(fabs(gam)), gamp, sqrt(gamp) };
+    }
+    */
     static void AngNorm(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp,
                         bool alt = false) {
       using std::signbit;
@@ -120,6 +143,32 @@ namespace GeographicLib {
     void elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
                       const AuxAngle& alp,
                       vec3& r, vec3& v) const;
+    class gamblk {
+    private:
+      typedef Math::real real;
+    public:
+      real gam, rtgam, gamp, rtgamp;
+      // [sin(nu), cos(nu)]
+      //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for gam > 0, 
+      //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for gam < 0
+      //   unused for gam == 0
+      AuxAngle nu;
+      gamblk()
+        : gam(Math::NaN())
+        , rtgam(Math::NaN())
+        , gamp(Math::NaN())
+        , rtgamp(Math::NaN())
+        , nu(AuxAngle::NaN())
+      {}
+      gamblk(const Triaxial& t, AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) {
+        using std::sqrt; using std::fabs;
+        gam = t.gamma(bet, omg, alp);
+        rtgam = sqrt(fabs(gam));
+        gamp = t.gammap(gam, bet, omg, alp);
+        rtgamp = sqrt(gamp);
+        nu = AuxAngle(rtgam, rtgamp, true);
+      }
+    };
   };
 
   class GEOGRAPHICLIB_EXPORT geod_fun {

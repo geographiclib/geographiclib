@@ -21,37 +21,59 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT TriaxialLineF {
   private:
     typedef Math::real real;
-    real _k2, _kp2, _e2, _gam;
+    Triaxial _t;
+    Triaxial::gamblk _gm;
     geod_fun _fbet, _fomg;
   public:
+    class ics {
+      // bundle of data setting the initial conditions for a geodesic
+    public:
+      AuxAngle bet1, omg1, alp1, // starting point
+        psi1;                    // nonumbilic angle psi
+      real u0, v0,               // starting point in u,v space
+        df, deltashift,          // umbilic constants
+        deltamax,                // max value of delta for umbilic
+        delta;                   //  starting point for umbilic
+      int ibet, iomg, ialp,      // wrapping quantities for bet, omg, alp
+        nN, eE,                  // Northgoing / eastgoing
+        flip,                    // Is bet or omg on the backside
+        bet0, omg0, alp0;        // Reference vals (1 = 0, -1 = 180)
+      bool umbalt;               // how coordinates wrap with umbilical lines
+    };
     TriaxialLineF() {}
-    TriaxialLineF(real k2, real kp2, real e2, real gam,
+    TriaxialLineF(const Triaxial& t, Triaxial::gamblk gm,
                   real epspow = 1, real nmaxmult = 0);
     const geod_fun& fbet() const { return _fbet; }
     const geod_fun& fomg() const { return _fomg; }
-    geod_fun& fbet() { return _fbet; }
-    geod_fun& fomg() { return _fomg; }
-
+    const Triaxial& t() const { return _t; }
+    real gamma() const { return _gm.gam; }
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLineG {
   private:
     typedef Math::real real;
-    real _k2, _kp2, _e2, _gam;
+    Triaxial _t;
+    Triaxial::gamblk _gm;
     dist_fun _gbet, _gomg;
   public:
+    class ics {
+      // bundle of data setting the initial conditions for a distance calc
+      real s0, sig1;           // starting point
+    };
     TriaxialLineG() {}
-    TriaxialLineG(real k2, real kp2, real e2, real gam);
+    TriaxialLineG(const Triaxial&, Triaxial::gamblk gam);
     const dist_fun& gbet() const { return _gbet; }
     const dist_fun& gomg() const { return _gomg; }
-
+    const Triaxial& t() const { return _t; }
+    real gamma() const { return _gm.gam; }
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLine {
   private:
     typedef Math::real real;
     Triaxial _t;
-    real _gam, _rtgam;
+    Triaxial::gamblk _gm;
+    //    real _gammao, _rtgam, _gamp, _rtgamp;
     AuxAngle _bet1, _omg1, _alp1;
     int _ibet, _iomg, _ialp;
     TriaxialLineF _f;
@@ -65,6 +87,7 @@ namespace GeographicLib {
     real _deltamax;             // max value of delta for umbilic
     real _delta, _sig1;         //  starting point
     bool _umbalt, _distinit;
+    real _s13;                  // Distance to the reference point 3
     // remainder with result in
     //    [-y/2, y/2) is alt = false
     //    (-y/2, y/2] is alt = true
@@ -125,7 +148,18 @@ namespace GeographicLib {
     void Hybrid(const AuxAngle& bet2, int dir,
                 AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
                 real& s12) const;
-    real gamma() const { return _gam; }
+    real gamma() const { return _gm.gam; }
+    real Distance() const { return _s13; }
+    void SetDistance(real s13) { _s13 = s13; }
+  };
+  class GEOGRAPHICLIB_EXPORT BareLine {
+    // Method for computing the course of the line only (not distance).
+    // Constructor sets starting point.  The Hybrid method returns tau12, bet2,
+    // omg2, alp2, betw2, omgw2, ind2.  Reinit resets starting point from the
+    // results of Hybrid, possibly (a) reversing the direction, (b) changing
+    // sign of bet, (c) flipping beta / omega to another sheet.  Promote
+    // returns a TriaxialLine with distance method initialized and s13 computed
+    // according to tau12.
   };
 } // namespace GeographicLib
 
