@@ -49,7 +49,7 @@ target_link_libraries (randgeod ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (TrigfunTest TrigfunTest.cpp Trigfun.cpp Trigfun.hpp
-   Triaxial.cpp Triaxial.hpp)
+   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
 target_link_libraries (TrigfunTest ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 

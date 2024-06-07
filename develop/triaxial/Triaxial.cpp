@@ -8,12 +8,11 @@
  **********************************************************************/
 
 #include "Triaxial.hpp"
+#include "TriaxialLine.hpp"
 #include <iostream>
 #include <algorithm>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
-
-#include "kissfft.hh"
 
 namespace GeographicLib {
 
@@ -22,7 +21,7 @@ namespace GeographicLib {
   Triaxial::Triaxial()
     : Triaxial(Math::NaN(), Math::NaN(), Math::NaN())
   {}
-    
+
   Triaxial::Triaxial(Math::real a, Math::real b, Math::real c)
     : a(a)
     , b(b)
@@ -540,4 +539,116 @@ namespace GeographicLib {
     // normvec(v); v is already normalized
   }
 
+  TriaxialLine Triaxial::Inverse(const AuxAngle& bet1, const AuxAngle& omg1,
+                                 const AuxAngle& bet2, const AuxAngle& omg2)
+    const {
+    AuxAngle
+      bet1a(bet1.normalized().rounded()),
+      omg1a(omg1.normalized().rounded()),
+      bet2a(bet2.normalized().rounded()),
+      omg2a(omg2.normalized().rounded());
+    bool flip1 = AngNorm(bet1a, omg1a);
+    (void) AngNorm(bet2a, omg2a);
+    bool swap12;
+    {
+      AuxAngle bet1am(bet1a), bet2am(bet2a);
+      bet1am.y() = fabs(bet1am.y()); bet2am.y() = fabs(bet2am.y());
+      AuxAngle bet12 = bet2am - bet1am; // |bet2| - |bet1|
+      swap12 = !signbit(bet12.y());     // is |bet2| > |bet1|
+    }
+    if (swap12) {
+      swap(bet1a, bet2a);
+      swap(omg1a, omg2a);
+    }
+    // Now |bet1| > |bet2|
+    bool swapsign = !signbit(bet1.y());
+    if (swapsign) {
+      bet1a.y() *= -1;
+      bet2a.y() *= -1;
+    }
+    // Now -90 <= bet1 <= -0; bet1 <= bet2 <= -bet1
+    // Just treat the general case for now
+    /*
+    Math::real domg[4];
+    AuxAngle alp1u[4];
+    alp1u[0] = AuxAngle( t.kp * omg1.y(), t.k * bet1.x(), true );
+    for (unsigned q = 1; q < 4; ++q) {
+      alp1u[q] = alp1u[0];
+      alp1u[q].setquadrant(q);
+    }
+
+    for (unsigned q = 0U; q < 4U; ++q) {
+      domg[q] = HybridA(t, bet1, omg1, alp1u[q], bet2, omg2);
+      cout << q << " " << alp1u[q].degrees() << " "
+           << domg[q]/Math::degree() << "\n";
+      if (domg[q] == 0) {
+        cout << "Result " << alp1u[q].degrees() << "\n";
+        return;
+      }
+    }
+    AuxAngle xa, xb, xn;
+    Math::real fa, fb;
+    for (unsigned q = 0U; q < 4U; ++q) {
+      if (domg[q] < 0 && domg[(q+1)&3] > 0) {
+        xb = alp1u[q]; xa = alp1u[(q+1)&3];
+        fb = domg[q]; fa = domg[(q+1)&3];
+        break;
+      }
+    }
+
+    int countn = 0, countb = 0;
+    xn = findroot(
+                  [&t, &bet1, &omg1, &bet2, &omg2]
+                  (const AuxAngle& x) -> Math::real
+                  { return HybridA(t, bet1, omg1, x, bet2, omg2); },
+                  xa,  xb,
+                  fa, fb,
+                  &countn, &countb);
+
+    AuxAngle alp1(xn), bet2a, alp2a, omg2a;
+    Math::real s12 = HybridB(t, bet1, omg1, alp1, bet2, bet2a, omg2a, alp2a);
+    */
+    TriaxialLine l(*this, bet1a, omg1a, bet2a);
+    l.SetDistance(omg2a.degrees() * (flip1 && swap12 && swapsign ? 1 : -1));
+    return l;
+
+  }
+  /*
+  Math::real Hybrid0(const TriaxialLineF& l, const TriaxialLineF::ics& ic;
+                     const AuxAngle& bet2, AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) {
+    AuxAngle bet2a, omg2a, alp2a;
+    (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
+    (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
+    omg2a -= omg2;
+    return omg2a.radians();
+  }
+Math::real HybridA(const Triaxial& t,
+                   const AuxAngle& bet1, const AuxAngle& omg1,
+                   const AuxAngle& alp1,
+                   const AuxAngle& bet2, const AuxAngle& omg2) {
+  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+  Triaxial::gamblk gam(t, b1, o1, a1);
+  TriaxialLineF l(t, gam, 0.5, 1.5);
+  TriaxialLineF::ics ic(l, b1, o1, a1);
+  AuxAngle bet2a, omg2a, alp2a;
+  (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
+  (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
+  omg2a -= omg2;
+  return omg2a.radians();
+}
+
+Math::real HybridB(const Triaxial& t,
+                   const AuxAngle& bet1, const AuxAngle& omg1,
+                   const AuxAngle& alp1, const AuxAngle& bet2, 
+                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) {
+  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+  Triaxial::gamblk gam(t, b1, o1, a1);
+  TriaxialLineF l(t, gam, 0.5, 1.5);
+  TriaxialLineF::ics ic(l, b1, o1, a1);
+  TriaxialLineF::disttx d = l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
+  TriaxialLineG ld(t, gam);
+  TriaxialLineG::ics icd(ld, ic);
+  return ld.dist(icd, d);
+}
+  */
 } // namespace GeographicLib

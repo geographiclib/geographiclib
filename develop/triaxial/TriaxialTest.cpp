@@ -161,7 +161,7 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
   cout << fixed << setprecision(14);
   for (int s12 = 0/*-5*/; s12 <= 1/*10*/; ++s12) {
     l.Position(real(s12), bet2, omg2, alp2);
-    Triaxial::AngNorm(bet2, omg2, alp2);
+    (void) Triaxial::AngNorm(bet2, omg2, alp2);
     cout << s12 << " "
          << bet2.degrees() << " "
          << omg2.degrees() << " "
@@ -169,19 +169,63 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
   }
 }
 
-Math::real HybridA(const Triaxial& t,
-                   const AuxAngle& bet1, const AuxAngle& omg1,
-                   const AuxAngle& bet2, const AuxAngle& omg2,
-                   const AuxAngle& alp1) {
+Math::real HybridOLD(const Triaxial& t,
+                     const AuxAngle& bet1, const AuxAngle& omg1,
+                     const AuxAngle& alp1,
+                     const AuxAngle& bet2, const AuxAngle& omg2) {
   typedef Math::real real;
   TriaxialLine l(t, bet1, omg1, alp1);
   real s12;
   AuxAngle bet2a, omg2a, alp2a;
   l.Hybrid(bet2, +1, bet2a, omg2a, alp2a, s12);
-  Triaxial::AngNorm(bet2a, omg2a, alp2a);
+  (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
   return omg2a.radians();
 }
+
+Math::real Hybrid0(const TriaxialLineF& l,
+                   const TriaxialLineF::ics ic,
+                   const AuxAngle& bet2,
+                   const AuxAngle& omg2) {
+  AuxAngle bet2a, omg2a, alp2a;
+  (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
+  (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
+  omg2a -= omg2;
+  return omg2a.radians();
+}
+
+Math::real HybridA(const Triaxial& t,
+                   const AuxAngle& bet1, const AuxAngle& omg1,
+                   const AuxAngle& alp1,
+                   const AuxAngle& bet2, const AuxAngle& omg2) {
+  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+  Triaxial::gamblk gam(t, b1, o1, a1);
+  TriaxialLineF l(t, gam, 0.5, 1.5);
+  TriaxialLineF::ics ic(l, b1, o1, a1);
+  return Hybrid0(l, ic, bet2, omg2);
+  /*
+  AuxAngle bet2a, omg2a, alp2a;
+  (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
+  (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
+  omg2a -= omg2;
+  return omg2a.radians();
+  */
+}
+
+Math::real HybridB(const Triaxial& t,
+                   const AuxAngle& bet1, const AuxAngle& omg1,
+                   const AuxAngle& alp1, const AuxAngle& bet2, 
+                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) {
+  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+  Triaxial::gamblk gam(t, b1, o1, a1);
+  TriaxialLineF l(t, gam, 0.5, 1.5);
+  TriaxialLineF::ics ic(l, b1, o1, a1);
+  TriaxialLineF::disttx d = l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
+  TriaxialLineG ld(t, gam);
+  TriaxialLineG::ics icd(ld, ic);
+  return ld.dist(icd, d);
+}
+
 
 // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference in
 // lontitude on bet2 and the target longitude.
@@ -217,7 +261,8 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
   }
   return 0;
   */
-  for (Math::real t = 1/Math::real(2), ab = 0;
+  bool trip = false;
+ for (Math::real t = 1/Math::real(2), ab = 0;
        cntn < 50 || GEOGRAPHICLIB_PANIC;) {
     AuxAngle xt = 2*t == 1 ?
       AuxAngle(xa.y() + xb.y(),
@@ -233,6 +278,10 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
                 (1-t) * xa.x() + t * xb.x(), true),
     */
       xc;
+    if (trip) {
+      xm = xt;
+      break;
+    }
     ++cntn;
     Math::real ft = f(xt), fm, fc;
     cout << cntn << " " << xt.degrees() << " " << ft << " " << ab << " " << t << "\n";
@@ -255,15 +304,17 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
       cb = ca+ab,
       // Scherer has a fabs(cb).  This should be fabs(ab).
       tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
-    if (2 * tl > 1 || fabs(fm) <= numeric_limits<Math::real>::epsilon())
-      break;
+    // Backward tests to deal with NaNs
+    trip =  !(2 * tl < 1 && fabs(fm) > numeric_limits<Math::real>::epsilon());
+    // If trip update xm one more time, then Hybrid solution is called once
+    // more outside this route to update bet2, omg2, alp2, etc.
     Math::real
       xi = ab / cb,
       phi = (fa-fb) / (fc-fb);
-    if ( xi / (1 + sqrt(1 - xi)) < phi && phi < sqrt(xi) ) {
+    if ( 2 * tl < 1 && xi / (1 + sqrt(1 - xi)) < phi && phi < sqrt(xi) ) {
       t = fa/(fb-fa) * fc/(fb-fc) - ca/ab * fa/(fc-fa) * fb/(fc-fb);
       // This equation matches the pseudocode in Scherer.  His Eq (6.40) reads
-      // t = fa/(fb-fa) * fc/(fb-fc) + ca/cb * fc/(fc-fa) * fb/(fb-fa); This is
+      // t = fa/(fb-fa) * fc/(fb-fc) + ca/cb * fc/(fc-fa) * fb/(fb-fa); this is
       // wrong.
       t = fmin(1 - tl, fmax(tl, t));
     } else {
@@ -289,8 +340,8 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   for (int i = -180; i <= 180; ++i) {
   //  {  int i = 101;
     cout << i << " "
-         << HybridA(t, bet1, omg1, bet2,
-                    AuxAngle{}, AuxAngle::degrees(i)) / Math::degree() << "\n";
+         << HybridA(t, bet1, omg1, AuxAngle::degrees(i),
+         bet2,omg2) / Math::degree() << "\n";
   }
   return;
   */
@@ -303,7 +354,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
     alp1u[q].setquadrant(q);
   }
   for (unsigned q = 0U; q < 4U; ++q) {
-    domg[q] = HybridA(t, bet1, omg1, bet2, omg2, alp1u[q]);
+    domg[q] = HybridA(t, bet1, omg1, alp1u[q], bet2, omg2);
     cout << q << " " << alp1u[q].degrees() << " "
          << domg[q]/Math::degree() << "\n";
     if (domg[q] == 0) {
@@ -311,6 +362,16 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
       return;
     }
   }
+  {
+    TriaxialLineF l(t, Triaxial::gamblk{}, 0.5, 1.5);
+    TriaxialLineF::ics ic(l, bet1, omg1, alp1u[0]);
+    for (unsigned q = 0U; q < 4U; ++q) {
+      ic.setquadrant(l, q);
+      Math::real dd = Hybrid0(l, ic, bet2, omg2);
+      cout << q << " " << dd/Math::degree() << "\n";
+    }
+  }
+
   AuxAngle xa, xb, xn;
   Math::real fa, fb;
   for (unsigned q = 0U; q < 4U; ++q) {
@@ -327,7 +388,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
     for (; countb < Math::digits() + 10;) {
       ++countb;
       xn = AuxAngle(xb.y() + xa.y(), xb.x() + xa.x(), true);
-      Math::real ft =  HybridA(t, bet1, omg1, bet2, omg2, xn);
+      Math::real ft =  HybridA(t, bet1, omg1, xn, bet2, omg2);
       cout << countb << " " << xn.degrees() << " " << ft << "\n";
       if (ft == 0 || (xa-xn).radians() <= 0 || (xn-xb).radians() <= 0)
         break;
@@ -337,12 +398,18 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
     xn = findroot(
                   [&t, &bet1, &omg1, &bet2, &omg2]
                   (const AuxAngle& x) -> Math::real
-                  { return HybridA(t, bet1, omg1, bet2, omg2, x); },
+                  { return HybridA(t, bet1, omg1, x, bet2, omg2); },
                   xa,  xb,
                   fa, fb,
                   &countn, &countb);
   }
+
   std::cout << xn.degrees() << " " << countn << " " << countb << "\n";
+  AuxAngle alp1(xn), bet2a, alp2a, omg2a;
+  Math::real s12 = HybridB(t, bet1, omg1, alp1, bet2, bet2a, omg2a, alp2a);
+  std::cout << alp1.degrees() << " " << bet2a.degrees() << " "
+            << omg2a.degrees() << " " << alp2a.degrees() << " "
+            << s12 << "\n";
 }
 
 int main() {
@@ -381,20 +448,19 @@ int main() {
     if (1) {
       using std::sqrt;
       real bet1 = -45, omg1 = 30, bet2 = 30, omg2 = 60;
-      bet2 = 45;
-      omg2 = -140;
       real a = 1.01, b = 1, c = 0.8;
       // s12 = 1.172873690527506
       // alp1 = 29.936197484667744
       //        29.936197484667770
       // alp2 = 26.341535680708272
-      // a = sqrt(real(2)); b = 1; c = 1/a;
+       a = sqrt(real(2)); b = 1; c = 1/a;
       // s12 = 0.995474462124499
       // alp1 = 30.275215672294671
       //        30.275215672295103
       // alp2 = 48.296592187017524
-      a = 6378172; b = 6378103; c = 6356753;
-      a -= 34; b += 34;
+       omg2 = 60-180;
+      //      a = 6378172; b = 6378103; c = 6356753;
+      //      a -= 34; b += 34;
       HybridTest(a, b, c, bet1, omg1, bet2, omg2);
     }
   }

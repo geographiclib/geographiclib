@@ -20,6 +20,8 @@
 #include "Trigfun.hpp"
 
 namespace GeographicLib {
+  class TriaxialLine;
+
   class GEOGRAPHICLIB_EXPORT Triaxial {
   public:
     typedef std::array<Math::real, 3> vec3;
@@ -43,6 +45,11 @@ namespace GeographicLib {
       real h = hypot3(r[0], r[1], r[2]);
       r[0] /= h; r[1] /= h; r[2] /= h;
     }
+    static void Flip(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) {
+      bet.x() *= -1;
+      alp.y() *= -1; alp.x() *= -1;
+      omg.y() *= -1;
+    }
   public:
     real a, b, c;               // semi-axes
     vec3 axes, axesn, axes2n;
@@ -57,6 +64,8 @@ namespace GeographicLib {
                 long nmin, long nmax,
                 std::vector<vec3>& r2, std::vector<vec3>& v2,
                 real eps = 0) const;
+    TriaxialLine Inverse(const AuxAngle& bet1, const AuxAngle& omg1,
+                         const AuxAngle& bet2, const AuxAngle& omg2) const;
     static real EllipticThresh() {
       static real thresh = 1/real(8);
       return thresh;
@@ -125,16 +134,27 @@ namespace GeographicLib {
       return { gam, sqrt(fabs(gam)), gamp, sqrt(gamp) };
     }
     */
-    static void AngNorm(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp,
+    static bool AngNorm(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp,
                         bool alt = false) {
       using std::signbit;
       // If !alt, put bet in [-pi/2,pi/2]
       // If  alt, put omg in [0, pi]
-      if (alt ? signbit(omg.y()) : signbit(bet.x())) {
-        bet.x() *= -1;
-        alp.y() *= -1; alp.x() *= -1;
-        omg.y() *= -1;
+      bool flip = alt ? signbit(omg.y()) : signbit(bet.x());
+      if (flip)
+        Flip(bet, omg, alp);
+      return flip;
+    }
+    static bool AngNorm(AuxAngle& bet, AuxAngle& omg,
+                        bool alt = false) {
+      using std::signbit;
+      // If !alt, put bet in [-pi/2,pi/2]
+      // If  alt, put omg in [0, pi]
+      bool flip = alt ? signbit(omg.y()) : signbit(bet.x());
+      if (flip) {
+        AuxAngle alp;
+        Flip(bet, omg, alp);
       }
+      return flip;
     }
     void cart2toellip(const vec3& r, AuxAngle& bet, AuxAngle& omg) const;
     void cart2toellip(const vec3& r, const vec3& v,
@@ -147,18 +167,19 @@ namespace GeographicLib {
     private:
       typedef Math::real real;
     public:
-      real gam, rtgam, gamp, rtgamp;
-      // [sin(nu), cos(nu)]
-      //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for gam > 0, 
+      real gam, rtgam, gamp, rtgamp,
+      // [nu, nup]
+      //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for gam > 0,
       //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for gam < 0
       //   unused for gam == 0
-      AuxAngle nu;
+        nu, nup;
       gamblk()
-        : gam(Math::NaN())
-        , rtgam(Math::NaN())
+        : gam(0)
+        , rtgam(0)
         , gamp(Math::NaN())
         , rtgamp(Math::NaN())
-        , nu(AuxAngle::NaN())
+        , nu(Math::NaN())
+        , nup(Math::NaN())
       {}
       gamblk(const Triaxial& t, AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) {
         using std::sqrt; using std::fabs;
@@ -166,7 +187,8 @@ namespace GeographicLib {
         rtgam = sqrt(fabs(gam));
         gamp = t.gammap(gam, bet, omg, alp);
         rtgamp = sqrt(gamp);
-        nu = AuxAngle(rtgam, rtgamp, true);
+        nu = rtgam / (gam > 0 ? t.k : t.kp);
+        nup = rtgamp / (gam > 0 ? t.k : t.kp);
       }
     };
   };

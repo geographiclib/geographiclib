@@ -39,6 +39,16 @@ namespace GeographicLib {
         flip,                    // Is bet or omg on the backside
         bet0, omg0, alp0;        // Reference vals (1 = 0, -1 = 180)
       bool umbalt;               // how coordinates wrap with umbilical lines
+      ics();
+      ics(const TriaxialLineF& f,
+          const AuxAngle& bet1, const AuxAngle& omg1, const AuxAngle& alp1);
+      void setquadrant(const TriaxialLineF& f, unsigned q);
+    };
+    class disttx {
+      // bundle of data to pass along for distance
+    public:
+      real betw2, omgw2;
+      int ind2;
     };
     TriaxialLineF() {}
     TriaxialLineF(const Triaxial& t, Triaxial::gamblk gm,
@@ -47,6 +57,9 @@ namespace GeographicLib {
     const geod_fun& fomg() const { return _fomg; }
     const Triaxial& t() const { return _t; }
     real gamma() const { return _gm.gam; }
+    const Triaxial::gamblk& gm() const { return _gm; }
+    disttx Hybrid(const ics& fi, const AuxAngle& bet2,
+                AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) const;
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLineG {
@@ -58,14 +71,20 @@ namespace GeographicLib {
   public:
     class ics {
       // bundle of data setting the initial conditions for a distance calc
+    public:
       real s0, sig1;           // starting point
+      ics();
+      ics(const TriaxialLineG& g,
+          const TriaxialLineF::ics& fic);
     };
     TriaxialLineG() {}
-    TriaxialLineG(const Triaxial&, Triaxial::gamblk gam);
+    TriaxialLineG(const Triaxial& t, const Triaxial::gamblk& gam);
     const dist_fun& gbet() const { return _gbet; }
     const dist_fun& gomg() const { return _gomg; }
     const Triaxial& t() const { return _t; }
     real gamma() const { return _gm.gam; }
+    const Triaxial::gamblk& gm() const { return _gm; }
+    real dist(ics ic, TriaxialLineF::disttx d) const;
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLine {
@@ -88,22 +107,6 @@ namespace GeographicLib {
     real _delta, _sig1;         //  starting point
     bool _umbalt, _distinit;
     real _s13;                  // Distance to the reference point 3
-    // remainder with result in
-    //    [-y/2, y/2) is alt = false
-    //    (-y/2, y/2] is alt = true
-    static std::pair<real, real> remx(real x, real y, bool alt = false) {
-      using std::remainder; using std::round;
-      real z = remainder(x, y);
-      if (alt) {
-        if (z == -y/2) z = y/2;
-      } else {
-        if (z == y/2) z = -y/2;
-      }
-      return std::pair<real, real>(z, round((x - z) / y));
-    }
-    static real roundx(real x, real y) {
-      return remx(x, y).second;
-    }
     static void solve2(real f0, real g0,
                        const geod_fun& fx, const geod_fun& fy,
                        const dist_fun& gx, const dist_fun& gy,
@@ -123,6 +126,22 @@ namespace GeographicLib {
                       int* countn = nullptr, int* countb = nullptr);
 
   public:
+    // remainder with result in
+    //    [-y/2, y/2) is alt = false
+    //    (-y/2, y/2] is alt = true
+    static std::pair<real, real> remx(real x, real y, bool alt = false) {
+      using std::remainder; using std::round;
+      real z = remainder(x, y);
+      if (alt) {
+        if (z == -y/2) z = y/2;
+      } else {
+        if (z == y/2) z = -y/2;
+      }
+      return std::pair<real, real>(z, round((x - z) / y));
+    }
+    static real roundx(real x, real y) {
+      return remx(x, y).second;
+    }
     TriaxialLine(const Triaxial& t) : _t(t) {}
     TriaxialLine(const Triaxial& t,
                  AuxAngle bet1, AuxAngle omg1, AuxAngle alp1);
@@ -160,6 +179,9 @@ namespace GeographicLib {
     // sign of bet, (c) flipping beta / omega to another sheet.  Promote
     // returns a TriaxialLine with distance method initialized and s13 computed
     // according to tau12.
+  public:
+    TriaxialLineF f;
+    TriaxialLineF::ics fi;
   };
 } // namespace GeographicLib
 
