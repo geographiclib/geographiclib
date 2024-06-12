@@ -10,6 +10,7 @@
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 #include <iostream>
+#include <iomanip>
 #include <algorithm>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
@@ -539,116 +540,293 @@ namespace GeographicLib {
     // normvec(v); v is already normalized
   }
 
-  TriaxialLine Triaxial::Inverse(const AuxAngle& bet1, const AuxAngle& omg1,
-                                 const AuxAngle& bet2, const AuxAngle& omg2)
+  TriaxialLine Triaxial::Inverse(AuxAngle bet1, AuxAngle omg1,
+                                 AuxAngle bet2, AuxAngle omg2)
     const {
-    AuxAngle
-      bet1a(bet1.normalized().rounded()),
-      omg1a(omg1.normalized().rounded()),
-      bet2a(bet2.normalized().rounded()),
-      omg2a(omg2.normalized().rounded());
-    bool flip1 = AngNorm(bet1a, omg1a);
-    (void) AngNorm(bet2a, omg2a);
+    bet1.normalize().round();
+    omg1.normalize().round();
+    bet2.normalize().round();
+    omg2.normalize().round();
+    bool flip1 = AngNorm(bet1, omg1);
+    (void) AngNorm(bet2, omg2);
     bool swap12;
     {
-      AuxAngle bet1am(bet1a), bet2am(bet2a);
-      bet1am.y() = fabs(bet1am.y()); bet2am.y() = fabs(bet2am.y());
-      AuxAngle bet12 = bet2am - bet1am; // |bet2| - |bet1|
-      swap12 = !signbit(bet12.y());     // is |bet2| > |bet1|
+      AuxAngle bet1m(bet1), bet2m(bet2);
+      bet1m.y() = fabs(bet1m.y()); bet2m.y() = fabs(bet2m.y());
+      AuxAngle bet12 = bet2m - bet1m; // |bet2| - |bet1|
+      swap12 = bet12.y() > 0;     // is |bet2| > |bet1|
+      // N.B. No swapping if bet1 = +0 and bet1 = -0.
     }
     if (swap12) {
-      swap(bet1a, bet2a);
-      swap(omg1a, omg2a);
+      swap(bet1, bet2);
+      swap(omg1, omg2);
     }
     // Now |bet1| > |bet2|
     bool swapsign = !signbit(bet1.y());
     if (swapsign) {
-      bet1a.y() *= -1;
-      bet2a.y() *= -1;
+      bet1.y() *= -1;
+      bet2.y() *= -1;
     }
-    // Now -90 <= bet1 <= -0; bet1 <= bet2 <= -bet1
-    // Just treat the general case for now
-    /*
-    Math::real domg[4];
-    AuxAngle alp1u[4];
-    alp1u[0] = AuxAngle( t.kp * omg1.y(), t.k * bet1.x(), true );
-    for (unsigned q = 1; q < 4; ++q) {
-      alp1u[q] = alp1u[0];
-      alp1u[q].setquadrant(q);
-    }
+    real f[4];
+    AuxAngle alpa( kp * fabs(omg1.y()), k * fabs(bet1.x()), true ),
+      alpb(alpa);
 
-    for (unsigned q = 0U; q < 4U; ++q) {
-      domg[q] = HybridA(t, bet1, omg1, alp1u[q], bet2, omg2);
-      cout << q << " " << alp1u[q].degrees() << " "
-           << domg[q]/Math::degree() << "\n";
-      if (domg[q] == 0) {
-        cout << "Result " << alp1u[q].degrees() << "\n";
-        return;
+    TriaxialLineF l(*this, Triaxial::gamblk{}, 0.5, 1.5);
+    TriaxialLineF::ics fic(l, bet1, omg1, alpb);
+    TriaxialLineF::disttx d;
+    bool done = false, equatorial = false;
+    real fa, fb;
+    if (alpb.y() == 0 && bet1.y() != 0) {
+      AuxAngle omg12 = omg2 - omg1;
+      if (omg12.y() == 0) {
+        if (omg12.x() < 0) {
+          alpb.setquadrant(2U);
+          fic.setquadrant(l, 2U);
+          done = true;
+        }
+      } else if (omg12.y() > 0) {
+        alpa = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), 1, false);
+        alpb = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), -1, false);
+        fa = - omg12.radians();
+        fb = fa + Math::pi();
+      } else {
+        alpa = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), -1, false);
+        alpb = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), 1, false);
+        fb = omg12.radians();
+        fa = fb - Math::pi();
+      }
+    } else {
+      unsigned q = 0U;
+      for (; q <= 4U; ++q) {
+        if (q) {
+          alpb.setquadrant(q);
+          fic.setquadrant(l, q);
+        }
+        if (q < 4U) {
+          f[q] = l.Hybrid0(fic, bet2, omg2);
+          if (0)
+            cout << "UMB " << q << " "
+                 << alpb.quadrant() << " "
+                 << alpb.degrees() << " " << scientific
+                 << f[q]/Math::degree() << "\n";
+          if (fabs(f[q]) < numeric_limits<real>::epsilon()) {
+            done = true;
+            break;
+          }
+        }
+        if (q && (f[(q+3U) & 3U] < 0 && f[q & 3U] > 0)) {
+          break;
+        }
+      }
+      if (q > 4U) std::cout << "ERROR\n";
+      fa = f[(q+3U) & 3U]; fb = f[q & 3U];
+      alpa.setquadrant((q+3U) & 3U);
+      if (!done && bet1.y() == 0 && bet2.y() == 0 && (q == 1U || q == 3U)) {
+        // cout << "QQ " << q << "\n";
+        // Possibly equatorial geodesics
+        // The change in f(beta) between a point and the conjugate point is
+        int eE = q&2U ? -1 : 1;
+        AuxAngle alpx = AuxAngle(eE, 0);
+        l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alpx), 0.5, 1.5);
+        fic = TriaxialLineF::ics(l, bet1, omg1, alpx);
+        AuxAngle bet2x, omg2x, alp2x;
+        l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
+        // cout << "OMGa " << omg2.degrees() << " " << omg2x.degrees() << "\n";
+        omg2x -= omg2;
+        // cout << "OMGb " << eE << " " << omg2x.degrees() << "\n";
+        if (eE * omg2x.y() >= 0) {
+          equatorial = done = true;
+          // We have
+          //   delta = l.fbet()(v2) - l.fomg()(u2)
+          //   u2 = l.fomg().fwd(eE * omg2)
+          //   v2 = l.fbet().fwd(psi2)
+          // =>
+          //   v2 = l.fbet.inv(fic.delta +  l.fomg()(u2));
+          real u2=  l.fomg().fwd(eE * ((omg1 - AuxAngle::cardinal(1U)).radians() +
+                                       (omg2 - omg1).radians())),
+            v2 = l.fbet().inv(fic.delta + l.fomg()(u2));
+          d.omgw2 = u2;
+          d.betw2 = v2;
+          d.ind2 = 0;
+          if (0) {
+          cout << "POSQ " << omg2.degrees()-90 << " " << l.fomg().rev(u2) << " " << l.fbet().rev(v2) << "\n";
+          cout << "POSP " << u2 << " " << v2 << " " << fic.delta << "\n";
+          }
+          alpb = alpx;
+        } else {
+          alpx.x() = -numeric_limits<real>::epsilon()/(1<<20);
+          (eE > 0 ? alpa : alpb) = alpx;
+          (eE > 0 ? fa : fb) = omg2x.radians();
+        }
       }
     }
-    AuxAngle xa, xb, xn;
-    Math::real fa, fb;
-    for (unsigned q = 0U; q < 4U; ++q) {
-      if (domg[q] < 0 && domg[(q+1)&3] > 0) {
-        xb = alp1u[q]; xa = alp1u[(q+1)&3];
-        fb = domg[q]; fa = domg[(q+1)&3];
+    AuxAngle alp1;
+    if (done)
+      alp1 = alpb;
+    else {
+      int countn = 0, countb = 0;
+      if (0)
+        cout << "ROOT "
+             << alpa.degrees() << " " << fa << " "
+             << alpb.degrees() << " " << fb << "\n";
+      alp1 = findroot(
+                      [this, &bet1, &omg1, &bet2, &omg2]
+                      (const AuxAngle& alp) -> Math::real
+                      {
+                        return HybridA(*this,
+                                       bet1, omg1, alp,
+                                       bet2, omg2);
+                      },
+                      alpa,  alpb,
+                      fa, fb,
+                      &countn, &countb);
+      l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
+      fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+    }
+
+    AuxAngle bet2a, omg2a, alp2;
+    if (equatorial)
+      alp2 = alp1;
+    else
+      d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+    TriaxialLineG ld(*this, l.gm());
+    TriaxialLineG::ics dic(ld, fic);
+    real s13 = ld.dist(dic, d);
+    (void) AngNorm(bet2a, omg2a, alp2);
+
+    //    cout << "\nFLIP " << swapsign << swap12 << flip1 << "\n";
+    // Undo switches in reverse order swapsign, swap12, flip1
+    if (swapsign) {
+      bet1.y() *= -1;
+      bet2.y() *= -1;
+      alp1.x() *= -1;
+      alp2.x() *= -1;
+    }
+
+    if (swap12) {
+      swap(bet1, bet2);
+      swap(omg1, omg2);
+      swap(alp1, alp2);
+      alp1 += AuxAngle::cardinal(2U);
+      alp2 += AuxAngle::cardinal(2U);
+    }
+
+    if (flip1)
+      Flip(bet1, omg1, alp1);
+
+    if (flip1 || swap12 || swapsign) {
+      fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+      dic = TriaxialLineG::ics(ld, fic);
+    }
+    dic.s13 = s13;
+    return TriaxialLine(l, fic, ld, dic);
+  }
+
+  Math::real Triaxial::HybridA(const Triaxial& t,
+                               const AuxAngle& bet1, const AuxAngle& omg1,
+                               const AuxAngle& alp1,
+                               const AuxAngle& bet2, const AuxAngle& omg2) {
+    AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+    gamblk gam(t, b1, o1, a1);
+    TriaxialLineF l(t, gam, 0.5, 1.5);
+    TriaxialLineF::ics ic(l, b1, o1, a1);
+    return l.Hybrid0(ic, bet2, omg2);
+  }
+
+  // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference in
+  // lontitude on bet2 and the target longitude.
+  AuxAngle Triaxial::findroot(const function<Math::real(const AuxAngle&)>& f,
+                              AuxAngle xa,  AuxAngle xb,
+                              Math::real fa, Math::real fb,
+                              int* countn, int* countb) {
+    // Implement root finding method of Chandrupatla (1997)
+    // https://doi.org/10.1016/s0965-9978(96)00051-8
+    // Here we follow Scherer (2013), Section 6.1.7.3
+    // https://doi.org/10.1007/978-3-319-00401-3
+
+    // Here the independent variable is an AuxAngle, but the computations on this
+    // variable essentially involve its conversion to radians.  There's no need
+    // to worry about the angle wrapping around because (xb-xa).radians() is in
+    // (0,pi).
+
+    // require xa and xb to be normalized (the result is normalized)
+    // require fa and fb to have opposite signs
+
+    AuxAngle xm;                  // The return value
+    int cntn = 0, cntb = 0;
+    if (0) {
+      cout << "START\n";
+      int num = 360;
+      for (int i = -num/2; i <= num/2; ++i) {
+        // { int i = 45;
+      Math::real x = 360*i/Math::real(num),
+      ff = f(AuxAngle::degrees(x));
+      cout << "DAT " << x << " " << ff/Math::degree() << "\n";
+      }
+      return 0;
+    }
+    bool trip = false, correct = false;
+    for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
+         cntn < 50 || GEOGRAPHICLIB_PANIC;) {
+      AuxAngle xt = 2*t == 1 ?
+        AuxAngle(xa.y() + xb.y(),
+                 xa.x() + xb.x(), true) :
+        (2*t < 1 ? xa - AuxAngle::radians(t * ab) :
+         xb + AuxAngle::radians((1 - t) * ab)),
+        xc;
+      if (trip) {
+        if (correct) xm = xt;   // Update result if not a bisection step
         break;
       }
+      ++cntn;
+      ft = f(xt);
+      if (0)
+        cout << scientific
+             << "RT " << cntn << " "
+             << xt.degrees() << " " << ft/Math::degree() << " " << ab << " " << t << "\n";
+      if (signbit(ft) == signbit(fa)) {
+        xc = xa; xa = xt;
+        fc = fa; fa = ft;
+      } else {
+        xc = xb; xb = xa; xa = xt;
+        fc = fb; fb = fa; fa = ft;
+      }
+      if (fabs(fb) < fabs(fa)) {
+        xm = xb; fm = fb;
+      } else {
+        xm = xa; fm = fa;
+      }
+      // ordering is b - a - c
+      ab = (xa-xb).radians();
+      Math::real
+        ca = (xc-xa).radians(),
+        cb = ca+ab,
+        // Scherer has a fabs(cb).  This should be fabs(ab).
+        tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
+      // Backward tests to deal with NaNs
+      trip =  !(2 * tl < 1 && fabs(fm) > numeric_limits<Math::real>::epsilon());
+      // If trip update xm one more time, then Hybrid solution is called once
+      // more outside this route to update bet2, omg2, alp2, etc.
+      if (trip) tl = 0;
+      Math::real
+        xi = ab / cb,
+        phi = (fa-fb) / (fc-fb);
+      if ( 2 * tl < 1 && xi / (1 + sqrt(1 - xi)) < phi && phi < sqrt(xi) ) {
+        t = fa/(fb-fa) * fc/(fb-fc) - ca/ab * fa/(fc-fa) * fb/(fc-fb);
+        // This equation matches the pseudocode in Scherer.  His Eq (6.40)
+        // reads t = fa/(fb-fa) * fc/(fb-fc) + ca/cb * fc/(fc-fa) * fb/(fb-fa);
+        // this is wrong.
+        t = fmin(1 - tl, fmax(tl, t));
+        correct = true;
+      } else {
+        t = 1/Math::real(2);
+        ++cntb;
+        correct = false;
+      }
     }
-
-    int countn = 0, countb = 0;
-    xn = findroot(
-                  [&t, &bet1, &omg1, &bet2, &omg2]
-                  (const AuxAngle& x) -> Math::real
-                  { return HybridA(t, bet1, omg1, x, bet2, omg2); },
-                  xa,  xb,
-                  fa, fb,
-                  &countn, &countb);
-
-    AuxAngle alp1(xn), bet2a, alp2a, omg2a;
-    Math::real s12 = HybridB(t, bet1, omg1, alp1, bet2, bet2a, omg2a, alp2a);
-    */
-    TriaxialLine l(*this, bet1a, omg1a, bet2a);
-    l.SetDistance(omg2a.degrees() * (flip1 && swap12 && swapsign ? 1 : -1));
-    return l;
-
+    if (countn) *countn += cntn;
+    if (countb) *countb += cntb;
+    return xm;
   }
-  /*
-  Math::real Hybrid0(const TriaxialLineF& l, const TriaxialLineF::ics& ic;
-                     const AuxAngle& bet2, AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) {
-    AuxAngle bet2a, omg2a, alp2a;
-    (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
-    (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
-    omg2a -= omg2;
-    return omg2a.radians();
-  }
-Math::real HybridA(const Triaxial& t,
-                   const AuxAngle& bet1, const AuxAngle& omg1,
-                   const AuxAngle& alp1,
-                   const AuxAngle& bet2, const AuxAngle& omg2) {
-  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
-  Triaxial::gamblk gam(t, b1, o1, a1);
-  TriaxialLineF l(t, gam, 0.5, 1.5);
-  TriaxialLineF::ics ic(l, b1, o1, a1);
-  AuxAngle bet2a, omg2a, alp2a;
-  (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
-  (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
-  omg2a -= omg2;
-  return omg2a.radians();
-}
 
-Math::real HybridB(const Triaxial& t,
-                   const AuxAngle& bet1, const AuxAngle& omg1,
-                   const AuxAngle& alp1, const AuxAngle& bet2, 
-                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) {
-  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
-  Triaxial::gamblk gam(t, b1, o1, a1);
-  TriaxialLineF l(t, gam, 0.5, 1.5);
-  TriaxialLineF::ics ic(l, b1, o1, a1);
-  TriaxialLineF::disttx d = l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
-  TriaxialLineG ld(t, gam);
-  TriaxialLineG::ics icd(ld, ic);
-  return ld.dist(icd, d);
-}
-  */
 } // namespace GeographicLib

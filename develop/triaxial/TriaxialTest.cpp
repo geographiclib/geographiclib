@@ -149,23 +149,22 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
   Triaxial t(a, b, c);
   AuxAngle bet1, omg1, alp1, bet2, omg2, alp2;
-  bet1 = AuxAngle::degrees(45); omg1 = AuxAngle::degrees(0);
+  bet1 = AuxAngle::degrees(-0.0); omg1 = AuxAngle::degrees(105);
   alp1 = AuxAngle::degrees(90);
-  bet1 = AuxAngle::degrees(90); omg1 = AuxAngle::degrees(45);
-  alp1 = AuxAngle::degrees(180);
-  bet1 = AuxAngle::degrees(90); omg1 = AuxAngle::degrees(0);
-  alp1 = AuxAngle::degrees(135);
   //  bet1 = AuxAngle::degrees(1); omg1 = AuxAngle::degrees(2);
   //  alp1 = AuxAngle::degrees(3);
   TriaxialLine l(t, bet1, omg1, alp1);
-  cout << fixed << setprecision(14);
-  for (int s12 = 0/*-5*/; s12 <= 1/*10*/; ++s12) {
-    l.Position(real(s12), bet2, omg2, alp2);
+  l.diag();
+  cout << fixed << setprecision(6);
+  real ds = 1/real(10);
+  //  for (int s12 = 0; s12 <= 30; ++s12) {
+  {real s12 = 0.996504/ds;
+    l.Position(s12*ds, bet2, omg2, alp2);
     (void) Triaxial::AngNorm(bet2, omg2, alp2);
     cout << s12 << " "
-         << bet2.degrees() << " "
-         << omg2.degrees() << " "
-         << alp2.degrees() << "\n";
+         << omg2.degrees() << "\n";
+      //         << bet2.degrees() << " "
+      //         << alp2.degrees() << "\n";
   }
 }
 
@@ -199,11 +198,24 @@ Math::real HybridA(const Triaxial& t,
                    const AuxAngle& alp1,
                    const AuxAngle& bet2, const AuxAngle& omg2) {
   AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+  /*  b1.normalize();
+  o1.normalize();
+  */
+  a1.normalize();
   Triaxial::gamblk gam(t, b1, o1, a1);
   TriaxialLineF l(t, gam, 0.5, 1.5);
   TriaxialLineF::ics ic(l, b1, o1, a1);
   return Hybrid0(l, ic, bet2, omg2);
   /*
+  cout << "AA "
+       << t.a << " " << t.b << " " << t.c << " "
+       << gam.gam << " "
+       << b1.degrees() << " "
+       << o1.degrees() << " "
+       << a1.degrees() << " "
+       << bet2.degrees() << " "
+       << omg2.degrees() << "\n";
+  cout << "BB " << alp1.degrees() << " " << d/Math::degree() << "\n";
   AuxAngle bet2a, omg2a, alp2a;
   (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
@@ -214,7 +226,7 @@ Math::real HybridA(const Triaxial& t,
 
 Math::real HybridB(const Triaxial& t,
                    const AuxAngle& bet1, const AuxAngle& omg1,
-                   const AuxAngle& alp1, const AuxAngle& bet2, 
+                   const AuxAngle& alp1, const AuxAngle& bet2,
                    AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) {
   AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
   Triaxial::gamblk gam(t, b1, o1, a1);
@@ -225,7 +237,6 @@ Math::real HybridB(const Triaxial& t,
   TriaxialLineG::ics icd(ld, ic);
   return ld.dist(icd, d);
 }
-
 
 // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference in
 // lontitude on bet2 and the target longitude.
@@ -268,7 +279,7 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
       AuxAngle(xa.y() + xb.y(),
                xa.x() + xb.x(), true) :
       (2*t < 1 ? xa - AuxAngle::radians(t * ab) :
-       xb + AuxAngle((1 - t) * ab)),
+       xb + AuxAngle::radians((1 - t) * ab)),
     /*
       AuxAngle::radians((1-t)*xa.radians() +
                                     t*xb.radians()),
@@ -278,6 +289,17 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
                 (1-t) * xa.x() + t * xb.x(), true),
     */
       xc;
+    if (fabs(hypot(xt.x(), xt.y()) - 1) > 0.001) {
+      cout << "CHECK " << (2*t - 1) << " "
+           << hypot(xa.x(), xa.y()) - 1 << " "
+           << hypot(xb.x(), xb.y()) - 1 << " "
+           << hypot(xt.x(), xt.y()) - 1 << "\n";
+      AuxAngle xq(xa - AuxAngle::radians(t * ab));
+      AuxAngle xr(xb + AuxAngle((1 - t) * ab));
+      cout << "CHECKX "
+           << hypot(xq.x(), xq.y()) - 1 << " "
+           << hypot(xr.x(), xr.y()) - 1 << "\n";
+    }
     if (trip) {
       xm = xt;
       break;
@@ -330,6 +352,7 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
 void HybridTest(Math::real a, Math::real b, Math::real c,
                 Math::real bet1d, Math::real omg1d,
                 Math::real bet2d, Math::real omg2d) {
+  typedef Math::real real;
   Triaxial t(a, b, c);
   AuxAngle bet1 = AuxAngle::degrees(bet1d),
     omg1 = AuxAngle::degrees(omg1d),
@@ -345,8 +368,9 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   }
   return;
   */
+  if (0) {
   cout << a << " " << b << " " << c << "\n";
-  Math::real domg[4];
+  real domg[4];
   AuxAngle alp1u[4];
   alp1u[0] = AuxAngle( t.kp * omg1.y(), t.k * bet1.x(), true );
   for (unsigned q = 1; q < 4; ++q) {
@@ -367,13 +391,13 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
     TriaxialLineF::ics ic(l, bet1, omg1, alp1u[0]);
     for (unsigned q = 0U; q < 4U; ++q) {
       ic.setquadrant(l, q);
-      Math::real dd = Hybrid0(l, ic, bet2, omg2);
+      real dd = Hybrid0(l, ic, bet2, omg2);
       cout << q << " " << dd/Math::degree() << "\n";
     }
   }
 
   AuxAngle xa, xb, xn;
-  Math::real fa, fb;
+  real fa, fb;
   for (unsigned q = 0U; q < 4U; ++q) {
     if (domg[q] < 0 && domg[(q+1)&3] > 0) {
       xb = alp1u[q]; xa = alp1u[(q+1)&3];
@@ -388,7 +412,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
     for (; countb < Math::digits() + 10;) {
       ++countb;
       xn = AuxAngle(xb.y() + xa.y(), xb.x() + xa.x(), true);
-      Math::real ft =  HybridA(t, bet1, omg1, xn, bet2, omg2);
+      real ft =  HybridA(t, bet1, omg1, xn, bet2, omg2);
       cout << countb << " " << xn.degrees() << " " << ft << "\n";
       if (ft == 0 || (xa-xn).radians() <= 0 || (xn-xb).radians() <= 0)
         break;
@@ -397,7 +421,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   } else {
     xn = findroot(
                   [&t, &bet1, &omg1, &bet2, &omg2]
-                  (const AuxAngle& x) -> Math::real
+                  (const AuxAngle& x) -> real
                   { return HybridA(t, bet1, omg1, x, bet2, omg2); },
                   xa,  xb,
                   fa, fb,
@@ -406,10 +430,87 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
 
   std::cout << xn.degrees() << " " << countn << " " << countb << "\n";
   AuxAngle alp1(xn), bet2a, alp2a, omg2a;
-  Math::real s12 = HybridB(t, bet1, omg1, alp1, bet2, bet2a, omg2a, alp2a);
+  real s12 = HybridB(t, bet1, omg1, alp1, bet2, bet2a, omg2a, alp2a);
   std::cout << alp1.degrees() << " " << bet2a.degrees() << " "
             << omg2a.degrees() << " " << alp2a.degrees() << " "
             << s12 << "\n";
+  {
+    TriaxialLine l0(t, bet1, omg1, alp1);
+    AuxAngle bb,oo,aa;
+    l0.Position(s12, bb,oo,aa);
+    std::cout << "TRY3\n" << alp1.degrees() << " " << bb.degrees() << " "
+            << oo.degrees() << " " << aa.degrees() << " "
+            << s12 << "\n";
+  }
+  }
+  TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2);
+  if (1) {
+    real bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+    l.pos1(bet1x, omg1x, alp1x);
+    real s12 = l.Distance();
+    l.Position(s12, bet2x, omg2x, alp2x);
+    std::cout << bet1x << " " << omg1x << " " << alp1x << " "
+              << bet2x << " " << omg2x << " " << alp2x << " "
+              << s12 << "\n";
+  }
+}
+
+void InverseTest(Math::real a, Math::real b, Math::real c) {
+  typedef Math::real real;
+  Triaxial t(a, b, c);
+  cout << fixed << setprecision(6);
+  real bet1d, omg1d, bet2d, omg2d, alp1d, alp2d, s12d;
+  while (cin >> bet1d >> omg1d >> bet2d >> omg2d >> alp1d >> alp2d >> s12d) {
+    cout << int(bet1d) << " " << int(omg1d) << " "
+         << int(bet2d) << " " << int(omg2d) << " " << flush;
+    if (fabs(bet1d) == 90 || fabs(bet2d) == 90) {
+      cout << "SKIP" << endl;
+      continue;
+    }
+    AuxAngle
+      bet1(AuxAngle::degrees(bet1d)),
+      omg1(AuxAngle::degrees(omg1d)),
+      bet2(AuxAngle::degrees(bet2d)),
+      omg2(AuxAngle::degrees(omg2d)),
+      alp1(AuxAngle::degrees(alp1d)),
+      alp2(AuxAngle::degrees(alp2d));
+    TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2);
+    AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+    l.pos1(bet1x, omg1x, alp1x);
+    real s12x = l.Distance();
+    l.Position(s12x, bet2x, omg2x, alp2x);
+    Triaxial::AngNorm(bet2x, omg2x, alp2x);
+    real
+      dbet1 = fabs((bet1 - bet1x).radians()),
+      domg1 = fabs((omg1 - omg1x).radians()),
+      dalp1 = fabs((alp1 - alp1x).radians()),
+      dalp1alt = fabs((alp1 - (AuxAngle::cardinal(2U) - alp1x)).radians()),
+      dbet2 = fabs((bet2 - bet2x).radians()),
+      domg2 = fabs((omg2 - omg2x).radians()),
+      dalp2 = fabs((alp2 - alp2x).radians()),
+      dalp2alt = fabs((alp2 - (AuxAngle::cardinal(2U) - alp2x)).radians()),
+      dalp12 = fabs((alp2x - alp1x).radians()),
+      ds12 = fabs(s12x - s12d);
+    if (dbet1 < 1e-9 &&
+        domg1 < 1e-9 &&
+        dbet2 < 1e-9 &&
+        domg2 < 1e-9 &&
+        ((dalp1 < 1e-4 && dalp2 < 1e-4) ||
+         (bet1d + bet2d == 0 && signbit(alp1x.x()) != signbit(alp2x.x()) &&
+          dalp1alt < 1e-4 && dalp2alt < 1e-4) ||
+         (s12d == 0 && dalp12 < 1e-9)) &&
+        ds12 < 1e-5) {
+      cout << "OK" << endl;
+    } else
+      if (0)
+      cout  << alp1d << " " << alp2d << " " << s12d << " BAD\n"
+           << bet1x.degrees() << " " << omg1x.degrees() << " "
+           << bet2x.degrees() << " " << omg2x.degrees() << " "
+           << alp1x.degrees() << " " << alp2x.degrees() << " "
+           << s12x << " BAD" << endl;
+      else
+        cout << "BAD" << endl;
+  }
 }
 
 int main() {
@@ -417,6 +518,19 @@ int main() {
     Utility::set_digits();
     typedef Math::real real;
     real a = 6378172, b = 6378103, c = 6356753;
+    if (0) {
+      using std::sqrt;
+      a = sqrt(real(2)); b = 1; c = 1/a;
+      //      real a = 1.01, b = 1, c = 0.8;
+      //      a = 6378172; b = 6378103; c = 6356753;
+      //      a -= 34; b += 34;
+      PositionTest(a, b, c);
+      }
+    if (1) {
+      using std::sqrt;
+      a = sqrt(real(2)); b = 1; c = 1/a;
+      InverseTest(a, b, c);
+    }
     if (0)
       ODEtest(a, b, c);
     /*
@@ -440,12 +554,6 @@ int main() {
       //      DirectfunTest(a, b, c);
     }
     if (0) {
-      real a = 1.01, b = 1, c = 0.8;
-      //      a = 6378172; b = 6378103; c = 6356753;
-      //      a -= 34; b += 34;
-      PositionTest(a, b, c);
-    }
-    if (1) {
       using std::sqrt;
       real bet1 = -45, omg1 = 30, bet2 = 30, omg2 = 60;
       real a = 1.01, b = 1, c = 0.8;
@@ -458,7 +566,7 @@ int main() {
       // alp1 = 30.275215672294671
       //        30.275215672295103
       // alp2 = 48.296592187017524
-       omg2 = 60-180;
+       omg2 = 60;
       //      a = 6378172; b = 6378103; c = 6356753;
       //      a -= 34; b += 34;
       HybridTest(a, b, c, bet1, omg1, bet2, omg2);

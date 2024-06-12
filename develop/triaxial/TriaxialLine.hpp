@@ -58,8 +58,12 @@ namespace GeographicLib {
     const Triaxial& t() const { return _t; }
     real gamma() const { return _gm.gam; }
     const Triaxial::gamblk& gm() const { return _gm; }
-    disttx Hybrid(const ics& fi, const AuxAngle& bet2,
+    real Hybrid0(const ics& ic,
+                 const AuxAngle& bet2, const AuxAngle& omg2) const;
+    disttx Hybrid(const ics& fic, const AuxAngle& bet2,
                 AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) const;
+    disttx ArcPos0(const ics& fic, real tau12,
+                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) const;
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLineG {
@@ -72,7 +76,7 @@ namespace GeographicLib {
     class ics {
       // bundle of data setting the initial conditions for a distance calc
     public:
-      real s0, sig1;           // starting point
+      real s0, sig1, s13;           // starting point
       ics();
       ics(const TriaxialLineG& g,
           const TriaxialLineF::ics& fic);
@@ -91,12 +95,15 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     Triaxial _t;
+    TriaxialLineF _f;
+    TriaxialLineF::ics _fic;
+    TriaxialLineG _g;
+    TriaxialLineG::ics _gic;
+    /*
     Triaxial::gamblk _gm;
     //    real _gammao, _rtgam, _gamp, _rtgamp;
     AuxAngle _bet1, _omg1, _alp1;
     int _ibet, _iomg, _ialp;
-    TriaxialLineF _f;
-    TriaxialLineG _g;
     int _nN, _eE,                 // Northgoing / eastgoing
       _flip,                    // Is bet or omg on the backside
       _bet0, _omg0, _alp0;      // Reference vals (1 = 0, -1 = 180)
@@ -107,6 +114,7 @@ namespace GeographicLib {
     real _delta, _sig1;         //  starting point
     bool _umbalt, _distinit;
     real _s13;                  // Distance to the reference point 3
+    */
     static void solve2(real f0, real g0,
                        const geod_fun& fx, const geod_fun& fy,
                        const dist_fun& gx, const dist_fun& gy,
@@ -146,11 +154,12 @@ namespace GeographicLib {
     TriaxialLine(const Triaxial& t,
                  AuxAngle bet1, AuxAngle omg1, AuxAngle alp1);
     TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1);
+    TriaxialLine(TriaxialLineF f, TriaxialLineF::ics fic,
+                 TriaxialLineG g, TriaxialLineG::ics gic);
     const geod_fun& fbet() const { return _f.fbet(); }
     const geod_fun& fomg() const { return _f.fomg(); }
     const dist_fun& gbet() const { return _g.gbet(); }
     const dist_fun& gomg() const { return _g.gomg(); }
-    void distinit();
     void Position(real s12, AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2,
                   int* ibet2 = nullptr, int* iomg2 = nullptr,
                   int* ialp2 = nullptr,
@@ -167,21 +176,21 @@ namespace GeographicLib {
     void Hybrid(const AuxAngle& bet2, int dir,
                 AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
                 real& s12) const;
-    real gamma() const { return _gm.gam; }
-    real Distance() const { return _s13; }
-    void SetDistance(real s13) { _s13 = s13; }
-  };
-  class GEOGRAPHICLIB_EXPORT BareLine {
-    // Method for computing the course of the line only (not distance).
-    // Constructor sets starting point.  The Hybrid method returns tau12, bet2,
-    // omg2, alp2, betw2, omgw2, ind2.  Reinit resets starting point from the
-    // results of Hybrid, possibly (a) reversing the direction, (b) changing
-    // sign of bet, (c) flipping beta / omega to another sheet.  Promote
-    // returns a TriaxialLine with distance method initialized and s13 computed
-    // according to tau12.
-  public:
-    TriaxialLineF f;
-    TriaxialLineF::ics fi;
+    real gamma() const { return _f.gamma(); }
+    real Distance() const { return _gic.s13; }
+    void SetDistance(real s13) { _gic.s13 = s13; }
+    AuxAngle bet1(int* ibet1 = nullptr) const;
+    AuxAngle omg1(int* iomg1 = nullptr) const;
+    AuxAngle alp1(int* ialp1 = nullptr) const;
+    real lat1(bool unroll = true) const;
+    real lon1(bool unroll = true) const;
+    real azi1(bool unroll = true) const;
+    void diag() const;
+    void pos1(AuxAngle& bet1, AuxAngle& omg1, AuxAngle& alp1,
+              int* ibet1 = nullptr, int* iomg1 = nullptr,
+              int* ialp1 = nullptr) const;
+    void pos1(real& bet1, real& omg1, real& alp1,
+            bool unroll = true) const;
   };
 } // namespace GeographicLib
 

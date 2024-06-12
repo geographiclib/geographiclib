@@ -14,6 +14,7 @@
 #include <array>
 #include <vector>
 #include <limits>
+#include <functional>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/AuxAngle.hpp>
@@ -21,6 +22,7 @@
 
 namespace GeographicLib {
   class TriaxialLine;
+  class TriaxialLineF;
 
   class GEOGRAPHICLIB_EXPORT Triaxial {
   public:
@@ -50,6 +52,16 @@ namespace GeographicLib {
       alp.y() *= -1; alp.x() *= -1;
       omg.y() *= -1;
     }
+
+    static real HybridA(const Triaxial& t,
+                        const AuxAngle& bet1, const AuxAngle& omg1,
+                        const AuxAngle& alp1,
+                        const AuxAngle& bet2, const AuxAngle& omg2);
+    static  AuxAngle findroot(const
+                              std::function<Math::real(const AuxAngle&)>& f,
+                              AuxAngle xa,  AuxAngle xb,
+                              Math::real fa, Math::real fb,
+                              int* countn = nullptr, int* countb = nullptr);
   public:
     real a, b, c;               // semi-axes
     vec3 axes, axesn, axes2n;
@@ -64,13 +76,14 @@ namespace GeographicLib {
                 long nmin, long nmax,
                 std::vector<vec3>& r2, std::vector<vec3>& v2,
                 real eps = 0) const;
-    TriaxialLine Inverse(const AuxAngle& bet1, const AuxAngle& omg1,
-                         const AuxAngle& bet2, const AuxAngle& omg2) const;
+    TriaxialLine Inverse(AuxAngle bet1, AuxAngle omg1,
+                         AuxAngle bet2, AuxAngle omg2) const;
     static real EllipticThresh() {
       static real thresh = 1/real(8);
       return thresh;
     }
-    real gamma(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const {
+    real gamma(const AuxAngle& bet, const AuxAngle& omg, const AuxAngle& alp)
+      const {
       // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
       //       = k2*cb2*sa2 - kp2*so2*ca2
       // Maybe need accurate expressions for
@@ -89,27 +102,13 @@ namespace GeographicLib {
       //   spsi2 = k2*sb2/(k2-gamma)
       //   cpsi2 = (k2*cb2-gamma)/(k2-gamma)
       using std::fabs; using std::copysign;
-      bet.normalize(); omg.normalize(); alp.normalize();
+      //      bet.normalize(); omg.normalize(); alp.normalize();
       real a = k * bet.x() * alp.y(), b = kp * omg.y() * alp.x(),
         gam = (a - b) * (a + b);
       // Factor of 8 allows umbilical geodesics with alp in [-180,180] degrees
       // to return gam = 0.  (If in radians the factor could be reduced to 4.)
-      if (fabs(gam) < 8 * std::numeric_limits<real>::epsilon() && gam != 0) {
+      if (fabs(gam) < std::numeric_limits<real>::epsilon())
         gam = 0 * gam;
-        // fix alp to be consistent with gamma = 0
-        alp = AuxAngle(copysign( kp * omg.y(), alp.y() ),
-                       copysign( k  * bet.x(), alp.x() )).normalized();
-      } else if (fabs(k2 - gam) <= std::numeric_limits<real>::epsilon()) {
-        gam = k2;
-        // This requires cbet = +/- 1 and salp = +/- 1
-        bet = AuxAngle(copysign(real(0), bet.y()), copysign(real(1), bet.x()));
-        alp = AuxAngle(copysign(real(1), alp.y()), copysign(real(0), alp.x()));
-      } else if (fabs(kp2 + gam) <= std::numeric_limits<real>::epsilon()) {
-        gam = -kp2;
-        // This requires somg = +/- 1 and calp = +/- 1
-        omg = AuxAngle(copysign(real(1), omg.y()), copysign(real(0), omg.x()));
-        alp = AuxAngle(copysign(real(0), alp.y()), copysign(real(1), alp.x()));
-      }
       return gam;
     }
     real gammap(real gamma,
@@ -181,7 +180,8 @@ namespace GeographicLib {
         , nu(Math::NaN())
         , nup(Math::NaN())
       {}
-      gamblk(const Triaxial& t, AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) {
+      gamblk(const Triaxial& t,
+             const AuxAngle& bet, const AuxAngle& omg, const AuxAngle& alp) {
         using std::sqrt; using std::fabs;
         gam = t.gamma(bet, omg, alp);
         rtgam = sqrt(fabs(gam));

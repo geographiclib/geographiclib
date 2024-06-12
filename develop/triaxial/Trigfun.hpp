@@ -15,6 +15,7 @@
 #include <functional>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 namespace GeographicLib {
 

@@ -9,6 +9,7 @@
 
 #include "Trigfun.hpp"
 #include <iostream>
+#include <iomanip>
 
 #include "kissfft.hh"
 
@@ -204,7 +205,7 @@ namespace GeographicLib {
       for (int k = _m; k > (_sym ? 0 : 1);)
         _max += fabs(_coeff[--k]);
     }
-    return _max;
+    return fmax(0*numeric_limits<real>::epsilon(), _max);
   }
 
   Math::real Trigfun::operator()(real z) const {
@@ -253,7 +254,8 @@ namespace GeographicLib {
     // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
     real s = _h / (Math::pi() * _coeff[0]),
       x0 = s * z, dx = s * Max();
-    return root(z, fp, x0, x0 - dx, x0 + dx, countn, countb, tol);
+    return Max() == 0 ? x0 :
+      root(z, fp, x0, x0 - dx, x0 + dx, countn, countb, tol);
   }
   Math::real Trigfun::root(real z, const function<real(real)>& fp,
                            real x0,
@@ -263,7 +265,8 @@ namespace GeographicLib {
     real s = _h / (Math::pi() * _coeff[0]),
       x00 = s * z, dx = s * Max();
     x0 = fmin(x00 + dx, fmax(x00 - dx, x0));
-    return root(z, fp, x0, x00 - dx, x00 + dx, countn, countb, tol);
+    return Max() == 0 ? x0 :
+      root(z, fp, x0, x00 - dx, x00 + dx, countn, countb, tol);
   }
   Math::real Trigfun::root(const function<real(real)>& f,
                            real z, const function<real(real)>& fp,
@@ -290,8 +293,25 @@ namespace GeographicLib {
       x = x0;
     int i = 0, maxit = 50, b = 0;
     real p = Math::pi()/2 * 0;
+    if (0) {
+      /*
+      xa = xa-1e-10;
+      xb = xb+1e-10;
+      */
+      pair<real, real> vala = ffp(xa);
+      pair<real, real> val0 = ffp(x0);
+      pair<real, real> valb = ffp(xb);
+      cout << scientific;
+      cout << "DAT " << s << " " << x0-xa << " " << xb-x0 << "\n";
+      cout << "DAT "
+           << xa << " " << vala.first - z << " " << vala.second << "\n";
+      cout << "DAT "
+           << x0 << " " << val0.first - z << " " << val0.second << "\n";
+      cout << "DAT "
+           << xb << " " << valb.first - z << " " << valb.second << "\n";
+    }
     for (; i < maxit ||
-           (throw GeographicLib::GeographicErr("Convergence failure"), false)
+           (throw GeographicLib::GeographicErr("Convergence failureX"), false)
            || GEOGRAPHICLIB_PANIC;) {
       ++i;
       pair<real, real> val = ffp(x);
@@ -301,6 +321,8 @@ namespace GeographicLib {
       if (debug)
         cout << i << " " << xa-p << " " << x-p << " " << xb-p << " "
              << dx << " " << x + dx-p << " " << v << "\n";
+      // FIX
+      //      if (!(fabs(v) > vtol0))
       if (fabs(v) <= vtol0)
         break;
       else if (s*v > 0)
