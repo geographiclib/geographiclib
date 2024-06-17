@@ -244,19 +244,6 @@ namespace GeographicLib {
       real c2 = kap * Math::sq(dn);
       return sqrt( (1 - eps * c2) / ((kapp + c2) * kap) );
     }
-    static real lam(real x) {
-      using std::tan; using std::asinh; using std::fabs;
-      // A consistent large value for x near pi/2.  Also deals with the issue
-      // that tan(pi/2) may be negative, e.g., for long doubles.
-      // static real bigval = 10 - log(std::numeric_limits<real>::epsilon());
-      static real bigval = Math::infinity();
-      return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
-        (x < 0 ? -bigval : bigval);
-    }
-    static real gd(real x) {
-      using std::atan; using std::sinh;
-      return atan(sinh(x));
-    }
     real root(real z, real x0, int* countn, int* countb) const;
   public:
     geod_fun() {}
@@ -264,6 +251,30 @@ namespace GeographicLib {
              real nmaxmult = 0);
     geod_fun(real kap, real kapp, real eps, real mu, bool tx,
              real epsow, real nmaxmult);
+    static real lam(real x) {
+      using std::tan; using std::asinh; using std::fabs;
+      // A consistent large value for x near pi/2.  Also deals with the issue
+      // that tan(pi/2) may be negative, e.g., for long doubles.
+      static real bigval = -2*log(std::numeric_limits<real>::epsilon());
+      return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
+        (x < 0 ? -bigval : bigval);
+    }
+    static real lamaux0(AuxAngle x) {
+      // lam(x) when x is an AuxAngle -- no claming
+      using std::asinh;
+      return asinh(x.tan());
+    }
+    static real lamaux(AuxAngle x) {
+      // lam(x) when x is an AuxAngle -- with clamping
+      using std::asinh; using std::fmax; using std::fmin;
+      // A consistent large value for x near pi/2.
+      static real bigval = -2*log(std::numeric_limits<real>::epsilon());
+      return fmax(-bigval, fmin(bigval, lamaux0(x)));
+    }
+    static real gd(real x) {
+      using std::atan; using std::sinh;
+      return atan(sinh(x));
+    }
     real operator()(real u) const {
       if (_mu == 0) {
         real phi = gd(u);
@@ -388,26 +399,13 @@ namespace GeographicLib {
       // alternatively mu + kap * Math::sq(dn)
       return (kap + mu) * Math::sq(cn);
     }
-    static real lam(real x) {
-      using std::tan; using std::asinh; using std::fabs;
-      // A consistent large value for x near pi/2.  Also deals with the issue
-      // that tan(pi/2) may be negative, e.g., for long doubles.
-      // static real bigval = 10 - log(std::numeric_limits<real>::epsilon());
-      static real bigval = Math::infinity();
-      return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
-        (x < 0 ? -bigval : bigval);
-    }
-    static real gd(real x) {
-      using std::atan; using std::sinh;
-      return atan(sinh(x));
-    }
   public:
     dist_fun() {}
     dist_fun(real kap, real kapp, real eps, real mu);
     dist_fun(real kap, real kapp, real eps, real mu, bool tx);
     real operator()(real u) const {
       if (_mu == 0) {
-        real phi = gd(u);
+        real phi = geod_fun::gd(u);
         return _fun(_tx ? _ell.F(phi) : phi);
       } else
         return _fun(u);
@@ -415,7 +413,7 @@ namespace GeographicLib {
     real deriv(real u) const {
       using std::cosh; using std::sqrt;
       if (_mu == 0) {
-        real phi = gd(u), sch = 1/cosh(u);
+        real phi = geod_fun::gd(u), sch = 1/cosh(u);
         return _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
           ( _tx ? sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch)) : 1);
       } else

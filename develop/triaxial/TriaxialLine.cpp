@@ -32,9 +32,6 @@ namespace GeographicLib {
     Triaxial::gamblk gam(t, bet1, omg1, alp1);
     _f = TriaxialLineF(t, gam, 0.5, 1.5);
     _fic = TriaxialLineF::ics(_f, bet1, omg1, alp1);
-    cout << "XXX0 " << bet1.degrees() << " " << omg1.degrees() << " "
-         << alp1.degrees() << " " << gam.gam << "\n";
-    cout << "XXX1 " << _fic.delta << " "  << _fic.u0 << " " << _fic.v0  << "\n";
     _g = TriaxialLineG(t, gam);
     _gic = TriaxialLineG::ics(_g, _fic);
   }
@@ -146,8 +143,8 @@ namespace GeographicLib {
     } else if (_f.gamma() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_gic.s0);  // reduce to [-s0, s0)
       real u2, v2,
-        deltax = max(-_fic.deltamax,
-                     min(_fic.deltamax, _fic.delta + sig2n.second * _fic.deltashift));
+        deltax = fmax(-_fic.deltamax,
+                     fmin(_fic.deltamax, _fic.delta + sig2n.second * _fic.deltashift));
       solve2u(deltax, sig2n.first, fbet(), fomg(), gbet(), gomg(), u2, v2,
               countn, countb);
       /*
@@ -416,7 +413,7 @@ namespace GeographicLib {
         int parity = fmod(bet2n.second, real(2)) ? -1 :  1;
         int alp0 = _fic.nN < 0 ? _fic.eE : 0;
         real deltax = fmax(-_fic.deltamax,
-                           min(_fic.deltamax, _fic.delta + bet2n.second * _fic.deltashift)),
+                           fmin(_fic.deltamax, _fic.delta + bet2n.second * _fic.deltashift)),
           u2 = fbet().fwd(bet2n.first),
           v2 = fomg().inv(fbet()(u2) - deltax),
           omg2 = _fic.eE * parity * fomg().rev(v2);
@@ -515,10 +512,11 @@ namespace GeographicLib {
                << bet2n.second << "\n";
         int parity = fmod(bet2n.second, real(2)) ? -1 :  1;
         int alp0 = fic.nN < 0 ? fic.eE : 0;
-        real deltax = fmax(-fic.deltamax,
-                           min(fic.deltamax,
+        real deltax = fmax(-2*fic.deltamax,
+                           fmin(2*fic.deltamax,
                                fic.delta + bet2n.second * fic.deltashift)),
-          u2 = fbet().fwd(bet2n.first),
+          u2 = fbet().fwd(bet2n.first);
+        real
           v2 = fomg().inv(fbet()(u2) - deltax),
           omg2 = fic.eE * parity * fomg().rev(v2);
         omg2a = AuxAngle::radians(omg2);
@@ -579,17 +577,28 @@ namespace GeographicLib {
   //      [bet2, omg2, alp2, betw2, omgw2, ind2] = obj.arcdist0(tau12, 1);
   TriaxialLineF::disttx
   TriaxialLineF::ArcPos0(const ics& fic, real tau12,
-                         AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a)
+                         AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
+                         bool betp)
     const {
     disttx ret{Math::NaN(), Math::NaN(), 0};
     if (gamma() > 0) {
-      AuxAngle psi2 = AuxAngle::radians(tau12) + fic.psi1;
-      real
-        psi2r = fic.psi1.radians() + tau12,
-        v2 = fbet().fwd(psi2r),
-        u2 = fomg().inv(fbet()(v2) - fic.delta),
+      AuxAngle psi2;
+      real psi2r, omg2, u2, v2;
+      if (betp) {
+        psi2 = AuxAngle::radians(tau12) + fic.psi1;
+        psi2r = fic.psi1.radians() + tau12;
+        v2 = fbet().fwd(psi2r);
+        u2 = fomg().inv(fbet()(v2) - fic.delta);
         omg2 = fic.eE * fomg().rev(u2);
-      omg2a = AuxAngle::radians(omg2);
+        omg2a = AuxAngle::radians(omg2);
+      } else {
+        omg2a = fic.eE > 0 ?
+          fic.omg1 + AuxAngle::radians(tau12) :
+          fic.omg1 - AuxAngle::radians(tau12);
+        u2 = fomg().fwd(fic.eE * omg2a.radians());
+        v2 = fbet().inv(fomg()(u2) + fic.delta);
+        psi2r = fbet().rev(v2);
+      }
       bet2a = AuxAngle(fic.bet0 * fic.flip * gm().nup * psi2.y(),
                        fic.bet0 * hypot(psi2.x(), gm().nu * psi2.y()),
                        true);
@@ -599,26 +608,42 @@ namespace GeographicLib {
                        true);
       ret.betw2 = v2;
       ret.omgw2 = u2;
-    } else if (gamma() <= 0) {
-      AuxAngle bet2(fic.nN > 0 ?
-                    fic.bet1 + AuxAngle::radians(tau12) :
-                    fic.bet1 - AuxAngle::radians(tau12));
-      real bet2r = fic.bet1.radians() + fic.nN * tau12;
-      if (gamma() < 0) {
-        real
-          u2 = fbet().fwd(fic.nN * bet2r),
-          v2 = fomg().inv(fbet()(u2) - fic.delta),
-          psi2r = fomg().rev(v2);
-        AuxAngle psi2 = AuxAngle::radians(psi2r);
-        omg2a = AuxAngle(fic.omg0 * fic.flip * gm().nup * psi2.y(),
-                         fic.omg0 * hypot(psi2.x(), gm().nu * psi2.y()),
-                         true);
-        alp2a = AuxAngle(fic.alp0 * fic.nN * fic.flip * _t.kp * gm().nup * psi2.x(),
-                         fic.alp0 * hypot(_t.kp * gm().nu, _t.k * bet2.x()),
-                         true);
-        ret.betw2 = u2;
-        ret.omgw2 = v2;
-        } else {                  // gamma() == 0
+    } else if (gamma() < 0) {
+      AuxAngle psi2;
+      real psi2r, bet2r, u2, v2;
+      if (betp) {
+        bet2a = fic.nN > 0 ?
+          fic.bet1 + AuxAngle::radians(tau12) :
+          fic.bet1 - AuxAngle::radians(tau12);
+        bet2r = fic.bet1.radians() + fic.nN * tau12;
+        u2 = fbet().fwd(fic.nN * bet2r);
+        v2 = fomg().inv(fbet()(u2) - fic.delta);
+        psi2r = fomg().rev(v2);
+      } else {
+        psi2 = AuxAngle::radians(tau12) + fic.psi1;
+        v2 = fomg().fwd(psi2.radians());
+        u2 = fbet().inv(fomg()(v2) + fic.delta);
+        bet2r = fic.nN * fbet().rev(u2);
+      }
+      psi2 = AuxAngle::radians(psi2r);
+      omg2a = AuxAngle(fic.omg0 * fic.flip * gm().nup * psi2.y(),
+                       fic.omg0 * hypot(psi2.x(), gm().nu * psi2.y()),
+                       true);
+      alp2a = AuxAngle(fic.alp0 * fic.nN * fic.flip *
+                       _t.kp * gm().nup * psi2.x(),
+                       fic.alp0 * hypot(_t.kp * gm().nu, _t.k * bet2a.x()),
+                       true);
+      ret.betw2 = u2;
+      ret.omgw2 = v2;
+    } else if (gamma() == 0) {
+      real u2, v2;
+      int ii;
+      if (betp) {
+        bet2a = fic.nN > 0 ?
+          fic.bet1 + AuxAngle::radians(tau12) :
+          fic.bet1 - AuxAngle::radians(tau12);
+        real bet2r = fic.bet1.radians() + fic.nN * tau12;
+
         // Could simplify this.  bet2 is in [-270,90]
         // reduce to [-pi/2, pi/2)
         pair<real, real> bet2n =
@@ -626,25 +651,47 @@ namespace GeographicLib {
         if (0)
           cout << "\nZERO1 " << fic.nN * bet2r << " " << bet2n.first << " "
                << bet2n.second << "\n";
-        int parity = fmod(bet2n.second, real(2)) ? -1 :  1;
-        int alp0 = fic.nN < 0 ? fic.eE : 0;
-        real deltax = fmax(-fic.deltamax,
-                           min(fic.deltamax,
-                               fic.delta + bet2n.second * fic.deltashift)),
-          u2 = fbet().fwd(bet2n.first),
-          v2 = fomg().inv(fbet()(u2) - deltax),
-          omg2 = fic.eE * parity * fomg().rev(v2);
+        int parity = fmod(bet2n.second, real(2)) ? -1 : 1,
+          alp0 = fic.nN < 0 ? fic.eE : 0;
+        real deltax = fmax(-2*fic.deltamax,
+                           fmin(2*fic.deltamax,
+                               fic.delta + bet2n.second * fic.deltashift));
+        u2 = fbet().fwd(bet2n.first);
+        v2 = fomg().inv(fbet()(u2) - deltax);
+        real omg2 = fic.eE * parity * fomg().rev(v2);
         omg2a = AuxAngle::radians(omg2);
         omg2a.x() *= fic.omg0 ? -1 : 1;
         omg2a.y() *= fic.omg0 ? -1 : 1;
-        alp2a = AuxAngle((alp0 ? -1 : 1) * fic.nN * _t.kp * fic.eE * parity  /
+        alp2a = AuxAngle((alp0 ? -1 : 1) * fic.nN * _t.kp * fic.eE * parity /
                          cosh(v2),
                          (alp0 ? -1 : 1) * _t.k / cosh(u2),
                          true);
-        ret.betw2 = u2;
-        ret.omgw2 = v2;
-        ret.ind2 = int(bet2n.second);
-        }
+        ii = int(bet2n.second);
+        if (0)
+            cout << "UU " << fbet()(u2) - deltax << " " << bet2n.first << " " << u2 << " " << v2 << " " << fic.delta << " " << deltax << " " << fbet()(u2) << " " << bet2n.second << " " << fic.deltashift  << "\n";
+      } else {
+        omg2a = fic.eE > 0 ?
+          fic.omg1 + AuxAngle::radians(tau12) :
+          fic.omg1 - AuxAngle::radians(tau12);
+        real omg2r = fic.omg1.radians() + fic.eE * tau12;
+        pair<real, real> omg2n =
+          TriaxialLine::remx(fic.eE * omg2r, Math::pi());
+        int parity = fmod(omg2n.second, real(2)) ? -1 : 1,
+          alp0 =  0;
+        real deltax = fmax(-2*fic.deltamax,
+                      fmin(2*fic.deltamax,
+                           fic.delta + omg2n.second * fic.deltashift));
+        v2 = fomg().fwd(omg2n.first);
+        u2 = fbet().inv(fomg()(v2) + deltax);
+        real bet2 = fic.nN * parity * fbet().rev(u2);
+        bet2a = AuxAngle::radians(bet2);
+        alp2a = AuxAngle((alp0 ? -1 : 1) * fic.eE * _t.kp / cosh(v2),
+                         (alp0 ? -1 : 1) * _t.k * fic.nN * parity / cosh(u2));
+        ii = int(omg2n.second);
+      }
+      ret.betw2 = u2;
+      ret.omgw2 = v2;
+      ret.ind2 = ii;
     } else {
       // gamma == NaN
     }
@@ -721,8 +768,7 @@ namespace GeographicLib {
       // N.B. factor of k*kp omitted
       df = f.fbet().Max() - f.fomg().Max();
       deltashift = 2*df - log(t.k2/t.kp2);
-      deltamax = -2*log(eps/2); // = asinh(2/eps^2)
-      //      deltamax *= 0.75;
+      deltamax = -2*log(eps); // consistent with geod_fun::lam + lamaux
       if (fabs(bet1.x()) < 8*eps && fabs(omg1.x()) < 8*eps) {
         //        bet0 = (int(round(bet1.y())) + nN) / 2 ? -1 : 1;
         //        omg0 = (int(round(omg1.y())) + eE) / 2 ? -1 : 1;
@@ -732,9 +778,18 @@ namespace GeographicLib {
       } else {
         bet0 = signbit(bet1.x()) ? (signbit(bet1.y()) ? -1 : 1) : 0;
         omg0 = signbit(omg1.x()) ? (signbit(omg1.y()) ? -1 : 1) : 0;
-        delta = nN * f.fbet()(asinh(bet1.tan())) -
-          eE * f.fomg()(asinh(omg1.tan()));
+        delta = nN * f.fbet()(geod_fun::lamaux(bet1)) -
+          eE * f.fomg()(geod_fun::lamaux(omg1));
         //        cout << "OOOA " << omg1.degrees() << " " << omg0 << "\n";
+        if (0) {
+          cout << "DEL2 " << omg1.degrees() << " " << geod_fun::lamaux(omg1) << "\n";
+          cout << "DEL " <<
+            geod_fun::lamaux(bet1) << " " <<
+            geod_fun::lamaux(omg1) << " " <<
+            f.fbet()(geod_fun::lamaux(bet1)) << " " <<
+            f.fomg()(geod_fun::lamaux(omg1)) << " " <<
+            delta << " " << deltamax << "\n";
+        }
       }
     } else {
       // gamma = NaN
@@ -769,8 +824,8 @@ namespace GeographicLib {
         bet0 = (int(round(bet1.y())) + nN) / 2; // -1, 0, or +1
         omg0 = (int(round(omg1.y())) + eE) / 2;
       } else {
-        delta = nN * f.fbet()(asinh(bet1.tan())) -
-          eE * f.fomg()(asinh(omg1.tan()));
+        delta = nN * f.fbet()(geod_fun::lamaux(bet1)) -
+          eE * f.fomg()(geod_fun::lamaux(omg1));
       }
     } else {
       // gamma = NaN
@@ -792,13 +847,13 @@ namespace GeographicLib {
       sig1 = g.gbet()(fic.u0) + g.gomg()(fic.v0);
       s0 = 0;
     } else if (g.gamma() == 0) {
-      sig1 = fic.nN * g.gbet()(asinh(fic.bet1.tan())) +
-        fic.eE * g.gomg()(asinh(fic.omg1.tan()));
+      sig1 = fic.nN * g.gbet()(geod_fun::lamaux(fic.bet1)) +
+        fic.eE * g.gomg()(geod_fun::lamaux(fic.omg1));
       s0 =  g.gbet().Max() + g.gomg().Max();
       if (0)
         cout << "GICS "
-             << fic.nN << " " << g.gbet()(asinh(fic.bet1.tan())) << " "
-             << fic.eE << " " << g.gomg()(asinh(fic.omg1.tan())) << " "
+             << fic.nN << " " << g.gbet()(geod_fun::lamaux(fic.bet1)) << " "
+             << fic.eE << " " << g.gomg()(geod_fun::lamaux(fic.omg1)) << " "
              << sig1 << " " << g.gbet().Max() << " " << g.gomg().Max() << " "
              << s0 << "\n";
     } else {

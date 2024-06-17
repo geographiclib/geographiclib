@@ -278,10 +278,15 @@ namespace GeographicLib {
 
   Math::real geod_fun::root(real z, real x0, int* countn, int* countb) const {
     if (_mu != 0) return Math::NaN();
-    real xa = z - Max(), xb = z + Max();
+    if (!isfinite(z)) return z; // Deals with +/-inf and nan
+    real d = Max()
+      + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
+      xa = z - d,
+      xb = z + d;
     x0 = fmin(xb, fmax(xa, x0));
     // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
     // N.B. use default tol for root, because we want accurate answers here
+
     return _tx ?
       Trigfun::root(
                     [fun = _fun, ell = _ell]
@@ -551,10 +556,16 @@ namespace GeographicLib {
     (void) AngNorm(bet2, omg2);
     bool swap12;
     {
-      AuxAngle bet1m(bet1), bet2m(bet2);
-      bet1m.y() = fabs(bet1m.y()); bet2m.y() = fabs(bet2m.y());
-      AuxAngle bet12 = bet2m - bet1m; // |bet2| - |bet1|
-      swap12 = bet12.y() > 0;     // is |bet2| > |bet1|
+      AuxAngle tmp1(bet1), tmp2(bet2);
+      tmp1.setquadrant(0U); tmp2.setquadrant(0U);
+      AuxAngle tmp12 = tmp2 - tmp1; // |bet2| - |bet1|
+      swap12 = tmp12.y() > 0; // is |bet2| > |bet1|
+      if (tmp12.y() == 0) {
+        tmp1 = omg1; tmp2 = omg2;
+        tmp1.setquadrant(0U); tmp2.setquadrant(0U);
+        tmp12 = tmp2 - tmp1;
+        swap12 = tmp12.y() < 0; // is |omg2| < |omg1|
+      }
       // N.B. No swapping if bet1 = +0 and bet1 = -0.
     }
     if (swap12) {
@@ -562,38 +573,106 @@ namespace GeographicLib {
       swap(omg1, omg2);
     }
     // Now |bet1| > |bet2|
-    bool swapsign = !signbit(bet1.y());
-    if (swapsign) {
+    bool flipz = !signbit(bet1.y());
+    if (flipz) {
       bet1.y() *= -1;
       bet2.y() *= -1;
     }
+    bool flipy = signbit(omg1.y());
+    if (flipy) {
+      omg1.y() *= -1;
+      omg2.y() *= -1;
+    }
+    bool flipx = signbit(omg1.x());
+    if (flipx) {
+      omg1.x() *= -1;
+      omg2.x() *= -1;
+    }
+    bool flipomg = bet2.x() == 0 && signbit(omg2.y());
+    if (flipomg) omg2.y() *= -1;
+
     real f[4];
     AuxAngle alpa( kp * fabs(omg1.y()), k * fabs(bet1.x()), true ),
-      alpb(alpa);
+      alpb(alpa), alp2;
 
     TriaxialLineF l(*this, Triaxial::gamblk{}, 0.5, 1.5);
     TriaxialLineF::ics fic(l, bet1, omg1, alpb);
     TriaxialLineF::disttx d;
-    bool done = false, equatorial = false;
+    bool done = false, equatorial = false, merid = false;
     real fa, fb;
+    //    cout << "ZZ " << alpb.x() << " " << omg2.y() << "\n";
     if (alpb.y() == 0 && bet1.y() != 0) {
-      AuxAngle omg12 = omg2 - omg1;
-      if (omg12.y() == 0) {
-        if (omg12.x() < 0) {
+      // alpb = 0 (i.e., omg1 = 0 or 180), not equatorial
+      if (omg2.y() == 0) {
+        if (omg2.x() < 0) {
           alpb.setquadrant(2U);
           fic.setquadrant(l, 2U);
-          done = true;
         }
-      } else if (omg12.y() > 0) {
+        done = true;
+      } else if (omg2.y() > 0) {
         alpa = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), 1, false);
         alpb = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), -1, false);
-        fa = - omg12.radians();
+        fa = - omg2.radians();
         fb = fa + Math::pi();
-      } else {
+      } else {                  // omg2.y() < 0
         alpa = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), -1, false);
         alpb = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), 1, false);
-        fb = omg12.radians();
+        fb = omg2.radians();
         fa = fb - Math::pi();
+      }
+    } else if (alpb.x() == 0) {
+      // alpb = 90 (i.e., bet1 = -90)
+      if (omg2.y() == 0) {
+        if (omg2.x() > 0) {
+          alpb.setquadrant(3U);
+          fic.setquadrant(l, 3U);
+        }
+        done = true;
+      } else {
+        if (bet2.x() == 0) {    // bet2 = +/- 90
+          if (bet2.y() < 1) {   // bet2 = -90
+            AuxAngle bet2x, omg2x;
+            AuxAngle omg12 = omg2 - omg1;
+            d = l.ArcPos0(fic, omg12.radians(), bet2x, omg2x, alp2, false);
+            if (omg2x.y() < 0) alp2.y() *= -1;
+            merid = done = true;
+          } else {              // bet2 = 90
+            alpb.setquadrant(3U);
+            fic.setquadrant(l, 3U);
+            AuxAngle bet2x, omg2x, alp2x;
+            (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
+            // cout << "\nOMG2x " << omg2.degrees() << " " << omg2x.degrees() << "\n";
+            omg2x -= omg2;
+            if (omg2x.y() > 0) {
+              omg2x = omg2 + omg1;
+              d = l.ArcPos0(fic, omg2x.radians(), bet2x, omg2x, alp2, false);
+              if (omg2x.y() < 0) alp2.y() *= -1;
+              merid = done = true;
+            } else {
+              alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20), false);
+              fa = omg2x.radians();
+              alpb.setquadrant(0U);
+              fic.setquadrant(l, 0U);
+              (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
+              omg2x -= omg2;
+              alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20), false);
+              fb = omg2x.radians();
+            }
+          }
+        } else if (omg2.y() > 0) {
+          alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20), false);
+          alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20), false);
+          fa = -omg2.radians();
+          fb = Math::pi() + fa;
+        } else {                // omg2.y() < 0
+          alpa = AuxAngle(1, -numeric_limits<real>::epsilon()/(1<<20), false);
+          alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20), false);
+          fb = -omg2.radians();
+          fa = -Math::pi() + fb ;
+          if (0)
+          cout << "B90 " << alpa.degrees() << " " << fa/Math::degree() << " "
+               << alpb.degrees() << " " << fb/Math::degree() << " ";
+        }
       }
     } else {
       unsigned q = 0U;
@@ -630,11 +709,12 @@ namespace GeographicLib {
         l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alpx), 0.5, 1.5);
         fic = TriaxialLineF::ics(l, bet1, omg1, alpx);
         AuxAngle bet2x, omg2x, alp2x;
-        l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
+        (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
         // cout << "OMGa " << omg2.degrees() << " " << omg2x.degrees() << "\n";
         omg2x -= omg2;
         // cout << "OMGb " << eE << " " << omg2x.degrees() << "\n";
         if (eE * omg2x.y() >= 0) {
+          // Should call ArcPos0 here and set alp2
           equatorial = done = true;
           // We have
           //   delta = l.fbet()(v2) - l.fomg()(u2)
@@ -667,8 +747,8 @@ namespace GeographicLib {
       int countn = 0, countb = 0;
       if (0)
         cout << "ROOT "
-             << alpa.degrees() << " " << fa << " "
-             << alpb.degrees() << " " << fb << "\n";
+             << alpa.degrees() << " " << fa/Math::degree() << " "
+             << alpb.degrees() << " " << fb/Math::degree() << "\n";
       alp1 = findroot(
                       [this, &bet1, &omg1, &bet2, &omg2]
                       (const AuxAngle& alp) -> Math::real
@@ -684,19 +764,40 @@ namespace GeographicLib {
       fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
     }
 
-    AuxAngle bet2a, omg2a, alp2;
+    AuxAngle bet2a, omg2a;
     if (equatorial)
       alp2 = alp1;
-    else
+    else if (!merid)
       d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
     TriaxialLineG ld(*this, l.gm());
     TriaxialLineG::ics dic(ld, fic);
     real s13 = ld.dist(dic, d);
     (void) AngNorm(bet2a, omg2a, alp2);
 
-    //    cout << "\nFLIP " << swapsign << swap12 << flip1 << "\n";
-    // Undo switches in reverse order swapsign, swap12, flip1
-    if (swapsign) {
+    if (0)
+      cout << "\nFLIP " << flipomg << flipx << flipy << flipz << swap12 << flip1 << "\n"
+           << "COORDS " << bet1.degrees() << " " << omg1.degrees() << " "
+           << bet2.degrees() << " " << omg2.degrees() << " "
+           << alp1.degrees() << " " << alp2.degrees() << "\n";
+    // Undo switches in reverse order flipz, swap12, flip1
+    if (flipomg)
+      omg2.y() *= -1;
+
+    if (flipx) {
+      omg1.x() *= -1;
+      omg2.x() *= -1;
+      alp1.y() *= -1;
+      alp2.y() *= -1;
+    }
+
+    if (flipy) {
+      omg1.y() *= -1;
+      omg2.y() *= -1;
+      alp1.y() *= -1;
+      alp2.y() *= -1;
+    }
+
+    if (flipz) {
       bet1.y() *= -1;
       bet2.y() *= -1;
       alp1.x() *= -1;
@@ -714,7 +815,7 @@ namespace GeographicLib {
     if (flip1)
       Flip(bet1, omg1, alp1);
 
-    if (flip1 || swap12 || swapsign) {
+    if (flipomg || flip1 || swap12 || flipz || flipy || flipx) {
       fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
       dic = TriaxialLineG::ics(ld, fic);
     }
@@ -763,7 +864,7 @@ namespace GeographicLib {
       ff = f(AuxAngle::degrees(x));
       cout << "DAT " << x << " " << ff/Math::degree() << "\n";
       }
-      return 0;
+      return AuxAngle(0);
     }
     bool trip = false, correct = false;
     for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
@@ -779,11 +880,13 @@ namespace GeographicLib {
         break;
       }
       ++cntn;
-      ft = f(xt);
       if (0)
         cout << scientific
              << "RT " << cntn << " "
-             << xt.degrees() << " " << ft/Math::degree() << " " << ab << " " << t << "\n";
+             << xt.degrees() << " ";
+      ft = f(xt);
+      if (0)
+        cout  << ft/Math::degree() << " " << ab << " " << t << "\n";
       if (signbit(ft) == signbit(fa)) {
         xc = xa; xa = xt;
         fc = fa; fa = ft;

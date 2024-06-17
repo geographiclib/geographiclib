@@ -348,6 +348,7 @@ namespace GeographicLib {
                            int* countn, int* countb, real tol) const {
     if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
       throw GeographicErr("Can only find root Trigfun with a secular term");
+    // cout << "QQB " << xa << " " << x0 << " " << xb << "\n";
     return root(*(this), z, fp, x0, xa, xb, _h, _coeff[0] * Math::pi(),
                 _coeff[0] > 0 ? 1 : -1, countn, countb, tol);
   }

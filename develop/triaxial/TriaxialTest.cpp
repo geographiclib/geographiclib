@@ -463,10 +463,6 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
   while (cin >> bet1d >> omg1d >> bet2d >> omg2d >> alp1d >> alp2d >> s12d) {
     cout << int(bet1d) << " " << int(omg1d) << " "
          << int(bet2d) << " " << int(omg2d) << " " << flush;
-    if (fabs(bet1d) == 90 || fabs(bet2d) == 90) {
-      cout << "SKIP" << endl;
-      continue;
-    }
     AuxAngle
       bet1(AuxAngle::degrees(bet1d)),
       omg1(AuxAngle::degrees(omg1d)),
@@ -474,12 +470,26 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
       omg2(AuxAngle::degrees(omg2d)),
       alp1(AuxAngle::degrees(alp1d)),
       alp2(AuxAngle::degrees(alp2d));
+    // if (fabs(bet1d) == 90 || fabs(bet2d) == 90) {
+    bool umb1 = bet1.x() == 0 && omg1.y() == 0,
+      umb2 = bet2.x() == 0 && omg2.y() == 0;
+    //    if (umb1 || umb2 || !( (fabs(bet1d) == 90 || fabs(bet2d) == 90) &&
+    //                           !(fabs(bet1d) == 90 && fabs(bet2d) == 90) )) {
+    if (umb1 || umb2) {
+      cout << "SKIP" << endl;
+      continue;
+    }
     TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2);
     AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
     l.pos1(bet1x, omg1x, alp1x);
     real s12x = l.Distance();
     l.Position(s12x, bet2x, omg2x, alp2x);
     Triaxial::AngNorm(bet2x, omg2x, alp2x);
+    if (fabs(bet2d) == 90 && signbit(omg2x.y())) {
+      omg2x.y() *= -1;
+      alp2x.x() *= -1;
+      alp2x.y() *= -1;
+    }
     real
       dbet1 = fabs((bet1 - bet1x).radians()),
       domg1 = fabs((omg1 - omg1x).radians()),
@@ -502,10 +512,12 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
         ds12 < 1e-5) {
       cout << "OK" << endl;
     } else
-      if (0)
+      if (1)
       cout  << alp1d << " " << alp2d << " " << s12d << " BAD\n"
+            << setprecision(1)
            << bet1x.degrees() << " " << omg1x.degrees() << " "
            << bet2x.degrees() << " " << omg2x.degrees() << " "
+            << setprecision(6)
            << alp1x.degrees() << " " << alp2x.degrees() << " "
            << s12x << " BAD" << endl;
       else

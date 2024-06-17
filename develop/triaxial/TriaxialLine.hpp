@@ -63,7 +63,8 @@ namespace GeographicLib {
     disttx Hybrid(const ics& fic, const AuxAngle& bet2,
                 AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) const;
     disttx ArcPos0(const ics& fic, real tau12,
-                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) const;
+                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
+                   bool betp = true) const;
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLineG {
