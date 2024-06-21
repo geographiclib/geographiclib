@@ -25,15 +25,10 @@ namespace GeographicLib {
   class TriaxialLineF;
 
   class GEOGRAPHICLIB_EXPORT Triaxial {
-  public:
-    typedef std::array<Math::real, 3> vec3;
   private:
     typedef Math::real real;
-    typedef std::array<real, 6> vec6;
-    // These private versions of Accel and Norm assume normalized ellipsoid
-    // with axes = axesn
-    vec6 Accel(const vec6& y) const;
-    void Norm(vec6& y) const;
+  public:
+    typedef std::array<Math::real, 3> vec3;
     static real hypot3(real x, real y, real z) {
 #if __cplusplus < 201703L || GEOGRAPHICLIB_PRECISION == 4
       using std::sqrt;
@@ -43,6 +38,12 @@ namespace GeographicLib {
       return hypot(x, y, z);
 #endif
     }
+  private:
+    typedef std::array<real, 6> vec6;
+    // These private versions of Accel and Norm assume normalized ellipsoid
+    // with axes = axesn
+    vec6 Accel(const vec6& y) const;
+    void Norm(vec6& y) const;
     static void normvec(vec3& r) {
       real h = hypot3(r[0], r[1], r[2]);
       r[0] /= h; r[1] /= h; r[2] /= h;
@@ -77,7 +78,17 @@ namespace GeographicLib {
                 std::vector<vec3>& r2, std::vector<vec3>& v2,
                 real eps = 0) const;
     TriaxialLine Inverse(AuxAngle bet1, AuxAngle omg1,
-                         AuxAngle bet2, AuxAngle omg2) const;
+                         AuxAngle bet2, AuxAngle omg2,
+                         bool newmethod = true) const;
+    static real BigValue() {
+      static real bigval = -2*log(std::numeric_limits<real>::epsilon());
+      return bigval;
+    }
+    static real clamp(real x, real mult = 1) {
+      using std::fmax; using std::fmin;
+      real z = mult * Triaxial::BigValue();
+      return fmax(-z, fmin(z, x));
+    }
     static real EllipticThresh() {
       static real thresh = 1/real(8);
       return thresh;
@@ -141,6 +152,13 @@ namespace GeographicLib {
       bool flip = alt ? signbit(omg.y()) : signbit(bet.x());
       if (flip)
         Flip(bet, omg, alp);
+      if (0) {
+        if (bet.x() == 0 && bet.y() * alp.x() > 0) {
+          alp.x() *= -1;
+          alp.y() *= -1;
+        }
+        if (bet.x() == 0 && alp.x() == 0) alp.y() = -bet.y();
+      }
       return flip;
     }
     static bool AngNorm(AuxAngle& bet, AuxAngle& omg,
@@ -158,6 +176,8 @@ namespace GeographicLib {
     void cart2toellip(const vec3& r, AuxAngle& bet, AuxAngle& omg) const;
     void cart2toellip(const vec3& r, const vec3& v,
                       AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const;
+    void cart2toellip(const AuxAngle& bet, const AuxAngle& omg,
+                      const vec3& v, AuxAngle& alp) const;
     void elliptocart2(const AuxAngle& bet, const AuxAngle& omg, vec3& r) const;
     void elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
                       const AuxAngle& alp,
@@ -255,21 +275,18 @@ namespace GeographicLib {
       using std::tan; using std::asinh; using std::fabs;
       // A consistent large value for x near pi/2.  Also deals with the issue
       // that tan(pi/2) may be negative, e.g., for long doubles.
-      static real bigval = -2*log(std::numeric_limits<real>::epsilon());
       return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
-        (x < 0 ? -bigval : bigval);
+        (x < 0 ? -1 : 1) * Triaxial::BigValue();
     }
     static real lamaux0(AuxAngle x) {
-      // lam(x) when x is an AuxAngle -- no claming
-      using std::asinh;
-      return asinh(x.tan());
+      // lam(x) when x is an AuxAngle -- no clamping
+      using std::asinh; using std::fabs;
+      return asinh(x.y()/fabs(x.x()));
     }
     static real lamaux(AuxAngle x) {
       // lam(x) when x is an AuxAngle -- with clamping
-      using std::asinh; using std::fmax; using std::fmin;
       // A consistent large value for x near pi/2.
-      static real bigval = -2*log(std::numeric_limits<real>::epsilon());
-      return fmax(-bigval, fmin(bigval, lamaux0(x)));
+      return Triaxial::clamp(lamaux0(x));
     }
     static real gd(real x) {
       using std::atan; using std::sinh;

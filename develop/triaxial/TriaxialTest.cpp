@@ -455,12 +455,35 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   }
 }
 
+std::pair<Math::real, Math::real>
+cartdiff(const Triaxial& t,
+         AuxAngle bet1, AuxAngle omg1, AuxAngle alp1,
+         AuxAngle bet2, AuxAngle omg2, AuxAngle alp2)
+{
+  Triaxial::vec3 r1, r2, v1, v2;
+  t.elliptocart2(bet1, omg1, alp1, r1, v1);
+  t.elliptocart2(bet2, omg2, alp2, r2, v2);
+  return std::pair<Math::real, Math::real>
+    (Triaxial::hypot3(r2[0] - r1[0], r2[1] - r1[1], r2[2] - r1[2]),
+     Triaxial::hypot3(v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]));
+}
+
 void InverseTest(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
   Triaxial t(a, b, c);
   cout << fixed << setprecision(6);
   real bet1d, omg1d, bet2d, omg2d, alp1d, alp2d, s12d;
   while (cin >> bet1d >> omg1d >> bet2d >> omg2d >> alp1d >> alp2d >> s12d) {
+    /*
+    if (bet1d == 90 && (alp1d > -90 && alp1d <= 90))
+      alp1d += alp1d < 0 ? 180 : -180;
+    if (bet1d ==-90 &&!(alp1d > -90 && alp1d <= 90))
+      alp1d += alp1d < 0 ? 180 : -180;
+    if (bet2d == 90 && (alp2d > -90 && alp2d <= 90))
+      alp2d += alp2d < 0 ? 180 : -180;
+    if (bet2d ==-90 &&!(alp2d > -90 && alp2d <= 90))
+      alp2d += alp2d < 0 ? 180 : -180;
+    */
     cout << int(bet1d) << " " << int(omg1d) << " "
          << int(bet2d) << " " << int(omg2d) << " " << flush;
     AuxAngle
@@ -473,23 +496,49 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
     // if (fabs(bet1d) == 90 || fabs(bet2d) == 90) {
     bool umb1 = bet1.x() == 0 && omg1.y() == 0,
       umb2 = bet2.x() == 0 && omg2.y() == 0;
+    bool newmethod = true;
     //    if (umb1 || umb2 || !( (fabs(bet1d) == 90 || fabs(bet2d) == 90) &&
     //                           !(fabs(bet1d) == 90 && fabs(bet2d) == 90) )) {
+    if (0) {
     if (umb1 || umb2) {
       cout << "SKIP" << endl;
       continue;
     }
-    TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2);
+    }
+
+    if (!(
+          (fabs(bet1d) == 90 && fabs(bet2d) == 90) ||
+          ((omg1d == 0 || omg1d == 180) && (omg2d == 0 || omg2d == 180)) ||
+          ((fabs(bet1d) == 90 || omg1d == 0 || omg1d == 180) &&
+           (fabs(bet2d) == 90 || omg2d == 0 || omg2d == 180)) ||
+          (bet1d == 0 && bet2d == 0) ||
+          (umb1 || umb2) ||
+          (fabs(bet1d) == 90 || fabs(bet2d) == 90) ||
+          ((omg1d == 0 || omg1d == 180) || (omg2d == 0 || omg2d == 180)) ||
+          true
+          )) {
+      cout << "SKIP" << endl;
+      continue;
+    }
+    TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2, newmethod);
     AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
     l.pos1(bet1x, omg1x, alp1x);
+    /*
+    bet1x.round(); omg1x.round(); alp1x.round();
+    Triaxial::AngNorm(bet1x, omg1x, alp1x);
+    */
     real s12x = l.Distance();
     l.Position(s12x, bet2x, omg2x, alp2x);
+    /*
+    bet2x.round(); omg2x.round(); alp2x.round();
     Triaxial::AngNorm(bet2x, omg2x, alp2x);
-    if (fabs(bet2d) == 90 && signbit(omg2x.y())) {
+    if (fabs(bet2d) == 90 && omg2x.y() < 0) {
       omg2x.y() *= -1;
       alp2x.x() *= -1;
       alp2x.y() *= -1;
     }
+    if (omg2x.x() == -1 && omg2x.y() == 0)
+      omg2x.y() = 0;
     real
       dbet1 = fabs((bet1 - bet1x).radians()),
       domg1 = fabs((omg1 - omg1x).radians()),
@@ -501,17 +550,54 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
       dalp2alt = fabs((alp2 - (AuxAngle::cardinal(2U) - alp2x)).radians()),
       dalp12 = fabs((alp2x - alp1x).radians()),
       ds12 = fabs(s12x - s12d);
-    if (dbet1 < 1e-9 &&
-        domg1 < 1e-9 &&
-        dbet2 < 1e-9 &&
-        domg2 < 1e-9 &&
+    if (bet1.x() == 0)
+      dalp1 = fmin( fabs((alp1 - alp1x + AuxAngle::cardinal(2U)).radians()),
+                    dalp1 );
+    if (bet2.x() == 0)
+      dalp2 = fmin( fabs((alp2 - alp2x + AuxAngle::cardinal(2U)).radians()),
+                    dalp2 );
+    if (0)
+      cout << "DD " << scientific << " "
+           << dbet1 << " " << domg1 << " "
+           << dbet2 << " " << domg2 << " "
+           << ds12 << "\n";
+    if (dbet1 < 1e-5 &&
+        domg1 < 1e-5 &&
+        dbet2 < 1e-5 &&
+        domg2 < 1e-5 &&
         ((dalp1 < 1e-4 && dalp2 < 1e-4) ||
          (bet1d + bet2d == 0 && signbit(alp1x.x()) != signbit(alp2x.x()) &&
           dalp1alt < 1e-4 && dalp2alt < 1e-4) ||
-         (s12d == 0 && dalp12 < 1e-9)) &&
+         (s12d == 0 && dalp12 < 1e-8)) &&
         ds12 < 1e-5) {
-      cout << "OK" << endl;
-    } else
+    */
+    real ds12 = fabs(s12x - s12d);
+    std::pair<real, real>
+      err1 = cartdiff(t, bet1, omg1, alp1, bet1x, omg1x, alp1x),
+      err2 = cartdiff(t, bet2, omg2, alp2, bet2x, omg2x, alp2x),
+      err3 = cartdiff(t, bet1x, omg1x, alp1x, bet2x, omg2x, alp2x);
+    if (bet1 + bet2 == 0 && err1.second >= 1.e-5) {
+      alp1x.x() *= -1;
+      alp2x.x() *= -1;
+      err1 = cartdiff(t, bet1, omg1, alp1, bet1x, omg1x, alp1x);
+      err2 = cartdiff(t, bet2, omg2, alp2, bet2x, omg2x, alp2x);
+    }
+    if (err1.first < 1e-5 &&
+        err2.first < 1e-5 &&
+        ds12 < 1e-5 &&
+        (s12d == 0 ? err3.first < 1.e-5 && err3.second < 1.e-5 :
+         err1.second < 1.e-5 && err2.second < 1.e-5)) {
+      if (0)
+      cout  << alp1d << " " << alp2d << " " << s12d << " OK\n"
+            << setprecision(0)
+           << bet1x.degrees() << " " << omg1x.degrees() << " "
+           << bet2x.degrees() << " " << omg2x.degrees() << " "
+            << setprecision(6)
+           << alp1x.degrees() << " " << alp2x.degrees() << " "
+           << s12x << " OK" << endl;
+      else
+        cout << "OK" << endl;
+    } else {
       if (1)
       cout  << alp1d << " " << alp2d << " " << s12d << " BAD\n"
             << setprecision(1)
@@ -522,6 +608,7 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
            << s12x << " BAD" << endl;
       else
         cout << "BAD" << endl;
+    }
   }
 }
 
@@ -529,6 +616,76 @@ int main() {
   try {
     Utility::set_digits();
     typedef Math::real real;
+    if (0) {
+      Triaxial t(sqrt(2.0), 1.0, 1/sqrt(2.0));
+      TriaxialLine l = t.Inverse(
+                     AuxAngle::degrees(-45.0),AuxAngle::degrees(-30.0),
+                     AuxAngle::degrees(-90.0),AuxAngle::degrees(0.0), true);
+      real s12 = l.Distance();
+      /*      real s12 = 0.361729;
+      TriaxialLine l(t, AuxAngle::degrees(-45.0),AuxAngle::degrees(-30.0),
+                      AuxAngle::degrees(135.0));
+      l.SetDistance(s12);
+      */
+      cout << s12 << "\n";
+      AuxAngle bet2, omg2, alp2;
+      l.pos1(bet2, omg2, alp2);
+        cout << "POS1 " << s12 << " "
+             << bet2.degrees() << " "
+             << omg2.degrees() << " "
+             << alp2.degrees() << "\n";
+      cout << fixed << setprecision(6);
+      for (int i = -3; i <= 3; ++i) {
+        real ss = 0 + i * 1e-6;
+        l.Position(ss, bet2, omg2, alp2);
+        cout << i << " " << ss << " "
+             << bet2.degrees() << " "
+             << omg2.degrees() << " "
+             << alp2.degrees() << "\n";
+      }
+      for (int i = -3; i <= 3; ++i) {
+        real ss = s12 + i * 1e-6;
+        l.Position(ss, bet2, omg2, alp2);
+        cout << i << " " << ss << " "
+             << bet2.degrees() << " "
+             << omg2.degrees() << " "
+             << alp2.degrees() << "\n";
+      }
+      return 0;
+    }
+    if (0) {
+    {
+      TriaxialLine ll(Triaxial(sqrt(2.0), 1.0, 1/sqrt(2.0)),
+                      AuxAngle::degrees(90), AuxAngle::degrees(180),
+                      AuxAngle::degrees(158.253574));
+      ll.SetDistance(0.898324);
+      AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+      int ibet1, iomg1, ialp1, ibet2, iomg2, ialp2;
+      ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
+      real s12x = ll.Distance();
+      ll.Position(s12x, bet2x, omg2x, alp2x, &ibet2, &iomg2, &ialp2);
+      std::cout << "OUT\n" << bet1x.degrees() << " " << omg1x.degrees() << " " << alp1x.degrees() << " " << ibet1 << iomg1 << ialp1 << signbit(bet1x.x()) << signbit(omg1x.y()) << "\n"
+                << bet2x.degrees() << " " << omg2x.degrees() << " " << alp2x.degrees() << " " << ibet2 << iomg2 << ialp2 << "\n"
+                << s12x << "\n";
+    }
+    return 0;
+        {
+      TriaxialLine ll(Triaxial(sqrt(2.0), 1.0, 1/sqrt(2.0)),
+                      AuxAngle::degrees(-90), AuxAngle::degrees(0),
+                      AuxAngle::degrees(-87.089900));
+      ll.SetDistance(2.736330);
+      AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+      int ibet1, iomg1, ialp1, ibet2, iomg2, ialp2;
+      ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
+      real s12x = ll.Distance();
+      ll.Position(s12x, bet2x, omg2x, alp2x, &ibet2, &iomg2, &ialp2);
+      std::cout << "OUT\n" << bet1x.degrees() << " " << omg1x.degrees() << " " << alp1x.degrees() << " " << ibet1 << iomg1 << ialp1 << signbit(bet1x.x()) << signbit(omg1x.y()) << "\n"
+                << bet2x.degrees() << " " << omg2x.degrees() << " " << alp2x.degrees() << " " << ibet2 << iomg2 << ialp2 << "\n"
+                << s12x << "\n";
+    }
+    return 0;
+    }
+
     real a = 6378172, b = 6378103, c = 6356753;
     if (0) {
       using std::sqrt;

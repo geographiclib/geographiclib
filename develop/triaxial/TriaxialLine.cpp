@@ -145,8 +145,13 @@ namespace GeographicLib {
       real u2, v2,
         deltax = fmax(-_fic.deltamax,
                      fmin(_fic.deltamax, _fic.delta + sig2n.second * _fic.deltashift));
+      if (0)  
+        cout << "HH " << deltax << " " << _gic.sig1 << " " <<  s12/_t.b << " " << sig2 << " " << 2*_gic.s0 << "\n";
       solve2u(deltax, sig2n.first, fbet(), fomg(), gbet(), gomg(), u2, v2,
               countn, countb);
+      if (0)
+      cout << "UU " << u2 << " " << v2 << " "
+           << deltax << " " << sig2n.first << " " << sig2n.second << "\n";
       /*
       cout << "AAA " << _gic.sig1 << " " << sig2 << " " << _gic.s0 << " " << deltax << " " << sig2n.first << " "
            << u2 << " " << v2 << "\n";
@@ -210,10 +215,13 @@ namespace GeographicLib {
     } else {
       // gamma = NaN
     }
+    bet2a.normalize().round();
+    omg2a.normalize().round();
+    alp2a.normalize().round();
     if (0)
-    cout << "AA " << bet2a.radians() << " " << bet2 << " "
-         << omg2a.radians() << " " << omg2 << " "
-         << alp2a.radians() << " " << alp2 << "\n";
+    cout << "AA " << bet2a.degrees() << " " << bet2 / Math::degree() << " "
+         << omg2a.degrees() << " " << omg2 / Math::degree() << " "
+         << alp2a.degrees() << " " << alp2 / Math::degree() << "\n";
 
     swap(omg2a.x(), omg2a.y());
     omg2a.x() *= -1;
@@ -481,13 +489,12 @@ namespace GeographicLib {
       bet12.y() = fmax(real(0), bet12.y()) + 0; // convert -180deg to 180deg
       real tau12 = bet12.radians(),
         bet2r = fic.bet1.radians() + fic.nN * tau12;
-      /*
+      if (0)
       cout << "TAU12 " << bet2.degrees() << " " << bet2a.degrees() << " "
            << bet12.degrees()
            << fic.nN << " " << fic.bet1.degrees() << " "
            << tau12/Math::degree() << " "
            << fic.alp1.degrees() << "\n";
-      */
       if (gamma() < 0) {
         real
           u2 = fbet().fwd(fic.nN * bet2r),
@@ -595,9 +602,17 @@ namespace GeographicLib {
         omg2a = fic.eE > 0 ?
           fic.omg1 + AuxAngle::radians(tau12) :
           fic.omg1 - AuxAngle::radians(tau12);
-        u2 = fomg().fwd(fic.eE * omg2a.radians());
+        u2 = fomg().fwd(fic.eE * fic.omg1.radians() + tau12);
         v2 = fbet().inv(fomg()(u2) + fic.delta);
         psi2r = fbet().rev(v2);
+        if (0)
+          cout << "OO " << omg2a.degrees() << " "
+               << fic.eE << " "
+               << fic.omg1.degrees() << " "
+               << u2 << " "
+               << v2 << " "
+               << fic.delta << " "
+               << psi2r/Math::degree() << "\n";
       }
       bet2a = AuxAngle(fic.bet0 * fic.flip * gm().nup * psi2.y(),
                        fic.bet0 * hypot(psi2.x(), gm().nu * psi2.y()),
@@ -644,12 +659,18 @@ namespace GeographicLib {
           fic.bet1 - AuxAngle::radians(tau12);
         real bet2r = fic.bet1.radians() + fic.nN * tau12;
 
+        if (0)
+      cout << "TAU12 " << bet2a.degrees() << " "
+           << fic.nN << " " << fic.bet1.degrees() << " "
+           << tau12/Math::degree() << " "
+           << fic.alp1.degrees() << "\n";
+
         // Could simplify this.  bet2 is in [-270,90]
         // reduce to [-pi/2, pi/2)
         pair<real, real> bet2n =
           TriaxialLine::remx(fic.nN * bet2r, Math::pi());
         if (0)
-          cout << "\nZERO1 " << fic.nN * bet2r << " " << bet2n.first << " "
+          cout << "\nZERO1 " << fic.nN * bet2r +Math::pi()/2<< " " << bet2n.first << " "
                << bet2n.second << "\n";
         int parity = fmod(bet2n.second, real(2)) ? -1 : 1,
           alp0 = fic.nN < 0 ? fic.eE : 0;
@@ -667,8 +688,16 @@ namespace GeographicLib {
                          (alp0 ? -1 : 1) * _t.k / cosh(u2),
                          true);
         ii = int(bet2n.second);
+        if (0) {
+        cout << "ALP2 " << scientific
+             << (alp0 ? -1 : 1) * fic.nN * _t.kp * fic.eE * parity /
+          cosh(v2) << " "
+             << (alp0 ? -1 : 1) * _t.k / cosh(u2) << fixed << "\n";
+        cout << "ALP2 " << alp0 << " " << fic.nN << " " << fic.eE << " "
+             << parity << "\n";
+        }
         if (0)
-            cout << "UU " << fbet()(u2) - deltax << " " << bet2n.first << " " << u2 << " " << v2 << " " << fic.delta << " " << deltax << " " << fbet()(u2) << " " << bet2n.second << " " << fic.deltashift  << "\n";
+            cout << "UU " << fbet()(u2) - deltax << " " << bet2n.first << " " << u2 << " " << v2 << " " << fic.delta << " " << deltax << " " << bet2n.second << " " << fic.deltashift  << "\n";
       } else {
         omg2a = fic.eE > 0 ?
           fic.omg1 + AuxAngle::radians(tau12) :
@@ -734,6 +763,7 @@ namespace GeographicLib {
     , ialp(0)
     , umbalt(false)
   {
+    alp1.normalize().round();
     const real eps = numeric_limits<real>::epsilon();
     const Triaxial::gamblk& gm = f.gm();
     const Triaxial& t = f.t();
@@ -768,7 +798,7 @@ namespace GeographicLib {
       // N.B. factor of k*kp omitted
       df = f.fbet().Max() - f.fomg().Max();
       deltashift = 2*df - log(t.k2/t.kp2);
-      deltamax = -2*log(eps); // consistent with geod_fun::lam + lamaux
+      deltamax = Triaxial::BigValue(); // consistent with geod_fun::lam + lamaux
       if (fabs(bet1.x()) < 8*eps && fabs(omg1.x()) < 8*eps) {
         //        bet0 = (int(round(bet1.y())) + nN) / 2 ? -1 : 1;
         //        omg0 = (int(round(omg1.y())) + eE) / 2 ? -1 : 1;
@@ -778,8 +808,12 @@ namespace GeographicLib {
       } else {
         bet0 = signbit(bet1.x()) ? (signbit(bet1.y()) ? -1 : 1) : 0;
         omg0 = signbit(omg1.x()) ? (signbit(omg1.y()) ? -1 : 1) : 0;
-        delta = nN * f.fbet()(geod_fun::lamaux(bet1)) -
-          eE * f.fomg()(geod_fun::lamaux(omg1));
+
+        AuxAngle btmp(bet1 - AuxAngle::cardinal(bet0 ? 2U : 0U)),
+        otmp(omg1 - AuxAngle::cardinal(omg0 ? 2U : 0U));
+
+        delta = nN * f.fbet()(geod_fun::lamaux(btmp)) -
+          eE * f.fomg()(geod_fun::lamaux(otmp));
         //        cout << "OOOA " << omg1.degrees() << " " << omg0 << "\n";
         if (0) {
           cout << "DEL2 " << omg1.degrees() << " " << geod_fun::lamaux(omg1) << "\n";
@@ -847,8 +881,20 @@ namespace GeographicLib {
       sig1 = g.gbet()(fic.u0) + g.gomg()(fic.v0);
       s0 = 0;
     } else if (g.gamma() == 0) {
-      sig1 = fic.nN * g.gbet()(geod_fun::lamaux(fic.bet1)) +
-        fic.eE * g.gomg()(geod_fun::lamaux(fic.omg1));
+      AuxAngle btmp(fic.bet1 - AuxAngle::cardinal(fic.bet0 ? 2U : 0U)),
+        otmp(fic.omg1 - AuxAngle::cardinal(fic.omg0 ? 2U : 0U));
+      sig1 = fic.nN * g.gbet()(geod_fun::lamaux(btmp)) +
+        fic.eE * g.gomg()(geod_fun::lamaux(otmp));
+        if (0) {
+          cout << "SIG1 "
+               << fic.nN << " " << fic.bet1.degrees() << " " << fic.bet0 << " "
+               << fic.bet1.degrees() - 180 * fic.bet0 << " "
+               << btmp.degrees() << " "
+               << fic.eE << " " << fic.omg1.degrees() << " " << fic.omg0 << " "
+               << fic.omg1.degrees() - 180 * fic.omg0 << " "
+               << otmp.degrees() << "\n";
+;
+        }
       s0 =  g.gbet().Max() + g.gomg().Max();
       if (0)
         cout << "GICS "

@@ -12,6 +12,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <utility>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 
@@ -434,10 +435,8 @@ namespace GeographicLib {
     bet.normalize(); omg.normalize();
   }
 
-  void Triaxial::cart2toellip(const vec3& r, const vec3& v,
-                              AuxAngle& bet, AuxAngle& omg, AuxAngle& alp)
-    const {
-    cart2toellip(r, bet, omg);
+  void Triaxial:: cart2toellip(const AuxAngle& bet, const AuxAngle& omg,
+                               const vec3& v, AuxAngle& alp) const {
     real tz = hypot(k, kp * omg.y()),
       tx = hypot(k * bet.x(), kp);
     if (!(bet.x() == 0 && omg.y() == 0)) {
@@ -462,7 +461,7 @@ namespace GeographicLib {
     } else {                    // bet.x() == 0 && omg.y() == 0
       // Special treatment at umbilical points
       real w = bet.y() * omg.x(),
-        upx = r[0]/Math::sq(a), upz = r[2]/Math::sq(c);
+        upx = omg.x() * tx/a, upz = bet.y() * tz/c;
       Math::norm(upx, upz);
       // compute direction cosines of v wrt the plane y = 0; angle = 2*alp
       real s2a = -v[1] * w, c2a = (upz*v[0] - upx*v[2]) * w;
@@ -485,11 +484,18 @@ namespace GeographicLib {
         alp.y() = flip * s2a;
         alp.x() = flip * (1 + c2a);
       } else {
-        alp.y() = flip * copysign(1 + c2a, s2a);
+        alp.y() = flip * copysign(1 - c2a, s2a);
         alp.x() = flip * fabs(s2a);
       }
     }
     alp.normalize();
+  }
+
+  void Triaxial::cart2toellip(const vec3& r, const vec3& v,
+                              AuxAngle& bet, AuxAngle& omg, AuxAngle& alp)
+    const {
+    cart2toellip(r, bet, omg);
+    cart2toellip(bet, omg, v, alp);
   }
 
   void Triaxial::elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
@@ -546,7 +552,8 @@ namespace GeographicLib {
   }
 
   TriaxialLine Triaxial::Inverse(AuxAngle bet1, AuxAngle omg1,
-                                 AuxAngle bet2, AuxAngle omg2)
+                                 AuxAngle bet2, AuxAngle omg2,
+                                 bool newmethod)
     const {
     bet1.normalize().round();
     omg1.normalize().round();
@@ -554,7 +561,14 @@ namespace GeographicLib {
     omg2.normalize().round();
     bool flip1 = AngNorm(bet1, omg1);
     (void) AngNorm(bet2, omg2);
+    bool umb1 = bet1.x() == 0 && omg1.y() == 0,
+      umb2 = bet2.x() == 0 && omg2.y() == 0;
     bool swap12;
+    /*
+    if (umb1 ^ umb2)
+      // NOT SURE ABOUT THIS
+      swap12 = umb1;          // If one umbilic point, make is point 2
+      else */
     {
       AuxAngle tmp1(bet1), tmp2(bet2);
       tmp1.setquadrant(0U); tmp2.setquadrant(0U);
@@ -571,14 +585,15 @@ namespace GeographicLib {
     if (swap12) {
       swap(bet1, bet2);
       swap(omg1, omg2);
+      swap(umb1, umb2);
     }
     // Now |bet1| > |bet2|
-    bool flipz = !signbit(bet1.y());
+    bool flipz = bet1.y() > 0;
     if (flipz) {
       bet1.y() *= -1;
       bet2.y() *= -1;
     }
-    bool flipy = signbit(omg1.y());
+    bool flipy = omg1.y() < 0 || (omg1.y() == 0 && omg2.y() < 0);
     if (flipy) {
       omg1.y() *= -1;
       omg2.y() *= -1;
@@ -589,161 +604,460 @@ namespace GeographicLib {
       omg2.x() *= -1;
     }
     bool flipomg = bet2.x() == 0 && signbit(omg2.y());
+    // Eliminate coordinate ambiguity bet2 = +/90 and omg2 < 0 for point 2
+    // Point 1 is already done with flipy
     if (flipomg) omg2.y() *= -1;
 
-    real f[4];
-    AuxAngle alpa( kp * fabs(omg1.y()), k * fabs(bet1.x()), true ),
-      alpb(alpa), alp2;
+    // Now bet1 <= 0, bet1 <= bet2 <= -bet1, 0 <= omg1 <= 90
+    //
+    // Distinguish two general categories of solution
+    //
+    // A The geodesic follows one of the principal ellipse (this means, of
+    //   course, that both points need to be on the same principal ellipse) and
+    //   the initial and final azimuth are easily determined.  The subcases
+    //   are:
+    //
+    //   a Minor ellipse, omg = +/-90: the ellipse is followed regardless of
+    //     the points; however we treat this using B (and the solution along
+    //     the ellipse is found on the first iteration).
+    //
+    //   b Major ellipse, bet = 0: the ellipse is followed provided that both
+    //     points are close enough "equatorial geodesics".  From point 1 we
+    //     follow an equatorial geodesic +/- 180deg in arc distance (= psi
+    //     variable).  If point 2 is within the resulting span of longitudes,
+    //     the geodesic is equatorial (compute with ArcPos0).  Other do search
+    //     iwith strategy B.
+    //
+    //   c Middle ellipse, bet = +/-90 or omg = 0,180: the ellipse is followed
+    //     provided that both points are close enough "meridional geodesics".
+    //     The four umbilical points divide the middle ellipse into 4 segments.
+    //     There are several subcases:
+    //
+    //     1 opposite umbilical points: multiple shortest geodesic, two of
+    //       which follow the middle ellipse.  But it's more useful to return
+    //       the one going through bet = 0, omg = 90.  Then all the others can
+    //       be generated by multipling tan(alp1) and tan(alp2) by a constant.
+    //
+    //     2 bet1 = -90, bet2 = -90: geodesic follows ellipse (compute with
+    //       ArcPos0).  Points may be adjacent umbilical points.
+    //
+    //     3 bet1 = -90, bet2 = 90: geodesic may follow the ellipse if if they
+    //       are close enough.  See case A.b for strategy.  Points may be
+    //       adjacent umbilical points.
+    //
+    //     4 |bet2| != 90: geodesic follows the ellipse.  Compute with Hybrid.
+    //
+    // B The geodesic does not follow a principal ellipse
+    //
+    //   a point 1 is an umbilical point, gam = 0, so we know alp2
+    //
+    //   b bet1 = -90: do a search with alp1 bracket = [-90+eps, 90-eps].
+    //   
 
-    TriaxialLineF l(*this, Triaxial::gamblk{}, 0.5, 1.5);
-    TriaxialLineF::ics fic(l, bet1, omg1, alpb);
-    TriaxialLineF::disttx d;
-    bool done = false, equatorial = false, merid = false;
+    // Set up variables for search
     real fa, fb;
-    //    cout << "ZZ " << alpb.x() << " " << omg2.y() << "\n";
-    if (alpb.y() == 0 && bet1.y() != 0) {
-      // alpb = 0 (i.e., omg1 = 0 or 180), not equatorial
-      if (omg2.y() == 0) {
-        if (omg2.x() < 0) {
-          alpb.setquadrant(2U);
-          fic.setquadrant(l, 2U);
-        }
-        done = true;
-      } else if (omg2.y() > 0) {
-        alpa = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), 1, false);
-        alpb = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), -1, false);
-        fa = - omg2.radians();
-        fb = fa + Math::pi();
-      } else {                  // omg2.y() < 0
-        alpa = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), -1, false);
-        alpb = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), 1, false);
-        fb = omg2.radians();
-        fa = fb - Math::pi();
-      }
-    } else if (alpb.x() == 0) {
-      // alpb = 90 (i.e., bet1 = -90)
-      if (omg2.y() == 0) {
-        if (omg2.x() > 0) {
-          alpb.setquadrant(3U);
-          fic.setquadrant(l, 3U);
-        }
-        done = true;
-      } else {
-        if (bet2.x() == 0) {    // bet2 = +/- 90
-          if (bet2.y() < 1) {   // bet2 = -90
-            AuxAngle bet2x, omg2x;
+    AuxAngle alpa, alpb;
+
+    // and for the final result
+    AuxAngle alp1, alp2, bet2a, omg2a;
+
+    TriaxialLineF l;
+    TriaxialLineF::ics fic;
+    TriaxialLineF::disttx d;
+
+    // flags for progress
+    bool done = false, equatorial = false, merid = false;
+    if (newmethod) {
+      if (bet1.x() * omg1.y() == 0 && bet2.x() * omg2.y() == 0) {
+        // both points on middle ellipse
+        l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+        if (umb1 && umb2 && bet2.y() > 0 && omg2.x() < 0) {
+          // process opposite umbilical points
+          fic = TriaxialLineF::ics(l, bet1, omg1,
+                                   AuxAngle{kp, k});
+          alp1 = AuxAngle(kp * exp(fic.df), k, true);
+          fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+          d = l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2, true);
+          // cout << "POS2 " << bet2a.degrees() << " " << omg2a.degrees() << "\n";
+          // if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
+          // cout << "ALP " << alp1.degrees() << " " << alp2.degrees() << "\n";
+          // s12 = 3.425383717961874 - 3.425383717962000
+          // alp1 =  59.7468646685880 = atan2(kp * exp(df), k )
+          // alp2 = 149.7468646685880 (149.74-90 = 59.74 entering)
+          // at midpoint alp0 = 54.735610317245353 = atan2(kp, k)
+          // df: 0.192555321594938
+          // deltashift: 1.078257823749821
+          // s0: 1.712691858981000
+          // u2-v2 = -df
+          // For
+          // [bet1, omg1, bet2, omg2] =
+          //    -90     0    90   180
+          //     90     0   -90   180
+          //     90   180   -90     0
+          //    -90   180    90     0
+          // [alp1, alp2] =
+          //   59.7469  149.7469
+          //  120.2531   30.2531
+          // -120.2531  -30.2531
+          //  -59.7469 -149.7469
+          // alp1  atan2(s1a * kp * exp(df), s1b * k)
+          // alp2  atan2(s2a * k, s2b * kp * exp(df))
+          // with [s1a, s1b,, s2a s2b] =
+          // +1   +1   +1   -1
+          // +1   -1   +1   +1
+          // -1   -1   -1   +1
+          // -1   +1   -1   -1
+          done = true;
+        } else if (bet1.x() == 0 && bet2.x() == 0) {
+          // bet1 = -90, bet2 = +/-90
+          if (bet2.y() < 1) {
+            // bet1 = bet2 = -90
+            alp1 = AuxAngle{1,0};
+            fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
             AuxAngle omg12 = omg2 - omg1;
-            d = l.ArcPos0(fic, omg12.radians(), bet2x, omg2x, alp2, false);
-            if (omg2x.y() < 0) alp2.y() *= -1;
+            d = omg12.y() == 0 && omg12.x() < 0 ?
+              // adjecent E/W umbilical points
+              TriaxialLineF::disttx{-Triaxial::BigValue(),
+              Triaxial::BigValue(), 0} :
+              l.ArcPos0(fic, omg12.radians(), bet2a, omg2a, alp2, false);
+            if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
             merid = done = true;
-          } else {              // bet2 = 90
-            alpb.setquadrant(3U);
-            fic.setquadrant(l, 3U);
-            AuxAngle bet2x, omg2x, alp2x;
-            (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
-            // cout << "\nOMG2x " << omg2.degrees() << " " << omg2x.degrees() << "\n";
-            omg2x -= omg2;
-            if (omg2x.y() > 0) {
-              omg2x = omg2 + omg1;
-              d = l.ArcPos0(fic, omg2x.radians(), bet2x, omg2x, alp2, false);
-              if (omg2x.y() < 0) alp2.y() *= -1;
+          } else {
+            // bet1 = -90, bet2 = 90
+            // need to see how far apart the points are
+            // If point 1 is at [-90, 0], direction is 0 else -90.
+            alp1 = omg1.y() == 0 ?  AuxAngle{0,1} :  AuxAngle{-1,0};
+            fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+            // If point 1 is [-90, 0] and point 2 is [90, 0]
+            if (omg1.y() == 0 && omg2.y() == 0) {
+              // adjacent N/S umbilical points
+              d = TriaxialLineF::disttx{Triaxial::BigValue(),
+                -Triaxial::BigValue(), 0};
               merid = done = true;
             } else {
-              alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20), false);
-              fa = omg2x.radians();
-              alpb.setquadrant(0U);
-              fic.setquadrant(l, 0U);
-              (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
-              omg2x -= omg2;
-              alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20), false);
-              fb = omg2x.radians();
+              d = l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+              omg2a -= omg2;
+              if (omg2a.y() > 0) {
+                omg2a = omg2 + omg1;
+                d = l.ArcPos0(fic, omg2a.radians(), bet2a, omg2a, alp2, false);
+                if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
+                merid = done = true;
+              } else {
+                alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20),
+                                false);
+                fa = omg2a.radians();
+                alpb.setquadrant(0U);
+                fic.setquadrant(l, 0U);
+                (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+                omg2a -= omg2;
+                alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20),
+                                false);
+                fb = omg2a.radians();
+              }
             }
           }
-        } else if (omg2.y() > 0) {
-          alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20), false);
-          alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20), false);
-          fa = -omg2.radians();
-          fb = Math::pi() + fa;
-        } else {                // omg2.y() < 0
-          alpa = AuxAngle(1, -numeric_limits<real>::epsilon()/(1<<20), false);
-          alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20), false);
-          fb = -omg2.radians();
-          fa = -Math::pi() + fb ;
+          /*
+        } else if (bet1.x() == 0) {
+          // bet1 = -90, omg2 = 0 or 180
+          // umb1, omg2 = 0, alp1 = 0
+          // umb1, omg2 = 180 alp1 = 90
+          // !umb1, omg2 = 0, alp1 = -90
+          // !umb1, omg2 = 180, alp1 = 90
+          alp1 = omg2.x() < 1 ? AuxAngle(1, 0, false) :
+            (omg1.y() == 0 ? AuxAngle(0, 1, false) :
+             AuxAngle(-1, 0, false));
+          fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+          d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+          merid = done = true;
+          */
+        } else {
+          // other meridional cases, invoke Hybrid with the following value of
+          // alp1
+          alp1 = bet1.x() == 0 ?
+            (omg2.x() < 1 ? AuxAngle(1, 0, false) :
+            (omg1.y() == 0 ? AuxAngle(0, 1, false) :
+             AuxAngle(-1, 0, false))) :
+            AuxAngle(0, omg2.x() > 0 ? 1 : -1);
+          fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+          d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
           if (0)
-          cout << "B90 " << alpa.degrees() << " " << fa/Math::degree() << " "
-               << alpb.degrees() << " " << fb/Math::degree() << " ";
+          cout << "\nZZZ " << alp1.degrees() << " " << alp2.degrees() << " "
+               << bet2.degrees() << " " << bet2a.degrees() << " "
+               << omg2a.degrees() << "\n";
+          merid = done = true;
+        }
+      } else if (bet1.y() == 0 && bet2.y() == 0) {
+        // both points on equator
+        AuxAngle omg12 = omg2 - omg1;
+        int eE = omg12.y() > 0 ? 1 : -1;
+        // set direction for orobe as +/-90 based on sign of omg12
+        alp1 = AuxAngle(eE, 0);
+        bet1.y() *= -1;
+        l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
+        fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+        (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+        omg2a -= omg2;
+        if (eE * omg2a.y() >= 0) {
+          // geodesic follows the equator
+          d = l.ArcPos0(fic, eE * omg12.radians(), bet2a, omg2a, alp2, false);
+          if (0)
+            cout << "\nZZZ " << bet1.y() << " " << alp1.degrees() << " "
+                 <<  eE * omg12.degrees() << " " << omg2a.degrees() << " "
+                 << d.betw2 << " " << d.omgw2 << " " << d.ind2 << "\n";
+          equatorial = done = true;
+        } else {
+          // geodesic does not follow the equator
+          //          cout << "PSI " << fic.psi1.degrees() << "\n";
+          alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20));
+          alpa = AuxAngle( 1, -numeric_limits<real>::epsilon()/(1<<20));
+          (eE > 0 ? fa : fb) = omg2a.radians();
+          alp1.setquadrant(eE > 0 ? 3U : 0U);
+          fic.setquadrant(l, eE > 0 ? 3U : 0U);
+          (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+          omg2a -= omg2;
+          (eE > 0 ? fb : fa) = omg2a.radians();
+        }
+      } else if (umb1) {
+        // umbilical point to general point
+        l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+        alp2 = AuxAngle( kp * omg2.y(), k * bet2.x(), true );
+        if (0)
+        cout << "ALP2 " << alp2.degrees() <<  "\n";
+        fic = TriaxialLineF::ics(l, bet2, omg2, alp2);
+        (void) l.ArcPos0(fic, (bet1 - bet2).radians(), bet2a, omg2a, alp1);
+        if (0)
+        cout << "ZZZ " << bet2a.degrees() << " " << omg2a.degrees() << " "
+             << alp1.degrees() << "\n";
+        if (alp1.y() < 0) alp1 += AuxAngle::cardinal(1U);
+        fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+        d = l.ArcPos0(fic, (bet2 - bet1).radians(), bet2a, omg2a, alp2);
+        done = true;
+      } else if (bet1.x() == 0) {
+        // bet1 = -90 to general point
+        if (omg2.y() > 0) {
+          alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20));
+          alpb = AuxAngle( 1, numeric_limits<real>::epsilon()/(1<<20));
+          fa = -omg2.radians();
+          fb = (AuxAngle::cardinal(2U)-omg2).radians();
+        } else {
+          alpa = AuxAngle( 1, -numeric_limits<real>::epsilon()/(1<<20));
+          alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20));
+          fa = (AuxAngle::cardinal(2U)-omg2).radians();
+          fb = -omg2.radians();
+        }
+      } else if (omg1.y() == 0) {
+        // omg1 = 0 to general point
+        if (omg2.y() > 0) {
+          alpa = AuxAngle(numeric_limits<real>::epsilon()/(1<<20),  1);
+          alpb = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), -1);
+          fa = -omg2.radians();
+          fb = (AuxAngle::cardinal(2U)-omg2).radians();
+        } else {
+          alpa = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), -1);
+          alpb = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20),  1);
+          fa = (AuxAngle::cardinal(2U)-omg2).radians();
+          fb = -omg2.radians();
+        }
+      } else {
+        // general case
+        real f[4];
+        alpa = AuxAngle( kp * fabs(omg1.y()), k * fabs(bet1.x()), true );
+        alpb = alpa;
+
+        l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+        fic = TriaxialLineF::ics(l, bet1, omg1, alpb);
+        {
+          unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
+          for (; qb <= 4U; ++qb, ++qa) {
+            if (qb) {
+              alpb.setquadrant(qb);
+              fic.setquadrant(l, qb);
+            }
+            if (qb < 4U) {
+              f[qb] = l.Hybrid0(fic, bet2, omg2);
+              if (0)
+                cout << "UMB " << qb << " "
+                     << alpb.quadrant() << " "
+                     << alpb.degrees() << " " << scientific
+                     << f[qb]/Math::degree() << "\n";
+              if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
+                alp1 = alpb;
+                d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+                done = true;
+                break;
+              }
+            }
+            if (qb && (f[qa & 3U] < 0 && f[qb & 3U] > 0)) {
+              break;
+            }
+          }
+          if (qb > 4U) std::cout << "ERROR\n";
+          fa = f[qa & 3U]; fb = f[qb & 3U];
+          alpa.setquadrant(qa & 3U);
         }
       }
     } else {
-      unsigned q = 0U;
-      for (; q <= 4U; ++q) {
-        if (q) {
-          alpb.setquadrant(q);
-          fic.setquadrant(l, q);
+      if (umb2)
+        // based on bet2.y() and omg2.x()
+        //  90   0 ->  -15   1  1 -> -1  1
+        //  90 180 ->   15   1 -1 ->  1  1
+        // -90 180 ->  125  -1 -1 ->  1 -1
+        // -90   0 -> -125  -1  1 -> -1 -1
+        alpa.copyquadrant(AuxAngle(-omg2.x(), bet2.y(), false));
+
+      real f[4];
+      alpa = AuxAngle( kp * fabs(omg1.y()), k * fabs(bet1.x()), true );
+      alpb = alpa;
+
+      l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+      fic = TriaxialLineF::ics(l, bet1, omg1, alpb);
+
+      //    cout << "ZZ " << alpb.x() << " " << omg2.y() << "\n";
+      if (alpb.y() == 0 && bet1.y() != 0) {
+        // alpb = 0 (i.e., omg1 = 0 or 180), not equatorial
+        if (omg2.y() == 0) {
+          if (omg2.x() < 0) {
+            alpb.setquadrant(2U);
+            fic.setquadrant(l, 2U);
+          }
+          done = true;
+        } else if (omg2.y() > 0) {
+          alpa = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), 1, false);
+          alpb = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), -1, false);
+          fa = - omg2.radians();
+          fb = fa + Math::pi();
+        } else {                  // omg2.y() < 0
+          alpa = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), -1, false);
+          alpb = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), 1, false);
+          fb = omg2.radians();
+          fa = fb - Math::pi();
         }
-        if (q < 4U) {
-          f[q] = l.Hybrid0(fic, bet2, omg2);
-          if (0)
-            cout << "UMB " << q << " "
-                 << alpb.quadrant() << " "
-                 << alpb.degrees() << " " << scientific
-                 << f[q]/Math::degree() << "\n";
-          if (fabs(f[q]) < numeric_limits<real>::epsilon()) {
-            done = true;
+      } else if (alpb.x() == 0) {
+        // alpb = 90 (i.e., bet1 = -90)
+        if (omg2.y() == 0) {
+          if (omg2.x() > 0) {
+            alpb.setquadrant(3U);
+            fic.setquadrant(l, 3U);
+          }
+          done = true;
+        } else {
+          if (bet2.x() == 0) {    // bet2 = +/- 90
+            if (bet2.y() < 1) {   // bet2 = -90
+              AuxAngle bet2x, omg2x;
+              AuxAngle omg12 = omg2 - omg1;
+              d = l.ArcPos0(fic, omg12.radians(), bet2x, omg2x, alp2, false);
+              if (omg2x.y() < 0) alp2.y() *= -1;
+              merid = done = true;
+            } else {              // bet2 = 90
+              alpb.setquadrant(3U);
+              fic.setquadrant(l, 3U);
+              AuxAngle bet2x, omg2x, alp2x;
+              (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
+              // cout << "\nOMG2x " << omg2.degrees() << " " << omg2x.degrees() << "\n";
+              omg2x -= omg2;
+              if (omg2x.y() > 0) {
+                omg2x = omg2 + omg1;
+                d = l.ArcPos0(fic, omg2x.radians(), bet2x, omg2x, alp2, false);
+                if (omg2x.y() < 0) alp2.y() *= -1;
+                merid = done = true;
+              } else {
+                alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20), false);
+                fa = omg2x.radians();
+                alpb.setquadrant(0U);
+                fic.setquadrant(l, 0U);
+                (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
+                omg2x -= omg2;
+                alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20), false);
+                fb = omg2x.radians();
+              }
+            }
+          } else if (omg2.y() > 0) {
+            alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20), false);
+            alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20), false);
+            fa = -omg2.radians();
+            fb = Math::pi() + fa;
+          } else {                // omg2.y() < 0
+            alpa = AuxAngle(1, -numeric_limits<real>::epsilon()/(1<<20), false);
+            alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20), false);
+            fb = -omg2.radians();
+            fa = -Math::pi() + fb ;
+            if (0)
+              cout << "B90 " << alpa.degrees() << " " << fa/Math::degree() << " "
+                   << alpb.degrees() << " " << fb/Math::degree() << " ";
+          }
+        }
+      } else {
+        unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
+        for (; qb <= 4U; ++qb, ++qa) {
+          if (qb) {
+            alpb.setquadrant(qb);
+            fic.setquadrant(l, qb);
+          }
+          if (qb < 4U) {
+            f[qb] = l.Hybrid0(fic, bet2, omg2);
+            if (0)
+              cout << "UMB " << qb << " "
+                   << alpb.quadrant() << " "
+                   << alpb.degrees() << " " << scientific
+                   << f[qb]/Math::degree() << "\n";
+            if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
+              done = true;
+              break;
+            }
+          }
+          if (qb && (f[qa & 3U] < 0 && f[qb & 3U] > 0)) {
             break;
           }
         }
-        if (q && (f[(q+3U) & 3U] < 0 && f[q & 3U] > 0)) {
-          break;
-        }
-      }
-      if (q > 4U) std::cout << "ERROR\n";
-      fa = f[(q+3U) & 3U]; fb = f[q & 3U];
-      alpa.setquadrant((q+3U) & 3U);
-      if (!done && bet1.y() == 0 && bet2.y() == 0 && (q == 1U || q == 3U)) {
-        // cout << "QQ " << q << "\n";
-        // Possibly equatorial geodesics
-        // The change in f(beta) between a point and the conjugate point is
-        int eE = q&2U ? -1 : 1;
-        AuxAngle alpx = AuxAngle(eE, 0);
-        l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alpx), 0.5, 1.5);
-        fic = TriaxialLineF::ics(l, bet1, omg1, alpx);
-        AuxAngle bet2x, omg2x, alp2x;
-        (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
-        // cout << "OMGa " << omg2.degrees() << " " << omg2x.degrees() << "\n";
-        omg2x -= omg2;
-        // cout << "OMGb " << eE << " " << omg2x.degrees() << "\n";
-        if (eE * omg2x.y() >= 0) {
-          // Should call ArcPos0 here and set alp2
-          equatorial = done = true;
-          // We have
-          //   delta = l.fbet()(v2) - l.fomg()(u2)
-          //   u2 = l.fomg().fwd(eE * omg2)
-          //   v2 = l.fbet().fwd(psi2)
-          // =>
-          //   v2 = l.fbet.inv(fic.delta +  l.fomg()(u2));
-          real u2=  l.fomg().fwd(eE * ((omg1 - AuxAngle::cardinal(1U)).radians() +
-                                       (omg2 - omg1).radians())),
-            v2 = l.fbet().inv(fic.delta + l.fomg()(u2));
-          d.omgw2 = u2;
-          d.betw2 = v2;
-          d.ind2 = 0;
-          if (0) {
-          cout << "POSQ " << omg2.degrees()-90 << " " << l.fomg().rev(u2) << " " << l.fbet().rev(v2) << "\n";
-          cout << "POSP " << u2 << " " << v2 << " " << fic.delta << "\n";
+        if (qb > 4U) std::cout << "ERROR\n";
+        fa = f[qa & 3U]; fb = f[qb & 3U];
+        alpa.setquadrant(qa & 3U);
+        if (!done && bet1.y() == 0 && bet2.y() == 0 && (qb == 1U || qb == 3U)) {
+          // cout << "QQ " << qb << "\n";
+          // Possibly equatorial geodesics
+          // The change in f(beta) between a point and the conjugate point is
+          int eE = qb&2U ? -1 : 1;
+          AuxAngle alpx = AuxAngle(eE, 0);
+          l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alpx), 0.5, 1.5);
+          fic = TriaxialLineF::ics(l, bet1, omg1, alpx);
+          AuxAngle bet2x, omg2x, alp2x;
+          (void) l.ArcPos0(fic, Math::pi(), bet2x, omg2x, alp2x);
+          // cout << "OMGa " << omg2.degrees() << " " << omg2x.degrees() << "\n";
+          omg2x -= omg2;
+          // cout << "OMGb " << eE << " " << omg2x.degrees() << "\n";
+          if (eE * omg2x.y() >= 0) {
+            // Should call ArcPos0 here and set alp2
+            equatorial = done = true;
+            // We have
+            //   delta = l.fbet()(v2) - l.fomg()(u2)
+            //   u2 = l.fomg().fwd(eE * omg2)
+            //   v2 = l.fbet().fwd(psi2)
+            // =>
+            //   v2 = l.fbet.inv(fic.delta +  l.fomg()(u2));
+            real u2=  l.fomg().fwd(eE * ((omg1 - AuxAngle::cardinal(1U)).radians() +
+                                         (omg2 - omg1).radians())),
+              v2 = l.fbet().inv(fic.delta + l.fomg()(u2));
+            d.omgw2 = u2;
+            d.betw2 = v2;
+            d.ind2 = 0;
+            if (0) {
+              cout << "POSQ " << omg2.degrees()-90 << " " << l.fomg().rev(u2) << " " << l.fbet().rev(v2) << "\n";
+              cout << "POSP " << u2 << " " << v2 << " " << fic.delta << "\n";
+            }
+            alpb = alpx;
+          } else {
+            alpx.x() = -numeric_limits<real>::epsilon()/(1<<20);
+            (eE > 0 ? alpa : alpb) = alpx;
+            (eE > 0 ? fa : fb) = omg2x.radians();
           }
-          alpb = alpx;
-        } else {
-          alpx.x() = -numeric_limits<real>::epsilon()/(1<<20);
-          (eE > 0 ? alpa : alpb) = alpx;
-          (eE > 0 ? fa : fb) = omg2x.radians();
         }
       }
     }
-    AuxAngle alp1;
-    if (done)
-      alp1 = alpb;
-    else {
+    
+    if (done) {
+      if (!newmethod)
+        alp1 = alpb;
+    } else {
       int countn = 0, countb = 0;
       if (0)
         cout << "ROOT "
@@ -762,20 +1076,24 @@ namespace GeographicLib {
                       &countn, &countb);
       l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
       fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+      if (newmethod) {
+        d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+      }        
     }
 
-    AuxAngle bet2a, omg2a;
-    if (equatorial)
-      alp2 = alp1;
-    else if (!merid)
-      d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+    if (!newmethod) {
+      if (equatorial)
+        alp2 = alp1;
+      else if (!merid)
+        d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+    }
     TriaxialLineG ld(*this, l.gm());
     TriaxialLineG::ics dic(ld, fic);
     real s13 = ld.dist(dic, d);
     (void) AngNorm(bet2a, omg2a, alp2);
 
     if (0)
-      cout << "\nFLIP " << flipomg << flipx << flipy << flipz << swap12 << flip1 << "\n"
+      cout << "\nFLIP "<< flipomg << flipx << flipy << flipz << swap12 << flip1 << "\n"
            << "COORDS " << bet1.degrees() << " " << omg1.degrees() << " "
            << bet2.degrees() << " " << omg2.degrees() << " "
            << alp1.degrees() << " " << alp2.degrees() << "\n";
@@ -788,6 +1106,7 @@ namespace GeographicLib {
       omg2.x() *= -1;
       alp1.y() *= -1;
       alp2.y() *= -1;
+      // cout << "ALPX " << alp1.degrees() << " " << alp2.degrees() << "\n";
     }
 
     if (flipy) {
@@ -795,32 +1114,66 @@ namespace GeographicLib {
       omg2.y() *= -1;
       alp1.y() *= -1;
       alp2.y() *= -1;
+      // cout << "ALPY1 " << alp1.degrees() << " " << alp2.degrees() << "\n";
+      if (0) {
+      if (umb1) alp1.x() *= -1;
+      if (umb2) alp2.x() *= -1;
+      // cout << "ALPY2 " << alp1.degrees() << " " << alp2.degrees() << "\n";
+      }
     }
 
     if (flipz) {
       bet1.y() *= -1;
       bet2.y() *= -1;
+
       alp1.x() *= -1;
       alp2.x() *= -1;
+      // cout << "ALPZ " << alp1.degrees() << " " << alp2.degrees() << "\n";
     }
 
     if (swap12) {
       swap(bet1, bet2);
       swap(omg1, omg2);
       swap(alp1, alp2);
-      alp1 += AuxAngle::cardinal(2U);
-      alp2 += AuxAngle::cardinal(2U);
+      swap(umb1, umb2);
+      if (0)
+        cout << "UMB " << umb1 << umb2 << " "
+           << alp1.degrees() << " " << alp2.degrees() << "\n";
+      alp1 += AuxAngle::cardinal(umb1 ? 1U : 2U);
+      alp2 += AuxAngle::cardinal(umb2 ? 1U : 2U);
+      if (0)
+        cout << "UMB " << umb1 << umb2 << " "
+           << alp1.degrees() << " " << alp2.degrees() << "\n";
     }
 
     if (flip1)
       Flip(bet1, omg1, alp1);
 
-    if (flipomg || flip1 || swap12 || flipz || flipy || flipx) {
+    if (0)
+      cout << "\nFLIP "<< flipomg << flipx << flipy << flipz << swap12 << flip1 << "\n"
+           << "COORDS " << bet1.degrees() << " " << omg1.degrees() << " "
+           << bet2.degrees() << " " << omg2.degrees() << " "
+           << alp1.degrees() << " " << alp2.degrees() << "\n";
+
+    if (flip1 || swap12 || flipz || flipy || flipx) {
       fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
       dic = TriaxialLineG::ics(ld, fic);
     }
-    dic.s13 = s13;
-    return TriaxialLine(l, fic, ld, dic);
+    dic.s13 = fmax(real(0), s13);
+    if (0) {
+      TriaxialLine ll(*this, bet1, omg1, alp1);
+      ll.SetDistance(s13);
+      AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+      int ibet1, iomg1, ialp1, ibet2, iomg2, ialp2;
+      ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
+      real s12x = ll.Distance();
+      ll.Position(s12x, bet2x, omg2x, alp2x, &ibet2, &iomg2, &ialp2);
+      std::cout << "OUT\n" << bet1x.degrees() << " " << omg1x.degrees() << " " << alp1x.degrees() << " " << ibet1 << iomg1 << ialp1 << signbit(bet1x.x()) << signbit(omg1x.y()) << "\n"
+                << bet2x.degrees() << " " << omg2x.degrees() << " " << alp2x.degrees() << " " << ibet2 << iomg2 << ialp2 << "\n"
+                << s12x << "\n";
+    }
+
+    return TriaxialLine(move(l), move(fic), move(ld), move(dic));
   }
 
   Math::real Triaxial::HybridA(const Triaxial& t,
@@ -866,6 +1219,7 @@ namespace GeographicLib {
       }
       return AuxAngle(0);
     }
+    // cout << "SNOO " << xa.x() << " " << xb.x() << "\n";
     bool trip = false, correct = false;
     for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
          cntn < 50 || GEOGRAPHICLIB_PANIC;) {
@@ -881,7 +1235,7 @@ namespace GeographicLib {
       }
       ++cntn;
       if (0)
-        cout << scientific
+        cout // << scientific
              << "RT " << cntn << " "
              << xt.degrees() << " ";
       ft = f(xt);
