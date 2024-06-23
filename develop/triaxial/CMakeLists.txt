@@ -62,3 +62,8 @@ add_executable (Geod3Solve Geod3Solve.cpp Trigfun.cpp Trigfun.hpp
    Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
 target_link_libraries (Geod3Solve ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
+
+add_executable (TriRand TriRand.cpp Trigfun.cpp Trigfun.hpp
+   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
+target_link_libraries (TriRand ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES})

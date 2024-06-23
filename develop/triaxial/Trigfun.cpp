@@ -254,6 +254,7 @@ namespace GeographicLib {
     // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
     real s = _h / (Math::pi() * _coeff[0]),
       x0 = s * z, dx = s * Max();
+    // cout << "QQF\n";
     return Max() == 0 ? x0 :
       root(z, fp, x0, x0 - dx, x0 + dx, countn, countb, tol);
   }
@@ -265,8 +266,11 @@ namespace GeographicLib {
     real s = _h / (Math::pi() * _coeff[0]),
       x00 = s * z, dx = s * Max();
     x0 = fmin(x00 + dx, fmax(x00 - dx, x0));
-    return Max() == 0 ? x0 :
+    //    cout << "QQG\n";
+    real ret = Max() == 0 ? x0 :
       root(z, fp, x0, x00 - dx, x00 + dx, countn, countb, tol);
+    //    cout << "QQGE\n";
+    return ret;
   }
   Math::real Trigfun::root(const function<real(real)>& f,
                            real z, const function<real(real)>& fp,
@@ -274,9 +278,13 @@ namespace GeographicLib {
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
                            real tol) {
-    return root([&f, &fp] (real x) -> pair<real, real>
+    // cout << "QQH\n";
+    real ret =
+    root([&f, &fp] (real x) -> pair<real, real>
                 { return pair<real, real>(f(x), fp(x)); },
                 z, x0, xa, xb, xscale, zscale, s, countn, countb, tol);
+    // cout << "QQHE" << endl;
+    return ret;
   }
 
   Math::real Trigfun::root(const function<pair<real, real>(real)>& ffp,
@@ -290,9 +298,10 @@ namespace GeographicLib {
     real vtol0 = tol * zscale,
       vtol1 = pow(tol, real(0.75)) * zscale,
       xtol = pow(tol, real(0.75)) * xscale,
-      x = x0;
-    int i = 0, maxit = 50, b = 0;
+      x = x0, oldv = Math::infinity();
+    int k = 0, maxit = 150, b = 0;
     real p = Math::pi()/2 * 0;
+    real xa0 = xa, x00 = x0, xb0 = xb;
     if (0) {
       /*
       xa = xa-1e-10;
@@ -302,43 +311,73 @@ namespace GeographicLib {
       pair<real, real> val0 = ffp(x0);
       pair<real, real> valb = ffp(xb);
       cout << scientific;
-      cout << "DAT " << s << " " << x0-xa << " " << xb-x0 << "\n";
+      cout << "DAT " << s << " " << x0-xa << " " << xb-x0 << " " << z << "\n";
       cout << "DAT "
            << xa << " " << vala.first - z << " " << vala.second << "\n";
       cout << "DAT "
            << x0 << " " << val0.first - z << " " << val0.second << "\n";
       cout << "DAT "
            << xb << " " << valb.first - z << " " << valb.second << "\n";
+      if ((vala.first - z) * (valb.first - z) > 0)
+        cout << "DATBAD\n";
+      //      debug = true; //z > 1.749675 && z < 1.749677;
     }
-    for (; i < maxit ||
-           (throw GeographicLib::GeographicErr("Convergence failureX"), false)
+    if (debug) cout << "ss0 " << k << endl;
+    for (; k < maxit ||
+           (throw GeographicLib::GeographicErr("Convergence failureZZ"), false)
            || GEOGRAPHICLIB_PANIC;) {
-      ++i;
+      // This inverse problem uses lots of iterations
+      //   20 60 -90 180 127.4974 24.6254 2.4377
+      // Need to figure out why.
+      if (false && k == maxit/2) {
+        debug = true;
+        cout << "SCALE " << xscale << " " << zscale << "\n";
+        pair<real, real> vala = ffp(xa0);
+        pair<real, real> val0 = ffp(x00);
+        pair<real, real> valb = ffp(xb0);
+        cout << scientific;
+        cout << "DAT " << s << " " << x00-xa0 << " " << xb0-x00 << " " << z << "\n";
+        cout << "DAT "
+             << xa0 << " " << vala.first - z << " " << vala.second << "\n";
+        cout << "DAT "
+             << x00 << " " << val0.first - z << " " << val0.second << "\n";
+        cout << "DAT "
+             << xb0 << " " << valb.first - z << " " << valb.second << "\n";
+        int nsamp = -1;
+        for (int i = 0; i <= nsamp; ++i) {
+          real xx = xa0 + i * (xb0-xa0) / nsamp;
+          pair<real, real> val = ffp(xx);
+          cout << "PLOT " << xx << " " << val.first - z << " " << val.second << "\n";
+        }
+      }
+      ++k;
       pair<real, real> val = ffp(x);
       real v = val.first - z,
         vp = val.second,
         dx = - v/vp;
       if (debug)
-        cout << i << " " << xa-p << " " << x-p << " " << xb-p << " "
-             << dx << " " << x + dx-p << " " << v << "\n";
+        cout <<"XX " << k << " " << xa-p << " " << x-p << " " << xb-p << " "
+             << dx << " " << x + dx-p << " " << v << endl;
       // FIX
       //      if (!(fabs(v) > vtol0))
-      if (fabs(v) <= vtol0)
+      if (fabs(v) <= vtol0) {
+        if (debug) cout << "break " << k << endl;
         break;
-      else if (s*v > 0)
+      } else if (s*v > 0)
         xb = fmin(xb, x);
       else
         xa = fmax(xa, x);
       x += dx;
-      if (!(xa <= x && x <= xb)) {
+      if (!(xa <= x && x <= xb) || fabs(v) > oldv) {
         if (debug)
-          cout << "bis " << xa-x << " " << x-xb << "\n";
+          cout << "bis " << xa-x << " " << x-xb << endl;
         x = (xa + xb)/2;
         ++b;
       } else if (!(fabs(dx) > xtol && fabs(v) > vtol1))
         break;
+      oldv = fabs(v);
     }
-    if (countn) *countn += i;
+    if (countn) *countn += k;
     if (countb) *countb += b;
     return x;
   }
@@ -386,6 +425,7 @@ namespace GeographicLib {
     vector<real> F(np, real(0));
     real z, x;
     z = nhp/2; x = nhr/nhp * z;
+    // cout << "QQC\n";
     F[1] = root(ffp, z, x + (dxm+dxp)/2, x + dxm, x + dxp,
                 hp, nhp, s, countn, countb, tol) - x;
     real dz = nhp/2, z0 = dz/2;
@@ -393,6 +433,7 @@ namespace GeographicLib {
       z = z0 + i * dz;
       x = nhr/nhp * z;
       real x0 = x + F[1] * sqrt(real(0.5));
+      // cout << "QQD\n";
       F[2 * i] = root(ffp, z, x0, x + dxm, x + dxp,
                       hp, nhp, s, countn, countb, tol) - x;
     }
@@ -411,6 +452,7 @@ namespace GeographicLib {
         z = z0 + i * dz;
         x = nhr/nhp * z;
         real x0 = fmin(x + dxp, fmax(x + dxm, t(z) + x));
+        // cout << "QQE\n";
         F[i] = root(ffp, z, x0, x + dxm, x + dxp,
                     hp, nhp, s, &cntn, &cntb, tol) - x;
       }

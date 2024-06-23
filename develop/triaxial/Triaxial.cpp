@@ -1098,8 +1098,11 @@ namespace GeographicLib {
            << bet2.degrees() << " " << omg2.degrees() << " "
            << alp1.degrees() << " " << alp2.degrees() << "\n";
     // Undo switches in reverse order flipz, swap12, flip1
-    if (flipomg)
+    if (flipomg) {
       omg2.y() *= -1;
+      alp2.x() *= -1;
+      alp2.y() *= -1;
+    }
 
     if (flipx) {
       omg1.x() *= -1;
@@ -1222,7 +1225,12 @@ namespace GeographicLib {
     // cout << "SNOO " << xa.x() << " " << xb.x() << "\n";
     bool trip = false, correct = false;
     for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
-         cntn < 50 || GEOGRAPHICLIB_PANIC;) {
+         cntn < 100 || GEOGRAPHICLIB_PANIC;) {
+      // These inverse problems use lots of iterations
+      //  22  48  90   1 -48.5628 -5.7915 0.7706
+      //  56 115 -89 179 113.5952 179.8512 1.6130
+      // -51  89  90   1 -65.9888 10.0598 2.0530
+      // Need to figure out why.
       AuxAngle xt = 2*t == 1 ?
         AuxAngle(xa.y() + xb.y(),
                  xa.x() + xb.x(), true) :

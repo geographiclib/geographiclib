@@ -327,11 +327,11 @@ namespace GeographicLib {
       //            (s0 <  sbet - somg)
       // or
       //   sign(d0) * s0 < sbet - somg
-      newt2(d0, s0, fbet, fomg, gbet, gomg, 0, -pi2, pi2, 2, 2,
+      newt2(d0, s0, fbet, fomg, gbet, gomg, 0, -pi2, pi2, pi2, pi2,
             u, v, countn, countb);
     } else {
       // Otherwise, use v is the independent variable
-      newt2(-d0, s0, fomg, fbet, gomg, gbet, 0, -pi2, pi2, 2, 2,
+      newt2(-d0, s0, fomg, fbet, gomg, gbet, 0, -pi2, pi2, pi2, pi2,
             v, u, countn, countb);
     }
   }

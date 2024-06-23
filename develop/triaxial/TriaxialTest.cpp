@@ -576,7 +576,7 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
       err1 = cartdiff(t, bet1, omg1, alp1, bet1x, omg1x, alp1x),
       err2 = cartdiff(t, bet2, omg2, alp2, bet2x, omg2x, alp2x),
       err3 = cartdiff(t, bet1x, omg1x, alp1x, bet2x, omg2x, alp2x);
-    if (bet1 + bet2 == 0 && err1.second >= 1.e-5) {
+    if (bet1d + bet2d == 0 && err1.second >= 1.e-5) {
       alp1x.x() *= -1;
       alp2x.x() *= -1;
       err1 = cartdiff(t, bet1, omg1, alp1, bet1x, omg1x, alp1x);
