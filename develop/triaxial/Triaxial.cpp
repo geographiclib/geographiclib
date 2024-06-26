@@ -75,6 +75,12 @@ namespace GeographicLib {
     y[3+0] /= f; y[3+1] /= f; y[3+2] /= f;
   }
 
+  void Triaxial::Norm(vec10& y) const {
+    vec6 y6{y[0], y[1], y[2], y[3+0], y[3+1], y[3+2]};
+    Norm(y6);
+    for (int i = 0; i < 6; ++i) y[i] = y6[i];
+  }
+
   Triaxial::vec6 Triaxial::Accel(const vec6& y) const {
     vec3 up = {y[0] / axes2n[0], y[1], y[2] / axes2n[2]};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
@@ -82,6 +88,17 @@ namespace GeographicLib {
             Math::sq(y[3+1]) +
             Math::sq(y[3+2]) / axes2n[2]) / u2;
     return vec6{y[3+0], y[3+1], y[3+2], f * up[0], f * up[1], f * up[2]};
+  }
+
+  Triaxial::vec10 Triaxial::Accel(const vec10& y) const {
+    vec3 up = {y[0] / axes2n[0], y[1], y[2] / axes2n[2]};
+    real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
+      f = -(Math::sq(y[3+0]) / axes2n[0] +
+            Math::sq(y[3+1]) +
+            Math::sq(y[3+2]) / axes2n[2]) / u2,
+      K = 1/Math::sq(u2 * axesn[0] * axesn[2]);
+    return vec10{ y[3+0], y[3+1], y[3+2], f * up[0], f * up[1], f * up[2],
+                  y[7], -K * y[6], y[9], -K * y[8] };
   }
 
   int Triaxial::Direct(const vec3& r1, const vec3& v1, real s12,
@@ -108,6 +125,35 @@ namespace GeographicLib {
     Norm(y);
     r2 = {b*y[0], b*y[1], b*y[2]};
     v2 = {y[3], y[4], y[5]};
+    return n;
+  }
+
+  int Triaxial::Direct(const vec3& r1, const vec3& v1, real s12,
+                       vec3& r2, vec3& v2, real& m12, real& M12, real& M21,
+                       real eps) const {
+    using namespace boost::numeric::odeint;
+    if (eps == 0)
+      eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
+    // Normalize all distances to b.
+    vec10 y{r1[0]/b, r1[1]/b, r1[2]/b, v1[0], v1[1], v1[2], 0, 1, 1, 0};
+    Norm(y);
+    int n;
+    s12 /= b;
+    auto fun = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
+      yp = y; Norm(yp); yp = Accel(yp);
+    };
+    if (1) {
+      bulirsch_stoer<vec10, real> stepper(eps, real(0));
+      n = integrate_adaptive(stepper, fun, y, real(0), s12, 1/real(10));
+    } else {
+      n = int(round(1/eps));
+      runge_kutta4<vec10, real> stepper;
+      integrate_n_steps(stepper, fun, y, real(0), s12/n, n);
+    }
+    Norm(y);
+    r2 = {b*y[0], b*y[1], b*y[2]};
+    v2 = {y[3], y[4], y[5]};
+    m12 = b*y[6]; M12 = y[8]; M21 = y[7]; // AG Eq 29: dm12/ds2 = M21
     return n;
   }
 

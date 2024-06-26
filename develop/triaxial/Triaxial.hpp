@@ -44,6 +44,11 @@ namespace GeographicLib {
     // with axes = axesn
     vec6 Accel(const vec6& y) const;
     void Norm(vec6& y) const;
+    typedef std::array<real, 10> vec10;
+    // These private versions of Accel and Norm assume normalized ellipsoid
+    // with axes = axesn
+    vec10 Accel(const vec10& y) const;
+    void Norm(vec10& y) const;
     static void normvec(vec3& r) {
       real h = hypot3(r[0], r[1], r[2]);
       r[0] /= h; r[1] /= h; r[2] /= h;
@@ -73,6 +78,9 @@ namespace GeographicLib {
     void Norm(vec3& r, vec3& v) const;
     int Direct(const vec3& r1, const vec3& v1, real s12, vec3& r2, vec3& v2,
                real eps = 0) const;
+    int Direct(const vec3& r1, const vec3& v1, real s12,
+               vec3& r2, vec3& v2, real& m12, real& M12, real& M21,
+               real eps = 0) const;
     void Direct(const vec3& r1, const vec3& v1, real ds,
                 long nmin, long nmax,
                 std::vector<vec3>& r2, std::vector<vec3>& v2,
@@ -81,6 +89,7 @@ namespace GeographicLib {
                          AuxAngle bet2, AuxAngle omg2,
                          bool newmethod = true) const;
     static real BigValue() {
+      using std::log;
       static real bigval = -2*log(std::numeric_limits<real>::epsilon());
       return bigval;
     }
@@ -241,7 +250,7 @@ namespace GeographicLib {
     static real dfp(real c, real kap, real kapp, real eps) {
       // function dfp = dfpf(phi, kappa, epsilon)
       // return derivative of Delta f
-      using std::cos; using std::sqrt;
+      using std::sqrt;
       // s = sqrt(1 - kap * sin(phi)^2)
       real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
       return (1 + eps*kapp) * kap * c / (s * (sqrt(kapp * (1 - eps*c2)) + s));
@@ -403,7 +412,6 @@ namespace GeographicLib {
         sqrt( (1 - eps * c2) / (( kapp + c2) * c2) ) * Math::sq(c);
     }
     static real gfpsip(real c, real kap, real mu) {
-      using std::sqrt;
       return (kap + mu) * Math::sq(c);
     }
     static real gvp(real cn, real dn, real kap, real kapp, real eps, real mu) {
