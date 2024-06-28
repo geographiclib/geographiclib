@@ -90,7 +90,7 @@ namespace GeographicLib {
                          bool newmethod = true) const;
     static real BigValue() {
       using std::log;
-      static real bigval = -2*log(std::numeric_limits<real>::epsilon());
+      static real bigval = -3*log(std::numeric_limits<real>::epsilon());
       return bigval;
     }
     static real clamp(real x, real mult = 1) {
@@ -127,7 +127,7 @@ namespace GeographicLib {
         gam = (a - b) * (a + b);
       // Factor of 8 allows umbilical geodesics with alp in [-180,180] degrees
       // to return gam = 0.  (If in radians the factor could be reduced to 4.)
-      if (fabs(gam) < std::numeric_limits<real>::epsilon())
+      if (fabs(gam) < 3*std::numeric_limits<real>::epsilon()/2)
         gam = 0 * gam;
       return gam;
     }

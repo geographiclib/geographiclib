@@ -1,5 +1,5 @@
 function runtest(n,k)
-  dat = load('Geod3Test.txt');
+  dat = load('testset.txt');
   m = size(dat, 1);
   dat = [dat, [1:m]'];
   dat = dat(k:n:end, :);

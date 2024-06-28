@@ -122,13 +122,39 @@ void errreport(const Triaxial& t,
   AuxAngle bet1a, omg1a, alp1a, bet2a, omg2a, alp2a;
   Triaxial::vec3 r1a, v1a, r2a, v2a;
   TriaxialLine l1(t, bet1x, omg1x, alp1x);
-  l1.Position(s12, bet2a, omg2a, alp2a);
-  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
-  real errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a);
   TriaxialLine l2(t, bet2x, omg2x, alp2x);
   l2.Position(-s12, bet1a, omg1a, alp1a);
   t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
   real errr1 = vecdiff(r1, r1a), errv1 = vecdiff(v1, v1a);
+  if (0) {
+  if (1) {
+  cout << "BET1 " << bet1x.y() << " " << bet1x.x() << "\n";
+  cout << "OMG1 " << omg1x.y() << " " << omg1x.x() << "\n";
+  cout << "ALP1 " << alp1x.y() << " " << alp1x.x() << "\n";
+  cout << "V1 " << v1[0] << " " << v1[1] << " " << v1[2] << "\n";
+  cout << "BET1a " << bet1a.y() << " " << bet1a.x() << "\n";
+  cout << "OMG1a " << omg1a.y() << " " << omg1a.x() << "\n";
+  cout << "ALP1a " << alp1a.y() << " " << alp1a.x() << "\n";
+  cout << "V1a " << v1a[0] << " " << v1a[1] << " " << v1a[2] << "\n";
+  }
+    cout << fixed << setprecision(0)
+         << ceil(errs/eps) << " "
+         << ceil(errr1/eps) << " " << ceil(errv1/eps) << endl;
+    return;
+  }
+  l1.Position(s12, bet2a, omg2a, alp2a);
+  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
+  if (0) {
+  cout << "BET2 " << bet2x.y() << " " << bet2x.x() << "\n";
+  cout << "OMG2 " << omg2x.y() << " " << omg2x.x() << "\n";
+  cout << "ALP2 " << alp2x.y() << " " << alp2x.x() << "\n";
+  cout << "V2 " << v2[0] << " " << v2[1] << " " << v2[2] << "\n";
+  cout << "BET2a " << bet2a.y() << " " << bet2a.x() << "\n";
+  cout << "OMG2a " << omg2a.y() << " " << omg2a.x() << "\n";
+  cout << "ALP2a " << alp2a.y() << " " << alp2a.x() << "\n";
+  cout << "V2a " << v2a[0] << " " << v2a[1] << " " << v2a[2] << "\n";
+  }
+  real errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a);
   cout << fixed << setprecision(0)
        << ceil(errs/eps) << " "
        << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "

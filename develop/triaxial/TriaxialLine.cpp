@@ -142,9 +142,12 @@ namespace GeographicLib {
       alp2 = alp2a.radians();
     } else if (_f.gamma() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_gic.s0);  // reduce to [-s0, s0)
+      if (sig2n.first - _gic.s0 >= -5 * numeric_limits<real>::epsilon()) {
+        sig2n.first = -_gic.s0;
+        ++sig2n.second;
+      }
       real u2, v2,
-        deltax = fmax(-_fic.deltamax,
-                     fmin(_fic.deltamax, _fic.delta + sig2n.second * _fic.deltashift));
+        deltax = Triaxial::clamp(_fic.delta + sig2n.second * _fic.deltashift, 2);
       if (0)  
         cout << "HH " << deltax << " " << _gic.sig1 << " " <<  s12/_t.b << " " << sig2 << " " << 2*_gic.s0 << "\n";
       solve2u(deltax, sig2n.first, fbet(), fomg(), gbet(), gomg(), u2, v2,
@@ -166,6 +169,9 @@ namespace GeographicLib {
       */
       bet2 = fbet().rev(u2); omg2 = fomg().rev(v2);
       bet2a = AuxAngle::lam(u2); omg2a = AuxAngle::lam(v2);
+      if (0)
+        cout << "BET " << bet2/Math::degree() << " " << bet2a.y() << " " << bet2a.x() << "\n"
+             << "OMG " << omg2/Math::degree() << " " << omg2a.y() << " " << omg2a.x() << "\n";
       // cout << "UU0 " << bet2 / Math::degree() << " " << bet2a.degrees() << "\n";
       // cout << "UU0 " << omg2 / Math::degree() << " " << omg2a.degrees() << "\n";
       // cout << "SIG2N " << sig2 << " " << _gic.s0 << " " << sig2n.first << " " << sig2n.second << "\n";
@@ -211,6 +217,8 @@ namespace GeographicLib {
         alp2a = AuxAngle((_fic.eE * _t.kp) / cosh(v2), _t.k * (Nx / cosh(u2)),
                          false);
         alp2 = alp2a.radians();
+        if (0)
+        cout << "ALP " << alp2/Math::degree() << " " << alp2a.y() << " " << alp2a.x() << "\n";
       }
     } else {
       // gamma = NaN
@@ -228,6 +236,10 @@ namespace GeographicLib {
     omg2 = omg2 / Math::degree() + 90;
     bet2 = bet2 / Math::degree();
     alp2 = alp2 / Math::degree();
+    if (0)
+    cout << "BET2 " << bet2 << " " << bet2a.y() << " " << bet2a.x() << "\n"
+         << "OMG2 " << omg2 << " " << omg2a.y() << " " << omg2a.x() << "\n"
+         << "ALP2 " << alp2 << " " << alp2a.y() << " " << alp2a.x() << "\n";
     //    cout << "UUU " << _fic.bet0 << " " <<  _fic.ibet << " " << bet2 << " " << bet2a.degrees() << "\n";
     if (ibet2)
       *ibet2 = _fic.ibet + int(round((bet2 - bet2a.degrees()) / Math::td)) -
@@ -306,11 +318,15 @@ namespace GeographicLib {
     //
     // fbet, fomg, gbet, gomg are increasing functions defined in [-1, 1]*pi2
     // Assume fbet(0) = fomg(0) = gbet(0) = gomg(0) = 0
-    real pi2 = -2*log(numeric_limits<real>::epsilon()/2),
+    real pi2 = Triaxial::BigValue(),
       sbet = gbet.Max(), somg = gomg.Max(), stot = sbet + somg,
       dbet = fbet.Max(), domg = fomg.Max(), del  = dbet - domg;
-    pi2 *= 0.75;
-    if (fabs(s0) >= stot) {
+    bool debug = false;
+    if (debug)
+      cout << "HEREQ " << pi2 << " " << d0 << " " << s0 << " " << stot << " " << sbet-somg << " "
+         << fabs(s0) - stot << " "
+         << fabs((1 - 2 * signbit(d0)) * s0 - (sbet - somg)) << "\n";
+    if (fabs(s0) - stot >= -5 * numeric_limits<real>::epsilon()) {
       // close to umbilic points we have
       // fbet(u) = u -/+ dbet
       // fomg(v) = v -/+ domg
@@ -321,6 +337,16 @@ namespace GeographicLib {
       real t0 = copysign(pi2, s0),
         t1 = (d0 + (1 - 2 * signbit(s0)) * del) / 2;
       u = t0 + t1; v = t0 - t1;
+      if (debug) cout << "UV1 " << u << " " << v << "\n";
+    } else if (fabs(d0) > 2*pi2/3 &&
+               fabs((1 - 2 * signbit(d0)) * s0 - (sbet - somg)) <=
+               5 * numeric_limits<real>::epsilon()) {
+      if (d0 > 0) {
+        u = 2*d0/3; v = -1*d0/3;
+      } else {
+        u = 1*d0/3; v = -2*d0/3;
+      }
+      if (debug) cout << "UV2 " << u << " " << v << "\n";
     } else if ((1 - 2 * signbit(d0)) * s0 < sbet - somg) {
       // Use u as independent variable if
       //   d0 < 0 ? (s0 > -sbet + somg) :
@@ -329,10 +355,12 @@ namespace GeographicLib {
       //   sign(d0) * s0 < sbet - somg
       newt2(d0, s0, fbet, fomg, gbet, gomg, 0, -pi2, pi2, pi2, pi2,
             u, v, countn, countb);
+      if (debug) cout << "UV3 " << u << " " << v << "\n";
     } else {
       // Otherwise, use v is the independent variable
       newt2(-d0, s0, fomg, fbet, gomg, gbet, 0, -pi2, pi2, pi2, pi2,
             v, u, countn, countb);
+      if (debug) cout << "UV4 " << u << " " << v << "\n";
     }
   }
 
@@ -420,8 +448,7 @@ namespace GeographicLib {
           remx(_fic.nN * bet2r, Math::pi());  // reduce to [-pi/2, pi/2)
         int parity = fmod(bet2n.second, real(2)) ? -1 :  1;
         int alp0 = _fic.nN < 0 ? _fic.eE : 0;
-        real deltax = fmax(-_fic.deltamax,
-                           fmin(_fic.deltamax, _fic.delta + bet2n.second * _fic.deltashift)),
+        real deltax = Triaxial::clamp(_fic.delta + bet2n.second * _fic.deltashift, 2),
           u2 = fbet().fwd(bet2n.first),
           v2 = fomg().inv(fbet()(u2) - deltax),
           omg2 = _fic.eE * parity * fomg().rev(v2);
@@ -519,9 +546,7 @@ namespace GeographicLib {
                << bet2n.second << "\n";
         int parity = fmod(bet2n.second, real(2)) ? -1 :  1;
         int alp0 = fic.nN < 0 ? fic.eE : 0;
-        real deltax = fmax(-2*fic.deltamax,
-                           fmin(2*fic.deltamax,
-                               fic.delta + bet2n.second * fic.deltashift)),
+        real deltax = Triaxial::clamp(fic.delta + bet2n.second * fic.deltashift, 2),
           u2 = fbet().fwd(bet2n.first);
         real
           v2 = fomg().inv(fbet()(u2) - deltax),
@@ -674,9 +699,7 @@ namespace GeographicLib {
                << bet2n.second << "\n";
         int parity = fmod(bet2n.second, real(2)) ? -1 : 1,
           alp0 = fic.nN < 0 ? fic.eE : 0;
-        real deltax = fmax(-2*fic.deltamax,
-                           fmin(2*fic.deltamax,
-                               fic.delta + bet2n.second * fic.deltashift));
+        real deltax = Triaxial::clamp(fic.delta + bet2n.second * fic.deltashift, 2);
         u2 = fbet().fwd(bet2n.first);
         v2 = fomg().inv(fbet()(u2) - deltax);
         real omg2 = fic.eE * parity * fomg().rev(v2);
@@ -707,9 +730,7 @@ namespace GeographicLib {
           TriaxialLine::remx(fic.eE * omg2r, Math::pi());
         int parity = fmod(omg2n.second, real(2)) ? -1 : 1,
           alp0 =  0;
-        real deltax = fmax(-2*fic.deltamax,
-                      fmin(2*fic.deltamax,
-                           fic.delta + omg2n.second * fic.deltashift));
+        real deltax = Triaxial::clamp(fic.delta + omg2n.second * fic.deltashift, 2);
         v2 = fomg().fwd(omg2n.first);
         u2 = fbet().inv(fomg()(v2) + deltax);
         real bet2 = fic.nN * parity * fbet().rev(u2);
