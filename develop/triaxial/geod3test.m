@@ -10,11 +10,8 @@ function errs = geod3test(dat)
   [r2, v2] = t.elliptocart2(ell2, alp2);
   s12a = t.distance(r1, r2);
   r2a = r2;
-  m = length(s12);
-  for k = 1:m
-    [r2a(k, :), v2a(k,:)] = t.reckon(r1(k, :), v1(k, :), s12(k));
-    [r1a(k, :), v1a(k,:)] = t.reckon(r2(k, :), v2(k, :), -s12(k));
-  end
+  [r2a, v2a] = t.reckon(r1, v1, s12);
+  [r1a, v1a] = t.reckon(r2, v2, -s12);
   err1 = abs(s12a - s12);
   err2 = sqrt(sum((r2 - r2a).^2, 2));
   err3 = sqrt(sum((v2 - v2a).^2, 2));

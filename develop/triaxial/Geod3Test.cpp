@@ -9,6 +9,7 @@
 #include <GeographicLib/AuxAngle.hpp>
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
+#include "Angle.hpp"
 
 using namespace GeographicLib;
 using namespace std;
@@ -161,10 +162,33 @@ void errreport(const Triaxial& t,
        << ceil(errr1/eps) << " " << ceil(errv1/eps) << endl;
 }
 
+void angletest() {
+  typedef Math::real real;
+  typedef Angle ang;
+  ang a1(-180);
+  ang a2(-180);
+  ang a3 = a2 - a1;
+  cout << real(a1) << " " << real(a2) << " " << real(a3) << "\n";
+  for (int i = -360; i <= 720; i += 30) {
+    ang a1(i);
+    for (int j = -360; j <= 720; j += 30) {
+      ang a2(j);
+      ang a3 = a2 - a1;
+      int q = int(round(double(a3)));
+      if (q != j - i)
+        cout << "ERROR " << q - (j-i) << " " << q << " " << j << " " << i << "\n";
+    }
+  }
+}
+
 int main(int argc, const char* const argv[]) {
   try {
     typedef Math::real real;
     Utility::set_digits();
+    if (0) {
+      angletest();
+      return 0;
+    }
     int num = 1000;
     int skew = 10;
     int div = 1;

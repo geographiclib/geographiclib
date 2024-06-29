@@ -63,11 +63,11 @@ namespace GeographicLib {
                         const AuxAngle& bet1, const AuxAngle& omg1,
                         const AuxAngle& alp1,
                         const AuxAngle& bet2, const AuxAngle& omg2);
-    static  AuxAngle findroot(const
-                              std::function<Math::real(const AuxAngle&)>& f,
-                              AuxAngle xa,  AuxAngle xb,
-                              Math::real fa, Math::real fb,
-                              int* countn = nullptr, int* countb = nullptr);
+    static AuxAngle findroot(const
+                             std::function<Math::real(const AuxAngle&)>& f,
+                             AuxAngle xa,  AuxAngle xb,
+                             Math::real fa, Math::real fb,
+                             int* countn = nullptr, int* countb = nullptr);
   public:
     real a, b, c;               // semi-axes
     vec3 axes, axesn, axes2n;
@@ -86,8 +86,7 @@ namespace GeographicLib {
                 std::vector<vec3>& r2, std::vector<vec3>& v2,
                 real eps = 0) const;
     TriaxialLine Inverse(AuxAngle bet1, AuxAngle omg1,
-                         AuxAngle bet2, AuxAngle omg2,
-                         bool newmethod = true) const;
+                         AuxAngle bet2, AuxAngle omg2) const;
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
@@ -102,36 +101,19 @@ namespace GeographicLib {
       static real thresh = 1/real(8);
       return thresh;
     }
-    real gamma(const AuxAngle& bet, const AuxAngle& omg, const AuxAngle& alp)
+    real gammax(const AuxAngle& bet, const AuxAngle& omg, const AuxAngle& alp)
       const {
-      // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
-      //       = k2*cb2*sa2 - kp2*so2*ca2
-      // Maybe need accurate expressions for
-      //   k2  - gamma = k2*(sb2+ca2*cb2) + kp2*so2*ca2
-      //   kp2 + gamma = k2*cb2*sa2 + kp2*(co2+sa2*so2)
-      // If gamma is given eval new alp given new bet and new omg
-      // gamma < 0
-      //   ca2 = (k2*cb2-gamma) / (k2*cb2+kp2*so2)
-      //   sa2 = (kp2+gamma - kp2*co2) / (k2*cb2+kp2*so2)
-      // gamma > 0
-      //   ca2 = (k2-gamma - k2*sb2) / (k2*cb2+kp2*so2)
-      //   sa2 = (kp2*so2+gamma) / (k2*cb2+kp2*so2)
-      // gamma > 0
-      //   k2*sb2 = spsi2 * (k2-gamma)
-      //   (k2-gamma - k2*sb2) = (k2-gamma)*(1-spsi2) = (k2-gamma)*cpsi2
-      //   spsi2 = k2*sb2/(k2-gamma)
-      //   cpsi2 = (k2*cb2-gamma)/(k2-gamma)
       using std::fabs; using std::copysign;
       //      bet.normalize(); omg.normalize(); alp.normalize();
       real a = k * bet.x() * alp.y(), b = kp * omg.y() * alp.x(),
         gam = (a - b) * (a + b);
       // Factor of 8 allows umbilical geodesics with alp in [-180,180] degrees
       // to return gam = 0.  (If in radians the factor could be reduced to 4.)
-      if (fabs(gam) < 3*std::numeric_limits<real>::epsilon()/2)
+      if (2*fabs(gam) < 3*std::numeric_limits<real>::epsilon())
         gam = 0 * gam;
       return gam;
     }
-    real gammap(real gamma,
+    real gammapx(real gamma,
                 const AuxAngle& bet, const AuxAngle& omg,
                 const AuxAngle& alp) const {
       // Return k2 - gamma or kp2 + gamma evaluated carefully
@@ -195,7 +177,24 @@ namespace GeographicLib {
     private:
       typedef Math::real real;
     public:
-      real gam, rtgam, gamp, rtgamp,
+      // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
+      //       = k2*cb2*sa2 - kp2*so2*ca2
+      // Need accurate expressions for
+      //   k2  - gamma = k2*(sb2+ca2*cb2) + kp2*so2*ca2
+      //   kp2 + gamma = k2*cb2*sa2 + kp2*(co2+sa2*so2)
+      // If gamma is given, eval new alp given new bet and new omg
+      // gamma < 0
+      //   ca2 = (k2*cb2-gamma) / (k2*cb2+kp2*so2)
+      //   sa2 = (kp2+gamma - kp2*co2) / (k2*cb2+kp2*so2)
+      // gamma > 0
+      //   ca2 = (k2-gamma - k2*sb2) / (k2*cb2+kp2*so2)
+      //   sa2 = (kp2*so2+gamma) / (k2*cb2+kp2*so2)
+      // gamma > 0
+      //   k2*sb2 = spsi2 * (k2-gamma)
+      //   (k2-gamma - k2*sb2) = (k2-gamma)*(1-spsi2) = (k2-gamma)*cpsi2
+      //   spsi2 = k2*sb2/(k2-gamma)
+      //   cpsi2 = (k2*cb2-gamma)/(k2-gamma)
+      real gam,
       // [nu, nup]
       //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for gam > 0,
       //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for gam < 0
@@ -203,21 +202,25 @@ namespace GeographicLib {
         nu, nup;
       gamblk()
         : gam(0)
-        , rtgam(0)
-        , gamp(Math::NaN())
-        , rtgamp(Math::NaN())
         , nu(Math::NaN())
         , nup(Math::NaN())
       {}
       gamblk(const Triaxial& t,
              const AuxAngle& bet, const AuxAngle& omg, const AuxAngle& alp) {
         using std::sqrt; using std::fabs;
-        gam = t.gamma(bet, omg, alp);
-        rtgam = sqrt(fabs(gam));
-        gamp = t.gammap(gam, bet, omg, alp);
-        rtgamp = sqrt(gamp);
-        nu = rtgam / (gam > 0 ? t.k : t.kp);
-        nup = rtgamp / (gam > 0 ? t.k : t.kp);
+        real a = t.k * bet.x() * alp.y(), b = t.kp * omg.y() * alp.x();
+        gam = (a - b) * (a + b);
+        if (2*fabs(gam) < 3*std::numeric_limits<real>::epsilon())
+          gam = 0 * gam;
+        real gamp = gam == 0 ? 0 :
+          (gam > 0 ? // k2 - gamma
+           t.k2 * (Math::sq(bet.y()) + Math::sq(alp.x()*bet.x())) +
+           t.kp2 * Math::sq(omg.y()*alp.x()) :
+           // kp2 + gamma
+           t.k2 *  Math::sq(bet.x()*alp.y()) +
+           t.kp2 * (Math::sq(omg.x()) + Math::sq(alp.y()*omg.y())));
+        nu = sqrt(fabs(gam)) / (gam > 0 ? t.k : t.kp);
+        nup = sqrt(gamp) / (gam > 0 ? t.k : t.kp);
       }
     };
   };

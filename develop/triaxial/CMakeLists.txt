@@ -69,6 +69,7 @@ target_link_libraries (TriRand ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (Geod3Test Geod3Test.cpp Trigfun.cpp Trigfun.hpp
-   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
+  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
+  Angle.cpp Angle.hpp)
 target_link_libraries (Geod3Test ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})

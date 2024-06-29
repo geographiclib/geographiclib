@@ -496,7 +496,6 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
     // if (fabs(bet1d) == 90 || fabs(bet2d) == 90) {
     bool umb1 = bet1.x() == 0 && omg1.y() == 0,
       umb2 = bet2.x() == 0 && omg2.y() == 0;
-    bool newmethod = true;
     //    if (umb1 || umb2 || !( (fabs(bet1d) == 90 || fabs(bet2d) == 90) &&
     //                           !(fabs(bet1d) == 90 && fabs(bet2d) == 90) )) {
     if (0) {
@@ -520,7 +519,7 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
       cout << "SKIP" << endl;
       continue;
     }
-    TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2, newmethod);
+    TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2);
     AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
     l.pos1(bet1x, omg1x, alp1x);
     /*
@@ -620,7 +619,7 @@ int main() {
       Triaxial t(sqrt(2.0), 1.0, 1/sqrt(2.0));
       TriaxialLine l = t.Inverse(
                      AuxAngle::degrees(-45.0),AuxAngle::degrees(-30.0),
-                     AuxAngle::degrees(-90.0),AuxAngle::degrees(0.0), true);
+                     AuxAngle::degrees(-90.0),AuxAngle::degrees(0.0));
       real s12 = l.Distance();
       /*      real s12 = 0.361729;
       TriaxialLine l(t, AuxAngle::degrees(-45.0),AuxAngle::degrees(-30.0),
