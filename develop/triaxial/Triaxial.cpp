@@ -594,35 +594,6 @@ namespace GeographicLib {
         alp1 = AuxAngle(kp * exp(fic.df), k, true);
         fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
         d = l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2, true);
-        // cout << "POS2 " << bet2a.degrees() << " " << omg2a.degrees() << "\n";
-        // if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
-        // cout << "ALP " << alp1.degrees() << " " << alp2.degrees() << "\n";
-        // s12 = 3.425383717961874 - 3.425383717962000
-        // alp1 =  59.7468646685880 = atan2(kp * exp(df), k )
-        // alp2 = 149.7468646685880 (149.74-90 = 59.74 entering)
-        // at midpoint alp0 = 54.735610317245353 = atan2(kp, k)
-        // df: 0.192555321594938
-        // deltashift: 1.078257823749821
-        // s0: 1.712691858981000
-        // u2-v2 = -df
-        // For
-        // [bet1, omg1, bet2, omg2] =
-        //    -90     0    90   180
-        //     90     0   -90   180
-        //     90   180   -90     0
-        //    -90   180    90     0
-        // [alp1, alp2] =
-        //   59.7469  149.7469
-        //  120.2531   30.2531
-        // -120.2531  -30.2531
-        //  -59.7469 -149.7469
-        // alp1  atan2(s1a * kp * exp(df), s1b * k)
-        // alp2  atan2(s2a * k, s2b * kp * exp(df))
-        // with [s1a, s1b,, s2a s2b] =
-        // +1   +1   +1   -1
-        // +1   -1   +1   +1
-        // -1   -1   -1   +1
-        // -1   +1   -1   -1
         done = true;
       } else if (bet1.x() == 0 && bet2.x() == 0) {
         // bet1 = -90, bet2 = +/-90
@@ -715,7 +686,6 @@ namespace GeographicLib {
         done = true;
       } else {
         // geodesic does not follow the equator
-        //          cout << "PSI " << fic.psi1.degrees() << "\n";
         alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20));
         alpa = AuxAngle( 1, -numeric_limits<real>::epsilon()/(1<<20));
         (eE > 0 ? fa : fb) = omg2a.radians();
@@ -898,10 +868,13 @@ namespace GeographicLib {
     // require fa and fb to have opposite signs
 
     AuxAngle xm;                  // The return value
-    int cntn = 0, cntb = 0;
+    int cntn = 0, cntb = 0, maxcnt = 100;
     bool trip = false, correct = false;
     for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
-         cntn < 100 || GEOGRAPHICLIB_PANIC;) {
+         cntn < maxcnt ||
+           (throw GeographicLib::GeographicErr
+            ("Convergence failure Triaxial::findroot"), false)
+           ||GEOGRAPHICLIB_PANIC;) {
       // These inverse problems use lots of iterations
       //  22  48  90   1 -48.5628 -5.7915 0.7706
       //  56 115 -89 179 113.5952 179.8512 1.6130

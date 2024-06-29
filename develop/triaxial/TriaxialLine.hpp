@@ -32,7 +32,6 @@ namespace GeographicLib {
         psi1;                    // nonumbilic angle psi
       real u0, v0,               // starting point in u,v space
         df, deltashift,          // umbilic constants
-        deltamax,                // max value of delta for umbilic
         delta;                   //  starting point for umbilic
       int ibet, iomg, ialp,      // wrapping quantities for bet, omg, alp
         nN, eE,                  // Northgoing / eastgoing
@@ -74,10 +73,11 @@ namespace GeographicLib {
     Triaxial::gamblk _gm;
     dist_fun _gbet, _gomg;
   public:
+    real s0;
     class ics {
       // bundle of data setting the initial conditions for a distance calc
     public:
-      real s0, sig1, s13;           // starting point
+      real sig1, s13;           // starting point
       ics();
       ics(const TriaxialLineG& g,
           const TriaxialLineF::ics& fic);
@@ -100,22 +100,6 @@ namespace GeographicLib {
     TriaxialLineF::ics _fic;
     TriaxialLineG _g;
     TriaxialLineG::ics _gic;
-    /*
-    Triaxial::gamblk _gm;
-    //    real _gammao, _rtgam, _gamp, _rtgamp;
-    AuxAngle _bet1, _omg1, _alp1;
-    int _ibet, _iomg, _ialp;
-    int _nN, _eE,                 // Northgoing / eastgoing
-      _flip,                    // Is bet or omg on the backside
-      _bet0, _omg0, _alp0;      // Reference vals (1 = 0, -1 = 180)
-    AuxAngle _psi1;             // nonumbilic constants
-    real _u0, _v0;
-    real _df, _deltashift, _s0; // umbilic constants
-    real _deltamax;             // max value of delta for umbilic
-    real _delta, _sig1;         //  starting point
-    bool _umbalt, _distinit;
-    real _s13;                  // Distance to the reference point 3
-    */
     static void solve2(real f0, real g0,
                        const geod_fun& fx, const geod_fun& fy,
                        const dist_fun& gx, const dist_fun& gy,
@@ -186,7 +170,6 @@ namespace GeographicLib {
     real lat1(bool unroll = true) const;
     real lon1(bool unroll = true) const;
     real azi1(bool unroll = true) const;
-    void diag() const;
     void pos1(AuxAngle& bet1, AuxAngle& omg1, AuxAngle& alp1,
               int* ibet1 = nullptr, int* iomg1 = nullptr,
               int* ialp1 = nullptr) const;

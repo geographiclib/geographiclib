@@ -156,7 +156,6 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
   //  bet1 = AuxAngle::degrees(1); omg1 = AuxAngle::degrees(2);
   //  alp1 = AuxAngle::degrees(3);
   TriaxialLine l(t, bet1, omg1, alp1);
-  l.diag();
   cout << fixed << setprecision(6);
   real ds = 1/real(10);
   //  for (int s12 = 0; s12 <= 30; ++s12) {

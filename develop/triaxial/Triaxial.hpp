@@ -157,6 +157,9 @@ namespace GeographicLib {
         using std::sqrt; using std::fabs;
         real a = t.k * bet.x() * alp.y(), b = t.kp * omg.y() * alp.x();
         gam = (a - b) * (a + b);
+        // This direct test case
+        // -30 -86 58.455576621187896848 -1.577754
+        // fails badly with reverse direct if gam is not set to zero here.
         if (2*fabs(gam) < 3*std::numeric_limits<real>::epsilon())
           gam = 0 * gam;
         real gamp = gam == 0 ? 0 :
