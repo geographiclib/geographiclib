@@ -81,13 +81,15 @@ namespace GeographicLib {
     if (!isfinite(q)) return Angle::NaN();
     q = round(q);
     int iq = int(remainder(q, real(4)));
-    iq = iq == -2 ? 2 : iq;     // Now iq in (-2, 2];
-    real s, c;
+    // iq is in [-2, 2];
+    // We could fold iq = -2 to iq = 2; but this way work too.
+    real s, c, z = 0;
     switch (iq) {
-    case -1: s = -1; c =  0; break;
-    case  0: s =  0; c =  1; break;
-    case  1: s =  1; c =  0; break;
-    default: s =  0; c = -1; break; // case 2
+    case -2: s = -z; c = -1; break;
+    case -1: s = -1; c =  z; break;
+    case  1: s =  1; c =  z; break;
+    case  2: s =  z; c = -1; break;
+    default: s =  z; c =  1; break; // iq = 0
     }
     return Angle(s, c, round((q - iq) / 4));
   }
@@ -106,7 +108,7 @@ namespace GeographicLib {
     return Angle(numeric_limits<real>::epsilon() / (1 << 20), 1, 0, true);
   }
 
-  Math::real Angle::quadrant() const {
+  Math::real Angle::ncardinal() const {
     int iq = (signbit(_s) ? -1 : 1) * (signbit(_c) ?
                                        ( -_c >= fabs(_s) ? 2 : 1 ) :
                                        (  _c >= fabs(_s) ? 0 : 1 ));
@@ -119,12 +121,12 @@ namespace GeographicLib {
   }
 
   Angle& Angle::operator+=(const Angle& p) {
-    real q = quadrant() + p.quadrant();
+    real q = ncardinal() + p.ncardinal();
     real c = _c * p._c - _s * p._s;
     _s = _s * p._c + _c * p._s;
     _c = c;
     _n += p._n;
-    q -= quadrant();
+    q -= ncardinal();
     _n += round(q / 4);
     return *this;
   }
@@ -181,7 +183,7 @@ namespace GeographicLib {
     return *this;
   }
 
-  Angle& Angle::setsigns(unsigned q) {
+  Angle& Angle::setquadrant(unsigned q) {
     _s = copysign(_s, real(             q  & 2U ? -1 : 1 ));
     _c = copysign(_c, real( ((q >> 1) ^ q) & 1U ? -1 : 1 ));
     return *this;

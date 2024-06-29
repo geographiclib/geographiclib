@@ -39,16 +39,6 @@ namespace GeographicLib {
 #endif
     }
   private:
-    typedef std::array<real, 6> vec6;
-    // These private versions of Accel and Norm assume normalized ellipsoid
-    // with axes = axesn
-    vec6 Accel(const vec6& y) const;
-    void Norm(vec6& y) const;
-    typedef std::array<real, 10> vec10;
-    // These private versions of Accel and Norm assume normalized ellipsoid
-    // with axes = axesn
-    vec10 Accel(const vec10& y) const;
-    void Norm(vec10& y) const;
     static void normvec(vec3& r) {
       real h = hypot3(r[0], r[1], r[2]);
       r[0] /= h; r[1] /= h; r[2] /= h;
@@ -70,21 +60,12 @@ namespace GeographicLib {
                              int* countn = nullptr, int* countb = nullptr);
   public:
     real a, b, c;               // semi-axes
-    vec3 axes, axesn, axes2n;
+    vec3 axes;
     real e2, k2, kp2, k, kp;
     Triaxial();
     Triaxial(real a, real b, real c);
     void Norm(vec3& r) const;
     void Norm(vec3& r, vec3& v) const;
-    int Direct(const vec3& r1, const vec3& v1, real s12, vec3& r2, vec3& v2,
-               real eps = 0) const;
-    int Direct(const vec3& r1, const vec3& v1, real s12,
-               vec3& r2, vec3& v2, real& m12, real& M12, real& M21,
-               real eps = 0) const;
-    void Direct(const vec3& r1, const vec3& v1, real ds,
-                long nmin, long nmax,
-                std::vector<vec3>& r2, std::vector<vec3>& v2,
-                real eps = 0) const;
     TriaxialLine Inverse(AuxAngle bet1, AuxAngle omg1,
                          AuxAngle bet2, AuxAngle omg2) const;
     static real BigValue() {
@@ -101,40 +82,6 @@ namespace GeographicLib {
       static real thresh = 1/real(8);
       return thresh;
     }
-    real gammax(const AuxAngle& bet, const AuxAngle& omg, const AuxAngle& alp)
-      const {
-      using std::fabs; using std::copysign;
-      //      bet.normalize(); omg.normalize(); alp.normalize();
-      real a = k * bet.x() * alp.y(), b = kp * omg.y() * alp.x(),
-        gam = (a - b) * (a + b);
-      // Factor of 8 allows umbilical geodesics with alp in [-180,180] degrees
-      // to return gam = 0.  (If in radians the factor could be reduced to 4.)
-      if (2*fabs(gam) < 3*std::numeric_limits<real>::epsilon())
-        gam = 0 * gam;
-      return gam;
-    }
-    real gammapx(real gamma,
-                const AuxAngle& bet, const AuxAngle& omg,
-                const AuxAngle& alp) const {
-      // Return k2 - gamma or kp2 + gamma evaluated carefully
-      using std::hypot;
-      return gamma == 0 ? 0 :
-        (gamma > 0 ? // return k2 - gamma
-         k2 * (Math::sq(bet.y()) + Math::sq(alp.x()*bet.x())) +
-         kp2 * Math::sq(omg.y()*alp.x()) :
-         // return kp2 + gamma
-         k2 *  Math::sq(bet.x()*alp.y()) +
-         kp2 * (Math::sq(omg.x()) + Math::sq(alp.y()*omg.y())));
-    }
-    /*
-    gamblk fillgamma(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const {
-      using std::sqrt; using std::fabs;
-      real gam = gamma(bet, omg, alp),
-        gamp = gammap(gam, bet, omg, alp);
-      //      gamblk g = { gam, sqrt(fabs(gam)), gamp, sqrt(gamp) };
-      return { gam, sqrt(fabs(gam)), gamp, sqrt(gamp) };
-    }
-    */
     static bool AngNorm(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp,
                         bool alt = false) {
       using std::signbit;

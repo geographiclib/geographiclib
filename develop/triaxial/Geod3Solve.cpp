@@ -18,6 +18,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "TriaxialLine.hpp"
+#include "TriaxialODE.hpp"
 
 // #include "GeodSolve.usage"
 
@@ -284,7 +285,8 @@ int main(int argc, const char* const argv[]) {
         t.elliptocart2(AuxAngle::degrees(bet1), AuxAngle::degrees(omg1),
                        AuxAngle::degrees(alp1), r1, v1);
         std::vector<Triaxial::vec3> r2, v2;
-        t.Direct(r1, v1, ds, nmin, nmax, r2, v2);
+        TriaxialODE direct(t, r1, v1);
+        direct.Position(ds, nmin, nmax, r2, v2);
         for (size_t i = 0; i < r2.size(); ++i) {
           AuxAngle bet2, omg2, alp2;
           t.cart2toellip(r2[i], v2[i], bet2, omg2, alp2);

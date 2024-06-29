@@ -10,6 +10,7 @@
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 #include "Angle.hpp"
+#include "TriaxialODE.hpp"
 
 using namespace GeographicLib;
 using namespace std;
@@ -45,7 +46,7 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
 #elif GEOGRAPHICLIB_PRECISION == 3
   int prec = 14;
 #else
-  int prec = 18+5;
+  int prec = 18;
 #endif
   typedef Math::real real;
   AuxAngle bet1x = AuxAngle::degrees(bet1), omg1x = AuxAngle::degrees(omg1), 
@@ -53,49 +54,19 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
   TriaxialLine l =
     t.Inverse(bet1x, omg1x, bet2x, omg2x);
   real s12 = l.Distance();
-  AuxAngle bet1a, omg1a, alp1a, bet2a, omg2a, alp2a;
-  Triaxial::vec3 r1, v1, r2, v2, r2a, v2a, r2b, v2b;
-  l.pos1(bet1a, omg1a, alp1a);
-  t.elliptocart2(bet1a, omg1a, alp1a, r1, v1);
-  // 2a = simple calc of pos/vel from l.Position
-  l.Position(s12, bet2a, omg2a, alp2a);
-  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
-  // 2 = correct alp2a -> alp2
-  AuxAngle alp2 = alp2a;
-  t.cart2toellip(bet2x, omg2x, v2, alp2);
-  t.elliptocart2(bet2x, omg2x, alp2, r2, v2);
-  // 2b = cart direct calc of pos/vel
+  AuxAngle bet1a, omg1a, alp1, bet2a, omg2a, alp2;
+  Triaxial::vec3 r2, v2;
   real m12, M12, M21;
-  t.Direct(r1, v1, s12, r2b, v2b, m12, M12, M21);
-  cout << bet1 << " " << omg1 << " " << nicestr(alp1a.degrees(), prec, true) << " "
-       << bet2 << " " << omg2 << " " << nicestr(alp2a.degrees(), prec, true) << " "
+  l.pos1(bet1a, omg1a, alp1);
+  TriaxialODE direct(t, bet1, omg1, alp1.degrees());
+  direct.Position(s12, r2, v2, m12, M12, M21);
+  t.cart2toellip(bet2x, omg2x, v2, alp2);
+  cout << bet1 << " " << omg1 << " "
+       << nicestr(alp1.degrees(), prec, true) << " "
+       << bet2 << " " << omg2 << " "
+       << nicestr(alp2.degrees(), prec, true) << " "
        << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " "
        << nicestr(M12, prec+2) << " " << nicestr(M21, prec+2) << endl;
-  cout << "2 " << r2[0] << " " << r2[1] << " " << r2[2] << " "
-       << v2[0] << " " << v2[1] << " " << v2[2] << "\n"
-       << "2a " << r2a[0] << " " << r2a[1] << " " << r2a[2] << " "
-       << v2a[0] << " " << v2a[1] << " " << v2a[2] << "\n"
-       << "2b " << r2b[0] << " " << r2b[1] << " " << r2b[2] << " "
-       << v2b[0] << " " << v2b[1] << " " << v2b[2] << "\n";
-  cout << "bet2x " << bet2x.y() << " " << bet2x.x() << "\n"
-       << "omg2x " << omg2x.y() << " " << omg2x.x() << "\n"
-       << "bet2a " << bet2a.y() << " " << bet2a.x() << "\n"
-       << "omg2a " << omg2a.y() << " " << omg2a.x() << "\n"
-       << "alp2 " << alp2.y() << " " << alp2.x() << "\n"
-       << "alp2a " << alp2a.y() << " " << alp2a.x() << "\n";
-  cout << "X "
-       << nicestr(Triaxial::hypot3(r2[0]-r2a[0], r2[1]-r2a[1], r2[2]-r2a[2]),
-                  prec+2) << " "
-       << nicestr(Triaxial::hypot3(v2[0]-v2a[0], v2[1]-v2a[1], v2[2]-v2a[2]),
-                  prec+2) << " "
-       << nicestr(Triaxial::hypot3(r2[0]-r2b[0], r2[1]-r2b[1], r2[2]-r2b[2]),
-                  prec+2) << " "
-       << nicestr(Triaxial::hypot3(v2[0]-v2b[0], v2[1]-v2b[1], v2[2]-v2b[2]),
-                  prec+2) << " "
-       << nicestr(Triaxial::hypot3(r2b[0]-r2a[0], r2b[1]-r2a[1], r2b[2]-r2a[2]),
-                  prec+2) << " "
-       << nicestr(Triaxial::hypot3(v2b[0]-v2a[0], v2b[1]-v2a[1], v2b[2]-v2a[2]),
-                  prec+2) << endl;
 }
 
 Math::real vecdiff(const Triaxial::vec3& a, const Triaxial::vec3& b) {
@@ -108,7 +79,11 @@ void errreport(const Triaxial& t,
                Math::real s12,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
   typedef Math::real real;
+#if GEOGRAPHICLIB_PRECISION > 3
+  static const real eps = real(1e-20);
+#else
   static const real eps = numeric_limits<real>::epsilon()/2;
+#endif
   AuxAngle
     bet1x = AuxAngle::degrees(bet1), omg1x = AuxAngle::degrees(omg1),
     alp1x = AuxAngle::degrees(alp1),
@@ -127,34 +102,8 @@ void errreport(const Triaxial& t,
   l2.Position(-s12, bet1a, omg1a, alp1a);
   t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
   real errr1 = vecdiff(r1, r1a), errv1 = vecdiff(v1, v1a);
-  if (0) {
-  if (1) {
-  cout << "BET1 " << bet1x.y() << " " << bet1x.x() << "\n";
-  cout << "OMG1 " << omg1x.y() << " " << omg1x.x() << "\n";
-  cout << "ALP1 " << alp1x.y() << " " << alp1x.x() << "\n";
-  cout << "V1 " << v1[0] << " " << v1[1] << " " << v1[2] << "\n";
-  cout << "BET1a " << bet1a.y() << " " << bet1a.x() << "\n";
-  cout << "OMG1a " << omg1a.y() << " " << omg1a.x() << "\n";
-  cout << "ALP1a " << alp1a.y() << " " << alp1a.x() << "\n";
-  cout << "V1a " << v1a[0] << " " << v1a[1] << " " << v1a[2] << "\n";
-  }
-    cout << fixed << setprecision(0)
-         << ceil(errs/eps) << " "
-         << ceil(errr1/eps) << " " << ceil(errv1/eps) << endl;
-    return;
-  }
   l1.Position(s12, bet2a, omg2a, alp2a);
   t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
-  if (0) {
-  cout << "BET2 " << bet2x.y() << " " << bet2x.x() << "\n";
-  cout << "OMG2 " << omg2x.y() << " " << omg2x.x() << "\n";
-  cout << "ALP2 " << alp2x.y() << " " << alp2x.x() << "\n";
-  cout << "V2 " << v2[0] << " " << v2[1] << " " << v2[2] << "\n";
-  cout << "BET2a " << bet2a.y() << " " << bet2a.x() << "\n";
-  cout << "OMG2a " << omg2a.y() << " " << omg2a.x() << "\n";
-  cout << "ALP2a " << alp2a.y() << " " << alp2a.x() << "\n";
-  cout << "V2a " << v2a[0] << " " << v2a[1] << " " << v2a[2] << "\n";
-  }
   real errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a);
   cout << fixed << setprecision(0)
        << ceil(errs/eps) << " "
@@ -165,6 +114,9 @@ void errreport(const Triaxial& t,
 void angletest() {
   typedef Math::real real;
   typedef Angle ang;
+  ang o1 = ang::cardinal(2);
+  ang o2 = ang::cardinal(-2);
+  cout << o1.s() << " " << o2.s() << " " << real(o1) << " " << real(o2) << "\n";
   ang a1(-180);
   ang a2(-180);
   ang a3 = a2 - a1;
@@ -174,7 +126,7 @@ void angletest() {
     for (int j = -360; j <= 720; j += 30) {
       ang a2(j);
       ang a3 = a2 - a1;
-      int q = int(round(double(a3)));
+      int q = int(round(real(a3)));
       if (q != j - i)
         cout << "ERROR " << q - (j-i) << " " << q << " " << j << " " << i << "\n";
     }

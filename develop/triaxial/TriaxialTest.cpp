@@ -7,6 +7,7 @@
 #include <GeographicLib/AuxAngle.hpp>
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
+#include "TriaxialODE.hpp"
 
 using namespace GeographicLib;
 using namespace std;
@@ -21,10 +22,11 @@ void ODEtest(Math::real a, Math::real b, Math::real c) {
                                         Math::sq(t.axes[2]));
     vec3 r2, v2;
     int kmax = Math::digits()-4;
+    TriaxialODE direct(t, r1, v1);
     if (1) {
       for (int k = 10; k <= kmax; ++k) {
         real eps = pow(real(2), -k);
-        int n = t.Direct(r1, v1, s12, r2, v2, eps);
+        int n = direct.Position(s12, r2, v2, eps);
         cout << k << " " << n << " "
              << sqrt(Math::sq(r1[0]+r2[0]) +
                      Math::sq(r1[1]+r2[1]) +
@@ -38,7 +40,7 @@ void ODEtest(Math::real a, Math::real b, Math::real c) {
       real eps = numeric_limits<real>::epsilon() * 16;
 #endif
       for (int i = 0; i < imax; ++i) {
-        n += t.Direct(r1, v1, s12, r2, v2, eps);
+        n += direct.Position(s12, r2, v2, eps);
         r1 = r2;
         v1 = v2;
       }

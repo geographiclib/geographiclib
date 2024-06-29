@@ -67,7 +67,7 @@ namespace GeographicLib {
     Angle cardinal() const;
     static Angle eps();
 
-    real quadrant() const;
+    real ncardinal() const;
     // Angle operator+() const;
     Angle operator-() const;
     Angle& operator+=(const Angle& p);
@@ -80,7 +80,7 @@ namespace GeographicLib {
     Angle base() const;
     Angle rebase(const Angle& c) const;
     Angle& renormalize();
-    Angle& setsigns(unsigned q);
+    Angle& setquadrant(unsigned q);
   };
 
 } // namespace GeographicLib
