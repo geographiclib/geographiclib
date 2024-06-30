@@ -472,10 +472,10 @@ namespace GeographicLib {
   TriaxialLine Triaxial::Inverse(AuxAngle bet1, AuxAngle omg1,
                                  AuxAngle bet2, AuxAngle omg2)
     const {
-    bet1.normalize().round();
-    omg1.normalize().round();
-    bet2.normalize().round();
-    omg2.normalize().round();
+    bet1.normalize().rnd();
+    omg1.normalize().rnd();
+    bet2.normalize().rnd();
+    omg2.normalize().rnd();
     bool flip1 = AngNorm(bet1, omg1);
     (void) AngNorm(bet2, omg2);
     bool umb1 = bet1.x() == 0 && omg1.y() == 0,
@@ -591,7 +591,7 @@ namespace GeographicLib {
         // process opposite umbilical points
         fic = TriaxialLineF::ics(l, bet1, omg1,
                                  AuxAngle{kp, k});
-        alp1 = AuxAngle(kp * exp(fic.df), k, true);
+        alp1 = AuxAngle::aux(kp * exp(fic.df), k, true);
         fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
         d = l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2, true);
         done = true;
@@ -606,7 +606,7 @@ namespace GeographicLib {
             // adjecent E/W umbilical points
             TriaxialLineF::disttx{-Triaxial::BigValue(),
                                   Triaxial::BigValue(), 0} :
-            l.ArcPos0(fic, omg12.radians(), bet2a, omg2a, alp2, false);
+            l.ArcPos0(fic, omg12.radians0(), bet2a, omg2a, alp2, false);
           if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
           done = true;
         } else {
@@ -626,20 +626,20 @@ namespace GeographicLib {
             omg2a -= omg2;
             if (omg2a.y() > 0) {
               omg2a = omg2 + omg1;
-              d = l.ArcPos0(fic, omg2a.radians(), bet2a, omg2a, alp2, false);
+              d = l.ArcPos0(fic, omg2a.radians0(), bet2a, omg2a, alp2, false);
               if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
               done = true;
             } else {
-              alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20),
+              alpa = AuxAngle::aux(-1, numeric_limits<real>::epsilon()/(1<<20),
                               false);
-              fa = omg2a.radians();
+              fa = omg2a.radians0();
               alpb.setquadrant(0U);
               fic.setquadrant(l, 0U);
               (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
               omg2a -= omg2;
-              alpb = AuxAngle(1, numeric_limits<real>::epsilon()/(1<<20),
+              alpb = AuxAngle::aux(1, numeric_limits<real>::epsilon()/(1<<20),
                               false);
-              fb = omg2a.radians();
+              fb = omg2a.radians0();
             }
           }
         }
@@ -650,9 +650,9 @@ namespace GeographicLib {
           // umb1, omg2 = 180 alp1 = 90
           // !umb1, omg2 = 0, alp1 = -90
           // !umb1, omg2 = 180, alp1 = 90
-          alp1 = omg2.x() < 1 ? AuxAngle(1, 0, false) :
-          (omg1.y() == 0 ? AuxAngle(0, 1, false) :
-          AuxAngle(-1, 0, false));
+          alp1 = omg2.x() < 1 ? AuxAngle::aux(1, 0, false) :
+          (omg1.y() == 0 ? AuxAngle::aux(0, 1, false) :
+          AuxAngle::aux(-1, 0, false));
           fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
           d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
           merid = done = true;
@@ -661,9 +661,9 @@ namespace GeographicLib {
         // other meridional cases, invoke Hybrid with the following value of
         // alp1
         alp1 = bet1.x() == 0 ?
-          (omg2.x() < 1 ? AuxAngle(1, 0, false) :
-           (omg1.y() == 0 ? AuxAngle(0, 1, false) :
-            AuxAngle(-1, 0, false))) :
+          (omg2.x() < 1 ? AuxAngle::aux(1, 0, false) :
+           (omg1.y() == 0 ? AuxAngle::aux(0, 1, false) :
+            AuxAngle::aux(-1, 0, false))) :
           AuxAngle(0, omg2.x() > 0 ? 1 : -1);
         fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
         d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
@@ -682,59 +682,59 @@ namespace GeographicLib {
       omg2a -= omg2;
       if (eE * omg2a.y() >= 0) {
         // geodesic follows the equator
-        d = l.ArcPos0(fic, eE * omg12.radians(), bet2a, omg2a, alp2, false);
+        d = l.ArcPos0(fic, eE * omg12.radians0(), bet2a, omg2a, alp2, false);
         done = true;
       } else {
         // geodesic does not follow the equator
         alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20));
         alpa = AuxAngle( 1, -numeric_limits<real>::epsilon()/(1<<20));
-        (eE > 0 ? fa : fb) = omg2a.radians();
+        (eE > 0 ? fa : fb) = omg2a.radians0();
         alp1.setquadrant(eE > 0 ? 3U : 0U);
         fic.setquadrant(l, eE > 0 ? 3U : 0U);
         (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
         omg2a -= omg2;
-        (eE > 0 ? fb : fa) = omg2a.radians();
+        (eE > 0 ? fb : fa) = omg2a.radians0();
       }
     } else if (umb1) {
       // umbilical point to general point
       l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
-      alp2 = AuxAngle( kp * omg2.y(), k * bet2.x(), true );
+      alp2 = AuxAngle::aux( kp * omg2.y(), k * bet2.x(), true );
       fic = TriaxialLineF::ics(l, bet2, omg2, alp2);
-      (void) l.ArcPos0(fic, (bet1 - bet2).radians(), bet2a, omg2a, alp1);
+      (void) l.ArcPos0(fic, (bet1 - bet2).radians0(), bet2a, omg2a, alp1);
       if (alp1.y() < 0) alp1 += AuxAngle::cardinal(1U);
       fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-      d = l.ArcPos0(fic, (bet2 - bet1).radians(), bet2a, omg2a, alp2);
+      d = l.ArcPos0(fic, (bet2 - bet1).radians0(), bet2a, omg2a, alp2);
       done = true;
     } else if (bet1.x() == 0) {
       // bet1 = -90 to general point
       if (omg2.y() > 0) {
         alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20));
         alpb = AuxAngle( 1, numeric_limits<real>::epsilon()/(1<<20));
-        fa = -omg2.radians();
-        fb = (AuxAngle::cardinal(2U)-omg2).radians();
+        fa = -omg2.radians0();
+        fb = (AuxAngle::cardinal(2U)-omg2).radians0();
       } else {
         alpa = AuxAngle( 1, -numeric_limits<real>::epsilon()/(1<<20));
         alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20));
-        fa = (AuxAngle::cardinal(2U)-omg2).radians();
-        fb = -omg2.radians();
+        fa = (AuxAngle::cardinal(2U)-omg2).radians0();
+        fb = -omg2.radians0();
       }
     } else if (omg1.y() == 0) {
       // omg1 = 0 to general point
       if (omg2.y() > 0) {
         alpa = AuxAngle(numeric_limits<real>::epsilon()/(1<<20),  1);
         alpb = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), -1);
-        fa = -omg2.radians();
-        fb = (AuxAngle::cardinal(2U)-omg2).radians();
+        fa = -omg2.radians0();
+        fb = (AuxAngle::cardinal(2U)-omg2).radians0();
       } else {
         alpa = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), -1);
         alpb = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20),  1);
-        fa = (AuxAngle::cardinal(2U)-omg2).radians();
-        fb = -omg2.radians();
+        fa = (AuxAngle::cardinal(2U)-omg2).radians0();
+        fb = -omg2.radians0();
       }
     } else {
       // general case
       real f[4];
-      alpa = AuxAngle( kp * fabs(omg1.y()), k * fabs(bet1.x()), true );
+      alpa = AuxAngle::aux( kp * fabs(omg1.y()), k * fabs(bet1.x()), true );
       alpb = alpa;
 
       l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
@@ -881,7 +881,7 @@ namespace GeographicLib {
       // -51  89  90   1 -65.9888 10.0598 2.0530
       // Need to figure out why.
       AuxAngle xt = 2*t == 1 ?
-        AuxAngle(xa.y() + xb.y(),
+        AuxAngle::aux(xa.y() + xb.y(),
                  xa.x() + xb.x(), true) :
         (2*t < 1 ? xa - AuxAngle::radians(t * ab) :
          xb + AuxAngle::radians((1 - t) * ab)),
@@ -905,9 +905,9 @@ namespace GeographicLib {
         xm = xa; fm = fa;
       }
       // ordering is b - a - c
-      ab = (xa-xb).radians();
+      ab = (xa-xb).radians0();
       Math::real
-        ca = (xc-xa).radians(),
+        ca = (xc-xa).radians0(),
         cb = ca+ab,
         // Scherer has a fabs(cb).  This should be fabs(ab).
         tl = numeric_limits<Math::real>::epsilon() / fabs(ab);

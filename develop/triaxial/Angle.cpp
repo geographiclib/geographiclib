@@ -29,8 +29,9 @@ namespace GeographicLib {
   {
     if (!normp) {
       real h = hypot(_s, _c);
-      if (isfinite(h)) {
-        // h == 0 give _s  = _c = NaN
+      if (h == 0) {
+        _s = 0; _c = 1;
+      } else if (isfinite(h)) {
         _s /= h; _c /= h;
       } else if (isnan(h) || (isinf(_s) && isinf(_c)))
         _s = _c = Math::NaN();
@@ -104,15 +105,15 @@ namespace GeographicLib {
     return Angle(s, c, _n, true);
   }
 
-  Angle Angle::eps() {
-    return Angle(numeric_limits<real>::epsilon() / (1 << 20), 1, 0, true);
-  }
-
   Math::real Angle::ncardinal() const {
     int iq = (signbit(_s) ? -1 : 1) * (signbit(_c) ?
                                        ( -_c >= fabs(_s) ? 2 : 1 ) :
                                        (  _c >= fabs(_s) ? 0 : 1 ));
     return 4 * _n + iq;
+  }
+
+  Angle Angle::eps() {
+    return Angle(numeric_limits<real>::epsilon() / (1 << 20), 1, 0, true);
   }
 
   // Angle Angle::operator+() const { return *this; }
@@ -166,8 +167,14 @@ namespace GeographicLib {
     return copysign(y, x);
   }
 
-  Angle Angle::rounded() const {
-    return Angle(rnd(_s), rnd(_c), _n, true);
+  Angle& Angle::rnd() {
+    _s = rnd(_s); _c = rnd(_c);
+    return *this;
+  }
+
+  Angle Angle::rnded() const {
+    Angle t = *this;
+    return t.rnd();
   }
 
   Angle Angle::base() const {

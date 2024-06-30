@@ -4,7 +4,8 @@
 #include <functional>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-#include <GeographicLib/AuxAngle.hpp>
+#include "Angle.hpp"
+typedef GeographicLib::Angle AuxAngle;
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 #include "TriaxialODE.hpp"
@@ -180,7 +181,7 @@ Math::real HybridOLD(const Triaxial& t,
   l.Hybrid(bet2, +1, bet2a, omg2a, alp2a, s12);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
-  return omg2a.radians();
+  return omg2a.radians0();
 }
 
 Math::real Hybrid0(const TriaxialLineF& l,
@@ -191,7 +192,7 @@ Math::real Hybrid0(const TriaxialLineF& l,
   (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
-  return omg2a.radians();
+  return omg2a.radians0();
 }
 
 Math::real HybridA(const Triaxial& t,
@@ -221,7 +222,7 @@ Math::real HybridA(const Triaxial& t,
   (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
-  return omg2a.radians();
+  return omg2a.radians0();
   */
 }
 
@@ -277,7 +278,7 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
  for (Math::real t = 1/Math::real(2), ab = 0;
        cntn < 50 || GEOGRAPHICLIB_PANIC;) {
     AuxAngle xt = 2*t == 1 ?
-      AuxAngle(xa.y() + xb.y(),
+      AuxAngle::aux(xa.y() + xb.y(),
                xa.x() + xb.x(), true) :
       (2*t < 1 ? xa - AuxAngle::radians(t * ab) :
        xb + AuxAngle::radians((1 - t) * ab)),
@@ -296,7 +297,7 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
            << hypot(xb.x(), xb.y()) - 1 << " "
            << hypot(xt.x(), xt.y()) - 1 << "\n";
       AuxAngle xq(xa - AuxAngle::radians(t * ab));
-      AuxAngle xr(xb + AuxAngle((1 - t) * ab));
+      AuxAngle xr(xb + AuxAngle::radians((1 - t) * ab));
       cout << "CHECKX "
            << hypot(xq.x(), xq.y()) - 1 << " "
            << hypot(xr.x(), xr.y()) - 1 << "\n";
@@ -321,9 +322,9 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
       xm = xa; fm = fa;
     }
     // ordering is b - a - c
-    ab = (xa-xb).radians();
+    ab = (xa-xb).radians0();
     Math::real
-      ca = (xc-xa).radians(),
+      ca = (xc-xa).radians0(),
       cb = ca+ab,
       // Scherer has a fabs(cb).  This should be fabs(ab).
       tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
@@ -373,7 +374,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   cout << a << " " << b << " " << c << "\n";
   real domg[4];
   AuxAngle alp1u[4];
-  alp1u[0] = AuxAngle( t.kp * omg1.y(), t.k * bet1.x(), true );
+  alp1u[0] = AuxAngle::aux( t.kp * omg1.y(), t.k * bet1.x(), true );
   for (unsigned q = 1; q < 4; ++q) {
     alp1u[q] = alp1u[0];
     alp1u[q].setquadrant(q);
@@ -412,10 +413,10 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   if (bisect) {
     for (; countb < Math::digits() + 10;) {
       ++countb;
-      xn = AuxAngle(xb.y() + xa.y(), xb.x() + xa.x(), true);
+      xn = AuxAngle::aux(xb.y() + xa.y(), xb.x() + xa.x(), true);
       real ft =  HybridA(t, bet1, omg1, xn, bet2, omg2);
       cout << countb << " " << xn.degrees() << " " << ft << "\n";
-      if (ft == 0 || (xa-xn).radians() <= 0 || (xn-xb).radians() <= 0)
+      if (ft == 0 || (xa-xn).radians0() <= 0 || (xn-xb).radians0() <= 0)
         break;
       (ft > 0 ? xa : xb) = xn;
     }
@@ -524,13 +525,13 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
     AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
     l.pos1(bet1x, omg1x, alp1x);
     /*
-    bet1x.round(); omg1x.round(); alp1x.round();
+    bet1x.rnd(); omg1x.rnd(); alp1x.rnd();
     Triaxial::AngNorm(bet1x, omg1x, alp1x);
     */
     real s12x = l.Distance();
     l.Position(s12x, bet2x, omg2x, alp2x);
     /*
-    bet2x.round(); omg2x.round(); alp2x.round();
+    bet2x.rnd(); omg2x.rnd(); alp2x.rnd();
     Triaxial::AngNorm(bet2x, omg2x, alp2x);
     if (fabs(bet2d) == 90 && omg2x.y() < 0) {
       omg2x.y() *= -1;

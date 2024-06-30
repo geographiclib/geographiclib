@@ -12,7 +12,8 @@
 
 #include <utility>
 #include <GeographicLib/Constants.hpp>
-#include <GeographicLib/AuxAngle.hpp>
+#include "Angle.hpp"
+typedef GeographicLib::Angle AuxAngle;
 #include "Trigfun.hpp"
 #include "Triaxial.hpp"
 

@@ -17,7 +17,8 @@
 #include <functional>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-#include <GeographicLib/AuxAngle.hpp>
+#include "Angle.hpp"
+typedef GeographicLib::Angle AuxAngle;
 #include "Trigfun.hpp"
 
 namespace GeographicLib {

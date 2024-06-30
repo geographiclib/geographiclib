@@ -65,9 +65,9 @@ namespace GeographicLib {
     static Angle NaN();
     static Angle cardinal(real q);
     Angle cardinal() const;
+    real ncardinal() const;
     static Angle eps();
 
-    real ncardinal() const;
     // Angle operator+() const;
     Angle operator-() const;
     Angle& operator+=(const Angle& p);
@@ -76,11 +76,29 @@ namespace GeographicLib {
     Angle operator-(const Angle& p) const;
     bool zerop(real mult = 0) const;
     bool operator==(const Angle& p) const;
-    Angle rounded() const;
+    Angle& rnd();
+    Angle rnded() const;
     Angle base() const;
     Angle rebase(const Angle& c) const;
     Angle& renormalize();
     Angle& setquadrant(unsigned q);
+    // Backward compatibility
+    static Angle degrees(real deg) { return Angle(deg); }
+    static Angle aux(real s, real c, bool /*normp*/) { return Angle(s, c); }
+    real degrees0() const { return Math::atan2d(_s, _c); }
+    real radians0() const { using std::atan2; return atan2(_s, _c); }
+    real degrees() const { return degrees0(); }
+    real y() const { return s(); }
+    real x() const { return c(); }
+    Math::real& y() { return _s; }
+    Math::real& x() { return _c; }
+    Angle& normalize() { return *this; }
+    Angle normalized() const { return *this; }
+    unsigned quadrant() const {
+      using std::signbit;
+      return 2U * signbit(_s) + (signbit(_c) ^ signbit(_s));
+    }
+    Math::real tan() const { return t(); }
   };
 
 } // namespace GeographicLib

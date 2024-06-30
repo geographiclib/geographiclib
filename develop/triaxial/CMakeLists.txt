@@ -49,24 +49,26 @@ target_link_libraries (randgeod ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (TrigfunTest TrigfunTest.cpp Trigfun.cpp Trigfun.hpp
-   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
+  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
+  Angle.cpp Angle.hpp)
 target_link_libraries (TrigfunTest ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (TriaxialTest TriaxialTest.cpp Trigfun.cpp Trigfun.hpp
-   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-   TriaxialODE.cpp TriaxialODE.hpp)
+  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
+  TriaxialODE.cpp TriaxialODE.hpp Angle.cpp Angle.hpp)
 target_link_libraries (TriaxialTest ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (Geod3Solve Geod3Solve.cpp Trigfun.cpp Trigfun.hpp
   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-  TriaxialODE.cpp TriaxialODE.hpp)
+  TriaxialODE.cpp TriaxialODE.hpp Angle.cpp Angle.hpp)
 target_link_libraries (Geod3Solve ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (TriRand TriRand.cpp Trigfun.cpp Trigfun.hpp
-   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp)
+  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
+  Angle.cpp Angle.hpp)
 target_link_libraries (TriRand ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 

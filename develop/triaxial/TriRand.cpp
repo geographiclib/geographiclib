@@ -4,7 +4,8 @@
 #include <utility>
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
-#include <GeographicLib/AuxAngle.hpp>
+#include "Angle.hpp"
+typedef GeographicLib::Angle AuxAngle;
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 
