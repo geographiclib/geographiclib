@@ -327,7 +327,7 @@ namespace GeographicLib {
       return gf0up(u, _kap, _kapp);
   }
 
-  void Triaxial::cart2toellip(const vec3& r, AuxAngle& bet, AuxAngle& omg)
+  void Triaxial::cart2toellip(const vec3& r, Angle& bet, Angle& omg)
     const {
     real xi = r[0]/a, eta = r[1]/b, zeta = r[2]/c,
       g = k2 * Math::sq(xi)
@@ -335,26 +335,27 @@ namespace GeographicLib {
       - kp2 * Math::sq(zeta);
     if (fabs(r[0]) == a * kp2 && r[1] == 0 && fabs(r[2]) == c * k2)
       g = 0;
-    real h = hypot(g, 2 * k * kp * eta);
+    real h = hypot(g, 2 * k * kp * eta),
+      so, co, sb, cb;
     if (h == 0) {
-      omg.y() = 0;
-      bet.x() = 0;
+      so = 0;
+      cb = 0;
     } else if (g < 0) {
-      omg.y() = copysign(sqrt( (h - g)/2 ) / kp, eta);
-      bet.x() = fabs(eta / omg.y());
+      so = copysign(sqrt( (h - g)/2 ) / kp, eta);
+      cb = fabs(eta / so);
     } else {
-      bet.x() = sqrt( (h + g)/2 ) / k;
-      omg.y() = eta / bet.x();
+      cb = sqrt( (h + g)/2 ) / k;
+      so = eta / cb;
     }
-    real tz = hypot(k, kp * omg.y()),
-      tx = hypot(k * bet.x(), kp);
-    bet.y() = tz == 0 ? -1 : zeta / tz;
-    omg.x() = tx == 0 ?  1 : xi / tx;
-    bet.normalize(); omg.normalize();
+    real tz = hypot(k, kp * so),
+      tx = hypot(k * cb, kp);
+    sb = tz == 0 ? -1 : zeta / tz;
+    co = tx == 0 ?  1 : xi / tx;
+    bet = ang(sb, cb); omg = ang(so, co);
   }
 
-  void Triaxial:: cart2toellip(const AuxAngle& bet, const AuxAngle& omg,
-                               const vec3& v, AuxAngle& alp) const {
+  void Triaxial:: cart2toellip(const Angle& bet, const Angle& omg,
+                               const vec3& v, Angle& alp) const {
     real tz = hypot(k, kp * omg.y()),
       tx = hypot(k * bet.x(), kp);
     if (!(bet.x() == 0 && omg.y() == 0)) {
@@ -374,8 +375,8 @@ namespace GeographicLib {
             b * bet.x() * omg.x(),
             c * kp2 * bet.y() * omg.x() * omg.y() / tz});
       normvec(N); normvec(E);
-      alp.x() = v[0] * N[0] + v[1] * N[1] + v[2] * N[2];
-      alp.y() = v[0] * E[0] + v[1] * E[1] + v[2] * E[2];
+      alp = ang(v[0] * E[0] + v[1] * E[1] + v[2] * E[2],
+                v[0] * N[0] + v[1] * N[1] + v[2] * N[2]);
     } else {                    // bet.x() == 0 && omg.y() == 0
       // Special treatment at umbilical points
       real w = bet.y() * omg.x(),
@@ -398,67 +399,61 @@ namespace GeographicLib {
       // for northern umbilical points, we want to flip alp to alp + pi; so
       // multiply [sa, ca] by -bet.y().
       real flip = -bet.y();
-      if (c2a >= 0) {
-        alp.y() = flip * s2a;
-        alp.x() = flip * (1 + c2a);
-      } else {
-        alp.y() = flip * copysign(1 - c2a, s2a);
-        alp.x() = flip * fabs(s2a);
-      }
+      if (c2a >= 0)
+        alp = ang(flip * s2a, flip * (1 + c2a));
+      else
+        alp = ang(flip * copysign(1 - c2a, s2a), flip * fabs(s2a));
     }
-    alp.normalize();
   }
 
   void Triaxial::cart2toellip(const vec3& r, const vec3& v,
-                              AuxAngle& bet, AuxAngle& omg, AuxAngle& alp)
+                              Angle& bet, Angle& omg, Angle& alp)
     const {
     cart2toellip(r, bet, omg);
     cart2toellip(bet, omg, v, alp);
   }
 
-  void Triaxial::elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
+  void Triaxial::elliptocart2(const Angle& bet, const Angle& omg,
                               vec3& r) const {
-    AuxAngle betn = bet.normalized(), omgn = omg.normalized();
-    real tx = hypot(k * betn.x(), kp), tz = hypot(k, kp * omgn.y());
-    r = vec3{ a * omgn.x() * tx,
-              b * betn.x() * omgn.y(),
-              c * betn.y() * tz };
+    real tx = hypot(k * bet.x(), kp), tz = hypot(k, kp * omg.y());
+    r = vec3{ a * omg.x() * tx,
+              b * bet.x() * omg.y(),
+              c * bet.y() * tz };
     // Norm(r); r is already normalized
   }
 
-  void Triaxial::elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
-                              const AuxAngle& alp,
+  void Triaxial::elliptocart2(const Angle& bet, const Angle& omg,
+                              const Angle& alp,
                               vec3& r, vec3& v) const {
     elliptocart2(bet, omg, r);
-    AuxAngle betn = bet.normalized(), omgn = omg.normalized();
-    real tx = hypot(k * betn.x(), kp), tz = hypot(k, kp * omgn.y());
-    if (betn.x() == 0 && omgn.y() == 0 && !(k == 0 || kp == 0)) {
+    real tx = hypot(k * bet.x(), kp), tz = hypot(k, kp * omg.y());
+    if (bet.x() == 0 && omg.y() == 0 && !(k == 0 || kp == 0)) {
       // umbilical point (not oblate or prolate)
       real sa2 = 2 * alp.y() * alp.x(),
         ca2 = (alp.x() - alp.y()) * (alp.x() + alp.y());
       // sign on 2nd component is -sign(cos(bet)*sin(omg)).  negative sign
       // gives normal convention of alpha measured clockwise.
-      v = vec3{a*k/b * omgn.x() * ca2,
-               -omgn.x() * betn.y() * sa2,
-               -c*kp/b * betn.y() * ca2};
+      v = vec3{a*k/b * omg.x() * ca2,
+               -omg.x() * bet.y() * sa2,
+               -c*kp/b * bet.y() * ca2};
     } else {
       vec3 N, E;
       if (tx == 0) {
         // At an oblate pole tx -> cos(bet)
-        N = vec3{-omgn.x() * betn.y(), -omgn.y() * betn.y(), 0};
-        E = vec3{-omgn.y()           ,  omgn.x()           , 0};
+        N = vec3{-omg.x() * bet.y(), -omg.y() * bet.y(), 0};
+        E = vec3{-omg.y()           ,  omg.x()           , 0};
       } else if (tz == 0) {
         // At a prolate pole tz -> sin(omg)
-        N = vec3{0, -betn.y()           , betn.x()           };
-        E = vec3{0,  betn.x() * omgn.x(), betn.y() * omgn.x()};
+        N = vec3{0, -bet.y()           , bet.x()           };
+        E = vec3{0,  bet.x() * omg.x(), bet.y() * omg.x()};
       } else {
         // The general case
-        N = vec3{ -a * k2 * betn.x() * betn.y() * omgn.x() / tx,
-                  -b * betn.y() * omgn.y(),
-                  c * betn.x() * tz};
-        E = vec3{ -a * tx * omgn.y(),
-                  b * betn.x() * omgn.x(),
-                  c * kp2 * betn.y() * omgn.x() * omgn.y() / tz};
+        N = vec3{ -a * k2 * bet.x() * bet.y() * omg.x() / tx,
+                  -b * bet.y() * omg.y(),
+                  c * bet.x() * tz};
+        E = vec3{ -a * tx * omg.y(),
+                  b * bet.x() * omg.x(),
+                  c * kp2 * bet.y() * omg.x() * omg.y() / tz};
       }
       normvec(N);
       normvec(E);
@@ -469,13 +464,13 @@ namespace GeographicLib {
     // normvec(v); v is already normalized
   }
 
-  TriaxialLine Triaxial::Inverse(AuxAngle bet1, AuxAngle omg1,
-                                 AuxAngle bet2, AuxAngle omg2)
+  TriaxialLine Triaxial::Inverse(Angle bet1, Angle omg1,
+                                 Angle bet2, Angle omg2)
     const {
-    bet1.normalize().rnd();
-    omg1.normalize().rnd();
-    bet2.normalize().rnd();
-    omg2.normalize().rnd();
+    bet1.rnd();
+    omg1.rnd();
+    bet2.rnd();
+    omg2.rnd();
     bool flip1 = AngNorm(bet1, omg1);
     (void) AngNorm(bet2, omg2);
     bool umb1 = bet1.x() == 0 && omg1.y() == 0,
@@ -487,9 +482,9 @@ namespace GeographicLib {
       swap12 = umb1;          // If one umbilic point, make is point 2
       else */
     {
-      AuxAngle tmp1(bet1), tmp2(bet2);
+      ang tmp1(bet1), tmp2(bet2);
       tmp1.setquadrant(0U); tmp2.setquadrant(0U);
-      AuxAngle tmp12 = tmp2 - tmp1; // |bet2| - |bet1|
+      ang tmp12 = tmp2 - tmp1; // |bet2| - |bet1|
       swap12 = tmp12.y() > 0; // is |bet2| > |bet1|
       if (tmp12.y() == 0) {
         tmp1 = omg1; tmp2 = omg2;
@@ -507,23 +502,23 @@ namespace GeographicLib {
     // Now |bet1| > |bet2|
     bool flipz = bet1.y() > 0;
     if (flipz) {
-      bet1.y() *= -1;
-      bet2.y() *= -1;
+      bet1.reflect(true, false);
+      bet2.reflect(true, false);
     }
     bool flipy = omg1.y() < 0 || (omg1.y() == 0 && omg2.y() < 0);
     if (flipy) {
-      omg1.y() *= -1;
-      omg2.y() *= -1;
+      omg1.reflect(true, false);
+      omg2.reflect(true, false);
     }
     bool flipx = signbit(omg1.x());
     if (flipx) {
-      omg1.x() *= -1;
-      omg2.x() *= -1;
+      omg1.reflect(false, true);
+      omg2.reflect(false, true);
     }
     bool flipomg = bet2.x() == 0 && signbit(omg2.y());
     // Eliminate coordinate ambiguity bet2 = +/90 and omg2 < 0 for point 2
     // Point 1 is already done with flipy
-    if (flipomg) omg2.y() *= -1;
+    if (flipomg) omg2.reflect(true, false);
 
     // Now bet1 <= 0, bet1 <= bet2 <= -bet1, 0 <= omg1 <= 90
     //
@@ -573,10 +568,10 @@ namespace GeographicLib {
 
     // Set up variables for search
     real fa, fb;
-    AuxAngle alpa, alpb;
+    ang alpa, alpb;
 
     // and for the final result
-    AuxAngle alp1, alp2, bet2a, omg2a;
+    ang alp1, alp2, bet2a, omg2a;
 
     TriaxialLineF l;
     TriaxialLineF::ics fic;
@@ -590,8 +585,8 @@ namespace GeographicLib {
       if (umb1 && umb2 && bet2.y() > 0 && omg2.x() < 0) {
         // process opposite umbilical points
         fic = TriaxialLineF::ics(l, bet1, omg1,
-                                 AuxAngle{kp, k});
-        alp1 = AuxAngle::aux(kp * exp(fic.df), k, true);
+                                 ang{kp, k});
+        alp1 = ang::aux(kp * exp(l.df), k, true);
         fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
         d = l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2, true);
         done = true;
@@ -599,21 +594,21 @@ namespace GeographicLib {
         // bet1 = -90, bet2 = +/-90
         if (bet2.y() < 1) {
           // bet1 = bet2 = -90
-          alp1 = AuxAngle{1,0};
+          alp1 = ang{1,0};
           fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-          AuxAngle omg12 = omg2 - omg1;
+          ang omg12 = omg2 - omg1;
           d = omg12.y() == 0 && omg12.x() < 0 ?
             // adjecent E/W umbilical points
             TriaxialLineF::disttx{-Triaxial::BigValue(),
                                   Triaxial::BigValue(), 0} :
             l.ArcPos0(fic, omg12.radians0(), bet2a, omg2a, alp2, false);
-          if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
+          if (omg2a.y() < 0) alp2.reflect(true, false); // Is this needed?
           done = true;
         } else {
           // bet1 = -90, bet2 = 90
           // need to see how far apart the points are
           // If point 1 is at [-90, 0], direction is 0 else -90.
-          alp1 = omg1.y() == 0 ?  AuxAngle{0,1} :  AuxAngle{-1,0};
+          alp1 = omg1.y() == 0 ?  ang{0,1} :  ang{-1,0};
           fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
           // If point 1 is [-90, 0] and point 2 is [90, 0]
           if (omg1.y() == 0 && omg2.y() == 0) {
@@ -627,17 +622,17 @@ namespace GeographicLib {
             if (omg2a.y() > 0) {
               omg2a = omg2 + omg1;
               d = l.ArcPos0(fic, omg2a.radians0(), bet2a, omg2a, alp2, false);
-              if (omg2a.y() < 0) alp2.y() *= -1; // Is this needed?
+              if (omg2a.y() < 0) alp2.reflect(true, false); // Is this needed?
               done = true;
             } else {
-              alpa = AuxAngle::aux(-1, numeric_limits<real>::epsilon()/(1<<20),
+              alpa = ang::aux(-1, numeric_limits<real>::epsilon()/(1<<20),
                               false);
               fa = omg2a.radians0();
               alpb.setquadrant(0U);
               fic.setquadrant(l, 0U);
               (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
               omg2a -= omg2;
-              alpb = AuxAngle::aux(1, numeric_limits<real>::epsilon()/(1<<20),
+              alpb = ang::aux(1, numeric_limits<real>::epsilon()/(1<<20),
                               false);
               fb = omg2a.radians0();
             }
@@ -650,9 +645,9 @@ namespace GeographicLib {
           // umb1, omg2 = 180 alp1 = 90
           // !umb1, omg2 = 0, alp1 = -90
           // !umb1, omg2 = 180, alp1 = 90
-          alp1 = omg2.x() < 1 ? AuxAngle::aux(1, 0, false) :
-          (omg1.y() == 0 ? AuxAngle::aux(0, 1, false) :
-          AuxAngle::aux(-1, 0, false));
+          alp1 = omg2.x() < 1 ? ang::aux(1, 0, false) :
+          (omg1.y() == 0 ? ang::aux(0, 1, false) :
+          ang::aux(-1, 0, false));
           fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
           d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
           merid = done = true;
@@ -661,21 +656,21 @@ namespace GeographicLib {
         // other meridional cases, invoke Hybrid with the following value of
         // alp1
         alp1 = bet1.x() == 0 ?
-          (omg2.x() < 1 ? AuxAngle::aux(1, 0, false) :
-           (omg1.y() == 0 ? AuxAngle::aux(0, 1, false) :
-            AuxAngle::aux(-1, 0, false))) :
-          AuxAngle(0, omg2.x() > 0 ? 1 : -1);
+          (omg2.x() < 1 ? ang::aux(1, 0, false) :
+           (omg1.y() == 0 ? ang::aux(0, 1, false) :
+            ang::aux(-1, 0, false))) :
+          ang(0, omg2.x() > 0 ? 1 : -1);
         fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
         d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
         done = true;
       }
     } else if (bet1.y() == 0 && bet2.y() == 0) {
       // both points on equator
-      AuxAngle omg12 = omg2 - omg1;
+      ang omg12 = omg2 - omg1;
       int eE = omg12.y() > 0 ? 1 : -1;
       // set direction for orobe as +/-90 based on sign of omg12
-      alp1 = AuxAngle(eE, 0);
-      bet1.y() *= -1;
+      alp1 = ang(eE, 0);
+      bet1.reflect(true, false);
       l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
       fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
       (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
@@ -686,8 +681,8 @@ namespace GeographicLib {
         done = true;
       } else {
         // geodesic does not follow the equator
-        alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20));
-        alpa = AuxAngle( 1, -numeric_limits<real>::epsilon()/(1<<20));
+        alpb = ang(-1, -numeric_limits<real>::epsilon()/(1<<20));
+        alpa = ang( 1, -numeric_limits<real>::epsilon()/(1<<20));
         (eE > 0 ? fa : fb) = omg2a.radians0();
         alp1.setquadrant(eE > 0 ? 3U : 0U);
         fic.setquadrant(l, eE > 0 ? 3U : 0U);
@@ -698,43 +693,43 @@ namespace GeographicLib {
     } else if (umb1) {
       // umbilical point to general point
       l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
-      alp2 = AuxAngle::aux( kp * omg2.y(), k * bet2.x(), true );
+      alp2 = ang::aux( kp * omg2.y(), k * bet2.x(), true );
       fic = TriaxialLineF::ics(l, bet2, omg2, alp2);
       (void) l.ArcPos0(fic, (bet1 - bet2).radians0(), bet2a, omg2a, alp1);
-      if (alp1.y() < 0) alp1 += AuxAngle::cardinal(1U);
+      if (alp1.y() < 0) alp1 += ang::cardinal(1U);
       fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
       d = l.ArcPos0(fic, (bet2 - bet1).radians0(), bet2a, omg2a, alp2);
       done = true;
     } else if (bet1.x() == 0) {
       // bet1 = -90 to general point
       if (omg2.y() > 0) {
-        alpa = AuxAngle(-1, numeric_limits<real>::epsilon()/(1<<20));
-        alpb = AuxAngle( 1, numeric_limits<real>::epsilon()/(1<<20));
+        alpa = ang(-1, numeric_limits<real>::epsilon()/(1<<20));
+        alpb = ang( 1, numeric_limits<real>::epsilon()/(1<<20));
         fa = -omg2.radians0();
-        fb = (AuxAngle::cardinal(2U)-omg2).radians0();
+        fb = (ang::cardinal(2U)-omg2).radians0();
       } else {
-        alpa = AuxAngle( 1, -numeric_limits<real>::epsilon()/(1<<20));
-        alpb = AuxAngle(-1, -numeric_limits<real>::epsilon()/(1<<20));
-        fa = (AuxAngle::cardinal(2U)-omg2).radians0();
+        alpa = ang( 1, -numeric_limits<real>::epsilon()/(1<<20));
+        alpb = ang(-1, -numeric_limits<real>::epsilon()/(1<<20));
+        fa = (ang::cardinal(2U)-omg2).radians0();
         fb = -omg2.radians0();
       }
     } else if (omg1.y() == 0) {
       // omg1 = 0 to general point
       if (omg2.y() > 0) {
-        alpa = AuxAngle(numeric_limits<real>::epsilon()/(1<<20),  1);
-        alpb = AuxAngle(numeric_limits<real>::epsilon()/(1<<20), -1);
+        alpa = ang(numeric_limits<real>::epsilon()/(1<<20),  1);
+        alpb = ang(numeric_limits<real>::epsilon()/(1<<20), -1);
         fa = -omg2.radians0();
-        fb = (AuxAngle::cardinal(2U)-omg2).radians0();
+        fb = (ang::cardinal(2U)-omg2).radians0();
       } else {
-        alpa = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20), -1);
-        alpb = AuxAngle(-numeric_limits<real>::epsilon()/(1<<20),  1);
-        fa = (AuxAngle::cardinal(2U)-omg2).radians0();
+        alpa = ang(-numeric_limits<real>::epsilon()/(1<<20), -1);
+        alpb = ang(-numeric_limits<real>::epsilon()/(1<<20),  1);
+        fa = (ang::cardinal(2U)-omg2).radians0();
         fb = -omg2.radians0();
       }
     } else {
       // general case
       real f[4];
-      alpa = AuxAngle::aux( kp * fabs(omg1.y()), k * fabs(bet1.x()), true );
+      alpa = ang::aux( kp * fabs(omg1.y()), k * fabs(bet1.x()), true );
       alpb = alpa;
 
       l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
@@ -769,7 +764,7 @@ namespace GeographicLib {
       int countn = 0, countb = 0;
       alp1 = findroot(
                       [this, &bet1, &omg1, &bet2, &omg2]
-                      (const AuxAngle& alp) -> Math::real
+                      (const ang& alp) -> Math::real
                       {
                         return HybridA(*this,
                                        bet1, omg1, alp,
@@ -790,30 +785,29 @@ namespace GeographicLib {
 
     // Undo switches in reverse order flipz, swap12, flip1
     if (flipomg) {
-      omg2.y() *= -1;
-      alp2.x() *= -1;
-      alp2.y() *= -1;
+      omg2.reflect(true, false);
+      alp2.reflect(true, true);
     }
 
     if (flipx) {
-      omg1.x() *= -1;
-      omg2.x() *= -1;
-      alp1.y() *= -1;
-      alp2.y() *= -1;
+      omg1.reflect(false, true);
+      omg2.reflect(false, true);
+      alp1.reflect(true, false);
+      alp2.reflect(true, false);
     }
 
     if (flipy) {
-      omg1.y() *= -1;
-      omg2.y() *= -1;
-      alp1.y() *= -1;
-      alp2.y() *= -1;
+      omg1.reflect(true, false);
+      omg2.reflect(true, true);
+      alp1.reflect(true, false);
+      alp2.reflect(true, false);
     }
 
     if (flipz) {
-      bet1.y() *= -1;
-      bet2.y() *= -1;
-      alp1.x() *= -1;
-      alp2.x() *= -1;
+      bet1.reflect(true, false);
+      bet2.reflect(true, false);
+      alp1.reflect(false, true);
+      alp2.reflect(false, true);
     }
 
     if (swap12) {
@@ -821,8 +815,8 @@ namespace GeographicLib {
       swap(omg1, omg2);
       swap(alp1, alp2);
       swap(umb1, umb2);
-      alp1 += AuxAngle::cardinal(umb1 ? 1U : 2U);
-      alp2 += AuxAngle::cardinal(umb2 ? 1U : 2U);
+      alp1 += ang::cardinal(umb1 ? 1U : 2U);
+      alp2 += ang::cardinal(umb2 ? 1U : 2U);
     }
 
     if (flip1)
@@ -838,10 +832,10 @@ namespace GeographicLib {
   }
 
   Math::real Triaxial::HybridA(const Triaxial& t,
-                               const AuxAngle& bet1, const AuxAngle& omg1,
-                               const AuxAngle& alp1,
-                               const AuxAngle& bet2, const AuxAngle& omg2) {
-    AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+                               const Angle& bet1, const Angle& omg1,
+                               const Angle& alp1,
+                               const Angle& bet2, const Angle& omg2) {
+    ang b1{bet1}, o1{omg1}, a1{alp1};
     gamblk gam(t, b1, o1, a1);
     TriaxialLineF l(t, gam, 0.5, 1.5);
     TriaxialLineF::ics ic(l, b1, o1, a1);
@@ -850,8 +844,8 @@ namespace GeographicLib {
 
   // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference in
   // lontitude on bet2 and the target longitude.
-  AuxAngle Triaxial::findroot(const function<Math::real(const AuxAngle&)>& f,
-                              AuxAngle xa,  AuxAngle xb,
+  Angle Triaxial::findroot(const function<Math::real(const Angle&)>& f,
+                              Angle xa,  Angle xb,
                               Math::real fa, Math::real fb,
                               int* countn, int* countb) {
     // Implement root finding method of Chandrupatla (1997)
@@ -859,7 +853,7 @@ namespace GeographicLib {
     // Here we follow Scherer (2013), Section 6.1.7.3
     // https://doi.org/10.1007/978-3-319-00401-3
 
-    // Here the independent variable is an AuxAngle, but the computations on this
+    // Here the independent variable is an ang, but the computations on this
     // variable essentially involve its conversion to radians.  There's no need
     // to worry about the angle wrapping around because (xb-xa).radians() is in
     // (0,pi).
@@ -867,7 +861,7 @@ namespace GeographicLib {
     // require xa and xb to be normalized (the result is normalized)
     // require fa and fb to have opposite signs
 
-    AuxAngle xm;                  // The return value
+    ang xm;                  // The return value
     int cntn = 0, cntb = 0, maxcnt = 100;
     bool trip = false, correct = false;
     for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
@@ -880,11 +874,11 @@ namespace GeographicLib {
       //  56 115 -89 179 113.5952 179.8512 1.6130
       // -51  89  90   1 -65.9888 10.0598 2.0530
       // Need to figure out why.
-      AuxAngle xt = 2*t == 1 ?
-        AuxAngle::aux(xa.y() + xb.y(),
+      ang xt = 2*t == 1 ?
+        ang::aux(xa.y() + xb.y(),
                  xa.x() + xb.x(), true) :
-        (2*t < 1 ? xa - AuxAngle::radians(t * ab) :
-         xb + AuxAngle::radians((1 - t) * ab)),
+        (2*t < 1 ? xa - ang::radians(t * ab) :
+         xb + ang::radians((1 - t) * ab)),
         xc;
       if (trip) {
         if (correct) xm = xt;   // Update result if not a bisection step

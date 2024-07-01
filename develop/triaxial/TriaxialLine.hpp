@@ -13,7 +13,6 @@
 #include <utility>
 #include <GeographicLib/Constants.hpp>
 #include "Angle.hpp"
-typedef GeographicLib::Angle AuxAngle;
 #include "Trigfun.hpp"
 #include "Triaxial.hpp"
 
@@ -22,17 +21,21 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT TriaxialLineF {
   private:
     typedef Math::real real;
+    typedef Angle ang;
     Triaxial _t;
     Triaxial::gamblk _gm;
     geod_fun _fbet, _fomg;
   public:
+    real df, deltashift;
     class ics {
       // bundle of data setting the initial conditions for a geodesic
     public:
-      AuxAngle bet1, omg1, alp1, // starting point
+      Angle bet1, omg1, alp1, // starting point
         psi1;                    // nonumbilic angle psi
       real u0, v0,               // starting point in u,v space
-        df, deltashift,          // umbilic constants
+      //        df, deltashift,          // umbilic constants
+      // NB df and deltashift need to migrate to a TriaxialLineF variables
+      // cf TriaxialLineG::s0 
         delta;                   //  starting point for umbilic
       int ibet, iomg, ialp,      // wrapping quantities for bet, omg, alp
         nN, eE,                  // Northgoing / eastgoing
@@ -41,7 +44,7 @@ namespace GeographicLib {
       bool umbalt;               // how coordinates wrap with umbilical lines
       ics();
       ics(const TriaxialLineF& f,
-          const AuxAngle& bet1, const AuxAngle& omg1, const AuxAngle& alp1);
+          const Angle& bet1, const Angle& omg1, const Angle& alp1);
       void setquadrant(const TriaxialLineF& f, unsigned q);
     };
     class disttx {
@@ -59,17 +62,18 @@ namespace GeographicLib {
     real gamma() const { return _gm.gam; }
     const Triaxial::gamblk& gm() const { return _gm; }
     real Hybrid0(const ics& ic,
-                 const AuxAngle& bet2, const AuxAngle& omg2) const;
-    disttx Hybrid(const ics& fic, const AuxAngle& bet2,
-                AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) const;
+                 const Angle& bet2, const Angle& omg2) const;
+    disttx Hybrid(const ics& fic, const Angle& bet2,
+                Angle& bet2a, Angle& omg2a, Angle& alp2a) const;
     disttx ArcPos0(const ics& fic, real tau12,
-                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
+                   Angle& bet2a, Angle& omg2a, Angle& alp2a,
                    bool betp = true) const;
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLineG {
   private:
     typedef Math::real real;
+    typedef Angle ang;
     Triaxial _t;
     Triaxial::gamblk _gm;
     dist_fun _gbet, _gomg;
@@ -96,6 +100,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT TriaxialLine {
   private:
     typedef Math::real real;
+    typedef Angle ang;
     Triaxial _t;
     TriaxialLineF _f;
     TriaxialLineF::ics _fic;
@@ -138,7 +143,7 @@ namespace GeographicLib {
     }
     TriaxialLine(const Triaxial& t) : _t(t) {}
     TriaxialLine(const Triaxial& t,
-                 AuxAngle bet1, AuxAngle omg1, AuxAngle alp1);
+                 Angle bet1, Angle omg1, Angle alp1);
     TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1);
     TriaxialLine(TriaxialLineF f, TriaxialLineF::ics fic,
                  TriaxialLineG g, TriaxialLineG::ics gic);
@@ -146,7 +151,7 @@ namespace GeographicLib {
     const geod_fun& fomg() const { return _f.fomg(); }
     const dist_fun& gbet() const { return _g.gbet(); }
     const dist_fun& gomg() const { return _g.gomg(); }
-    void Position(real s12, AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2,
+    void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
                   int* ibet2 = nullptr, int* iomg2 = nullptr,
                   int* ialp2 = nullptr,
                   int* countn = nullptr, int* countb = nullptr) const;
@@ -159,19 +164,19 @@ namespace GeographicLib {
     // bet1 < 0, alp1 in [-90,90], omg2 = 0
     // bet1 == 0, alp1 in (-90,90), omg2 = 0,
     //                   alp1 = +/-90 omg2 = conj pt
-    void Hybrid(const AuxAngle& bet2, int dir,
-                AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a,
+    void Hybrid(const Angle& bet2,
+                Angle& bet2a, Angle& omg2a, Angle& alp2a,
                 real& s12) const;
     real gamma() const { return _f.gamma(); }
     real Distance() const { return _gic.s13; }
     void SetDistance(real s13) { _gic.s13 = s13; }
-    AuxAngle bet1(int* ibet1 = nullptr) const;
-    AuxAngle omg1(int* iomg1 = nullptr) const;
-    AuxAngle alp1(int* ialp1 = nullptr) const;
+    Angle bet1(int* ibet1 = nullptr) const;
+    Angle omg1(int* iomg1 = nullptr) const;
+    Angle alp1(int* ialp1 = nullptr) const;
     real lat1(bool unroll = true) const;
     real lon1(bool unroll = true) const;
     real azi1(bool unroll = true) const;
-    void pos1(AuxAngle& bet1, AuxAngle& omg1, AuxAngle& alp1,
+    void pos1(Angle& bet1, Angle& omg1, Angle& alp1,
               int* ibet1 = nullptr, int* iomg1 = nullptr,
               int* ialp1 = nullptr) const;
     void pos1(real& bet1, real& omg1, real& alp1,

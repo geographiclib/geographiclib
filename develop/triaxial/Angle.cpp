@@ -51,7 +51,7 @@ namespace GeographicLib {
     Math::sincosd(deg, _s, _c);
     _n = round( (deg - Math::atan2d(_s, _c)) / Math::td );
   }
-        
+
   Angle::operator Math::real() const {
     return Math::td * _n + Math::atan2d(_s, _c);
   }
@@ -98,7 +98,7 @@ namespace GeographicLib {
   Angle Angle::cardinal() const {
     real s, c;
     if (fabs(_c) >= fabs(_s)) {
-      s = copysign(real(0), _s); c = copysign(real(1), _c); 
+      s = copysign(real(0), _s); c = copysign(real(1), _c);
     } else {
       s = copysign(real(1), _s); c = copysign(real(0), _c);
     }
@@ -195,4 +195,11 @@ namespace GeographicLib {
     _c = copysign(_c, real( ((q >> 1) ^ q) & 1U ? -1 : 1 ));
     return *this;
   }
+
+  Angle& Angle::reflect(bool flips, bool flipc) {
+    if (flips) _s *= -1;
+    if (flipc) _c *= -1;
+    return *this;
+  }
+
 } // namespace GeographicLib

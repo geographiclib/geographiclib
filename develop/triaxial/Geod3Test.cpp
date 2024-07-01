@@ -7,7 +7,6 @@
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
-typedef GeographicLib::Angle AuxAngle;
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 #include "Angle.hpp"
@@ -50,12 +49,13 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
   int prec = 18;
 #endif
   typedef Math::real real;
-  AuxAngle bet1x = AuxAngle::degrees(bet1), omg1x = AuxAngle::degrees(omg1), 
-    bet2x = AuxAngle::degrees(bet2), omg2x = AuxAngle::degrees(omg2);
+  typedef Angle ang;
+  ang bet1x = ang::degrees(bet1), omg1x = ang::degrees(omg1), 
+    bet2x = ang::degrees(bet2), omg2x = ang::degrees(omg2);
   TriaxialLine l =
     t.Inverse(bet1x, omg1x, bet2x, omg2x);
   real s12 = l.Distance();
-  AuxAngle bet1a, omg1a, alp1, bet2a, omg2a, alp2;
+  ang bet1a, omg1a, alp1, bet2a, omg2a, alp2;
   Triaxial::vec3 r2, v2;
   real m12, M12, M21;
   l.pos1(bet1a, omg1a, alp1);
@@ -80,23 +80,24 @@ void errreport(const Triaxial& t,
                Math::real s12,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
   typedef Math::real real;
+  typedef Angle ang;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else
   static const real eps = numeric_limits<real>::epsilon()/2;
 #endif
-  AuxAngle
-    bet1x = AuxAngle::degrees(bet1), omg1x = AuxAngle::degrees(omg1),
-    alp1x = AuxAngle::degrees(alp1),
-    bet2x = AuxAngle::degrees(bet2), omg2x = AuxAngle::degrees(omg2),
-    alp2x = AuxAngle::degrees(alp2);
+  ang
+    bet1x = ang::degrees(bet1), omg1x = ang::degrees(omg1),
+    alp1x = ang::degrees(alp1),
+    bet2x = ang::degrees(bet2), omg2x = ang::degrees(omg2),
+    alp2x = ang::degrees(alp2);
   TriaxialLine l0 =
     t.Inverse(bet1x, omg1x, bet2x, omg2x);
   real s12a = l0.Distance(), errs = fabs(s12 - s12a);
   Triaxial::vec3 r1, v1, r2, v2;
   t.elliptocart2(bet1x, omg1x, alp1x, r1, v1);
   t.elliptocart2(bet2x, omg2x, alp2x, r2, v2);
-  AuxAngle bet1a, omg1a, alp1a, bet2a, omg2a, alp2a;
+  ang bet1a, omg1a, alp1a, bet2a, omg2a, alp2a;
   Triaxial::vec3 r1a, v1a, r2a, v2a;
   TriaxialLine l1(t, bet1x, omg1x, alp1x);
   TriaxialLine l2(t, bet2x, omg2x, alp2x);
@@ -145,69 +146,6 @@ int main(int argc, const char* const argv[]) {
     int num = 1000;
     int skew = 10;
     int div = 1;
-    Triaxial::vec3 r, v;
-    if (0) {
-      Triaxial t(sqrt(real(2)), 1, sqrt(1/real(2)));
-      real z = 0;
-      AuxAngle bet0 = AuxAngle::degrees(90),
-        omg0 = AuxAngle::degrees(180),
-        alp0 = AuxAngle::degrees(-90);
-      for (int sb = 0; sb < 2; ++sb) {
-        AuxAngle bet(bet0); bet.x() = sb ? -z : z;
-        for (int so = 0; so < 2; ++so) {
-          AuxAngle omg(omg0); omg.y() = so ? -z : z;
-          for (int sa1 = 0; sa1 < 2; ++sa1) {
-            AuxAngle alp(alp0); alp.x() = sa1 ? -z : z;
-            for (int sa2 = 0; sa2 < 2; ++sa2) {
-              alp.y() = sa2 ? -1 : 1;
-                   t.elliptocart2(bet, omg, alp, r, v);
-              cout << bet.x() << " " << bet.y() << " "
-                   << omg.x() << " " << omg.y() << " "
-                   << alp.x() << " " << alp.y() << " "
-                   << r[0] << " " << r[1] << " " << r[2] << " "
-                   << v[0] << " " << v[1] << " " << v[2] << "\n";
-            }
-          }
-        }
-      }
-      // ry = +/-0 = cos(bet) * sin(omg)
-      // vy = +/-0 = sin(alp) * cos(alp)
-      cout << "======\n";
-      Triaxial::vec3 r0(r), v0(v);
-      r0[1] = v0[1] = z;
-      for (int sr = 0; sr < 2; ++sr) {
-        r = r0; r[1] = sr ? -z : z;
-        for (int sv = 0; sv < 2; ++sv) {
-          v = v0; v[1] = sv ? -z : z;
-          AuxAngle bet, omg, alp;
-          t.cart2toellip(r, v, bet, omg, alp);
-          cout << r[1] << " "
-               << v[1] << " "
-               << bet.x() << " " << bet.y() << " "
-               << omg.x() << " " << omg.y() << " "
-               << alp.x() << " " << alp.y() << "\n";
-        }
-      }
-      // cos(alp) = -0, sin(alp) = copysign(1, -vy)
-      cout << "======\n";
-      for (int sb = 0; sb < 2; ++sb) {
-        AuxAngle bet(bet0); bet.x() = sb ? -z : z;
-        for (int so = 0; so < 2; ++so) {
-          AuxAngle omg(omg0); omg.y() = so ? -z : z;
-          for (int sv = 0; sv < 2; ++sv) {
-            v = v0; v[1] = sv ? -z : z;
-            AuxAngle alp;
-            t.cart2toellip(bet, omg, v, alp);
-            cout << bet.x() << " " << bet.y() << " "
-                 << omg.x() << " " << omg.y() << " "
-                 << v[1] << " "
-                 << alp.x() << " " << alp.y() << "\n";
-          }
-        }
-      }
-      // cos(alp) = -0, sin(alp) = copysign(1, -vy)
-      return 0;
-    }
     {
       Triaxial t(sqrt(real(2)), 1, sqrt(1/real(2)));
       int bet1, omg1, bet2, omg2;

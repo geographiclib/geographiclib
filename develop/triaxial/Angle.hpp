@@ -82,6 +82,8 @@ namespace GeographicLib {
     Angle rebase(const Angle& c) const;
     Angle& renormalize();
     Angle& setquadrant(unsigned q);
+    Angle& reflect(bool flips, bool flipc);
+
     // Backward compatibility
     static Angle degrees(real deg) { return Angle(deg); }
     static Angle aux(real s, real c, bool /*normp*/) { return Angle(s, c); }

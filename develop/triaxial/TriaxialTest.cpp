@@ -5,7 +5,6 @@
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include "Angle.hpp"
-typedef GeographicLib::Angle AuxAngle;
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 #include "TriaxialODE.hpp"
@@ -126,36 +125,38 @@ void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
 
 void DirectfunTest(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
+  typedef Angle ang;
   Triaxial t(a, b, c);
   // Circumpolar
-  TriaxialLine lca(t, AuxAngle::degrees(real(1)), AuxAngle::degrees(real(0)),
-                  AuxAngle::degrees(real(90)));
+  TriaxialLine lca(t, ang::degrees(real(1)), ang::degrees(real(0)),
+                  ang::degrees(real(90)));
   if (1) {
-  TriaxialLine lcb(t, AuxAngle::degrees(real(89.999)),
-                   AuxAngle::degrees(real(0)),
-                  AuxAngle::degrees(real(90)));
+  TriaxialLine lcb(t, ang::degrees(real(89.999)),
+                   ang::degrees(real(0)),
+                  ang::degrees(real(90)));
   }
   // Umbilic
-  TriaxialLine lu(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(0)),
-                  AuxAngle::degrees(real(135)));
+  TriaxialLine lu(t, ang::degrees(real(90)), ang::degrees(real(0)),
+                  ang::degrees(real(135)));
   if (1) {
   // Circumpolar
-  TriaxialLine ltb(t, AuxAngle::degrees(real(90)),
-                   AuxAngle::degrees(real(0.001)),
-                   AuxAngle::degrees(real(180)));
+  TriaxialLine ltb(t, ang::degrees(real(90)),
+                   ang::degrees(real(0.001)),
+                   ang::degrees(real(180)));
   }
-  TriaxialLine lta(t, AuxAngle::degrees(real(90)), AuxAngle::degrees(real(89)),
-                  AuxAngle::degrees(real(180)));
+  TriaxialLine lta(t, ang::degrees(real(90)), ang::degrees(real(89)),
+                  ang::degrees(real(180)));
 }
 
 void PositionTest(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
+  typedef Angle ang;
   Triaxial t(a, b, c);
-  AuxAngle bet1, omg1, alp1, bet2, omg2, alp2;
-  bet1 = AuxAngle::degrees(-0.0); omg1 = AuxAngle::degrees(105);
-  alp1 = AuxAngle::degrees(90);
-  //  bet1 = AuxAngle::degrees(1); omg1 = AuxAngle::degrees(2);
-  //  alp1 = AuxAngle::degrees(3);
+  ang bet1, omg1, alp1, bet2, omg2, alp2;
+  bet1 = ang::degrees(-0.0); omg1 = ang::degrees(105);
+  alp1 = ang::degrees(90);
+  //  bet1 = ang::degrees(1); omg1 = ang::degrees(2);
+  //  alp1 = ang::degrees(3);
   TriaxialLine l(t, bet1, omg1, alp1);
   cout << fixed << setprecision(6);
   real ds = 1/real(10);
@@ -171,14 +172,15 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
 }
 
 Math::real HybridOLD(const Triaxial& t,
-                     const AuxAngle& bet1, const AuxAngle& omg1,
-                     const AuxAngle& alp1,
-                     const AuxAngle& bet2, const AuxAngle& omg2) {
+                     const Angle& bet1, const Angle& omg1,
+                     const Angle& alp1,
+                     const Angle& bet2, const Angle& omg2) {
   typedef Math::real real;
+  typedef Angle ang;
   TriaxialLine l(t, bet1, omg1, alp1);
   real s12;
-  AuxAngle bet2a, omg2a, alp2a;
-  l.Hybrid(bet2, +1, bet2a, omg2a, alp2a, s12);
+  ang bet2a, omg2a, alp2a;
+  l.Hybrid(bet2, bet2a, omg2a, alp2a, s12);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
   return omg2a.radians0();
@@ -186,9 +188,10 @@ Math::real HybridOLD(const Triaxial& t,
 
 Math::real Hybrid0(const TriaxialLineF& l,
                    const TriaxialLineF::ics ic,
-                   const AuxAngle& bet2,
-                   const AuxAngle& omg2) {
-  AuxAngle bet2a, omg2a, alp2a;
+                   const Angle& bet2,
+                   const Angle& omg2) {
+  typedef Angle ang;
+  ang bet2a, omg2a, alp2a;
   (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
@@ -196,17 +199,12 @@ Math::real Hybrid0(const TriaxialLineF& l,
 }
 
 Math::real HybridA(const Triaxial& t,
-                   const AuxAngle& bet1, const AuxAngle& omg1,
-                   const AuxAngle& alp1,
-                   const AuxAngle& bet2, const AuxAngle& omg2) {
-  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
-  /*  b1.normalize();
-  o1.normalize();
-  */
-  a1.normalize();
-  Triaxial::gamblk gam(t, b1, o1, a1);
+                   const Angle& bet1, const Angle& omg1,
+                   const Angle& alp1,
+                   const Angle& bet2, const Angle& omg2) {
+  Triaxial::gamblk gam(t, bet1, omg1, alp1);
   TriaxialLineF l(t, gam, 0.5, 1.5);
-  TriaxialLineF::ics ic(l, b1, o1, a1);
+  TriaxialLineF::ics ic(l, bet1, omg1, alp1);
   return Hybrid0(l, ic, bet2, omg2);
   /*
   cout << "AA "
@@ -218,7 +216,7 @@ Math::real HybridA(const Triaxial& t,
        << bet2.degrees() << " "
        << omg2.degrees() << "\n";
   cout << "BB " << alp1.degrees() << " " << d/Math::degree() << "\n";
-  AuxAngle bet2a, omg2a, alp2a;
+  ang bet2a, omg2a, alp2a;
   (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
@@ -227,10 +225,11 @@ Math::real HybridA(const Triaxial& t,
 }
 
 Math::real HybridB(const Triaxial& t,
-                   const AuxAngle& bet1, const AuxAngle& omg1,
-                   const AuxAngle& alp1, const AuxAngle& bet2,
-                   AuxAngle& bet2a, AuxAngle& omg2a, AuxAngle& alp2a) {
-  AuxAngle b1{bet1}, o1{omg1}, a1{alp1};
+                   const Angle& bet1, const Angle& omg1,
+                   const Angle& alp1, const Angle& bet2,
+                   Angle& bet2a, Angle& omg2a, Angle& alp2a) {
+  typedef Angle ang;
+  ang b1{bet1}, o1{omg1}, a1{alp1};
   Triaxial::gamblk gam(t, b1, o1, a1);
   TriaxialLineF l(t, gam, 0.5, 1.5);
   TriaxialLineF::ics ic(l, b1, o1, a1);
@@ -242,8 +241,8 @@ Math::real HybridB(const Triaxial& t,
 
 // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference in
 // lontitude on bet2 and the target longitude.
-AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
-                  AuxAngle xa,  AuxAngle xb,
+Angle findroot(const function<Math::real(const Angle&)>& f,
+                  Angle xa,  Angle xb,
                   Math::real fa, Math::real fb,
                   int* countn = nullptr, int* countb = nullptr) {
   // Implement root finding method of Chandrupatla (1997)
@@ -251,7 +250,7 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
   // Here we follow Scherer (2013), Section 6.1.7.3
   // https://doi.org/10.1007/978-3-319-00401-3
 
-  // Here the independent variable is an AuxAngle, but the computations on this
+  // Here the independent variable is an ang, but the computations on this
   // variable essentially involve its conversion to radians.  There's no need
   // to worry about the angle wrapping around because (xb-xa).radians() is in
   // (0,pi).
@@ -259,7 +258,8 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
   // require xa and xb to be normalized (the result is normalized)
   // require fa and fb to have opposite signs
 
-  AuxAngle xm;                  // The return value
+  typedef Angle ang;
+  ang xm;                  // The return value
   int cntn = 0, cntb = 0;
   /*
     cout << xa.degrees() << " " << fa << " "
@@ -269,7 +269,7 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
   //  for (int i = 0; i <= num; ++i) {
   { int i = 90;
     Math::real x = 360*i/Math::real(num),
-      ff = f(AuxAngle::degrees(x));
+      ff = f(ang::degrees(x));
     cout << "DAT " << x << " " << ff/Math::degree() << "\n";
   }
   return 0;
@@ -277,17 +277,17 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
   bool trip = false;
  for (Math::real t = 1/Math::real(2), ab = 0;
        cntn < 50 || GEOGRAPHICLIB_PANIC;) {
-    AuxAngle xt = 2*t == 1 ?
-      AuxAngle::aux(xa.y() + xb.y(),
+    ang xt = 2*t == 1 ?
+      ang::aux(xa.y() + xb.y(),
                xa.x() + xb.x(), true) :
-      (2*t < 1 ? xa - AuxAngle::radians(t * ab) :
-       xb + AuxAngle::radians((1 - t) * ab)),
+      (2*t < 1 ? xa - ang::radians(t * ab) :
+       xb + ang::radians((1 - t) * ab)),
     /*
-      AuxAngle::radians((1-t)*xa.radians() +
+      ang::radians((1-t)*xa.radians() +
                                     t*xb.radians()),
     */
     /*
-    AuxAngle xt((1-t) * xa.y() + t * xb.y(),
+    ang xt((1-t) * xa.y() + t * xb.y(),
                 (1-t) * xa.x() + t * xb.x(), true),
     */
       xc;
@@ -296,8 +296,8 @@ AuxAngle findroot(const function<Math::real(const AuxAngle&)>& f,
            << hypot(xa.x(), xa.y()) - 1 << " "
            << hypot(xb.x(), xb.y()) - 1 << " "
            << hypot(xt.x(), xt.y()) - 1 << "\n";
-      AuxAngle xq(xa - AuxAngle::radians(t * ab));
-      AuxAngle xr(xb + AuxAngle::radians((1 - t) * ab));
+      ang xq(xa - ang::radians(t * ab));
+      ang xr(xb + ang::radians((1 - t) * ab));
       cout << "CHECKX "
            << hypot(xq.x(), xq.y()) - 1 << " "
            << hypot(xr.x(), xr.y()) - 1 << "\n";
@@ -355,17 +355,18 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
                 Math::real bet1d, Math::real omg1d,
                 Math::real bet2d, Math::real omg2d) {
   typedef Math::real real;
+  typedef Angle ang;
   Triaxial t(a, b, c);
-  AuxAngle bet1 = AuxAngle::degrees(bet1d),
-    omg1 = AuxAngle::degrees(omg1d),
-    bet2 = AuxAngle::degrees(bet2d),
-    omg2 = AuxAngle::degrees(omg2d);
+  ang bet1 = ang::degrees(bet1d),
+    omg1 = ang::degrees(omg1d),
+    bet2 = ang::degrees(bet2d),
+    omg2 = ang::degrees(omg2d);
   cout << fixed << setprecision(6);
   /*
   for (int i = -180; i <= 180; ++i) {
   //  {  int i = 101;
     cout << i << " "
-         << HybridA(t, bet1, omg1, AuxAngle::degrees(i),
+         << HybridA(t, bet1, omg1, ang::degrees(i),
          bet2,omg2) / Math::degree() << "\n";
   }
   return;
@@ -373,8 +374,8 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   if (0) {
   cout << a << " " << b << " " << c << "\n";
   real domg[4];
-  AuxAngle alp1u[4];
-  alp1u[0] = AuxAngle::aux( t.kp * omg1.y(), t.k * bet1.x(), true );
+  ang alp1u[4];
+  alp1u[0] = ang::aux( t.kp * omg1.y(), t.k * bet1.x(), true );
   for (unsigned q = 1; q < 4; ++q) {
     alp1u[q] = alp1u[0];
     alp1u[q].setquadrant(q);
@@ -398,7 +399,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
     }
   }
 
-  AuxAngle xa, xb, xn;
+  ang xa, xb, xn;
   real fa, fb;
   for (unsigned q = 0U; q < 4U; ++q) {
     if (domg[q] < 0 && domg[(q+1)&3] > 0) {
@@ -413,7 +414,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   if (bisect) {
     for (; countb < Math::digits() + 10;) {
       ++countb;
-      xn = AuxAngle::aux(xb.y() + xa.y(), xb.x() + xa.x(), true);
+      xn = ang::aux(xb.y() + xa.y(), xb.x() + xa.x(), true);
       real ft =  HybridA(t, bet1, omg1, xn, bet2, omg2);
       cout << countb << " " << xn.degrees() << " " << ft << "\n";
       if (ft == 0 || (xa-xn).radians0() <= 0 || (xn-xb).radians0() <= 0)
@@ -423,7 +424,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   } else {
     xn = findroot(
                   [&t, &bet1, &omg1, &bet2, &omg2]
-                  (const AuxAngle& x) -> real
+                  (const ang& x) -> real
                   { return HybridA(t, bet1, omg1, x, bet2, omg2); },
                   xa,  xb,
                   fa, fb,
@@ -431,14 +432,14 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   }
 
   std::cout << xn.degrees() << " " << countn << " " << countb << "\n";
-  AuxAngle alp1(xn), bet2a, alp2a, omg2a;
+  ang alp1(xn), bet2a, alp2a, omg2a;
   real s12 = HybridB(t, bet1, omg1, alp1, bet2, bet2a, omg2a, alp2a);
   std::cout << alp1.degrees() << " " << bet2a.degrees() << " "
             << omg2a.degrees() << " " << alp2a.degrees() << " "
             << s12 << "\n";
   {
     TriaxialLine l0(t, bet1, omg1, alp1);
-    AuxAngle bb,oo,aa;
+    ang bb,oo,aa;
     l0.Position(s12, bb,oo,aa);
     std::cout << "TRY3\n" << alp1.degrees() << " " << bb.degrees() << " "
             << oo.degrees() << " " << aa.degrees() << " "
@@ -459,8 +460,8 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
 
 std::pair<Math::real, Math::real>
 cartdiff(const Triaxial& t,
-         AuxAngle bet1, AuxAngle omg1, AuxAngle alp1,
-         AuxAngle bet2, AuxAngle omg2, AuxAngle alp2)
+         Angle bet1, Angle omg1, Angle alp1,
+         Angle bet2, Angle omg2, Angle alp2)
 {
   Triaxial::vec3 r1, r2, v1, v2;
   t.elliptocart2(bet1, omg1, alp1, r1, v1);
@@ -472,6 +473,7 @@ cartdiff(const Triaxial& t,
 
 void InverseTest(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
+  typedef Angle ang;
   Triaxial t(a, b, c);
   cout << fixed << setprecision(6);
   real bet1d, omg1d, bet2d, omg2d, alp1d, alp2d, s12d;
@@ -488,13 +490,13 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
     */
     cout << int(bet1d) << " " << int(omg1d) << " "
          << int(bet2d) << " " << int(omg2d) << " " << flush;
-    AuxAngle
-      bet1(AuxAngle::degrees(bet1d)),
-      omg1(AuxAngle::degrees(omg1d)),
-      bet2(AuxAngle::degrees(bet2d)),
-      omg2(AuxAngle::degrees(omg2d)),
-      alp1(AuxAngle::degrees(alp1d)),
-      alp2(AuxAngle::degrees(alp2d));
+    ang
+      bet1(ang::degrees(bet1d)),
+      omg1(ang::degrees(omg1d)),
+      bet2(ang::degrees(bet2d)),
+      omg2(ang::degrees(omg2d)),
+      alp1(ang::degrees(alp1d)),
+      alp2(ang::degrees(alp2d));
     // if (fabs(bet1d) == 90 || fabs(bet2d) == 90) {
     bool umb1 = bet1.x() == 0 && omg1.y() == 0,
       umb2 = bet2.x() == 0 && omg2.y() == 0;
@@ -522,7 +524,7 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
       continue;
     }
     TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2);
-    AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+    ang bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
     l.pos1(bet1x, omg1x, alp1x);
     /*
     bet1x.rnd(); omg1x.rnd(); alp1x.rnd();
@@ -530,56 +532,14 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
     */
     real s12x = l.Distance();
     l.Position(s12x, bet2x, omg2x, alp2x);
-    /*
-    bet2x.rnd(); omg2x.rnd(); alp2x.rnd();
-    Triaxial::AngNorm(bet2x, omg2x, alp2x);
-    if (fabs(bet2d) == 90 && omg2x.y() < 0) {
-      omg2x.y() *= -1;
-      alp2x.x() *= -1;
-      alp2x.y() *= -1;
-    }
-    if (omg2x.x() == -1 && omg2x.y() == 0)
-      omg2x.y() = 0;
-    real
-      dbet1 = fabs((bet1 - bet1x).radians()),
-      domg1 = fabs((omg1 - omg1x).radians()),
-      dalp1 = fabs((alp1 - alp1x).radians()),
-      dalp1alt = fabs((alp1 - (AuxAngle::cardinal(2U) - alp1x)).radians()),
-      dbet2 = fabs((bet2 - bet2x).radians()),
-      domg2 = fabs((omg2 - omg2x).radians()),
-      dalp2 = fabs((alp2 - alp2x).radians()),
-      dalp2alt = fabs((alp2 - (AuxAngle::cardinal(2U) - alp2x)).radians()),
-      dalp12 = fabs((alp2x - alp1x).radians()),
-      ds12 = fabs(s12x - s12d);
-    if (bet1.x() == 0)
-      dalp1 = fmin( fabs((alp1 - alp1x + AuxAngle::cardinal(2U)).radians()),
-                    dalp1 );
-    if (bet2.x() == 0)
-      dalp2 = fmin( fabs((alp2 - alp2x + AuxAngle::cardinal(2U)).radians()),
-                    dalp2 );
-    if (0)
-      cout << "DD " << scientific << " "
-           << dbet1 << " " << domg1 << " "
-           << dbet2 << " " << domg2 << " "
-           << ds12 << "\n";
-    if (dbet1 < 1e-5 &&
-        domg1 < 1e-5 &&
-        dbet2 < 1e-5 &&
-        domg2 < 1e-5 &&
-        ((dalp1 < 1e-4 && dalp2 < 1e-4) ||
-         (bet1d + bet2d == 0 && signbit(alp1x.x()) != signbit(alp2x.x()) &&
-          dalp1alt < 1e-4 && dalp2alt < 1e-4) ||
-         (s12d == 0 && dalp12 < 1e-8)) &&
-        ds12 < 1e-5) {
-    */
     real ds12 = fabs(s12x - s12d);
     std::pair<real, real>
       err1 = cartdiff(t, bet1, omg1, alp1, bet1x, omg1x, alp1x),
       err2 = cartdiff(t, bet2, omg2, alp2, bet2x, omg2x, alp2x),
       err3 = cartdiff(t, bet1x, omg1x, alp1x, bet2x, omg2x, alp2x);
     if (bet1d + bet2d == 0 && err1.second >= 1.e-5) {
-      alp1x.x() *= -1;
-      alp2x.x() *= -1;
+      alp1x.reflect(false, true);
+      alp2x.reflect(false, true);
       err1 = cartdiff(t, bet1, omg1, alp1, bet1x, omg1x, alp1x);
       err2 = cartdiff(t, bet2, omg2, alp2, bet2x, omg2x, alp2x);
     }
@@ -617,19 +577,20 @@ int main() {
   try {
     Utility::set_digits();
     typedef Math::real real;
-    if (0) {
+    typedef Angle ang;
+   if (0) {
       Triaxial t(sqrt(2.0), 1.0, 1/sqrt(2.0));
       TriaxialLine l = t.Inverse(
-                     AuxAngle::degrees(-45.0),AuxAngle::degrees(-30.0),
-                     AuxAngle::degrees(-90.0),AuxAngle::degrees(0.0));
+                     ang::degrees(-45.0),ang::degrees(-30.0),
+                     ang::degrees(-90.0),ang::degrees(0.0));
       real s12 = l.Distance();
       /*      real s12 = 0.361729;
-      TriaxialLine l(t, AuxAngle::degrees(-45.0),AuxAngle::degrees(-30.0),
-                      AuxAngle::degrees(135.0));
+      TriaxialLine l(t, ang::degrees(-45.0),ang::degrees(-30.0),
+                      ang::degrees(135.0));
       l.SetDistance(s12);
       */
       cout << s12 << "\n";
-      AuxAngle bet2, omg2, alp2;
+      ang bet2, omg2, alp2;
       l.pos1(bet2, omg2, alp2);
         cout << "POS1 " << s12 << " "
              << bet2.degrees() << " "
@@ -657,10 +618,10 @@ int main() {
     if (0) {
     {
       TriaxialLine ll(Triaxial(sqrt(2.0), 1.0, 1/sqrt(2.0)),
-                      AuxAngle::degrees(90), AuxAngle::degrees(180),
-                      AuxAngle::degrees(158.253574));
+                      ang::degrees(90), ang::degrees(180),
+                      ang::degrees(158.253574));
       ll.SetDistance(0.898324);
-      AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+      ang bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
       int ibet1, iomg1, ialp1, ibet2, iomg2, ialp2;
       ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
       real s12x = ll.Distance();
@@ -672,10 +633,10 @@ int main() {
     return 0;
         {
       TriaxialLine ll(Triaxial(sqrt(2.0), 1.0, 1/sqrt(2.0)),
-                      AuxAngle::degrees(-90), AuxAngle::degrees(0),
-                      AuxAngle::degrees(-87.089900));
+                      ang::degrees(-90), ang::degrees(0),
+                      ang::degrees(-87.089900));
       ll.SetDistance(2.736330);
-      AuxAngle bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
+      ang bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
       int ibet1, iomg1, ialp1, ibet2, iomg2, ialp2;
       ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
       real s12x = ll.Distance();

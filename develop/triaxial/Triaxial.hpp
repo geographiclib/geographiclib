@@ -18,7 +18,6 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include "Angle.hpp"
-typedef GeographicLib::Angle AuxAngle;
 #include "Trigfun.hpp"
 
 namespace GeographicLib {
@@ -28,6 +27,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Triaxial {
   private:
     typedef Math::real real;
+    typedef Angle ang;
   public:
     typedef std::array<Math::real, 3> vec3;
     static real hypot3(real x, real y, real z) {
@@ -44,19 +44,19 @@ namespace GeographicLib {
       real h = hypot3(r[0], r[1], r[2]);
       r[0] /= h; r[1] /= h; r[2] /= h;
     }
-    static void Flip(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) {
-      bet.x() *= -1;
-      alp.y() *= -1; alp.x() *= -1;
-      omg.y() *= -1;
+    static void Flip(Angle& bet, Angle& omg, Angle& alp) {
+      bet.reflect(false, true);
+      omg.reflect(true, false);
+      alp.reflect(true, true);
     }
 
     static real HybridA(const Triaxial& t,
-                        const AuxAngle& bet1, const AuxAngle& omg1,
-                        const AuxAngle& alp1,
-                        const AuxAngle& bet2, const AuxAngle& omg2);
-    static AuxAngle findroot(const
-                             std::function<Math::real(const AuxAngle&)>& f,
-                             AuxAngle xa,  AuxAngle xb,
+                        const Angle& bet1, const Angle& omg1,
+                        const Angle& alp1,
+                        const Angle& bet2, const Angle& omg2);
+    static Angle findroot(const
+                             std::function<Math::real(const Angle&)>& f,
+                             Angle xa,  Angle xb,
                              Math::real fa, Math::real fb,
                              int* countn = nullptr, int* countb = nullptr);
   public:
@@ -67,8 +67,8 @@ namespace GeographicLib {
     Triaxial(real a, real b, real c);
     void Norm(vec3& r) const;
     void Norm(vec3& r, vec3& v) const;
-    TriaxialLine Inverse(AuxAngle bet1, AuxAngle omg1,
-                         AuxAngle bet2, AuxAngle omg2) const;
+    TriaxialLine Inverse(Angle bet1, Angle omg1,
+                         Angle bet2, Angle omg2) const;
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
@@ -83,7 +83,7 @@ namespace GeographicLib {
       static real thresh = 1/real(8);
       return thresh;
     }
-    static bool AngNorm(AuxAngle& bet, AuxAngle& omg, AuxAngle& alp,
+    static bool AngNorm(Angle& bet, Angle& omg, Angle& alp,
                         bool alt = false) {
       using std::signbit;
       // If !alt, put bet in [-pi/2,pi/2]
@@ -92,38 +92,35 @@ namespace GeographicLib {
       if (flip)
         Flip(bet, omg, alp);
       if (0) {
-        if (bet.x() == 0 && bet.y() * alp.x() > 0) {
-          alp.x() *= -1;
-          alp.y() *= -1;
-        }
-        if (bet.x() == 0 && alp.x() == 0) alp.y() = -bet.y();
+        if (bet.x() == 0 && bet.y() * alp.x() > 0)
+          alp.reflect(true, true);
+        if (bet.x() == 0 && alp.x() == 0)
+          alp.reflect(alp.y() * bet.y() > 0, false); // alp.y() = -bet.y();
       }
       return flip;
     }
-    static bool AngNorm(AuxAngle& bet, AuxAngle& omg,
+    static bool AngNorm(Angle& bet, Angle& omg,
                         bool alt = false) {
       using std::signbit;
       // If !alt, put bet in [-pi/2,pi/2]
       // If  alt, put omg in [0, pi]
       bool flip = alt ? signbit(omg.y()) : signbit(bet.x());
       if (flip) {
-        AuxAngle alp;
+        ang alp;
         Flip(bet, omg, alp);
       }
       return flip;
     }
-    void cart2toellip(const vec3& r, AuxAngle& bet, AuxAngle& omg) const;
+    void cart2toellip(const vec3& r, Angle& bet, Angle& omg) const;
     void cart2toellip(const vec3& r, const vec3& v,
-                      AuxAngle& bet, AuxAngle& omg, AuxAngle& alp) const;
-    void cart2toellip(const AuxAngle& bet, const AuxAngle& omg,
-                      const vec3& v, AuxAngle& alp) const;
-    void elliptocart2(const AuxAngle& bet, const AuxAngle& omg, vec3& r) const;
-    void elliptocart2(const AuxAngle& bet, const AuxAngle& omg,
-                      const AuxAngle& alp,
+                      Angle& bet, Angle& omg, Angle& alp) const;
+    void cart2toellip(const Angle& bet, const Angle& omg,
+                      const vec3& v, Angle& alp) const;
+    void elliptocart2(const Angle& bet, const Angle& omg, vec3& r) const;
+    void elliptocart2(const Angle& bet, const Angle& omg,
+                      const Angle& alp,
                       vec3& r, vec3& v) const;
     class gamblk {
-    private:
-      typedef Math::real real;
     public:
       // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
       //       = k2*cb2*sa2 - kp2*so2*ca2
@@ -154,7 +151,7 @@ namespace GeographicLib {
         , nup(Math::NaN())
       {}
       gamblk(const Triaxial& t,
-             const AuxAngle& bet, const AuxAngle& omg, const AuxAngle& alp) {
+             const Angle& bet, const Angle& omg, const Angle& alp) {
         using std::sqrt; using std::fabs;
         real a = t.k * bet.x() * alp.y(), b = t.kp * omg.y() * alp.x();
         gam = (a - b) * (a + b);
@@ -179,6 +176,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT geod_fun {
   private:
     typedef Math::real real;
+    typedef Angle ang;
     real _kap, _kapp, _eps, _mu;
     bool _tx;
     EllipticFunction _ell;
@@ -241,13 +239,13 @@ namespace GeographicLib {
       return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
         (x < 0 ? -1 : 1) * Triaxial::BigValue();
     }
-    static real lamaux0(AuxAngle x) {
-      // lam(x) when x is an AuxAngle -- no clamping
+    static real lamaux0(Angle x) {
+      // lam(x) when x is an ang -- no clamping
       using std::asinh; using std::fabs;
       return asinh(x.y()/fabs(x.x()));
     }
-    static real lamaux(AuxAngle x) {
-      // lam(x) when x is an AuxAngle -- with clamping
+    static real lamaux(Angle x) {
+      // lam(x) when x is an ang -- with clamping
       // A consistent large value for x near pi/2.
       return Triaxial::clamp(lamaux0(x));
     }

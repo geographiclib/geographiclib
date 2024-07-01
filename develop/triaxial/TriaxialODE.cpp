@@ -31,8 +31,8 @@ namespace GeographicLib {
     _t.Norm(_r1, _v1);
   }
 
-  TriaxialODE::TriaxialODE(const Triaxial& t, const AuxAngle& bet1,
-                           const AuxAngle& omg1, const AuxAngle& alp1)
+  TriaxialODE::TriaxialODE(const Triaxial& t, const ang& bet1,
+                           const ang& omg1, const ang& alp1)
     : _t(t)
     , _b(t.b)
     , _axesn({t.a/t.b, real(1), t.c/t.b})
@@ -42,8 +42,8 @@ namespace GeographicLib {
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1)
-    : TriaxialODE(t, AuxAngle::degrees(bet1), AuxAngle::degrees(omg1),
-                  AuxAngle::degrees(alp1))
+    : TriaxialODE(t, ang::degrees(bet1), ang::degrees(omg1),
+                  ang::degrees(alp1))
   {}
 
   void TriaxialODE::Norm(vec6& y) const {
@@ -230,7 +230,7 @@ namespace GeographicLib {
   }
 
   int TriaxialODE::Position(real s12,
-                            AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2,
+                            ang& bet2, ang& omg2, ang& alp2,
                             real eps) const {
     vec3 r2, v2;
     int n = Position(s12, r2, v2, eps);
@@ -239,7 +239,7 @@ namespace GeographicLib {
   }
 
   int TriaxialODE::Position(real s12,
-                            AuxAngle& bet2, AuxAngle& omg2, AuxAngle& alp2,
+                            ang& bet2, ang& omg2, ang& alp2,
                             real& m12, real& M12, real& M21,
                             real eps) const {
     vec3 r2, v2;
@@ -249,8 +249,8 @@ namespace GeographicLib {
   }
     
   void TriaxialODE::Position(real ds, long nmin, long nmax,
-                             vector<AuxAngle>& bet2, vector<AuxAngle>& omg2,
-                             vector<AuxAngle>& alp2, real eps) const {
+                             vector<ang>& bet2, vector<ang>& omg2,
+                             vector<ang>& alp2, real eps) const {
     vector<vec3> r2, v2;
     Position(ds, nmin, nmax, r2, v2, eps);
     size_t n = r2.size();
@@ -259,8 +259,8 @@ namespace GeographicLib {
       _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
   }
   void TriaxialODE::Position(real ds, long nmin, long nmax,
-                             vector<AuxAngle>& bet2, vector<AuxAngle>& omg2,
-                             vector<AuxAngle>& alp2,
+                             vector<ang>& bet2, vector<ang>& omg2,
+                             vector<ang>& alp2,
                              vector<real>& m12,
                              vector<real>& M12, vector<real>& M21,
                              real eps) const {

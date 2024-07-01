@@ -5,7 +5,6 @@
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
-typedef GeographicLib::Angle AuxAngle;
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 
@@ -50,17 +49,18 @@ int usage(int retval, bool /*brief*/) {
 
 void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
   typedef Math::real real;
+  typedef Angle ang;
   cout << bet1 << " " << omg1 << " " << bet2 << " " << omg2 << " " << flush;
   TriaxialLine l =
-    t.Inverse(AuxAngle::degrees(bet1), AuxAngle::degrees(omg1),
-              AuxAngle::degrees(bet2), AuxAngle::degrees(omg2));
+    t.Inverse(ang::degrees(bet1), ang::degrees(omg1),
+              ang::degrees(bet2), ang::degrees(omg2));
   real s12 = l.Distance();
-  AuxAngle bet1a, omg1a, alp1a, bet2a, omg2a, alp2a;
+  ang bet1a, omg1a, alp1a, bet2a, omg2a, alp2a;
   l.pos1(bet1a, omg1a, alp1a);
   l.Position(s12, bet2a, omg2a, alp2a);
   Triaxial::vec3 r2, v2;
   t.elliptocart2(bet2a, omg2a, alp2a, r2, v2);
-  t.cart2toellip(AuxAngle::degrees(bet2), AuxAngle::degrees(omg2), v2,
+  t.cart2toellip(ang::degrees(bet2), ang::degrees(omg2), v2,
                  alp2a);
 #if GEOGRAPHICLIB_PRECISION <= 2
   int prec = 12;
