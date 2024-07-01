@@ -236,7 +236,8 @@ namespace GeographicLib {
   }
   // Accurate inverse by direct Newton (not using _finv)
   Math::real geod_fun::inv1(real z, int* countn, int* countb) const {
-    return _mu == 0 ? root(z, z, countn, countb) : _fun.inv1(z, countn, countb);
+    return _mu == 0 ? root(z, z, countn, countb) :
+      _fun.inv1(z, countn, countb);
   }
   // Accurate inverse correcting result from _finv
   Math::real geod_fun::inv(real z, int* countn, int* countb) const {
@@ -840,8 +841,8 @@ namespace GeographicLib {
     return l.Hybrid0(ic, bet2, omg2);
   }
 
-  // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference in
-  // lontitude on bet2 and the target longitude.
+  // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference
+  // in lontitude on bet2 and the target longitude.
   Angle Triaxial::findroot(const function<Math::real(const Angle&)>& f,
                               Angle xa,  Angle xb,
                               Math::real fa, Math::real fb,
@@ -903,7 +904,8 @@ namespace GeographicLib {
         // Scherer has a fabs(cb).  This should be fabs(ab).
         tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
       // Backward tests to deal with NaNs
-      trip =  !(2 * tl < 1 && fabs(fm) > numeric_limits<Math::real>::epsilon());
+      trip =  !(2 * tl < 1 &&
+                fabs(fm) > numeric_limits<Math::real>::epsilon());
       // If trip update xm one more time, then Hybrid solution is called once
       // more outside this route to update bet2, omg2, alp2, etc.
       if (trip) tl = 0;

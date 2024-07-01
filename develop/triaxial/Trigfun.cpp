@@ -219,7 +219,8 @@ namespace GeographicLib {
     if (_coeff.empty()) return 0;
     real y = Math::pi()/(_sym ? _q : _h) * z;
     int k = _m, k0 = !_sym ? 1 : 0;
-    // cout <<"c " << _coeff[8] << " " << _coeff.size() << " " << k << " " << k0 << "\n";
+    // cout << "c " << _coeff[8] << " " << _coeff.size()
+    // << " " << k << " " << k0 << "\n";
     real u0 = 0, u1 = 0,        // accumulators for sum
       x = 2 * cos(y);
     for (; k > k0;) {
@@ -236,7 +237,8 @@ namespace GeographicLib {
     //   f1 = odd ? sin(y) : cos(y)
     //   f0 = odd ? 0 : 1
     return _sym ? (_odd ? sin(y/2) * (u0 + u1) : cos(y/2) * (u0 - u1)) :
-      _coeff[0] * (_odd ? y : 1) + (_odd ? sin(y) : x/2) * u0 - (_odd ? 0 : u1);
+      _coeff[0] * (_odd ? y : 1) +
+      (_odd ? sin(y) : x/2) * u0 - (_odd ? 0 : u1);
   }
 
   Trigfun Trigfun::integral() const {
@@ -337,7 +339,8 @@ namespace GeographicLib {
         pair<real, real> val0 = ffp(x00);
         pair<real, real> valb = ffp(xb0);
         cout << scientific;
-        cout << "DAT " << s << " " << x00-xa0 << " " << xb0-x00 << " " << z << "\n";
+        cout << "DAT " << s << " " << x00-xa0 << " " << xb0-x00 << " "
+             << z << "\n";
         cout << "DAT "
              << xa0 << " " << vala.first - z << " " << vala.second << "\n";
         cout << "DAT "
@@ -348,7 +351,8 @@ namespace GeographicLib {
         for (int i = 0; i <= nsamp; ++i) {
           real xx = xa0 + i * (xb0-xa0) / nsamp;
           pair<real, real> val = ffp(xx);
-          cout << "PLOT " << xx << " " << val.first - z << " " << val.second << "\n";
+          cout << "PLOT " << xx << " " << val.first - z << " "
+               << val.second << "\n";
         }
       }
       ++k;

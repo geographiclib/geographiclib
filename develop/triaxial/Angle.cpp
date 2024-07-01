@@ -213,13 +213,17 @@ namespace GeographicLib {
     // normq = already normalized
     bool normq = fabs(hypot(s, c) - 1) < 1/real(10000);
     if (donorm && normq)
-      cerr << id << " angauxOKISH normalization requested but already normalized\n";
+      cerr << id
+           << " angauxOKISH normalization requested but already normalized\n";
     else if (!donorm && !normq)
-      cerr << id << " angauxBAD normalization not requested but needed\n";
+      cerr << id
+           << " angauxBAD normalization not requested but needed\n";
     else if (donorm)
-      cerr << id <<  " angauxOKA normalization requested and needed\n";
+      cerr << id
+           << " angauxOKA normalization requested and needed\n";
     else
-      cerr << id << " angauxOKB normalization not requested nor needed\n";
+      cerr << id
+           << " angauxOKB normalization not requested nor needed\n";
     return Angle(s, c, 0, !donorm);
   }
   */

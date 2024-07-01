@@ -116,7 +116,8 @@ void angletest() {
   typedef Angle ang;
   ang o1 = ang::cardinal(2);
   ang o2 = ang::cardinal(-2);
-  cout << o1.s() << " " << o2.s() << " " << real(o1) << " " << real(o2) << "\n";
+  cout << o1.s() << " " << o2.s() << " "
+       << real(o1) << " " << real(o2) << "\n";
   ang a1(-180);
   ang a2(-180);
   ang a3 = a2 - a1;
@@ -128,7 +129,8 @@ void angletest() {
       ang a3 = a2 - a1;
       int q = int(round(real(a3)));
       if (q != j - i)
-        cout << "ERROR " << q - (j-i) << " " << q << " " << j << " " << i << "\n";
+        cout << "ERROR " << q - (j-i) << " " << q << " "
+             << j << " " << i << "\n";
     }
   }
 }

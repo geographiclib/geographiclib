@@ -99,7 +99,8 @@ void EllipTest(Math::real k2, Math::real kp2) {
   if (0) {
     for (int i = 0; i <= 100; ++i) {
       real x = i/real(10);
-      cout << i << " " << t(x) << " " << F(x) << " " << F(x) - ell.F(x) << "\n";
+      cout << i << " " << t(x) << " " << F(x) << " "
+           << F(x) - ell.F(x) << "\n";
     }
   }
   if (0) {

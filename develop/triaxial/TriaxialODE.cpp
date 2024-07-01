@@ -117,7 +117,8 @@ namespace GeographicLib {
     if (eps == 0)
       eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
     // Normalize all distances to b.
-    vec10 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2], 0, 1, 1, 0};
+    vec10 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2],
+            0, 1, 1, 0};
     Norm(y);
     int n;
     s12 /= _b;

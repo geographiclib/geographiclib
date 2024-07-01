@@ -117,8 +117,8 @@ namespace GeographicLib {
                real tol = std::numeric_limits<real>::epsilon()) const;
     //    real eval(real x) const;
     real operator()(real x) const;
-    static Trigfun initbysamples(const std::vector<real>& F, bool odd, bool sym,
-                                 bool centerp,
+    static Trigfun initbysamples(const std::vector<real>& F,
+                                 bool odd, bool sym, bool centerp,
                                  real halfp);
     void refine(const Trigfun& tb);
     Trigfun integral() const;

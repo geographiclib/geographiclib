@@ -299,7 +299,8 @@ Angle findroot(const function<Math::real(const Angle&)>& f,
     }
     ++cntn;
     Math::real ft = f(xt), fm, fc;
-    cout << cntn << " " << xt.degrees0() << " " << ft << " " << ab << " " << t << "\n";
+    cout << cntn << " " << xt.degrees0() << " "
+         << ft << " " << ab << " " << t << "\n";
     if (signbit(ft) == signbit(fa)) {
       xc = xa; xa = xt;
       fc = fa; fa = ft;
@@ -615,8 +616,13 @@ int main() {
       ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
       real s12x = ll.Distance();
       ll.Position(s12x, bet2x, omg2x, alp2x, &ibet2, &iomg2, &ialp2);
-      std::cout << "OUT\n" << bet1x.degrees0() << " " << omg1x.degrees0() << " " << alp1x.degrees0() << " " << ibet1 << iomg1 << ialp1 << signbit(bet1x.c()) << signbit(omg1x.s()) << "\n"
-                << bet2x.degrees0() << " " << omg2x.degrees0() << " " << alp2x.degrees0() << " " << ibet2 << iomg2 << ialp2 << "\n"
+      std::cout << "OUT\n"
+                << bet1x.degrees0() << " " << omg1x.degrees0() << " "
+                << alp1x.degrees0() << " "
+                << ibet1 << iomg1 << ialp1
+                << signbit(bet1x.c()) << signbit(omg1x.s()) << "\n"
+                << bet2x.degrees0() << " " << omg2x.degrees0() << " "
+                << alp2x.degrees0() << " " << ibet2 << iomg2 << ialp2 << "\n"
                 << s12x << "\n";
     }
     return 0;
@@ -630,8 +636,13 @@ int main() {
       ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
       real s12x = ll.Distance();
       ll.Position(s12x, bet2x, omg2x, alp2x, &ibet2, &iomg2, &ialp2);
-      std::cout << "OUT\n" << bet1x.degrees0() << " " << omg1x.degrees0() << " " << alp1x.degrees0() << " " << ibet1 << iomg1 << ialp1 << signbit(bet1x.c()) << signbit(omg1x.s()) << "\n"
-                << bet2x.degrees0() << " " << omg2x.degrees0() << " " << alp2x.degrees0() << " " << ibet2 << iomg2 << ialp2 << "\n"
+      std::cout << "OUT\n"
+                << bet1x.degrees0() << " " << omg1x.degrees0() << " "
+                << alp1x.degrees0() << " "
+                << ibet1 << iomg1 << ialp1
+                << signbit(bet1x.c()) << signbit(omg1x.s()) << "\n"
+                << bet2x.degrees0() << " " << omg2x.degrees0() << " "
+                << alp2x.degrees0() << " " << ibet2 << iomg2 << ialp2 << "\n"
                 << s12x << "\n";
     }
     return 0;
