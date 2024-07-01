@@ -54,6 +54,8 @@ namespace GeographicLib {
      *
      * The point (\e x, \e y) is scaled so that it lies reasonably close to the
      * unit circle.
+     *
+     * normp means "already normalized"
      **********************************************************************/
     Angle(real s, real c, real num = 0, bool normp = false);
     explicit Angle(real deg);
@@ -82,25 +84,22 @@ namespace GeographicLib {
     Angle rebase(const Angle& c) const;
     Angle& renormalize();
     Angle& setquadrant(unsigned q);
+    unsigned quadrant() const;
     Angle& reflect(bool flips, bool flipc);
 
     // Backward compatibility
-    static Angle degrees(real deg) { return Angle(deg); }
-    static Angle aux(real s, real c, bool /*normp*/) { return Angle(s, c); }
+    // static Angle degrees(real deg) { return Angle(deg); }
+    // static Angle aux(int id, real s, real c, bool donorm);
     real degrees0() const { return Math::atan2d(_s, _c); }
     real radians0() const { using std::atan2; return atan2(_s, _c); }
-    real degrees() const { return degrees0(); }
-    real y() const { return s(); }
-    real x() const { return c(); }
-    Math::real& y() { return _s; }
-    Math::real& x() { return _c; }
-    Angle& normalize() { return *this; }
-    Angle normalized() const { return *this; }
-    unsigned quadrant() const {
-      using std::signbit;
-      return 2U * signbit(_s) + (signbit(_c) ^ signbit(_s));
-    }
-    Math::real tan() const { return t(); }
+    // real degrees() const { return degrees0(); }
+    // real y() const { return s(); }
+    // real x() const { return c(); }
+    // Math::real& y() { return _s; }
+    // Math::real& x() { return _c; }
+    // Angle& normalize() { return *this; }
+    // Angle normalized() const { return *this; }
+    // Math::real tan() const { return t(); }
   };
 
 } // namespace GeographicLib

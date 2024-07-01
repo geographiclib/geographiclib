@@ -39,7 +39,7 @@ string nicestr(Math::real x, int prec, bool azi = false) {
   }
   return s;
 }
-  
+
 void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
 #if GEOGRAPHICLIB_PRECISION <= 2
   int prec = 12;
@@ -50,8 +50,8 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
 #endif
   typedef Math::real real;
   typedef Angle ang;
-  ang bet1x = ang::degrees(bet1), omg1x = ang::degrees(omg1), 
-    bet2x = ang::degrees(bet2), omg2x = ang::degrees(omg2);
+  ang bet1x(bet1), omg1x(omg1),
+    bet2x(bet2), omg2x(omg2);
   TriaxialLine l =
     t.Inverse(bet1x, omg1x, bet2x, omg2x);
   real s12 = l.Distance();
@@ -59,13 +59,13 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
   Triaxial::vec3 r2, v2;
   real m12, M12, M21;
   l.pos1(bet1a, omg1a, alp1);
-  TriaxialODE direct(t, bet1, omg1, alp1.degrees());
+  TriaxialODE direct(t, bet1, omg1, alp1.degrees0());
   direct.Position(s12, r2, v2, m12, M12, M21);
   t.cart2toellip(bet2x, omg2x, v2, alp2);
   cout << bet1 << " " << omg1 << " "
-       << nicestr(alp1.degrees(), prec, true) << " "
+       << nicestr(alp1.degrees0(), prec, true) << " "
        << bet2 << " " << omg2 << " "
-       << nicestr(alp2.degrees(), prec, true) << " "
+       << nicestr(alp2.degrees0(), prec, true) << " "
        << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " "
        << nicestr(M12, prec+2) << " " << nicestr(M21, prec+2) << endl;
 }
@@ -87,10 +87,8 @@ void errreport(const Triaxial& t,
   static const real eps = numeric_limits<real>::epsilon()/2;
 #endif
   ang
-    bet1x = ang::degrees(bet1), omg1x = ang::degrees(omg1),
-    alp1x = ang::degrees(alp1),
-    bet2x = ang::degrees(bet2), omg2x = ang::degrees(omg2),
-    alp2x = ang::degrees(alp2);
+    bet1x(bet1), omg1x(omg1), alp1x(alp1),
+    bet2x(bet2), omg2x(omg2), alp2x(alp2);
   TriaxialLine l0 =
     t.Inverse(bet1x, omg1x, bet2x, omg2x);
   real s12a = l0.Distance(), errs = fabs(s12 - s12a);

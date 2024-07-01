@@ -42,8 +42,8 @@ namespace GeographicLib {
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1)
-    : TriaxialODE(t, ang::degrees(bet1), ang::degrees(omg1),
-                  ang::degrees(alp1))
+    : TriaxialODE(t, ang(bet1), ang(omg1),
+                  ang(alp1))
   {}
 
   void TriaxialODE::Norm(vec6& y) const {
@@ -247,7 +247,7 @@ namespace GeographicLib {
     _t.cart2toellip(r2, v2, bet2, omg2, alp2);
     return n;
   }
-    
+
   void TriaxialODE::Position(real ds, long nmin, long nmax,
                              vector<ang>& bet2, vector<ang>& omg2,
                              vector<ang>& alp2, real eps) const {

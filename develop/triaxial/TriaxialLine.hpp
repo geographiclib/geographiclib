@@ -35,7 +35,7 @@ namespace GeographicLib {
       real u0, v0,               // starting point in u,v space
       //        df, deltashift,          // umbilic constants
       // NB df and deltashift need to migrate to a TriaxialLineF variables
-      // cf TriaxialLineG::s0 
+      // cf TriaxialLineG::s0
         delta;                   //  starting point for umbilic
       int ibet, iomg, ialp,      // wrapping quantities for bet, omg, alp
         nN, eE,                  // Northgoing / eastgoing

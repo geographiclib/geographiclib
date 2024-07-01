@@ -88,14 +88,14 @@ namespace GeographicLib {
       using std::signbit;
       // If !alt, put bet in [-pi/2,pi/2]
       // If  alt, put omg in [0, pi]
-      bool flip = alt ? signbit(omg.y()) : signbit(bet.x());
+      bool flip = alt ? signbit(omg.s()) : signbit(bet.c());
       if (flip)
         Flip(bet, omg, alp);
       if (0) {
-        if (bet.x() == 0 && bet.y() * alp.x() > 0)
+        if (bet.c() == 0 && bet.s() * alp.c() > 0)
           alp.reflect(true, true);
-        if (bet.x() == 0 && alp.x() == 0)
-          alp.reflect(alp.y() * bet.y() > 0, false); // alp.y() = -bet.y();
+        if (bet.c() == 0 && alp.c() == 0)
+          alp.reflect(alp.s() * bet.s() > 0, false); // alp.s() = -bet.s();
       }
       return flip;
     }
@@ -104,7 +104,7 @@ namespace GeographicLib {
       using std::signbit;
       // If !alt, put bet in [-pi/2,pi/2]
       // If  alt, put omg in [0, pi]
-      bool flip = alt ? signbit(omg.y()) : signbit(bet.x());
+      bool flip = alt ? signbit(omg.s()) : signbit(bet.c());
       if (flip) {
         ang alp;
         Flip(bet, omg, alp);
@@ -153,7 +153,7 @@ namespace GeographicLib {
       gamblk(const Triaxial& t,
              const Angle& bet, const Angle& omg, const Angle& alp) {
         using std::sqrt; using std::fabs;
-        real a = t.k * bet.x() * alp.y(), b = t.kp * omg.y() * alp.x();
+        real a = t.k * bet.c() * alp.s(), b = t.kp * omg.s() * alp.c();
         gam = (a - b) * (a + b);
         // This direct test case
         // -30 -86 58.455576621187896848 -1.577754
@@ -162,11 +162,11 @@ namespace GeographicLib {
           gam = 0 * gam;
         real gamp = gam == 0 ? 0 :
           (gam > 0 ? // k2 - gamma
-           t.k2 * (Math::sq(bet.y()) + Math::sq(alp.x()*bet.x())) +
-           t.kp2 * Math::sq(omg.y()*alp.x()) :
+           t.k2 * (Math::sq(bet.s()) + Math::sq(alp.c()*bet.c())) +
+           t.kp2 * Math::sq(omg.s()*alp.c()) :
            // kp2 + gamma
-           t.k2 *  Math::sq(bet.x()*alp.y()) +
-           t.kp2 * (Math::sq(omg.x()) + Math::sq(alp.y()*omg.y())));
+           t.k2 *  Math::sq(bet.c()*alp.s()) +
+           t.kp2 * (Math::sq(omg.c()) + Math::sq(alp.s()*omg.s())));
         nu = sqrt(fabs(gam)) / (gam > 0 ? t.k : t.kp);
         nup = sqrt(gamp) / (gam > 0 ? t.k : t.kp);
       }
@@ -239,15 +239,15 @@ namespace GeographicLib {
       return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
         (x < 0 ? -1 : 1) * Triaxial::BigValue();
     }
-    static real lamaux0(Angle x) {
+    static real lamang0(Angle x) {
       // lam(x) when x is an ang -- no clamping
       using std::asinh; using std::fabs;
-      return asinh(x.y()/fabs(x.x()));
+      return asinh(x.s()/fabs(x.c()));
     }
-    static real lamaux(Angle x) {
+    static real lamang(Angle x) {
       // lam(x) when x is an ang -- with clamping
       // A consistent large value for x near pi/2.
-      return Triaxial::clamp(lamaux0(x));
+      return Triaxial::clamp(lamang0(x));
     }
     static real gd(real x) {
       using std::atan; using std::sinh;

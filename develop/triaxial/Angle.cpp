@@ -196,10 +196,31 @@ namespace GeographicLib {
     return *this;
   }
 
+  unsigned Angle::quadrant() const {
+    return 2U * signbit(_s) + (signbit(_c) ^ signbit(_s));
+  }
+
   Angle& Angle::reflect(bool flips, bool flipc) {
     if (flips) _s *= -1;
     if (flipc) _c *= -1;
     return *this;
   }
 
+  /*
+  Angle Angle::aux(int id, Math::real s, Math::real c, bool donorm) {
+    using std::hypot; using std::fabs;
+    // donorm = normalization required
+    // normq = already normalized
+    bool normq = fabs(hypot(s, c) - 1) < 1/real(10000);
+    if (donorm && normq)
+      cerr << id << " angauxOKISH normalization requested but already normalized\n";
+    else if (!donorm && !normq)
+      cerr << id << " angauxBAD normalization not requested but needed\n";
+    else if (donorm)
+      cerr << id <<  " angauxOKA normalization requested and needed\n";
+    else
+      cerr << id << " angauxOKB normalization not requested nor needed\n";
+    return Angle(s, c, 0, !donorm);
+  }
+  */
 } // namespace GeographicLib

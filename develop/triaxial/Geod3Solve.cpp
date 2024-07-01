@@ -284,17 +284,17 @@ int main(int argc, const char* const argv[]) {
     if (lineseq) {
       if (cart) {
         Triaxial::vec3 r1, v1;
-        t.elliptocart2(ang::degrees(bet1), ang::degrees(omg1),
-                       ang::degrees(alp1), r1, v1);
+        t.elliptocart2(ang(bet1), ang(omg1),
+                       ang(alp1), r1, v1);
         std::vector<Triaxial::vec3> r2, v2;
         TriaxialODE direct(t, r1, v1);
         direct.Position(ds, nmin, nmax, r2, v2);
         for (size_t i = 0; i < r2.size(); ++i) {
           ang bet2, omg2, alp2;
           t.cart2toellip(r2[i], v2[i], bet2, omg2, alp2);
-          *output << BetOmgString(bet2.degrees(), omg2.degrees(),
+          *output << BetOmgString(bet2.degrees0(), omg2.degrees0(),
                                   prec, dms, dmssep, longfirst)
-                  << " " << AzimuthString(alp2.degrees(), prec, dms, dmssep)
+                  << " " << AzimuthString(alp2.degrees0(), prec, dms, dmssep)
                   << "\n";
         }
       } else {
