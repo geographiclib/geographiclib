@@ -48,9 +48,16 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     real _y, _x;
+    static real rnd(real x);
   public:
     /**
-     * The constructor.
+     * The default constructor.
+     *
+     * This sets the angle to 0.
+     **********************************************************************/
+    AuxAngle() : _y(0), _x(1) {}
+    /**
+     * The general constructor.
      *
      * @param[in] y the \e y coordinate.
      * @param[in] x the \e x coordinate.
@@ -58,11 +65,27 @@ namespace GeographicLib {
      * \note the \e y coordinate is specified \e first.
      * \warning either \e x or \e y can be infinite, but not both.
      *
-     * The defaults (\e x = 1 and \e y = 0) are such that
-     * + no arguments gives an angle of 0;
-     * + 1 argument specifies the tangent of the angle.
+     * The point (\e x, \e y) is scaled so that it lies reasonably close to the
+     * unit circle.
      **********************************************************************/
-    AuxAngle(real y = 0, real x = 1) : _y(y), _x(x) {}
+    AuxAngle(real y, real x = 1) : _y(y), _x(x) { scale(); }
+    /**
+     * The general constructor.
+     *
+     * @param[in] y the \e y coordinate.
+     * @param[in] x the \e x coordinate.
+     * @param[in] normp if true, normalize \e y and \e x.
+     *
+     * \note the \e y coordinate is specified \e first.
+     * \warning either \e x or \e y can be infinite, but not both.
+     *
+     * If \e normp is true, if the point (\e x, \e y) is normalized to lie on
+     * the unit circle.  If \e normp is false, \e no scaling is done; in this
+     * case \e neither \e x nor \e y should be infinite.
+     **********************************************************************/
+    AuxAngle(real y, real x, bool normp) : _y(y), _x(x) {
+      if (normp) { scale(); normalize(); };
+    }
     /**
      * @return the \e y component.  This is the sine of the angle if the
      *   AuxAngle has been normalized.
@@ -112,23 +135,58 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real tan() const { return _y / _x; }
     /**
+     * @return the sine of the angle.
+     **********************************************************************/
+    Math::real sin() const {
+      using std::hypot;
+      return _y / hypot(_x, _y);
+    }
+    /**
+     * @return the cosine of the angle.
+     **********************************************************************/
+    Math::real cos() const {
+      using std::hypot;
+      return _x / hypot(_x, _y);
+    }
+    /**
+     * Scale (exactly) the \e x and \e y components so that the absolute value
+     * of the largest component lies in [0.5, 2).  This also converts various
+     * indeterminate angles to NaN().
+     **********************************************************************/
+    AuxAngle& scale();
+    /**
+     * Normalize the AuxAngle in place so that the \e y and \e x components are
+     * equal to the sine and cosine of the angle.
+     **********************************************************************/
+    AuxAngle& normalize();
+
+    /**
      * @return a new normalized AuxAngle with the point lying on the unit
      *   circle and the \e y and \e x components are equal to the sine and
      *   cosine of the angle.
      **********************************************************************/
     AuxAngle normalized() const;
+
     /**
-     * Normalize the AuxAngle in place so that the \e y and \e x components are
-     *   equal to the sine and cosine of the angle.
+     * Round the AuxAngle in place so that values of \e y and \e x close to
+     * zero are quantized to the nearest multiples of &epsilon;/2<sup>11</sup>
+     * = 1/2<sup>63</sup> (for doubles).  This only makes sense if the AuxAngle
+     * is already normalized.
      **********************************************************************/
-    void normalize() { *this = normalized(); }
+    AuxAngle& round();
+
     /**
-     * Set the quadrant for the AuxAngle.
-     *
-     * @param[in] p the AuxAngle from which the quadrant information is taken.
-     * @return the new AuxAngle in the same quadrant as \e p.
+     * @return a new AuxAngle with AuxAngle::round applied to it.  This only
+     * makes sense if the AuxAngle is already normalized.
      **********************************************************************/
-    AuxAngle copyquadrant(const AuxAngle& p) const;
+    AuxAngle rounded() const;
+
+    /**
+     * Replace an AuxAngle by its complement, interchanging the \e y and \e x
+     * components.
+     **********************************************************************/
+    AuxAngle& complement();
+
     /**
      * Add an AuxAngle.
      *
@@ -138,7 +196,7 @@ namespace GeographicLib {
      * The addition is done in place, altering the current AuxAngle.
      *
      * \warning Neither *this nor \e p should have an infinite component.  If
-     * necessary, invoke AuxAngle::normalize on these angles first.
+     * necessary, invoke AuxAngle::scale on these angles first.
      **********************************************************************/
     AuxAngle& operator+=(const AuxAngle& p);
     /**
@@ -148,9 +206,49 @@ namespace GeographicLib {
      * @return a *this + p as a new AuxAngle.
      *
      * \warning Neither *this nor \e p should have an infinite component.  If
-     * necessary, invoke AuxAngle::normalize on these angles first.
+     * necessary, invoke AuxAngle::scale on these angles first.
      **********************************************************************/
     AuxAngle operator+(const AuxAngle& p) const;
+    /**
+     * Subtract an AuxAngle.
+     *
+     * @param[in] p the AuxAngle to be subtracted.
+     * @return a reference to the new AuxAngle.
+     *
+     * The subtraction is done in place, altering the current AuxAngle.
+     *
+     * \warning Neither *this nor \e p should have an infinite component.  If
+     * necessary, invoke AuxAngle::scale on these angles first.
+     **********************************************************************/
+    AuxAngle& operator-=(const AuxAngle& p);
+    /**
+     * Subtract two AuxAngles.
+     *
+     * @param[in] p the AuxAngle to be subtracted.
+     * @return *this - p as a new AuxAngle.
+     *
+     * \warning Neither *this nor \e p should have an infinite component.  If
+     * necessary, invoke AuxAngle::scale on these angles first.
+     **********************************************************************/
+    AuxAngle operator-(const AuxAngle& p) const;
+    /**
+     * Test for close to zero
+     *
+     * @param[in] eps the slop in the test.
+     * @return true if abs(*this) <= eps
+     **********************************************************************/
+    bool zerop(real eps = 0) const;
+
+    /**
+     * Test for equality
+     *
+     * @param[in] p the AuxAngle to be compared against.
+     * @return true if two angles are equal.
+     *
+     * For a sloppy test for equality, use @code(a - b).zerop(eps)@endcode.
+     **********************************************************************/
+    bool operator==(const AuxAngle& p) const;
+
     /**
      * Construct and return an AuxAngle specied as an angle in degrees.
      *
@@ -204,21 +302,58 @@ namespace GeographicLib {
      * \note this sets the angle &chi; to gd(&psi;) = atan(sinh(&psi;)).
      **********************************************************************/
     static AuxAngle lamd(real psid);
+
     /**
      * @return a "NaN" AuxAngle.
      **********************************************************************/
     static AuxAngle NaN();
+
+    /**
+     * @param[in] n cardinal direction.
+     * @return an AuxAngle for a cardinal direction \e n.
+     *
+     * The returned AuxAngle is a multiple n of 90 degrees
+     **********************************************************************/
+    static AuxAngle cardinal(unsigned n);
+
+    /**
+     * An AuxAngle with the quadrant copied from another AuxAngle.
+     *
+     * @param[in] p the AuxAngle from which the quadrant information is taken.
+     * @return the new AuxAngle in the same quadrant as \e p.
+     **********************************************************************/
+    AuxAngle copyquadrant(const AuxAngle& p) const;
+
+    /**
+     * @return the quadrant of the AuxAngle counting counter-clockwise with
+     *   [0,90&deg;) returning 0U.
+     *
+     * The returned quadrant is in [0U, 3U].  The sign of \e x or \e y =
+     * &plusmn;0 is used to determine the quadrant assigned for the cardinal
+     * directions.
+     **********************************************************************/
+    unsigned quadrant() const;
+
+    /**
+     * Set the quadrant of the angle.
+     *
+     * @param[in] q the quadrant of the AuxAngle counting counter-clockwise
+     *   with [0,90&deg;) signified by 0U.
+     *
+     * Only the low two bits of \e q are used.
+     **********************************************************************/
+    AuxAngle& setquadrant(unsigned q);
   };
 
   inline AuxAngle AuxAngle::degrees(real d) {
     real y, x;
     Math::sincosd(d, y, x);
-    return AuxAngle(y, x);
+    return AuxAngle(y, x, false);
   }
 
   inline AuxAngle AuxAngle::radians(real r) {
     using std::sin; using std::cos;
-    return AuxAngle(sin(r), cos(r));
+    return AuxAngle(sin(r), cos(r), false);
   }
 
   inline AuxAngle AuxAngle::lam(real psi) {
