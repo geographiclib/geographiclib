@@ -14,8 +14,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  TriaxialLine::TriaxialLine(TriaxialLineF f, TriaxialLineF::ics fic,
-                             TriaxialLineG g, TriaxialLineG::ics gic)
+  TriaxialLine::TriaxialLine(TriaxialLineF f, TriaxialLineF::fics fic,
+                             TriaxialLineG g, TriaxialLineG::gics gic)
     : _t(f.t())
     , _f(f)
     , _fic(fic)
@@ -31,9 +31,9 @@ namespace GeographicLib {
     _t = t;
     Triaxial::gamblk gam(t, bet1, omg1, alp1);
     _f = TriaxialLineF(t, gam, 0.5, 1.5);
-    _fic = TriaxialLineF::ics(_f, bet1, omg1, alp1);
+    _fic = TriaxialLineF::fics(_f, bet1, omg1, alp1);
     _g = TriaxialLineG(t, gam);
-    _gic = TriaxialLineG::ics(_g, _fic);
+    _gic = TriaxialLineG::gics(_g, _fic);
   }
 
   TriaxialLine::TriaxialLine(const Triaxial& t, real bet1, real omg1,
@@ -137,7 +137,7 @@ namespace GeographicLib {
       bet2 = fbet().rev(u2); omg2 = fomg().rev(v2);
       bet2a = ang::lam(u2); omg2a = ang::lam(v2);
       int parity = fmod(sig2n.second, real(2)) ? -1 : 1;
-      if (_fic.umbalt) {
+      if (_t.umbalt) {
         Ex = _fic.eE * parity;
         omg2a.reflect(Ex * ( _fic.omg0 ? -1 : 1) < 0, _fic.omg0);
         omg2 = _fic.omg0 * Math::pi() + Ex * omg2;
@@ -190,7 +190,7 @@ namespace GeographicLib {
       *ialp2 = _fic.ialp + int(round((alp2 - alp2a.degrees0()) / Math::td)) -
         (_f.gamma() < 0 && _fic.nN < 0 ?
          (signbit(alp2a.s()) ? -1 : 1) - _fic.eE : 0)/2 +
-        (_f.gamma() == 0 && _fic.umbalt ?
+        (_f.gamma() == 0 && _t.umbalt ?
          (_fic.alp0 == _fic.nN * Ex ? _fic.alp0 : 0) : 0);
   }
 
@@ -333,7 +333,7 @@ namespace GeographicLib {
   }
 
   TriaxialLineF::disttx
-  TriaxialLineF::Hybrid(const ics& fic,
+  TriaxialLineF::Hybrid(const fics& fic,
                         const Angle& bet2,
                         Angle& bet2a, Angle& omg2a, Angle& alp2a)
     const {
@@ -387,7 +387,7 @@ namespace GeographicLib {
     , s0(_gm.gam == 0 ? _gbet.Max() + _gomg.Max() : 0)
   {}
 
-  Math::real TriaxialLineF::Hybrid0(const ics& fic,
+  Math::real TriaxialLineF::Hybrid0(const fics& fic,
                                     const Angle& bet2, const Angle& omg2)
   const {
     ang bet2a, omg2a, alp2a, omg2b(omg2);
@@ -399,7 +399,7 @@ namespace GeographicLib {
 
   //      [bet2, omg2, alp2, betw2, omgw2, ind2] = obj.arcdist0(tau12, 1);
   TriaxialLineF::disttx
-  TriaxialLineF::ArcPos0(const ics& fic, real tau12,
+  TriaxialLineF::ArcPos0(const fics& fic, real tau12,
                          Angle& bet2a, Angle& omg2a, Angle& alp2a,
                          bool betp)
     const {
@@ -511,7 +511,7 @@ namespace GeographicLib {
     return ret;
   }
 
-  TriaxialLineF::ics::ics()
+  TriaxialLineF::fics::fics()
     : bet1(ang::NaN())
     , omg1(ang::NaN())
     , alp1(ang::NaN())
@@ -527,10 +527,9 @@ namespace GeographicLib {
     ,bet0(0)
     ,omg0(0)
     ,alp0(0)
-    ,umbalt(false)
   {}
 
-  TriaxialLineF::ics::ics(const TriaxialLineF& f,
+  TriaxialLineF::fics::fics(const TriaxialLineF& f,
                          const Angle& bet10, const Angle& omg10,
                          const Angle& alp10)
     : bet1(bet10)
@@ -541,7 +540,6 @@ namespace GeographicLib {
       // omg10 - 90 crossed omg10 = -180 if quadant of omg10 == 2
     , iomg(omg10.quadrant() == 2U ? -1 : 0)
     , ialp(0)
-    , umbalt(false)
   {
     alp1.rnd();
     const real eps = numeric_limits<real>::epsilon();
@@ -571,7 +569,7 @@ namespace GeographicLib {
       u0 = f.fbet().fwd(nN * bet1.radians0());
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gm.gam == 0) {
-      alp0 = umbalt && nN < 0 ? eE : 0;
+      alp0 = t.umbalt && nN < 0 ? eE : 0;
       // N.B. factor of k*kp omitted
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps) {
         //        bet0 = (int(round(bet1.s())) + nN) / 2 ? -1 : 1;
@@ -594,7 +592,7 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialLineF::ics::setquadrant(const TriaxialLineF& f, unsigned q) {
+  void TriaxialLineF::fics::setquadrant(const TriaxialLineF& f, unsigned q) {
     const real eps = numeric_limits<real>::epsilon();
     real gam = f.gm().gam;
     alp1.setquadrant(q);
@@ -615,7 +613,7 @@ namespace GeographicLib {
       u0 *= nN/oN;
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gam == 0) {
-      alp0 = umbalt && nN < 0 ? eE : 0;
+      alp0 = f.t().umbalt && nN < 0 ? eE : 0;
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps) {
         //        bet0 = (int(round(bet1.s())) + nN) / 2 ? -1 : 1;
         //        omg0 = (int(round(omg1.s())) + eE) / 2 ? -1 : 1;
@@ -630,12 +628,12 @@ namespace GeographicLib {
     }
   }
 
-  TriaxialLineG::ics::ics()
+  TriaxialLineG::gics::gics()
     : sig1(Math::NaN())
   {}
 
-  TriaxialLineG::ics::ics(const TriaxialLineG& g,
-                          const TriaxialLineF::ics& fic)
+  TriaxialLineG::gics::gics(const TriaxialLineG& g,
+                          const TriaxialLineF::fics& fic)
   {
     if (g.gamma() > 0) {
       sig1 = g.gbet()(fic.v0) + g.gomg()(fic.u0);
@@ -651,7 +649,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real TriaxialLineG::dist(ics ic, TriaxialLineF::disttx d) const {
+  Math::real TriaxialLineG::dist(gics ic, TriaxialLineF::disttx d) const {
     real sig2 = gbet()(d.betw2) + gomg()(d.omgw2) + d.ind2 * 2*s0;
     return (sig2 - ic.sig1) * t().b;
   }

@@ -27,7 +27,7 @@ namespace GeographicLib {
     geod_fun _fbet, _fomg;
   public:
     real df, deltashift;
-    class ics {
+    class fics {
       // bundle of data setting the initial conditions for a geodesic
     public:
       Angle bet1, omg1, alp1, // starting point
@@ -41,10 +41,9 @@ namespace GeographicLib {
         nN, eE,                  // Northgoing / eastgoing
         flip,                    // Is bet or omg on the backside
         bet0, omg0, alp0;        // Reference vals (1 = 0, -1 = 180)
-      bool umbalt;               // how coordinates wrap with umbilical lines
-      ics();
-      ics(const TriaxialLineF& f,
-          const Angle& bet1, const Angle& omg1, const Angle& alp1);
+      fics();
+      fics(const TriaxialLineF& f,
+           const Angle& bet1, const Angle& omg1, const Angle& alp1);
       void setquadrant(const TriaxialLineF& f, unsigned q);
     };
     class disttx {
@@ -61,11 +60,11 @@ namespace GeographicLib {
     const Triaxial& t() const { return _t; }
     real gamma() const { return _gm.gam; }
     const Triaxial::gamblk& gm() const { return _gm; }
-    real Hybrid0(const ics& ic,
+    real Hybrid0(const fics& ic,
                  const Angle& bet2, const Angle& omg2) const;
-    disttx Hybrid(const ics& fic, const Angle& bet2,
+    disttx Hybrid(const fics& fic, const Angle& bet2,
                 Angle& bet2a, Angle& omg2a, Angle& alp2a) const;
-    disttx ArcPos0(const ics& fic, real tau12,
+    disttx ArcPos0(const fics& fic, real tau12,
                    Angle& bet2a, Angle& omg2a, Angle& alp2a,
                    bool betp = true) const;
   };
@@ -79,13 +78,13 @@ namespace GeographicLib {
     dist_fun _gbet, _gomg;
   public:
     real s0;
-    class ics {
+    class gics {
       // bundle of data setting the initial conditions for a distance calc
     public:
       real sig1, s13;           // starting point
-      ics();
-      ics(const TriaxialLineG& g,
-          const TriaxialLineF::ics& fic);
+      gics();
+      gics(const TriaxialLineG& g,
+          const TriaxialLineF::fics& fic);
     };
     TriaxialLineG() {}
     TriaxialLineG(const Triaxial& t, const Triaxial::gamblk& gam);
@@ -94,7 +93,7 @@ namespace GeographicLib {
     const Triaxial& t() const { return _t; }
     real gamma() const { return _gm.gam; }
     const Triaxial::gamblk& gm() const { return _gm; }
-    real dist(ics ic, TriaxialLineF::disttx d) const;
+    real dist(gics ic, TriaxialLineF::disttx d) const;
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLine {
@@ -103,9 +102,9 @@ namespace GeographicLib {
     typedef Angle ang;
     Triaxial _t;
     TriaxialLineF _f;
-    TriaxialLineF::ics _fic;
+    TriaxialLineF::fics _fic;
     TriaxialLineG _g;
-    TriaxialLineG::ics _gic;
+    TriaxialLineG::gics _gic;
     static void solve2(real f0, real g0,
                        const geod_fun& fx, const geod_fun& fy,
                        const dist_fun& gx, const dist_fun& gy,
@@ -145,8 +144,8 @@ namespace GeographicLib {
     TriaxialLine(const Triaxial& t,
                  Angle bet1, Angle omg1, Angle alp1);
     TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1);
-    TriaxialLine(TriaxialLineF f, TriaxialLineF::ics fic,
-                 TriaxialLineG g, TriaxialLineG::ics gic);
+    TriaxialLine(TriaxialLineF f, TriaxialLineF::fics fic,
+                 TriaxialLineG g, TriaxialLineG::gics gic);
     const geod_fun& fbet() const { return _f.fbet(); }
     const geod_fun& fomg() const { return _f.fomg(); }
     const dist_fun& gbet() const { return _g.gbet(); }

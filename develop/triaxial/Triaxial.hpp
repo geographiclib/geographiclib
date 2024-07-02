@@ -63,8 +63,10 @@ namespace GeographicLib {
     real a, b, c;               // semi-axes
     vec3 axes;
     real e2, k2, kp2, k, kp;
+    bool umbalt;                // how coordinates wrap with umbilical lines
     Triaxial();
     Triaxial(real a, real b, real c);
+    Triaxial(real b, real e2, real k2, real kp2);
     void Norm(vec3& r) const;
     void Norm(vec3& r, vec3& v) const;
     TriaxialLine Inverse(Angle bet1, Angle omg1,

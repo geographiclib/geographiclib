@@ -21,7 +21,7 @@ namespace GeographicLib {
   using namespace std;
 
   Triaxial::Triaxial()
-    : Triaxial(Math::NaN(), Math::NaN(), Math::NaN())
+    : Triaxial(1, 0, 1, 0)
   {}
 
   Triaxial::Triaxial(Math::real a, Math::real b, Math::real c)
@@ -29,6 +29,7 @@ namespace GeographicLib {
     , b(b)
     , c(c)
     , axes({a, b, c})
+    , umbalt(false)
   {
     real s = (a - c) * (a + c);
     e2 = s / Math::sq(b);
@@ -36,12 +37,37 @@ namespace GeographicLib {
       // The sphere is a nonuniform limit, we can pick any values in [0,1]
       // s.t. k2 + kp2 = 1.  Here we choose to treat the sphere as an
       // oblate ellipsoid.
-        kp2 = 0; k2 = 1 - kp2;
+      kp2 = 0; k2 = 1 - kp2;
     } else {
       kp2 = (a - b) * (a + b) / s;
       k2  = (b - c) * (b + c) / s;
     }
     k = sqrt(k2); kp = sqrt(kp2);
+    real ksum = k2 + kp2;
+    if (! (isfinite(a) && isfinite(b) && isfinite(c) &&
+           a >= b && b >=c && c > 0 &&
+           fabs(ksum - 1) <= numeric_limits<real>::epsilon()) )
+      throw GeographicErr("Bad semiaxes for triaxial ellipsoid");
+  }
+
+  Triaxial::Triaxial(Math::real b, Math::real e2,
+                     Math::real k2, Math::real kp2)
+    : b(b)
+    , e2(e2)
+    , k2(k2)
+    , kp2(kp2)
+    , k(sqrt(k2))
+    , kp(sqrt(kp2))
+    , umbalt(false)
+  {
+    a = b * sqrt(1 + e2 * k2);
+    c = b * sqrt(1 - e2 * kp2);
+    axes = vec3({a, b, c});
+    real ksum = k2 + kp2;
+    if (! (isfinite(a) && isfinite(b) && isfinite(c) &&
+           a >= b && b >=c && c > 0 &&
+           fabs(ksum - 1) <= numeric_limits<real>::epsilon()) )
+      throw GeographicErr("Bad semiaxes for triaxial ellipsoid");
   }
 
   void Triaxial::Norm(vec3& r) const {
@@ -574,21 +600,21 @@ namespace GeographicLib {
     // and for the final result
     ang alp1, alp2, bet2a, omg2a;
 
-    TriaxialLineF l;
-    TriaxialLineF::ics fic;
+    TriaxialLineF lf;
+    TriaxialLineF::fics fic;
     TriaxialLineF::disttx d;
 
     // flag for progress
     bool done = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
       // both points on middle ellipse
-      l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+      lf = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
       if (umb1 && umb2 && bet2.s() > 0 && omg2.c() < 0) {
         // process opposite umbilical points
-        fic = TriaxialLineF::ics(l, bet1, omg1, ang{kp, k});
-        alp1 = ang(kp * exp(l.df), k);
-        fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-        d = l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2, true);
+        fic = TriaxialLineF::fics(lf, bet1, omg1, ang{kp, k});
+        alp1 = ang(kp * exp(lf.df), k);
+        fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+        d = lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2, true);
         if (debug) cout << "opposite umbilics\n";
         done = true;
       } else if (bet1.c() == 0 && bet2.c() == 0) {
@@ -596,13 +622,13 @@ namespace GeographicLib {
         if (bet2.s() < 1) {
           // bet1 = bet2 = -90
           alp1 = ang::cardinal(1);
-          fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+          fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
           ang omg12 = omg2 - omg1;
           d = omg12.s() == 0 && omg12.c() < 0 ?
             // adjacent E/W umbilical points
             TriaxialLineF::disttx{-Triaxial::BigValue(),
                                   Triaxial::BigValue(), 0} :
-            l.ArcPos0(fic, omg12.radians0(), bet2a, omg2a, alp2, false);
+            lf.ArcPos0(fic, omg12.radians0(), bet2a, omg2a, alp2, false);
           if (omg2a.s() < 0) alp2.reflect(true, false); // Is this needed?
           if (debug) {
             if (omg12.s() == 0 && omg12.c() < 0)
@@ -616,7 +642,7 @@ namespace GeographicLib {
           // need to see how far apart the points are
           // If point 1 is at [-90, 0], direction is 0 else -90.
           alp1 = ang::cardinal(omg1.s() == 0 ? 0 : -1);
-          fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
+          fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
           // If point 1 is [-90, 0] and point 2 is [90, 0]
           if (omg1.s() == 0 && omg2.s() == 0) {
             // adjacent N/S umbilical points
@@ -625,11 +651,11 @@ namespace GeographicLib {
             if (debug) cout << "bet1 = -90,  bet2 = 90, adj umb\n";
             done = true;
           } else {
-            d = l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+            d = lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
             omg2a -= omg2;
             if (omg2a.s() > 0) {
               omg2a = omg2 + omg1;
-              d = l.ArcPos0(fic, omg2a.radians0(), bet2a, omg2a, alp2, false);
+              d = lf.ArcPos0(fic, omg2a.radians0(), bet2a, omg2a, alp2, false);
               if (omg2a.s() < 0) alp2.reflect(true, false); // Is this needed?
               if (debug) cout << "bet1 = -90,  bet2 = 90, merid\n";
               done = true;
@@ -637,8 +663,8 @@ namespace GeographicLib {
               alpa = ang::cardinal(-1) + ang::eps();
               fa = omg2a.radians0();
               alpb.setquadrant(0U);
-              fic.setquadrant(l, 0U);
-              (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+              fic.setquadrant(lf, 0U);
+              (void) lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
               omg2a -= omg2;
               alpb = -alpa;
               fb = omg2a.radians0();
@@ -652,8 +678,8 @@ namespace GeographicLib {
         alp1 = ang::cardinal(bet1.c() == 0 ?
                              (omg2.c() < 1 ? 1 : (omg1.s() == 0 ? 0 : -1)) :
                              (omg2.c() > 0 ? 0 : 2));
-        fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-        d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+        fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+        d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
         if (debug) cout << "other merid\n";
         done = true;
       }
@@ -664,13 +690,13 @@ namespace GeographicLib {
       // set direction for probe as +/-90 based on sign of omg12
       alp1 = ang::cardinal(eE);
       bet1.reflect(true, false);
-      l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
-      fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-      (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+      lf = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
+      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+      (void) lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
       omg2a -= omg2;
       if (eE * omg2a.s() >= 0) {
         // geodesic follows the equator
-        d = l.ArcPos0(fic, eE * omg12.radians0(), bet2a, omg2a, alp2, false);
+        d = lf.ArcPos0(fic, eE * omg12.radians0(), bet2a, omg2a, alp2, false);
         if (debug) cout << "bet1 = bet2 = 0 equatorial\n";
         done = true;
       } else {
@@ -679,21 +705,21 @@ namespace GeographicLib {
         alpa = -alpb;
         (eE > 0 ? fa : fb) = omg2a.radians0();
         alp1.setquadrant(eE > 0 ? 3U : 0U);
-        fic.setquadrant(l, eE > 0 ? 3U : 0U);
-        (void) l.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+        fic.setquadrant(lf, eE > 0 ? 3U : 0U);
+        (void) lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
         omg2a -= omg2;
         (eE > 0 ? fb : fa) = omg2a.radians0();
         if (debug) cout << "bet1 = bet2 = 0 non-equatorial\n";
       }
     } else if (umb1) {
       // umbilical point to general point
-      l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+      lf = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
       alp2 = ang(kp * omg2.s(), k * bet2.c());
-      fic = TriaxialLineF::ics(l, bet2, omg2, alp2);
-      (void) l.ArcPos0(fic, (bet1 - bet2).radians0(), bet2a, omg2a, alp1);
+      fic = TriaxialLineF::fics(lf, bet2, omg2, alp2);
+      (void) lf.ArcPos0(fic, (bet1 - bet2).radians0(), bet2a, omg2a, alp1);
       if (alp1.s() < 0) alp1 += ang::cardinal(1);
-      fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-      d = l.ArcPos0(fic, (bet2 - bet1).radians0(), bet2a, omg2a, alp2);
+      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+      d = lf.ArcPos0(fic, (bet2 - bet1).radians0(), bet2a, omg2a, alp2);
       if (debug) cout << "umb to general\n";
       done = true;
     } else if (bet1.c() == 0) {
@@ -730,20 +756,20 @@ namespace GeographicLib {
       alpa = ang( kp * fabs(omg1.s()), k * fabs(bet1.c()));
       alpb = alpa;
 
-      l = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
-      fic = TriaxialLineF::ics(l, bet1, omg1, alpb);
+      lf = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+      fic = TriaxialLineF::fics(lf, bet1, omg1, alpb);
       {
         unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
         for (; qb <= 4U; ++qb, ++qa) {
           if (qb) {
             alpb.setquadrant(qb);
-            fic.setquadrant(l, qb);
+            fic.setquadrant(lf, qb);
           }
           if (qb < 4U) {
-            f[qb] = l.Hybrid0(fic, bet2, omg2);
+            f[qb] = lf.Hybrid0(fic, bet2, omg2);
             if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
               alp1 = alpb;
-              d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+              d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
               done = true;
               break;
             }
@@ -772,14 +798,14 @@ namespace GeographicLib {
                       alpa,  alpb,
                       fa, fb,
                       &countn, &countb);
-      l = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
-      fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-      d = l.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+      lf = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
+      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+      d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
     }
 
-    TriaxialLineG ld(*this, l.gm());
-    TriaxialLineG::ics dic(ld, fic);
-    real s13 = ld.dist(dic, d);
+    TriaxialLineG lg(*this, lf.gm());
+    TriaxialLineG::gics gic(lg, fic);
+    real s13 = lg.dist(gic, d);
     (void) AngNorm(bet2a, omg2a, alp2);
 
     // Undo switches in reverse order flipz, swap12, flip1
@@ -822,12 +848,12 @@ namespace GeographicLib {
       Flip(bet1, omg1, alp1);
 
     if (flip1 || swap12 || flipz || flipy || flipx) {
-      fic = TriaxialLineF::ics(l, bet1, omg1, alp1);
-      dic = TriaxialLineG::ics(ld, fic);
+      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+      gic = TriaxialLineG::gics(lg, fic);
     }
-    dic.s13 = fmax(real(0), s13);
+    gic.s13 = fmax(real(0), s13);
 
-    return TriaxialLine(move(l), move(fic), move(ld), move(dic));
+    return TriaxialLine(move(lf), move(fic), move(lg), move(gic));
   }
 
   Math::real Triaxial::HybridA(const Triaxial& t,
@@ -837,7 +863,7 @@ namespace GeographicLib {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     gamblk gam(t, b1, o1, a1);
     TriaxialLineF l(t, gam, 0.5, 1.5);
-    TriaxialLineF::ics ic(l, b1, o1, a1);
+    TriaxialLineF::fics ic(l, b1, o1, a1);
     return l.Hybrid0(ic, bet2, omg2);
   }
 

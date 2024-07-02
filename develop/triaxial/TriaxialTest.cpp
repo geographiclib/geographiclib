@@ -178,7 +178,7 @@ Math::real HybridOLD(const Triaxial& t,
 }
 
 Math::real Hybrid0(const TriaxialLineF& l,
-                   const TriaxialLineF::ics ic,
+                   const TriaxialLineF::fics ic,
                    const Angle& bet2,
                    const Angle& omg2) {
   typedef Angle ang;
@@ -195,7 +195,7 @@ Math::real HybridA(const Triaxial& t,
                    const Angle& bet2, const Angle& omg2) {
   Triaxial::gamblk gam(t, bet1, omg1, alp1);
   TriaxialLineF l(t, gam, 0.5, 1.5);
-  TriaxialLineF::ics ic(l, bet1, omg1, alp1);
+  TriaxialLineF::fics ic(l, bet1, omg1, alp1);
   return Hybrid0(l, ic, bet2, omg2);
   /*
   cout << "AA "
@@ -223,10 +223,10 @@ Math::real HybridB(const Triaxial& t,
   ang b1{bet1}, o1{omg1}, a1{alp1};
   Triaxial::gamblk gam(t, b1, o1, a1);
   TriaxialLineF l(t, gam, 0.5, 1.5);
-  TriaxialLineF::ics ic(l, b1, o1, a1);
+  TriaxialLineF::fics ic(l, b1, o1, a1);
   TriaxialLineF::disttx d = l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
   TriaxialLineG ld(t, gam);
-  TriaxialLineG::ics icd(ld, ic);
+  TriaxialLineG::gics icd(ld, ic);
   return ld.dist(icd, d);
 }
 
@@ -381,7 +381,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   }
   {
     TriaxialLineF l(t, Triaxial::gamblk{}, 0.5, 1.5);
-    TriaxialLineF::ics ic(l, bet1, omg1, alp1u[0]);
+    TriaxialLineF::fics ic(l, bet1, omg1, alp1u[0]);
     for (unsigned q = 0U; q < 4U; ++q) {
       ic.setquadrant(l, q);
       real dd = Hybrid0(l, ic, bet2, omg2);
