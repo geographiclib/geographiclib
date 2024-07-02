@@ -190,6 +190,11 @@ namespace GeographicLib {
     return *this;
   }
 
+  Angle& Angle::setn(Math::real n) {
+    _n = round(n);
+    return *this;
+  }
+
   Angle& Angle::setquadrant(unsigned q) {
     _s = copysign(_s, real(             q  & 2U ? -1 : 1 ));
     _c = copysign(_c, real( ((q >> 1) ^ q) & 1U ? -1 : 1 ));
@@ -200,9 +205,10 @@ namespace GeographicLib {
     return 2U * signbit(_s) + (signbit(_c) ^ signbit(_s));
   }
 
-  Angle& Angle::reflect(bool flips, bool flipc) {
+  Angle& Angle::reflect(bool flips, bool flipc, bool swapp) {
     if (flips) _s *= -1;
     if (flipc) _c *= -1;
+    if (swapp) swap(_s, _c);
     return *this;
   }
 

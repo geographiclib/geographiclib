@@ -46,7 +46,7 @@ namespace GeographicLib {
     }
     static void Flip(Angle& bet, Angle& omg, Angle& alp) {
       bet.reflect(false, true);
-      omg.reflect(true, false);
+      omg.reflect(true);
       alp.reflect(true, true);
     }
 
@@ -97,7 +97,7 @@ namespace GeographicLib {
         if (bet.c() == 0 && bet.s() * alp.c() > 0)
           alp.reflect(true, true);
         if (bet.c() == 0 && alp.c() == 0)
-          alp.reflect(alp.s() * bet.s() > 0, false); // alp.s() = -bet.s();
+          alp.reflect(alp.s() * bet.s() > 0); // alp.s() = -bet.s();
       }
       return flip;
     }

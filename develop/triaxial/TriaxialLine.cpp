@@ -356,7 +356,7 @@ namespace GeographicLib {
     } else if (gamma() <= 0) {
       bet2a = bet2; bet2a.reflect(false, fic.nN < 0);
       ang bet12 = bet2a - fic.bet1;
-      bet12.reflect(fic.nN < 0, false);
+      bet12.reflect(fic.nN < 0);
       // convert -180deg to 180deg
       if (signbit(bet12.s())) bet12 = ang(0, bet12.c(), bet12.n(), true);
       tau12 = bet12.radians0();

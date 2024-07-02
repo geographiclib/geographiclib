@@ -530,13 +530,13 @@ namespace GeographicLib {
     // Now |bet1| > |bet2|
     bool flipz = bet1.s() > 0;
     if (flipz) {
-      bet1.reflect(true, false);
-      bet2.reflect(true, false);
+      bet1.reflect(true);
+      bet2.reflect(true);
     }
     bool flipy = omg1.s() < 0 || (omg1.s() == 0 && omg2.s() < 0);
     if (flipy) {
-      omg1.reflect(true, false);
-      omg2.reflect(true, false);
+      omg1.reflect(true);
+      omg2.reflect(true);
     }
     bool flipx = signbit(omg1.c());
     if (flipx) {
@@ -546,7 +546,7 @@ namespace GeographicLib {
     bool flipomg = bet2.c() == 0 && signbit(omg2.s());
     // Eliminate coordinate ambiguity bet2 = +/90 and omg2 < 0 for point 2
     // Point 1 is already done with flipy
-    if (flipomg) omg2.reflect(true, false);
+    if (flipomg) omg2.reflect(true);
 
     // Now bet1 <= 0, bet1 <= bet2 <= -bet1, 0 <= omg1 <= 90
     //
@@ -629,7 +629,7 @@ namespace GeographicLib {
             TriaxialLineF::disttx{-Triaxial::BigValue(),
                                   Triaxial::BigValue(), 0} :
             lf.ArcPos0(fic, omg12.radians0(), bet2a, omg2a, alp2, false);
-          if (omg2a.s() < 0) alp2.reflect(true, false); // Is this needed?
+          if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
           if (debug) {
             if (omg12.s() == 0 && omg12.c() < 0)
               cout << "adj EW umbilics\n";
@@ -656,7 +656,7 @@ namespace GeographicLib {
             if (omg2a.s() > 0) {
               omg2a = omg2 + omg1;
               d = lf.ArcPos0(fic, omg2a.radians0(), bet2a, omg2a, alp2, false);
-              if (omg2a.s() < 0) alp2.reflect(true, false); // Is this needed?
+              if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
               if (debug) cout << "bet1 = -90,  bet2 = 90, merid\n";
               done = true;
             } else {
@@ -689,7 +689,7 @@ namespace GeographicLib {
       int eE = omg12.s() > 0 ? 1 : -1;
       // set direction for probe as +/-90 based on sign of omg12
       alp1 = ang::cardinal(eE);
-      bet1.reflect(true, false);
+      bet1.reflect(true);
       lf = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
       fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
       (void) lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
@@ -810,27 +810,27 @@ namespace GeographicLib {
 
     // Undo switches in reverse order flipz, swap12, flip1
     if (flipomg) {
-      omg2.reflect(true, false);
+      omg2.reflect(true);
       alp2.reflect(true, true);
     }
 
     if (flipx) {
       omg1.reflect(false, true);
       omg2.reflect(false, true);
-      alp1.reflect(true, false);
-      alp2.reflect(true, false);
+      alp1.reflect(true);
+      alp2.reflect(true);
     }
 
     if (flipy) {
-      omg1.reflect(true, false);
+      omg1.reflect(true);
       omg2.reflect(true, true);
-      alp1.reflect(true, false);
-      alp2.reflect(true, false);
+      alp1.reflect(true);
+      alp2.reflect(true);
     }
 
     if (flipz) {
-      bet1.reflect(true, false);
-      bet2.reflect(true, false);
+      bet1.reflect(true);
+      bet2.reflect(true);
       alp1.reflect(false, true);
       alp2.reflect(false, true);
     }
