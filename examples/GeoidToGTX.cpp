@@ -56,12 +56,12 @@ int main(int argc, const char* const argv[]) {
     string filename(argv[3]);
     GravityModel g(model);
     int
-      nlat = 180 * ndeg + 1,
-      nlon = 360 * ndeg;
+      nlat = Math::hd * ndeg + 1,
+      nlon = Math::td * ndeg;
     Math::real
       delta = 1 / Math::real(ndeg), // Grid spacing
-      latorg = -90,
-      lonorg = -180;
+      latorg = -Math::qd,
+      lonorg = -Math::hd;
     // Write results as floats in binary mode
     ofstream file(filename.c_str(), ios::binary);
 

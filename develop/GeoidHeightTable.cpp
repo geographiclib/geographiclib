@@ -164,7 +164,10 @@ with offset = -108; scale = 0.003
 
 Rate of misrounding = 1/4200
 
-for i in egm*pgm;do echo $i; pamarith -diff /usr/local/share/GeographicLib/geoids/$i $i | pgmhist;done
+for i in egm*pgm; do
+   echo $i
+   pamarith -diff /usr/local/share/GeographicLib/geoids/$i $i | pgmhist
+done
 egm2008-1.pgm
 value  count  b%      w%
 -----  -----  ------  ------
@@ -205,13 +208,13 @@ Times for
   ./develop/GeoidHeightTable egm2008 60 egm2008-1.pgm
 
 double:
-  real	8m37.894s
-  user	67m6.894s
-  sys	0m3.135s
+  real  8m37.894s
+  user  67m6.894s
+  sys   0m3.135s
 
 long double:
-  real	31m49.708s
-  user	246m29.631s
-  sys	0m9.573s
+  real  31m49.708s
+  user  246m29.631s
+  sys   0m9.573s
 
- */
+*/

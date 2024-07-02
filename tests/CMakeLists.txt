@@ -1,12 +1,14 @@
 # Compile test programs
 set (TESTPROGRAMS geodtest signtest polygontest intersecttest)
 
+add_custom_target (testprograms)
+add_dependencies (testprograms tools)
+
 if (GEOGRAPHICLIB_PRECISION GREATER 1)
 
-  add_custom_target (testprograms)
   foreach (TESTPROGRAM ${TESTPROGRAMS})
 
-    add_executable (${TESTPROGRAM} ${TESTPROGRAM}.cpp)
+    add_executable (${TESTPROGRAM} EXCLUDE_FROM_ALL ${TESTPROGRAM}.cpp)
     add_dependencies (testprograms ${TESTPROGRAM})
     target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES}
       ${HIGHPREC_LIBRARIES})
@@ -19,6 +21,8 @@ if (GEOGRAPHICLIB_PRECISION GREATER 1)
   set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
 
 endif ()
+
+# add_custom_target (test DEPENDS tools testprograms tools)
 
 # Here are the tests for GeographicLib
 if (DEFINED ENV{GEOGRAPHICLIB_DATA})
