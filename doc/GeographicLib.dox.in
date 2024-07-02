@@ -7524,9 +7524,23 @@ git repository for GeographicLib</a>.
    - Update cmake_minimum_required to 3.16.0.
    - C++14 compliant compiler required (this requirement tracks the
      Boost Math library).
-   - Add AuxAngle::opertor+.
+   - Make constructor for AuxAngle explicit.
+   - CMake configuration changes
+     - exclude the <code>tools</code> and <code>doc</code> targets from
+       the default build (<code>make all</code>) if these components
+       won't be installed (<code>BINDIR</code> or <code>DOCDIR</code>
+       set to <code>OFF</code>).
+     - <code>testprograms</code> is now excluded from the default build
+       and it now depends on <code>tools</code>.  Before running the
+       test suite, build <code>testprograms<</code>, e.g., <code>make
+       testprograms test</code>.
+     - added a target <code>libs</code> to build only the static and/or
+       shared libraries.
+   - Math::sind, Math:sincosd, etc., now return accurate results for
+     arguments = 30&deg;, 45&deg;, 60&deg;, &hellip;.
    - TODO: document use of CMake's FetchContent and
-     GeographicLib::GeographicLib as target name.
+     GeographicLib::GeographicLib as target name.  See
+     https://github.com/geographiclib/geographiclib/issues/23
    - TODO: include notes for area of plate carree polygon.  See email of
      2023-10-03 to Anton.Grafstrom@slu.se.
    .

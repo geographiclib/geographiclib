@@ -130,11 +130,13 @@ for ver in 14 15 16 17; do
             echo 'unset GEOGRAPHICLIB_DATA'
             echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= -S . -B \$b
             echo cmake --build \$b --config Debug   --target ALL_BUILD
+            echo cmake --build \$b --config Debug   --target testprograms
             echo cmake --build \$b --config Debug   --target RUN_TESTS
             echo cmake --build \$b --config Debug   --target INSTALL
             echo cmake --build \$b --config Release --target ALL_BUILD
             echo cmake --build \$b --config Release --target exampleprograms
             echo cmake --build \$b --config Release --target experimental
+            echo cmake --build \$b --config Release --target testprograms
             echo cmake --build \$b --config Release --target RUN_TESTS
             echo cmake --build \$b --config Release --target INSTALL
             echo cmake --build \$b --config Release --target PACKAGE
@@ -221,7 +223,7 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
 (
     cd BUILD
     make package_source
-    make -j$NUMCPUS all
+    make -j$NUMCPUS all testprograms
     make test
     make exampleprograms
     make -j$NUMCPUS experimental
@@ -273,7 +275,7 @@ echo ==============================================================
 echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD-system install to /usr/local
 
 cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
-(cd BUILD-system && make -j$NUMCPUS all && make test)
+(cd BUILD-system && make -j$NUMCPUS all testprograms && make test)
 
 if test "$HAVEINTEL"; then
     echo ==============================================================
@@ -281,7 +283,7 @@ if test "$HAVEINTEL"; then
     env FC=ifort CC=icc CXX=icpc cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
     (
         cd BUILD-intel
-        make -j$NUMCPUS all
+        make -j$NUMCPUS all testprograms
         make test
         make exampleprograms
         make -j$NUMCPUS experimental
@@ -350,7 +352,7 @@ for p in 1 3 5; do
     cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
     (
         cd BUILD-$p
-        make -j$NUMCPUS all
+        make -j$NUMCPUS all testprograms
         if test $p -ne 1; then
             make test
         fi
