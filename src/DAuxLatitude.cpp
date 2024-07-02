@@ -2,8 +2,6 @@
  * \file DAuxLatitude.cpp
  * \brief Implementation for the GeographicLib::DAuxLatitude class.
  *
- * \note This is just sample code.  It is not part of GeographicLib itself.
- *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
  *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
@@ -90,16 +88,15 @@ namespace GeographicLib {
 
     // Make both positive, so we can do the swap a <-> b trick
     Xn.y() = fabs(Xn.y()); Yn.y() = fabs(Yn.y());
-    real x = Xn.radians(), y = Yn.radians(), d = y - x,
-      sx = Xn.y(), sy = Yn.y(), cx = Xn.x(), cy = Yn.x(),
-      k2;
+    real k2 = -base::_e12;
+    bool flip = base::_f < 0;
     // Switch prolate to oblate; we then can use the formulas for k2 < 0
-    if (base::_f < 0) {
-      d = -d; swap(sx, cx); swap(sy, cy);
+    if (flip) {
+      swap(Xn.x(), Xn.y()); swap(Yn.x(), Yn.y());
       k2 = base::_e2;
-    } else {
-      k2 = -base::_e12;
     }
+    real x = Xn.radians(), y = Yn.radians(), d = y - x,
+      sx = Xn.y(), sy = Yn.y(), cx = Xn.x(), cy = Yn.x();
     // See DLMF: Eqs (19.11.2) and (19.11.4) letting
     // theta -> x, phi -> -y, psi -> z
     //
@@ -119,7 +116,7 @@ namespace GeographicLib {
       // E(z)/sin(z)
       Ezbsz = (EllipticFunction::RF(cz2, dz2, 1)
                - k2 * sz2 * EllipticFunction::RD(cz2, dz2, 1) / 3);
-    return (Ezbsz - k2 * sx * sy) * Dsz;
+    return (Ezbsz - k2 * sx * sy) * Dsz / (flip ? 1 - base::_f : 1);
   }
 
   /// \cond SKIP

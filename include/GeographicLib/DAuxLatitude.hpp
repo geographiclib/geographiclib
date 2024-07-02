@@ -185,7 +185,7 @@ namespace GeographicLib {
     static real Dsin(real x, real y) {
       using std::sin; using std::cos;
       real d = (x - y) / 2;
-      return cos((x + y)/2) * (d != 0 ? sin(d) / d : 1);
+      return cos((x + y) / 2) * (d != 0 ? sin(d) / d : 1);
     }
     // (E(x) - E(y)) / (x - y)
     real DE(const AuxAngle& X, const AuxAngle& Y) const;

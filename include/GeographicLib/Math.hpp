@@ -134,12 +134,30 @@ namespace GeographicLib {
      * break most of the tests.  Also the normal definition of degree is baked
      * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
      **********************************************************************/
-    static constexpr int qd = 90;            ///< degrees per quarter turn
-    static constexpr int dm = 60;            ///< minutes per degree
-    static constexpr int ms = 60;            ///< seconds per minute
-    static constexpr int hd = 2 * qd;        ///< degrees per half turn
-    static constexpr int td = 2 * hd;        ///< degrees per turn
-    static constexpr int ds = dm * ms;       ///< seconds per degree
+#if __cplusplus >= 201703L
+    static inline constexpr int qd = 90;      ///< degrees per quarter turn
+    static inline constexpr int dm = 60;      ///< minutes per degree
+    static inline constexpr int ms = 60;      ///< seconds per minute
+    static inline constexpr int hd = 2 * qd;  ///< degrees per half turn
+    static inline constexpr int td = 2 * hd;  ///< degrees per turn
+    static inline constexpr int ds = dm * ms; ///< seconds per degree
+#elif GEOGRAPHICLIB_PRECISION < 4
+    static constexpr int qd = 90;      ///< degrees per quarter turn
+    static constexpr int dm = 60;      ///< minutes per degree
+    static constexpr int ms = 60;      ///< seconds per minute
+    static constexpr int hd = 2 * qd;  ///< degrees per half turn
+    static constexpr int td = 2 * hd;  ///< degrees per turn
+    static constexpr int ds = dm * ms; ///< seconds per degree
+#else
+    enum dms {
+      qd = 90,                  ///< degrees per quarter turn
+      dm = 60,                  ///< minutes per degree
+      ms = 60,                  ///< seconds per minute
+      hd = 2 * qd,              ///< degrees per half turn
+      td = 2 * hd,              ///< degrees per turn
+      ds = dm * ms              ///< seconds per degree
+    };
+#endif
 
     /**
      * @return the number of bits of precision in a real number.

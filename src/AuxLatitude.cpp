@@ -2,8 +2,6 @@
  * \file AuxLatitude.cpp
  * \brief Implementation for the GeographicLib::AuxLatitude class.
  *
- * \note This is just sample code.  It is not part of GeographicLib itself.
- *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
  *   <a href="https://doi.org/10.1080/00396265.2023.2217604">

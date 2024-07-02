@@ -101,11 +101,18 @@ namespace GeographicLib {
   template<typename T> void Math::sincosd(T x, T& sinx, T& cosx) {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
-    T r; int q = 0;
-    r = remquo(x, T(qd), &q);   // now abs(r) <= 45
-    r *= degree<T>();
+    T d, r; int q = 0;
+    d = remquo(x, T(qd), &q);   // now abs(r) <= 45
+    r = d * degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
+    if (2 * fabs(d) == qd) {
+      c = sqrt(1/T(2));
+      s = copysign(c, r);
+    } else if (3 * fabs(d) == qd) {
+      c = sqrt(T(3))/2;
+      s = copysign(1/T(2), r);
+    }
     switch (unsigned(q) & 3U) {
     case 0U: sinx =  s; cosx =  c; break;
     case 1U: sinx =  c; cosx = -s; break;
@@ -123,11 +130,18 @@ namespace GeographicLib {
     // the argument to the range [-45, 45] before converting it to radians.
     // This implementation allows x outside [-180, 180], but implementations in
     // other languages may not.
-    T r; int q = 0;
-    r = AngRound(remquo(x, T(qd), &q) + t); // now abs(r) <= 45
-    r *= degree<T>();
+    int q = 0;
+    T d = AngRound(remquo(x, T(qd), &q) + t), // now abs(r) <= 45
+      r = d * degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
+    if (2 * fabs(d) == qd) {
+      c = sqrt(1/T(2));
+      s = copysign(c, r);
+    } else if (3 * fabs(d) == qd) {
+      c = sqrt(T(3))/2;
+      s = copysign(1/T(2), r);
+    }
     switch (unsigned(q) & 3U) {
     case 0U: sinx =  s; cosx =  c; break;
     case 1U: sinx =  c; cosx = -s; break;
@@ -142,11 +156,15 @@ namespace GeographicLib {
 
   template<typename T> T Math::sind(T x) {
     // See sincosd
-    T r; int q = 0;
-    r = remquo(x, T(qd), &q); // now abs(r) <= 45
-    r *= degree<T>();
+    int q = 0;
+    T d = remquo(x, T(qd), &q), // now abs(r) <= 45
+      r = d * degree<T>();
     unsigned p = unsigned(q);
-    r = p & 1U ? cos(r) : sin(r);
+    // r = p & 1U ? cos(r) : sin(r); replaced by ...
+    r = p & 1U ? (2 * fabs(d) == qd ? sqrt(1/T(2)) :
+                  (3 * fabs(d) == qd ? sqrt(T(3))/2 : cos(r))) :
+      copysign(2 * fabs(d) == qd ? sqrt(1/T(2)) :
+               (3 * fabs(d) == qd ? 1/T(2) : sin(r)), r);
     if (p & 2U) r = -r;
     if (r == 0) r = copysign(r, x);
     return r;
@@ -154,11 +172,14 @@ namespace GeographicLib {
 
   template<typename T> T Math::cosd(T x) {
     // See sincosd
-    T r; int q = 0;
-    r = remquo(x, T(qd), &q); // now abs(r) <= 45
-    r *= degree<T>();
+    int q = 0;
+    T d = remquo(x, T(qd), &q), // now abs(r) <= 45
+      r = d * degree<T>();
     unsigned p = unsigned(q + 1);
-    r = p & 1U ? cos(r) : sin(r);
+    r = p & 1U ? (2 * fabs(d) == qd ? sqrt(1/T(2)) :
+                  (3 * fabs(d) == qd ? sqrt(T(3))/2 : cos(r))) :
+      copysign(2 * fabs(d) == qd ? sqrt(1/T(2)) :
+               (3 * fabs(d) == qd ? 1/T(2) : sin(r)), r);
     if (p & 2U) r = -r;
     // mpreal needs T(0) here
     return T(0) + r;
