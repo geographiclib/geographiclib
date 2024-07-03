@@ -92,21 +92,218 @@ namespace GeographicLib {
     unsigned quadrant() const;
     Angle& reflect(bool flips, bool flipc = false, bool swapp = false);
     Angle flipsign(int mult) const;
-
-    // Backward compatibility
-    // static Angle degrees(real deg) { return Angle(deg); }
-    // static Angle aux(int id, real s, real c, bool donorm);
-    // real degrees0() const { return Math::atan2d(_s, _c); }
-    // real radians0() const { using std::atan2; return atan2(_s, _c); }
-    // real degrees() const { return degrees0(); }
-    // real y() const { return s(); }
-    // real x() const { return c(); }
-    // Math::real& y() { return _s; }
-    // Math::real& x() { return _c; }
-    // Angle& normalize() { return *this; }
-    // Angle normalized() const { return *this; }
-    // Math::real tan() const { return t(); }
   };
+
+  inline Angle::Angle(real s, real c, real num, bool normp)
+    : _s(s)
+    , _c(c)
+    , _n(num)
+  {
+    using std::isfinite; using std::isnan; using std::isinf;
+    using std::hypot; using std::copysign; using std::round;
+    _n = round(_n);
+    if (!normp) {
+      real h = hypot(_s, _c);
+      if (h == 0) {
+        _s = 0; _c = 1;
+      } else if (isfinite(h)) {
+        _s /= h; _c /= h;
+      } else if (isnan(h) || (isinf(_s) && isinf(_c)))
+        _s = _c = Math::NaN();
+      else if (isinf(_s)) {
+        // infinite, finite
+        _s = copysign(real(1), _s);
+        _c = copysign(real(0), _c);
+      } else {
+        // isinf(cos); finite, infinite
+        _s = copysign(real(0), _s);
+        _c = copysign(real(1), _c);
+      }
+    }
+  }
+
+  inline Angle::Angle(Math::real deg) {
+    using std::round;
+    Math::sincosd(deg, _s, _c);
+    _n = round( (deg - Math::atan2d(_s, _c)) / Math::td );
+  }
+
+  inline Angle::operator Math::real() const {
+    return Math::td * _n + Math::atan2d(_s, _c);
+  }
+
+  inline Angle Angle::radians(Math::real rad) {
+    using std::sin; using std::cos; using std::atan2; using std::round;
+    real sn = sin(rad), cs = cos(rad);
+    return Angle(sn, cs, round( (rad - atan2(sn, cs)) / (2 * Math::pi()) ),
+                 true);
+  }
+
+  inline Math::real Angle::radians() const {
+    return 2 * Math::pi() * _n + radians0();
+  }
+
+  inline Math::real Angle::radians0() const {
+    using std::atan2;
+    return atan2(_s, _c);
+  }
+
+  inline Angle Angle::lam(Math::real psi) {
+    using std::sinh;
+    return Angle(sinh(psi), 1, 0);
+  }
+
+  inline Math::real Angle::lam() const {
+    using std::asinh;
+    return asinh(t());
+  }
+
+  inline Angle Angle::NaN() {
+    return Angle(Math::NaN(), Math::NaN(), 0, true);
+  }
+
+  inline Math::real Angle::ncardinal() const {
+    using std::signbit; using std::fabs;
+    int iq = (signbit(_s) ? -1 : 1) * (signbit(_c) ?
+                                       ( -_c >= fabs(_s) ? 2 : 1 ) :
+                                       (  _c >= fabs(_s) ? 0 : 1 ));
+    return 4 * _n + iq;
+  }
+
+  inline Angle Angle::eps() {
+    return Angle(std::numeric_limits<real>::epsilon() / (1 << 20), 1, 0, true);
+  }
+
+  // Angle Angle::operator+() const { return *this; }
+  inline Angle Angle::operator-() const {
+    return Angle(-_s, _c, -_n, true);
+  }
+
+  inline Angle& Angle::operator+=(const Angle& p) {
+    using std::round;
+    real q = ncardinal() + p.ncardinal();
+    real c = _c * p._c - _s * p._s;
+    _s = _s * p._c + _c * p._s;
+    _c = c;
+    _n += p._n;
+    q -= ncardinal();
+    _n += round(q / 4);
+    return *this;
+  }
+
+  inline Angle Angle::operator+(const Angle& p) const {
+    Angle t = *this; t += p;
+    return t;
+  }
+
+  inline Angle& Angle::operator-=(const Angle& p) {
+    *this += -p;
+    return *this;
+  }
+
+  inline Angle Angle::operator-(const Angle& p) const {
+    Angle t = *this; t -= p;
+    return t;
+  }
+
+  inline bool Angle::zerop(real mult) const {
+    using std::fabs;
+    return _c > 0 && fabs(_s) <= mult * std::numeric_limits<real>::epsilon();
+  }
+
+  inline bool Angle::operator==(const Angle& p) const {
+    Angle t = *this; t -= p;
+    return t.zerop();
+  }
+
+  inline Angle& Angle::rnd() {
+    _s = rnd(_s); _c = rnd(_c);
+    return *this;
+  }
+
+  inline Angle Angle::rnded() const {
+    Angle t = *this;
+    return t.rnd();
+  }
+
+  inline Angle Angle::base() const {
+    return Angle(_s, _c, 0, true);
+  }
+
+  inline Angle Angle::rebase(const Angle& c) const {
+    return (*this - c).base() + c;
+  }
+
+  inline Angle& Angle::renormalize() {
+    using std::hypot;
+    real h = hypot(_s, _c); _s /= h; _c /= h;
+    return *this;
+  }
+
+  inline Angle& Angle::setn(Math::real n) {
+    using std::round;
+    _n = round(n);
+    return *this;
+  }
+
+  inline Angle& Angle::setquadrant(unsigned q) {
+    using std::copysign;
+    _s = copysign(_s, real(             q  & 2U ? -1 : 1 ));
+    _c = copysign(_c, real( ((q >> 1) ^ q) & 1U ? -1 : 1 ));
+    return *this;
+  }
+
+  inline unsigned Angle::quadrant() const {
+    using std::signbit;
+    return 2U * signbit(_s) + (signbit(_c) ^ signbit(_s));
+  }
+
+  inline Angle& Angle::reflect(bool flips, bool flipc, bool swapp) {
+    using std::swap;
+    if (flips) _s *= -1;
+    if (flipc) _c *= -1;
+    if (swapp) swap(_s, _c);
+    return *this;
+  }
+
+  inline Angle Angle::flipsign(int mult) const {
+    return mult < 0 ? -*this : *this;
+  }
+
+  inline Angle Angle::cardinal(real q) {
+    using std::isfinite; using std::round; using std::remainder;
+    if (!isfinite(q)) return Angle::NaN();
+    q = round(q);
+    int iq = int(remainder(q, real(4)));
+    // iq is in [-2, 2];
+    // We could fold iq = -2 to iq = 2; but this way work too.
+    real s, c, z = 0;
+    switch (iq) {
+    case -2: s = -z; c = -1; break;
+    case -1: s = -1; c =  z; break;
+    case  1: s =  1; c =  z; break;
+    case  2: s =  z; c = -1; break;
+    default: s =  z; c =  1; break; // iq = 0
+    }
+    return Angle(s, c, round((q - iq) / 4));
+  }
+
+  inline Angle Angle::nearest(unsigned ind) const {
+    using std::fabs; using std::copysign;
+    real s, c;
+    if (ind == 0U) {
+      if (fabs(_c) >= fabs(_s)) {
+        s = copysign(real(0), _s); c = copysign(real(1), _c);
+      } else {
+        s = copysign(real(1), _s); c = copysign(real(0), _c);
+      }
+    } else if ((ind & 1U) == 0U) { // ind nonzero and even
+      s = copysign(real(0), _s); c = copysign(real(1), _c);
+    } else {                    // ind odd
+      s = copysign(real(1), _s); c = copysign(real(0), _c);
+    }
+    return Angle(s, c, _n, true);
+  }
 
 } // namespace GeographicLib
 

@@ -169,6 +169,7 @@ namespace GeographicLib {
            // kp2 + gamma
            t.k2 *  Math::sq(bet.c()*alp.s()) +
            t.kp2 * (Math::sq(omg.c()) + Math::sq(alp.s()*omg.s())));
+        // for gam == 0, we have nu = nup = 0
         nu = sqrt(fabs(gam)) / (gam > 0 ? t.k : t.kp);
         nup = sqrt(gamp) / (gam > 0 ? t.k : t.kp);
       }
