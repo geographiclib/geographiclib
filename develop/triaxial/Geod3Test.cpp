@@ -59,13 +59,13 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
   Triaxial::vec3 r2, v2;
   real m12, M12, M21;
   l.pos1(bet1a, omg1a, alp1);
-  TriaxialODE direct(t, bet1, omg1, alp1.degrees0());
+  TriaxialODE direct(t, bet1, omg1, real(alp1));
   direct.Position(s12, r2, v2, m12, M12, M21);
   t.cart2toellip(bet2x, omg2x, v2, alp2);
   cout << bet1 << " " << omg1 << " "
-       << nicestr(alp1.degrees0(), prec, true) << " "
+       << nicestr(real(alp1), prec, true) << " "
        << bet2 << " " << omg2 << " "
-       << nicestr(alp2.degrees0(), prec, true) << " "
+       << nicestr(real(alp2), prec, true) << " "
        << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " "
        << nicestr(M12, prec+2) << " " << nicestr(M21, prec+2) << endl;
 }

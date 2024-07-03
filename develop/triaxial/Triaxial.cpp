@@ -614,7 +614,7 @@ namespace GeographicLib {
         fic = TriaxialLineF::fics(lf, bet1, omg1, ang{kp, k});
         alp1 = ang(kp * exp(lf.df), k);
         fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
-        d = lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2, true);
+        d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, true);
         if (debug) cout << "opposite umbilics\n";
         done = true;
       } else if (bet1.c() == 0 && bet2.c() == 0) {
@@ -628,7 +628,7 @@ namespace GeographicLib {
             // adjacent E/W umbilical points
             TriaxialLineF::disttx{-Triaxial::BigValue(),
                                   Triaxial::BigValue(), 0} :
-            lf.ArcPos0(fic, omg12.radians0(), bet2a, omg2a, alp2, false);
+            lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
           if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
           if (debug) {
             if (omg12.s() == 0 && omg12.c() < 0)
@@ -651,11 +651,11 @@ namespace GeographicLib {
             if (debug) cout << "bet1 = -90,  bet2 = 90, adj umb\n";
             done = true;
           } else {
-            d = lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+            d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
             omg2a -= omg2;
             if (omg2a.s() > 0) {
-              omg2a = omg2 + omg1;
-              d = lf.ArcPos0(fic, omg2a.radians0(), bet2a, omg2a, alp2, false);
+              ang omg12 = omg2 + omg1;
+              d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
               if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
               if (debug) cout << "bet1 = -90,  bet2 = 90, merid\n";
               done = true;
@@ -664,7 +664,7 @@ namespace GeographicLib {
               fa = omg2a.radians0();
               alpb.setquadrant(0U);
               fic.setquadrant(lf, 0U);
-              (void) lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+              (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
               omg2a -= omg2;
               alpb = -alpa;
               fb = omg2a.radians0();
@@ -685,18 +685,18 @@ namespace GeographicLib {
       }
     } else if (bet1.s() == 0 && bet2.s() == 0) {
       // both points on equator
-      ang omg12 = omg2 - omg1;
+      ang omg12 = (omg2 - omg1).base();
       int eE = omg12.s() > 0 ? 1 : -1;
       // set direction for probe as +/-90 based on sign of omg12
       alp1 = ang::cardinal(eE);
       bet1.reflect(true);
       lf = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
       fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
-      (void) lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+      (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
       omg2a -= omg2;
       if (eE * omg2a.s() >= 0) {
         // geodesic follows the equator
-        d = lf.ArcPos0(fic, eE * omg12.radians0(), bet2a, omg2a, alp2, false);
+        d = lf.ArcPos0(fic, omg12.flipsign(eE), bet2a, omg2a, alp2, false);
         if (debug) cout << "bet1 = bet2 = 0 equatorial\n";
         done = true;
       } else {
@@ -706,7 +706,7 @@ namespace GeographicLib {
         (eE > 0 ? fa : fb) = omg2a.radians0();
         alp1.setquadrant(eE > 0 ? 3U : 0U);
         fic.setquadrant(lf, eE > 0 ? 3U : 0U);
-        (void) lf.ArcPos0(fic, Math::pi(), bet2a, omg2a, alp2);
+        (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
         omg2a -= omg2;
         (eE > 0 ? fb : fa) = omg2a.radians0();
         if (debug) cout << "bet1 = bet2 = 0 non-equatorial\n";
@@ -716,10 +716,10 @@ namespace GeographicLib {
       lf = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
       alp2 = ang(kp * omg2.s(), k * bet2.c());
       fic = TriaxialLineF::fics(lf, bet2, omg2, alp2);
-      (void) lf.ArcPos0(fic, (bet1 - bet2).radians0(), bet2a, omg2a, alp1);
+      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
       if (alp1.s() < 0) alp1 += ang::cardinal(1);
       fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
-      d = lf.ArcPos0(fic, (bet2 - bet1).radians0(), bet2a, omg2a, alp2);
+      d = lf.ArcPos0(fic, bet2 - bet1, bet2a, omg2a, alp2);
       if (debug) cout << "umb to general\n";
       done = true;
     } else if (bet1.c() == 0) {
@@ -727,13 +727,13 @@ namespace GeographicLib {
       if (omg2.s() > 0) {
         alpa = ang::cardinal(-1) + ang::eps();
         alpb = -alpa;
-        fa = -omg2.radians0();
+        fa = -omg2.radians();
         fb = (ang::cardinal(2) - omg2).radians0();
       } else {
         alpa = ang::cardinal(1) + ang::eps();
         alpb = -alpa;
         fa = (ang::cardinal(2) - omg2).radians0();
-        fb = -omg2.radians0();
+        fb = -omg2.radians();
       }
       if (debug) cout << "bet = -90 to general\n";
     } else if (omg1.s() == 0) {
@@ -741,13 +741,13 @@ namespace GeographicLib {
       if (omg2.s() > 0) {
         alpa = ang::eps();
         alpb = ang::cardinal(2) - alpa;
-        fa = -omg2.radians0();
+        fa = -omg2.radians();
         fb = (ang::cardinal(2)-omg2).radians0();
       } else {
         alpa = ang(-numeric_limits<real>::epsilon()/(1<<20), -1);
         alpb = ang(-numeric_limits<real>::epsilon()/(1<<20),  1);
         fa = (ang::cardinal(2)-omg2).radians0();
-        fb = -omg2.radians0();
+        fb = -omg2.radians();
       }
       if (debug) cout << "omg1 = 0 to general\n";
     } else {

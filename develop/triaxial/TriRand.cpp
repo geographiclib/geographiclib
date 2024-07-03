@@ -69,8 +69,8 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
 #else
   int prec = 18;
 #endif
-  cout << fixed << setprecision(prec) << alp1a.degrees0() << " "
-       << alp2a.degrees0() << " "
+  cout << fixed << setprecision(prec) << real(alp1a) << " "
+       << real(alp2a) << " "
        << setprecision(prec+2) <<l.Distance() << endl;
 }
 int main(int argc, const char* const argv[]) {

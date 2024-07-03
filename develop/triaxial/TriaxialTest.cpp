@@ -156,9 +156,7 @@ void PositionTest(Math::real a, Math::real b, Math::real c) {
     l.Position(s12*ds, bet2, omg2, alp2);
     (void) Triaxial::AngNorm(bet2, omg2, alp2);
     cout << s12 << " "
-         << omg2.degrees0() << "\n";
-      //         << bet2.degrees0() << " "
-      //         << alp2.degrees0() << "\n";
+         << real(omg2) << "\n";
   }
 }
 
@@ -174,7 +172,7 @@ Math::real HybridOLD(const Triaxial& t,
   l.Hybrid(bet2, bet2a, omg2a, alp2a, s12);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
-  return omg2a.radians0();
+  return omg2a.radians();
 }
 
 Math::real Hybrid0(const TriaxialLineF& l,
@@ -186,7 +184,7 @@ Math::real Hybrid0(const TriaxialLineF& l,
   (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
   (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
   omg2a -= omg2;
-  return omg2a.radians0();
+  return omg2a.radians();
 }
 
 Math::real HybridA(const Triaxial& t,
@@ -197,22 +195,6 @@ Math::real HybridA(const Triaxial& t,
   TriaxialLineF l(t, gam, 0.5, 1.5);
   TriaxialLineF::fics ic(l, bet1, omg1, alp1);
   return Hybrid0(l, ic, bet2, omg2);
-  /*
-  cout << "AA "
-       << t.a << " " << t.b << " " << t.c << " "
-       << gam.gam << " "
-       << b1.degrees0() << " "
-       << o1.degrees0() << " "
-       << a1.degrees0() << " "
-       << bet2.degrees0() << " "
-       << omg2.degrees0() << "\n";
-  cout << "BB " << alp1.degrees0() << " " << d/Math::degree() << "\n";
-  ang bet2a, omg2a, alp2a;
-  (void) l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
-  (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
-  omg2a -= omg2;
-  return omg2a.radians0();
-  */
 }
 
 Math::real HybridB(const Triaxial& t,
@@ -252,19 +234,6 @@ Angle findroot(const function<Math::real(const Angle&)>& f,
   typedef Angle ang;
   ang xm;                  // The return value
   int cntn = 0, cntb = 0;
-  /*
-    cout << xa.degrees0() << " " << fa << " "
-       << xb.degrees0() << " " << fb << "\n";
-
-  int num = 360;
-  //  for (int i = 0; i <= num; ++i) {
-  { int i = 90;
-    Math::real x = 360*i/Math::real(num),
-      ff = f(ang(x));
-    cout << "DAT " << x << " " << ff/Math::degree() << "\n";
-  }
-  return 0;
-  */
   bool trip = false;
  for (Math::real t = 1/Math::real(2), ab = 0;
        cntn < 50 || GEOGRAPHICLIB_PANIC;) {
@@ -299,7 +268,7 @@ Angle findroot(const function<Math::real(const Angle&)>& f,
     }
     ++cntn;
     Math::real ft = f(xt), fm, fc;
-    cout << cntn << " " << xt.degrees0() << " "
+    cout << cntn << " " << Math::real(xt) << " "
          << ft << " " << ab << " " << t << "\n";
     if (signbit(ft) == signbit(fa)) {
       xc = xa; xa = xt;
@@ -314,9 +283,9 @@ Angle findroot(const function<Math::real(const Angle&)>& f,
       xm = xa; fm = fa;
     }
     // ordering is b - a - c
-    ab = (xa-xb).radians0();
+    ab = (xa-xb).radians();
     Math::real
-      ca = (xc-xa).radians0(),
+      ca = (xc-xa).radians(),
       cb = ca+ab,
       // Scherer has a fabs(cb).  This should be fabs(ab).
       tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
@@ -372,10 +341,10 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   }
   for (unsigned q = 0U; q < 4U; ++q) {
     domg[q] = HybridA(t, bet1, omg1, alp1u[q], bet2, omg2);
-    cout << q << " " << alp1u[q].degrees0() << " "
+    cout << q << " " << real(alp1u[q]) << " "
          << domg[q]/Math::degree() << "\n";
     if (domg[q] == 0) {
-      cout << "Result " << alp1u[q].degrees0() << "\n";
+      cout << "Result " << real(alp1u[q]) << "\n";
       return;
     }
   }
@@ -406,8 +375,8 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
       ++countb;
       xn = ang(xb.s() + xa.s(), xb.c() + xa.c());
       real ft =  HybridA(t, bet1, omg1, xn, bet2, omg2);
-      cout << countb << " " << xn.degrees0() << " " << ft << "\n";
-      if (ft == 0 || (xa-xn).radians0() <= 0 || (xn-xb).radians0() <= 0)
+      cout << countb << " " << real(xn) << " " << ft << "\n";
+      if (ft == 0 || (xa-xn).radians() <= 0 || (xn-xb).radians() <= 0)
         break;
       (ft > 0 ? xa : xb) = xn;
     }
@@ -421,18 +390,18 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
                   &countn, &countb);
   }
 
-  std::cout << xn.degrees0() << " " << countn << " " << countb << "\n";
+  std::cout << real(xn) << " " << countn << " " << countb << "\n";
   ang alp1(xn), bet2a, alp2a, omg2a;
   real s12 = HybridB(t, bet1, omg1, alp1, bet2, bet2a, omg2a, alp2a);
-  std::cout << alp1.degrees0() << " " << bet2a.degrees0() << " "
-            << omg2a.degrees0() << " " << alp2a.degrees0() << " "
+  std::cout << real(alp1) << " " << real(bet2a) << " "
+            << real(omg2a) << " " << real(alp2a) << " "
             << s12 << "\n";
   {
     TriaxialLine l0(t, bet1, omg1, alp1);
     ang bb,oo,aa;
     l0.Position(s12, bb,oo,aa);
-    std::cout << "TRY3\n" << alp1.degrees0() << " " << bb.degrees0() << " "
-            << oo.degrees0() << " " << aa.degrees0() << " "
+    std::cout << "TRY3\n" << real(alp1) << " " << real(bb) << " "
+              << real(oo) << " " << real(aa) << " "
             << s12 << "\n";
   }
   }
@@ -541,21 +510,21 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
       if (0)
       cout  << alp1d << " " << alp2d << " " << s12d << " OK\n"
             << setprecision(0)
-           << bet1x.degrees0() << " " << omg1x.degrees0() << " "
-           << bet2x.degrees0() << " " << omg2x.degrees0() << " "
+            << real(bet1x) << " " << real(omg1x) << " "
+            << real(bet2x) << " " << real(omg2x) << " "
             << setprecision(6)
-           << alp1x.degrees0() << " " << alp2x.degrees0() << " "
-           << s12x << " OK" << endl;
+            << real(alp1x) << " " << real(alp2x) << " "
+            << s12x << " OK" << endl;
       else
         cout << "OK" << endl;
     } else {
       if (1)
       cout  << alp1d << " " << alp2d << " " << s12d << " BAD\n"
             << setprecision(1)
-           << bet1x.degrees0() << " " << omg1x.degrees0() << " "
-           << bet2x.degrees0() << " " << omg2x.degrees0() << " "
+            << real(bet1x) << " " << real(omg1x) << " "
+            << real(bet2x) << " " << real(omg2x) << " "
             << setprecision(6)
-           << alp1x.degrees0() << " " << alp2x.degrees0() << " "
+            << real(alp1x) << " " << real(alp2x) << " "
            << s12x << " BAD" << endl;
       else
         cout << "BAD" << endl;
@@ -583,25 +552,25 @@ int main() {
       ang bet2, omg2, alp2;
       l.pos1(bet2, omg2, alp2);
         cout << "POS1 " << s12 << " "
-             << bet2.degrees0() << " "
-             << omg2.degrees0() << " "
-             << alp2.degrees0() << "\n";
+             << real(bet2) << " "
+             << real(omg2) << " "
+             << real(alp2) << "\n";
       cout << fixed << setprecision(6);
       for (int i = -3; i <= 3; ++i) {
         real ss = 0 + i * 1e-6;
         l.Position(ss, bet2, omg2, alp2);
         cout << i << " " << ss << " "
-             << bet2.degrees0() << " "
-             << omg2.degrees0() << " "
-             << alp2.degrees0() << "\n";
+             << real(bet2) << " "
+             << real(omg2) << " "
+             << real(alp2) << "\n";
       }
       for (int i = -3; i <= 3; ++i) {
         real ss = s12 + i * 1e-6;
         l.Position(ss, bet2, omg2, alp2);
         cout << i << " " << ss << " "
-             << bet2.degrees0() << " "
-             << omg2.degrees0() << " "
-             << alp2.degrees0() << "\n";
+             << real(bet2) << " "
+             << real(omg2) << " "
+             << real(alp2) << "\n";
       }
       return 0;
     }
@@ -612,17 +581,15 @@ int main() {
                       ang(158.253574));
       ll.SetDistance(0.898324);
       ang bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
-      int ibet1, iomg1, ialp1, ibet2, iomg2, ialp2;
-      ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
+      ll.pos1(bet1x, omg1x, alp1x);
       real s12x = ll.Distance();
-      ll.Position(s12x, bet2x, omg2x, alp2x, &ibet2, &iomg2, &ialp2);
+      ll.Position(s12x, bet2x, omg2x, alp2x);
       std::cout << "OUT\n"
-                << bet1x.degrees0() << " " << omg1x.degrees0() << " "
-                << alp1x.degrees0() << " "
-                << ibet1 << iomg1 << ialp1
+                << real(bet1x) << " " << real(omg1x) << " "
+                << real(alp1x) << " "
                 << signbit(bet1x.c()) << signbit(omg1x.s()) << "\n"
-                << bet2x.degrees0() << " " << omg2x.degrees0() << " "
-                << alp2x.degrees0() << " " << ibet2 << iomg2 << ialp2 << "\n"
+                << real(bet2x) << " " << real(omg2x) << " "
+                << real(alp2x) << "\n"
                 << s12x << "\n";
     }
     return 0;
@@ -632,17 +599,15 @@ int main() {
                       ang(-87.089900));
       ll.SetDistance(2.736330);
       ang bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
-      int ibet1, iomg1, ialp1, ibet2, iomg2, ialp2;
-      ll.pos1(bet1x, omg1x, alp1x, &ibet1, &iomg1, &ialp1);
+      ll.pos1(bet1x, omg1x, alp1x);
       real s12x = ll.Distance();
-      ll.Position(s12x, bet2x, omg2x, alp2x, &ibet2, &iomg2, &ialp2);
+      ll.Position(s12x, bet2x, omg2x, alp2x);
       std::cout << "OUT\n"
-                << bet1x.degrees0() << " " << omg1x.degrees0() << " "
-                << alp1x.degrees0() << " "
-                << ibet1 << iomg1 << ialp1
+                << real(bet1x) << " " << real(omg1x) << " "
+                << real(alp1x) << " "
                 << signbit(bet1x.c()) << signbit(omg1x.s()) << "\n"
-                << bet2x.degrees0() << " " << omg2x.degrees0() << " "
-                << alp2x.degrees0() << " " << ibet2 << iomg2 << ialp2 << "\n"
+                << real(bet2x) << " " << real(omg2x) << " "
+                << real(alp2x) << "\n"
                 << s12x << "\n";
     }
     return 0;

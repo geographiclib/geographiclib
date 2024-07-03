@@ -292,9 +292,9 @@ int main(int argc, const char* const argv[]) {
         for (size_t i = 0; i < r2.size(); ++i) {
           ang bet2, omg2, alp2;
           t.cart2toellip(r2[i], v2[i], bet2, omg2, alp2);
-          *output << BetOmgString(bet2.degrees0(), omg2.degrees0(),
+          *output << BetOmgString(real(bet2), real(omg2),
                                   prec, dms, dmssep, longfirst)
-                  << " " << AzimuthString(alp2.degrees0(), prec, dms, dmssep)
+                  << " " << AzimuthString(real(alp2), prec, dms, dmssep)
                   << "\n";
         }
       } else {

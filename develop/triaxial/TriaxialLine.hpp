@@ -30,17 +30,22 @@ namespace GeographicLib {
     class fics {
       // bundle of data setting the initial conditions for a geodesic
     public:
-      Angle bet1, omg1, alp1, // starting point
-        psi1;                    // nonumbilic angle psi
-      real u0, v0,               // starting point in u,v space
-      //        df, deltashift,          // umbilic constants
-      // NB df and deltashift need to migrate to a TriaxialLineF variables
-      // cf TriaxialLineG::s0
+      Angle bet1, omg1, alp1,   // starting point (omg displaced by -pi/2)
+        psi1,                   // nonumbilic angle psi
+      // Angles about which quantities oscillate
+      // circumpolar:
+      //   omg0 not used, bet0 = cardinal(even), alp0 = cardinal(odd)
+      // transpolar:
+      //   bet0 not used, omg0 = cardinal(even), alp0 = cardinal(even)
+      // umbilical
+      //   bet0, omg0 = cardinal(even) = middle of starting segment
+      //   !umbalt: alp0 = cardinal(odd)
+      //   umbalt: alp0 = cardinal(even)
+        bet0, omg0, alp0;
+      real u0, v0,              // starting point in u,v space
         delta;                   //  starting point for umbilic
-      int ibet, iomg, ialp,      // wrapping quantities for bet, omg, alp
-        nN, eE,                  // Northgoing / eastgoing
-        flip,                    // Is bet or omg on the backside
-        bet0, omg0, alp0;        // Reference vals (1 = 0, -1 = 180)
+      int nN, eE,                  // Northgoing / eastgoing
+        flip;                    // Is bet or omg on the backside (non-umb)
       fics();
       fics(const TriaxialLineF& f,
            const Angle& bet1, const Angle& omg1, const Angle& alp1);
@@ -64,7 +69,7 @@ namespace GeographicLib {
                  const Angle& bet2, const Angle& omg2) const;
     disttx Hybrid(const fics& fic, const Angle& bet2,
                 Angle& bet2a, Angle& omg2a, Angle& alp2a) const;
-    disttx ArcPos0(const fics& fic, real tau12,
+    disttx ArcPos0(const fics& fic, const Angle& tau12,
                    Angle& bet2a, Angle& omg2a, Angle& alp2a,
                    bool betp = true) const;
   };
@@ -151,8 +156,6 @@ namespace GeographicLib {
     const dist_fun& gbet() const { return _g.gbet(); }
     const dist_fun& gomg() const { return _g.gomg(); }
     void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
-                  int* ibet2 = nullptr, int* iomg2 = nullptr,
-                  int* ialp2 = nullptr,
                   int* countn = nullptr, int* countb = nullptr) const;
     void Position(real s12, real& bet2, real& omg2, real& alp2,
                   bool unroll = true,
@@ -169,17 +172,8 @@ namespace GeographicLib {
     real gamma() const { return _f.gamma(); }
     real Distance() const { return _gic.s13; }
     void SetDistance(real s13) { _gic.s13 = s13; }
-    Angle bet1(int* ibet1 = nullptr) const;
-    Angle omg1(int* iomg1 = nullptr) const;
-    Angle alp1(int* ialp1 = nullptr) const;
-    real lat1(bool unroll = true) const;
-    real lon1(bool unroll = true) const;
-    real azi1(bool unroll = true) const;
-    void pos1(Angle& bet1, Angle& omg1, Angle& alp1,
-              int* ibet1 = nullptr, int* iomg1 = nullptr,
-              int* ialp1 = nullptr) const;
-    void pos1(real& bet1, real& omg1, real& alp1,
-            bool unroll = true) const;
+    void pos1(Angle& bet1, Angle& omg1, Angle& alp1) const;
+    void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
   };
 } // namespace GeographicLib
 

@@ -62,12 +62,16 @@ namespace GeographicLib {
     explicit operator real() const;
     static Angle radians(real rad);
     real radians() const;
+    real radians0() const;
     static Angle lam(real q);
     real lam() const;
     static Angle NaN();
     static Angle cardinal(real q);
-    Angle cardinal() const;
-    real ncardinal() const;
+    // dir == 0 => q has closest cardinal direction
+    // dir > 0 => q has closest N/S (even) direction
+    // dir < 0 => q has closest E/W (odd) direction
+    Angle cardinaldir(int dir = 0) const;
+    real ncardinal(int dir = 0) const;
     static Angle eps();
 
     // Angle operator+() const;
@@ -87,12 +91,13 @@ namespace GeographicLib {
     Angle& setquadrant(unsigned q);
     unsigned quadrant() const;
     Angle& reflect(bool flips, bool flipc = false, bool swapp = false);
+    Angle flipsign(int mult) const;
 
     // Backward compatibility
     // static Angle degrees(real deg) { return Angle(deg); }
     // static Angle aux(int id, real s, real c, bool donorm);
-    real degrees0() const { return Math::atan2d(_s, _c); }
-    real radians0() const { using std::atan2; return atan2(_s, _c); }
+    // real degrees0() const { return Math::atan2d(_s, _c); }
+    // real radians0() const { using std::atan2; return atan2(_s, _c); }
     // real degrees() const { return degrees0(); }
     // real y() const { return s(); }
     // real x() const { return c(); }

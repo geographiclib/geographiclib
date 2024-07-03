@@ -89,23 +89,17 @@ namespace GeographicLib {
     if (eps == 0)
       eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
     // Normalize all distances to b.
-    vec6 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2]};
+    vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
     Norm(y);
     int n;
     s12 /= _b;
     auto fun = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
       yp = y; Norm(yp); yp = Accel(yp);
     };
-    if (1) {
-      bulirsch_stoer<vec6, real> stepper(eps, real(0));
-      n = integrate_adaptive(stepper, fun, y, real(0), s12, 1/real(10));
-    } else {
-      n = int(round(1/eps));
-      runge_kutta4<vec6, real> stepper;
-      integrate_n_steps(stepper, fun, y, real(0), s12/n, n);
-    }
+    bulirsch_stoer<vec6, real> stepper(eps, real(0));
+    n = integrate_adaptive(stepper, fun, y, real(0), s12, 1/real(10));
     Norm(y);
-    r2 = {_b*y[0], _b*y[1], _b*y[2]};
+    r2 = {_b * y[0], _b * y[1], _b * y[2]};
     v2 = {y[3], y[4], y[5]};
     return n;
   }
@@ -117,7 +111,7 @@ namespace GeographicLib {
     if (eps == 0)
       eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
     // Normalize all distances to b.
-    vec10 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2],
+    vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
             0, 1, 1, 0};
     Norm(y);
     int n;
@@ -125,18 +119,12 @@ namespace GeographicLib {
     auto fun = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
       yp = y; Norm(yp); yp = Accel(yp);
     };
-    if (1) {
-      bulirsch_stoer<vec10, real> stepper(eps, real(0));
-      n = integrate_adaptive(stepper, fun, y, real(0), s12, 1/real(10));
-    } else {
-      n = int(round(1/eps));
-      runge_kutta4<vec10, real> stepper;
-      integrate_n_steps(stepper, fun, y, real(0), s12/n, n);
-    }
+    bulirsch_stoer<vec10, real> stepper(eps, real(0));
+    n = integrate_adaptive(stepper, fun, y, real(0), s12, 1/real(10));
     Norm(y);
-    r2 = {_b*y[0], _b*y[1], _b*y[2]};
+    r2 = {_b * y[0], _b * y[1], _b * y[2]};
     v2 = {y[3], y[4], y[5]};
-    m12 = _b*y[6]; M12 = y[8]; M21 = y[7]; // AG Eq 29: dm12/ds2 = M21
+    m12 = _b * y[6]; M12 = y[8]; M21 = y[7]; // AG Eq 29: dm12/ds2 = M21
     return n;
   }
 
@@ -156,20 +144,22 @@ namespace GeographicLib {
       yp = y; Norm(yp); yp = Accel(yp);
     };
     auto observer = [&r2, &v2, b = _b](const vec6& y, real /*t*/) -> void {
-      r2.push_back( {b*y[0], b*y[1], b*y[2]} );
+      r2.push_back( {b * y[0], b * y[1], b * y[2]} );
       v2.push_back( {y[3], y[4], y[5]} );
     };
     bulirsch_stoer<vec6, real> stepper(eps, real(0));
     ds /= _b;
     if (nmin < 0) {
-      vec6 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2]}; Norm(y);
+      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
+      Norm(y);
       integrate_n_steps(stepper, fun, y, real(0), -ds, abs(nmin), observer);
       reverse(r2.begin(), r2.end());
       reverse(v2.begin(), v2.end());
     }
     if (nmax > 0) {
       if (nmin < 0) { r2.pop_back(); v2.pop_back(); }
-      vec6 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2]}; Norm(y);
+      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
+      Norm(y);
       integrate_n_steps(stepper, fun, y, real(0), ds, nmax, observer);
     }
     for (int i = 0; i <= nmax - nmin; ++i)
@@ -197,16 +187,16 @@ namespace GeographicLib {
     };
     auto observer = [&r2, &v2, &m12, &M12, &M21, b = _b]
       (const vec10& y, real /*t*/) -> void {
-      r2.push_back( {b*y[0], b*y[1], b*y[2]} );
+      r2.push_back( {b * y[0], b * y[1], b * y[2]} );
       v2.push_back( {y[3], y[4], y[5]} );
-      m12.push_back( b*y[6] );
+      m12.push_back( b * y[6] );
       M12.push_back( y[8] );
       M21.push_back( y[7] );
     };
     bulirsch_stoer<vec10, real> stepper(eps, real(0));
     ds /= _b;
     if (nmin < 0) {
-      vec10 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2],
+      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
         0, 1, 1, 0};
       Norm(y);
       integrate_n_steps(stepper, fun, y, real(0), -ds, abs(nmin), observer);
@@ -221,7 +211,7 @@ namespace GeographicLib {
         r2.pop_back(); v2.pop_back();
         m12.pop_back(); M12.pop_back(); M21.pop_back();
       }
-      vec10 y{_r1[0]/_b, _r1[1]/_b, _r1[2]/_b, _v1[0], _v1[1], _v1[2],
+      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
         0, 1, 1, 0};
       Norm(y);
       integrate_n_steps(stepper, fun, y, real(0), ds, nmax, observer);

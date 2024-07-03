@@ -66,6 +66,8 @@ namespace GeographicLib {
     return 2 * Math::pi() * _n + atan2(_s, _c);
   }
 
+  Math::real Angle::radians0() const { return atan2(_s, _c); }
+
   Angle Angle::lam(Math::real psi) {
     return Angle(sinh(psi), 1, 0);
   }
@@ -95,9 +97,9 @@ namespace GeographicLib {
     return Angle(s, c, round((q - iq) / 4));
   }
 
-  Angle Angle::cardinal() const {
+  Angle Angle::cardinaldir(int dir) const {
     real s, c;
-    if (fabs(_c) >= fabs(_s)) {
+    if ((fabs(_c) >= fabs(_s) || dir > 0) && !(dir < 0)) {
       s = copysign(real(0), _s); c = copysign(real(1), _c);
     } else {
       s = copysign(real(1), _s); c = copysign(real(0), _c);
@@ -105,10 +107,13 @@ namespace GeographicLib {
     return Angle(s, c, _n, true);
   }
 
-  Math::real Angle::ncardinal() const {
-    int iq = (signbit(_s) ? -1 : 1) * (signbit(_c) ?
-                                       ( -_c >= fabs(_s) ? 2 : 1 ) :
-                                       (  _c >= fabs(_s) ? 0 : 1 ));
+  Math::real Angle::ncardinal(int dir) const {
+    int iq = dir > 0 ? (signbit(_c) ? (signbit(_s) ? -2 : 2) : 0) :
+      (dir < 0 ? (signbit(_s) ? -1 : 1) :
+       // dir == 0
+       ((signbit(_s) ? -1 : 1) * (signbit(_c) ?
+                                  ( -_c >= fabs(_s) ? 2 : 1 ) :
+                                  (  _c >= fabs(_s) ? 0 : 1 ))) );
     return 4 * _n + iq;
   }
 
@@ -210,6 +215,10 @@ namespace GeographicLib {
     if (flipc) _c *= -1;
     if (swapp) swap(_s, _c);
     return *this;
+  }
+
+  Angle Angle::flipsign(int mult) const {
+    return mult < 0 ? -*this : *this;
   }
 
   /*
