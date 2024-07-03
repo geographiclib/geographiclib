@@ -42,7 +42,7 @@ namespace GeographicLib {
     {}
 
   void TriaxialLine::pos1(Angle& bet1, Angle& omg1, Angle& alp1) const {
-    bet1 = _fic.bet1; omg1 = _fic.omg1 + ang::cardinal(1U);
+    bet1 = _fic.bet1; omg1 = _fic.omg1 + ang::cardinal(1);
     alp1 = _fic.alp1;
   }
 
@@ -80,10 +80,11 @@ namespace GeographicLib {
       ang psi2 = ang::radians(fbet().rev(v2));
       // Already normalized
       bet2a = ang(_f.gm().nup * psi2.s(),
-                  _fic.flip * hypot(psi2.c(), _f.gm().nu * psi2.s()),
+                  _fic.bet0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
                   0, true).rebase(_fic.bet0);
       alp2a = ang(_fic.eE * hypot(_t.k * _f.gm().nu, _t.kp * omg2a.c()),
-                  _fic.flip * _t.k * _f.gm().nup * psi2.c()).rebase(_fic.alp0);
+                  _fic.bet0.c() * _t.k * _f.gm().nup * psi2.c())
+        .rebase(_fic.alp0);
     } else if (_f.gamma() < 0) {
       real u2, v2;
       if (fomg().NCoeffsInv() <= fbet().NCoeffsInv()) {
@@ -99,9 +100,9 @@ namespace GeographicLib {
       ang psi2 = ang::radians(fomg().rev(v2));
       // Already normalized
       omg2a = ang(_f.gm().nup * psi2.s(),
-                  _fic.flip * hypot(psi2.c(), _f.gm().nu * psi2.s()),
+                  _fic.omg0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
                   0, true).rebase(_fic.omg0);
-      alp2a = ang(_fic.flip * _t.kp * _f.gm().nup * psi2.c(),
+      alp2a = ang(_fic.omg0.c() * _t.kp * _f.gm().nup * psi2.c(),
                   _fic.nN * hypot(_t.kp * _f.gm().nu, _t.k * bet2a.c()))
         .rebase(_fic.alp0);
     } else if (_f.gamma() == 0) {
@@ -129,7 +130,6 @@ namespace GeographicLib {
         Nx = _fic.nN * parity;
         omg2a += ang::cardinal(2 * sig2n.second);
         omg2a = omg2a.flipsign(_fic.eE) + _fic.omg0;
-        // bet2a = bet2a.flipsign(Nx).rebase(_fic.bet0);
         bet2a = bet2a.reflect((_fic.bet0.c() * Nx) < 0, _fic.bet0.c() < 0)
           .rebase(_fic.bet0);
         // replace cos(bet)/cos(omg) by sech(u)/sech(v)
@@ -311,7 +311,7 @@ namespace GeographicLib {
     } else {
       tau12 = ang::NaN();
     }
-    return ArcPos0(fic, tau12, bet2a, omg2a, alp2a, true);
+    return ArcPos0(fic, tau12.base(), bet2a, omg2a, alp2a, true);
   }
 
   TriaxialLineF::TriaxialLineF(const Triaxial& t, Triaxial::gamblk gam,
@@ -368,10 +368,10 @@ namespace GeographicLib {
       }
       // Already normalized
       bet2a = ang(gm().nup * psi2.s(),
-                  fic.flip * hypot(psi2.c(), gm().nu * psi2.s()),
+                  fic.bet0.c() * hypot(psi2.c(), gm().nu * psi2.s()),
                   0, true).rebase(fic.bet0);
       alp2a = ang(fic.eE * hypot(_t.k * gm().nu, _t.kp * omg2a.c()),
-                  fic.flip * _t.k * gm().nup * psi2.c()).rebase(fic.alp0);
+                  fic.bet0.c() * _t.k * gm().nup * psi2.c()).rebase(fic.alp0);
       ret.betw2 = v2;
       ret.omgw2 = u2;
     } else if (gamma() < 0) {
@@ -390,9 +390,9 @@ namespace GeographicLib {
       }
       // Already normalized
       omg2a = ang(gm().nup * psi2.s(),
-                  fic.flip * hypot(psi2.c(), gm().nu * psi2.s()),
+                  fic.omg0.c() * hypot(psi2.c(), gm().nu * psi2.s()),
                   0, true).rebase(fic.omg0);
-      alp2a = ang(fic.flip * _t.kp * gm().nup * psi2.c(),
+      alp2a = ang(fic.omg0.c() * _t.kp * gm().nup * psi2.c(),
                   fic.nN * hypot(_t.kp * gm().nu, _t.k * bet2a.c()))
         .rebase(fic.alp0);
       ret.betw2 = u2;
@@ -413,7 +413,7 @@ namespace GeographicLib {
         omg2a = ang::radians(fic.eE * parity * fomg().rev(v2))
           .rebase(fic.omg0);
         // umbalt definition of alp0
-        ang alp0x(fic.alp1.cardinaldir(1));
+        ang alp0x(fic.alp1.cardinaldir(2U));
         alp2a = ang(fic.nN * _t.kp * fic.eE * parity / cosh(v2),
                     _t.k / cosh(u2)).rebase(alp0x);
         ii = int(bet2n.second);
@@ -430,7 +430,7 @@ namespace GeographicLib {
         real bet2 = fic.nN * parity * fbet().rev(u2);
         bet2a = ang::radians(bet2);
         // !umbalt definition of alp0
-        ang alp0x(fic.alp1.cardinaldir(-1));
+        ang alp0x(fic.alp1.cardinaldir(1U));
         alp2a = ang(fic.eE * _t.kp / cosh(v2),
                     _t.k * fic.nN * parity / cosh(u2)).rebase(alp0x);
         ii = int(omg2n.second);
@@ -441,7 +441,7 @@ namespace GeographicLib {
     } else {
       // gamma == NaN
     }
-    omg2a += ang::cardinal(1U);
+    omg2a += ang::cardinal(1);
     return ret;
   }
 
@@ -457,7 +457,6 @@ namespace GeographicLib {
     , delta(Math::NaN())
     , nN(0)
     , eE(0)
-    , flip(0)
   {}
 
   TriaxialLineF::fics::fics(const TriaxialLineF& f,
@@ -465,7 +464,7 @@ namespace GeographicLib {
                             const Angle& alp10)
     : bet1(bet10)
       // omg10 - 90
-    , omg1(omg10 - ang::cardinal(1U))
+    , omg1(omg10 - ang::cardinal(1))
     , alp1(alp10)
   {
     const real eps = numeric_limits<real>::epsilon();
@@ -476,35 +475,35 @@ namespace GeographicLib {
     eE = signbit(alp1.s()) ? -1 : 1;
     nN = signbit(alp1.c()) ? -1 : 1;
     if (gm.gam > 0) {
-      flip = signbit(bet1.c()) ? -1 : 1;
-      bet0 = bet1.cardinaldir(1);
-      alp0 = alp1.cardinaldir(-1);
+      bet0 = bet1.cardinaldir(2U);
+      alp0 = alp1.cardinaldir(1U);
       psi1 = ang(t.k * bet1.s(),
-                 flip * alp1.c() * hypot(t.k * bet1.c(), t.kp * omg1.c()));
+                 bet0.c() * alp1.c() *
+                 hypot(t.k * bet1.c(), t.kp * omg1.c()));
       v0 = f.fbet().fwd(psi1.radians());
       u0 = f.fomg().fwd(eE * omg1.radians());
       delta = f.fbet()(v0) - f.fomg()(u0);
     } else if (gm.gam < 0) {
-      flip = signbit(omg1.c()) ? -1 : 1;
-      omg0 = omg1.cardinaldir(1);
-      alp0 = alp1.cardinaldir(1);
+      omg0 = omg1.cardinaldir(2U);
+      alp0 = alp1.cardinaldir(2U);
       // Need Angle(0, 0) to be treated like Angle(0, 1) here.
       psi1 = ang(t.kp * omg1.s(),
-                 flip * alp1.s() * hypot(t.k * bet1.c(), t.kp * omg1.c()));
+                 omg0.c() * alp1.s() *
+                 hypot(t.k * bet1.c(), t.kp * omg1.c()));
       v0 = f.fomg().fwd(psi1.radians());
       u0 = f.fbet().fwd(nN * bet1.radians());
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gm.gam == 0) {
-      alp0 = alp1.cardinaldir(t.umbalt ? 1 : -1);
+      alp0 = alp1.cardinaldir(t.umbalt ? 2U : 1U);
       // N.B. factor of k*kp omitted
       // bet0, omg0 are the middle of the initial umbilical segment
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps) {
-        bet0 = ang::cardinal(bet1.ncardinal(-1) + nN);
-        omg0 = ang::cardinal(omg1.ncardinal(-1) + eE);
+        bet0 = ang::cardinal(bet1.ncardinal(1U) + nN);
+        omg0 = ang::cardinal(omg1.ncardinal(1U) + eE);
         delta = f.deltashift/2 - log(fabs(alp1.t()));
       } else {
-        bet0 = bet1.cardinaldir(1);
-        omg0 = omg1.cardinaldir(1);
+        bet0 = bet1.cardinaldir(2U);
+        omg0 = omg1.cardinaldir(2U);
         delta = nN * f.fbet()(geod_fun::lamang(bet1 - bet0)) -
           eE * f.fomg()(geod_fun::lamang(omg1 - omg0));
       }
@@ -524,20 +523,20 @@ namespace GeographicLib {
     eE = signbit(alp1.s()) ? -1 : 1;
     nN = signbit(alp1.c()) ? -1 : 1;
     if (gam > 0) {
-      alp0 = alp1.cardinaldir(-1);
+      alp0 = alp1.cardinaldir(1U);
       psi1.reflect(false, nN != oN);
       v0 = f.fbet().fwd(psi1.radians());
       u0 *= eE/oE;
       delta = f.fbet()(v0) - f.fomg()(u0);
     } else if (gam < 0) {
-      alp0 = alp1.cardinaldir(1);
+      alp0 = alp1.cardinaldir(2U);
       psi1.reflect(false, eE != oE);
       v0 = f.fomg().fwd(psi1.radians());
       u0 *= nN/oN;
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gam == 0) {
-      // Don't expect to invoke setquadrant in this case
-      alp0 = alp1.cardinaldir(t.umbalt ? 1 : -1);
+      // Only expect to invoke setquadrant in this case
+      alp0 = alp1.cardinaldir(t.umbalt ? 2U : 1U);
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps)
         delta = f.deltashift/2 - log(fabs(alp1.t()));
       else

@@ -42,10 +42,8 @@ namespace GeographicLib {
       //   !umbalt: alp0 = cardinal(odd)
       //   umbalt: alp0 = cardinal(even)
         bet0, omg0, alp0;
-      real u0, v0,              // starting point in u,v space
-        delta;                   //  starting point for umbilic
-      int nN, eE,                  // Northgoing / eastgoing
-        flip;                    // Is bet or omg on the backside (non-umb)
+      real u0, v0, delta;              // starting point geodesic
+      int nN, eE;                  // Northgoing / eastgoing
       fics();
       fics(const TriaxialLineF& f,
            const Angle& bet1, const Angle& omg1, const Angle& alp1);

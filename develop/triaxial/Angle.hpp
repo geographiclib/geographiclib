@@ -67,11 +67,11 @@ namespace GeographicLib {
     real lam() const;
     static Angle NaN();
     static Angle cardinal(real q);
-    // dir == 0 => q has closest cardinal direction
-    // dir > 0 => q has closest N/S (even) direction
-    // dir < 0 => q has closest E/W (odd) direction
-    Angle cardinaldir(int dir = 0) const;
-    real ncardinal(int dir = 0) const;
+    // ind == 0 => q has closest cardinal direction
+    // ind even => q has closest even (N/S) cardinal direction
+    // ind odd  => q has closest odd  (E/W) cardinal direction
+    Angle cardinaldir(unsigned ind = 0U) const;
+    real ncardinal(unsigned ind = 0U) const;
     static Angle eps();
 
     // Angle operator+() const;

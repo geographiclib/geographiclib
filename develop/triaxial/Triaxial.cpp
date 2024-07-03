@@ -760,7 +760,7 @@ namespace GeographicLib {
       fic = TriaxialLineF::fics(lf, bet1, omg1, alpb);
       {
         unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
-        for (; qb <= 4U; ++qb, ++qa) {
+        for (; !done && qb <= 4U; ++qb, ++qa) {
           if (qb) {
             alpb.setquadrant(qb);
             fic.setquadrant(lf, qb);
@@ -770,6 +770,7 @@ namespace GeographicLib {
             if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
               alp1 = alpb;
               d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+              if (debug) cout << "accidental umbilic\n";
               done = true;
               break;
             }
@@ -778,9 +779,11 @@ namespace GeographicLib {
             break;
           }
         }
-        if (qb > 4U) std::cout << "ERROR\n";
-        fa = f[qa & 3U]; fb = f[qb & 3U];
-        alpa.setquadrant(qa & 3U);
+        if (!done) {
+          if (qb > 4U) std::cout << "ERROR\n";
+          fa = f[qa & 3U]; fb = f[qb & 3U];
+          alpa.setquadrant(qa & 3U);
+        }
       }
       if (debug) cout << "general\n";
     }
