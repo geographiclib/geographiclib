@@ -97,7 +97,7 @@ namespace GeographicLib {
     return Angle(s, c, round((q - iq) / 4));
   }
 
-  Angle Angle::cardinaldir(unsigned ind) const {
+  Angle Angle::nearest(unsigned ind) const {
     real s, c;
     if (ind == 0U) {
       if (fabs(_c) >= fabs(_s)) {
@@ -113,16 +113,10 @@ namespace GeographicLib {
     return Angle(s, c, _n, true);
   }
 
-  Math::real Angle::ncardinal(unsigned ind) const {
-    int iq;
-    if (ind == 0U)
-      iq = (signbit(_s) ? -1 : 1) * (signbit(_c) ?
-                                     ( -_c >= fabs(_s) ? 2 : 1 ) :
-                                     (  _c >= fabs(_s) ? 0 : 1 ));
-    else if ((ind & 1U) == 0U)  // ind nonzero and even
-      iq = signbit(_c) ? (signbit(_s) ? -2 : 2) : 0;
-    else                        // ind odd
-      iq = signbit(_s) ? -1 : 1;
+  Math::real Angle::ncardinal() const {
+    int iq = (signbit(_s) ? -1 : 1) * (signbit(_c) ?
+                                       ( -_c >= fabs(_s) ? 2 : 1 ) :
+                                       (  _c >= fabs(_s) ? 0 : 1 ));
     return 4 * _n + iq;
   }
 

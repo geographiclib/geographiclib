@@ -413,7 +413,7 @@ namespace GeographicLib {
         omg2a = ang::radians(fic.eE * parity * fomg().rev(v2))
           .rebase(fic.omg0);
         // umbalt definition of alp0
-        ang alp0x(fic.alp1.cardinaldir(2U));
+        ang alp0x(fic.alp1.nearest(2U));
         alp2a = ang(fic.nN * _t.kp * fic.eE * parity / cosh(v2),
                     _t.k / cosh(u2)).rebase(alp0x);
         ii = int(bet2n.second);
@@ -430,7 +430,7 @@ namespace GeographicLib {
         real bet2 = fic.nN * parity * fbet().rev(u2);
         bet2a = ang::radians(bet2);
         // !umbalt definition of alp0
-        ang alp0x(fic.alp1.cardinaldir(1U));
+        ang alp0x(fic.alp1.nearest(1U));
         alp2a = ang(fic.eE * _t.kp / cosh(v2),
                     _t.k * fic.nN * parity / cosh(u2)).rebase(alp0x);
         ii = int(omg2n.second);
@@ -475,8 +475,8 @@ namespace GeographicLib {
     eE = signbit(alp1.s()) ? -1 : 1;
     nN = signbit(alp1.c()) ? -1 : 1;
     if (gm.gam > 0) {
-      bet0 = bet1.cardinaldir(2U);
-      alp0 = alp1.cardinaldir(1U);
+      bet0 = bet1.nearest(2U);
+      alp0 = alp1.nearest(1U);
       psi1 = ang(t.k * bet1.s(),
                  bet0.c() * alp1.c() *
                  hypot(t.k * bet1.c(), t.kp * omg1.c()));
@@ -484,8 +484,8 @@ namespace GeographicLib {
       u0 = f.fomg().fwd(eE * omg1.radians());
       delta = f.fbet()(v0) - f.fomg()(u0);
     } else if (gm.gam < 0) {
-      omg0 = omg1.cardinaldir(2U);
-      alp0 = alp1.cardinaldir(2U);
+      omg0 = omg1.nearest(2U);
+      alp0 = alp1.nearest(2U);
       // Need Angle(0, 0) to be treated like Angle(0, 1) here.
       psi1 = ang(t.kp * omg1.s(),
                  omg0.c() * alp1.s() *
@@ -494,16 +494,16 @@ namespace GeographicLib {
       u0 = f.fbet().fwd(nN * bet1.radians());
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gm.gam == 0) {
-      alp0 = alp1.cardinaldir(t.umbalt ? 2U : 1U);
+      alp0 = alp1.nearest(t.umbalt ? 2U : 1U);
       // N.B. factor of k*kp omitted
       // bet0, omg0 are the middle of the initial umbilical segment
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps) {
-        bet0 = ang::cardinal(bet1.ncardinal(1U) + nN);
-        omg0 = ang::cardinal(omg1.ncardinal(1U) + eE);
+        bet0 = bet1.nearest(1U) + ang::cardinal(nN);
+        omg0 = omg1.nearest(1U) + ang::cardinal(eE);
         delta = f.deltashift/2 - log(fabs(alp1.t()));
       } else {
-        bet0 = bet1.cardinaldir(2U);
-        omg0 = omg1.cardinaldir(2U);
+        bet0 = bet1.nearest(2U);
+        omg0 = omg1.nearest(2U);
         delta = nN * f.fbet()(geod_fun::lamang(bet1 - bet0)) -
           eE * f.fomg()(geod_fun::lamang(omg1 - omg0));
       }
@@ -523,20 +523,20 @@ namespace GeographicLib {
     eE = signbit(alp1.s()) ? -1 : 1;
     nN = signbit(alp1.c()) ? -1 : 1;
     if (gam > 0) {
-      alp0 = alp1.cardinaldir(1U);
+      alp0 = alp1.nearest(1U);
       psi1.reflect(false, nN != oN);
       v0 = f.fbet().fwd(psi1.radians());
       u0 *= eE/oE;
       delta = f.fbet()(v0) - f.fomg()(u0);
     } else if (gam < 0) {
-      alp0 = alp1.cardinaldir(2U);
+      alp0 = alp1.nearest(2U);
       psi1.reflect(false, eE != oE);
       v0 = f.fomg().fwd(psi1.radians());
       u0 *= nN/oN;
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gam == 0) {
       // Only expect to invoke setquadrant in this case
-      alp0 = alp1.cardinaldir(t.umbalt ? 2U : 1U);
+      alp0 = alp1.nearest(t.umbalt ? 2U : 1U);
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps)
         delta = f.deltashift/2 - log(fabs(alp1.t()));
       else

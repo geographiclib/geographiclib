@@ -70,8 +70,8 @@ namespace GeographicLib {
     // ind == 0 => q has closest cardinal direction
     // ind even => q has closest even (N/S) cardinal direction
     // ind odd  => q has closest odd  (E/W) cardinal direction
-    Angle cardinaldir(unsigned ind = 0U) const;
-    real ncardinal(unsigned ind = 0U) const;
+    Angle nearest(unsigned ind = 0U) const;
+    real ncardinal() const;
     static Angle eps();
 
     // Angle operator+() const;
