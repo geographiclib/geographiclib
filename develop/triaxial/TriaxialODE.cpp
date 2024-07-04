@@ -22,9 +22,9 @@ namespace GeographicLib {
   TriaxialODE::TriaxialODE(const Triaxial& t,
                            const Triaxial::vec3& r1, const Triaxial::vec3& v1)
     : _t(t)
-    , _b(t.b)
-    , _axesn({t.a/t.b, real(1), t.c/t.b})
-    , _axes2n({Math::sq(t.a/t.b), real(1), Math::sq(t.c/t.b)})
+    , _b(t.b())
+    , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
+    , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
     , _r1(r1)
     , _v1(v1)
   {
@@ -34,9 +34,9 @@ namespace GeographicLib {
   TriaxialODE::TriaxialODE(const Triaxial& t, const ang& bet1,
                            const ang& omg1, const ang& alp1)
     : _t(t)
-    , _b(t.b)
-    , _axesn({t.a/t.b, real(1), t.c/t.b})
-    , _axes2n({Math::sq(t.a/t.b), real(1), Math::sq(t.c/t.b)})
+    , _b(t.b())
+    , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
+    , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
   {
     _t.elliptocart2(bet1, omg1, alp1, _r1, _v1);
   }
@@ -47,14 +47,14 @@ namespace GeographicLib {
   {}
 
   void TriaxialODE::Norm(vec6& y) const {
-    real ra = Triaxial::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
+    real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
     y[0] /= ra; y[1] /= ra; y[2] /= ra;
     vec3 up = {y[0] / _axes2n[0], y[1], y[2] / _axes2n[2]};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
       uv = up[0] * y[3+0] + up[1] * y[3+1] + up[2] * y[3+2],
       f = uv/u2;
     y[3+0] -= f * up[0]; y[3+1] -= f * up[1]; y[3+2] -= f * up[2];
-    f = Triaxial::hypot3(y[3+0], y[3+1], y[3+2]);
+    f = Math::hypot3(y[3+0], y[3+1], y[3+2]);
     y[3+0] /= f; y[3+1] /= f; y[3+2] /= f;
   }
 

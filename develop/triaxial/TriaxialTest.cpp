@@ -16,10 +16,10 @@ void ODEtest(Math::real a, Math::real b, Math::real c) {
     typedef Math::real real;
     typedef Triaxial::vec3 vec3;
     Triaxial t(a, b, c);
-    vec3 r1{t.axes[0] * t.kp, 0, t.axes[2] * t.k},
+    vec3 r1{t.axes()[0] * sqrt(t.kp2()), 0, t.axes()[2] * sqrt(t.k2())},
       v1{0,1,0};
-    real s12 = 4 * EllipticFunction::RG(Math::sq(t.axes[0]),
-                                        Math::sq(t.axes[2]));
+    real s12 = 4 * EllipticFunction::RG(Math::sq(t.axes()[0]),
+                                        Math::sq(t.axes()[2]));
     vec3 r2, v2;
     int kmax = Math::digits()-4;
     TriaxialODE direct(t, r1, v1);
@@ -30,7 +30,7 @@ void ODEtest(Math::real a, Math::real b, Math::real c) {
         cout << k << " " << n << " "
              << sqrt(Math::sq(r1[0]+r2[0]) +
                      Math::sq(r1[1]+r2[1]) +
-                     Math::sq(r1[2]+r2[2])) / t.b << endl;
+                     Math::sq(r1[2]+r2[2])) / t.b() << endl;
       }
     } else {
       int n = 0, imax = 1000;
@@ -81,7 +81,7 @@ void TriaxialTest0() {
 void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
   Triaxial t(a, b, c);
-  real k2 = t.k2, kp2 = t.kp2, e2 = t.e2;
+  real k2 = t.k2(), kp2 = t.kp2(), e2 = t.e2();
   if (0) {
     int num = 100, numk = int(round(num*k2)), numkp = num-numk;
     for (int k = -numkp; k <= numk; ++k) {
@@ -334,7 +334,7 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
   cout << a << " " << b << " " << c << "\n";
   real domg[4];
   ang alp1u[4];
-  alp1u[0] = ang(t.kp * omg1.s(), t.k * bet1.c());
+  alp1u[0] = ang(sqrt(t.kp2()) * omg1.s(), sqrt(t.k2()) * bet1.c());
   for (unsigned q = 1; q < 4; ++q) {
     alp1u[q] = alp1u[0];
     alp1u[q].setquadrant(q);
@@ -426,8 +426,8 @@ cartdiff(const Triaxial& t,
   t.elliptocart2(bet1, omg1, alp1, r1, v1);
   t.elliptocart2(bet2, omg2, alp2, r2, v2);
   return std::pair<Math::real, Math::real>
-    (Triaxial::hypot3(r2[0] - r1[0], r2[1] - r1[1], r2[2] - r1[2]),
-     Triaxial::hypot3(v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]));
+    (Math::hypot3(r2[0] - r1[0], r2[1] - r1[1], r2[2] - r1[2]),
+     Math::hypot3(v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]));
 }
 
 void InverseTest(Math::real a, Math::real b, Math::real c) {

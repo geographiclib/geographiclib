@@ -71,7 +71,7 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
 }
 
 Math::real vecdiff(const Triaxial::vec3& a, const Triaxial::vec3& b) {
-  return Triaxial::hypot3(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
+  return Math::hypot3(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
 }
 
 void errreport(const Triaxial& t,

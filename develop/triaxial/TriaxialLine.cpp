@@ -64,7 +64,7 @@ namespace GeographicLib {
                               int* countn, int* countb)
   const {
     // Compute points at distance s12
-    real sig2 = _gic.sig1 + s12/_t.b;
+    real sig2 = _gic.sig1 + s12/_t._b;
     real bet2, omg2;
     int Ex, Nx;
     if (_f.gamma() > 0) {
@@ -82,8 +82,8 @@ namespace GeographicLib {
       bet2a = ang(_f.gm().nup * psi2.s(),
                   _fic.bet0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
                   0, true).rebase(_fic.bet0);
-      alp2a = ang(_fic.eE * hypot(_t.k * _f.gm().nu, _t.kp * omg2a.c()),
-                  _fic.bet0.c() * _t.k * _f.gm().nup * psi2.c())
+      alp2a = ang(_fic.eE * hypot(_t._k * _f.gm().nu, _t._kp * omg2a.c()),
+                  _fic.bet0.c() * _t._k * _f.gm().nup * psi2.c())
         .rebase(_fic.alp0);
     } else if (_f.gamma() < 0) {
       real u2, v2;
@@ -102,8 +102,8 @@ namespace GeographicLib {
       omg2a = ang(_f.gm().nup * psi2.s(),
                   _fic.omg0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
                   0, true).rebase(_fic.omg0);
-      alp2a = ang(_fic.omg0.c() * _t.kp * _f.gm().nup * psi2.c(),
-                  _fic.nN * hypot(_t.kp * _f.gm().nu, _t.k * bet2a.c()))
+      alp2a = ang(_fic.omg0.c() * _t._kp * _f.gm().nup * psi2.c(),
+                  _fic.nN * hypot(_t._kp * _f.gm().nu, _t._k * bet2a.c()))
         .rebase(_fic.alp0);
     } else if (_f.gamma() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
@@ -112,20 +112,20 @@ namespace GeographicLib {
         ++sig2n.second;
       }
       real u2, v2,
-        deltax = Triaxial::clamp(_fic.delta + sig2n.second * _f.deltashift, 1);
+        deltax = clamp(_fic.delta + sig2n.second * _f.deltashift, 1);
       solve2u(deltax, sig2n.first, fbet(), fomg(), gbet(), gomg(), u2, v2,
               countn, countb);
       bet2 = fbet().rev(u2); omg2 = fomg().rev(v2);
       bet2a = ang::lam(u2); omg2a = ang::lam(v2);
       int parity = fmod(sig2n.second, real(2)) ? -1 : 1;
-      if (_t.umbalt) {
+      if (_t._umbalt) {
         Ex = _fic.eE * parity;
         omg2a = omg2a.flipsign(Ex).rebase(_fic.omg0);
         bet2a += ang::cardinal(2 * sig2n.second);
         bet2a = bet2a.flipsign(_fic.nN) + _fic.bet0;
         // replace cos(bet)/cos(omg) by sech(u)/sech(v)
-        alp2a = ang(_fic.nN * _t.kp * Ex / cosh(v2),
-                    _t.k / cosh(u2)).rebase(_fic.alp0);
+        alp2a = ang(_fic.nN * _t._kp * Ex / cosh(v2),
+                    _t._k / cosh(u2)).rebase(_fic.alp0);
       } else {
         Nx = _fic.nN * parity;
         omg2a += ang::cardinal(2 * sig2n.second);
@@ -133,8 +133,8 @@ namespace GeographicLib {
         bet2a = bet2a.reflect((_fic.bet0.c() * Nx) < 0, _fic.bet0.c() < 0)
           .rebase(_fic.bet0);
         // replace cos(bet)/cos(omg) by sech(u)/sech(v)
-        alp2a = ang(_fic.eE * _t.kp / cosh(v2),
-                    _t.k * Nx / cosh(u2)).rebase(_fic.alp0);
+        alp2a = ang(_fic.eE * _t._kp / cosh(v2),
+                    _t._k * Nx / cosh(u2)).rebase(_fic.alp0);
       }
     } else {
       // gamma = NaN
@@ -285,10 +285,10 @@ namespace GeographicLib {
     const {
     ang tau12;
     if (gamma() > 0) {
-      real spsi = _t.k * bet2.s(),
+      real spsi = _t._k * bet2.s(),
         // In evaluating equivalent expressions, choose the one
         // with minimum cancelation
-        cpsi = 0 + _t.k
+        cpsi = 0 + _t._k
         * sqrt(fmax(0,
                     gm().nu < fabs(bet2.s()) ?
                     (bet2.c() - gm().nu) * (bet2.c() + gm().nu) :
@@ -318,20 +318,20 @@ namespace GeographicLib {
                                real epspow, real nmaxmult)
     : _t(t)
     , _gm(gam)
-    , _fbet(_t.k2 , _t.kp2,  _t.e2, -_gm.gam, epspow, nmaxmult)
-    , _fomg(_t.kp2, _t.k2 , -_t.e2,  _gm.gam, epspow, nmaxmult)
+    , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gam, epspow, nmaxmult)
+    , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gam, epspow, nmaxmult)
     {
       _fbet.ComputeInverse();
       _fomg.ComputeInverse();
       df = _gm.gam == 0 ? _fbet.Max() - _fomg.Max() : 0;
-      deltashift = _gm.gam == 0 ? 2*df - log(t.k2/t.kp2) : 0;
+      deltashift = _gm.gam == 0 ? 2*df - log(_t._k2/_t._kp2) : 0;
     }
 
   TriaxialLineG::TriaxialLineG(const Triaxial& t, const Triaxial::gamblk& gam)
     : _t(t)
     , _gm(gam)
-    , _gbet(_t.k2 , _t.kp2,  _t.e2, -_gm.gam)
-    , _gomg(_t.kp2, _t.k2 , -_t.e2,  _gm.gam)
+    , _gbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gam)
+    , _gomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gam)
     , s0(_gm.gam == 0 ? _gbet.Max() + _gomg.Max() : 0)
   {}
 
@@ -370,8 +370,8 @@ namespace GeographicLib {
       bet2a = ang(gm().nup * psi2.s(),
                   fic.bet0.c() * hypot(psi2.c(), gm().nu * psi2.s()),
                   0, true).rebase(fic.bet0);
-      alp2a = ang(fic.eE * hypot(_t.k * gm().nu, _t.kp * omg2a.c()),
-                  fic.bet0.c() * _t.k * gm().nup * psi2.c()).rebase(fic.alp0);
+      alp2a = ang(fic.eE * hypot(_t._k * gm().nu, _t._kp * omg2a.c()),
+                  fic.bet0.c() * _t._k * gm().nup * psi2.c()).rebase(fic.alp0);
       ret.betw2 = v2;
       ret.omgw2 = u2;
     } else if (gamma() < 0) {
@@ -392,8 +392,8 @@ namespace GeographicLib {
       omg2a = ang(gm().nup * psi2.s(),
                   fic.omg0.c() * hypot(psi2.c(), gm().nu * psi2.s()),
                   0, true).rebase(fic.omg0);
-      alp2a = ang(fic.omg0.c() * _t.kp * gm().nup * psi2.c(),
-                  fic.nN * hypot(_t.kp * gm().nu, _t.k * bet2a.c()))
+      alp2a = ang(fic.omg0.c() * _t._kp * gm().nup * psi2.c(),
+                  fic.nN * hypot(_t._kp * gm().nu, _t._k * bet2a.c()))
         .rebase(fic.alp0);
       ret.betw2 = u2;
       ret.omgw2 = v2;
@@ -406,16 +406,16 @@ namespace GeographicLib {
           TriaxialLine::remx(fic.nN * (bet2a - fic.bet0).radians(),
                              Math::pi());
         int parity = fmod(bet2n.second, real(2)) ? -1 : 1;
-        real deltax = Triaxial::clamp(fic.delta + bet2n.second * deltashift,
-                                      2);
+        real deltax = TriaxialLine::clamp(fic.delta +
+                                          bet2n.second * deltashift, 2);
         u2 = fbet().fwd(bet2n.first);
         v2 = fomg().inv(fbet()(u2) - deltax);
         omg2a = ang::radians(fic.eE * parity * fomg().rev(v2))
           .rebase(fic.omg0);
         // umbalt definition of alp0
         ang alp0x(fic.alp1.nearest(2U));
-        alp2a = ang(fic.nN * _t.kp * fic.eE * parity / cosh(v2),
-                    _t.k / cosh(u2)).rebase(alp0x);
+        alp2a = ang(fic.nN * _t._kp * fic.eE * parity / cosh(v2),
+                    _t._k / cosh(u2)).rebase(alp0x);
         ii = int(bet2n.second);
       } else {
         omg2a = fic.omg1 + tau12.flipsign(fic.eE);
@@ -423,16 +423,16 @@ namespace GeographicLib {
           TriaxialLine::remx(fic.eE * (omg2a - fic.omg0).radians(),
                              Math::pi());
         int parity = fmod(omg2n.second, real(2)) ? -1 : 1;
-        real deltax = Triaxial::clamp(fic.delta + omg2n.second * deltashift,
-                                      2);
+        real deltax = TriaxialLine::clamp(fic.delta +
+                                          omg2n.second * deltashift, 2);
         v2 = fomg().fwd(omg2n.first);
         u2 = fbet().inv(fomg()(v2) + deltax);
         real bet2 = fic.nN * parity * fbet().rev(u2);
         bet2a = ang::radians(bet2);
         // !umbalt definition of alp0
         ang alp0x(fic.alp1.nearest(1U));
-        alp2a = ang(fic.eE * _t.kp / cosh(v2),
-                    _t.k * fic.nN * parity / cosh(u2)).rebase(alp0x);
+        alp2a = ang(fic.eE * _t._kp / cosh(v2),
+                    _t._k * fic.nN * parity / cosh(u2)).rebase(alp0x);
         ii = int(omg2n.second);
       }
       ret.betw2 = u2;
@@ -477,9 +477,9 @@ namespace GeographicLib {
     if (gm.gam > 0) {
       bet0 = bet1.nearest(2U);
       alp0 = alp1.nearest(1U);
-      psi1 = ang(t.k * bet1.s(),
+      psi1 = ang(t._k * bet1.s(),
                  bet0.c() * alp1.c() *
-                 hypot(t.k * bet1.c(), t.kp * omg1.c()));
+                 hypot(t._k * bet1.c(), t._kp * omg1.c()));
       v0 = f.fbet().fwd(psi1.radians());
       u0 = f.fomg().fwd(eE * omg1.radians());
       delta = f.fbet()(v0) - f.fomg()(u0);
@@ -487,14 +487,14 @@ namespace GeographicLib {
       omg0 = omg1.nearest(2U);
       alp0 = alp1.nearest(2U);
       // Need Angle(0, 0) to be treated like Angle(0, 1) here.
-      psi1 = ang(t.kp * omg1.s(),
+      psi1 = ang(t._kp * omg1.s(),
                  omg0.c() * alp1.s() *
-                 hypot(t.k * bet1.c(), t.kp * omg1.c()));
+                 hypot(t._k * bet1.c(), t._kp * omg1.c()));
       v0 = f.fomg().fwd(psi1.radians());
       u0 = f.fbet().fwd(nN * bet1.radians());
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gm.gam == 0) {
-      alp0 = alp1.nearest(t.umbalt ? 2U : 1U);
+      alp0 = alp1.nearest(t._umbalt ? 2U : 1U);
       // N.B. factor of k*kp omitted
       // bet0, omg0 are the middle of the initial umbilical segment
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps) {
@@ -504,8 +504,8 @@ namespace GeographicLib {
       } else {
         bet0 = bet1.nearest(2U);
         omg0 = omg1.nearest(2U);
-        delta = nN * f.fbet()(geod_fun::lamang(bet1 - bet0)) -
-          eE * f.fomg()(geod_fun::lamang(omg1 - omg0));
+        delta = nN * f.fbet()(TriaxialLine::lamang(bet1 - bet0)) -
+          eE * f.fomg()(TriaxialLine::lamang(omg1 - omg0));
       }
     } else {
       // gamma = NaN
@@ -536,12 +536,12 @@ namespace GeographicLib {
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gam == 0) {
       // Only expect to invoke setquadrant in this case
-      alp0 = alp1.nearest(t.umbalt ? 2U : 1U);
+      alp0 = alp1.nearest(t._umbalt ? 2U : 1U);
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps)
         delta = f.deltashift/2 - log(fabs(alp1.t()));
       else
-        delta = nN * f.fbet()(geod_fun::lamang(bet1 - bet0)) -
-          eE * f.fomg()(geod_fun::lamang(omg1 - omg0));
+        delta = nN * f.fbet()(TriaxialLine::lamang(bet1 - bet0)) -
+          eE * f.fomg()(TriaxialLine::lamang(omg1 - omg0));
     } else {
       // gamma = NaN
     }
@@ -559,8 +559,8 @@ namespace GeographicLib {
     } else if (g.gamma() < 0) {
       sig1 = g.gbet()(fic.u0) + g.gomg()(fic.v0);
     } else if (g.gamma() == 0) {
-      sig1 = fic.nN * g.gbet()(geod_fun::lamang(fic.bet1 - fic.bet0)) +
-          fic.eE * g.gomg()(geod_fun::lamang(fic.omg1 - fic.omg0));
+      sig1 = fic.nN * g.gbet()(TriaxialLine::lamang(fic.bet1 - fic.bet0)) +
+          fic.eE * g.gomg()(TriaxialLine::lamang(fic.omg1 - fic.omg0));
     } else {
       // gamma = NaN
     }
@@ -568,6 +568,275 @@ namespace GeographicLib {
 
   Math::real TriaxialLineG::dist(gics ic, TriaxialLineF::disttx d) const {
     real sig2 = gbet()(d.betw2) + gomg()(d.omgw2) + d.ind2 * 2*s0;
-    return (sig2 - ic.sig1) * t().b;
+    return (sig2 - ic.sig1) * t()._b;
   }
+
+  geod_fun::geod_fun(real kap, real kapp, real eps, real mu,
+                     real epspow, real nmaxmult)
+    : geod_fun(kap, kapp, eps, mu,
+               (mu > 0 ? mu / (kap + mu) :
+                (mu < 0 ? -mu / kap :
+                 kapp)) < TriaxialLine::EllipticThresh(), epspow, nmaxmult)
+  {}
+
+  geod_fun::geod_fun(real kap, real kapp, real eps, real mu, bool tx,
+                     real epspow, real nmaxmult)
+    : _kap(kap)
+    , _kapp(kapp)
+    , _eps(eps)
+    , _mu(mu)
+    , _tx(tx)
+    , _tol(pow(numeric_limits<real>::epsilon(), epspow))
+    , _invp(false)
+  {
+    real k2 = 0, kp2 = 1;
+    if (_tx) {
+      k2 = _mu > 0 ? _kap / (_kap + _mu) :
+        (_mu < 0 ? (_kap + _mu) / _kap :
+         _kap);                    // _mu == 0
+      kp2 = _mu > 0 ? _mu / (_kap + _mu) :
+        (_mu < 0 ? -_mu / _kap :
+         _kapp);                // _mu == 0
+    }
+    _ell = EllipticFunction(k2, 0, kp2, 1);
+    if (_mu > 0) {
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
+                    eps = _eps, mu = _mu, ell = _ell]
+                   (real u) -> real
+                   { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                     return fup(cn, kap, kapp, eps, mu); },
+                   _ell.K(), false, epspow, nmaxmult) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   (real phi) -> real
+                   { return fphip(cos(phi), kap, kapp, eps, mu); },
+                   Math::pi()/2, false, epspow, nmaxmult);
+    } else if (_mu < 0) {
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
+                    eps = _eps, mu = _mu, ell = _ell]
+                   (real v) -> real
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                     return fvp(dn, kap, kapp, eps, mu); },
+                   _ell.K(), false, epspow, nmaxmult) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   (real psi) -> real
+                   { return fpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
+                   Math::pi()/2);
+    } else {                    // _mu == 0
+      // N.B. Don't compute the inverse of _fun so not really necessary to
+      // supply epspow and nmaxmult args to TrigfunExt.
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
+                    eps = _eps, ell = _ell]
+                   (real v) -> real
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                     return dfvp(cn, dn, kap, kapp, eps); },
+                   2 * _ell.K(), true, epspow, nmaxmult) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps]
+                   (real phi) -> real
+                   { return dfp(cos(phi), kap, kapp, eps); },
+                   Math::pi(), true, epspow, nmaxmult);
+    }
+    _nmax = nmaxmult ? int(ceil(nmaxmult * _fun.NCoeffs())) : 1 << 16;
+    _max = _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
+      _fun.Max();
+  }
+
+  void geod_fun::ComputeInverse() {
+    if (!_invp) {
+      if (_mu == 0) {
+        _chiinv = _tx ?
+          // chi maps [-1,1]*K -> [-1,1]*pi/2
+          // dchi/dx = sech(lam(am(x)) - dfv(x)) *
+          //           (sec(am(x)) * dn(x) - dfvp(x))
+          // cosh(lam(am(x))) = 1/cn, sinh(lam(am(x))) = sn/cn
+          // cosh(lam(x) - dfv(x))
+          //  = cosh(lam(am(x))) * cosh(dfv(x)) -
+          //    sinh(lam(am(x))) * sinh(dfv(x))
+          //  = 1/cn * cosh(dfv(x)) - sn/cn * sinh(dfv(x))
+          //  = 1/cn * (cosh(dfv(x)) - sn * sinh(dfv(x)))
+          // (sec(am(x)) * dn - dfvp(x)) = 1/cn * (dn - cn * dfvp(x))
+          // dchi/dx = (dn - cn * dfvp(x)) /
+          //           (cosh(dfv(x)) - sn * sinh(dfv(x)))
+          Trigfun::InverseInit(
+                               [fun = _fun, ell = _ell]
+                               (real x) -> pair<real, real>
+                               { real sn, cn, dn, f = fun(x);
+                                 (void) ell.am(x, sn, cn, dn);
+                                 return pair<real,real>
+                                   ( gd(lam(ell.am(x)) - f),
+                                     (dn - cn * fun.deriv(x)) /
+                                     (cosh(f) - sn * sinh(f)) ); },
+                               _ell.K(), Math::pi()/2,
+                               -Math::pi()/2, Math::pi()/2, &_countn, &_countb,
+                               _tol, _nmax) :
+          // chi maps [-1,1]*pi/2 -> [-1,1]*pi/2
+          // dchi/dx = sech(lam(x) - df(x)) * (sec(x) - dfp(x))
+          // cosh(lam(x)) = sec(x), sinh(lam(x)) = tan(x)
+          // cosh(lam(x) - df(x))
+          //  = cosh(lam(x)) * cosh(df(x)) - sinh(lam(x)) * sinh(df(x))
+          //  = sec(x) * cosh(df(x)) - tan(x) * sinh(df(x))
+          //  = sec(x) * (cosh(df(x)) - sin(x) * sinh(df(x)))
+          // (sec(x) - dfp(x)) = sec(x) * (1 - cos(x) * dfp(x))
+          // dchi/dx = (1 - cos(x) * dfp(x)) /
+          //           (cosh(df(x)) - sin(x) * sinh(df(x)))
+          Trigfun::InverseInit(
+                               [fun = _fun]
+                               (real x) -> pair<real, real>
+                               { real f = fun(x);
+                                 return pair<real, real>
+                                   ( gd(lam(x) - f),
+                                     (1 - cos(x) * fun.deriv(x)) /
+                                     (cosh(f) - sin(x) * sinh(f)) ); },
+                               Math::pi()/2, Math::pi()/2,
+                               -Math::pi()/2, Math::pi()/2, &_countn, &_countb,
+                               _tol, _nmax);
+      }
+      else
+        _fun.ComputeInverse();
+    }
+    _invp = true;
+  }
+
+  Math::real geod_fun::root(real z, real x0, int* countn, int* countb) const {
+    if (_mu != 0) return Math::NaN();
+    if (!isfinite(z)) return z; // Deals with +/-inf and nan
+    real d = Max()
+      + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
+      xa = z - d,
+      xb = z + d;
+    x0 = fmin(xb, fmax(xa, x0));
+    // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
+    // N.B. use default tol for root, because we want accurate answers here
+
+    return _tx ?
+      Trigfun::root(
+                    [fun = _fun, ell = _ell]
+                    (real u) -> pair<real, real>
+                    { real phi = gd(u), sch = 1/cosh(u);
+                      return pair<real, real>
+                        (u - fun(ell.F(phi)),
+                         1 - fun.deriv(ell.F(phi)) * sch /
+                         sqrt(ell.kp2() + ell.k2() * Math::sq(sch))); },
+                    z,
+                    x0, xa, xb,
+                    Math::pi()/2, Math::pi()/2, 1, countn, countb) :
+      Trigfun::root(
+                    [fun = _fun]
+                    (real u) -> pair<real, real>
+                    { real phi = gd(u), sch = 1/cosh(u);
+                      return pair<real, real>
+                        (u - fun(phi),
+                         1 - fun.deriv(phi) * sch); },
+                    z,
+                    x0, xa, xb,
+                    Math::pi()/2, Math::pi()/2, 1, countn, countb);
+  }
+  // Approximate inverse using _chiinv or _fun.inv0
+  Math::real geod_fun::inv0(real z) const {
+    if (!_invp) return Math::NaN();
+    return _mu == 0 ? _fun(_chiinv(gd(z))) : _fun.inv0(z);
+  }
+  // Accurate inverse by direct Newton (not using _finv)
+  Math::real geod_fun::inv1(real z, int* countn, int* countb) const {
+    return _mu == 0 ? root(z, z, countn, countb) :
+      _fun.inv1(z, countn, countb);
+  }
+  // Accurate inverse correcting result from _finv
+  Math::real geod_fun::inv(real z, int* countn, int* countb) const {
+    if (!_invp) return Math::NaN();
+    return _mu == 0 ? root(z, inv0(z), countn, countb) :
+      _fun.inv(z, countn, countb);
+  }
+
+  dist_fun::dist_fun(real kap, real kapp, real eps, real mu)
+    : dist_fun(kap, kapp, eps, mu,
+               (mu > 0 ? mu / (kap + mu) :
+                (mu < 0 ? -mu / kap :
+                 kapp)) < TriaxialLine::EllipticThresh())
+  {}
+
+  dist_fun::dist_fun(real kap, real kapp, real eps, real mu, bool tx)
+    : _kap(kap)
+    , _kapp(kapp)
+    , _eps(eps)
+    , _mu(mu)
+    , _tx(tx)
+  {
+    real k2 = 0, kp2 = 1;
+    if (_tx) {
+      k2 = _mu > 0 ? _kap / (_kap + _mu) :
+        (_mu < 0 ? (_kap + _mu) / _kap :
+         _kap);                    // _mu == 0
+      kp2 = _mu > 0 ? _mu / (_kap + _mu) :
+        (_mu < 0 ? -_mu / _kap :
+         _kapp);                // _mu == 0
+    }
+    _ell = EllipticFunction(k2, 0, kp2, 1);
+    if (_mu > 0) {
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
+                    eps = _eps, mu = _mu, ell = _ell]
+                   (real u) -> real
+                   { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                     return gup(cn, dn, kap, kapp, eps, mu); },
+                   _ell.K()) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   (real phi) -> real
+                   { return gphip(cos(phi), kap, kapp, eps, mu); },
+                   Math::pi()/2);
+    } else if (_mu < 0) {
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp,
+                    eps = _eps, mu = _mu, ell = _ell]
+                   (real v) -> real
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                     return gvp(cn, dn, kap, kapp, eps, mu); },
+                   _ell.K()) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                   (real psi) -> real
+                   { return gpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
+                   Math::pi()/2);
+    } else {                    // _mu == 0
+      _fun = _tx ?
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
+                   (real v) -> real
+                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                     return g0vp(cn, kap, kapp, eps); },
+                   2*_ell.K(), true) :
+        TrigfunExt(
+                   [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
+                   (real phi) -> real
+                   { return g0p(cos(phi), kap, kapp, eps); },
+                   Math::pi(), true);
+    }
+    _max = _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
+      _fun.Max();
+  }
+
+  Math::real dist_fun::gfderiv(real u) const {
+    real sn = 0, cn = 0, dn = 0;
+    if (_mu != 0 && _tx)
+      (void) _ell.am(u, sn, cn, dn);
+    if (_mu > 0)
+      return _tx ? gfup(cn, _kap, _mu) : gfphip(cos(u), _kap, _mu);
+    else if (_mu < 0)
+      return _tx ? gfvp(cn, _kap, _mu) : gfpsip(cos(u), _kap, _mu);
+    else                      // _mu == 0
+      return gf0up(u, _kap, _kapp);
+  }
+
+
 } // namespace GeographicLib
