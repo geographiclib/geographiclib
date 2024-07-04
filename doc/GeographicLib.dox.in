@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2023-mm-dd
+\date 2024-mm-dd
 
 \section abstract Abstract
 
@@ -7516,7 +7516,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.4</a>
-   (released 2023-mm-dd)
+   (released 2024-mm-dd)
    - Internal code change: stop using reserved identifiers (\e _N in the
      DST class and \e _R in the Intersect class).
    - Stop requiring that `CMAKE_CROSSCOMPILING` match with
@@ -7538,6 +7538,7 @@ git repository for GeographicLib</a>.
        shared libraries.
    - Math::sind, Math:sincosd, etc., now return accurate results for
      arguments = 30&deg;, 45&deg;, 60&deg;, &hellip;.
+   - Add Math::hypot3.
    - TODO: document use of CMake's FetchContent and
      GeographicLib::GeographicLib as target name.  See
      https://github.com/geographiclib/geographiclib/issues/23

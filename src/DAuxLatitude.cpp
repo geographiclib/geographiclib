@@ -92,7 +92,8 @@ namespace GeographicLib {
     bool flip = base::_f < 0;
     // Switch prolate to oblate; we then can use the formulas for k2 < 0
     if (flip) {
-      swap(Xn.x(), Xn.y()); swap(Yn.x(), Yn.y());
+      swap(Xn.x(), Xn.y());
+      swap(Yn.x(), Yn.y());
       k2 = base::_e2;
     }
     real x = Xn.radians(), y = Yn.radians(), d = y - x,

@@ -263,6 +263,14 @@ namespace GeographicLib {
     return tau;
   }
 
+  template<typename T> T Math::hypot3(T x, T y, T z) {
+#if __cplusplus < 201703L || GEOGRAPHICLIB_PRECISION == 4
+    return sqrt(x*x + y*y + z*z);
+#else
+    return hypot(x, y, z);
+#endif
+  }
+
   template<typename T> T Math::NaN() {
 #if defined(_MSC_VER)
     return numeric_limits<T>::has_quiet_NaN ?
@@ -304,6 +312,7 @@ namespace GeographicLib {
   template T    GEOGRAPHICLIB_EXPORT Math::eatanhe      <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::taupf        <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::tauf         <T>(T, T);         \
+  template T    GEOGRAPHICLIB_EXPORT Math::hypot3       <T>(T, T, T);      \
   template T    GEOGRAPHICLIB_EXPORT Math::NaN          <T>();             \
   template T    GEOGRAPHICLIB_EXPORT Math::infinity     <T>();
 

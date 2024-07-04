@@ -501,6 +501,18 @@ namespace GeographicLib {
     template<typename T> static T tauf(T taup, T es);
 
     /**
+     * Implement hypot with 3 parameters
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup> +
+     *   <i>z</i><sup>2</sup>).
+     **********************************************************************/
+    template<typename T> static T hypot3(T x, T y, T z);
+
+    /**
      * The NaN (not a number)
      *
      * @tparam T the type of the returned value.
