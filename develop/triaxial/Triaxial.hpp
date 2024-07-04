@@ -28,9 +28,6 @@ namespace GeographicLib {
     typedef std::array<Math::real, 3> vec3;
   private:
     friend class TriaxialLine;
-    friend class fline;
-    friend class gline;
-    friend class ffun;
     typedef Math::real real;
     typedef Angle ang;
     static void normvec(vec3& r) {
@@ -52,10 +49,10 @@ namespace GeographicLib {
                              Angle xa,  Angle xb,
                              Math::real fa, Math::real fb,
                              int* countn = nullptr, int* countb = nullptr);
-    real _a, _b, _c;               // semi-axes
+    real _a, _b, _c;            // semi-axes
     vec3 _axes;
     real _e2, _k2, _kp2, _k, _kp;
-    bool _umbalt;                // how coordinates wrap with umbilical lines
+    bool _umbalt;               // how coordinates wrap with umbilical lines
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
