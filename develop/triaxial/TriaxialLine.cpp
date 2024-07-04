@@ -25,9 +25,9 @@ namespace GeographicLib {
 
   TriaxialLine::TriaxialLine(const Triaxial& t,
                              Angle bet1, Angle omg1, Angle alp1) {
-    bet1.rnd();
-    omg1.rnd();
-    alp1.rnd();
+    bet1.round();
+    omg1.round();
+    alp1.round();
     _t = t;
     Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
     _f = fline(t, gam, 0.5, 1.5);
@@ -139,9 +139,9 @@ namespace GeographicLib {
     } else {
       // gamma = NaN
     }
-    bet2a.rnd();
-    omg2a.rnd();
-    alp2a.rnd();
+    bet2a.round();
+    omg2a.round();
+    alp2a.round();
     omg2a += ang::cardinal(1);
   }
 
@@ -444,20 +444,6 @@ namespace GeographicLib {
     return ret;
   }
 
-  fline::fics::fics()
-    : bet1(ang::NaN())
-    , omg1(ang::NaN())
-    , alp1(ang::NaN())
-    , bet0(0)
-    , omg0(0)
-    , alp0(0)
-    , u0(Math::NaN())
-    , v0(Math::NaN())
-    , delta(Math::NaN())
-    , nN(0)
-    , eE(0)
-  {}
-
   fline::fics::fics(const fline& f,
                     const Angle& bet10, const Angle& omg10, const Angle& alp10)
     : bet1(bet10)
@@ -544,10 +530,6 @@ namespace GeographicLib {
       // gamma = NaN
     }
   }
-
-  gline::gics::gics()
-    : sig1(Math::NaN())
-  {}
 
   gline::gics::gics(const gline& g, const fline::fics& fic)
   {
@@ -753,6 +735,41 @@ namespace GeographicLib {
       _fun.inv(z, countn, countb);
   }
 
+  // mu > 0
+  Math::real ffun::fphip(real c, real kap, real kapp, real eps, real mu) {
+    real c2 = kap * Math::sq(c);
+    return sqrt( (1 - eps * c2) / (( kapp + c2) * (c2 + mu)) );
+  }
+  Math::real ffun::fup(real cn, real kap, real kapp, real eps, real mu) {
+    real c2 = kap * Math::sq(cn);
+    return sqrt( (1 - eps * c2) / (( kapp + c2) * (kap + mu)) );
+  }
+  // mu == 0
+  Math::real ffun::dfp(real c, real kap, real kapp, real eps) {
+    // function dfp = dfpf(phi, kappa, epsilon)
+    // return derivative of Delta f
+    // s = sqrt(1 - kap * sin(phi)^2)
+    real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
+    return (1 + eps*kapp) * kap * c / (s * (sqrt(kapp * (1 - eps*c2)) + s));
+  }
+  Math::real ffun::dfvp(real cn, real dn, real kap, real kapp, real eps) {
+    // function dfvp = dfvpf(v, kap, eps)
+    // return derivative of Delta f_v
+    return (1 + eps*kapp) * kap *
+      (cn / (sqrt(kapp * (1 - (eps*kap) * Math::sq(cn))) + dn));
+  }
+  // mu < 0
+  Math::real ffun::fpsip(real s, real c, real kap, real kapp,
+                         real eps, real mu) {
+    real c2 = kap * Math::sq(c) - mu * Math::sq(s);
+    return sqrt( (1 - eps * c2) / (( kapp + c2) * c2) ) ;
+  }
+  Math::real ffun::fvp(real dn, real kap, real kapp,
+                       real eps, real /* mu */) {
+    real c2 = kap * Math::sq(dn);
+    return sqrt( (1 - eps * c2) / ((kapp + c2) * kap) );
+  }
+
   gfun::gfun(real kap, real kapp, real eps, real mu)
     : gfun(kap, kapp, eps, mu,
                (mu > 0 ? mu / (kap + mu) :
@@ -835,5 +852,65 @@ namespace GeographicLib {
       return gf0up(u, _kap, _kapp);
   }
 
+  // _mu > 0
+  Math::real gfun::gphip(real c, real kap, real kapp, real eps, real mu) {
+    real c2 = kap * Math::sq(c);
+    return sqrt((c2 + mu) * (1 - eps * c2) / ( kapp + c2) );
+  }
+  Math::real gfun::gfphip(real c, real kap, real mu) {
+    real c2 = kap * Math::sq(c);
+    return c2 + mu;
+  }
+  Math::real gfun::gup(real cn, real dn, real kap, real kapp,
+                       real eps, real mu) {
+    real c2 = kap * Math::sq(cn);
+    return sqrt( (kap + mu) * (1 - eps * c2) / ( kapp + c2) ) * Math::sq(dn);
+  }
+  Math::real gfun::gfup(real cn, real kap, real mu) {
+    real c2 = kap * Math::sq(cn);
+    return c2 + mu;           // or (kap + mu) * Math::sq(dn);
+  }
+  // _mu == 0
+  Math::real gfun::g0p(real c, real kap, real kapp, real eps) {
+    real c2 = kap * Math::sq(c);
+    return sqrt( kap * (1 - eps * c2) / ( kapp + c2) ) * c;
+  }
+  /*
+    Math::real gfun::gf0p(real c, real kap, real kapp) {
+    real c2 = sqrt(kap * kapp) * kap * Math::sq(c);
+    return c2;
+    }
+  */
+  Math::real gfun::gf0up(real u, real kap, real kapp) {
+    // Adjust by sqrt(kap * kappp) to account of factor removed from f
+    // functions.
+    real c2 = sqrt(kap / kapp) / Math::sq(cosh(u));
+    return c2;
+  }
+  Math::real gfun::g0vp(real cn, real kap, real /*kapp*/, real eps) {
+    real c2 = kap * Math::sq(cn);
+    return sqrt( kap * (1 - eps * c2) ) * cn;
+  }
+  // _mu < 0
+  Math::real gfun::gpsip(real s, real c, real kap, real kapp,
+                         real eps, real mu) {
+    // kap * cos(phi)^2
+    real c2 = kap * Math::sq(c) - mu * Math::sq(s);
+    return (kap + mu) *
+      sqrt( (1 - eps * c2) / (( kapp + c2) * c2) ) * Math::sq(c);
+  }
+  Math::real gfun::gfpsip(real c, real kap, real mu) {
+    return (kap + mu) * Math::sq(c);
+  }
+  Math::real gfun::gvp(real cn, real dn, real kap, real kapp,
+                       real eps, real mu) {
+    real c2 = kap * Math::sq(dn);
+    return (kap + mu) *
+      sqrt( (1 - eps * c2) / (kap * (kapp + c2))) * Math::sq(cn);
+  }
+  Math::real gfun::gfvp(real cn, real kap, real mu) {
+    // alternatively mu + kap * Math::sq(dn)
+    return (kap + mu) * Math::sq(cn);
+  }
 
 } // namespace GeographicLib

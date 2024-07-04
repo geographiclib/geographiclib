@@ -82,8 +82,7 @@ namespace GeographicLib {
     Angle operator-(const Angle& p) const;
     bool zerop(real mult = 0) const;
     bool operator==(const Angle& p) const;
-    Angle& rnd();
-    Angle rnded() const;
+    Angle& round();
     Angle base() const;
     Angle rebase(const Angle& c) const;
     Angle& renormalize();
@@ -100,8 +99,8 @@ namespace GeographicLib {
     , _n(num)
   {
     using std::isfinite; using std::isnan; using std::isinf;
-    using std::hypot; using std::copysign; using std::round;
-    _n = round(_n);
+    using std::hypot; using std::copysign; using std::rint;
+    _n = rint(_n);
     if (!normp) {
       real h = hypot(_s, _c);
       if (h == 0) {
@@ -123,9 +122,9 @@ namespace GeographicLib {
   }
 
   inline Angle::Angle(Math::real deg) {
-    using std::round;
+    using std::rint;
     Math::sincosd(deg, _s, _c);
-    _n = round( (deg - Math::atan2d(_s, _c)) / Math::td );
+    _n = rint( (deg - Math::atan2d(_s, _c)) / Math::td );
   }
 
   inline Angle::operator Math::real() const {
@@ -133,9 +132,9 @@ namespace GeographicLib {
   }
 
   inline Angle Angle::radians(Math::real rad) {
-    using std::sin; using std::cos; using std::atan2; using std::round;
+    using std::sin; using std::cos; using std::atan2; using std::rint;
     real sn = sin(rad), cs = cos(rad);
-    return Angle(sn, cs, round( (rad - atan2(sn, cs)) / (2 * Math::pi()) ),
+    return Angle(sn, cs, rint( (rad - atan2(sn, cs)) / (2 * Math::pi()) ),
                  true);
   }
 
@@ -180,14 +179,14 @@ namespace GeographicLib {
   }
 
   inline Angle& Angle::operator+=(const Angle& p) {
-    using std::round;
+    using std::rint;
     real q = ncardinal() + p.ncardinal();
     real c = _c * p._c - _s * p._s;
     _s = _s * p._c + _c * p._s;
     _c = c;
     _n += p._n;
     q -= ncardinal();
-    _n += round(q / 4);
+    _n += rint(q / 4);
     return *this;
   }
 
@@ -216,14 +215,9 @@ namespace GeographicLib {
     return t.zerop();
   }
 
-  inline Angle& Angle::rnd() {
+  inline Angle& Angle::round() {
     _s = rnd(_s); _c = rnd(_c);
     return *this;
-  }
-
-  inline Angle Angle::rnded() const {
-    Angle t = *this;
-    return t.rnd();
   }
 
   inline Angle Angle::base() const {
@@ -241,8 +235,8 @@ namespace GeographicLib {
   }
 
   inline Angle& Angle::setn(Math::real n) {
-    using std::round;
-    _n = round(n);
+    using std::rint;
+    _n = rint(n);
     return *this;
   }
 
@@ -271,9 +265,9 @@ namespace GeographicLib {
   }
 
   inline Angle Angle::cardinal(real q) {
-    using std::isfinite; using std::round; using std::remainder;
+    using std::isfinite; using std::rint; using std::remainder;
     if (!isfinite(q)) return Angle::NaN();
-    q = round(q);
+    q = rint(q);
     int iq = int(remainder(q, real(4)));
     // iq is in [-2, 2];
     // We could fold iq = -2 to iq = 2; but this way work too.
@@ -285,7 +279,7 @@ namespace GeographicLib {
     case  2: s =  z; c = -1; break;
     default: s =  z; c =  1; break; // iq = 0
     }
-    return Angle(s, c, round((q - iq) / 4));
+    return Angle(s, c, rint((q - iq) / 4));
   }
 
   inline Angle Angle::nearest(unsigned ind) const {

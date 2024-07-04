@@ -228,10 +228,10 @@ namespace GeographicLib {
                                  Angle bet2, Angle omg2)
     const {
     bool debug = false;
-    bet1.rnd();
-    omg1.rnd();
-    bet2.rnd();
-    omg2.rnd();
+    bet1.round();
+    omg1.round();
+    bet2.round();
+    omg2.round();
     bool flip1 = AngNorm(bet1, omg1);
     (void) AngNorm(bet2, omg2);
     bool umb1 = bet1.c() == 0 && omg1.s() == 0,

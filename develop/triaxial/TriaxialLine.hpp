@@ -18,7 +18,6 @@
 
 namespace GeographicLib {
 
-
   class GEOGRAPHICLIB_EXPORT ffun {
   private:
     typedef Math::real real;
@@ -34,43 +33,14 @@ namespace GeographicLib {
     real _max;
     bool _invp;
     // mu > 0
-    static real fphip(real c, real kap, real kapp, real eps, real mu) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(c);
-      return sqrt( (1 - eps * c2) / (( kapp + c2) * (c2 + mu)) );
-    }
-    static real fup(real cn, real kap, real kapp, real eps, real mu) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(cn);
-      return sqrt( (1 - eps * c2) / (( kapp + c2) * (kap + mu)) );
-    }
+    static real fphip(real c, real kap, real kapp, real eps, real mu);
+    static real fup(real cn, real kap, real kapp, real eps, real mu);
     // mu == 0
-    static real dfp(real c, real kap, real kapp, real eps) {
-      // function dfp = dfpf(phi, kappa, epsilon)
-      // return derivative of Delta f
-      using std::sqrt;
-      // s = sqrt(1 - kap * sin(phi)^2)
-      real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
-      return (1 + eps*kapp) * kap * c / (s * (sqrt(kapp * (1 - eps*c2)) + s));
-    }
-    static real dfvp(real cn, real dn, real kap, real kapp, real eps) {
-      // function dfvp = dfvpf(v, kap, eps)
-      // return derivative of Delta f_v
-      using std::sqrt;
-      return (1 + eps*kapp) * kap *
-        (cn / (sqrt(kapp * (1 - (eps*kap) * Math::sq(cn))) + dn));
-    }
+    static real dfp(real c, real kap, real kapp, real eps);
+    static real dfvp(real cn, real dn, real kap, real kapp, real eps);
     // mu < 0
-    static real fpsip(real s, real c, real kap, real kapp, real eps, real mu) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(c) - mu * Math::sq(s);
-      return sqrt( (1 - eps * c2) / (( kapp + c2) * c2) ) ;
-    }
-    static real fvp(real dn, real kap, real kapp, real eps, real /* mu */) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(dn);
-      return sqrt( (1 - eps * c2) / ((kapp + c2) * kap) );
-    }
+    static real fpsip(real s, real c, real kap, real kapp, real eps, real mu);
+    static real fvp(real dn, real kap, real kapp, real eps, real /* mu */);
     real root(real z, real x0, int* countn, int* countb) const;
   public:
     ffun() {}
@@ -148,70 +118,20 @@ namespace GeographicLib {
     TrigfunExt _fun;
     real _max;
     // _mu > 0
-    static real gphip(real c, real kap, real kapp, real eps, real mu) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(c);
-      return sqrt((c2 + mu) * (1 - eps * c2) / ( kapp + c2) );
-    }
-    static real gfphip(real c, real kap, real mu) {
-      real c2 = kap * Math::sq(c);
-      return c2 + mu;
-    }
-    static real gup(real cn, real dn, real kap, real kapp, real eps, real mu) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(cn);
-      return sqrt( (kap + mu) * (1 - eps * c2) / ( kapp + c2) ) * Math::sq(dn);
-    }
-    static real gfup(real cn, real kap, real mu) {
-      real c2 = kap * Math::sq(cn);
-      return c2 + mu;           // or (kap + mu) * Math::sq(dn);
-    }
+    static real gphip(real c, real kap, real kapp, real eps, real mu);
+    static real gfphip(real c, real kap, real mu);
+    static real gup(real cn, real dn, real kap, real kapp, real eps, real mu);
+    static real gfup(real cn, real kap, real mu);
     // _mu == 0
-    static real g0p(real c, real kap, real kapp, real eps) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(c);
-      return sqrt( kap * (1 - eps * c2) / ( kapp + c2) ) * c;
-    }
-    /*
-      static real gf0p(real c, real kap, real kapp) {
-      using std::sqrt;
-      real c2 = sqrt(kap * kapp) * kap * Math::sq(c);
-      return c2;
-      }
-    */
-    static real gf0up(real u, real kap, real kapp) {
-      using std::cosh; using std::sqrt;
-      // Adjust by sqrt(kap * kappp) to account of factor removed from f
-      // functions.
-      real c2 = sqrt(kap / kapp) / Math::sq(cosh(u));
-      return c2;
-    }
-    static real g0vp(real cn, real kap, real /*kapp*/, real eps) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(cn);
-      return sqrt( kap * (1 - eps * c2) ) * cn;
-    }
+    static real g0p(real c, real kap, real kapp, real eps);
+    // static real gf0p(real c, real kap, real kapp);
+    static real gf0up(real u, real kap, real kapp);
+    static real g0vp(real cn, real kap, real /*kapp*/, real eps);
     // _mu < 0
-    static real gpsip(real s, real c, real kap, real kapp, real eps, real mu) {
-      using std::sqrt;
-      // kap * cos(phi)^2
-      real c2 = kap * Math::sq(c) - mu * Math::sq(s);
-      return (kap + mu) *
-        sqrt( (1 - eps * c2) / (( kapp + c2) * c2) ) * Math::sq(c);
-    }
-    static real gfpsip(real c, real kap, real mu) {
-      return (kap + mu) * Math::sq(c);
-    }
-    static real gvp(real cn, real dn, real kap, real kapp, real eps, real mu) {
-      using std::sqrt;
-      real c2 = kap * Math::sq(dn);
-      return (kap + mu) *
-        sqrt( (1 - eps * c2) / (kap * (kapp + c2))) * Math::sq(cn);
-    }
-    static real gfvp(real cn, real kap, real mu) {
-      // alternatively mu + kap * Math::sq(dn)
-      return (kap + mu) * Math::sq(cn);
-    }
+    static real gpsip(real s, real c, real kap, real kapp, real eps, real mu);
+    static real gfpsip(real c, real kap, real mu);
+    static real gvp(real cn, real dn, real kap, real kapp, real eps, real mu);
+    static real gfvp(real cn, real kap, real mu);
   public:
     gfun() {}
     gfun(real kap, real kapp, real eps, real mu);
@@ -285,9 +205,10 @@ namespace GeographicLib {
         bet0, omg0, alp0;
       real u0, v0, delta;              // starting point geodesic
       int nN, eE;                  // Northgoing / eastgoing
-      fics();
+      fics() {}
       fics(const fline& f,
            const Angle& bet1, const Angle& omg1, const Angle& alp1);
+
       void setquadrant(const fline& f, unsigned q);
     };
     class disttx {
@@ -326,9 +247,8 @@ namespace GeographicLib {
       // bundle of data setting the initial conditions for a distance calc
     public:
       real sig1, s13;           // starting point
-      gics();
-      gics(const gline& g,
-          const fline::fics& fic);
+      gics() {}
+      gics(const gline& g, const fline::fics& fic);
     };
     gline() {}
     gline(const Triaxial& t, const Triaxial::gamblk& gam);

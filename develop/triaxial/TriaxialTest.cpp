@@ -48,81 +48,6 @@ void ODEtest(Math::real a, Math::real b, Math::real c) {
     }
 }
 
-/*
-void TriaxialTest0() {
-  typedef Math::real real;
-  // Triaxial t(sqrt(real(2)), 1, sqrt(real(0.5)));
-  Triaxial t(1.01,1,0.8);
-  // Triaxial t(sqrt(real(3)), 1, 1/sqrt(real(3)));
-  real mu = real(0.0000001);
-  //  cout << t.k2 << " " << t.kp2 << " " << t.e2 << "\n";
-  ffun fa(t.k2, t.kp2, -t.e2, mu, true);
-  fa.NCoeffsInv();
-  cerr << fa.NCoeffs() << " "
-            << fa.NCoeffsInv() << " "
-            << fa.InvCounts().first << "\n";
-  ffun fb(t.k2, t.kp2, -t.e2, mu, false);
-  fb.NCoeffsInv();
-  cerr << fb.NCoeffs() << " "
-            << fb.NCoeffsInv() << " "
-            << fb.InvCounts().first << "\n";
-  for (int k = 0; k <= 360; k += 3) {
-    real x = k * Math::degree(),
-      u = fa.ell.F(x),
-      fu = fa.fun(u),
-      fx = fb.fun(x),
-      uu = fa.fun.inv(fu),
-      xx = fb.fun.inv(fx);
-      cout << k << " " << fu << " " << fx << " " << fu - fx << " "
-                << u - uu << " " << x - xx << "\n";
-  }
-}
-*/
-void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
-  typedef Math::real real;
-  Triaxial t(a, b, c);
-  real k2 = t.k2(), kp2 = t.kp2(), e2 = t.e2();
-  if (0) {
-    int num = 100, numk = int(round(num*k2)), numkp = num-numk;
-    for (int k = -numkp; k <= numk; ++k) {
-      if (k == 0) continue;
-      real gam = k < 0 ?
-        - kp2 * Math::sq(k / real(numkp)) : k2 * Math::sq(k / real(numk));
-      if (0) {
-        ffun fphia(k2, kp2, e2, -gam, false); fphia.NCoeffsInv();
-        ffun fphib(k2, kp2, e2, -gam, true); fphib.NCoeffsInv();
-        ffun fomga(kp2, k2, -e2, gam, false); fomga.NCoeffsInv();
-        ffun fomgb(kp2, k2, -e2, gam, true); fomgb.NCoeffsInv();
-         cout << k << " " << gam << " "
-                   << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
-                   << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << " "
-                   << fphib.NCoeffs() << " " << fphib.NCoeffsInv() << " "
-                   << fomgb.NCoeffs() << " " << fomgb.NCoeffsInv() << "\n";
-      } else {
-        ffun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
-        ffun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
-         cout << k << " " << gam << " "
-                   << fphia.txp() << " "
-                   << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
-                   << fomga.txp() << " "
-                   << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << "\n";
-      }
-    }
-  }
-  for (int k = 3; k <= 16; ++k) {
-    for (int s = -1; s <= 1; s += 2) {
-      real gam = pow(real(10), -k) * s;
-      ffun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
-      ffun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
-       cout << k << " " << gam << " "
-                 << fphia.HalfPeriod() << " "
-                 << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
-                 << fomga.HalfPeriod() << " "
-                 << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << "\n";
-    }
-  }
-}
-
 void DirectfunTest(Math::real a, Math::real b, Math::real c) {
   typedef Math::real real;
   typedef Angle ang;
@@ -486,7 +411,7 @@ void InverseTest(Math::real a, Math::real b, Math::real c) {
     ang bet1x, omg1x, alp1x, bet2x, omg2x, alp2x;
     l.pos1(bet1x, omg1x, alp1x);
     /*
-    bet1x.rnd(); omg1x.rnd(); alp1x.rnd();
+    bet1x.round(); omg1x.round(); alp1x.round();
     Triaxial::AngNorm(bet1x, omg1x, alp1x);
     */
     real s12x = l.Distance();
@@ -633,14 +558,6 @@ int main() {
     if (0)
       TriaxialTest0();
     */
-    if (0) {
-      real a = 1.01, b = 1, c = 0.8;
-      //    a = sqrt(2.0); c = 1/a;
-      //    a = 1.2; c = 0.99;
-      a = 6378172; b = 6378103; c = 6356753;
-      a -= 34; b += 34;
-      TriaxialTest1(a, b, c);
-    }
     if (0) {
       real a = 1.01, b = 1, c = 0.8;
       a = 6378172; b = 6378103; c = 6356753;
