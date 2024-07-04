@@ -302,7 +302,7 @@ namespace GeographicLib {
     const geod_fun& fbet() const { return _fbet; }
     const geod_fun& fomg() const { return _fomg; }
     const Triaxial& t() const { return _t; }
-    real gamma() const { return _gm.gam; }
+    real gamma() const { return _gm.gamma; }
     const Triaxial::gamblk& gm() const { return _gm; }
     real Hybrid0(const fics& ic,
                  const Angle& bet2, const Angle& omg2) const;
@@ -335,7 +335,7 @@ namespace GeographicLib {
     const dist_fun& gbet() const { return _gbet; }
     const dist_fun& gomg() const { return _gomg; }
     const Triaxial& t() const { return _t; }
-    real gamma() const { return _gm.gam; }
+    real gamma() const { return _gm.gamma; }
     const Triaxial::gamblk& gm() const { return _gm; }
     real dist(gics ic, TriaxialLineF::disttx d) const;
   };

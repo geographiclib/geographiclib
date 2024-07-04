@@ -423,7 +423,7 @@ namespace GeographicLib {
       // set direction for probe as +/-90 based on sign of omg12
       alp1 = ang::cardinal(eE);
       bet1.reflect(true);
-      lf = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
+      lf = TriaxialLineF(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
       fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
       (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
       omg2a -= omg2;
@@ -534,7 +534,7 @@ namespace GeographicLib {
                       alpa,  alpb,
                       fa, fb,
                       &countn, &countb);
-      lf = TriaxialLineF(*this, gamblk(*this, bet1, omg1, alp1), 0.5, 1.5);
+      lf = TriaxialLineF(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
       fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
       d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
     }
@@ -597,7 +597,7 @@ namespace GeographicLib {
                                const Angle& alp1,
                                const Angle& bet2, const Angle& omg2) {
     ang b1{bet1}, o1{omg1}, a1{alp1};
-    gamblk gam(t, b1, o1, a1);
+    gamblk gam = t.gamma(b1, o1, a1);
     TriaxialLineF l(t, gam, 0.5, 1.5);
     TriaxialLineF::fics ic(l, b1, o1, a1);
     return l.Hybrid0(ic, bet2, omg2);
@@ -690,6 +690,28 @@ namespace GeographicLib {
     if (countn) *countn += cntn;
     if (countb) *countb += cntb;
     return xm;
+  }
+
+  Triaxial::gamblk Triaxial::gamma(const Angle& bet, const Angle& omg,
+                                   const Angle& alp) const {
+    real a = _k * bet.c() * alp.s(), b = _kp * omg.s() * alp.c(),
+      gam = (a - b) * (a + b);
+    // This direct test case
+    // -30 -86 58.455576621187896848 -1.577754
+    // fails badly with reverse direct if gam is not set to zero here.
+    if (2*fabs(gam) < 3*std::numeric_limits<real>::epsilon())
+      gam = 0;
+    real gamp = gam == 0 ? 0 :
+      (gam > 0 ? // sqrt(k2 - gamma)
+       hypot(_k * hypot(bet.s(), alp.c()*bet.c()),
+             _kp * omg.s()*alp.c()) :
+       // sqrt(kp2 + gamma)
+       hypot(_k *  bet.c()*alp.s(),
+             _kp * hypot(omg.c(), alp.s()*omg.s()))),
+      // for gam == 0, we have nu = nup = 0
+      nu = sqrt(fabs(gam)) / (gam > 0 ? _k : _kp),
+      nup = gamp / (gam > 0 ? _k : _kp);
+    return gamblk{gam, nu, nup};
   }
 
 } // namespace GeographicLib

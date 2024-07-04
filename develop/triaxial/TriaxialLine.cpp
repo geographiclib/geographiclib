@@ -29,7 +29,7 @@ namespace GeographicLib {
     omg1.rnd();
     alp1.rnd();
     _t = t;
-    Triaxial::gamblk gam(t, bet1, omg1, alp1);
+    Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
     _f = TriaxialLineF(t, gam, 0.5, 1.5);
     _fic = TriaxialLineF::fics(_f, bet1, omg1, alp1);
     _g = TriaxialLineG(t, gam);
@@ -318,21 +318,21 @@ namespace GeographicLib {
                                real epspow, real nmaxmult)
     : _t(t)
     , _gm(gam)
-    , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gam, epspow, nmaxmult)
-    , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gam, epspow, nmaxmult)
+    , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, epspow, nmaxmult)
+    , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, epspow, nmaxmult)
     {
       _fbet.ComputeInverse();
       _fomg.ComputeInverse();
-      df = _gm.gam == 0 ? _fbet.Max() - _fomg.Max() : 0;
-      deltashift = _gm.gam == 0 ? 2*df - log(_t._k2/_t._kp2) : 0;
+      df = _gm.gamma == 0 ? _fbet.Max() - _fomg.Max() : 0;
+      deltashift = _gm.gamma == 0 ? 2*df - log(_t._k2/_t._kp2) : 0;
     }
 
   TriaxialLineG::TriaxialLineG(const Triaxial& t, const Triaxial::gamblk& gam)
     : _t(t)
     , _gm(gam)
-    , _gbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gam)
-    , _gomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gam)
-    , s0(_gm.gam == 0 ? _gbet.Max() + _gomg.Max() : 0)
+    , _gbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma)
+    , _gomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma)
+    , s0(_gm.gamma == 0 ? _gbet.Max() + _gomg.Max() : 0)
   {}
 
   Math::real TriaxialLineF::Hybrid0(const fics& fic,
@@ -474,7 +474,7 @@ namespace GeographicLib {
       alp1 = ang(alp1.s(), - Math::sq(eps), alp1.n(), true);
     eE = signbit(alp1.s()) ? -1 : 1;
     nN = signbit(alp1.c()) ? -1 : 1;
-    if (gm.gam > 0) {
+    if (gm.gamma > 0) {
       bet0 = bet1.nearest(2U);
       alp0 = alp1.nearest(1U);
       psi1 = ang(t._k * bet1.s(),
@@ -483,7 +483,7 @@ namespace GeographicLib {
       v0 = f.fbet().fwd(psi1.radians());
       u0 = f.fomg().fwd(eE * omg1.radians());
       delta = f.fbet()(v0) - f.fomg()(u0);
-    } else if (gm.gam < 0) {
+    } else if (gm.gamma < 0) {
       omg0 = omg1.nearest(2U);
       alp0 = alp1.nearest(2U);
       // Need Angle(0, 0) to be treated like Angle(0, 1) here.
@@ -493,7 +493,7 @@ namespace GeographicLib {
       v0 = f.fomg().fwd(psi1.radians());
       u0 = f.fbet().fwd(nN * bet1.radians());
       delta = f.fbet()(u0) - f.fomg()(v0);
-    } else if (gm.gam == 0) {
+    } else if (gm.gamma == 0) {
       alp0 = alp1.nearest(t._umbalt ? 2U : 1U);
       // N.B. factor of k*kp omitted
       // bet0, omg0 are the middle of the initial umbilical segment
@@ -514,7 +514,7 @@ namespace GeographicLib {
 
   void TriaxialLineF::fics::setquadrant(const TriaxialLineF& f, unsigned q) {
     const real eps = numeric_limits<real>::epsilon();
-    real gam = f.gm().gam;
+    real gam = f.gm().gamma;
     const Triaxial& t = f.t();
     alp1.setquadrant(q);
     if (bet1.s() == 0 && fabs(alp1.c()) <= Math::sq(eps))

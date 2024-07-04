@@ -191,7 +191,7 @@ Math::real HybridA(const Triaxial& t,
                    const Angle& bet1, const Angle& omg1,
                    const Angle& alp1,
                    const Angle& bet2, const Angle& omg2) {
-  Triaxial::gamblk gam(t, bet1, omg1, alp1);
+  Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
   TriaxialLineF l(t, gam, 0.5, 1.5);
   TriaxialLineF::fics ic(l, bet1, omg1, alp1);
   return Hybrid0(l, ic, bet2, omg2);
@@ -203,7 +203,7 @@ Math::real HybridB(const Triaxial& t,
                    Angle& bet2a, Angle& omg2a, Angle& alp2a) {
   typedef Angle ang;
   ang b1{bet1}, o1{omg1}, a1{alp1};
-  Triaxial::gamblk gam(t, b1, o1, a1);
+  Triaxial::gamblk gam = t.gamma(b1, o1, a1);
   TriaxialLineF l(t, gam, 0.5, 1.5);
   TriaxialLineF::fics ic(l, b1, o1, a1);
   TriaxialLineF::disttx d = l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);

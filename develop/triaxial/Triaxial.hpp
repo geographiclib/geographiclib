@@ -134,39 +134,15 @@ namespace GeographicLib {
       //   (k2-gamma - k2*sb2) = (k2-gamma)*(1-spsi2) = (k2-gamma)*cpsi2
       //   spsi2 = k2*sb2/(k2-gamma)
       //   cpsi2 = (k2*cb2-gamma)/(k2-gamma)
-      real gam,
+      real gamma,
       // [nu, nup]
       //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for gam > 0,
       //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for gam < 0
       //   unused for gam == 0
         nu, nup;
-      gamblk()
-        : gam(0)
-        , nu(0)
-        , nup(0)
-      {}
-      gamblk(const Triaxial& t,
-             const Angle& bet, const Angle& omg, const Angle& alp) {
-        using std::sqrt; using std::fabs;
-        real a = t._k * bet.c() * alp.s(), b = t._kp * omg.s() * alp.c();
-        gam = (a - b) * (a + b);
-        // This direct test case
-        // -30 -86 58.455576621187896848 -1.577754
-        // fails badly with reverse direct if gam is not set to zero here.
-        if (2*fabs(gam) < 3*std::numeric_limits<real>::epsilon())
-          gam = 0;
-        real gamp = gam == 0 ? 0 :
-          (gam > 0 ? // k2 - gamma
-           t._k2 * (Math::sq(bet.s()) + Math::sq(alp.c()*bet.c())) +
-           t._kp2 * Math::sq(omg.s()*alp.c()) :
-           // kp2 + gamma
-           t._k2 *  Math::sq(bet.c()*alp.s()) +
-           t._kp2 * (Math::sq(omg.c()) + Math::sq(alp.s()*omg.s())));
-        // for gam == 0, we have nu = nup = 0
-        nu = sqrt(fabs(gam)) / (gam > 0 ? t._k : t._kp);
-        nup = sqrt(gamp) / (gam > 0 ? t._k : t._kp);
-      }
     };
+    gamblk gamma(const Angle& bet, const Angle& omg, const Angle& alp)
+      const;
   };
 
 } // namespace GeographicLib
