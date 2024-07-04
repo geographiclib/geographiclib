@@ -56,12 +56,12 @@ void TriaxialTest0() {
   // Triaxial t(sqrt(real(3)), 1, 1/sqrt(real(3)));
   real mu = real(0.0000001);
   //  cout << t.k2 << " " << t.kp2 << " " << t.e2 << "\n";
-  geod_fun fa(t.k2, t.kp2, -t.e2, mu, true);
+  ffun fa(t.k2, t.kp2, -t.e2, mu, true);
   fa.NCoeffsInv();
   cerr << fa.NCoeffs() << " "
             << fa.NCoeffsInv() << " "
             << fa.InvCounts().first << "\n";
-  geod_fun fb(t.k2, t.kp2, -t.e2, mu, false);
+  ffun fb(t.k2, t.kp2, -t.e2, mu, false);
   fb.NCoeffsInv();
   cerr << fb.NCoeffs() << " "
             << fb.NCoeffsInv() << " "
@@ -89,18 +89,18 @@ void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
       real gam = k < 0 ?
         - kp2 * Math::sq(k / real(numkp)) : k2 * Math::sq(k / real(numk));
       if (0) {
-        geod_fun fphia(k2, kp2, e2, -gam, false); fphia.NCoeffsInv();
-        geod_fun fphib(k2, kp2, e2, -gam, true); fphib.NCoeffsInv();
-        geod_fun fomga(kp2, k2, -e2, gam, false); fomga.NCoeffsInv();
-        geod_fun fomgb(kp2, k2, -e2, gam, true); fomgb.NCoeffsInv();
+        ffun fphia(k2, kp2, e2, -gam, false); fphia.NCoeffsInv();
+        ffun fphib(k2, kp2, e2, -gam, true); fphib.NCoeffsInv();
+        ffun fomga(kp2, k2, -e2, gam, false); fomga.NCoeffsInv();
+        ffun fomgb(kp2, k2, -e2, gam, true); fomgb.NCoeffsInv();
          cout << k << " " << gam << " "
                    << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
                    << fomga.NCoeffs() << " " << fomga.NCoeffsInv() << " "
                    << fphib.NCoeffs() << " " << fphib.NCoeffsInv() << " "
                    << fomgb.NCoeffs() << " " << fomgb.NCoeffsInv() << "\n";
       } else {
-        geod_fun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
-        geod_fun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
+        ffun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
+        ffun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
          cout << k << " " << gam << " "
                    << fphia.txp() << " "
                    << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
@@ -112,8 +112,8 @@ void TriaxialTest1(Math::real a, Math::real b, Math::real c) {
   for (int k = 3; k <= 16; ++k) {
     for (int s = -1; s <= 1; s += 2) {
       real gam = pow(real(10), -k) * s;
-      geod_fun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
-      geod_fun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
+      ffun fphia(k2, kp2, e2, -gam); fphia.NCoeffsInv();
+      ffun fomga(kp2, k2, -e2, gam); fomga.NCoeffsInv();
        cout << k << " " << gam << " "
                  << fphia.HalfPeriod() << " "
                  << fphia.NCoeffs() << " " << fphia.NCoeffsInv() << " "
@@ -175,8 +175,8 @@ Math::real HybridOLD(const Triaxial& t,
   return omg2a.radians();
 }
 
-Math::real Hybrid0(const TriaxialLineF& l,
-                   const TriaxialLineF::fics ic,
+Math::real Hybrid0(const fline& l,
+                   const fline::fics ic,
                    const Angle& bet2,
                    const Angle& omg2) {
   typedef Angle ang;
@@ -192,8 +192,8 @@ Math::real HybridA(const Triaxial& t,
                    const Angle& alp1,
                    const Angle& bet2, const Angle& omg2) {
   Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
-  TriaxialLineF l(t, gam, 0.5, 1.5);
-  TriaxialLineF::fics ic(l, bet1, omg1, alp1);
+  fline l(t, gam, 0.5, 1.5);
+  fline::fics ic(l, bet1, omg1, alp1);
   return Hybrid0(l, ic, bet2, omg2);
 }
 
@@ -204,11 +204,11 @@ Math::real HybridB(const Triaxial& t,
   typedef Angle ang;
   ang b1{bet1}, o1{omg1}, a1{alp1};
   Triaxial::gamblk gam = t.gamma(b1, o1, a1);
-  TriaxialLineF l(t, gam, 0.5, 1.5);
-  TriaxialLineF::fics ic(l, b1, o1, a1);
-  TriaxialLineF::disttx d = l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
-  TriaxialLineG ld(t, gam);
-  TriaxialLineG::gics icd(ld, ic);
+  fline l(t, gam, 0.5, 1.5);
+  fline::fics ic(l, b1, o1, a1);
+  fline::disttx d = l.Hybrid(ic, bet2, bet2a, omg2a, alp2a);
+  gline ld(t, gam);
+  gline::gics icd(ld, ic);
   return ld.dist(icd, d);
 }
 
@@ -349,8 +349,8 @@ void HybridTest(Math::real a, Math::real b, Math::real c,
     }
   }
   {
-    TriaxialLineF l(t, Triaxial::gamblk{}, 0.5, 1.5);
-    TriaxialLineF::fics ic(l, bet1, omg1, alp1u[0]);
+    fline l(t, Triaxial::gamblk{}, 0.5, 1.5);
+    fline::fics ic(l, bet1, omg1, alp1u[0]);
     for (unsigned q = 0U; q < 4U; ++q) {
       ic.setquadrant(l, q);
       real dd = Hybrid0(l, ic, bet2, omg2);

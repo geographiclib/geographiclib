@@ -19,7 +19,7 @@
 namespace GeographicLib {
 
 
-  class GEOGRAPHICLIB_EXPORT geod_fun {
+  class GEOGRAPHICLIB_EXPORT ffun {
   private:
     typedef Math::real real;
     typedef Angle ang;
@@ -73,10 +73,10 @@ namespace GeographicLib {
     }
     real root(real z, real x0, int* countn, int* countb) const;
   public:
-    geod_fun() {}
-    geod_fun(real kap, real kapp, real eps, real mu, real epspow = 1,
+    ffun() {}
+    ffun(real kap, real kapp, real eps, real mu, real epspow = 1,
              real nmaxmult = 0);
-    geod_fun(real kap, real kapp, real eps, real mu, bool tx,
+    ffun(real kap, real kapp, real eps, real mu, bool tx,
              real epsow, real nmaxmult);
     static real lam(real x) {
       using std::tan; using std::asinh; using std::fabs;
@@ -139,7 +139,7 @@ namespace GeographicLib {
     }
   };
 
-  class GEOGRAPHICLIB_EXPORT dist_fun {
+  class GEOGRAPHICLIB_EXPORT gfun {
   private:
     typedef Math::real real;
     real _kap, _kapp, _eps, _mu;
@@ -213,12 +213,12 @@ namespace GeographicLib {
       return (kap + mu) * Math::sq(cn);
     }
   public:
-    dist_fun() {}
-    dist_fun(real kap, real kapp, real eps, real mu);
-    dist_fun(real kap, real kapp, real eps, real mu, bool tx);
+    gfun() {}
+    gfun(real kap, real kapp, real eps, real mu);
+    gfun(real kap, real kapp, real eps, real mu, bool tx);
     real operator()(real u) const {
       if (_mu == 0) {
-        real phi = geod_fun::gd(u);
+        real phi = ffun::gd(u);
         return _fun(_tx ? _ell.F(phi) : phi);
       } else
         return _fun(u);
@@ -226,7 +226,7 @@ namespace GeographicLib {
     real deriv(real u) const {
       using std::cosh; using std::sqrt;
       if (_mu == 0) {
-        real phi = geod_fun::gd(u), sch = 1/cosh(u);
+        real phi = ffun::gd(u), sch = 1/cosh(u);
         return _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
           ( _tx ? sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch)) : 1);
       } else
@@ -236,7 +236,7 @@ namespace GeographicLib {
     // Don't need these
     // real inv(real y) const { return _fun.inv(y); }
     // real inv1(real y) const { return _fun.inv1(y); }
-    // Use geod_fun versions of these
+    // Use ffun versions of these
     // real fwd(real phi) const {
     //   return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);
     // }
@@ -258,14 +258,14 @@ namespace GeographicLib {
     }
   };
 
-  class GEOGRAPHICLIB_EXPORT TriaxialLineF {
+  class GEOGRAPHICLIB_EXPORT fline {
   private:
     friend class TriaxialLine;
     typedef Math::real real;
     typedef Angle ang;
     Triaxial _t;
     Triaxial::gamblk _gm;
-    geod_fun _fbet, _fomg;
+    ffun _fbet, _fomg;
   public:
     real df, deltashift;
     class fics {
@@ -286,9 +286,9 @@ namespace GeographicLib {
       real u0, v0, delta;              // starting point geodesic
       int nN, eE;                  // Northgoing / eastgoing
       fics();
-      fics(const TriaxialLineF& f,
+      fics(const fline& f,
            const Angle& bet1, const Angle& omg1, const Angle& alp1);
-      void setquadrant(const TriaxialLineF& f, unsigned q);
+      void setquadrant(const fline& f, unsigned q);
     };
     class disttx {
       // bundle of data to pass along for distance
@@ -296,11 +296,11 @@ namespace GeographicLib {
       real betw2, omgw2;
       int ind2;
     };
-    TriaxialLineF() {}
-    TriaxialLineF(const Triaxial& t, Triaxial::gamblk gm,
+    fline() {}
+    fline(const Triaxial& t, Triaxial::gamblk gm,
                   real epspow = 1, real nmaxmult = 0);
-    const geod_fun& fbet() const { return _fbet; }
-    const geod_fun& fomg() const { return _fomg; }
+    const ffun& fbet() const { return _fbet; }
+    const ffun& fomg() const { return _fomg; }
     const Triaxial& t() const { return _t; }
     real gamma() const { return _gm.gamma; }
     const Triaxial::gamblk& gm() const { return _gm; }
@@ -313,13 +313,13 @@ namespace GeographicLib {
                    bool betp = true) const;
   };
 
-  class GEOGRAPHICLIB_EXPORT TriaxialLineG {
+  class GEOGRAPHICLIB_EXPORT gline {
   private:
     typedef Math::real real;
     typedef Angle ang;
     Triaxial _t;
     Triaxial::gamblk _gm;
-    dist_fun _gbet, _gomg;
+    gfun _gbet, _gomg;
   public:
     real s0;
     class gics {
@@ -327,45 +327,45 @@ namespace GeographicLib {
     public:
       real sig1, s13;           // starting point
       gics();
-      gics(const TriaxialLineG& g,
-          const TriaxialLineF::fics& fic);
+      gics(const gline& g,
+          const fline::fics& fic);
     };
-    TriaxialLineG() {}
-    TriaxialLineG(const Triaxial& t, const Triaxial::gamblk& gam);
-    const dist_fun& gbet() const { return _gbet; }
-    const dist_fun& gomg() const { return _gomg; }
+    gline() {}
+    gline(const Triaxial& t, const Triaxial::gamblk& gam);
+    const gfun& gbet() const { return _gbet; }
+    const gfun& gomg() const { return _gomg; }
     const Triaxial& t() const { return _t; }
     real gamma() const { return _gm.gamma; }
     const Triaxial::gamblk& gm() const { return _gm; }
-    real dist(gics ic, TriaxialLineF::disttx d) const;
+    real dist(gics ic, fline::disttx d) const;
   };
 
   class GEOGRAPHICLIB_EXPORT TriaxialLine {
   private:
-    friend class TriaxialLineF;
-    friend class TriaxialLineG;
-    friend class geod_fun;
-    friend class dist_fun;
+    friend class fline;
+    friend class gline;
+    friend class ffun;
+    friend class gfun;
     typedef Math::real real;
     typedef Angle ang;
     Triaxial _t;
-    TriaxialLineF _f;
-    TriaxialLineF::fics _fic;
-    TriaxialLineG _g;
-    TriaxialLineG::gics _gic;
+    fline _f;
+    fline::fics _fic;
+    gline _g;
+    gline::gics _gic;
     static void solve2(real f0, real g0,
-                       const geod_fun& fx, const geod_fun& fy,
-                       const dist_fun& gx, const dist_fun& gy,
+                       const ffun& fx, const ffun& fy,
+                       const gfun& gx, const gfun& gy,
                        real& x, real& y,
                        int* countn = nullptr, int* countb = nullptr);
     static void solve2u(real f0, real g0,
-                        const geod_fun& fx, const geod_fun& fy,
-                        const dist_fun& gx, const dist_fun& gy,
+                        const ffun& fx, const ffun& fy,
+                        const gfun& gx, const gfun& gy,
                         real& x, real& y,
                         int* countn = nullptr, int* countb = nullptr);
     static void newt2(real f0, real g0,
-                      const geod_fun& fx, const geod_fun& fy,
-                      const dist_fun& gx, const dist_fun& gy,
+                      const ffun& fx, const ffun& fy,
+                      const gfun& gx, const gfun& gy,
                       real x0, real xa, real xb,
                       real xscale, real zscale,
                       real& x, real& y,
@@ -411,12 +411,12 @@ namespace GeographicLib {
     TriaxialLine(const Triaxial& t,
                  Angle bet1, Angle omg1, Angle alp1);
     TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1);
-    TriaxialLine(TriaxialLineF f, TriaxialLineF::fics fic,
-                 TriaxialLineG g, TriaxialLineG::gics gic);
-    const geod_fun& fbet() const { return _f.fbet(); }
-    const geod_fun& fomg() const { return _f.fomg(); }
-    const dist_fun& gbet() const { return _g.gbet(); }
-    const dist_fun& gomg() const { return _g.gomg(); }
+    TriaxialLine(fline f, fline::fics fic,
+                 gline g, gline::gics gic);
+    const ffun& fbet() const { return _f.fbet(); }
+    const ffun& fomg() const { return _f.fomg(); }
+    const gfun& gbet() const { return _g.gbet(); }
+    const gfun& gomg() const { return _g.gomg(); }
     void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
                   int* countn = nullptr, int* countb = nullptr) const;
     void Position(real s12, real& bet2, real& omg2, real& alp2,

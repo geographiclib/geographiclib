@@ -28,9 +28,9 @@ namespace GeographicLib {
     typedef std::array<Math::real, 3> vec3;
   private:
     friend class TriaxialLine;
-    friend class TriaxialLineF;
-    friend class TriaxialLineG;
-    friend class geod_fun;
+    friend class fline;
+    friend class gline;
+    friend class ffun;
     typedef Math::real real;
     typedef Angle ang;
     static void normvec(vec3& r) {

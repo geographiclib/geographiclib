@@ -333,20 +333,20 @@ namespace GeographicLib {
     // and for the final result
     ang alp1, alp2, bet2a, omg2a;
 
-    TriaxialLineF lf;
-    TriaxialLineF::fics fic;
-    TriaxialLineF::disttx d;
+    fline lf;
+    fline::fics fic;
+    fline::disttx d;
 
     // flag for progress
     bool done = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
       // both points on middle ellipse
-      lf = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+      lf = fline(*this, Triaxial::gamblk{}, 0.5, 1.5);
       if (umb1 && umb2 && bet2.s() > 0 && omg2.c() < 0) {
         // process opposite umbilical points
-        fic = TriaxialLineF::fics(lf, bet1, omg1, ang{_kp, _k});
+        fic = fline::fics(lf, bet1, omg1, ang{_kp, _k});
         alp1 = ang(_kp * exp(lf.df), _k);
-        fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+        fic = fline::fics(lf, bet1, omg1, alp1);
         d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, true);
         if (debug) cout << "opposite umbilics\n";
         done = true;
@@ -355,11 +355,11 @@ namespace GeographicLib {
         if (bet2.s() < 1) {
           // bet1 = bet2 = -90
           alp1 = ang::cardinal(1);
-          fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+          fic = fline::fics(lf, bet1, omg1, alp1);
           ang omg12 = omg2 - omg1;
           d = omg12.s() == 0 && omg12.c() < 0 ?
             // adjacent E/W umbilical points
-            TriaxialLineF::disttx{-Triaxial::BigValue(),
+            fline::disttx{-Triaxial::BigValue(),
                                   Triaxial::BigValue(), 0} :
             lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
           if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
@@ -375,11 +375,11 @@ namespace GeographicLib {
           // need to see how far apart the points are
           // If point 1 is at [-90, 0], direction is 0 else -90.
           alp1 = ang::cardinal(omg1.s() == 0 ? 0 : -1);
-          fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+          fic = fline::fics(lf, bet1, omg1, alp1);
           // If point 1 is [-90, 0] and point 2 is [90, 0]
           if (omg1.s() == 0 && omg2.s() == 0) {
             // adjacent N/S umbilical points
-            d = TriaxialLineF::disttx{Triaxial::BigValue(),
+            d = fline::disttx{Triaxial::BigValue(),
                                       -Triaxial::BigValue(), 0};
             if (debug) cout << "bet1 = -90,  bet2 = 90, adj umb\n";
             done = true;
@@ -411,7 +411,7 @@ namespace GeographicLib {
         alp1 = ang::cardinal(bet1.c() == 0 ?
                              (omg2.c() < 1 ? 1 : (omg1.s() == 0 ? 0 : -1)) :
                              (omg2.c() > 0 ? 0 : 2));
-        fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+        fic = fline::fics(lf, bet1, omg1, alp1);
         d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
         if (debug) cout << "other merid\n";
         done = true;
@@ -423,8 +423,8 @@ namespace GeographicLib {
       // set direction for probe as +/-90 based on sign of omg12
       alp1 = ang::cardinal(eE);
       bet1.reflect(true);
-      lf = TriaxialLineF(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
-      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+      lf = fline(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
+      fic = fline::fics(lf, bet1, omg1, alp1);
       (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
       omg2a -= omg2;
       if (eE * omg2a.s() >= 0) {
@@ -446,12 +446,12 @@ namespace GeographicLib {
       }
     } else if (umb1) {
       // umbilical point to general point
-      lf = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
+      lf = fline(*this, Triaxial::gamblk{}, 0.5, 1.5);
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
-      fic = TriaxialLineF::fics(lf, bet2, omg2, alp2);
+      fic = fline::fics(lf, bet2, omg2, alp2);
       (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
       if (alp1.s() < 0) alp1 += ang::cardinal(1);
-      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+      fic = fline::fics(lf, bet1, omg1, alp1);
       d = lf.ArcPos0(fic, bet2 - bet1, bet2a, omg2a, alp2);
       if (debug) cout << "umb to general\n";
       done = true;
@@ -489,8 +489,8 @@ namespace GeographicLib {
       alpa = ang( _kp * fabs(omg1.s()), _k * fabs(bet1.c()));
       alpb = alpa;
 
-      lf = TriaxialLineF(*this, Triaxial::gamblk{}, 0.5, 1.5);
-      fic = TriaxialLineF::fics(lf, bet1, omg1, alpb);
+      lf = fline(*this, Triaxial::gamblk{}, 0.5, 1.5);
+      fic = fline::fics(lf, bet1, omg1, alpb);
       {
         unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
         for (; !done && qb <= 4U; ++qb, ++qa) {
@@ -534,13 +534,13 @@ namespace GeographicLib {
                       alpa,  alpb,
                       fa, fb,
                       &countn, &countb);
-      lf = TriaxialLineF(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
-      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
+      lf = fline(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
+      fic = fline::fics(lf, bet1, omg1, alp1);
       d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
     }
 
-    TriaxialLineG lg(*this, lf.gm());
-    TriaxialLineG::gics gic(lg, fic);
+    gline lg(*this, lf.gm());
+    gline::gics gic(lg, fic);
     real s13 = lg.dist(gic, d);
     (void) AngNorm(bet2a, omg2a, alp2);
 
@@ -584,8 +584,8 @@ namespace GeographicLib {
       Flip(bet1, omg1, alp1);
 
     if (flip1 || swap12 || flipz || flipy || flipx) {
-      fic = TriaxialLineF::fics(lf, bet1, omg1, alp1);
-      gic = TriaxialLineG::gics(lg, fic);
+      fic = fline::fics(lf, bet1, omg1, alp1);
+      gic = gline::gics(lg, fic);
     }
     gic.s13 = fmax(real(0), s13);
 
@@ -598,8 +598,8 @@ namespace GeographicLib {
                                const Angle& bet2, const Angle& omg2) {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     gamblk gam = t.gamma(b1, o1, a1);
-    TriaxialLineF l(t, gam, 0.5, 1.5);
-    TriaxialLineF::fics ic(l, b1, o1, a1);
+    fline l(t, gam, 0.5, 1.5);
+    fline::fics ic(l, b1, o1, a1);
     return l.Hybrid0(ic, bet2, omg2);
   }
 

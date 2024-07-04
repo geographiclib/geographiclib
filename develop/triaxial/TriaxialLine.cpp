@@ -14,8 +14,8 @@ namespace GeographicLib {
 
   using namespace std;
 
-  TriaxialLine::TriaxialLine(TriaxialLineF f, TriaxialLineF::fics fic,
-                             TriaxialLineG g, TriaxialLineG::gics gic)
+  TriaxialLine::TriaxialLine(fline f, fline::fics fic,
+                             gline g, gline::gics gic)
     : _t(f.t())
     , _f(f)
     , _fic(fic)
@@ -30,10 +30,10 @@ namespace GeographicLib {
     alp1.rnd();
     _t = t;
     Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
-    _f = TriaxialLineF(t, gam, 0.5, 1.5);
-    _fic = TriaxialLineF::fics(_f, bet1, omg1, alp1);
-    _g = TriaxialLineG(t, gam);
-    _gic = TriaxialLineG::gics(_g, _fic);
+    _f = fline(t, gam, 0.5, 1.5);
+    _fic = fline::fics(_f, bet1, omg1, alp1);
+    _g = gline(t, gam);
+    _gic = gline::gics(_g, _fic);
   }
 
   TriaxialLine::TriaxialLine(const Triaxial& t, real bet1, real omg1,
@@ -160,8 +160,8 @@ namespace GeographicLib {
   }
 
   void TriaxialLine::solve2(real f0, real g0,
-                            const geod_fun& fx, const geod_fun& fy,
-                            const dist_fun& gx, const dist_fun& gy,
+                            const ffun& fx, const ffun& fy,
+                            const gfun& gx, const gfun& gy,
                             real& x, real& y,
                             int* countn, int* countb) {
     // Return x and y, s.t.
@@ -190,8 +190,8 @@ namespace GeographicLib {
   }
 
   void TriaxialLine::solve2u(real d0, real s0,
-                             const geod_fun& fbet, const geod_fun& fomg,
-                             const dist_fun& gbet, const dist_fun& gomg,
+                             const ffun& fbet, const ffun& fomg,
+                             const gfun& gbet, const gfun& gomg,
                              real& u, real& v,
                              int* countn, int* countb) {
     // Return u and v, s.t.
@@ -250,8 +250,8 @@ namespace GeographicLib {
   }
 
   void TriaxialLine::newt2(real f0, real g0,
-                           const geod_fun& fx, const geod_fun& fy,
-                           const dist_fun& gx, const dist_fun& gy,
+                           const ffun& fx, const ffun& fy,
+                           const gfun& gx, const gfun& gy,
                            real x0, real xa, real xb,
                            real xscale, real zscale,
                            real& x, real& y,
@@ -274,12 +274,12 @@ namespace GeographicLib {
                             Angle& bet2a, Angle& omg2a, Angle& alp2a,
                             real& s12)
     const {
-    TriaxialLineF::disttx d = _f.Hybrid(_fic, bet2, bet2a, omg2a, alp2a);
+    fline::disttx d = _f.Hybrid(_fic, bet2, bet2a, omg2a, alp2a);
     s12 = _g.dist(_gic, d);
   }
 
-  TriaxialLineF::disttx
-  TriaxialLineF::Hybrid(const fics& fic,
+  fline::disttx
+  fline::Hybrid(const fics& fic,
                         const Angle& bet2,
                         Angle& bet2a, Angle& omg2a, Angle& alp2a)
     const {
@@ -314,8 +314,8 @@ namespace GeographicLib {
     return ArcPos0(fic, tau12.base(), bet2a, omg2a, alp2a, true);
   }
 
-  TriaxialLineF::TriaxialLineF(const Triaxial& t, Triaxial::gamblk gam,
-                               real epspow, real nmaxmult)
+  fline::fline(const Triaxial& t, Triaxial::gamblk gam,
+               real epspow, real nmaxmult)
     : _t(t)
     , _gm(gam)
     , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, epspow, nmaxmult)
@@ -327,7 +327,7 @@ namespace GeographicLib {
       deltashift = _gm.gamma == 0 ? 2*df - log(_t._k2/_t._kp2) : 0;
     }
 
-  TriaxialLineG::TriaxialLineG(const Triaxial& t, const Triaxial::gamblk& gam)
+  gline::gline(const Triaxial& t, const Triaxial::gamblk& gam)
     : _t(t)
     , _gm(gam)
     , _gbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma)
@@ -335,8 +335,8 @@ namespace GeographicLib {
     , s0(_gm.gamma == 0 ? _gbet.Max() + _gomg.Max() : 0)
   {}
 
-  Math::real TriaxialLineF::Hybrid0(const fics& fic,
-                                    const Angle& bet2, const Angle& omg2)
+  Math::real fline::Hybrid0(const fics& fic,
+                            const Angle& bet2, const Angle& omg2)
   const {
     ang bet2a, omg2a, alp2a, omg2b(omg2);
     (void) Hybrid(fic, bet2, bet2a, omg2a, alp2a);
@@ -346,10 +346,9 @@ namespace GeographicLib {
   }
 
   //      [bet2, omg2, alp2, betw2, omgw2, ind2] = obj.arcdist0(tau12, 1);
-  TriaxialLineF::disttx
-  TriaxialLineF::ArcPos0(const fics& fic, const Angle& tau12,
-                         Angle& bet2a, Angle& omg2a, Angle& alp2a,
-                         bool betp)
+  fline::disttx fline::ArcPos0(const fics& fic, const Angle& tau12,
+                               Angle& bet2a, Angle& omg2a, Angle& alp2a,
+                               bool betp)
     const {
     disttx ret{Math::NaN(), Math::NaN(), 0};
     if (gamma() > 0) {
@@ -445,7 +444,7 @@ namespace GeographicLib {
     return ret;
   }
 
-  TriaxialLineF::fics::fics()
+  fline::fics::fics()
     : bet1(ang::NaN())
     , omg1(ang::NaN())
     , alp1(ang::NaN())
@@ -459,9 +458,8 @@ namespace GeographicLib {
     , eE(0)
   {}
 
-  TriaxialLineF::fics::fics(const TriaxialLineF& f,
-                            const Angle& bet10, const Angle& omg10,
-                            const Angle& alp10)
+  fline::fics::fics(const fline& f,
+                    const Angle& bet10, const Angle& omg10, const Angle& alp10)
     : bet1(bet10)
       // omg10 - 90
     , omg1(omg10 - ang::cardinal(1))
@@ -512,7 +510,7 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialLineF::fics::setquadrant(const TriaxialLineF& f, unsigned q) {
+  void fline::fics::setquadrant(const fline& f, unsigned q) {
     const real eps = numeric_limits<real>::epsilon();
     real gam = f.gm().gamma;
     const Triaxial& t = f.t();
@@ -547,12 +545,11 @@ namespace GeographicLib {
     }
   }
 
-  TriaxialLineG::gics::gics()
+  gline::gics::gics()
     : sig1(Math::NaN())
   {}
 
-  TriaxialLineG::gics::gics(const TriaxialLineG& g,
-                          const TriaxialLineF::fics& fic)
+  gline::gics::gics(const gline& g, const fline::fics& fic)
   {
     if (g.gamma() > 0) {
       sig1 = g.gbet()(fic.v0) + g.gomg()(fic.u0);
@@ -566,21 +563,21 @@ namespace GeographicLib {
     }
   }
 
-  Math::real TriaxialLineG::dist(gics ic, TriaxialLineF::disttx d) const {
+  Math::real gline::dist(gics ic, fline::disttx d) const {
     real sig2 = gbet()(d.betw2) + gomg()(d.omgw2) + d.ind2 * 2*s0;
     return (sig2 - ic.sig1) * t()._b;
   }
 
-  geod_fun::geod_fun(real kap, real kapp, real eps, real mu,
-                     real epspow, real nmaxmult)
-    : geod_fun(kap, kapp, eps, mu,
+  ffun::ffun(real kap, real kapp, real eps, real mu,
+             real epspow, real nmaxmult)
+    : ffun(kap, kapp, eps, mu,
                (mu > 0 ? mu / (kap + mu) :
                 (mu < 0 ? -mu / kap :
                  kapp)) < TriaxialLine::EllipticThresh(), epspow, nmaxmult)
   {}
 
-  geod_fun::geod_fun(real kap, real kapp, real eps, real mu, bool tx,
-                     real epspow, real nmaxmult)
+  ffun::ffun(real kap, real kapp, real eps, real mu, bool tx,
+             real epspow, real nmaxmult)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
@@ -649,7 +646,7 @@ namespace GeographicLib {
       _fun.Max();
   }
 
-  void geod_fun::ComputeInverse() {
+  void ffun::ComputeInverse() {
     if (!_invp) {
       if (_mu == 0) {
         _chiinv = _tx ?
@@ -705,7 +702,7 @@ namespace GeographicLib {
     _invp = true;
   }
 
-  Math::real geod_fun::root(real z, real x0, int* countn, int* countb) const {
+  Math::real ffun::root(real z, real x0, int* countn, int* countb) const {
     if (_mu != 0) return Math::NaN();
     if (!isfinite(z)) return z; // Deals with +/-inf and nan
     real d = Max()
@@ -740,30 +737,30 @@ namespace GeographicLib {
                     Math::pi()/2, Math::pi()/2, 1, countn, countb);
   }
   // Approximate inverse using _chiinv or _fun.inv0
-  Math::real geod_fun::inv0(real z) const {
+  Math::real ffun::inv0(real z) const {
     if (!_invp) return Math::NaN();
     return _mu == 0 ? _fun(_chiinv(gd(z))) : _fun.inv0(z);
   }
   // Accurate inverse by direct Newton (not using _finv)
-  Math::real geod_fun::inv1(real z, int* countn, int* countb) const {
+  Math::real ffun::inv1(real z, int* countn, int* countb) const {
     return _mu == 0 ? root(z, z, countn, countb) :
       _fun.inv1(z, countn, countb);
   }
   // Accurate inverse correcting result from _finv
-  Math::real geod_fun::inv(real z, int* countn, int* countb) const {
+  Math::real ffun::inv(real z, int* countn, int* countb) const {
     if (!_invp) return Math::NaN();
     return _mu == 0 ? root(z, inv0(z), countn, countb) :
       _fun.inv(z, countn, countb);
   }
 
-  dist_fun::dist_fun(real kap, real kapp, real eps, real mu)
-    : dist_fun(kap, kapp, eps, mu,
+  gfun::gfun(real kap, real kapp, real eps, real mu)
+    : gfun(kap, kapp, eps, mu,
                (mu > 0 ? mu / (kap + mu) :
                 (mu < 0 ? -mu / kap :
                  kapp)) < TriaxialLine::EllipticThresh())
   {}
 
-  dist_fun::dist_fun(real kap, real kapp, real eps, real mu, bool tx)
+  gfun::gfun(real kap, real kapp, real eps, real mu, bool tx)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
@@ -826,7 +823,7 @@ namespace GeographicLib {
       _fun.Max();
   }
 
-  Math::real dist_fun::gfderiv(real u) const {
+  Math::real gfun::gfderiv(real u) const {
     real sn = 0, cn = 0, dn = 0;
     if (_mu != 0 && _tx)
       (void) _ell.am(u, sn, cn, dn);
