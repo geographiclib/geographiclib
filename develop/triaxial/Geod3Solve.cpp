@@ -24,7 +24,6 @@
 // #include "GeodSolve.usage"
 
 typedef GeographicLib::Math::real real;
-typedef GeographicLib::Angle ang;
 
 void DecodeLatLon(const std::string& stra, const std::string& strb,
                   real& lat, real& lon,
@@ -91,9 +90,23 @@ real ReadDistance(const std::string& s, bool arcmode, bool fraction = false) {
 
 int usage(int retval, bool /*brief*/) { return retval; }
 
+// Need to specify modes of operation here!
+// bet1 omg1 bet2 omg2 -> alp1 alp2 s12 (Jac)  -i
+// bet1 omg1 bet2 omg2 -> bet1 omg1 alp1 bet1 omg1 alp2 s12 m12 M12 M21
+//                        (Jac and ODE)  -f
+// bet1 omg1 alp1 s12 -> bet2 omg2 alp2 (Jac) none
+// bet1 omg1 alp1 ds nmin nmax -> bet2 omg2 alp2 ... (Jac or ODE) -s, -s --cart
+// bet1 omg1 alp1 ds nmin nmax -> bet2 omg2 alp2 dr dv (Jac and ODE + diff)
+//                         -s --diff
+// Full line -> inverse error dr Jac -i --diff
+// Full line -> forward direct error dr dv Jac or ODE --diff, --diff --cart
+// Full line -> reverse direct error dr dv Jav or ODE
+//                         --diff -r, --diff --cart -r
+
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
+    typedef GeographicLib::Angle ang;
     enum { NONE = 0, LINE, DIRECT, INVERSE };
     Utility::set_digits();
     bool inverse = false, arcmode = false,
@@ -183,7 +196,7 @@ int main(int argc, const char* const argv[]) {
           nmax = Utility::val<long>(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -t: " << e.what() << "\n";
+          std::cerr << "Error decoding arguments of -s: " << e.what() << "\n";
           return 1;
         }
         m += 3;

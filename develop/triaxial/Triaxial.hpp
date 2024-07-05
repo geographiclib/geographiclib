@@ -15,6 +15,7 @@
 #include <vector>
 #include <limits>
 #include <functional>
+#include <utility>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include "Angle.hpp"
@@ -52,7 +53,8 @@ namespace GeographicLib {
     real _a, _b, _c;            // semi-axes
     vec3 _axes;
     real _e2, _k2, _kp2, _k, _kp;
-    bool _umbalt;               // how coordinates wrap with umbilical lines
+    bool _umbalt,               // how coordinates wrap with umbilical lines
+      _debug;                   // print out diagnostics
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
@@ -64,8 +66,16 @@ namespace GeographicLib {
     Triaxial(real b, real e2, real k2, real kp2);
     void Norm(vec3& r) const;
     void Norm(vec3& r, vec3& v) const;
-    TriaxialLine Inverse(Angle bet1, Angle omg1,
-                         Angle bet2, Angle omg2) const;
+    TriaxialLine Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
+                         Angle& alp1, Angle& alp2, real& s12) const;
+    TriaxialLine Inverse(real bet1, real omg1, real bet2, real omg2,
+                         real& alp1, real& alp2, real& s12) const;
+    TriaxialLine Line(Angle bet1, Angle omg1, Angle alp1) const;
+    TriaxialLine Line(real bet1, real omg1, real alp1) const;
+    TriaxialLine Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
+                        Angle& bet2, Angle& omg2, Angle& alp2) const;
+    TriaxialLine Direct(real bet1, real omg1, real alp1, real s12,
+                        real& bet2, real& omg2, real& alp2) const;
     real a() const { return _a; }
     real b() const { return _b; }
     real c() const { return _c; }
@@ -75,6 +85,7 @@ namespace GeographicLib {
     const vec3& axes() const { return _axes; }
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) { _umbalt = numbalt; }
+    void debug(bool ndebug) { _debug = ndebug; }
     static bool AngNorm(Angle& bet, Angle& omg, Angle& alp,
                         bool alt = false) {
       using std::signbit;
@@ -103,15 +114,25 @@ namespace GeographicLib {
       }
       return flip;
     }
-    void cart2toellip(const vec3& r, Angle& bet, Angle& omg) const;
-    void cart2toellip(const vec3& r, const vec3& v,
+    void cart2toellip(vec3 r, Angle& bet, Angle& omg) const;
+    void cart2toellip(vec3 r, vec3 v,
                       Angle& bet, Angle& omg, Angle& alp) const;
     void cart2toellip(const Angle& bet, const Angle& omg,
-                      const vec3& v, Angle& alp) const;
+                      vec3 v, Angle& alp) const;
     void elliptocart2(const Angle& bet, const Angle& omg, vec3& r) const;
     void elliptocart2(const Angle& bet, const Angle& omg,
                       const Angle& alp,
                       vec3& r, vec3& v) const;
+    real EuclideanInverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
+                          Angle& alp1, Angle& alp2) const;
+    real EuclideanInverse(vec3 r1, vec3 r2,
+                          vec3& v1, vec3& v2) const;
+    std::pair<real, real> EuclideanDiff(Angle bet1, Angle omg1, Angle alp1,
+                                        Angle bet2, Angle omg2, Angle alp2)
+      const;
+    std::pair<real, real> EuclideanDiff(vec3 r1, vec3 v1,
+                                        vec3 r2, vec3 v2)
+      const;
     class gamblk {
     public:
       // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2

@@ -17,7 +17,6 @@
 #include <functional>
 #include <GeographicLib/Constants.hpp>
 #include "Angle.hpp"
-typedef GeographicLib::Angle ang;
 #include "Triaxial.hpp"
 
 namespace GeographicLib {
@@ -28,6 +27,7 @@ namespace GeographicLib {
     typedef Triaxial::vec3 vec3;
     typedef std::array<real, 6> vec6;
     typedef std::array<real, 10> vec10;
+    typedef Angle ang;
     Triaxial _t;
     real _b;
     vec3 _axesn, _axes2n, _r1, _v1;
@@ -40,11 +40,9 @@ namespace GeographicLib {
     vec10 Accel(const vec10& y) const;
     void Norm(vec10& y) const;
   public:
-    typedef Angle ang;
-    TriaxialODE(const Triaxial& t,
-                const vec3& r1, const vec3& v1);
-    TriaxialODE(const Triaxial& t, const ang& bet1, const ang& omg1,
-                const ang& alp1);
+    TriaxialODE(const Triaxial& t, vec3 r1, vec3 v1);
+    TriaxialODE(const Triaxial& t, const Angle& bet1, const Angle& omg1,
+                const Angle& alp1);
     TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1);
     int Position(real s12, vec3& r2, vec3& v2, real eps = 0) const;
     int Position(real s12, vec3& r2, vec3& v2, real& m12, real& M12, real& M21,
@@ -57,17 +55,17 @@ namespace GeographicLib {
                   std::vector<real>& m12,
                   std::vector<real>& M12, std::vector<real>& M21,
                   real eps = 0) const;
-    int Position(real s12, ang& bet2, ang& omg2, ang& alp2,
+    int Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
                  real eps = 0) const;
-    int Position(real s12, ang& bet2, ang& omg2, ang& alp2,
+    int Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
                  real& m12, real& M12, real& M21,
                  real eps = 0) const;
     void Position(real ds, long nmin, long nmax,
-                  std::vector<ang>& bet2, std::vector<ang>& omg2,
-                  std::vector<ang>& alp2, real eps = 0) const;
+                  std::vector<Angle>& bet2, std::vector<Angle>& omg2,
+                  std::vector<Angle>& alp2, real eps = 0) const;
     void Position(real ds, long nmin, long nmax,
-                  std::vector<ang>& bet2, std::vector<ang>& omg2,
-                  std::vector<ang>& alp2,
+                  std::vector<Angle>& bet2, std::vector<Angle>& omg2,
+                  std::vector<Angle>& alp2,
                   std::vector<real>& m12,
                   std::vector<real>& M12, std::vector<real>& M21,
                   real eps = 0) const;

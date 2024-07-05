@@ -278,6 +278,14 @@ namespace GeographicLib {
     s12 = _g.dist(_gic, d);
   }
 
+  void TriaxialLine::Offset(real s13, bool reverse) {
+    ang bet2, omg2, alp2;
+    Position(s13, bet2, omg2, alp2);
+    if (reverse) alp2.reflect(true, true);
+    _fic = fline::fics(_f, bet2, omg2, alp2);
+    _gic = gline::gics(_g, _fic);
+
+  }
   TriaxialLine::fline::disttx
   TriaxialLine::fline::Hybrid(const fics& fic,
                               const Angle& bet2,

@@ -92,17 +92,18 @@ int main() {
     typedef Angle ang;
    if (0) {
       Triaxial t(sqrt(2.0), 1.0, 1/sqrt(2.0));
+      ang bet2, omg2, alp1, alp2;
+      real s12;
       TriaxialLine l = t.Inverse(
                      ang(-45.0),ang(-30.0),
-                     ang(-90.0),ang(0.0));
-      real s12 = l.Distance();
+                     ang(-90.0),ang(0.0), alp1, alp2, s12);
+      s12 = l.Distance();
       /*      real s12 = 0.361729;
       TriaxialLine l(t, ang(-45.0),ang(-30.0),
                       ang(135.0));
       l.SetDistance(s12);
       */
       cout << s12 << "\n";
-      ang bet2, omg2, alp2;
       l.pos1(bet2, omg2, alp2);
         cout << "POS1 " << s12 << " "
              << real(bet2) << " "

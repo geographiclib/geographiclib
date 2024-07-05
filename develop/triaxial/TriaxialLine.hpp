@@ -346,6 +346,7 @@ namespace GeographicLib {
     real gamma() const { return _f.gamma(); }
     real Distance() const { return _gic.s13; }
     void SetDistance(real s13) { _gic.s13 = s13; }
+    void Offset(real s13, bool reverse = false);
     void pos1(Angle& bet1, Angle& omg1, Angle& alp1) const;
     void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
   };

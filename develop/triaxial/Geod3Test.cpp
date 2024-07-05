@@ -52,10 +52,11 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
   typedef Angle ang;
   ang bet1x(bet1), omg1x(omg1),
     bet2x(bet2), omg2x(omg2);
+  real s12;
+  ang alp1, alp2;
   TriaxialLine l =
-    t.Inverse(bet1x, omg1x, bet2x, omg2x);
-  real s12 = l.Distance();
-  ang bet1a, omg1a, alp1, bet2a, omg2a, alp2;
+    t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1, alp2, s12);
+  ang bet1a, omg1a, bet2a, omg2a;
   Triaxial::vec3 r2, v2;
   real m12, M12, M21;
   l.pos1(bet1a, omg1a, alp1);
@@ -88,14 +89,15 @@ void errreport(const Triaxial& t,
 #endif
   ang
     bet1x(bet1), omg1x(omg1), alp1x(alp1),
-    bet2x(bet2), omg2x(omg2), alp2x(alp2);
+    bet2x(bet2), omg2x(omg2), alp2x(alp2), alp1a, alp2a;
+  real s12a;
   TriaxialLine l0 =
-    t.Inverse(bet1x, omg1x, bet2x, omg2x);
-  real s12a = l0.Distance(), errs = fabs(s12 - s12a);
+    t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
+  real errs = fabs(s12 - s12a);
   Triaxial::vec3 r1, v1, r2, v2;
   t.elliptocart2(bet1x, omg1x, alp1x, r1, v1);
   t.elliptocart2(bet2x, omg2x, alp2x, r2, v2);
-  ang bet1a, omg1a, alp1a, bet2a, omg2a, alp2a;
+  ang bet1a, omg1a, bet2a, omg2a;
   Triaxial::vec3 r1a, v1a, r2a, v2a;
   TriaxialLine l1(t, bet1x, omg1x, alp1x);
   TriaxialLine l2(t, bet2x, omg2x, alp2x);
