@@ -41,8 +41,7 @@ namespace GeographicLib {
     void Norm(vec10& y) const;
   public:
     TriaxialODE(const Triaxial& t, vec3 r1, vec3 v1);
-    TriaxialODE(const Triaxial& t, const Angle& bet1, const Angle& omg1,
-                const Angle& alp1);
+    TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1);
     TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1);
     int Position(real s12, vec3& r2, vec3& v2, real eps = 0) const;
     int Position(real s12, vec3& r2, vec3& v2, real& m12, real& M12, real& M21,

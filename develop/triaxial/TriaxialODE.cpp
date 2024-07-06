@@ -31,8 +31,8 @@ namespace GeographicLib {
     _t.Norm(_r1, _v1);
   }
 
-  TriaxialODE::TriaxialODE(const Triaxial& t, const Angle& bet1,
-                           const Angle& omg1, const Angle& alp1)
+  TriaxialODE::TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1,
+                           Angle alp1)
     : _t(t)
     , _b(t.b())
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})

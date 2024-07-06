@@ -270,7 +270,7 @@ namespace GeographicLib {
     // TO DO: supplement with 1 iteration of 2d Newton
   }
 
-  void TriaxialLine::Hybrid(const Angle& bet2,
+  void TriaxialLine::Hybrid(Angle bet2,
                             Angle& bet2a, Angle& omg2a, Angle& alp2a,
                             real& s12)
     const {
@@ -288,7 +288,7 @@ namespace GeographicLib {
   }
   TriaxialLine::fline::disttx
   TriaxialLine::fline::Hybrid(const fics& fic,
-                              const Angle& bet2,
+                              Angle bet2,
                               Angle& bet2a, Angle& omg2a, Angle& alp2a)
     const {
     ang tau12;
@@ -344,7 +344,7 @@ namespace GeographicLib {
   {}
 
   Math::real TriaxialLine::fline::Hybrid0(const fics& fic,
-                                          const Angle& bet2, const Angle& omg2)
+                                          Angle bet2, Angle omg2)
   const {
     ang bet2a, omg2a, alp2a, omg2b(omg2);
     (void) Hybrid(fic, bet2, bet2a, omg2a, alp2a);
@@ -354,7 +354,7 @@ namespace GeographicLib {
   }
 
   TriaxialLine::fline::disttx
-  TriaxialLine::fline::ArcPos0(const fics& fic, const Angle& tau12,
+  TriaxialLine::fline::ArcPos0(const fics& fic, Angle tau12,
                                Angle& bet2a, Angle& omg2a, Angle& alp2a,
                                bool betp)
     const {
@@ -422,6 +422,8 @@ namespace GeographicLib {
         alp2a = ang(fic.nN * _t._kp * fic.eE * parity / cosh(v2),
                     _t._k / cosh(u2)).rebase(alp0x);
         ii = int(bet2n.second);
+        // Move forward from umbilical point
+        bet2a += ang::eps();
       } else {
         omg2a = fic.omg1 + tau12.flipsign(fic.eE);
         pair<real, real> omg2n =
@@ -437,6 +439,8 @@ namespace GeographicLib {
         alp2a = ang(fic.eE * _t._kp / cosh(v2),
                     _t._k * fic.nN * parity / cosh(u2)).rebase(alp0x);
         ii = int(omg2n.second);
+        // Move forward from umbilical point
+        omg2a += ang::eps();
       }
       ret.betw2 = u2;
       ret.omgw2 = v2;
@@ -449,8 +453,8 @@ namespace GeographicLib {
   }
 
   TriaxialLine::fline::fics::fics(const fline& f,
-                                  const Angle& bet10, const Angle& omg10,
-                                  const Angle& alp10)
+                                  Angle bet10, Angle omg10,
+                                  Angle alp10)
     : bet1(bet10)
       // omg10 - 90
     , omg1(omg10 - ang::cardinal(1))

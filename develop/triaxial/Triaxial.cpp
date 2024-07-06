@@ -61,8 +61,8 @@ namespace GeographicLib {
     , _umbalt(false)
     , _debug(false)
   {
-    _a = _b * sqrt(1 + _e2 * _k2);
-    _c = _b * sqrt(1 - _e2 * _kp2);
+    _a = _b * sqrt(1 + _e2 * _kp2);
+    _c = _b * sqrt(1 - _e2 * _k2);
     _axes = vec3({_a, _b, _c});
     real ksum = _k2 + _kp2;
     if (! (isfinite(_a) && isfinite(_b) && isfinite(_c) &&
@@ -115,7 +115,7 @@ namespace GeographicLib {
     bet = ang(sb, cb, 0, true); omg = ang(so, co, 0, true);
   }
 
-  void Triaxial:: cart2toellip(const Angle& bet, const Angle& omg,
+  void Triaxial:: cart2toellip(Angle bet, Angle omg,
                                vec3 v, Angle& alp) const {
     real tz = hypot(_k, _kp * omg.s()),
       tx = hypot(_k * bet.c(), _kp);
@@ -174,7 +174,7 @@ namespace GeographicLib {
     cart2toellip(bet, omg, v, alp);
   }
 
-  void Triaxial::elliptocart2(const Angle& bet, const Angle& omg,
+  void Triaxial::elliptocart2(Angle bet, Angle omg,
                               vec3& r) const {
     real tx = hypot(_k * bet.c(), _kp), tz = hypot(_k, _kp * omg.s());
     r = vec3{ _a * omg.c() * tx,
@@ -183,8 +183,8 @@ namespace GeographicLib {
     // Norm(r); r is already normalized
   }
 
-  void Triaxial::elliptocart2(const Angle& bet, const Angle& omg,
-                              const Angle& alp,
+  void Triaxial::elliptocart2(Angle bet, Angle omg,
+                              Angle alp,
                               vec3& r, vec3& v) const {
     elliptocart2(bet, omg, r);
     real tx = hypot(_k * bet.c(), _kp), tz = hypot(_k, _kp * omg.s());
@@ -234,8 +234,8 @@ namespace GeographicLib {
     omg1.round();
     bet2.round();
     omg2.round();
-    bool flip1 = AngNorm(bet1, omg1);
-    (void) AngNorm(bet2, omg2);
+    ang bet10(bet1), omg10(omg1);
+    bool flip1 = AngNorm(bet1, omg1), flip2 = AngNorm(bet2, omg2);
     bool umb1 = bet1.c() == 0 && omg1.s() == 0,
       umb2 = bet2.c() == 0 && omg2.s() == 0;
     bool swap12;
@@ -335,7 +335,7 @@ namespace GeographicLib {
     TL::fline::disttx d;
 
     // flag for progress
-    bool done = false;
+    bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
       // both points on middle ellipse
       lf = TL::fline(*this, gamblk{}, 0.5, 1.5);
@@ -346,6 +346,7 @@ namespace GeographicLib {
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
         d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, true);
         if (_debug) msg = "opposite umbilics";
+        backside = signbit(bet2a.c());
         done = true;
       } else if (bet1.c() == 0 && bet2.c() == 0) {
         // bet1 = -90, bet2 = +/-90
@@ -354,17 +355,17 @@ namespace GeographicLib {
           alp1 = ang::cardinal(1);
           fic = TL::fline::fics(lf, bet1, omg1, alp1);
           ang omg12 = omg2 - omg1;
-          d = omg12.s() == 0 && omg12.c() < 0 ?
+          if (omg12.s() == 0 && omg12.c() < 0) {
             // adjacent E/W umbilical points
-            TL::fline::disttx{-BigValue(), BigValue(), 0 } :
-            lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
-          if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
-          if (_debug) {
-            if (omg12.s() == 0 && omg12.c() < 0)
-              msg = "adjacent EW umbilics";
-            else
-              msg = "bet1/2 = -90";
+            // Should be able to get ArcPos0 to return this?
+            d = TL::fline::disttx{-BigValue(), BigValue(), 0 };
+            if (_debug) msg = "adjacent EW umbilics";
+            alp2 = ang::cardinal(0);
+          } else {
+            d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
+            if (_debug) msg = "bet1/2 = -90";
           }
+          if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
           done = true;
         } else {
           // bet1 = -90, bet2 = 90
@@ -375,7 +376,9 @@ namespace GeographicLib {
           // If point 1 is [-90, 0] and point 2 is [90, 0]
           if (omg1.s() == 0 && omg2.s() == 0) {
             // adjacent N/S umbilical points
+            // Should be able to get ArcPos0 to return this?
             d = TL::fline::disttx{BigValue(), -BigValue(), 0};
+            alp2 = ang::cardinal(1);
             if (_debug) msg = "adjacent NS umbilics";
             done = true;
           } else {
@@ -452,7 +455,7 @@ namespace GeographicLib {
       done = true;
     } else if (bet1.c() == 0) {
       // bet1 = -90 to general point
-      if (omg2.s() > 0) {
+      if (!signbit(omg2.s())) {
         alpa = ang::cardinal(-1) + ang::eps();
         alpb = -alpa;
         fa = -omg2.radians();
@@ -486,31 +489,30 @@ namespace GeographicLib {
 
       lf = TL::fline(*this, gamblk{}, 0.5, 1.5);
       fic = TL::fline::fics(lf, bet1, omg1, alpb);
-      {
-        unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
-        for (; !done && qb <= 4U; ++qb, ++qa) {
-          if (qb) {
-            alpb.setquadrant(qb);
-            fic.setquadrant(lf, qb);
-          }
-          if (qb < 4U) {
-            f[qb] = lf.Hybrid0(fic, bet2, omg2);
-            if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
-              alp1 = alpb;
-              d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
-              if (_debug) msg = "accidental umbilic";
-              done = true;
-              break;
-            }
-          }
-          if (qb && (f[qa & 3U] < 0 && f[qb & 3U] > 0)) {
+      unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
+      for (; !done && qb <= 4U; ++qb, ++qa) {
+        if (qb) {
+          alpb.setquadrant(qb);
+          fic.setquadrant(lf, qb);
+        }
+        if (qb < 4U) {
+          f[qb] = lf.Hybrid0(fic, bet2, omg2);
+          if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
+            alp1 = alpb;
+            d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+            if (_debug) msg = "accidental umbilic";
+            backside = signbit(bet2a.c()); // qb == 1U || qb == 2U;
+            done = true;
             break;
           }
         }
-        if (!done) {
-          fa = f[qa & 3U]; fb = f[qb & 3U];
-          alpa.setquadrant(qa & 3U);
+        if (qb && (f[qa & 3U] < 0 && f[qb & 3U] > 0)) {
+          break;
         }
+      }
+      if (!done) {
+        fa = f[qa & 3U]; fb = f[qb & 3U];
+        alpa.setquadrant(qa);
       }
       if (_debug) msg = "general";
     }
@@ -528,22 +530,32 @@ namespace GeographicLib {
                       alpa,  alpb,
                       fa, fb,
                       &countn, &countb);
+      alp1.round();
       lf = TL::fline(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+      backside = signbit(bet2a.c());
     }
+
+    if (backside) alp2.reflect(true, true);
+    alp2.round();
 
     TL::gline lg(*this, lf.gm());
     TL::gline::gics gic(lg, fic);
     s12 = lg.dist(gic, d);
-    (void) AngNorm(bet2a, omg2a, alp2);
 
+    if (_debug)
+    cerr << "A " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     // Undo switches in reverse order flipz, swap12, flip1
     if (flipomg) {
       omg2.reflect(true);
       alp2.reflect(true, true);
     }
 
+    if (_debug)
+    cerr << "B " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipx) {
       omg1.reflect(false, true);
       omg2.reflect(false, true);
@@ -551,6 +563,9 @@ namespace GeographicLib {
       alp2.reflect(true);
     }
 
+    if (_debug)
+    cerr << "C " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipy) {
       omg1.reflect(true);
       omg2.reflect(true, true);
@@ -558,6 +573,9 @@ namespace GeographicLib {
       alp2.reflect(true);
     }
 
+    if (_debug)
+    cerr << "D " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipz) {
       bet1.reflect(true);
       bet2.reflect(true);
@@ -565,22 +583,34 @@ namespace GeographicLib {
       alp2.reflect(false, true);
     }
 
+    if (_debug)
+    cerr << "E " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+         << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (swap12) {
       swap(bet1, bet2);
       swap(omg1, omg2);
       swap(alp1, alp2);
       swap(umb1, umb2);
-      alp1 += ang::cardinal(umb1 ? 1 : 2);
-      alp2 += ang::cardinal(umb2 ? 1 : 2);
+      // points not swapped if umb1 == true
+      alp1 += ang::cardinal(2);
+      if (umb2)
+        alp2 += ang::cardinal((signbit(alp2.s()) ? -1 : 1) * bet2.s());
+      else
+        alp2 += ang::cardinal(2);
     }
 
-    if (flip1)
-      Flip(bet1, omg1, alp1);
+    if (_debug)
+    cerr << "F " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+         << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+    if (flip1) Flip(bet1, omg1, alp1);
+    if (flip2) Flip(bet2, omg2, alp2);
+    alp1.setn(); alp2.setn();
+    if (_debug)
+    cerr << "G " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+         << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
 
-    if (flip1 || swap12 || flipz || flipy || flipx) {
-      fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      gic = TL::gline::gics(lg, fic);
-    }
+    fic = TL::fline::fics(lf, bet10, omg10, alp1);
+    gic = TL::gline::gics(lg, fic);
     gic.s13 = fmax(real(0), s12);
 
     if (_debug)
@@ -593,9 +623,9 @@ namespace GeographicLib {
   }
 
   Math::real Triaxial::HybridA(const Triaxial& t,
-                               const Angle& bet1, const Angle& omg1,
-                               const Angle& alp1,
-                               const Angle& bet2, const Angle& omg2) {
+                               Angle bet1, Angle omg1,
+                               Angle alp1,
+                               Angle bet2, Angle omg2) {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     gamblk gam = t.gamma(b1, o1, a1);
     TriaxialLine::fline l(t, gam, 0.5, 1.5);
@@ -692,13 +722,14 @@ namespace GeographicLib {
     return xm;
   }
 
-  Triaxial::gamblk Triaxial::gamma(const Angle& bet, const Angle& omg,
-                                   const Angle& alp) const {
+  Triaxial::gamblk Triaxial::gamma(Angle bet, Angle omg, Angle alp) const {
     real a = _k * bet.c() * alp.s(), b = _kp * omg.s() * alp.c(),
       gam = (a - b) * (a + b);
     // This direct test case
-    // -30 -86 58.455576621187896848 -1.577754
+    // -30 -86 58.455576621187896848 -1.577754271270003
     // fails badly with reverse direct if gam is not set to zero here.
+    // Neighboring values of alp as double are
+    // 58.455576621187890, 58.455576621187895, 58.455576621187900
     if (2*fabs(gam) < 3*numeric_limits<real>::epsilon())
       gam = 0;
     real gamp = gam == 0 ? 0 :

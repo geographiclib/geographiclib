@@ -42,14 +42,13 @@ namespace GeographicLib {
     }
 
     static real HybridA(const Triaxial& t,
-                        const Angle& bet1, const Angle& omg1,
-                        const Angle& alp1,
-                        const Angle& bet2, const Angle& omg2);
-    static Angle findroot(const
-                             std::function<Math::real(const Angle&)>& f,
-                             Angle xa,  Angle xb,
-                             Math::real fa, Math::real fb,
-                             int* countn = nullptr, int* countb = nullptr);
+                        Angle bet1, Angle omg1,
+                        Angle alp1,
+                        Angle bet2, Angle omg2);
+    static Angle findroot(const std::function<Math::real(const Angle&)>& f,
+                          Angle xa,  Angle xb,
+                          Math::real fa, Math::real fb,
+                          int* countn = nullptr, int* countb = nullptr);
     real _a, _b, _c;            // semi-axes
     vec3 _axes;
     real _e2, _k2, _kp2, _k, _kp;
@@ -117,11 +116,11 @@ namespace GeographicLib {
     void cart2toellip(vec3 r, Angle& bet, Angle& omg) const;
     void cart2toellip(vec3 r, vec3 v,
                       Angle& bet, Angle& omg, Angle& alp) const;
-    void cart2toellip(const Angle& bet, const Angle& omg,
+    void cart2toellip(Angle bet, Angle omg,
                       vec3 v, Angle& alp) const;
-    void elliptocart2(const Angle& bet, const Angle& omg, vec3& r) const;
-    void elliptocart2(const Angle& bet, const Angle& omg,
-                      const Angle& alp,
+    void elliptocart2(Angle bet, Angle omg, vec3& r) const;
+    void elliptocart2(Angle bet, Angle omg,
+                      Angle alp,
                       vec3& r, vec3& v) const;
     real EuclideanInverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
                           Angle& alp1, Angle& alp2) const;
@@ -159,7 +158,7 @@ namespace GeographicLib {
       //   unused for gam == 0
         nu, nup;
     };
-    gamblk gamma(const Angle& bet, const Angle& omg, const Angle& alp)
+    gamblk gamma(Angle bet, Angle omg, Angle alp)
       const;
   };
 

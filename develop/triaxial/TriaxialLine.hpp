@@ -211,7 +211,7 @@ namespace GeographicLib {
         int nN, eE;             // Northgoing / eastgoing
         fics() {}
         fics(const fline& f,
-             const Angle& bet1, const Angle& omg1, const Angle& alp1);
+             Angle bet1, Angle omg1, Angle alp1);
 
         void setquadrant(const fline& f, unsigned q);
       };
@@ -230,10 +230,10 @@ namespace GeographicLib {
       real gamma() const { return _gm.gamma; }
       const Triaxial::gamblk& gm() const { return _gm; }
       real Hybrid0(const fics& ic,
-                   const Angle& bet2, const Angle& omg2) const;
-      disttx Hybrid(const fics& fic, const Angle& bet2,
+                   Angle bet2, Angle omg2) const;
+      disttx Hybrid(const fics& fic, Angle bet2,
                     Angle& bet2a, Angle& omg2a, Angle& alp2a) const;
-      disttx ArcPos0(const fics& fic, const Angle& tau12,
+      disttx ArcPos0(const fics& fic, Angle tau12,
                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
                      bool betp = true) const;
     };
@@ -292,7 +292,7 @@ namespace GeographicLib {
     static real lamang0(Angle x) {
       // lam(x) when x is an ang -- no clamping
       using std::asinh; using std::fabs;
-      return asinh(x.s()/fabs(x.c()));
+      return asinh(x.t());
     }
     static real lamang(Angle x) {
       // lam(x) when x is an ang -- with clamping
@@ -340,7 +340,7 @@ namespace GeographicLib {
     // bet1 < 0, alp1 in [-90,90], omg2 = 0
     // bet1 == 0, alp1 in (-90,90), omg2 = 0,
     //                   alp1 = +/-90 omg2 = conj pt
-    void Hybrid(const Angle& bet2,
+    void Hybrid(Angle bet2,
                 Angle& bet2a, Angle& omg2a, Angle& alp2a,
                 real& s12) const;
     real gamma() const { return _f.gamma(); }

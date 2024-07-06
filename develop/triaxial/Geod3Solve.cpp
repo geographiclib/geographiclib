@@ -18,15 +18,18 @@
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
+#include "Angle.hpp"
+#include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
 #include "TriaxialODE.hpp"
 
 // #include "GeodSolve.usage"
 
 typedef GeographicLib::Math::real real;
+typedef GeographicLib::Angle ang;
 
 void DecodeLatLon(const std::string& stra, const std::string& strb,
-                  real& lat, real& lon,
+                  ang& lat, ang& lon,
                   bool longfirst) {
   using namespace GeographicLib;
   real a, b;
@@ -45,137 +48,65 @@ void DecodeLatLon(const std::string& stra, const std::string& strb,
     throw GeographicErr("Both " + stra + " and "
                         + strb + " interpreted as "
                         + (ia == DMS::LATITUDE ? "latitudes" : "longitudes"));
-  lat = ia == DMS::LATITUDE ? a : b;
-  lon = ia == DMS::LATITUDE ? b : a;
+  lat = ang(ia == DMS::LATITUDE ? a : b);
+  lon = ang(ia == DMS::LATITUDE ? b : a);
 }
 
-real DecodeAzimuth(const std::string& azistr) {
+ang DecodeAzimuth(const std::string& azistr) {
   using namespace GeographicLib;
   DMS::flag ind;
   real azi = DMS::Decode(azistr, ind);
   if (ind == DMS::LATITUDE)
     throw GeographicErr("Azimuth " + azistr
                         + " has a latitude hemisphere, N/S");
-  return azi;
+  return ang(azi);
 }
 
-std::string BetOmgString(real bet, real omg, int prec, bool dms, char dmssep,
+std::string BetOmgString(ang bet, ang omg, int prec, bool dms, char dmssep,
                          bool longfirst) {
   using namespace GeographicLib;
   std::string
-    betstr = dms ? DMS::Encode(bet, prec + 5, DMS::LATITUDE, dmssep) :
-    DMS::Encode(bet, prec + 5, DMS::NUMBER),
-    omgstr = dms ? DMS::Encode(omg, prec + 5, DMS::LONGITUDE, dmssep) :
-    DMS::Encode(omg, prec + 5, DMS::NUMBER);
+    betstr = dms ? DMS::Encode(real(bet), prec + 5, DMS::LATITUDE, dmssep) :
+    DMS::Encode(real(bet), prec + 5, DMS::NUMBER),
+    omgstr = dms ? DMS::Encode(real(omg), prec + 5, DMS::LONGITUDE, dmssep) :
+    DMS::Encode(real(omg), prec + 5, DMS::NUMBER);
   return
     (longfirst ? omgstr : betstr) + " " + (longfirst ? betstr : omgstr);
 }
 
-std::string AzimuthString(real alp, int prec, bool dms, char dmssep) {
+std::string AzimuthString(ang alp, int prec, bool dms, char dmssep) {
   using namespace GeographicLib;
-  return dms ? DMS::Encode(alp, prec + 5, DMS::AZIMUTH, dmssep) :
-    DMS::Encode(alp, prec + 5, DMS::NUMBER);
-}
-
-std::string DistanceString(real s12, int prec) {
-  using namespace GeographicLib;
-  return  Utility::str(s12, prec);
-}
-
-real ReadDistance(const std::string& s, bool arcmode, bool fraction = false) {
-  using namespace GeographicLib;
-  return fraction ? Utility::fract<real>(s) :
-    (arcmode ? DMS::DecodeAngle(s) : Utility::val<real>(s));
+  return dms ? DMS::Encode(real(alp), prec + 5, DMS::AZIMUTH, dmssep) :
+    DMS::Encode(real(alp), prec + 5, DMS::NUMBER);
 }
 
 int usage(int retval, bool /*brief*/) { return retval; }
-
-// Need to specify modes of operation here!
-// bet1 omg1 bet2 omg2 -> alp1 alp2 s12 (Jac)  -i
-// bet1 omg1 bet2 omg2 -> bet1 omg1 alp1 bet1 omg1 alp2 s12 m12 M12 M21
-//                        (Jac and ODE)  -f
-// bet1 omg1 alp1 s12 -> bet2 omg2 alp2 (Jac) none
-// bet1 omg1 alp1 ds nmin nmax -> bet2 omg2 alp2 ... (Jac or ODE) -s, -s --cart
-// bet1 omg1 alp1 ds nmin nmax -> bet2 omg2 alp2 dr dv (Jac and ODE + diff)
-//                         -s --diff
-// Full line -> inverse error dr Jac -i --diff
-// Full line -> forward direct error dr dv Jac or ODE --diff, --diff --cart
-// Full line -> reverse direct error dr dv Jav or ODE
-//                         --diff -r, --diff --cart -r
 
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     typedef GeographicLib::Angle ang;
-    enum { NONE = 0, LINE, DIRECT, INVERSE };
     Utility::set_digits();
-    bool inverse = false, arcmode = false,
-      dms = false, full = false, unroll = false,
-      longfirst = false, azi2back = false, fraction = false,
-      lineseq = false, cart = false;
+    bool inverse = false,
+      dms = false, full = false, unroll = true,
+      longfirst = false,
+      lineseq = false, cart = false, bench = false, reverse = false,
+      debug = false;
     real
       a = 6378172, b = 6378102, c = 6356752;
-    real bet1, omg1, alp1, bet2, omg2, alp2, s12,
-      mult = 1;
-    int linecalc = NONE, prec = 3;
+    ang bet1, omg1, alp1, bet2, omg2, alp2;
+    real s12;
+    int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
     real ds = 0;
     long nmin = 0, nmax = 0;
 
+    Triaxial t(a, b, c);
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
       if (arg == "-i") {
         inverse = true;
-        linecalc = NONE;
-      } else if (arg == "-a")
-        arcmode = !arcmode;
-      else if (arg == "-F")
-        fraction = true;
-      else if (arg == "-L") {
-        inverse = false;
-        linecalc = LINE;
-        if (m + 3 >= argc) return usage(1, true);
-        try {
-          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                       bet1, omg1, longfirst);
-          alp1 = DecodeAzimuth(std::string(argv[m + 3]));
-        }
-        catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
-          return 1;
-        }
-        m += 3;
-      } else if (arg == "-D") {
-        inverse = false;
-        linecalc = DIRECT;
-        if (m + 4 >= argc) return usage(1, true);
-        try {
-          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                       bet1, omg1, longfirst);
-          alp1 = DecodeAzimuth(std::string(argv[m + 3]));
-          s12 = ReadDistance(std::string(argv[m + 4]), arcmode);
-        }
-        catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -D: " << e.what() << "\n";
-          return 1;
-        }
-        m += 4;
-      } else if (arg == "-I") {
-        inverse = false;
-        linecalc = INVERSE;
-        if (m + 4 >= argc) return usage(1, true);
-        try {
-          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                       bet1, omg1, longfirst);
-          DecodeLatLon(std::string(argv[m + 3]), std::string(argv[m + 4]),
-                       bet2, omg2, longfirst);
-        }
-        catch (const std::exception& e) {
-          std::cerr << "Error decoding arguments of -I: " << e.what() << "\n";
-          return 1;
-        }
-        m += 4;
       } else if (arg == "-t") {
         if (m + 3 >= argc) return usage(1, true);
         try {
@@ -187,7 +118,26 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -t: " << e.what() << "\n";
           return 1;
         }
+        t = Triaxial(a, b, c);
         m += 3;
+      } else if (arg == "-e") {
+        // Cayley ellipsoid sqrt([2,1,1/2]) is
+        // -e 1 3/2 1/3 2/3
+        if (m + 4 >= argc) return usage(1, true);
+        real e2, k2, kp2;
+        try {
+          b = Utility::val<real>(std::string(argv[m + 1]));
+          e2 = Utility::fract<real>(std::string(argv[m + 2]));
+          k2 = Utility::fract<real>(std::string(argv[m + 3]));
+          kp2 = Utility::fract<real>(std::string(argv[m + 4]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+          return 1;
+        }
+        t = Triaxial(b, e2, k2, kp2);
+        a = t.a(); c = t.c();
+        m += 4;
       } else if (arg == "-s") {
         if (m + 3 >= argc) return usage(1, true);
         try {
@@ -199,12 +149,16 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -s: " << e.what() << "\n";
           return 1;
         }
+        if (nmin > 0 || nmax < 0) {
+          std::cerr << "Bad values of nmin or nmax\n";
+          return 1;
+        }
         m += 3;
         lineseq = true;
       } else if (arg == "--cart")
         cart = true;
       else if (arg == "-u")
-        unroll = true;
+        unroll = !unroll;
       else if (arg == "-d") {
         dms = true;
         dmssep = '\0';
@@ -213,10 +167,14 @@ int main(int argc, const char* const argv[]) {
         dmssep = ':';
       } else if (arg == "-w")
         longfirst = !longfirst;
-      else if (arg == "-b")
-        azi2back = true;
       else if (arg == "-f")
         full = true;
+      else if (arg == "--bench")
+        bench = true;
+      else if (arg == "-r")
+        reverse = true;
+      else if (arg == "--debug")
+        debug = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -253,8 +211,13 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
+    real errmult = 1000000;
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
+      return 1;
+    }
+    if (inverse && cart) {
+      std::cerr << "Cannot specify -i and --cart together\n";
       return 1;
     }
     if (ifile == "-") ifile.clear();
@@ -290,43 +253,13 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    const Triaxial t(a, b, c);
-    TriaxialLine ls(t);
-    if (linecalc)
-      ls = TriaxialLine(t, bet1, omg1, alp1);
-    if (lineseq) {
-      if (cart) {
-        Triaxial::vec3 r1, v1;
-        t.elliptocart2(ang(bet1), ang(omg1),
-                       ang(alp1), r1, v1);
-        std::vector<Triaxial::vec3> r2, v2;
-        TriaxialODE direct(t, r1, v1);
-        direct.Position(ds, nmin, nmax, r2, v2);
-        for (size_t i = 0; i < r2.size(); ++i) {
-          ang bet2, omg2, alp2;
-          t.cart2toellip(r2[i], v2[i], bet2, omg2, alp2);
-          *output << BetOmgString(real(bet2), real(omg2),
-                                  prec, dms, dmssep, longfirst)
-                  << " " << AzimuthString(real(alp2), prec, dms, dmssep)
-                  << "\n";
-        }
-      } else {
-        for (long n = nmin; n <= nmax; ++n) {
-          real s12 = n * ds;
-          ls.Position(s12, bet2, omg2, alp2, unroll);
-          *output << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
-                  << " " << AzimuthString(alp2, prec, dms, dmssep)
-                  << "\n";
-        }
-      }
-      return 0;
-    }
-    using std::round; using std::log10;
-    int disprec = int(round(log10(b/6400000)));
+    t.debug(debug);
+    using std::round; using std::log10; using std::fabs;
+    int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    std::string s, eol, sbet1, somg1, sbet2, somg2, salp1, ss12, strc;
+    std::string s, eol, sbet1, somg1, salp1, sbet2, somg2, salp2, ss12, strc;
     std::istringstream str;
     int retval = 0;
     while (std::getline(*input, s)) {
@@ -340,70 +273,149 @@ int main(int argc, const char* const argv[]) {
           }
         }
         str.clear(); str.str(s);
-        if (inverse) {
+// Need to specify modes of operation here!
+// bet1 omg1 bet2 omg2 -> alp1 alp2 s12 (Jac)  -i
+// bet1 omg1 bet2 omg2 -> bet1 omg1 alp1 bet1 omg1 alp2 s12 m12 M12 M21
+//                        (Jac and ODE)  -f
+// bet1 omg1 alp1 s12 -> bet2 omg2 alp2 (Jac or cart)
+// bet1 omg1 alp1 ds nmin nmax -> bet2 omg2 alp2 ... (Jac or ODE) -s, -s --cart
+// bet1 omg1 alp1 ds nmin nmax -> bet2 omg2 alp2 dr dv (Jac and ODE + bench)
+//                         -s --bench
+// Full line -> inverse error dr Jac -i --bench
+// Full line -> forward direct error dr dv Jac or ODE --bench, --bench --cart
+// Full line -> reverse direct error dr dv Jav or ODE
+//                         --bench -r, --bench --cart -r
+
+
+        if (!bench && (inverse || full)) {
           if (!(str >> sbet1 >> somg1 >> sbet2 >> somg2))
             throw GeographicErr("Incomplete input: " + s);
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
           DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
+          (void) t.Inverse(bet1, omg1, bet2, omg2, alp1, alp2, s12);
           if (full) {
-            if (unroll) {
-              real e;
-              omg2 = omg1 + Math::AngDiff(omg1, omg2, e);
-              omg2 += e;
-            } else {
-              omg1 = Math::AngNormalize(omg1);
-              omg2 = Math::AngNormalize(omg2);
-            }
+            TriaxialODE l(t, bet1, omg1, alp1);
+            ang bet2a, omg2a, alp2a;
+            real m12, M12, M21;
+            (void) l.Position(s12, bet2a, omg2a, alp2a, m12, M12, M21);
+            // Strip trailing 0's and convert -180 to 180 with
+            // sed -e 's/\.\([0-9]*[1-9]\)0*\b/.\1/g'
+            //     -e 's/\.00*\b//g'
+            //     -e 's/ -180 / 180 /g'
             *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
-                    << " ";
+                    << " " << AzimuthString(alp1, prec, dms, dmssep)
+                    << " "
+                    << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
+                    << " " << AzimuthString(alp2, prec, dms, dmssep)
+                    << " "
+                    << Utility::str(s12, prec + disprec) << " "
+                    << Utility::str(m12, prec + disprec) << " "
+                    << Utility::str(M12, prec+7) << " "
+                    << Utility::str(M21, prec+7) << eol;
+          } else
+            *output << AzimuthString(alp1, prec, dms, dmssep) << " "
+                    << AzimuthString(alp2, prec, dms, dmssep) << " "
+                    << Utility::str(s12, prec + disprec) << eol;
+        } else if (lineseq) {
+          if (!(str >> sbet1 >> somg1 >> salp1))
+            throw GeographicErr("Incomplete input: " + s);
+          if (str >> strc)
+            throw GeographicErr("Extraneous input: " + strc);
+          DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+          alp1 = DecodeAzimuth(salp1);
+          std::vector<ang> bet2v, omg2v, alp2v, bet2w, omg2w, alp2w;
+          if (bench || !cart) {
+            int m = nmax - nmin + 1;
+            bet2v.resize(m); omg2v.resize(m); alp2v.resize(m);
+            TriaxialLine l(t, bet1, omg1, alp1);
+            for (int i = nmin, k = 0; i <= nmax; ++i, ++k)
+              l.Position(i * ds, bet2v[k], omg2v[k], alp2v[k]);
+            if (!unroll) {
+              for (int k = 0; k <= nmax - nmin; ++k)
+                Triaxial::AngNorm(bet2v[k], omg2v[k], alp2v[k]);
+            }
           }
-          *output << AzimuthString(alp1, prec, dms, dmssep) << " ";
-          if (full)
-            *output << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
-                    << " ";
-          if (azi2back) {
-            using std::copysign;
-            // map +/-0 -> -/+180; +/-180 -> -/+0
-            // this depends on abs(alp2) <= 180
-            alp2 = copysign(alp2 + copysign(real(Math::hd), -alp2), -alp2);
+          if (bench || cart) {
+            TriaxialODE l(t, bet1, omg1, alp1);
+            l.Position(ds, nmin, nmax, bet2w, omg2w, alp2w);
           }
-          *output << AzimuthString(alp2, prec, dms, dmssep) << " "
-                  << DistanceString(s12, prec + disprec);
-          *output << eol;
-        } else {
-          if (linecalc) {
-            if (!(str >> ss12))
-              throw GeographicErr("Incomplete input: " + s);
-            if (str >> strc)
-              throw GeographicErr("Extraneous input: " + strc);
-            // In fraction mode input is read as a distance
-            s12 = ReadDistance(ss12, !fraction && arcmode, fraction) * mult;
-            ls.Position(s12, bet2, omg2, alp2);
+          for (int k = 0; k <= nmax - nmin; ++k) {
+            if (!bench) {
+              if (cart)
+                *output << BetOmgString(bet2w[k], omg2w[k], prec, dms,
+                                        dmssep, longfirst) << " "
+                        << AzimuthString(alp2w[k], prec, dms, dmssep) << eol;
+              else
+                *output << BetOmgString(bet2v[k], omg2v[k], prec, dms,
+                                        dmssep, longfirst) << " "
+                        << AzimuthString(alp2v[k], prec, dms, dmssep) << eol;
+            } else {
+              std::pair<real, real> diff =
+                t.EuclideanDiff(bet2v[k], omg2v[k], alp2v[k],
+                                bet2w[k], omg2w[k], alp2w[k]);
+              *output << BetOmgString(bet2v[k], omg2v[k], prec, dms,
+                                      dmssep, longfirst) << " "
+                      << AzimuthString(alp2v[k], prec, dms, dmssep) << " "
+                      << Utility::str(diff.first * errmult) << " "
+                      << Utility::str(diff.second * errmult) << eol;
+            }
+          }
+        } else if (bench) {
+          if (!(str >> sbet1 >> somg1 >> salp1
+                >> sbet2 >> somg2 >> salp2 >> ss12))
+            throw GeographicErr("Incomplete input: " + s);
+          if (str >> strc)
+            throw GeographicErr("Extraneous input: " + strc);
+          DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+          alp1 = DecodeAzimuth(salp1);
+          DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
+          alp2 = DecodeAzimuth(salp2);
+          s12 = Utility::val<real>(ss12);
+          if (inverse) {
+            real s12a;
+            t.Inverse(bet1, omg1, bet2, omg2, alp1, alp2, s12a);
+            *output << Utility::str(fabs(s12 - s12a)) << eol;
+          } else if (reverse) {
+            ang bet1a, omg1a, alp1a;
+            if (cart) {
+              TriaxialODE l(t, bet2, omg2, alp2);
+              l.Position(-s12, bet1a, omg1a, alp1a);
+            } else
+              t.Direct(bet2, omg2, alp2, -s12, bet1a, omg1a, alp1a);
+            std::pair<real, real> diff =
+              t.EuclideanDiff(bet1a, omg1a, alp1a, bet1, omg1, alp1);
+            *output << Utility::str(diff.first * errmult) << " "
+                    << Utility::str(diff.second * errmult) << eol;
           } else {
-            if (!(str >> sbet1 >> somg1 >> salp1 >> ss12))
-              throw GeographicErr("Incomplete input: " + s);
-            if (str >> strc)
-              throw GeographicErr("Extraneous input: " + strc);
-            DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
-            alp1 = DecodeAzimuth(salp1);
-            s12 = ReadDistance(ss12, arcmode);
-            ls = TriaxialLine(t, bet1, omg1, alp1);
-            ls.Position(s12, bet2, omg2, alp2);
+            ang bet2a, omg2a, alp2a;
+            if (cart) {
+              TriaxialODE l(t, bet1, omg1, alp1);
+              l.Position(s12, bet2a, omg2a, alp2a);
+            } else
+              t.Direct(bet1, omg1, alp1, s12, bet2a, omg2a, alp2a);
+            std::pair<real, real> diff =
+              t.EuclideanDiff(bet2a, omg2a, alp2a, bet2, omg2, alp2);
+            *output << Utility::str(diff.first * errmult) << " "
+                    << Utility::str(diff.second * errmult) << eol;
           }
-          if (azi2back) {
-            using std::copysign;
-            // map +/-0 -> -/+180; +/-180 -> -/+0
-            // this depends on abs(alp2) <= 180
-            alp2 = copysign(alp2 + copysign(real(Math::hd), -alp2), -alp2);
-          }
-          *output << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
-                  << " " << AzimuthString(alp2, prec, dms, dmssep);
-          if (full)
-            *output << " "
-                    << DistanceString(s12, prec + disprec);
-          *output << eol;
+        } else {
+          if (!(str >> sbet1 >> somg1 >> salp1 >> ss12))
+            throw GeographicErr("Incomplete input: " + s);
+          if (str >> strc)
+            throw GeographicErr("Extraneous input: " + strc);
+          DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+          alp1 = DecodeAzimuth(salp1);
+          s12 = Utility::val<real>(ss12);
+          if (cart) {
+              TriaxialODE l(t, bet1, omg1, alp1);
+              l.Position(s12, bet2, omg2, alp2);
+          } else
+            t.Direct(bet1, omg1, alp1, s12, bet2, omg2, alp2);
+          *output << BetOmgString(bet2, omg2, prec, dms,
+                                  dmssep, longfirst) << " "
+                  << AzimuthString(alp2, prec, dms, dmssep) << eol;
         }
       }
       catch (const std::exception& e) {
