@@ -30,8 +30,10 @@ namespace GeographicLib {
     , _extended(extended)
     , _dir(0)
     , _nsteps(0)
-    , _step6(_eps, real(0))
-    , _step10(_eps, real(0))
+    , _step6(_eps, real(0),
+             real(1), real(1), real(0), true)
+    , _step10(_eps, real(0),
+              real(1), real(1), real(0), true)
   {
     _t.Norm(_r1, _v1);
   }
@@ -47,8 +49,10 @@ namespace GeographicLib {
     , _extended(extended)
     , _dir(0)
     , _nsteps(0)
-    , _step6(_eps, real(0))
-    , _step10(_eps, real(0))
+    , _step6(_eps, real(0),
+             real(1), real(1), real(0), true)
+    , _step10(_eps, real(0),
+              real(1), real(1), real(0), true)
   {
     _t.elliptocart2(bet1, omg1, alp1, _r1, _v1);
 
@@ -111,14 +115,16 @@ namespace GeographicLib {
     };
     if (_dir == 0) {
       _dir = s12 < 0 ? -1 : 1;
-      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
-      _step6.initialize(y, real(0), _dir / real(4));
+      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
+             _dir * _v1[0], _dir * _v1[1], _dir * _v1[2]};
+      _step6.initialize(y, real(0), 1 / real(4));
       (void) _step6.do_step(fun);
       ++_nsteps;
     }
-    if (_dir * s12 < _dir * _step6.previous_time())
+    s12 *= _dir;
+    if (s12 < _step6.previous_time())
       return false;
-    while (_dir * _step6.current_time() < _dir * s12) {
+    while (_step6.current_time() < s12) {
       (void) _step6.do_step(fun);
       ++_nsteps;
     }
@@ -126,7 +132,7 @@ namespace GeographicLib {
     _step6.calc_state(s12, y);
     Norm(y);
     r2 = {_b * y[0], _b * y[1], _b * y[2]};
-    v2 = {y[3], y[4], y[5]};
+    v2 = {_dir * y[3], _dir * y[4], _dir * y[5]};
     return true;
   }
 
@@ -143,15 +149,17 @@ namespace GeographicLib {
     };
     if (_dir == 0) {
       _dir = s12 < 0 ? -1 : 1;
-      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
+      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
+              _dir * _v1[0], _dir * _v1[1], _dir * _v1[2],
         0, 1, 1, 0};
-      _step10.initialize(y, real(0), _dir / real(4));
+      _step10.initialize(y, real(0), 1 / real(4));
       (void) _step10.do_step(fun);
       ++_nsteps;
     }
-    if (_dir * s12 < _dir * _step10.previous_time())
+    s12 *= _dir;
+    if (s12 < _step10.previous_time())
       return false;
-    while (_dir * _step10.current_time() < _dir * s12) {
+    while (_step10.current_time() < s12) {
       (void) _step10.do_step(fun);
       ++_nsteps;
     }
@@ -159,8 +167,9 @@ namespace GeographicLib {
     _step10.calc_state(s12, y);
     Norm(y);
     r2 = {_b * y[0], _b * y[1], _b * y[2]};
-    v2 = {y[3], y[4], y[5]};
-    m12 = _b * y[6]; M12 = y[8]; M21 = y[7]; // AG Eq 29: dm12/ds2 = M21
+    v2 = {_dir * y[3], _dir * y[4], _dir * y[5]};
+    m12 = _dir * _b * y[6];
+    M12 = y[8]; M21 = y[7];     // AG Eq 29: dm12/ds2 = M21
     return true;
   }
 
