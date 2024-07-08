@@ -10,39 +10,53 @@
 #include "TriaxialODE.hpp"
 #include <iostream>
 #include <iomanip>
-#include <algorithm>
-#include <utility>
-#include <boost/numeric/odeint.hpp>
-#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+#include <limits>
+#include <functional>
 
 namespace GeographicLib {
 
   using namespace std;
 
   TriaxialODE::TriaxialODE(const Triaxial& t,
-                           Triaxial::vec3 r1, Triaxial::vec3 v1)
+                           Triaxial::vec3 r1, Triaxial::vec3 v1,
+                           bool extended, real eps)
     : _t(t)
     , _b(t.b())
+    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(7)/8) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
     , _r1(r1)
     , _v1(v1)
+    , _extended(extended)
+    , _dir(0)
+    , _nsteps(0)
+    , _step6(_eps, real(0))
+    , _step10(_eps, real(0))
   {
     _t.Norm(_r1, _v1);
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1,
-                           Angle alp1)
+                           Angle alp1,
+                           bool extended, real eps)
     : _t(t)
     , _b(t.b())
+    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(7)/8) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
+    , _extended(extended)
+    , _dir(0)
+    , _nsteps(0)
+    , _step6(_eps, real(0))
+    , _step10(_eps, real(0))
   {
     _t.elliptocart2(bet1, omg1, alp1, _r1, _v1);
+
   }
 
-  TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1)
-    : TriaxialODE(t, Angle(bet1), Angle(omg1), Angle(alp1))
+  TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
+                           bool extended, real eps)
+    : TriaxialODE(t, Angle(bet1), Angle(omg1), Angle(alp1), extended, eps)
   {}
 
   void TriaxialODE::Norm(vec6& y) const {
@@ -83,183 +97,90 @@ namespace GeographicLib {
                   y[7], -K * y[6], y[9], -K * y[8] };
   }
 
-  int TriaxialODE::Position(real s12, vec3& r2, vec3& v2, real eps) const {
-    using namespace boost::numeric::odeint;
-    if (eps == 0)
-      eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
-    // Normalize all distances to b.
-    vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
-    Norm(y);
-    int n;
+  bool TriaxialODE::Position(real s12, vec3& r2, vec3& v2) {
+    if (_extended) {
+      real m12, M12, M21;
+      return Position(s12, r2, v2, m12, M12, M21);
+    }
     s12 /= _b;
+    if (s12 == 0) {
+      r2 = _r1; v2 = _v1;
+    }
     auto fun = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
       yp = y; Norm(yp); yp = Accel(yp);
     };
-    bulirsch_stoer<vec6, real> stepper(eps, real(0));
-    n = integrate_adaptive(stepper, fun, y, real(0), s12, 1/real(10));
+    if (_dir == 0) {
+      _dir = s12 < 0 ? -1 : 1;
+      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
+      _step6.initialize(y, real(0), _dir / real(4));
+      (void) _step6.do_step(fun);
+      ++_nsteps;
+    }
+    if (_dir * s12 < _dir * _step6.previous_time())
+      return false;
+    while (_dir * _step6.current_time() < _dir * s12) {
+      (void) _step6.do_step(fun);
+      ++_nsteps;
+    }
+    vec6 y;
+    _step6.calc_state(s12, y);
     Norm(y);
     r2 = {_b * y[0], _b * y[1], _b * y[2]};
     v2 = {y[3], y[4], y[5]};
-    return n;
+    return true;
   }
 
-  int TriaxialODE::Position(real s12, vec3& r2, vec3& v2,
-                              real& m12, real& M12, real& M21,
-                              real eps) const {
-    using namespace boost::numeric::odeint;
-    if (eps == 0)
-      eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
-    // Normalize all distances to b.
-    vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
-            0, 1, 1, 0};
-    Norm(y);
-    int n;
+  bool TriaxialODE::Position(real s12, vec3& r2, vec3& v2,
+                             real& m12, real& M12, real& M21) {
+    if (!_extended) return false;
     s12 /= _b;
+    if (s12 == 0) {
+      r2 = _r1; v2 = _v1;
+      m12 = 0; M12 = M21 = 1;
+    }
     auto fun = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
       yp = y; Norm(yp); yp = Accel(yp);
     };
-    bulirsch_stoer<vec10, real> stepper(eps, real(0));
-    n = integrate_adaptive(stepper, fun, y, real(0), s12, 1/real(10));
+    if (_dir == 0) {
+      _dir = s12 < 0 ? -1 : 1;
+      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
+        0, 1, 1, 0};
+      _step10.initialize(y, real(0), _dir / real(4));
+      (void) _step10.do_step(fun);
+      ++_nsteps;
+    }
+    if (_dir * s12 < _dir * _step10.previous_time())
+      return false;
+    while (_dir * _step10.current_time() < _dir * s12) {
+      (void) _step10.do_step(fun);
+      ++_nsteps;
+    }
+    vec10 y;
+    _step10.calc_state(s12, y);
     Norm(y);
     r2 = {_b * y[0], _b * y[1], _b * y[2]};
     v2 = {y[3], y[4], y[5]};
     m12 = _b * y[6]; M12 = y[8]; M21 = y[7]; // AG Eq 29: dm12/ds2 = M21
-    return n;
+    return true;
   }
 
-  void TriaxialODE::Position(real ds, long nmin, long nmax,
-                             vector<vec3>& r2, vector<vec3>& v2,
-                             real eps) const {
-    using namespace boost::numeric::odeint;
-    r2.clear(); v2.clear();
-    if (nmin > 0 || nmax < 0) return;
-    if (nmin == 0 && nmax == 0) {
-      r2.push_back(_r1); v2.push_back(_v1);
-      return;
-    }
-    if (eps == 0)
-      eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
-    auto fun = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
-      yp = y; Norm(yp); yp = Accel(yp);
-    };
-    auto observer = [&r2, &v2, b = _b](const vec6& y, real /*t*/) -> void {
-      r2.push_back( {b * y[0], b * y[1], b * y[2]} );
-      v2.push_back( {y[3], y[4], y[5]} );
-    };
-    bulirsch_stoer<vec6, real> stepper(eps, real(0));
-    ds /= _b;
-    if (nmin < 0) {
-      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
-      Norm(y);
-      integrate_n_steps(stepper, fun, y, real(0), -ds, abs(nmin), observer);
-      reverse(r2.begin(), r2.end());
-      reverse(v2.begin(), v2.end());
-    }
-    if (nmax > 0) {
-      if (nmin < 0) { r2.pop_back(); v2.pop_back(); }
-      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2]};
-      Norm(y);
-      integrate_n_steps(stepper, fun, y, real(0), ds, nmax, observer);
-    }
-    for (int i = 0; i <= nmax - nmin; ++i)
-      _t.Norm(r2[i], v2[i]);
-  }
-
-  void TriaxialODE::Position(real ds, long nmin, long nmax,
-                             vector<vec3>& r2, vector<vec3>& v2,
-                             vector<real>& m12,
-                             vector<real>& M12, vector<real>& M21,
-                             real eps) const {
-    using namespace boost::numeric::odeint;
-    r2.clear(); v2.clear();
-    m12.clear(); M12.clear(); M21.clear();
-    if (nmin > 0 || nmax < 0) return;
-    if (nmin == 0 && nmax == 0) {
-      r2.push_back(_r1); v2.push_back(_v1);
-      m12.push_back(0); M12.push_back(1); M21.push_back(0);
-      return;
-    }
-    if (eps == 0)
-      eps = pow(numeric_limits<real>::epsilon(), real(7)/8);
-    auto fun = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
-      yp = y; Norm(yp); yp = Accel(yp);
-    };
-    auto observer = [&r2, &v2, &m12, &M12, &M21, b = _b]
-      (const vec10& y, real /*t*/) -> void {
-      r2.push_back( {b * y[0], b * y[1], b * y[2]} );
-      v2.push_back( {y[3], y[4], y[5]} );
-      m12.push_back( b * y[6] );
-      M12.push_back( y[8] );
-      M21.push_back( y[7] );
-    };
-    bulirsch_stoer<vec10, real> stepper(eps, real(0));
-    ds /= _b;
-    if (nmin < 0) {
-      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
-        0, 1, 1, 0};
-      Norm(y);
-      integrate_n_steps(stepper, fun, y, real(0), -ds, abs(nmin), observer);
-      reverse(r2.begin(), r2.end());
-      reverse(v2.begin(), v2.end());
-      reverse(m12.begin(), m12.end());
-      reverse(M12.begin(), M12.end());
-      reverse(M21.begin(), M21.end());
-    }
-    if (nmax > 0) {
-      if (nmin < 0) {
-        r2.pop_back(); v2.pop_back();
-        m12.pop_back(); M12.pop_back(); M21.pop_back();
-      }
-      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b, _v1[0], _v1[1], _v1[2],
-        0, 1, 1, 0};
-      Norm(y);
-      integrate_n_steps(stepper, fun, y, real(0), ds, nmax, observer);
-    }
-    for (int i = 0; i <= nmax - nmin; ++i)
-      _t.Norm(r2[i], v2[i]);
-  }
-
-  int TriaxialODE::Position(real s12,
-                            Angle& bet2, Angle& omg2, Angle& alp2,
-                            real eps) const {
+  bool TriaxialODE::Position(real s12,
+                             Angle& bet2, Angle& omg2, Angle& alp2) {
     vec3 r2, v2;
-    int n = Position(s12, r2, v2, eps);
+    if (!Position(s12, r2, v2)) return false;
     _t.cart2toellip(r2, v2, bet2, omg2, alp2);
-    return n;
+    return true;
   }
 
-  int TriaxialODE::Position(real s12,
-                            Angle& bet2, Angle& omg2, Angle& alp2,
-                            real& m12, real& M12, real& M21,
-                            real eps) const {
+  bool TriaxialODE::Position(real s12,
+                              Angle& bet2, Angle& omg2, Angle& alp2,
+                              real& m12, real& M12, real& M21) {
     vec3 r2, v2;
-    int n = Position(s12, r2, v2, m12, M12, M21, eps);
+    if (!Position(s12, r2, v2, m12, M12, M21)) return false;
     _t.cart2toellip(r2, v2, bet2, omg2, alp2);
-    return n;
+    return true;
   }
 
-  void TriaxialODE::Position(real ds, long nmin, long nmax,
-                             vector<Angle>& bet2, vector<Angle>& omg2,
-                             vector<Angle>& alp2, real eps) const {
-    vector<vec3> r2, v2;
-    Position(ds, nmin, nmax, r2, v2, eps);
-    size_t n = r2.size();
-    bet2.resize(n); omg2.resize(n); alp2.resize(n);
-    for (size_t i = 0; i < n; ++i)
-      _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
-  }
-  void TriaxialODE::Position(real ds, long nmin, long nmax,
-                             vector<Angle>& bet2, vector<Angle>& omg2,
-                             vector<Angle>& alp2,
-                             vector<real>& m12,
-                             vector<real>& M12, vector<real>& M21,
-                             real eps) const {
-    vector<vec3> r2, v2;
-    Position(ds, nmin, nmax, r2, v2, m12, M12, M21, eps);
-    size_t n = r2.size();
-    bet2.resize(n); omg2.resize(n); alp2.resize(n);
-    for (size_t i = 0; i < n; ++i)
-      _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
-  }
+  void TriaxialODE::Reset() { _dir = 0; _nsteps = 0; }
 
 } // namespace GeographicLib

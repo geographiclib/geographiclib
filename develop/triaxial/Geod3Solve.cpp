@@ -283,7 +283,7 @@ int main(int argc, const char* const argv[]) {
 //                         -s --bench
 // Full line -> inverse error dr Jac -i --bench
 // Full line -> forward direct error dr dv Jac or ODE --bench, --bench --cart
-// Full line -> reverse direct error dr dv Jav or ODE
+// Full line -> reverse direct error dr dv Jac or ODE
 //                         --bench -r, --bench --cart -r
 
 
@@ -300,10 +300,6 @@ int main(int argc, const char* const argv[]) {
             ang bet2a, omg2a, alp2a;
             real m12, M12, M21;
             (void) l.Position(s12, bet2a, omg2a, alp2a, m12, M12, M21);
-            // Strip trailing 0's and convert -180 to 180 with
-            // sed -e 's/\.\([0-9]*[1-9]\)0*\b/.\1/g'
-            //     -e 's/\.00*\b//g'
-            //     -e 's/ -180 / 180 /g'
             *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
                     << " " << AzimuthString(alp1, prec, dms, dmssep)
                     << " "
@@ -325,10 +321,10 @@ int main(int argc, const char* const argv[]) {
             throw GeographicErr("Extraneous input: " + strc);
           DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
           alp1 = DecodeAzimuth(salp1);
-          std::vector<ang> bet2v, omg2v, alp2v, bet2w, omg2w, alp2w;
+          int m = nmax - nmin + 1;
+          std::vector<ang> bet2v(m), omg2v(m), alp2v(m),
+            bet2w(m), omg2w(m), alp2w(m);
           if (bench || !cart) {
-            int m = nmax - nmin + 1;
-            bet2v.resize(m); omg2v.resize(m); alp2v.resize(m);
             TriaxialLine l(t, bet1, omg1, alp1);
             for (int i = nmin, k = 0; i <= nmax; ++i, ++k)
               l.Position(i * ds, bet2v[k], omg2v[k], alp2v[k]);
@@ -339,7 +335,11 @@ int main(int argc, const char* const argv[]) {
           }
           if (bench || cart) {
             TriaxialODE l(t, bet1, omg1, alp1);
-            l.Position(ds, nmin, nmax, bet2w, omg2w, alp2w);
+            for (int i = 0, k = -nmin; i <= nmax; ++i, ++k)
+              l.Position(i * ds, bet2w[k], omg2w[k], alp2w[k]);
+            l.Reset();
+            for (int i = -1, k = -nmin - 1; i >= nmin; --i, --k)
+              l.Position(i * ds, bet2w[k], omg2w[k], alp2w[k]);
           }
           for (int k = 0; k <= nmax - nmin; ++k) {
             if (!bench) {
