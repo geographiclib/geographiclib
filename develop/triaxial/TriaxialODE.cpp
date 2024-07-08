@@ -19,10 +19,10 @@ namespace GeographicLib {
 
   TriaxialODE::TriaxialODE(const Triaxial& t,
                            Triaxial::vec3 r1, Triaxial::vec3 v1,
-                           bool extended, real eps)
+                           bool extended, bool interp, real eps)
     : _t(t)
     , _b(t.b())
-    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(7)/8) : eps)
+    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(3)/4) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
     , _r1(r1)
@@ -31,36 +31,37 @@ namespace GeographicLib {
     , _dir(0)
     , _nsteps(0)
     , _step6(_eps, real(0),
-             real(1), real(1), real(0), true)
+             real(1), real(1), real(0), interp)
     , _step10(_eps, real(0),
-              real(1), real(1), real(0), true)
+              real(1), real(1), real(0), interp)
   {
     _t.Norm(_r1, _v1);
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1,
                            Angle alp1,
-                           bool extended, real eps)
+                           bool extended, bool interp, real eps)
     : _t(t)
     , _b(t.b())
-    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(7)/8) : eps)
+    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(3)/4) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
     , _extended(extended)
     , _dir(0)
     , _nsteps(0)
     , _step6(_eps, real(0),
-             real(1), real(1), real(0), true)
+             real(1), real(1), real(0), interp)
     , _step10(_eps, real(0),
-              real(1), real(1), real(0), true)
+              real(1), real(1), real(0), interp)
   {
     _t.elliptocart2(bet1, omg1, alp1, _r1, _v1);
 
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
-                           bool extended, real eps)
-    : TriaxialODE(t, Angle(bet1), Angle(omg1), Angle(alp1), extended, eps)
+                           bool extended, bool interp, real eps)
+    : TriaxialODE(t, Angle(bet1), Angle(omg1), Angle(alp1),
+                  extended, interp, eps)
   {}
 
   void TriaxialODE::Norm(vec6& y) const {
@@ -102,6 +103,10 @@ namespace GeographicLib {
   }
 
   bool TriaxialODE::Position(real s12, vec3& r2, vec3& v2) {
+    static const
+      auto fun = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
+        yp = y; Norm(yp); yp = Accel(yp);
+      };
     if (_extended) {
       real m12, M12, M21;
       return Position(s12, r2, v2, m12, M12, M21);
@@ -110,9 +115,6 @@ namespace GeographicLib {
     if (s12 == 0) {
       r2 = _r1; v2 = _v1;
     }
-    auto fun = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
-      yp = y; Norm(yp); yp = Accel(yp);
-    };
     if (_dir == 0) {
       _dir = s12 < 0 ? -1 : 1;
       vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
@@ -138,15 +140,16 @@ namespace GeographicLib {
 
   bool TriaxialODE::Position(real s12, vec3& r2, vec3& v2,
                              real& m12, real& M12, real& M21) {
+    static const
+      auto fun = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
+      yp = y; Norm(yp); yp = Accel(yp);
+    };
     if (!_extended) return false;
     s12 /= _b;
     if (s12 == 0) {
       r2 = _r1; v2 = _v1;
       m12 = 0; M12 = M21 = 1;
     }
-    auto fun = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
-      yp = y; Norm(yp); yp = Accel(yp);
-    };
     if (_dir == 0) {
       _dir = s12 < 0 ? -1 : 1;
       vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,

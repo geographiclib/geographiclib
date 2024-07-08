@@ -49,11 +49,11 @@ namespace GeographicLib {
 
   public:
     TriaxialODE(const Triaxial& t, vec3 r1, vec3 v1,
-                bool extended = true, real eps = 0);
+                bool extended = true, bool interp = true, real eps = 0);
     TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1,
-                bool extended = true, real eps = 0);
+                bool extended = true, bool interp = true, real eps = 0);
     TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
-                bool extended = true, real eps = 0);
+                bool extended = true, bool interp = true, real eps = 0);
     bool Position(real s12, vec3& r2, vec3& v2);
     bool Position(real s12, vec3& r2, vec3& v2,
                   real& m12, real& M12, real& M21);

@@ -86,7 +86,10 @@ namespace GeographicLib {
       // Accurate inverse by direct Newton (not using _finv)
       real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
       // Accurate inverse correcting result from _finv
-      real inv(real z, int* countn = nullptr, int* countb = nullptr) const;
+      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
+      real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
+        return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
+      }
       void ComputeInverse();
       real fwd(real phi) const {
         return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);
@@ -190,6 +193,7 @@ namespace GeographicLib {
       Triaxial _t;
       Triaxial::gamblk _gm;
       ffun _fbet, _fomg;
+      bool _invp;
     public:
       real df, deltashift;
       class fics {
@@ -236,6 +240,7 @@ namespace GeographicLib {
       disttx ArcPos0(const fics& fic, Angle tau12,
                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
                      bool betp = true) const;
+      void ComputeInverse();
     };
 
     class gline {
@@ -349,6 +354,7 @@ namespace GeographicLib {
     void Offset(real s13, bool reverse = false);
     void pos1(Angle& bet1, Angle& omg1, Angle& alp1) const;
     void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
+    void Optimize();
   };
 
 } // namespace GeographicLib

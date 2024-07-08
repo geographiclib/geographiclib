@@ -281,11 +281,18 @@ namespace GeographicLib {
   void TriaxialLine::Offset(real s13, bool reverse) {
     ang bet2, omg2, alp2;
     Position(s13, bet2, omg2, alp2);
-    if (reverse) alp2.reflect(true, true);
+    if (reverse) {
+      alp2.reflect(true, true);
+      // TODO check if point 2 is an umbilical point
+    }
     _fic = fline::fics(_f, bet2, omg2, alp2);
     _gic = gline::gics(_g, _fic);
-
   }
+
+  void TriaxialLine::Optimize() {
+    _f.ComputeInverse();
+  }
+
   TriaxialLine::fline::disttx
   TriaxialLine::fline::Hybrid(const fics& fic,
                               Angle bet2,
@@ -328,12 +335,19 @@ namespace GeographicLib {
     , _gm(gam)
     , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, epspow, nmaxmult)
     , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, epspow, nmaxmult)
+    , _invp(false)
     {
-      _fbet.ComputeInverse();
-      _fomg.ComputeInverse();
       df = _gm.gamma == 0 ? _fbet.Max() - _fomg.Max() : 0;
       deltashift = _gm.gamma == 0 ? 2*df - log(_t._k2/_t._kp2) : 0;
     }
+
+  void TriaxialLine::fline::ComputeInverse() {
+    if (!_invp) {
+      _fbet.ComputeInverse();
+      _fomg.ComputeInverse();
+      _invp = true;
+    }
+  }
 
   TriaxialLine::gline::gline(const Triaxial& t, const Triaxial::gamblk& gam)
     : _t(t)
@@ -742,10 +756,10 @@ namespace GeographicLib {
   }
 
   // Accurate inverse correcting result from _finv
-  Math::real TriaxialLine::ffun::inv(real z, int* countn, int* countb) const {
+  Math::real TriaxialLine::ffun::inv2(real z, int* countn, int* countb) const {
     if (!_invp) return Math::NaN();
     return _mu == 0 ? root(z, inv0(z), countn, countb) :
-      _fun.inv(z, countn, countb);
+      _fun.inv2(z, countn, countb);
   }
 
   // mu > 0

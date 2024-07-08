@@ -245,9 +245,12 @@ namespace GeographicLib {
       return _sym ? Math::NaN() : _f.root(z, _fp, countn, countb);
     }
     // Accurate inverse correcting result from _finv
-    real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
+    real inv2(real z, int* countn = nullptr, int* countb = nullptr) const {
       if (!_invp) return Math::NaN();
       return _sym ? Math::NaN() : _f.root(z, _fp, _finv(z), countn, countb);
+    }
+    real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
+      return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
     }
     int NCoeffs() const { return _f.NCoeffs(); }
     int NCoeffsInv() const {

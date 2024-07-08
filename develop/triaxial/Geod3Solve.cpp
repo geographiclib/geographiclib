@@ -296,7 +296,7 @@ int main(int argc, const char* const argv[]) {
           DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
           (void) t.Inverse(bet1, omg1, bet2, omg2, alp1, alp2, s12);
           if (full) {
-            TriaxialODE l(t, bet1, omg1, alp1);
+            TriaxialODE l(t, bet1, omg1, alp1, true);
             ang bet2a, omg2a, alp2a;
             real m12, M12, M21;
             (void) l.Position(s12, bet2a, omg2a, alp2a, m12, M12, M21);
@@ -334,7 +334,7 @@ int main(int argc, const char* const argv[]) {
             }
           }
           if (bench || cart) {
-            TriaxialODE l(t, bet1, omg1, alp1);
+            TriaxialODE l(t, bet1, omg1, alp1, false);
             for (int i = 0, k = -nmin; i <= nmax; ++i, ++k)
               l.Position(i * ds, bet2w[k], omg2w[k], alp2w[k]);
             l.Reset();
@@ -380,7 +380,7 @@ int main(int argc, const char* const argv[]) {
           } else if (reverse) {
             ang bet1a, omg1a, alp1a;
             if (cart) {
-              TriaxialODE l(t, bet2, omg2, alp2);
+              TriaxialODE l(t, bet2, omg2, alp2, false);
               l.Position(-s12, bet1a, omg1a, alp1a);
             } else
               t.Direct(bet2, omg2, alp2, -s12, bet1a, omg1a, alp1a);
@@ -391,7 +391,7 @@ int main(int argc, const char* const argv[]) {
           } else {
             ang bet2a, omg2a, alp2a;
             if (cart) {
-              TriaxialODE l(t, bet1, omg1, alp1);
+              TriaxialODE l(t, bet1, omg1, alp1, false);
               l.Position(s12, bet2a, omg2a, alp2a);
             } else
               t.Direct(bet1, omg1, alp1, s12, bet2a, omg2a, alp2a);
@@ -409,7 +409,7 @@ int main(int argc, const char* const argv[]) {
           alp1 = DecodeAzimuth(salp1);
           s12 = Utility::val<real>(ss12);
           if (cart) {
-              TriaxialODE l(t, bet1, omg1, alp1);
+              TriaxialODE l(t, bet1, omg1, alp1, false);
               l.Position(s12, bet2, omg2, alp2);
           } else
             t.Direct(bet1, omg1, alp1, s12, bet2, omg2, alp2);
