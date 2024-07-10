@@ -730,7 +730,18 @@ namespace GeographicLib {
     // fails badly with reverse direct if gam is not set to zero here.
     // Neighboring values of alp as double are
     // 58.455576621187890, 58.455576621187895, 58.455576621187900
-    if (2*fabs(gam) < 3*numeric_limits<real>::epsilon())
+    // 30 86 90 180
+    // dgam/dalp = 2*alp.c()*alp.s() * hypot(_k * bet.c(), _kp * omg.s())
+    real
+      alpdiff = 2 * alp.c() * alp.s()
+      * (_k2 * Math::sq(bet.c())+_kp2 * Math::sq(omg.s())),
+      betdiff = -2 * bet.c() * bet.s() * _k2 * Math::sq(alp.s()),
+      omgdiff = -2 * omg.c() * omg.s() * _kp2 * Math::sq(alp.c()),
+      maxdiff = fmax( fabs(alpdiff), fmax( fabs(betdiff), fabs(omgdiff) ) );
+    // cout << "GAMDIFF " << gam/ numeric_limits<real>::epsilon() << " " << maxdiff << "\n";
+    if (fabs(gam) <= 2 * maxdiff * numeric_limits<real>::epsilon())
+      // Set gam = 0 if a change of alp, bet, or omg by epsilon would include
+      // gam = 0.
       gam = 0;
     real gamp = gam == 0 ? 0 :
       (gam > 0 ? // sqrt(k2 - gamma)

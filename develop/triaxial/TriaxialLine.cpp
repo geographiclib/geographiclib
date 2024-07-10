@@ -87,14 +87,12 @@ namespace GeographicLib {
         .rebase(_fic.alp0);
     } else if (_f.gamma() < 0) {
       real u2, v2;
-      if (fomg().NCoeffsInv() <= fbet().NCoeffsInv()) {
+      if (fomg().NCoeffsInv() <= fbet().NCoeffsInv())
         solve2( _fic.delta, sig2, fbet(), fomg(), gbet(), gomg(), u2, v2,
                 countn, countb);
-      }
-      else {
+      else
         solve2(-_fic.delta, sig2, fomg(), fbet(), gomg(), gbet(), v2, u2,
                countn, countb);
-      }
       bet2 = _fic.nN * fbet().rev(u2);
       bet2a = ang::radians(bet2);
       ang psi2 = ang::radians(fomg().rev(v2));
@@ -225,7 +223,7 @@ namespace GeographicLib {
       if (debug) cout << "UV1 " << u << " " << v << "\n";
     } else if (fabs(d0) > 2*pi2/3 &&
                fabs((1 - 2 * signbit(d0)) * s0 - (sbet - somg)) <=
-               5 * numeric_limits<real>::epsilon()) {
+               7 * numeric_limits<real>::epsilon()) {
       if (d0 > 0) {
         u = 2*d0/3; v = -1*d0/3;
       } else {

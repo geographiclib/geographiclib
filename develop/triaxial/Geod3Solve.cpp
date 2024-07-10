@@ -15,6 +15,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <limits>
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
@@ -211,7 +212,11 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
-    real errmult = 1000000;
+#if GEOGRAPHICLIB_PRECISION > 3
+  static const real errscale = real(1e-20);
+#else
+  static const real errscale = std::numeric_limits<real>::epsilon()/2;
+#endif
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
       return 1;
@@ -254,7 +259,7 @@ int main(int argc, const char* const argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     t.debug(debug);
-    using std::round; using std::log10; using std::fabs;
+    using std::round; using std::log10; using std::fabs; using std::ceil;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
@@ -358,8 +363,8 @@ int main(int argc, const char* const argv[]) {
               *output << BetOmgString(bet2v[k], omg2v[k], prec, dms,
                                       dmssep, longfirst) << " "
                       << AzimuthString(alp2v[k], prec, dms, dmssep) << " "
-                      << Utility::str(diff.first * errmult) << " "
-                      << Utility::str(diff.second * errmult) << eol;
+                      << Utility::str(ceil(diff.first / errscale)) << " "
+                      << Utility::str(ceil(diff.second / errscale)) << eol;
             }
           }
         } else if (bench) {
@@ -376,7 +381,7 @@ int main(int argc, const char* const argv[]) {
           if (inverse) {
             real s12a;
             t.Inverse(bet1, omg1, bet2, omg2, alp1, alp2, s12a);
-            *output << Utility::str(fabs(s12 - s12a)) << eol;
+            *output << Utility::str(ceil(fabs(s12 - s12a) / errscale)) << eol;
           } else if (reverse) {
             ang bet1a, omg1a, alp1a;
             if (cart) {
@@ -386,8 +391,8 @@ int main(int argc, const char* const argv[]) {
               t.Direct(bet2, omg2, alp2, -s12, bet1a, omg1a, alp1a);
             std::pair<real, real> diff =
               t.EuclideanDiff(bet1a, omg1a, alp1a, bet1, omg1, alp1);
-            *output << Utility::str(diff.first * errmult) << " "
-                    << Utility::str(diff.second * errmult) << eol;
+            *output << Utility::str(ceil(diff.first / errscale)) << " "
+                    << Utility::str(ceil(diff.second / errscale)) << eol;
           } else {
             ang bet2a, omg2a, alp2a;
             if (cart) {
@@ -397,8 +402,8 @@ int main(int argc, const char* const argv[]) {
               t.Direct(bet1, omg1, alp1, s12, bet2a, omg2a, alp2a);
             std::pair<real, real> diff =
               t.EuclideanDiff(bet2a, omg2a, alp2a, bet2, omg2, alp2);
-            *output << Utility::str(diff.first * errmult) << " "
-                    << Utility::str(diff.second * errmult) << eol;
+            *output << Utility::str(ceil(diff.first / errscale)) << " "
+                    << Utility::str(ceil(diff.second / errscale)) << eol;
           }
         } else {
           if (!(str >> sbet1 >> somg1 >> salp1 >> ss12))

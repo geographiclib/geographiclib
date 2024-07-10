@@ -12,10 +12,23 @@
 
 #include <array>
 #include <GeographicLib/Constants.hpp>
+
+#if !defined(GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT)
+#  if GEOGRAPHICLIB_PRECISION < 5
+#    define GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT 1
+#  else
+#    define GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT 0
+#  endif
+#endif
+
 #include "Angle.hpp"
 #include "Triaxial.hpp"
 #include <boost/numeric/odeint.hpp>
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
+#else
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+#endif
 
 namespace GeographicLib {
 
@@ -26,10 +39,17 @@ namespace GeographicLib {
     typedef std::array<real, 6> vec6;
     typedef std::array<real, 10> vec10;
     typedef Angle ang;
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     typedef
     boost::numeric::odeint::bulirsch_stoer_dense_out<vec6, real> step6;
     typedef
     boost::numeric::odeint::bulirsch_stoer_dense_out<vec10, real> step10;
+#else
+    typedef
+    boost::numeric::odeint::bulirsch_stoer<vec6, real> step6;
+    typedef
+    boost::numeric::odeint::bulirsch_stoer<vec10, real> step10;
+#endif
     Triaxial _t;
     real _b, _eps;
     vec3 _axesn, _axes2n, _r1, _v1;
@@ -38,6 +58,9 @@ namespace GeographicLib {
     long _nsteps;
     step6 _step6;
     step10 _step10;
+    real _s;
+    vec6 _y6;
+    vec10 _y10;
     // These private versions of Accel and Norm assume normalized ellipsoid
     // with axes = axesn
     vec6 Accel(const vec6& y) const;

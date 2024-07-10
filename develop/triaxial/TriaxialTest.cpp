@@ -7,7 +7,6 @@
 #include "Angle.hpp"
 #include "Triaxial.hpp"
 #include "TriaxialLine.hpp"
-#include "TriaxialODE.hpp"
 
 using namespace GeographicLib;
 using namespace std;

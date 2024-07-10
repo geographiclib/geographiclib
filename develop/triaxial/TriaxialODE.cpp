@@ -30,12 +30,18 @@ namespace GeographicLib {
     , _extended(extended)
     , _dir(0)
     , _nsteps(0)
-    , _step6(_eps, real(0),
-             real(1), real(1), real(0), interp)
-    , _step10(_eps, real(0),
-              real(1), real(1), real(0), interp)
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    , _step6(_eps, real(0), real(1), real(1), real(0), interp)
+    , _step10(_eps, real(0), real(1), real(1), real(0), interp)
+#else
+    , _step6(_eps, real(0))
+    , _step10(_eps, real(0))
+#endif
   {
     _t.Norm(_r1, _v1);
+#if !GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    (void) interp;
+#endif
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1,
@@ -49,13 +55,18 @@ namespace GeographicLib {
     , _extended(extended)
     , _dir(0)
     , _nsteps(0)
-    , _step6(_eps, real(0),
-             real(1), real(1), real(0), interp)
-    , _step10(_eps, real(0),
-              real(1), real(1), real(0), interp)
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    , _step6(_eps, real(0), real(1), real(1), real(0), interp)
+    , _step10(_eps, real(0), real(1), real(1), real(0), interp)
+#else
+    , _step6(_eps, real(0))
+    , _step10(_eps, real(0))
+#endif
   {
     _t.elliptocart2(bet1, omg1, alp1, _r1, _v1);
-
+#if !GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    (void) interp;
+#endif
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
@@ -117,24 +128,35 @@ namespace GeographicLib {
     }
     if (_dir == 0) {
       _dir = s12 < 0 ? -1 : 1;
-      vec6 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
-             _dir * _v1[0], _dir * _v1[1], _dir * _v1[2]};
-      _step6.initialize(y, real(0), 1 / real(4));
+      _y6 = vec6{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
+        _dir * _v1[0], _dir * _v1[1], _dir * _v1[2]};
+      _s = 0;
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+      _step6.initialize(_y6, _s, 1/real(4));
       (void) _step6.do_step(fun);
       ++_nsteps;
+#endif
     }
     s12 *= _dir;
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     if (s12 < _step6.previous_time())
       return false;
     while (_step6.current_time() < s12) {
       (void) _step6.do_step(fun);
       ++_nsteps;
     }
-    vec6 y;
-    _step6.calc_state(s12, y);
-    Norm(y);
-    r2 = {_b * y[0], _b * y[1], _b * y[2]};
-    v2 = {_dir * y[3], _dir * y[4], _dir * y[5]};
+    _step6.calc_state(s12, _y6);
+#else
+    if (s12 < _s)
+      return false;
+    else if (s12 > _s)
+      _nsteps += integrate_adaptive(_step6, fun, _y6, _s, s12,
+                                    fmax(s12 - _s, 1/real(4)));
+#endif
+    _s = s12;
+    Norm(_y6);
+    r2 = {_b * _y6[0], _b * _y6[1], _b * _y6[2]};
+    v2 = {_dir * _y6[3], _dir * _y6[4], _dir * _y6[5]};
     return true;
   }
 
@@ -152,27 +174,37 @@ namespace GeographicLib {
     }
     if (_dir == 0) {
       _dir = s12 < 0 ? -1 : 1;
-      vec10 y{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
-              _dir * _v1[0], _dir * _v1[1], _dir * _v1[2],
+      _y10 = vec10{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
+        _dir * _v1[0], _dir * _v1[1], _dir * _v1[2],
         0, 1, 1, 0};
-      _step10.initialize(y, real(0), 1 / real(4));
+      _s = 0;
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+      _step10.initialize(_y10, _s, 1/real(4));
       (void) _step10.do_step(fun);
       ++_nsteps;
+#endif
     }
     s12 *= _dir;
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     if (s12 < _step10.previous_time())
       return false;
     while (_step10.current_time() < s12) {
       (void) _step10.do_step(fun);
       ++_nsteps;
     }
-    vec10 y;
-    _step10.calc_state(s12, y);
-    Norm(y);
-    r2 = {_b * y[0], _b * y[1], _b * y[2]};
-    v2 = {_dir * y[3], _dir * y[4], _dir * y[5]};
-    m12 = _dir * _b * y[6];
-    M12 = y[8]; M21 = y[7];     // AG Eq 29: dm12/ds2 = M21
+    _step10.calc_state(s12, _y10);
+#else
+    if (s12 < _s)
+      return false;
+    else if (s12 > _s)
+      _nsteps += integrate_adaptive(_step10, fun, _y10, _s, s12,
+                                    fmax(s12 - _s, 1/real(4)));
+#endif
+    Norm(_y10);
+    r2 = {_b * _y10[0], _b * _y10[1], _b * _y10[2]};
+    v2 = {_dir * _y10[3], _dir * _y10[4], _dir * _y10[5]};
+    m12 = _dir * _b * _y10[6];
+    M12 = _y10[8]; M21 = _y10[7];     // AG Eq 29: dm12/ds2 = M21
     return true;
   }
 
