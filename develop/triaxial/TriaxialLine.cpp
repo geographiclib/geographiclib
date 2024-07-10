@@ -254,6 +254,18 @@ namespace GeographicLib {
                            real xscale, real zscale,
                            real& x, real& y,
                            int* countn, int* countb) {
+    // Find [x,y] s.t.
+    //   fx(x) - fy(y) - f0 = 0
+    //   gx(x) + gy(y) - g0 = 0
+    // Assume fy.inv is known, then
+    //   y = fy.inv(fx(x) - f0)
+    // and we consider the 1d problem
+    //   gx(x) + gy( fy.inv(fx(x) - f0) ) - g0 = 0
+    // d/dx of the LHS is
+    //   fx'(x) * ( gx'(x)/fx'(x) + gy'(y)/fy'(y) )
+    //   = fx'(x) * (gfx'(x) + gfy'(y))
+    // where gfx'(y) = gx'(x)/fx'(x)
+    //       gfy'(y) = gy'(y)/fy'(y)
     x = Trigfun::root(
                       [&fx, &fy, &gx, &gy, f0, g0]
                       (real x) -> pair<real, real>
@@ -265,7 +277,25 @@ namespace GeographicLib {
                       g0, x0, xa, xb, xscale, zscale, 1,
                       countn, countb);
     y = fy.inv(fx(x) - f0);
-    // TO DO: supplement with 1 iteration of 2d Newton
+    // Do one round of 2d Newton
+    // Trial solution z0 = [x0, y0]'
+    // let t0 = [fx(x0) - fy(y0) - f0, gx(x0) + gy(y0) - g0]'
+    // Updated solution is
+    // z1 = z0 - M . t0
+    // M = 1/(gfx'(x) + gfy'(y) *
+    //   [ gfy'(y)/fx'(x), 1/fx'(x)]
+    //   [-gfx'(x)/fy'(y), 1/fy'(y)]
+    int nfix = 1;
+    for (int i = 0; i < nfix; ++i) {
+      real tf = fx(x) - fy(y) - f0, tg = gx(x) + gy(y) - g0,
+        fxp = fx.deriv(x), fyp = fy.deriv(y),
+        gfxp = gx.gfderiv(x), gfyp =  gy.gfderiv(y),
+        den = gfxp + gfyp;
+      x -= ( gfyp * tf + tg) / (fxp * den);
+      y -= (-gfxp * tf + tg) / (fyp * den);
+      if (countn)
+        ++*countn;
+    }
   }
 
   void TriaxialLine::Hybrid(Angle bet2,
