@@ -6,6 +6,15 @@ For documentation see
 
   https://geographiclib.sourceforge.io/Python/doc/
 
+## ctypes
+
+This is the official way to use C++ libraries from Python.  See
+
+  https://docs.python.org/3/extending/extending.html#writing-extensions-in-c
+
+Borys Kaboakov https://github.com/banderlog provided a sample invocation
+in the PyGetIntersect directory.
+
 ## pybind11
 
 See
