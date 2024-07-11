@@ -25,7 +25,6 @@ set -e
 umask 0022
 
 # The following files contain version information:
-#   pom.xml
 #   CMakeLists.txt (PROJECT_VERSION_* LIBVERSION_*)
 #   NEWS
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
@@ -80,7 +79,7 @@ echo Unpack source package in $TEMP/rel bcx
 
 mkdir $TEMP/rel{b,c,x}
 tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relb # Version for autoconf
-tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relc # Version for cmake+mvn
+tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relc # Version for cmake
 tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relx # for listing
 
 echo ==============================================================
@@ -95,22 +94,6 @@ echo Make a release for Windows testing in $WINDOWSBUILD/GeographicLib-$VERSION
 rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 
 unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
-
-cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
-#! /bin/sh -exv
-unset GEOGRAPHICLIB_DATA
-# for v in 2019 2017 2015 2013 2012 2010; do
-for v in 2019 2017 2015; do
-  for a in 64 32; do
-    echo ========== maven $v-$a ==========
-    rm -rf c:/scratch/geog-mvn-$v-$a
-    mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
-      -Dcmake.project.bin.directory=c:/scratch/geog-mvn-$v-$a install
-  done
-done
-EOF
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
-cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
 
 # for ver in 10 11 12 14 15 16; do
 for ver in 14 15 16 17; do
@@ -153,7 +136,6 @@ cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
     for d in build-*; do
         ./$d
     done
-    ./mvn-build
 ) >& build.log
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all

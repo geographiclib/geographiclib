@@ -529,7 +529,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
   "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin|HOWTO-RELEASE.txt)\$")
+  "${PROJECT_SOURCE_DIR}/(makefile-admin|HOWTO-RELEASE.txt)\$")
 set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

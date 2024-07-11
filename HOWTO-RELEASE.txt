@@ -1,5 +1,4 @@
 Updating version
-  pom.xml include -SNAPSHOT in version
   CMakeLists.txt set PROJECT_VERSION_SUFFIX to "-alpha" + LIBVERSION_{API,BUILD}
   configure.ac AC_INIT + GEOGRAPHICLIB_VERSION_* + LT_{CURRENT,REVISION,AGE}
   develop/test-distribution VERSION, SUFFIX, BRANCH
@@ -107,7 +106,6 @@ Release checklist:
 Merge all changes to main
 test-distribution.sh: set SUFFIX= and BRANCH=main
 CMakeLists.txt set PROJECT_VERSION_SUFFIX suffix to ""
-pom.xml keeps SNAPSHOT for now
 Update NEWS
 Set date in NEWS and GeographicLib.dox.in
 run develop/test-distribution.sh

@@ -7582,7 +7582,6 @@ git repository for GeographicLib</a>.
    - Template versions of Gnomonic and AzimuthalEquidistant so that they
      can use either Geodesic and GeodesicExact.  Use typedefs so that
      Geodesic::Line points to GeodesicLine.
-   - Add information on radius of convergence for aux latitude series.
    - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
      &gt; 1/sqrt(2).
    - Check Visual Studo "code analysis" results (from Analize VS
