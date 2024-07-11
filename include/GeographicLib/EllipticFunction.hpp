@@ -64,7 +64,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
 
-    enum { num_ = 13 }; // Max depth required for sncndn; probably 5 is enough.
+    enum { num_ = 25 }; // Max depth required for sncndn; probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
     real _kKc, _eEc, _dDc, _pPic, _gGc, _hHc;
   public:
