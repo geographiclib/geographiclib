@@ -1,0 +1,45 @@
+/*
+ * Maxima code to compute the series expansion for the area of a plate
+ * carree polygon
+ *
+ * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * https://geographiclib.sourceforge.io/
+ *
+ * Instructions:
+ *
+ *  * [optional] edit to set the desired value of Lmax (currently 6)
+ *
+ *  * start maxima and run
+ *      batch("platecarreearea.mac")$
+ *
+ *  * now M is an Lmax x Lmax matrix with the series coefficients.
+ */
+
+/* Series for auxiliary latitudes available at
+   https://doi.org/10.5281/zenodo.7382666
+*/
+load("auxvals40.mac")$
+
+Lmax:6$
+
+submat(M,rows,cols):=block([r0:length(M),c0:length(M[1]),l],
+  l:append(makelist(r,r,rows+1,r0),[M]),
+  M:apply('submatrix,l),
+  l:append([M],makelist(c,c,cols+1,c0)),
+  apply('submatrix,l))$
+
+/* xi in terms of phi */
+xiphi:block([M:submat(C[xi,phi],Lmax,Lmax)],
+  phi+makelist(sin(2*l*phi),l,1,Lmax).M.
+  transpose(makelist(n^j,j,1,Lmax)))$
+
+kill(C,T)$
+
+/* -1/cos(phi) * integral of sin(xi) */
+S:expand(trigreduce(expand(trigexpand(
+  integrate(ratdisrep(taylor(sin(xiphi),n,0,Lmax)),phi))/(-cos(phi)))))$
+CC[i]:=coeff(S,cos(2*i*phi))$
+CC[0]:expand(S-sum(CC[i]*cos(2*i*phi),i,1,Lmax))$
+MM[i,j]:=coeff(CC[i],n,j)$
+M:genmatrix(MM,Lmax,Lmax,0,0);
