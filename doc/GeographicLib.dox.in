@@ -5656,8 +5656,8 @@ A(\phi) = \frac12
     \frac{\tanh^{-1}(e\sin\phi)}e
     +\frac{\sin\phi}{1 - e^2\sin^2\phi} \biggr),
 \f]
-\f$c\f$ is the authalic radius and \f$\xi\f$ is the authalic
-latitude.
+\f$b\f$ is the polar semi-axis, \f$c\f$ is the authalic radius, and
+\f$\xi\f$ is the authalic latitude.
 
 In the approach taken in GRASS, \f$A(\phi)\f$ is expanded as a Taylor
 series in \f$e^2\f$; this as a particularly simple form when written in

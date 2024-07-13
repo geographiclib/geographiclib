@@ -13,91 +13,14 @@
  *  * start maxima and run
  *      batch("platecarreearea.mac")$
  *
- *  * now M is an Lmax x Lmax matrix with the series coefficients.
+ *  * Now Q[l = 0..Lmax] are coefficients for the area series and
+ *    Qgrass[l = 0..Lmax] are the corresponding coefficients for the
+ *    GRASS formulation.
  */
 
-/* Series for auxiliary latitudes available at
-   https://doi.org/10.5281/zenodo.7382666
-*/
-load("auxvals40.mac")$
-
-Lmax:6$
-
-submat(M,rows,cols):=block([r0:length(M),c0:length(M[1]),l],
-  l:append(makelist(r,r,rows+1,r0),[M]),
-  M:apply('submatrix,l),
-  l:append([M],makelist(c,c,cols+1,c0)),
-  apply('submatrix,l))$
-
-/* xi in terms of phi */
-xiphi:block([M:submat(C[xi,phi],Lmax,Lmax)],
-  phi+makelist(sin(2*l*phi),l,1,Lmax).M.
-  transpose(makelist(n^j,j,1,Lmax)))$
-
-kill(C,T)$
-
-/* Expansion in n with c^2 being multiplicative constant */
-
-sinxi:ratdisrep(taylor(sin(xiphi),n,0,Lmax))$
-/* integral of sin(xi) */
-S:expand(integrate(sinxi,phi))$
-
-nf(f):=f/(2-f)$
-e2f(f):=f*(2-f)$
-ne2(e2):=(1-sqrt(1-e2))/(1+sqrt(1-e2))$
-e2n(n):=4*n/(1+n)^2$
-
-/* Reexpand S in e2 */
-Se2:expand(ratdisrep(taylor(subst([n=ne2(e2)], S), e2, 0, Lmax)))$
-
-/* Alternatively -- following GRASS -- expand in e2 with b^2 being the
-  multiplicative constant */
-
-A:(atanh(sqrt(e2)*sin(phi))/sqrt(e2)+sin(phi)/(1-e2*sin(phi)^2))/2$
-/* c^2/b^2 */
-Ap:ev(A,phi=%pi/2)$
-Aex:taylor(A,e2,0,Lmax)$
-/*
-  This has a nice simple Taylor series
-  Aex = sin(phi) + 2/3  * sin(phi)^3  * e2
-                 + 3/5  * sin(phi)^5  * e2^2
-                 + 4/7  * sin(phi)^7  * e2^3
-                 + 5/9  * sin(phi)^9  * e2^4
-                 + 6/11 * sin(phi)^11 * e2^5
-                 + 7/13 * sin(phi)^13 * e2^6;
-*/
-Qa:expand(integrate(ratdisrep(Aex),phi))$
-Qb:expand(trigreduce(Qa))$
-
-/* Reexpand Qb in n */
-Qbn:expand(ratdisrep(taylor(subst([e2=e2n(n)], Qb), n, 0, Lmax)))$
-
-/* Check equivalence */
-Qc:expand(ratdisrep(taylor(Se2*Ap, e2, 0, Lmax)))$
-Qb-Qc; /* = 0 */
-
-kill(Qacoeff,Qbcoeff,Scoeff)$
-Qacoeff[i,j] := coeff(coeff(Qa,cos(phi),(2*i+1)), e2, j)$
-Qbcoeff[i,j] := coeff(coeff(Qb,cos((2*i+1)*phi)), e2, j)$
-Scoeff[i,j] := coeff(coeff(S,cos((2*i+1)*phi)), n, j)$
-
-trunc(expr,var,val,pow):=block([q:subst([var=val],
-expand(expr-ratdisrep(taylor(expr,var,0,pow)))),s:0],
-for i:0 thru Lmax do s:s+abs(coeff(q,cos((2*i+1)*phi))),
-ev(s,numer))$
-
-printterms(A, var):=
-for i:0 thru Lmax do block([s:concat("Q[",string(i),"]=")],
-  for j:i thru Lmax do block([sgn: if A[i,j]<0 then "" else "+"],
-    s:concat(s,sgn,string(A[i,j])),
-    if j>=1 then s:concat(s,"*",string(var)),
-    if j>=2 then s:concat(s,"^",string(j))),
-  print(concat(s,";")))$
-
-printterms(Scoeff,n)$
 /*
 Expansion in cos((2*i+1)*phi) * n^j, multiplicative const = c^2
-This converges the fastest.
+This converges the faster than the GRASS formulation.
 Q[0] = - 1
        + 2/3 * n
        + 22/45 * n^2
@@ -128,71 +51,93 @@ Q[5] = + 6/121 * n^5
 Q[6] = - 7/169 * n^6;
 */
 
-printterms(Qacoeff,e2);
 /*
 Expansion in cos(phi)^(2*i+1) * e2^j, multiplicative const = b^2
 This is the form used by GRASS area_poly1.c
-Q[0] = - 1
-       - 2/3 * e2
-       - 3/5 * e2^2
-       - 4/7 * e2^3
-       - 5/9 * e2^4
-       - 6/11 * e2^5
-       - 7/13 * e2^6;
-Q[1] = + 2/9 * e2
-       + 2/5 * e2^2
-       + 4/7 * e2^3
-       + 20/27 * e2^4
-       + 10/11 * e2^5
-       + 14/13 * e2^6;
-Q[2] = - 3/25 * e2^2
-       - 12/35 * e2^3
-       - 2/3 * e2^4
-       - 12/11 * e2^5
-       - 21/13 * e2^6;
-Q[3] = + 4/49 * e2^3
-       + 20/63 * e2^4
-       + 60/77 * e2^5
-       + 20/13 * e2^6;
-Q[4] = - 5/81 * e2^4
-       - 10/33 * e2^5
-       - 35/39 * e2^6;
-Q[5] = + 6/121 * e2^5
-       + 42/143 * e2^6;
-Q[6] = - 7/169 * e2^6;
+Qgrass[0] = - 1
+            - 2/3 * e2
+            - 3/5 * e2^2
+            - 4/7 * e2^3
+            - 5/9 * e2^4
+            - 6/11 * e2^5
+            - 7/13 * e2^6;
+Qgrass[1] = + 2/9 * e2
+            + 2/5 * e2^2
+            + 4/7 * e2^3
+            + 20/27 * e2^4
+            + 10/11 * e2^5
+            + 14/13 * e2^6;
+Qgrass[2] = - 3/25 * e2^2
+            - 12/35 * e2^3
+            - 2/3 * e2^4
+            - 12/11 * e2^5
+            - 21/13 * e2^6;
+Qgrass[3] = + 4/49 * e2^3
+            + 20/63 * e2^4
+            + 60/77 * e2^5
+            + 20/13 * e2^6;
+Qgrass[4] = - 5/81 * e2^4
+            - 10/33 * e2^5
+            - 35/39 * e2^6;
+Qgrass[5] = + 6/121 * e2^5
+            + 42/143 * e2^6;
+Qgrass[6] = - 7/169 * e2^6;
 */
 
-printterms(Qbcoeff,e2)$
-/*
-Expansion in cos((2*i+1)*phi) * e2^j, multiplicative const = b^2
-Same truncation error as Qacoeff, but smaller roundoff error when
-evaluated with Clenshaw summation.
-Q[0] = - 1
-       - 1/2 * e2
-       - 3/8 * e2^2
-       - 5/16 * e2^3
-       - 35/128 * e2^4
-       - 63/256 * e2^5
-       - 231/1024 * e2^6;
-Q[1] = + 1/18 * e2
-       + 1/16 * e2^2
-       + 1/16 * e2^3
-       + 35/576 * e2^4
-       + 15/256 * e2^5
-       + 231/4096 * e2^6;
-Q[2] = - 3/400 * e2^2
-       - 1/80 * e2^3
-       - 1/64 * e2^4
-       - 9/512 * e2^5
-       - 77/4096 * e2^6;
-Q[3] = + 1/784 * e2^3
-       + 5/1792 * e2^4
-       + 15/3584 * e2^5
-       + 11/2048 * e2^6;
-Q[4] = - 5/20736 * e2^4
-       - 1/1536 * e2^5
-       - 7/6144 * e2^6;
-Q[5] = + 3/61952 * e2^5
-       + 7/45056 * e2^6;
-Q[6] = - 7/692224 * e2^6;
+
+/* Series for auxiliary latitudes available at
+   https://doi.org/10.5281/zenodo.7382666
 */
+load("auxvals40.mac")$
+
+Lmax:6$
+
+submat(M,rows,cols):=block([r0:length(M),c0:length(M[1]),l],
+  l:append(makelist(r,r,rows+1,r0),[M]),
+  M:apply('submatrix,l),
+  l:append([M],makelist(c,c,cols+1,c0)),
+  apply('submatrix,l))$
+
+/* xi in terms of phi */
+xiphi:block([M:submat(C[xi,phi],Lmax,Lmax)],
+  phi+makelist(sin(2*l*phi),l,1,Lmax).M.
+  transpose(makelist(n^j,j,1,Lmax)))$
+
+kill(C,T)$
+
+/* Expand in n, c^2 is multiplicative constant, series given in terms
+   of cos((2*l+1)*phi) */
+
+sinxi:ratdisrep(taylor(sin(xiphi), n, 0, Lmax))$
+/* integral of sin(xi) */
+S:expand(trigreduce(integrate(sinxi, phi)))$
+kill(Q)$
+Q[l]:=taylor(coeff(S, cos((2*l+1)*phi)), n, 0, Lmax)$
+for l:0 thru Lmax do display(Q[l])$
+
+/* The GRASS approach: expand in e^2, b^2 is multiplicative constant,
+   series given in terms of cos(phi)^(2*l+1) */
+
+A(phi):=(atanh(sqrt(e2)*sin(phi))/sqrt(e2) + sin(phi)/(1-e2*sin(phi)^2))/2$
+Ap:A(%pi/2)$  /* c^2/b^2 */
+Aex:ratdisrep(taylor(A(phi), e2, 0, Lmax))$
+/*
+  This has a nice simple Taylor series
+  Aex = sin(phi) + 2/3  * sin(phi)^3  * e2
+                 + 3/5  * sin(phi)^5  * e2^2
+                 + 4/7  * sin(phi)^7  * e2^3
+                 + 5/9  * sin(phi)^9  * e2^4
+                 + 6/11 * sin(phi)^11 * e2^5
+                 + 7/13 * sin(phi)^13 * e2^6;
+*/
+Sgrass:expand(trigexpand(integrate(Aex, phi)))$
+kill(Qgrass)$
+Qgrass[l]:=taylor(coeff(Sgrass, cos(phi), 2*l+1), e2, 0, Lmax)$
+for l:0 thru Lmax do display(Qgrass[l])$
+
+/* Convert Sgrass to S */
+Scheck:expand(trigreduce(ratdisrep(
+      taylor(subst([e2=4*n/(1+n)^2], Sgrass/Ap), n, 0, Lmax))))$
+
+Sdiff:S-Scheck$
+display(Sdiff)$
