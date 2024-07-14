@@ -58,7 +58,6 @@ int main(int argc, char* argv[]) {
     // Write results as floats in binary mode
     ofstream file(filename.c_str(), ios::binary);
 
-
     switch (mode) {
     case PGM:
       file << "P5\n"

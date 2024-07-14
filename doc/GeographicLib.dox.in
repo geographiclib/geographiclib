@@ -376,13 +376,15 @@ Here are the steps to compile and install GeographicLib:
   .
 - Build and install the software.  In non-IDE environments, run
   \verbatim
-  make         # compile the library and utilities
-  make test    # run some tests
-  make install # as root, if CMAKE_INSTALL_PREFIX is a system directory
+  make                   # compile the library and utilities
+  make testprograms test # run some tests
+  make install    # as root, if CMAKE_INSTALL_PREFIX is a system directory
 \endverbatim
   Possible additional targets are \verbatim
-  make dist
-  make exampleprograms \endverbatim
+  make libs       # make the libraries only, not the utilities
+  make tools      # make the utilities
+  make testprograms    # make the programs needed for "make test"
+  make exampleprograms # make the example programs \endverbatim
   On IDE environments, run your IDE (e.g., Visual Studio), load
   GeographicLib.sln, pick the build type (e.g., Release), and select
   "Build Solution".  If this succeeds, select "RUN_TESTS" to build;
@@ -404,7 +406,7 @@ Here are the steps to compile and install GeographicLib:
   <code>CMAKE_INSTALL_PREFIX</code>.  (dll dynamic libraries are
   installed in `bin`.)  For documentation, open in a web browser
   <a href="index.html">`share/doc/GeographicLib/html/index.html`</a>.
-- With cmake 3.13 and later, cmake can create the build directory for
+- CMake can create the build directory for
   you.  This allows you to configure and run the build on Windows with
   \verbatim
   cmake -G "Visual Studio 14" -A x64 -S . -B BUILD
@@ -626,7 +628,7 @@ In order to use GeographicLib from C++ code, you will need to
     cmake --build . --config Release --target ALL_BUILD \endverbatim
     You might also want to install your package (using "make install" or
     build the "INSTALL" target with the command above).
-    With cmake 3.13 and later, cmake can create the build directory for
+    CMake can create the build directory for
     you.  This allows you to configure and run the build on Windows with
     \verbatim
     cmake -G "Visual Studio 14" -A x64 \
@@ -4174,13 +4176,10 @@ Go to
     versions of the papers.
  -# An alternative to exploring geodesics using Jacobi's solution is to
     integrate the equations for the geodesics directly.  This is the
-    approach taken by
-    <a href="http://www.math.harvard.edu/~knill/caustic/">
-    Oliver Knill and Michael Teodorescu</a>.  However it is difficult to
+    approach taken by <a href="http://dx.doi.org/10.1515/jogs-2019-0001">
+    Panou and Korakitis (2019)</a>.  However it is difficult to
     ensure that the long time behavior is correctly modeled with such an
     approach.
- -# At this point, I have no plans to add the solution of triaxial
-    geodesic problem to GeographicLib.
  -# If you only want to learn about geodesics on a biaxial ellipsoid (an
     ellipsoid of revolution), then see \ref geodesic or the paper
     - C. F. F. Karney,
@@ -4676,6 +4675,13 @@ The shortest path found by this method is unique unless:
    \f$\cos\alpha_2\f$ have opposite signs.  In this case, there another
    shortest geodesic with azimuths \f$\pi - \alpha_1\f$ and
    \f$\pi - \alpha_2\f$.
+
+I have implemented this <a href="../../doc/triaxial.html"> solution to
+the inverse geodesic problem on a triaxial ellipsoid</a> in
+<a href="https://github.com/geographiclib/geographiclib-octave#readme">
+Octave/MATLAB</a>.  However, this is uses the method of Panou and
+Korakitis (2019) to solve the direct problem while searching for the
+inverse solution.
 
 \section triaxial-conformal Jacobi's conformal projection
 
@@ -7658,15 +7664,15 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.4</a>
    (released 2024-mm-dd)
-   - Internal code change: stop using reserved identifiers (\e _N in the
-     DST class and \e _R in the Intersect class).
-   - Stop requiring that `CMAKE_CROSSCOMPILING` match with
-     `find_package(GeographicLib)`.
-   - Update cmake_minimum_required to 3.16.0.
+   - Math::sind, Math:sincosd, etc., now return accurate results for
+     arguments = 30&deg;, 45&deg;, 60&deg;, &hellip;.
+   - Add Math::hypot3.
+   - Make constructor for AuxAngle explicit.
+   - Include notes for \ref platecarreearea.
    - C++14 compliant compiler required (this requirement tracks the
      Boost Math library).
-   - Make constructor for AuxAngle explicit.
    - CMake configuration changes
+     - update cmake_minimum_required to 3.16.0.
      - exclude the <code>tools</code> and <code>doc</code> targets from
        the default build (<code>make all</code>) if these components
        won't be installed (<code>BINDIR</code> or <code>DOCDIR</code>
@@ -7677,12 +7683,12 @@ git repository for GeographicLib</a>.
        testprograms test</code>.
      - added a target <code>libs</code> to build only the static and/or
        shared libraries.
-   - Math::sind, Math:sincosd, etc., now return accurate results for
-     arguments = 30&deg;, 45&deg;, 60&deg;, &hellip;.
-   - Add Math::hypot3.
-   - Document the use of CMake's FetchContent as an alternative to
-     find_package.
-   - Include notes for \ref platecarreearea.
+     - document the use of CMake's FetchContent as an alternative to
+       find_package.
+     - stop requiring that `CMAKE_CROSSCOMPILING` match with
+       `find_package(GeographicLib)`.
+   - Internal code change: stop using reserved identifiers (\e _N in the
+     DST class and \e _R in the Intersect class).
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-07-25)
