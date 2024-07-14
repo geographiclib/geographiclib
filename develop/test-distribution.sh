@@ -326,8 +326,7 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
 (cd BUILD && make -j$NUMCPUS && make -j$NUMCPUS develprograms)
 
 cp $DEVELSOURCE/include/mpreal.h include/
-# Skip 4 for now because of various boost bugs
-for p in 1 3 5; do
+for p in 1 3 4 5; do
     echo ==============================================================
     echo CMake build of devel tree at precision $p in $TEMP/gitb/geographiclib/BUILD-$p
     mkdir BUILD-$p

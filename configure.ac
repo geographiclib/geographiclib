@@ -47,7 +47,7 @@ AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
-AC_PROG_LIBTOOL
+LT_INIT
 AC_LANG([C++])
 
 # Checks for long double
