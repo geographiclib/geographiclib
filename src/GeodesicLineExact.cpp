@@ -28,11 +28,6 @@
 
 #include <GeographicLib/GeodesicLineExact.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about mixing enums
-#  pragma warning (disable: 5054)
-#endif
-
 namespace GeographicLib {
 
   using namespace std;

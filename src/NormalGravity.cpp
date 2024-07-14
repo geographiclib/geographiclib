@@ -9,11 +9,6 @@
 
 #include <GeographicLib/NormalGravity.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
-
 namespace GeographicLib {
 
   using namespace std;
@@ -87,7 +82,7 @@ namespace GeographicLib {
     // require abs(x) < 1/2, but better to restrict calls to abs(x) < 1/4
     static const real lg2eps_ = -log2(numeric_limits<real>::epsilon() / 2);
     int e;
-    frexp(x, &e);
+    (void) frexp(x, &e);
     e = max(-e, 1);             // Here's where abs(x) < 1/2 is assumed
     // x = [0.5,1) * 2^(-e)
     // estimate n s.t. x^n/n < 1/7 * epsilon/2
@@ -269,7 +264,10 @@ namespace GeographicLib {
       ep2 = fmax(Math::sq(32 * K / (3 * Math::sq(Math::pi()) * (J0 - J2))),
                 -maxe_),
       e2 = fmin(ep2 / (1 + ep2), maxe_);
-    for (int j = 0; j < maxit_ || GEOGRAPHICLIB_PANIC; ++j) {
+    for (int j = 0;
+         j < maxit_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in NormalGravity");
+         ++j) {
       real
         e2a = e2, ep2a = ep2,
         f2 = 1 - e2,            // (1 - f)^2

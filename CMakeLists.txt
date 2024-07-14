@@ -1,9 +1,9 @@
-cmake_minimum_required (VERSION 3.13.0)
+cmake_minimum_required (VERSION 3.16.0)
 project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
-set (PROJECT_VERSION_MINOR 3)
+set (PROJECT_VERSION_MINOR 4)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -50,7 +50,7 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 26)
-set (LIBVERSION_BUILD 26.0.0)
+set (LIBVERSION_BUILD 26.1.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -263,8 +263,8 @@ endif ()
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
-# We require C++11
-set (CMAKE_CXX_STANDARD 11)
+# We require C++14
+set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 if (GEOGRAPHICLIB_PRECISION EQUAL 4)
   set (CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
@@ -529,7 +529,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
   "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin|HOWTO-RELEASE.txt)\$")
+  "${PROJECT_SOURCE_DIR}/(makefile-admin|HOWTO-RELEASE.txt)\$")
 set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)

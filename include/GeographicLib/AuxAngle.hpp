@@ -6,7 +6,7 @@
  * - C. F. F. Karney,
  *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
  *   On auxiliary latitudes,</a>
- *   Survey Review (2023);
+ *   Survey Review 56(395), 165--180 (2024);
  *   preprint
  *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
  * .
@@ -29,7 +29,7 @@ namespace GeographicLib {
    * - C. F. F. Karney,
    *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
    *   On auxiliary latitudes,</a>
-   *   Survey Review (2023);
+   *   Survey Review 56(395), 165--180 (2024);
    *   preprint
    *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
    *
@@ -62,7 +62,7 @@ namespace GeographicLib {
      * + no arguments gives an angle of 0;
      * + 1 argument specifies the tangent of the angle.
      **********************************************************************/
-    AuxAngle(real y = 0, real x = 1) : _y(y), _x(x) {}
+    explicit AuxAngle(real y = 0, real x = 1) : _y(y), _x(x) {}
     /**
      * @return the \e y component.  This is the sine of the angle if the
      *   AuxAngle has been normalized.

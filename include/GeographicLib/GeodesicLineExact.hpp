@@ -2,7 +2,7 @@
  * \file GeodesicLineExact.hpp
  * \brief Header for GeographicLib::GeodesicLineExact class
  *
- * Copyright (c) Charles Karney (2012-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2012-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -67,17 +67,16 @@ namespace GeographicLib {
                       real azi1, real salp1, real calp1,
                       unsigned caps, bool arcmode, real s13_a13);
 
-    enum captype {
-      CAP_NONE = GeodesicExact::CAP_NONE,
-      CAP_E    = GeodesicExact::CAP_E,
-      CAP_D    = GeodesicExact::CAP_D,
-      CAP_H    = GeodesicExact::CAP_H,
-      CAP_C4   = GeodesicExact::CAP_C4,
-      CAP_ALL  = GeodesicExact::CAP_ALL,
-      CAP_MASK = GeodesicExact::CAP_MASK,
-      OUT_ALL  = GeodesicExact::OUT_ALL,
-      OUT_MASK = GeodesicExact::OUT_MASK,
-    };
+    static constexpr unsigned CAP_NONE = GeodesicExact::CAP_NONE;
+    static constexpr unsigned CAP_E    = GeodesicExact::CAP_E;
+    static constexpr unsigned CAP_D    = GeodesicExact::CAP_D;
+    static constexpr unsigned CAP_H    = GeodesicExact::CAP_H;
+    static constexpr unsigned CAP_C4   = GeodesicExact::CAP_C4;
+    static constexpr unsigned CAP_ALL  = GeodesicExact::CAP_ALL;
+    static constexpr unsigned CAP_MASK = GeodesicExact::CAP_MASK;
+    static constexpr unsigned OUT_ALL  = GeodesicExact::OUT_ALL;
+    static constexpr unsigned OUT_MASK = GeodesicExact::OUT_MASK;
+
   public:
 
     /**

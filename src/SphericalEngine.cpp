@@ -135,9 +135,8 @@
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions and potentially
-// uninitialized local variables
-#  pragma warning (disable: 4127 4701)
+// Squelch warnings about potentially uninitialized local variables
+#  pragma warning (disable: 4701)
 #endif
 
 namespace GeographicLib {

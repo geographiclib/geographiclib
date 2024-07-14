@@ -2,13 +2,11 @@
  * \file AuxLatitude.cpp
  * \brief Implementation for the GeographicLib::AuxLatitude class.
  *
- * \note This is just sample code.  It is not part of GeographicLib itself.
- *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
  *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
  *   On auxiliary latitudes,</a>
- *   Survey Review (2023);
+ *   Survey Review 56(395), 165--180 (2024);
  *   preprint
  *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
  * .
@@ -19,11 +17,6 @@
 
 #include <GeographicLib/AuxLatitude.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional and enum-float expressions
-#  pragma warning (disable: 4127 5055)
-#endif
 
 namespace GeographicLib {
 
@@ -1326,8 +1319,8 @@ namespace GeographicLib {
   Math::real AuxLatitude::Clenshaw(bool sinp, real szeta, real czeta,
                                    const real c[], int K) {
     // Evaluate
-    // y = sum(c[k] * sin( (2*k+2) * zeta), i, 0, K-1) if  sinp
-    // y = sum(c[k] * cos( (2*k+2) * zeta), i, 0, K-1) if !sinp
+    // y = sum(c[k] * sin( (2*k+2) * zeta), k, 0, K-1) if  sinp
+    // y = sum(c[k] * cos( (2*k+2) * zeta), k, 0, K-1) if !sinp
     // Approx operation count = (K + 5) mult and (2 * K + 2) add
     int k = K;
     real u0 = 0, u1 = 0,        // accumulators for sum

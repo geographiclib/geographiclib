@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2008-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -53,13 +53,13 @@
 #define GEOGRAPHICLIB_VOLATILE
 // Signal a convergence failure with multiprec types by throwing an exception
 // at loop exit.
-#define GEOGRAPHICLIB_PANIC \
-  (throw GeographicLib::GeographicErr("Convergence failure"), false)
+#define GEOGRAPHICLIB_PANIC(msg) \
+  (throw GeographicLib::GeographicErr(msg), false)
 #else
 #define GEOGRAPHICLIB_VOLATILE volatile
 // Ignore convergence failures with standard floating points types by allowing
 // loop to exit cleanly.
-#define GEOGRAPHICLIB_PANIC false
+#define GEOGRAPHICLIB_PANIC(msg) false
 #endif
 
 namespace GeographicLib {
@@ -134,6 +134,21 @@ namespace GeographicLib {
      * break most of the tests.  Also the normal definition of degree is baked
      * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
      **********************************************************************/
+#if __cplusplus >= 201703L
+    static inline constexpr int qd = 90;      ///< degrees per quarter turn
+    static inline constexpr int dm = 60;      ///< minutes per degree
+    static inline constexpr int ms = 60;      ///< seconds per minute
+    static inline constexpr int hd = 2 * qd;  ///< degrees per half turn
+    static inline constexpr int td = 2 * hd;  ///< degrees per turn
+    static inline constexpr int ds = dm * ms; ///< seconds per degree
+#elif GEOGRAPHICLIB_PRECISION < 4
+    static constexpr int qd = 90;      ///< degrees per quarter turn
+    static constexpr int dm = 60;      ///< minutes per degree
+    static constexpr int ms = 60;      ///< seconds per minute
+    static constexpr int hd = 2 * qd;  ///< degrees per half turn
+    static constexpr int td = 2 * hd;  ///< degrees per turn
+    static constexpr int ds = dm * ms; ///< seconds per degree
+#else
     enum dms {
       qd = 90,                  ///< degrees per quarter turn
       dm = 60,                  ///< minutes per degree
@@ -142,6 +157,7 @@ namespace GeographicLib {
       td = 2 * hd,              ///< degrees per turn
       ds = dm * ms              ///< seconds per degree
     };
+#endif
 
     /**
      * @return the number of bits of precision in a real number.
@@ -483,6 +499,18 @@ namespace GeographicLib {
      * <a href="https://arxiv.org/abs/1002.1417">arXiv:1002.1417</a>).
      **********************************************************************/
     template<typename T> static T tauf(T taup, T es);
+
+    /**
+     * Implement hypot with 3 parameters
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @return sqrt(<i>x</i><sup>2</sup> + <i>y</i><sup>2</sup> +
+     *   <i>z</i><sup>2</sup>).
+     **********************************************************************/
+    template<typename T> static T hypot3(T x, T y, T z);
 
     /**
      * The NaN (not a number)

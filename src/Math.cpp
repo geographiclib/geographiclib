@@ -2,17 +2,12 @@
  * \file Math.cpp
  * \brief Implementation for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2015-2022) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2015-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/Math.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional and enum-float expressions
-#  pragma warning (disable: 4127 5055)
-#endif
 
 namespace GeographicLib {
 
@@ -106,11 +101,18 @@ namespace GeographicLib {
   template<typename T> void Math::sincosd(T x, T& sinx, T& cosx) {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
-    T r; int q = 0;
-    r = remquo(x, T(qd), &q);   // now abs(r) <= 45
-    r *= degree<T>();
+    T d, r; int q = 0;
+    d = remquo(x, T(qd), &q);   // now abs(r) <= 45
+    r = d * degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
+    if (2 * fabs(d) == qd) {
+      c = sqrt(1/T(2));
+      s = copysign(c, r);
+    } else if (3 * fabs(d) == qd) {
+      c = sqrt(T(3))/2;
+      s = copysign(1/T(2), r);
+    }
     switch (unsigned(q) & 3U) {
     case 0U: sinx =  s; cosx =  c; break;
     case 1U: sinx =  c; cosx = -s; break;
@@ -128,11 +130,18 @@ namespace GeographicLib {
     // the argument to the range [-45, 45] before converting it to radians.
     // This implementation allows x outside [-180, 180], but implementations in
     // other languages may not.
-    T r; int q = 0;
-    r = AngRound(remquo(x, T(qd), &q) + t); // now abs(r) <= 45
-    r *= degree<T>();
+    int q = 0;
+    T d = AngRound(remquo(x, T(qd), &q) + t), // now abs(r) <= 45
+      r = d * degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
+    if (2 * fabs(d) == qd) {
+      c = sqrt(1/T(2));
+      s = copysign(c, r);
+    } else if (3 * fabs(d) == qd) {
+      c = sqrt(T(3))/2;
+      s = copysign(1/T(2), r);
+    }
     switch (unsigned(q) & 3U) {
     case 0U: sinx =  s; cosx =  c; break;
     case 1U: sinx =  c; cosx = -s; break;
@@ -147,11 +156,15 @@ namespace GeographicLib {
 
   template<typename T> T Math::sind(T x) {
     // See sincosd
-    T r; int q = 0;
-    r = remquo(x, T(qd), &q); // now abs(r) <= 45
-    r *= degree<T>();
+    int q = 0;
+    T d = remquo(x, T(qd), &q), // now abs(r) <= 45
+      r = d * degree<T>();
     unsigned p = unsigned(q);
-    r = p & 1U ? cos(r) : sin(r);
+    // r = p & 1U ? cos(r) : sin(r); replaced by ...
+    r = p & 1U ? (2 * fabs(d) == qd ? sqrt(1/T(2)) :
+                  (3 * fabs(d) == qd ? sqrt(T(3))/2 : cos(r))) :
+      copysign(2 * fabs(d) == qd ? sqrt(1/T(2)) :
+               (3 * fabs(d) == qd ? 1/T(2) : sin(r)), r);
     if (p & 2U) r = -r;
     if (r == 0) r = copysign(r, x);
     return r;
@@ -159,11 +172,14 @@ namespace GeographicLib {
 
   template<typename T> T Math::cosd(T x) {
     // See sincosd
-    T r; int q = 0;
-    r = remquo(x, T(qd), &q); // now abs(r) <= 45
-    r *= degree<T>();
+    int q = 0;
+    T d = remquo(x, T(qd), &q), // now abs(r) <= 45
+      r = d * degree<T>();
     unsigned p = unsigned(q + 1);
-    r = p & 1U ? cos(r) : sin(r);
+    r = p & 1U ? (2 * fabs(d) == qd ? sqrt(1/T(2)) :
+                  (3 * fabs(d) == qd ? sqrt(T(3))/2 : cos(r))) :
+      copysign(2 * fabs(d) == qd ? sqrt(1/T(2)) :
+               (3 * fabs(d) == qd ? 1/T(2) : sin(r)), r);
     if (p & 2U) r = -r;
     // mpreal needs T(0) here
     return T(0) + r;
@@ -236,7 +252,10 @@ namespace GeographicLib {
       tau = fabs(taup) > 70 ? taup * exp(eatanhe(T(1), es)) : taup/e2m,
       stol = tol * fmax(T(1), fabs(taup));
     if (!(fabs(tau) < taumax)) return tau; // handles +/-inf and nan
-    for (int i = 0; i < numit || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0;
+         i < numit ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in Math::tauf");
+         ++i) {
       T taupa = taupf(tau, es),
         dtau = (taup - taupa) * (1 + e2m * sq(tau)) /
         ( e2m * hypot(T(1), tau) * hypot(T(1), taupa) );
@@ -245,6 +264,14 @@ namespace GeographicLib {
         break;
     }
     return tau;
+  }
+
+  template<typename T> T Math::hypot3(T x, T y, T z) {
+#if __cplusplus < 201703L || GEOGRAPHICLIB_PRECISION == 4
+    return sqrt(x*x + y*y + z*z);
+#else
+    return hypot(x, y, z);
+#endif
   }
 
   template<typename T> T Math::NaN() {
@@ -288,6 +315,7 @@ namespace GeographicLib {
   template T    GEOGRAPHICLIB_EXPORT Math::eatanhe      <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::taupf        <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::tauf         <T>(T, T);         \
+  template T    GEOGRAPHICLIB_EXPORT Math::hypot3       <T>(T, T, T);      \
   template T    GEOGRAPHICLIB_EXPORT Math::NaN          <T>();             \
   template T    GEOGRAPHICLIB_EXPORT Math::infinity     <T>();
 

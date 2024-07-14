@@ -1,7 +1,7 @@
 dnl
 dnl Copyright (C) 2009, Francesco P. Lovergine <frankie@debian.org>
 
-AC_INIT([GeographicLib],[2.3],[karney@alum.mit.edu])
+AC_INIT([GeographicLib],[2.4],[karney@alum.mit.edu])
 AC_CANONICAL_TARGET
 AC_PREREQ([2.71])
 AC_CONFIG_SRCDIR(src/Geodesic.cpp)
@@ -9,7 +9,7 @@ AC_CONFIG_MACRO_DIR(m4)
 AM_INIT_AUTOMAKE
 
 GEOGRAPHICLIB_VERSION_MAJOR=2
-GEOGRAPHICLIB_VERSION_MINOR=3
+GEOGRAPHICLIB_VERSION_MINOR=4
 GEOGRAPHICLIB_VERSION_PATCH=0
 AC_DEFINE_UNQUOTED([GEOGRAPHICLIB_VERSION_MAJOR],
         [$GEOGRAPHICLIB_VERSION_MAJOR],[major version number])
@@ -34,9 +34,9 @@ dnl Library code modified:              REVISION++
 dnl Interfaces changed/added/removed:   CURRENT++ REVISION=0
 dnl Interfaces added:                   AGE++
 dnl Interfaces removed:                 AGE=0
-LT_CURRENT=26
+LT_CURRENT=27
 LT_REVISION=0
-LT_AGE=0
+LT_AGE=1
 AC_SUBST(LT_CURRENT)
 AC_SUBST(LT_REVISION)
 AC_SUBST(LT_AGE)
@@ -47,7 +47,7 @@ AC_PROG_MAKE_SET
 AC_PROG_INSTALL
 AC_PROG_CXX
 AX_CXX_COMPILE_STDCXX_11([noext],[mandatory])
-AC_PROG_LIBTOOL
+LT_INIT
 AC_LANG([C++])
 
 # Checks for long double
@@ -89,6 +89,7 @@ experimental/Makefile
 PKG_PROG_PKG_CONFIG
 PKG_INSTALLDIR
 
+AC_SUBST(lib_postfix,"")
 AC_CONFIG_FILES([cmake/geographiclib.pc:cmake/project.pc.in])
 
 AC_OUTPUT

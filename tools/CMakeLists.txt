@@ -12,10 +12,19 @@ include_directories (${MANDIR})
 add_definitions (${PROJECT_DEFINITIONS})
 
 # Loop over all the tools, specifying the source and library.
-add_custom_target (tools ALL)
+if (BINDIR)
+  add_custom_target (tools ALL)
+else ()
+  add_custom_target (tools)
+endif ()
+
 foreach (TOOL ${TOOLS})
 
-  add_executable (${TOOL} ${TOOL}.cpp)
+  if (BINDIR)
+    add_executable (${TOOL} ${TOOL}.cpp)
+  else ()
+    add_executable (${TOOL} EXCLUDE_FROM_ALL ${TOOL}.cpp)
+  endif ()
   if (NOT RELEASE)
     add_dependencies (${TOOL} usage)
   endif ()

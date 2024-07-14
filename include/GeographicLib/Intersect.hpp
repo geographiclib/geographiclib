@@ -2,8 +2,8 @@
  * \file Intersect.hpp
  * \brief Header for GeographicLib::Intersect class
  *
- * Copyright (c) Charles Karney (2023) <karney@alum.mit.edu> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2023-2024) <karney@alum.mit.edu> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -52,10 +52,11 @@ namespace GeographicLib {
    *
    * This solution for intersections is described in
    * - C. F. F. Karney,<br>
-   *   <a href="https://arxiv.org/abs/yymm.nnnnn">
-   *   Geodesic intersections</a>,<br>
-   *   Technical Report, SRI International, MMM 2023.<br>
-   *   <a href="https://arxiv.org/abs/yymm.nnnnn">arxiv:yymm.nnnnn</a>
+   *   <a href="https://doi.org/10.1061/JSUED2.SUENG-1483">
+   *   Geodesic intersections</a>,
+   *   J. Surveying Eng. <b>150</b>(3), 04024005:1--9 (2024);
+   *   preprint
+   *   <a href="https://arxiv.org/abs/2308.00495">arxiv:2308.00495</a>.
    * .
    * It is based on the work of
    * - S. Baseldga and J. C. Martinez-Llario,
@@ -87,8 +88,8 @@ namespace GeographicLib {
     static const int numit_ = 100;
     const Geodesic _geod;
     real _a, _f,                // equatorial radius, flattening
-      _R,                       // authalic radius
-      _d,                       // pi*_R
+      _rR,                      // authalic radius
+      _d,                       // pi*_rR
       _eps,                     // criterion for intersection + coincidence
       _tol,                     // convergence for Newton in Solve1
       _delta,                   // for equality tests, safety margin for tiling
@@ -158,7 +159,7 @@ namespace GeographicLib {
           (p.x != q.x ? (p.x < q.x) : (p.y < q.y));
       }
     };
-// The spherical solution
+    // The spherical solution
     XPoint Spherical(const GeodesicLine& lineX, const GeodesicLine& lineY,
                      const XPoint& p) const;
     // The basic algorithm

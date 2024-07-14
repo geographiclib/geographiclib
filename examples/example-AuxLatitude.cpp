@@ -2,7 +2,7 @@
 //
 // - C. F. F. Karney,
 //   On auxiliary latitudes,
-//   Survey Review, 2023.
+//   Survey Review 56(395), 165--180 (2024).
 //   https://doi.org/10.1080/00396265.2023.2217604
 //   preprint: https://arxiv.org/abs/2212.05818
 

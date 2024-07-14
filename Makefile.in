@@ -357,6 +357,7 @@ htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
 install_sh = @install_sh@
+lib_postfix = @lib_postfix@
 libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@

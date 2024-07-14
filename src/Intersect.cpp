@@ -21,8 +21,8 @@ namespace GeographicLib {
     : _geod(geod)
     , _a(_geod.EquatorialRadius())
     , _f(_geod.Flattening())
-    , _R(sqrt(_geod.EllipsoidArea() / (4 * Math::pi())))
-    , _d(_R * Math::pi())       // Used to normalize intersection points
+    , _rR(sqrt(_geod.EllipsoidArea() / (4 * Math::pi())))
+    , _d(_rR * Math::pi())      // Used to normalize intersection points
     , _eps(3 * numeric_limits<real>::epsilon())
     , _tol(_d * pow(numeric_limits<real>::epsilon(), 3/real(4)))
     , _delta(_d * pow(numeric_limits<real>::epsilon(), 1/real(5)))
@@ -145,7 +145,7 @@ namespace GeographicLib {
     lineY.Position(p.y, latY, lonY, aziY);
     real z, aziXa, aziYa;
     _geod.Inverse(latX, lonX, latY, lonY, z, aziXa, aziYa);
-    real sinz = sin(z/_R), cosz = cos(z/_R);
+    real sinz = sin(z/_rR), cosz = cos(z/_rR);
     // X = interior angle at X, Y = exterior angle at Y
     real dX, dY, dXY,
       X = Math::AngDiff(aziX, aziXa, dX), Y = Math::AngDiff(aziY, aziYa, dY),
@@ -161,7 +161,7 @@ namespace GeographicLib {
     real sinY, cosY; Math::sincosde(s*Y, s*dY, sinY, cosY);
     real sX, sY;
     int c;
-    if (z <= _eps * _R) {
+    if (z <= _eps * _rR) {
       sX = sY = 0;              // Already at intersection
       // Determine whether lineX and lineY are parallel or antiparallel
       if (fabs(sinX - sinY) <= _eps && fabs(cosX - cosY) <= _eps)
@@ -181,8 +181,8 @@ namespace GeographicLib {
       // underflow in {sinX,sinY}*sinz; this is probably not necessary].
       // Definitely need to treat sinz < 0 (z > pi*R) correctly.  Without
       // this we have some convergence failures in Basic.
-      sX = _R * atan2(sinY * sinz,  sinY * cosX * cosz - cosY * sinX);
-      sY = _R * atan2(sinX * sinz, -sinX * cosY * cosz + cosX * sinY);
+      sX = _rR * atan2(sinY * sinz,  sinY * cosX * cosz - cosY * sinX);
+      sY = _rR * atan2(sinX * sinz, -sinX * cosY * cosz + cosX * sinY);
       c = 0;
     }
     return XPoint(sX, sY, c);
@@ -193,7 +193,10 @@ namespace GeographicLib {
                    const Intersect::XPoint& p0) const {
     ++_cnt1;
     XPoint q = p0;
-    for (int n = 0; n < numit_ || GEOGRAPHICLIB_PANIC; ++n) {
+    for (int n = 0;
+         n < numit_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in Intersect");
+         ++n) {
       ++_cnt0;
       XPoint dq = Spherical(lineX, lineY, q);
       q += dq;

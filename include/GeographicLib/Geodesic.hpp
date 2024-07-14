@@ -2,7 +2,7 @@
  * \file Geodesic.hpp
  * \brief Header for GeographicLib::Geodesic class
  *
- * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2009-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -194,18 +194,16 @@ namespace GeographicLib {
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
 
-    enum captype {
-      CAP_NONE = 0U,
-      CAP_C1   = 1U<<0,
-      CAP_C1p  = 1U<<1,
-      CAP_C2   = 1U<<2,
-      CAP_C3   = 1U<<3,
-      CAP_C4   = 1U<<4,
-      CAP_ALL  = 0x1FU,
-      CAP_MASK = CAP_ALL,
-      OUT_ALL  = 0x7F80U,
-      OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
-    };
+    static constexpr unsigned CAP_NONE = 0U;
+    static constexpr unsigned CAP_C1   = 1U<<0;
+    static constexpr unsigned CAP_C1p  = 1U<<1;
+    static constexpr unsigned CAP_C2   = 1U<<2;
+    static constexpr unsigned CAP_C3   = 1U<<3;
+    static constexpr unsigned CAP_C4   = 1U<<4;
+    static constexpr unsigned CAP_ALL  = 0x1FU;
+    static constexpr unsigned CAP_MASK = CAP_ALL;
+    static constexpr unsigned OUT_ALL  = 0x7F80U;
+    static constexpr unsigned OUT_MASK = 0xFF80U;    // Includes LONG_UNROLL
 
     static real SinCosSeries(bool sinp,
                              real sinx, real cosx, const real c[], int n);
