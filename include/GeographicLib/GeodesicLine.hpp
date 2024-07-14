@@ -2,7 +2,7 @@
  * \file GeodesicLine.hpp
  * \brief Header for GeographicLib::GeodesicLine class
  *
- * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2009-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/

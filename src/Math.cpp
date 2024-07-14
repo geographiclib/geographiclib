@@ -2,7 +2,7 @@
  * \file Math.cpp
  * \brief Implementation for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2015-2022) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2015-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -252,7 +252,10 @@ namespace GeographicLib {
       tau = fabs(taup) > 70 ? taup * exp(eatanhe(T(1), es)) : taup/e2m,
       stol = tol * fmax(T(1), fabs(taup));
     if (!(fabs(tau) < taumax)) return tau; // handles +/-inf and nan
-    for (int i = 0; i < numit || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0;
+         i < numit ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in Math::tauf");
+         ++i) {
       T taupa = taupf(tau, es),
         dtau = (taup - taupa) * (1 + e2m * sq(tau)) /
         ( e2m * hypot(T(1), tau) * hypot(T(1), taupa) );

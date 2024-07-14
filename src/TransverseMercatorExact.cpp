@@ -190,7 +190,11 @@ namespace GeographicLib {
       return;
     real stol2 = tol2_ / Math::sq(fmax(psi, real(1)));
     // min iterations = 2, max iterations = 6; mean = 4.0
-    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0, trip = 0;
+         i < numit_ ||
+           GEOGRAPHICLIB_PANIC
+           ("Convergence failure in TransverseMercatorExact");
+         ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
       _eEu.am(u, snu, cnu, dnu);
       _eEv.am(v, snv, cnv, dnv);
@@ -294,7 +298,11 @@ namespace GeographicLib {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
-    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0, trip = 0;
+         i < numit_ ||
+           GEOGRAPHICLIB_PANIC
+           ("Convergence failure in TransverseMercatorExact");
+         ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
       _eEu.am(u, snu, cnu, dnu);
       _eEv.am(v, snv, cnv, dnv);

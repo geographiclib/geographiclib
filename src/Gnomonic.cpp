@@ -59,7 +59,8 @@ namespace GeographicLib {
                                   Geodesic::GEODESICSCALE));
     int count = numit_, trip = 0;
     real lat1, lon1, azi1, M;
-    while (count-- || GEOGRAPHICLIB_PANIC) {
+    while (count-- ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in Gnomonic")) {
       real m, t;
       line.Position(s, lat1, lon1, azi1, m, M, t);
       if (trip)

@@ -2,7 +2,7 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011-2022) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2011-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/

@@ -2,7 +2,7 @@
  * \file Math.hpp
  * \brief Header for GeographicLib::Math class
  *
- * Copyright (c) Charles Karney (2008-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2008-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -53,13 +53,13 @@
 #define GEOGRAPHICLIB_VOLATILE
 // Signal a convergence failure with multiprec types by throwing an exception
 // at loop exit.
-#define GEOGRAPHICLIB_PANIC \
-  (throw GeographicLib::GeographicErr("Convergence failure"), false)
+#define GEOGRAPHICLIB_PANIC(msg) \
+  (throw GeographicLib::GeographicErr(msg), false)
 #else
 #define GEOGRAPHICLIB_VOLATILE volatile
 // Ignore convergence failures with standard floating points types by allowing
 // loop to exit cleanly.
-#define GEOGRAPHICLIB_PANIC false
+#define GEOGRAPHICLIB_PANIC(msg) false
 #endif
 
 namespace GeographicLib {

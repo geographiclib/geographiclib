@@ -193,7 +193,10 @@ namespace GeographicLib {
                    const Intersect::XPoint& p0) const {
     ++_cnt1;
     XPoint q = p0;
-    for (int n = 0; n < numit_ || GEOGRAPHICLIB_PANIC; ++n) {
+    for (int n = 0;
+         n < numit_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in Intersect");
+         ++n) {
       ++_cnt0;
       XPoint dq = Spherical(lineX, lineY, q);
       q += dq;

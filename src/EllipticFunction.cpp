@@ -2,7 +2,7 @@
  * \file EllipticFunction.cpp
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2008-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -330,7 +330,10 @@ namespace GeographicLib {
       real c = 0;           // To suppress warning about uninitialized variable
       real m[num_], n[num_];
       unsigned l = 0;
-      for (real a = 1; l < num_ || GEOGRAPHICLIB_PANIC; ++l) {
+      for (real a = 1;
+           l < num_ ||
+             GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");
+           ++l) {
         // This converges quadratically.  Max 5 trips
         m[l] = a;
         n[l] = mc = sqrt(mc);
@@ -389,7 +392,8 @@ namespace GeographicLib {
     real a[num_], b, c[num_];
     a[0] = 1; b = sqrt(kp2); c[0] = sqrt(k2);
     int l = 1;
-    for (; l < num_ || GEOGRAPHICLIB_PANIC;) {
+    for (; l < num_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");) {
       a[l] = (a[l-1] + b) / 2;
       c[l] = (a[l-1] - b) / 2;
       b = sqrt(a[l-1] * b);
@@ -612,7 +616,10 @@ namespace GeographicLib {
     // For kp2 close to zero use asin(x/_eEc) or
     // J. P. Boyd, Applied Math. and Computation 218, 7005-7013 (2012)
     // https://doi.org/10.1016/j.amc.2011.12.021
-    for (int i = 0; i < num_ || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0;
+         i < num_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");
+         ++i) {
       real
         sn = sin(phi),
         cn = cos(phi),

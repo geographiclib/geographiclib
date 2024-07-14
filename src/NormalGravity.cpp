@@ -264,7 +264,10 @@ namespace GeographicLib {
       ep2 = fmax(Math::sq(32 * K / (3 * Math::sq(Math::pi()) * (J0 - J2))),
                 -maxe_),
       e2 = fmin(ep2 / (1 + ep2), maxe_);
-    for (int j = 0; j < maxit_ || GEOGRAPHICLIB_PANIC; ++j) {
+    for (int j = 0;
+         j < maxit_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in NormalGravity");
+         ++j) {
       real
         e2a = e2, ep2a = ep2,
         f2 = 1 - e2,            // (1 - f)^2

@@ -7666,6 +7666,7 @@ git repository for GeographicLib</a>.
    - Math::sind, Math:sincosd, etc., now return accurate results for
      arguments = 30&deg;, 45&deg;, 60&deg;, &hellip;.
    - Add Math::hypot3.
+   - Add EllipticFunction::am.
    - Make constructor for AuxAngle explicit.
    - Include notes for \ref platecarreearea.
    - C++14 compliant compiler required (this requirement tracks the
