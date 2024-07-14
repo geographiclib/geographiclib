@@ -571,24 +571,6 @@ namespace GeographicLib {
       return x < 0 ? std::string("-inf") :
         (x > 0 ? std::string("inf") : std::string("nan"));
     std::ostringstream s;
-#if GEOGRAPHICLIB_PRECISION == 4
-    // boost-quadmath treats precision == 0 as "use as many digits as
-    // necessary" (see https://svn.boost.org/trac/boost/ticket/10103 and
-    // https://github.com/boostorg/multiprecision/issues/416)
-    // Fixed by https://github.com/boostorg/multiprecision/pull/389
-    if (p == 0) {
-      using std::signbit; using std::fabs;
-      using std::round; using std::fmod;
-      int n = signbit(x) ? -1 : 1; x = fabs(x);
-      Math::real ix = round(x); // Rounds ties away from zero (up for positive)
-      // Implement the "round ties to even" rule
-      if (2 * (ix - x) == 1 && fmod(ix, Math::real(2)) == 1) --ix;
-      s << std::fixed << std::setprecision(1) << n*ix;
-      std::string r(s.str());
-      // strip off trailing ".0"
-      return r.substr(0, (std::max)(int(r.size()) - 2, 0));
-    }
-#endif
     if (p >= 0) s << std::fixed << std::setprecision(p);
     s << x; return s.str();
   }

@@ -7657,7 +7657,6 @@ git repository for GeographicLib</a>.
    - Allow addition of points to NearestNeighbor objects (maybe by
      allowing larger buckets on construction or by just do additional
      splits as necessary).
-   - Check whether boost/quadmath workarounds can be removed with boost 1.79.
    - Improve documentation for Intersect class + tool to treat case of
      equally close intersectons.
 \endif
@@ -7687,8 +7686,11 @@ git repository for GeographicLib</a>.
        find_package.
      - stop requiring that `CMAKE_CROSSCOMPILING` match with
        `find_package(GeographicLib)`.
-   - Internal code change: stop using reserved identifiers (\e _N in the
-     DST class and \e _R in the Intersect class).
+   - Internal code changes
+     - stop using reserved identifiers (\e _N in the DST class and \e _R
+       in the Intersect class).
+     - remove the workaround for the boost-quadmath bug with
+       setprecision(0).
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-07-25)
