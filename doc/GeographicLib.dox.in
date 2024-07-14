@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2024-mm-dd
+\date 2024-07-14
 
 \section abstract Abstract
 
@@ -7661,16 +7661,16 @@ git repository for GeographicLib</a>.
      equally close intersectons.
 \endif
 
- - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.4</a>
-   (released 2024-mm-dd)
-   - Math::sind, Math:sincosd, etc., now return accurate results for
+ - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.4</a>
+   (released 2024-07-14)
+   - Math::sind, Math::sincosd, etc., now return accurate results for
      arguments = 30&deg;, 45&deg;, 60&deg;, &hellip;.
    - Add Math::hypot3.
    - Add EllipticFunction::am.
    - Make constructor for AuxAngle explicit.
    - Include notes for \ref platecarreearea.
    - C++14 compliant compiler required (this requirement tracks the
-     Boost Math library).
+     Boost math library).
    - CMake configuration changes
      - update cmake_minimum_required to 3.16.0.
      - exclude the <code>tools</code> and <code>doc</code> targets from
@@ -7679,7 +7679,7 @@ git repository for GeographicLib</a>.
        set to <code>OFF</code>).
      - <code>testprograms</code> is now excluded from the default build
        and it now depends on <code>tools</code>.  Before running the
-       test suite, build <code>testprograms<</code>, e.g., <code>make
+       test suite, build <code>testprograms</code>, e.g., <code>make
        testprograms test</code>.
      - added a target <code>libs</code> to build only the static and/or
        shared libraries.
@@ -7692,6 +7692,7 @@ git repository for GeographicLib</a>.
        in the Intersect class).
      - remove the workaround for the boost-quadmath bug with
        setprecision(0).
+     - GEOGRAPHICLIB_PANIC(msg) macro now takes a message argument.
    .
  - <a href="https://geographiclib.sourceforge.io/C++/2.3">Version 2.3</a>
    (released 2023-07-25)

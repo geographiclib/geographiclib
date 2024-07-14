@@ -122,8 +122,6 @@ In build directory:
 checkin and tag release branch & push
 tag main branch
 
-trigger build on build-open
-
 update binaries for cgi applications
   make stage-cgi deploy-cgi
   ssh -t karney,geographiclib@shell.sourceforge.net create

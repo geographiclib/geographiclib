@@ -4,7 +4,45 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.3
+The current version of the library is 2.4
+
+Changes between 2.4 (released 2024-07-14) and 2.3 versions:
+
+   * Math::sind, Math::sincosd, etc., now return accurate results for
+     arguments = 30d, 45d, 60d, ...
+
+   * Add Math::hypot3.
+
+   * Add EllipticFunction::am.
+
+   * Make constructor for AuxAngle explicit.
+
+   * Include notes for plate carree areas.
+
+   * C++14 compliant compiler required (this requirement tracks the
+     Boost Math library).
+
+   * CMake configuration changes
+     + update cmake_minimum_required to 3.16.0.
+     + exclude the tools and doc targets from the default build (make
+       all) if these components won't be installed (BINDIR or DOCDIR
+       set to OFF).
+     + testprograms is now excluded from the default build and it now
+       depends on tools.  Before running the test suite, build
+       testprograms, e.g., make testprograms test.
+     + added a target libs to build only the static and/or shared
+       libraries.
+     + document the use of CMake's FetchContent as an alternative to
+       find_package.
+     + stop requiring that CMAKE_CROSSCOMPILING match with
+       find_package(GeographicLib).
+
+   * Internal code changes
+     + stop using reserved identifiers (_N in the DST class and _R in
+       the Intersect class).
+     + remove the workaround for the boost-quadmath bug with
+       setprecision(0).
+     + GEOGRAPHICLIB_PANIC(msg) macro now takes a message argument.
 
 Changes between 2.3 (released 2023-07-25) and 2.2 versions:
 
