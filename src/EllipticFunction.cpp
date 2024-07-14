@@ -2,17 +2,12 @@
  * \file EllipticFunction.cpp
  * \brief Implementation for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/EllipticFunction.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional and enum-float expressions
-#  pragma warning (disable: 4127 5055)
-#endif
 
 namespace GeographicLib {
 
@@ -300,9 +295,12 @@ namespace GeographicLib {
       // using https://dlmf.nist.gov/19.20.E18
       // Equivalently
       //   RF(x, 1) - RD(0, x, 1)/3 = x * RD(0, 1, x)/3 for x > 0
+      // For k2 = 0 and alpha2 = 0, we have
+      //   Hc = int(cos(phi)^2,...) = pi/4
       // For k2 = 1 and alpha2 = 0, we have
       //   Hc = int(cos(phi),...) = 1
-      _hHc = _kp2 != 0 ? _kp2 * RD(0, 1, _kp2) / 3 : 1;
+      _hHc = _kp2 == 1 ? Math::pi()/4 :
+        (_kp2 == 0 ? 1 : _kp2 * RD(0, 1, _kp2) / 3);
     }
   }
 
@@ -321,6 +319,9 @@ namespace GeographicLib {
     if (_kp2 != 0) {
       real mc = _kp2, d = 0;
       if (signbit(_kp2)) {
+        // This implements DLMF Eqs 22.17.2 - 22.17.4.  But this only
+        // accomodates kp2 < 0 or k2 > 1 and these are outside the advertized
+        // ranges for the contructor for this class.
         d = 1 - mc;
         mc /= -d;
         d = sqrt(d);
@@ -329,7 +330,10 @@ namespace GeographicLib {
       real c = 0;           // To suppress warning about uninitialized variable
       real m[num_], n[num_];
       unsigned l = 0;
-      for (real a = 1; l < num_ || GEOGRAPHICLIB_PANIC; ++l) {
+      for (real a = 1;
+           l < num_ ||
+             GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");
+           ++l) {
         // This converges quadratically.  Max 5 trips
         m[l] = a;
         n[l] = mc = sqrt(mc);
@@ -359,6 +363,7 @@ namespace GeographicLib {
         sn = signbit(sn) ? -a : a;
         cn = c * sn;
         if (signbit(_kp2)) {
+          // See DLMF Eqs 22.17.2 - 22.17.4
           swap(cn, dn);
           sn /= d;
         }
@@ -367,6 +372,58 @@ namespace GeographicLib {
       sn = tanh(x);
       dn = cn = 1 / cosh(x);
     }
+  }
+
+  Math::real EllipticFunction::am(real x) const {
+    // This implements DLMF Sec 22.20(ii).
+    // See also Sala (1989), https://doi.org/10.1137/0520100, Sec 5.
+    static const real tolJAC =
+      pow(numeric_limits<real>::epsilon(), real(0.75));
+    real k2 = _k2, kp2 = _kp2;
+    if (_k2 == 0)
+      return x;
+    else if (_kp2 == 0) {
+      return atan(sinh(x));     // gd(x)
+    } else if (_k2 < 0) {
+      // Sala Eq. 5.8
+      k2 = -_k2 / _kp2; kp2 = 1 / _kp2;
+      x *= sqrt(_kp2);
+    }
+    real a[num_], b, c[num_];
+    a[0] = 1; b = sqrt(kp2); c[0] = sqrt(k2);
+    int l = 1;
+    for (; l < num_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");) {
+      a[l] = (a[l-1] + b) / 2;
+      c[l] = (a[l-1] - b) / 2;
+      b = sqrt(a[l-1] * b);
+      if (!(c[l] > tolJAC * a[l])) break;
+      ++l;
+    }
+    // Now a[l] = pi/(2*K)
+    // Need to initialize phi1 to stop Visual Studio complaining
+    real phi = a[l] * x * real(1 << l), phi1 = 0;
+    for (; l > 0; --l) {
+      phi1 = phi;
+      phi = (phi + asin(c[l] * sin(phi) / a[l])) / 2;
+    }
+    // For k2 < 0, see Sala Eq. 5.8
+    return _k2 < 0 ? phi1 - phi : phi;
+  }
+
+  Math::real EllipticFunction::am(real x, real& sn, real& cn, real& dn) const {
+    real phi = am(x);
+    if (_kp2 == 0) {
+      // Could rely on sin(gd(x)) = tanh(x) and cos(gd(x)) = 1 / cosh(x).  But
+      // this is more accurate for large |x|.
+      sn = tanh(x); cn = dn = 1 / cosh(x);
+    } else {
+      sn = sin(phi); cn = cos(phi);
+      // See comment following DLMF Eq. 22.20.5
+      // dn = cn / cos(phi1 - phi)
+      dn = Delta(sn, cn);
+    }
+    return phi;
   }
 
   Math::real EllipticFunction::F(real sn, real cn, real dn) const {
@@ -494,12 +551,22 @@ namespace GeographicLib {
   }
 
   Math::real EllipticFunction::F(real phi) const {
+    if (_k2 == 0)
+      return phi;
+    else if (_kp2 == 0)
+      return asinh(tan(phi));
     real sn = sin(phi), cn = cos(phi), dn = Delta(sn, cn);
     return fabs(phi) < Math::pi() ? F(sn, cn, dn) :
       (deltaF(sn, cn, dn) + phi) * K() / (Math::pi()/2);
   }
 
   Math::real EllipticFunction::E(real phi) const {
+    if (_k2 == 0)
+      return phi;
+    // else if (_kp2 == 0)
+    // Despite DLMF Eq 19.6.9 this is probably wrong, since
+    // sqrt(1 - k^2*sin(phi)^2) -> abs(cos(phi)) in the limit k -> 1.
+    //      return sin(phi);
     real sn = sin(phi), cn = cos(phi), dn = Delta(sn, cn);
     return fabs(phi) < Math::pi() ? E(sn, cn, dn) :
       (deltaE(sn, cn, dn) + phi) * E() / (Math::pi()/2);
@@ -549,7 +616,10 @@ namespace GeographicLib {
     // For kp2 close to zero use asin(x/_eEc) or
     // J. P. Boyd, Applied Math. and Computation 218, 7005-7013 (2012)
     // https://doi.org/10.1016/j.amc.2011.12.021
-    for (int i = 0; i < num_ || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0;
+         i < num_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");
+         ++i) {
       real
         sn = sin(phi),
         cn = cos(phi),

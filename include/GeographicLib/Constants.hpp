@@ -2,7 +2,7 @@
  * \file Constants.hpp
  * \brief Header for GeographicLib::Constants class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -118,12 +118,12 @@ namespace GeographicLib {
      * @return the number of radians in an arcminute.
      **********************************************************************/
     static Math::real arcminute()
-    { return Math::degree() / Math::real(Math::dm); }
+    { return Math::degree() / Math::dm; }
     /**
      * @return the number of radians in an arcsecond.
      **********************************************************************/
     static Math::real arcsecond()
-    { return Math::degree() / Math::real(Math::ds); }
+    { return Math::degree() / Math::ds; }
 
     /** \name Ellipsoid parameters
      **********************************************************************/

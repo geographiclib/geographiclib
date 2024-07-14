@@ -100,21 +100,21 @@ if (NOT WIN32)
   set (BINARY_EXT "m4|gif|pdf|png|kmz")
   add_custom_target (checktrailingspace
     COMMAND git ls-files |
-    egrep -v '\\.\(${BINARY_EXT}\)$$' |
+    grep -E -v '\\.\(${BINARY_EXT}\)$$' |
     xargs grep '[ \t]$$' || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for trailing spaces")
   add_custom_target (checktabs
     COMMAND git ls-files |
-    egrep -v '\([Mm]akefile|test-distribution.sh|\\.\(${BINARY_EXT}\)$$\)' |
+    grep -E -v '\([Mm]akefile|test-distribution.sh|\\.\(${BINARY_EXT}\)$$\)' |
     xargs grep -l '\t' || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for tabs")
   add_custom_target (checkblanklines
     COMMAND git ls-files |
-    egrep -v '\\.\(${BINARY_EXT}\)$$' |
+    grep -E -v '\\.\(${BINARY_EXT}\)$$' |
     while read f\; do tr 'X\\n' 'YX' < $$f |
-    egrep '\(^X|XXX|XX$$|[^X]$$\)' > /dev/null && echo $$f\; done || true
+    grep -E '\(^X|XXX|XX$$|[^X]$$\)' > /dev/null && echo $$f\; done || true
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
     COMMENT "Looking for extra blank lines")
 

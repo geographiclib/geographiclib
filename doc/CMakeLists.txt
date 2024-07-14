@@ -39,8 +39,13 @@ if (BUILD_DOCUMENTATION)
     tmseries30.html geodseries30.html ../LICENSE.txt)
   file (GLOB FIGURES *.png *.svg *.gif)
   file (COPY ${EXTRA_FILES} DESTINATION html-stage)
-  add_custom_target (doc ALL
-    DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
+  if (DOCDIR)
+    add_custom_target (doc ALL
+      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
+  else ()
+    add_custom_target (doc
+      DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/html/index.html)
+  endif ()
   if (NOT RELEASE)
     add_dependencies (doc htmlman)
   endif ()

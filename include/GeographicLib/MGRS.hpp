@@ -2,7 +2,7 @@
  * \file MGRS.hpp
  * \brief Header for GeographicLib::MGRS class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -12,12 +12,6 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/UTMUPS.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about dll vs string
-#  pragma warning (push)
-#  pragma warning (disable: 4251)
-#endif
 
 namespace GeographicLib {
 
@@ -88,31 +82,17 @@ namespace GeographicLib {
     static const int maxeasting_[4];
     static const int minnorthing_[4];
     static const int maxnorthing_[4];
-#if GEOGRAPHICLIB_PRECISION == 4
-    // Work around an enum lossage introduced in boost 1.76
-    //   https://github.com/boostorg/multiprecision/issues/324
-    // and fixed in
-    //   https://github.com/boostorg/multiprecision/pull/333
-    static const int
-#else
-    enum {
-#endif
-      base_ = 10,
-      // Top-level tiles are 10^5 m = 100 km on a side
-      tilelevel_ = 5,
-      // Period of UTM row letters
-      utmrowperiod_ = 20,
-      // Row letters are shifted by 5 for even zones
-      utmevenrowshift_ = 5,
-      // Maximum precision is um
-      maxprec_ = 5 + 6,
-      // For generating digits at maxprec
-      mult_ = 1000000
-#if GEOGRAPHICLIB_PRECISION == 4
-      ;
-#else
-    };
-#endif
+    static constexpr int base_ = 10;
+    // Top-level tiles are 10^5 m = 100 km on a side
+    static constexpr int tilelevel_ = 5;
+    // Period of UTM row letters
+    static constexpr int utmrowperiod_ = 20;
+    // Row letters are shifted by 5 for even zones
+    static constexpr int utmevenrowshift_ = 5;
+    // Maximum precision is um
+    static constexpr int maxprec_ = 5 + 6;
+    // For generating digits at maxprec
+    static constexpr int mult_ = 1000000;
     static void CheckCoords(bool utmp, bool& northp, real& x, real& y);
     static int UTMRow(int iband, int icol, int irow);
 
@@ -149,36 +129,22 @@ namespace GeographicLib {
       // X 9  80:94  15
       return y >= 0 ? b : -(b + 1);
     }
-    // UTMUPS accesses these enums
-#if GEOGRAPHICLIB_PRECISION == 4
-    // Work around an enum lossage introduced in boost 1.76
-    //   https://github.com/boostorg/multiprecision/issues/324
-    // and fixed in
-    //   https://github.com/boostorg/multiprecision/pull/333
-    static const int
-#else
-    enum {
-#endif
-      tile_ = 100000,            // Size MGRS blocks
-      minutmcol_ = 1,
-      maxutmcol_ = 9,
-      minutmSrow_ = 10,
-      maxutmSrow_ = 100,         // Also used for UTM S false northing
-      minutmNrow_ = 0,           // Also used for UTM N false northing
-      maxutmNrow_ = 95,
-      minupsSind_ = 8,           // These 4 ind's apply to easting and northing
-      maxupsSind_ = 32,
-      minupsNind_ = 13,
-      maxupsNind_ = 27,
-      upseasting_ = 20,          // Also used for UPS false northing
-      utmeasting_ = 5,           // UTM false easting
-      // Difference between S hemisphere northing and N hemisphere northing
-      utmNshift_ = (maxutmSrow_ - minutmNrow_) * tile_
-#if GEOGRAPHICLIB_PRECISION == 4
-      ;
-#else
-    };
-#endif
+    // UTMUPS accesses these constants
+    static constexpr int tile_ = 100000;    // Size MGRS blocks
+    static constexpr int minutmcol_ = 1;
+    static constexpr int maxutmcol_ = 9;
+    static constexpr int minutmSrow_ = 10;
+    static constexpr int maxutmSrow_ = 100; // Also used for UTM S false northing
+    static constexpr int minutmNrow_ = 0;   // Also used for UTM N false northing
+    static constexpr int maxutmNrow_ = 95;
+    static constexpr int minupsSind_ = 8;   // These 4 ind's apply to easting and northing
+    static constexpr int maxupsSind_ = 32;
+    static constexpr int minupsNind_ = 13;
+    static constexpr int maxupsNind_ = 27;
+    static constexpr int upseasting_ = 20;  // Also used for UPS false northing
+    static constexpr int utmeasting_ = 5;   // UTM false easting
+    // Difference between S hemisphere northing and N hemisphere northing
+    static constexpr int utmNshift_ = (maxutmSrow_ - minutmNrow_) * tile_;
     MGRS() = delete;            // Disable constructor
 
   public:
@@ -398,9 +364,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_MGRS_HPP

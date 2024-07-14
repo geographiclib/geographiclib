@@ -2,7 +2,7 @@
  * \file Geoid.cpp
  * \brief Implementation for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2020) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -25,8 +25,8 @@
 #endif
 
 #if defined(_MSC_VER)
-// Squelch warnings about unsafe use of getenv and enum-float expressions
-#  pragma warning (disable: 4996 5055)
+// Squelch warnings about unsafe use of getenv
+#  pragma warning (disable: 4996)
 #endif
 
 namespace GeographicLib {

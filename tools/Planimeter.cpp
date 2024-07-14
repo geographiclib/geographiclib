@@ -2,7 +2,7 @@
  * \file Planimeter.cpp
  * \brief Command line utility for measuring the area of geodesic polygons
  *
- * Copyright (c) Charles Karney (2010-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -19,11 +19,6 @@
 #include <GeographicLib/GeoCoords.hpp>
 #include <GeographicLib/AuxLatitude.hpp>
 
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
-
 #include "Planimeter.usage"
 
 int main(int argc, const char* const argv[]) {
@@ -31,7 +26,7 @@ int main(int argc, const char* const argv[]) {
     using namespace GeographicLib;
     typedef Math::real real;
     Utility::set_digits();
-    enum { GEODESIC, AUTHALIC, RHUMB, EXACT };
+    enum { GEODESIC, AUTHALIC, RHUMB };
     real
       a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
@@ -146,21 +141,19 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    // At start linetype is one of GEODESIC, AUTHALIC, RHUMB
+    // Linetype is one of GEODESIC, AUTHALIC, RHUMB
     const AuxLatitude ellip(a, f);
     if (linetype == AUTHALIC) {
-      linetype = exact ? EXACT : GEODESIC;
+      // adjusting a and f to correspond to the authalic sphere
       using std::sqrt;
       a = sqrt(ellip.AuthalicRadiusSquared(exact));
       f = 0;
-    } else if (linetype == GEODESIC && exact)
-      linetype = EXACT;
-    // Now linetype is one of GEODESIC, EXACT, RHUMB
-    const Geodesic geod(a, f);
-    const GeodesicExact geode(a, linetype == EXACT ? f : 0);
-    const Rhumb rhumb(a, f, exact && linetype == RHUMB);
+    }
+    const Geodesic geod(a, linetype != RHUMB ? f : 0,
+                        exact && linetype != RHUMB);
+    const Rhumb rhumb(a, linetype == RHUMB ? f : 0,
+                      exact && linetype == RHUMB);
     PolygonArea poly(geod, polyline);
-    PolygonAreaExact polye(geode, polyline);
     PolygonAreaRhumb polyr(rhumb, polyline);
     GeoCoords p;
 
@@ -205,7 +198,6 @@ int main(int argc, const char* const argv[]) {
       }
       if (endpoly) {
         num =
-          linetype == EXACT ? polye.Compute(reverse, sign, perimeter, area) :
           linetype == RHUMB ? polyr.Compute(reverse, sign, perimeter, area) :
           poly.Compute(reverse, sign, perimeter, area); // geodesic + authalic
         if (num > 0) {
@@ -215,12 +207,10 @@ int main(int argc, const char* const argv[]) {
           }
           *output << eol;
         }
-        linetype == EXACT ? polye.Clear() :
-          linetype == RHUMB ? polyr.Clear() : poly.Clear();
+        linetype == RHUMB ? polyr.Clear() : poly.Clear();
         eol = "\n";
       } else {
-        linetype == EXACT ? polye.AddPoint(lat, lon) :
-          linetype == RHUMB ? polyr.AddPoint(lat, lon) :
+        linetype == RHUMB ? polyr.AddPoint(lat, lon) :
           poly.AddPoint
           (linetype == AUTHALIC ?
            ellip.Convert(AuxLatitude::PHI, AuxLatitude::XI, lat, exact) : lat,
@@ -228,7 +218,6 @@ int main(int argc, const char* const argv[]) {
       }
     }
     num =
-      linetype == EXACT ? polye.Compute(reverse, sign, perimeter, area) :
       linetype == RHUMB ? polyr.Compute(reverse, sign, perimeter, area) :
       poly.Compute(reverse, sign, perimeter, area);
     if (num > 0) {
@@ -238,7 +227,6 @@ int main(int argc, const char* const argv[]) {
       }
       *output << eol;
     }
-    linetype == EXACT ? polye.Clear() :
       linetype == RHUMB ? polyr.Clear() : poly.Clear();
     eol = "\n";
     return 0;

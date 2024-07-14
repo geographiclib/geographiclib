@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.cpp
  * \brief Implementation for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -42,11 +42,6 @@
  **********************************************************************/
 
 #include <GeographicLib/TransverseMercatorExact.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional and enum-float expressions
-#  pragma warning (disable: 4127 5055)
-#endif
 
 namespace GeographicLib {
 
@@ -195,10 +190,14 @@ namespace GeographicLib {
       return;
     real stol2 = tol2_ / Math::sq(fmax(psi, real(1)));
     // min iterations = 2, max iterations = 6; mean = 4.0
-    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0, trip = 0;
+         i < numit_ ||
+           GEOGRAPHICLIB_PANIC
+           ("Convergence failure in TransverseMercatorExact");
+         ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
-      _eEu.sncndn(u, snu, cnu, dnu);
-      _eEv.sncndn(v, snv, cnv, dnv);
+      _eEu.am(u, snu, cnu, dnu);
+      _eEv.am(v, snv, cnv, dnv);
       real tau1, lam1, du1, dv1;
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau1, lam1);
       dwdzeta(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
@@ -299,10 +298,14 @@ namespace GeographicLib {
     if (sigmainv0(xi, eta, u, v))
       return;
     // min iterations = 2, max iterations = 7; mean = 3.9
-    for (int i = 0, trip = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0, trip = 0;
+         i < numit_ ||
+           GEOGRAPHICLIB_PANIC
+           ("Convergence failure in TransverseMercatorExact");
+         ++i) {
       real snu, cnu, dnu, snv, cnv, dnv;
-      _eEu.sncndn(u, snu, cnu, dnu);
-      _eEv.sncndn(v, snv, cnv, dnv);
+      _eEu.am(u, snu, cnu, dnu);
+      _eEv.am(v, snv, cnv, dnv);
       real xi1, eta1, du1, dv1;
       sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi1, eta1);
       dwdsigma(u, snu, cnu, dnu, v, snv, cnv, dnv, du1, dv1);
@@ -381,8 +384,8 @@ namespace GeographicLib {
       zetainv(Math::taupf(tau, _e), lam, u, v);
 
     real snu, cnu, dnu, snv, cnv, dnv;
-    _eEu.sncndn(u, snu, cnu, dnu);
-    _eEv.sncndn(v, snv, cnv, dnv);
+    _eEu.am(u, snu, cnu, dnu);
+    _eEv.am(v, snv, cnv, dnv);
 
     real xi, eta;
     sigma(u, snu, cnu, dnu, v, snv, cnv, dnv, xi, eta);
@@ -433,8 +436,8 @@ namespace GeographicLib {
       sigmainv(xi, eta, u, v);
 
     real snu, cnu, dnu, snv, cnv, dnv;
-    _eEu.sncndn(u, snu, cnu, dnu);
-    _eEv.sncndn(v, snv, cnv, dnv);
+    _eEu.am(u, snu, cnu, dnu);
+    _eEv.am(v, snv, cnv, dnv);
     real phi, lam, tau;
     if (v != 0 || u != _eEu.K()) {
       zeta(u, snu, cnu, dnu, v, snv, cnv, dnv, tau, lam);

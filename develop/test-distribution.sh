@@ -25,7 +25,6 @@ set -e
 umask 0022
 
 # The following files contain version information:
-#   pom.xml
 #   CMakeLists.txt (PROJECT_VERSION_* LIBVERSION_*)
 #   NEWS
 #   configure.ac (AC_INIT, GEOGRAPHICLIB_VERSION_* LT_*)
@@ -37,7 +36,7 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.2
+VERSION=2.4
 SUFFIX=
 DISTVERSION=$VERSION$SUFFIX
 BRANCH=main
@@ -80,7 +79,7 @@ echo Unpack source package in $TEMP/rel bcx
 
 mkdir $TEMP/rel{b,c,x}
 tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relb # Version for autoconf
-tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relc # Version for cmake+mvn
+tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relc # Version for cmake
 tar xfpzC BUILD/distrib/GeographicLib-$DISTVERSION.tar.gz $TEMP/relx # for listing
 
 echo ==============================================================
@@ -96,24 +95,8 @@ rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 
 unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
 
-cat > $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build <<'EOF'
-#! /bin/sh -exv
-unset GEOGRAPHICLIB_DATA
-# for v in 2019 2017 2015 2013 2012 2010; do
-for v in 2019 2017 2015; do
-  for a in 64 32; do
-    echo ========== maven $v-$a ==========
-    rm -rf c:/scratch/geog-mvn-$v-$a
-    mvn -Dcmake.compiler=vc$v -Dcmake.arch=$a \
-      -Dcmake.project.bin.directory=c:/scratch/geog-mvn-$v-$a install
-  done
-done
-EOF
-chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/mvn-build
-cp pom.xml $WINDOWSBUILD/GeographicLib-$VERSION/
-
 # for ver in 10 11 12 14 15 16; do
-for ver in 14 15 16; do
+for ver in 14 15 16 17; do
     for arch in win32 x64; do
         pkg=vc$ver-$arch
         gen="Visual Studio $ver"
@@ -130,11 +113,13 @@ for ver in 14 15 16; do
             echo 'unset GEOGRAPHICLIB_DATA'
             echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= -S . -B \$b
             echo cmake --build \$b --config Debug   --target ALL_BUILD
+            echo cmake --build \$b --config Debug   --target testprograms
             echo cmake --build \$b --config Debug   --target RUN_TESTS
             echo cmake --build \$b --config Debug   --target INSTALL
             echo cmake --build \$b --config Release --target ALL_BUILD
             echo cmake --build \$b --config Release --target exampleprograms
             echo cmake --build \$b --config Release --target experimental
+            echo cmake --build \$b --config Release --target testprograms
             echo cmake --build \$b --config Release --target RUN_TESTS
             echo cmake --build \$b --config Release --target INSTALL
             echo cmake --build \$b --config Release --target PACKAGE
@@ -151,7 +136,6 @@ cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
     for d in build-*; do
         ./$d
     done
-    ./mvn-build
 ) >& build.log
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
@@ -161,7 +145,7 @@ echo Set up release branch in $TEMP/gitr/geographiclib
 
 cd $TEMP/gitr/geographiclib
 git checkout release
-git config user.email charles@karney.com
+git config user.email karney@alum.mit.edu
 git ls-files | sort > ../files.old
 (
     cd $TEMP/gitb/geographiclib
@@ -221,12 +205,28 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
 (
     cd BUILD
     make package_source
-    make -j$NUMCPUS all
+    make -j$NUMCPUS all testprograms
     make test
     make exampleprograms
     make -j$NUMCPUS experimental
     make install
     # rsync -a --delete doc/html/ $WEBDIST/htdocs/C++/$VERSION/
+)
+
+echo ==============================================================
+echo Test building installed examples in $TEMP/instc
+cd $TEMP/relc/GeographicLib-$VERSION
+env GeographicLib_DIR=$TEMP/instc cmake -S $TEMP/instc/share/doc/GeographicLib-dev -B BUILD-examples-shared
+(
+    cd BUILD-examples-shared
+    make -j$NUMCPUS
+    ./example-Geodesic
+)
+env GeographicLib_DIR=$TEMP/instc cmake -S $TEMP/instc/share/doc/GeographicLib-dev -B BUILD-examples-static -D GeographicLib_USE_STATIC_LIBS=ON
+(
+    cd BUILD-examples-static
+    make -j$NUMCPUS
+    ./example-Geodesic
 )
 
 echo ==============================================================
@@ -257,7 +257,7 @@ echo ==============================================================
 echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD-system install to /usr/local
 
 cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-system
-(cd BUILD-system && make -j$NUMCPUS all && make test)
+(cd BUILD-system && make -j$NUMCPUS all testprograms && make test)
 
 if test "$HAVEINTEL"; then
     echo ==============================================================
@@ -265,7 +265,7 @@ if test "$HAVEINTEL"; then
     env FC=ifort CC=icc CXX=icpc cmake -D BUILD_BOTH_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD-intel
     (
         cd BUILD-intel
-        make -j$NUMCPUS all
+        make -j$NUMCPUS all testprograms
         make test
         make exampleprograms
         make -j$NUMCPUS experimental
@@ -326,15 +326,14 @@ cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=
 (cd BUILD && make -j$NUMCPUS && make -j$NUMCPUS develprograms)
 
 cp $DEVELSOURCE/include/mpreal.h include/
-# Skip 4 for now because of various boost bugs
-for p in 1 3 5; do
+for p in 1 3 4 5; do
     echo ==============================================================
     echo CMake build of devel tree at precision $p in $TEMP/gitb/geographiclib/BUILD-$p
     mkdir BUILD-$p
     cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
     (
         cd BUILD-$p
-        make -j$NUMCPUS all
+        make -j$NUMCPUS all testprograms
         if test $p -ne 1; then
             make test
         fi
@@ -415,20 +414,21 @@ test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
 cd $TEMP/relx/GeographicLib-$VERSION
 (
     echo Files with trailing spaces:
-    find . -type f | egrep -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif' |
+    find . -type f | grep -E -v 'config\.guess|Makefile\.in|\.m4|\.png|\.gif' |
         while read f; do
             tr -d '\r' < $f | grep ' $' > /dev/null && echo $f || true
         done
     echo
     echo Files with tabs:
     find . -type f |
-        egrep -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
-        egrep -v '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
+        grep -E -v '[Mm]akefile|\.html|\.m4|\.png|\.gif' |
+        grep -E -v \
+             '\.sh|depcomp|install-sh|/config\.|configure$|compile|missing' |
         xargs grep -l  '	' || true
     echo
     echo Files with multiple newlines:
     find . -type f |
-        egrep -v \
+        grep -E -v \
            '/Makefile\.in|\.1\.html|\.png|\.gif|/ltmain|/config|\.m4' |
         while read f; do
             tr 'X\n' 'xX' < $f | grep XXX > /dev/null && echo $f || true
@@ -436,14 +436,14 @@ cd $TEMP/relx/GeographicLib-$VERSION
     echo
     echo Files with no newline at end:
     find . -type f |
-        egrep -v '\.png|\.gif' |
+        grep -E -v '\.png|\.gif' |
         while read f; do
             n=`tail -1 $f | wc -l`; test $n -eq 0 && echo $f || true
         done
     echo
     echo Files with extra newlines at end:
     find . -type f |
-        egrep -v '/configure|/ltmain.sh|\.png|\.gif|\.1\.html' |
+        grep -E -v '/configure|/ltmain.sh|\.png|\.gif|\.1\.html' |
         while read f; do
             n=`tail -1 $f | wc -w`; test $n -eq 0 && echo $f || true
         done
@@ -472,7 +472,6 @@ git push --tags
 # Also to do
 # post release notices
 # set default download files
-# make -f makefile-admin distrib-{cgi,html}
 # update home brew
 #   dir = /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core
 #   branch = geographiclib/$VERSION

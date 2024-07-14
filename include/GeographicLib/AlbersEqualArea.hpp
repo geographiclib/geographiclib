@@ -2,7 +2,7 @@
  * \file AlbersEqualArea.hpp
  * \brief Header for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -19,7 +19,7 @@ namespace GeographicLib {
    *
    * Implementation taken from the report,
    * - J. P. Snyder,
-   *   <a href="http://pubs.er.usgs.gov/usgspubs/pp/pp1395"> Map Projections: A
+   *   <a href="https://pubs.usgs.gov/publication/pp1395"> Map Projections: A
    *   Working Manual</a>, USGS Professional Paper 1395 (1987),
    *   pp. 101--102.
    *
@@ -118,8 +118,6 @@ namespace GeographicLib {
     void Init(real sphi1, real cphi1, real sphi2, real cphi2, real k1);
     real txif(real tphi) const;
     real tphif(real txi) const;
-
-    friend class Ellipsoid;           // For access to txif, tphif, etc.
   public:
 
     /**

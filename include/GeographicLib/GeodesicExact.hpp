@@ -2,7 +2,7 @@
  * \file GeodesicExact.hpp
  * \brief Header for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -85,22 +85,24 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     friend class GeodesicLineExact;
+    friend class Geodesic;    // Allow Geodesic to call the default constructor
+    // Private default constructor to support Geodesic(a, f, exact)
+    GeodesicExact() {};         // Do nothing; used with exact = false.
+
     static const unsigned maxit1_ = 20;
     unsigned maxit2_;
     real tiny_, tol0_, tol1_, tol2_, tolb_, xthresh_;
 
-    enum captype {
-      CAP_NONE = 0U,
-      CAP_E    = 1U<<0,
-      // Skip 1U<<1 for compatibility with Geodesic (not required)
-      CAP_D    = 1U<<2,
-      CAP_H    = 1U<<3,
-      CAP_C4   = 1U<<4,
-      CAP_ALL  = 0x1FU,
-      CAP_MASK = CAP_ALL,
-      OUT_ALL  = 0x7F80U,
-      OUT_MASK = 0xFF80U,       // Includes LONG_UNROLL
-    };
+    static constexpr unsigned CAP_NONE = 0U;
+    static constexpr unsigned CAP_E    = 1U<<0;
+    // Skip 1U<<1 for compatibility with Geodesic (not required)
+    static constexpr unsigned CAP_D    = 1U<<2;
+    static constexpr unsigned CAP_H    = 1U<<3;
+    static constexpr unsigned CAP_C4   = 1U<<4;
+    static constexpr unsigned CAP_ALL  = 0x1FU;
+    static constexpr unsigned CAP_MASK = CAP_ALL;
+    static constexpr unsigned OUT_ALL  = 0x7F80U;
+    static constexpr unsigned OUT_MASK = 0xFF80U;       // Includes LONG_UNROLL
 
     static real Astroid(real x, real y);
 
@@ -697,6 +699,11 @@ namespace GeographicLib {
     /** \name Interface to GeodesicLineExact.
      **********************************************************************/
     ///@{
+
+    /**
+     * Typedef for the class for computing multiple points on a geodesic.
+     **********************************************************************/
+    typedef GeodesicLineExact LineClass;
 
     /**
      * Set up to compute several points on a single geodesic.

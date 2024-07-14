@@ -2,7 +2,7 @@
  * \file OSGB.hpp
  * \brief Header for GeographicLib::OSGB class
  *
- * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -12,12 +12,6 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about dll vs string
-#  pragma warning (push)
-#  pragma warning (disable: 4251)
-#endif
 
 namespace GeographicLib {
 
@@ -47,32 +41,18 @@ namespace GeographicLib {
     static const char* const letters_;
     static const char* const digits_;
     static const TransverseMercator& OSGBTM();
-#if GEOGRAPHICLIB_PRECISION == 4
-    // Work around an enum lossage introduced in boost 1.76
-    //   https://github.com/boostorg/multiprecision/issues/324
-    // and fixed in
-    //   https://github.com/boostorg/multiprecision/pull/333
-    static const int
-#else
-    enum {
-#endif
-      base_ = 10,
-      tile_ = 100000,
-      tilelevel_ = 5,
-      tilegrid_ = 5,
-      tileoffx_ = 2 * tilegrid_,
-      tileoffy_ = 1 * tilegrid_,
-      minx_ = - tileoffx_ * tile_,
-      miny_ = - tileoffy_ * tile_,
-      maxx_ = (tilegrid_*tilegrid_ - tileoffx_) * tile_,
-      maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_,
-      // Maximum precision is um
-      maxprec_ = 5 + 6
-#if GEOGRAPHICLIB_PRECISION == 4
-      ;
-#else
-    };
-#endif
+    static constexpr int base_ = 10;
+    static constexpr int tile_ = 100000;
+    static constexpr int tilelevel_ = 5;
+    static constexpr int tilegrid_ = 5;
+    static constexpr int tileoffx_ = 2 * tilegrid_;
+    static constexpr int tileoffy_ = 1 * tilegrid_;
+    static constexpr int minx_ = - tileoffx_ * tile_;
+    static constexpr int miny_ = - tileoffy_ * tile_;
+    static constexpr int maxx_ = (tilegrid_*tilegrid_ - tileoffx_) * tile_;
+    static constexpr int maxy_ = (tilegrid_*tilegrid_ - tileoffy_) * tile_;
+    // Maximum precision is um
+    static constexpr int maxprec_ = 5 + 6;
     static real computenorthoffset();
     static void CheckCoords(real x, real y);
     OSGB() = delete;            // Disable constructor
@@ -200,7 +180,7 @@ namespace GeographicLib {
      * coordinate systems in Great Britain</i>, v3.6 (2020).
      **********************************************************************/
     static Math::real EquatorialRadius() {
-    // result is about 6377563.3960320664406 m
+      // result is about 6377563.3960320664406 m
       using std::pow;
       return pow(real(10), real(48401603 - 100000000) / 100000000)
         * real(20923713);
@@ -253,9 +233,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_OSGB_HPP

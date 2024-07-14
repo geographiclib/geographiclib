@@ -2,7 +2,7 @@
  * \file Georef.hpp
  * \brief Header for GeographicLib::Georef class
  *
- * Copyright (c) Charles Karney (2015-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2015-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -11,12 +11,6 @@
 #define GEOGRAPHICLIB_GEOREF_HPP 1
 
 #include <GeographicLib/Constants.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about dll vs string
-#  pragma warning (push)
-#  pragma warning (disable: 4251)
-#endif
 
 namespace GeographicLib {
 
@@ -42,27 +36,13 @@ namespace GeographicLib {
     static const char* const lontile_;
     static const char* const lattile_;
     static const char* const degrees_;
-#if GEOGRAPHICLIB_PRECISION == 4
-    // Work around an enum lossage introduced in boost 1.76
-    //   https://github.com/boostorg/multiprecision/issues/324
-    // and fixed in
-    //   https://github.com/boostorg/multiprecision/pull/333
-    static const int
-#else
-    enum {
-#endif
-      tile_ = 15,               // The size of tile in degrees
-      lonorig_ = -Math::hd,     // Origin for longitude
-      latorig_ = -Math::qd,     // Origin for latitude
-      base_ = 10,               // Base for minutes
-      baselen_ = 4,
-      maxprec_ = 11,            // approximately equivalent to MGRS class
-      maxlen_ = baselen_ + 2 * maxprec_
-#if GEOGRAPHICLIB_PRECISION == 4
-      ;
-#else
-    };
-#endif
+    static constexpr int tile_ = 15;           // The size of tile in degrees
+    static constexpr int lonorig_ = -Math::hd; // Origin for longitude
+    static constexpr int latorig_ = -Math::qd; // Origin for latitude
+    static constexpr int base_ = 10;           // Base for minutes
+    static constexpr int baselen_ = 4;
+    static constexpr int maxprec_ = 11;        // approximately equivalent to MGRS class
+    static constexpr int maxlen_ = baselen_ + 2 * maxprec_;
     Georef() = delete;          // Disable constructor
 
   public:
@@ -165,9 +145,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_GEOREF_HPP

@@ -2,7 +2,7 @@
  * \file TransverseMercatorExact.hpp
  * \brief Header for GeographicLib::TransverseMercatorExact class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -85,6 +85,9 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT TransverseMercatorExact {
   private:
     typedef Math::real real;
+    friend class TransverseMercator; // Allow TM to call the default constructor
+    // Private default constructor to support TransverseMercator(a, f, exact)
+    TransverseMercatorExact() {}; // Do nothing; used with exact = false.
     static const int numit_ = 10;
     real tol_, tol2_, taytol_;
     real _a, _f, _k0, _mu, _mv, _e;
@@ -117,7 +120,6 @@ namespace GeographicLib {
                real snu, real cnu, real dnu,
                real snv, real cnv, real dnv,
                real& gamma, real& k) const;
-
   public:
 
     /**
@@ -126,7 +128,7 @@ namespace GeographicLib {
      * @param[in] a equatorial radius (meters).
      * @param[in] f flattening of ellipsoid.
      * @param[in] k0 central scale factor.
-     * @param[in] extendp use extended domain.
+     * @param[in] extendp if true, use extended domain (default false).
      * @exception GeographicErr if \e a, \e f, or \e k0 is not positive.
      *
      * The transverse Mercator projection has a branch point singularity at \e

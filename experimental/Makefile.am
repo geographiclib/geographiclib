@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2023, Charles Karney <charles@karney.com>
+# Copyright (C) 2023, Charles Karney <karney@alum.mit.edu>
 
 EXPERIMENTAL_FILES = \
 	JacobiConformal.cpp JacobiConformal.hpp

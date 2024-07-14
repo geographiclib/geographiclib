@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2011-2022, Charles Karney <charles@karney.com>
+# Copyright (C) 2011-2022, Charles Karney <karney@alum.mit.edu>
 
 USAGE = \
 	CartConvert.usage \
@@ -11,6 +11,7 @@ USAGE = \
 	GeodSolve.usage \
 	GeoidEval.usage \
 	Gravity.usage \
+	IntersectTool.usage \
 	MagneticField.usage \
 	Planimeter.usage \
 	RhumbSolve.usage \
@@ -24,6 +25,7 @@ MANPAGES = \
 	GeodSolve.1 \
 	GeoidEval.1 \
 	Gravity.1 \
+	IntersectTool.1 \
 	MagneticField.1 \
 	Planimeter.1 \
 	RhumbSolve.1 \
@@ -37,6 +39,7 @@ HTMLMAN = \
 	GeodSolve.1.html \
 	GeoidEval.1.html \
 	Gravity.1.html \
+	IntersectTool.1.html \
 	MagneticField.1.html \
 	Planimeter.1.html \
 	RhumbSolve.1.html \

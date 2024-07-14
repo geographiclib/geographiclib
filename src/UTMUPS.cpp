@@ -2,7 +2,7 @@
  * \file UTMUPS.cpp
  * \brief Implementation for GeographicLib::UTMUPS class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -12,11 +12,6 @@
 #include <GeographicLib/PolarStereographic.hpp>
 #include <GeographicLib/TransverseMercator.hpp>
 #include <GeographicLib/Utility.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about enum-float expressions
-#  pragma warning (disable: 5055)
-#endif
 
 namespace GeographicLib {
 

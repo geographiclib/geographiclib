@@ -42,8 +42,7 @@ Mercator projection instead of the exact projection.
 
 =item B<-t>
 
-use the exact algorithm with the L</EXTENDED DOMAIN>; this is the
-default.
+use the exact algorithm with the L</EXTENDED DOMAIN>.
 
 =item B<-l> I<lon0>
 

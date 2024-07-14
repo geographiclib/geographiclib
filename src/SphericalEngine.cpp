@@ -2,7 +2,7 @@
  * \file SphericalEngine.cpp
  * \brief Implementation for GeographicLib::SphericalEngine class
  *
- * Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -135,9 +135,8 @@
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions and potentially
-// uninitialized local variables
-#  pragma warning (disable: 4127 4701)
+// Squelch warnings about potentially uninitialized local variables
+#  pragma warning (disable: 4701)
 #endif
 
 namespace GeographicLib {

@@ -2,7 +2,7 @@
  * \file Geoid.hpp
  * \brief Header for GeographicLib::Geoid class
  *
- * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -146,6 +146,7 @@ namespace GeographicLib {
           _file.get(a);
           _file.get(b);
           unsigned r = ((unsigned char)(a) << 8) | (unsigned char)(b);
+          // for C++17 use if constexpr
           if (pixel_size_ == 4) {
             _file.get(a);
             _file.get(b);

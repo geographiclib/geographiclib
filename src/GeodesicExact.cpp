@@ -2,7 +2,7 @@
  * \file GeodesicExact.cpp
  * \brief Implementation for GeographicLib::GeodesicExact class
  *
- * Copyright (c) Charles Karney (2012-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2012-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -31,9 +31,8 @@
 #include <vector>
 
 #if defined(_MSC_VER)
-// Squelch warnings about potentially uninitialized local variables,
-// constant conditional and enum-float expressions and mixing enums
-#  pragma warning (disable: 4701 4127 5055 5054)
+// Squelch warnings about potentially uninitialized local variables
+#  pragma warning (disable: 4701)
 #endif
 
 namespace GeographicLib {

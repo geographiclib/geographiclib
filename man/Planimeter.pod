@@ -194,7 +194,7 @@ The following code takes the output from gdalinfo and reports the area
 covered by the data (assuming the edges of the image are geodesics).
 
    #! /bin/sh
-   egrep '^((Upper|Lower) (Left|Right)|Center) ' |
+   grep -E '^((Upper|Lower) (Left|Right)|Center) ' |
    sed -e 's/d /d/g' -e "s/' /'/g" | tr -s '(),\r\t' ' ' | awk '{
        if ($1 $2 == "UpperLeft")
            ul = $6 " " $5;

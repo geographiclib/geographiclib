@@ -2,17 +2,12 @@
  * \file AlbersEqualArea.cpp
  * \brief Implementation for GeographicLib::AlbersEqualArea class
  *
- * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/AlbersEqualArea.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional and enum-float expressions
-#  pragma warning (disable: 4127 5055)
-#endif
 
 namespace GeographicLib {
 
@@ -212,7 +207,10 @@ namespace GeographicLib {
       C = den / (2 * scbet12 * scbet22 * dsxi);
       tphi0 = (tphi2 + tphi1)/2;
       real stol = tol0_ * fmax(real(1), fabs(tphi0));
-      for (int i = 0; i < 2*numit0_ || GEOGRAPHICLIB_PANIC; ++i) {
+      for (int i = 0;
+           i < 2*numit0_ ||
+             GEOGRAPHICLIB_PANIC("Convergence failure in AlbersEqualArea");
+           ++i) {
         // Solve (scbet0^2 * sphi0) / (1/qZ + scbet0^2 * sphi0 * sxi0) = s
         // for tphi0 by Newton's method on
         // v(tphi0) = (scbet0^2 * sphi0) - s * (1/qZ + scbet0^2 * sphi0 * sxi0)
@@ -335,7 +333,10 @@ namespace GeographicLib {
       tphi = txi,
       stol = tol_ * fmax(real(1), fabs(txi));
     // CHECK: min iterations = 1, max iterations = 2; mean = 1.99
-    for (int i = 0; i < numit_ || GEOGRAPHICLIB_PANIC; ++i) {
+    for (int i = 0;
+         i < numit_ ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in AlbersEqualArea");
+         ++i) {
       // dtxi/dtphi = (scxi/scphi)^3 * 2*(1-e^2)/(qZ*(1-e^2*sphi^2)^2)
       real
         txia = txif(tphi),
@@ -358,7 +359,7 @@ namespace GeographicLib {
     if (fabs(x) < real(0.5)) {
       static const real lg2eps_ = -log2(numeric_limits<real>::epsilon() / 2);
       int e;
-      frexp(x, &e);
+      (void) frexp(x, &e);
       e = -e;
       // x = [0.5,1) * 2^(-e)
       // estimate n s.t. x^n/(2*n+1) < x/3 * epsilon/2

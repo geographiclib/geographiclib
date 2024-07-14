@@ -2,26 +2,21 @@
  * \file DAuxLatitude.cpp
  * \brief Implementation for the GeographicLib::DAuxLatitude class.
  *
- * \note This is just sample code.  It is not part of GeographicLib itself.
- *
  * This file is an implementation of the methods described in
  * - C. F. F. Karney,
- *   On auxiliary latitudes,
- *   Technical Report, SRI International, December 2022.
- *   https://arxiv.org/abs/2212.05818
+ *   <a href="https://doi.org/10.1080/00396265.2023.2217604">
+ *   On auxiliary latitudes,</a>
+ *   Survey Review 56(395), 165--180 (2024);
+ *   preprint
+ *   <a href="https://arxiv.org/abs/2212.05818">arXiv:2212.05818</a>.
  * .
- * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2022-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/DAuxLatitude.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (disable: 4127)
-#endif
 
 namespace GeographicLib {
 
@@ -93,16 +88,16 @@ namespace GeographicLib {
 
     // Make both positive, so we can do the swap a <-> b trick
     Xn.y() = fabs(Xn.y()); Yn.y() = fabs(Yn.y());
-    real x = Xn.radians(), y = Yn.radians(), d = y - x,
-      sx = Xn.y(), sy = Yn.y(), cx = Xn.x(), cy = Yn.x(),
-      k2;
+    real k2 = -base::_e12;
+    bool flip = base::_f < 0;
     // Switch prolate to oblate; we then can use the formulas for k2 < 0
-    if (false && base::_f < 0) {
-      d = -d; swap(sx, cx); swap(sy, cy);
+    if (flip) {
+      swap(Xn.x(), Xn.y());
+      swap(Yn.x(), Yn.y());
       k2 = base::_e2;
-    } else {
-      k2 = -base::_e12;
     }
+    real x = Xn.radians(), y = Yn.radians(), d = y - x,
+      sx = Xn.y(), sy = Yn.y(), cx = Xn.x(), cy = Yn.x();
     // See DLMF: Eqs (19.11.2) and (19.11.4) letting
     // theta -> x, phi -> -y, psi -> z
     //
@@ -122,7 +117,7 @@ namespace GeographicLib {
       // E(z)/sin(z)
       Ezbsz = (EllipticFunction::RF(cz2, dz2, 1)
                - k2 * sz2 * EllipticFunction::RD(cz2, dz2, 1) / 3);
-    return (Ezbsz - k2 * sx * sy) * Dsz;
+    return (Ezbsz - k2 * sx * sy) * Dsz / (flip ? 1 - base::_f : 1);
   }
 
   /// \cond SKIP

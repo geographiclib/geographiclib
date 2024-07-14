@@ -2,7 +2,7 @@
  * \file DST.cpp
  * \brief Implementation for GeographicLib::DST class
  *
- * Copyright (c) Charles Karney (2022) <charles@karney.com> and licensed under
+ * Copyright (c) Charles Karney (2022) <karney@alum.mit.edu> and licensed under
  * the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -17,15 +17,15 @@ namespace GeographicLib {
   using namespace std;
 
   DST::DST(int N)
-    : _N(N < 0 ? 0 : N)
-    , _fft(make_shared<fft_t>(fft_t(2 * _N, false)))
+    : _nN(N < 0 ? 0 : N)
+    , _fft(make_shared<fft_t>(fft_t(2 * _nN, false)))
   {}
 
   void DST::reset(int N) {
     N = N < 0 ? 0 : N;
-    if (N == _N) return;
-    _N = N;
-    _fft->assign(2 * _N, false);
+    if (N == _nN) return;
+    _nN = N;
+    _fft->assign(2 * _nN, false);
   }
 
   void DST::fft_transform(real data[], real F[], bool centerp) const {
@@ -34,27 +34,29 @@ namespace GeographicLib {
     // Elements (0,N], resp. [0,N), of data should be set on input for centerp
     // = false, resp. true.  F must have a size of at least N and on output
     // elements [0,N) of F contain the transform.
-    if (_N == 0) return;
+    if (_nN == 0) return;
     if (centerp) {
-      for (int i = 0; i < _N; ++i) {
-        data[_N+i] = data[_N-1-i];
-        data[2*_N+i] = -data[i];
-        data[3*_N+i] = -data[_N-1-i];
+      for (int i = 0; i < _nN; ++i) {
+        data[_nN+i] = data[_nN-1-i];
+        data[2*_nN+i] = -data[i];
+        data[3*_nN+i] = -data[_nN-1-i];
       }
     } else {
-      data[0] = 0;            // set [0]
-      for (int i = 1; i < _N; ++i) data[_N+i] = data[_N-i]; // set [N+1,2*N-1]
-      for (int i = 0; i < 2*_N; ++i) data[2*_N+i] = -data[i]; // [2*N, 4*N-1]
+      data[0] = 0;              // set [0]
+      for (int i = 1; i < _nN; ++i)
+        data[_nN+i] = data[_nN-i]; // set [N+1,2*N-1]
+      for (int i = 0; i < 2*_nN; ++i)
+        data[2*_nN+i] = -data[i]; // [2*N, 4*N-1]
     }
-    vector<complex<real>> ctemp(2*_N);
+    vector<complex<real>> ctemp(2*_nN);
     _fft->transform_real(data, ctemp.data());
     if (centerp) {
-      real d = -Math::pi()/(4*_N);
-      for (int i = 0, j = 1; i < _N; ++i, j+=2)
+      real d = -Math::pi()/(4*_nN);
+      for (int i = 0, j = 1; i < _nN; ++i, j+=2)
         ctemp[j] *= exp(complex<real>(0, j*d));
     }
-    for (int i = 0, j = 1; i < _N; ++i, j+=2) {
-      F[i] = -ctemp[j].imag() / (2*_N);
+    for (int i = 0, j = 1; i < _nN; ++i, j+=2) {
+      F[i] = -ctemp[j].imag() / (2*_nN);
     }
   }
 
@@ -63,29 +65,29 @@ namespace GeographicLib {
     // should have size of at least 2*N.  On input elements [0,N) of F contain
     // the size N transform; on output elements [0,2*N) of F contain the size
     // 2*N transform.
-    fft_transform(data, F+_N, true);
+    fft_transform(data, F+_nN, true);
     // Copy DST-IV order N tx to [0,N) elements of data
-    for (int i = 0; i < _N; ++i) data[i] = F[i+_N];
-    for (int i = _N; i < 2*_N; ++i)
+    for (int i = 0; i < _nN; ++i) data[i] = F[i+_nN];
+    for (int i = _nN; i < 2*_nN; ++i)
       // (DST-IV order N - DST-III order N) / 2
-      F[i] = (data[2*_N-1-i] - F[2*_N-1-i])/2;
-    for (int i = 0; i < _N; ++i)
+      F[i] = (data[2*_nN-1-i] - F[2*_nN-1-i])/2;
+    for (int i = 0; i < _nN; ++i)
       // (DST-IV order N + DST-III order N) / 2
       F[i] = (data[i] + F[i])/2;
   }
 
   void DST::transform(function<real(real)> f, real F[]) const {
-    vector<real> data(4 * _N);
-    real d = Math::pi()/(2 * _N);
-    for (int i = 1; i <= _N; ++i)
+    vector<real> data(4 * _nN);
+    real d = Math::pi()/(2 * _nN);
+    for (int i = 1; i <= _nN; ++i)
       data[i] = f( i * d );
     fft_transform(data.data(), F, false);
   }
 
   void DST::refine(function<real(real)> f, real F[]) const {
-    vector<real> data(4 * _N);
-    real d = Math::pi()/(4 * _N);
-    for (int i = 0; i < _N; ++i)
+    vector<real> data(4 * _nN);
+    real d = Math::pi()/(4 * _nN);
+    for (int i = 0; i < _nN; ++i)
       data[i] = f( (2*i + 1) * d );
     fft_transform2(data.data(), F);
   }

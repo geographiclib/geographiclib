@@ -2,7 +2,7 @@
  * \file GeodSolve.cpp
  * \brief Command line utility for geodesic calculations
  *
- * Copyright (c) Charles Karney (2009-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -15,15 +15,12 @@
 #include <fstream>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicLine.hpp>
-#include <GeographicLib/GeodesicExact.hpp>
-#include <GeographicLib/GeodesicLineExact.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions and potentially
-// uninitialized local variables
-#  pragma warning (disable: 4127 4701)
+// Squelch warnings about potentially uninitialized local variables
+#  pragma warning (disable: 4701)
 #endif
 
 #include "GeodSolve.usage"
@@ -239,7 +236,6 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    // GeodesicExact mask values are the same as Geodesic
     unsigned outmask = Geodesic::LATITUDE | Geodesic::LONGITUDE |
       Geodesic::AZIMUTH;        // basic output quantities
     outmask |= inverse ? Geodesic::DISTANCE : // distance-related flags
@@ -251,31 +247,18 @@ int main(int argc, const char* const argv[]) {
                        Geodesic::GEODESICSCALE | Geodesic::AREA) :
       Geodesic::NONE;
 
-    const Geodesic      geods(a, f);
-    const GeodesicExact geode(a, exact ? f : 0);
-    GeodesicLine      ls;
-    GeodesicLineExact le;
+    const Geodesic geods(a, f, exact);
+    GeodesicLine ls;
     if (linecalc) {
       if (linecalc == LINE) fraction = false;
-      if (exact) {
-        le = linecalc == DIRECT ?
-          geode.GenDirectLine(lat1, lon1, azi1, arcmodeline, s12, outmask) :
-          linecalc == INVERSE ?
-          geode.InverseLine(lat1, lon1, lat2, lon2, outmask) :
-          // linecalc == LINE
-          geode.Line(lat1, lon1, azi1, outmask);
-        mult = fraction ? le.GenDistance(arcmode) : 1;
-        if (linecalc == INVERSE) azi1 = le.Azimuth();
-      } else {
-        ls = linecalc == DIRECT ?
-          geods.GenDirectLine(lat1, lon1, azi1, arcmodeline, s12, outmask) :
-          linecalc == INVERSE ?
-          geods.InverseLine(lat1, lon1, lat2, lon2, outmask) :
-          // linecalc == LINE
-          geods.Line(lat1, lon1, azi1, outmask);
-        mult = fraction ? ls.GenDistance(arcmode) : 1;
-        if (linecalc == INVERSE) azi1 = ls.Azimuth();
-      }
+      ls = linecalc == DIRECT ?
+        geods.GenDirectLine(lat1, lon1, azi1, arcmodeline, s12, outmask) :
+        linecalc == INVERSE ?
+        geods.InverseLine(lat1, lon1, lat2, lon2, outmask) :
+        // linecalc == LINE
+        geods.Line(lat1, lon1, azi1, outmask);
+      mult = fraction ? ls.GenDistance(arcmode) : 1;
+      if (linecalc == INVERSE) azi1 = ls.Azimuth();
     }
 
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
@@ -302,11 +285,8 @@ int main(int argc, const char* const argv[]) {
             throw GeographicErr("Extraneous input: " + strc);
           DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);
           DMS::DecodeLatLon(slat2, slon2, lat2, lon2, longfirst);
-          a12 = exact ?
-            geode.GenInverse(lat1, lon1, lat2, lon2, outmask,
-                             s12, azi1, azi2, m12, M12, M21, S12) :
-            geods.GenInverse(lat1, lon1, lat2, lon2, outmask,
-                             s12, azi1, azi2, m12, M12, M21, S12);
+          a12 = geods.GenInverse(lat1, lon1, lat2, lon2, outmask,
+                                 s12, azi1, azi2, m12, M12, M21, S12);
           if (full) {
             if (unroll) {
               real e;
@@ -345,11 +325,8 @@ int main(int argc, const char* const argv[]) {
               throw GeographicErr("Extraneous input: " + strc);
             // In fraction mode input is read as a distance
             s12 = ReadDistance(ss12, !fraction && arcmode, fraction) * mult;
-            a12 = exact ?
-              le.GenPosition(arcmode, s12, outmask,
-                             lat2, lon2, azi2, s12, m12, M12, M21, S12) :
-              ls.GenPosition(arcmode, s12, outmask,
-                             lat2, lon2, azi2, s12, m12, M12, M21, S12);
+            a12 = ls.GenPosition(arcmode, s12, outmask,
+                                 lat2, lon2, azi2, s12, m12, M12, M21, S12);
           } else {
             if (!(str >> slat1 >> slon1 >> sazi1 >> ss12))
               throw GeographicErr("Incomplete input: " + s);
@@ -358,11 +335,8 @@ int main(int argc, const char* const argv[]) {
             DMS::DecodeLatLon(slat1, slon1, lat1, lon1, longfirst);
             azi1 = DMS::DecodeAzimuth(sazi1);
             s12 = ReadDistance(ss12, arcmode);
-            a12 = exact ?
-              geode.GenDirect(lat1, lon1, azi1, arcmode, s12, outmask,
-                              lat2, lon2, azi2, s12, m12, M12, M21, S12) :
-              geods.GenDirect(lat1, lon1, azi1, arcmode, s12, outmask,
-                              lat2, lon2, azi2, s12, m12, M12, M21, S12);
+            a12 = geods.GenDirect(lat1, lon1, azi1, arcmode, s12, outmask,
+                                  lat2, lon2, azi2, s12, m12, M12, M21, S12);
           }
           if (full)
             *output

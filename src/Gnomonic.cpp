@@ -2,7 +2,7 @@
  * \file Gnomonic.cpp
  * \brief Implementation for GeographicLib::Gnomonic class
  *
- * Copyright (c) Charles Karney (2010-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2010-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -10,9 +10,8 @@
 #include <GeographicLib/Gnomonic.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about potentially uninitialized local variables and
-// constant conditional expressions
-#  pragma warning (disable: 4701 4127)
+// Squelch warnings about potentially uninitialized local variables
+#  pragma warning (disable: 4701)
 #endif
 
 namespace GeographicLib {
@@ -60,7 +59,8 @@ namespace GeographicLib {
                                   Geodesic::GEODESICSCALE));
     int count = numit_, trip = 0;
     real lat1, lon1, azi1, M;
-    while (count-- || GEOGRAPHICLIB_PANIC) {
+    while (count-- ||
+           GEOGRAPHICLIB_PANIC("Convergence failure in Gnomonic")) {
       real m, t;
       line.Position(s, lat1, lon1, azi1, m, M, t);
       if (trip)

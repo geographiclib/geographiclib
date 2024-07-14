@@ -2,7 +2,7 @@
  * \file DAuxLatitude.hpp
  * \brief Header for the GeographicLib::DAuxLatitude class
  *
- * Copyright (c) Charles Karney (2022-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2022-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -185,7 +185,7 @@ namespace GeographicLib {
     static real Dsin(real x, real y) {
       using std::sin; using std::cos;
       real d = (x - y) / 2;
-      return cos((x + y)/2) * (d != 0 ? sin(d) / d : 1);
+      return cos((x + y) / 2) * (d != 0 ? sin(d) / d : 1);
     }
     // (E(x) - E(y)) / (x - y)
     real DE(const AuxAngle& X, const AuxAngle& Y) const;

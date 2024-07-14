@@ -1,9 +1,9 @@
-cmake_minimum_required (VERSION 3.13.0)
+cmake_minimum_required (VERSION 3.16.0)
 project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
-set (PROJECT_VERSION_MINOR 2)
+set (PROJECT_VERSION_MINOR 4)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -49,8 +49,8 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
-set (LIBVERSION_API 24)
-set (LIBVERSION_BUILD 24.1.0)
+set (LIBVERSION_API 26)
+set (LIBVERSION_BUILD 26.1.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -263,8 +263,8 @@ endif ()
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
-# We require C++11
-set (CMAKE_CXX_STANDARD 11)
+# We require C++14
+set (CMAKE_CXX_STANDARD 14)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 if (GEOGRAPHICLIB_PRECISION EQUAL 4)
   set (CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
@@ -453,7 +453,8 @@ endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
-  GeoidEval Gravity MagneticField Planimeter RhumbSolve TransverseMercatorProj)
+  GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
+  TransverseMercatorProj)
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
   geographiclib-get-magnetic)
@@ -479,7 +480,7 @@ if (NOT RELEASE)
 endif ()
 
 # make exampleprograms does a fresh cmake configuration and so uses
-# find_package to find the just-built version og GeographicLib (via the
+# find_package to find the just-built version of GeographicLib (via the
 # GeographicLib_DIR option to cmake).
 if (CMAKE_GENERATOR_PLATFORM)
   set (PLATFORM_FLAG "-A")
@@ -511,7 +512,7 @@ include (InstallRequiredSystemLibraries)
 
 # The configuration of CPack is via variables that need to be set before
 # the include (CPack).
-set (CPACK_PACKAGE_CONTACT charles@karney.com)
+set (CPACK_PACKAGE_CONTACT karney@alum.mit.edu)
 set (CPACK_PACKAGE_VENDOR "GeographicLib")
 set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
   "GeographicLib library, utilities, and documentation")
@@ -528,7 +529,7 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
   "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
   "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/(pom.xml|makefile-admin|HOWTO-RELEASE.txt)\$")
+  "${PROJECT_SOURCE_DIR}/(makefile-admin|HOWTO-RELEASE.txt)\$")
 set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
 set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
@@ -538,9 +539,9 @@ set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PACKAGE_DIR}")
 if (WIN32)
   # The Windows binary packager is NSIS.  Set the necessary variables
   # for this.
-  set (CPACK_NSIS_CONTACT "charles@karney.com")
+  set (CPACK_NSIS_CONTACT "karney@alum.mit.edu")
   set (CPACK_NSIS_URL_INFO_ABOUT "https://geographiclib.sourceforge.io")
-  set (CPACK_NSIS_HELP_LINK "mailto:charles@karney.com")
+  set (CPACK_NSIS_HELP_LINK "mailto:karney@alum.mit.edu")
   # No provision for accommodating different compiler versions.  However
   # the Visual Studio 14 2015 build works also with Visual Studio 15
   # 2017, Visual Studio 16 2019, and Visual Studio 17 2022.

@@ -2,7 +2,7 @@
  * \file GeodesicLine30.cpp
  * \brief Implementation for GeographicLib::GeodesicLine30 class
  *
- * Copyright (c) Charles Karney (2009-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2009-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
@@ -87,38 +87,39 @@ namespace GeographicLib {
     real eps = _k2 / (2 * (1 + sqrt(1 + _k2)) + _k2);
 
     if (_caps & CAP_C1) {
-      _A1m1 = Geodesic30<real>::A1m1f(eps);
-      Geodesic30<real>::C1f(eps, _C1a);
-      _B11 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1, _C1a, nC1_);
-      real s = sin(_B11), c = cos(_B11);
+      _aA1m1 = Geodesic30<real>::A1m1f(eps);
+      Geodesic30<real>::C1f(eps, _cC1a);
+      _bB11 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1, _cC1a, nC1_);
+      real s = sin(_bB11), c = cos(_bB11);
       // tau1 = sig1 + B11
       _stau1 = _ssig1 * c + _csig1 * s;
       _ctau1 = _csig1 * c - _ssig1 * s;
       // Not necessary because C1pa reverts C1a
-      //    _B11 = -SinCosSeries(true, _stau1, _ctau1, _C1pa, nC1p_);
+      //    _bB11 = -SinCosSeries(true, _stau1, _ctau1, _cC1pa, nC1p_);
     }
 
     if (_caps & CAP_C1p)
-      Geodesic30<real>::C1pf(eps, _C1pa);
+      Geodesic30<real>::C1pf(eps, _cC1pa);
 
     if (_caps & CAP_C2) {
-      _A2m1 = Geodesic30<real>::A2m1f(eps);
-      Geodesic30<real>::C2f(eps, _C2a);
-      _B21 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1, _C2a, nC2_);
+      _aA2m1 = Geodesic30<real>::A2m1f(eps);
+      Geodesic30<real>::C2f(eps, _cC2a);
+      _bB21 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1, _cC2a, nC2_);
     }
 
     if (_caps & CAP_C3) {
-      g.C3f(eps, _C3a);
-      _A3c = -_f * _salp0 * g.A3f(eps);
-      _B31 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1,
-                                            _C3a, nC3_-1);
+      g.C3f(eps, _cC3a);
+      _aA3c = -_f * _salp0 * g.A3f(eps);
+      _bB31 = Geodesic30<real>::SinCosSeries(true, _ssig1, _csig1,
+                                            _cC3a, nC3_-1);
     }
 
     if (_caps & CAP_C4) {
-      g.C4f(_k2, _C4a);
+      g.C4f(_k2, _cC4a);
       // Multiplier = a^2 * e^2 * cos(alpha0) * sin(alpha0)
-      _A4 = Math::sq(_a) * _calp0 * _salp0 * g._e2;
-      _B41 = Geodesic30<real>::SinCosSeries(false, _ssig1, _csig1, _C4a, nC4_);
+      _aA4 = Math::sq(_a) * _calp0 * _salp0 * g._e2;
+      _bB41 = Geodesic30<real>::SinCosSeries(false, _ssig1, _csig1,
+                                             _cC4a, nC4_);
     }
   }
 
@@ -147,14 +148,14 @@ namespace GeographicLib {
     } else {
       // Interpret s12_a12 as distance
       real
-        tau12 = s12_a12 / (_b * (1 + _A1m1)),
+        tau12 = s12_a12 / (_b * (1 + _aA1m1)),
         s = sin(tau12),
         c = cos(tau12);
       // tau2 = tau1 + tau12
       B12 = - Geodesic30<real>::SinCosSeries(true, _stau1 * c + _ctau1 * s,
                                      _ctau1 * c - _stau1 * s,
-                                     _C1pa, nC1p_);
-      sig12 = tau12 - (B12 - _B11);
+                                     _cC1pa, nC1p_);
+      sig12 = tau12 - (B12 - _bB11);
       ssig12 = sin(sig12);
       csig12 = cos(sig12);
     }
@@ -166,8 +167,8 @@ namespace GeographicLib {
     csig2 = _csig1 * csig12 - _ssig1 * ssig12;
     if (outmask & (DISTANCE | REDUCEDLENGTH | GEODESICSCALE)) {
       if (arcmode)
-        B12 = Geodesic30<real>::SinCosSeries(true, ssig2, csig2, _C1a, nC1_);
-      AB1 = (1 + _A1m1) * (B12 - _B11);
+        B12 = Geodesic30<real>::SinCosSeries(true, ssig2, csig2, _cC1a, nC1_);
+      AB1 = (1 + _aA1m1) * (B12 - _bB11);
     }
     // sin(bet2) = cos(alp0) * sin(sig2)
     sbet2 = _calp0 * ssig2;
@@ -185,13 +186,13 @@ namespace GeographicLib {
                   comg2 * _comg1 + somg2 * _somg1);
 
     if (outmask & DISTANCE)
-      s12 = arcmode ? _b * ((1 + _A1m1) * sig12 + AB1) : s12_a12;
+      s12 = arcmode ? _b * ((1 + _aA1m1) * sig12 + AB1) : s12_a12;
 
     if (outmask & LONGITUDE) {
-      lam12 = omg12 + _A3c *
+      lam12 = omg12 + _aA3c *
         ( sig12 +
-          (Geodesic30<real>::SinCosSeries(true, ssig2, csig2, _C3a, nC3_-1)
-           - _B31));
+          (Geodesic30<real>::SinCosSeries(true, ssig2, csig2, _cC3a, nC3_-1)
+           - _bB31));
       lon12 = lam12 / Math::degree<real>();
       lon12 = Math::AngNormalize(lon12);
       lon2 = Math::AngNormalize(_lon1 + lon12);
@@ -210,9 +211,9 @@ namespace GeographicLib {
         ssig2sq = Math::sq( ssig2),
         w1 = sqrt(1 + _k2 * ssig1sq),
         w2 = sqrt(1 + _k2 * ssig2sq),
-        B22 = Geodesic30<real>::SinCosSeries(true, ssig2, csig2, _C2a, nC2_),
-        AB2 = (1 + _A2m1) * (B22 - _B21),
-        J12 = (_A1m1 - _A2m1) * sig12 + (AB1 - AB2);
+        B22 = Geodesic30<real>::SinCosSeries(true, ssig2, csig2, _cC2a, nC2_),
+        AB2 = (1 + _aA2m1) * (B22 - _bB21),
+        J12 = (_aA1m1 - _aA2m1) * sig12 + (AB1 - AB2);
       if (outmask & REDUCEDLENGTH)
         // Add parens around (_csig1 * ssig2) and (_ssig1 * csig2) to ensure
         // accurate cancellation in the case of coincident points.
@@ -228,7 +229,7 @@ namespace GeographicLib {
 
     if (outmask & AREA) {
       real
-        B42 = Geodesic30<real>::SinCosSeries(false, ssig2, csig2, _C4a, nC4_);
+        B42 = Geodesic30<real>::SinCosSeries(false, ssig2, csig2, _cC4a, nC4_);
       real salp12, calp12;
       if (_calp0 == 0 || _salp0 == 0) {
         // alp12 = alp2 - alp1, used in atan2 so no need to normalize
@@ -256,7 +257,7 @@ namespace GeographicLib {
            ssig12 * (_csig1 * ssig12 / (1 + csig12) + _ssig1));
         calp12 = Math::sq(_salp0) + Math::sq(_calp0) * _csig1 * csig2;
       }
-      S12 = _c2 * atan2(salp12, calp12) + _A4 * (B42 - _B41);
+      S12 = _c2 * atan2(salp12, calp12) + _aA4 * (B42 - _bB41);
     }
 
     return arcmode ? s12_a12 : sig12 / Math::degree<real>();

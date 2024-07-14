@@ -1,20 +1,15 @@
 /**
  * \file Rhumb.cpp
- * \brief Implementation for GeographicLib::experimental::Rhumb and
- * GeographicLib::experimental::RhumbLine classes
+ * \brief Implementation for GeographicLib::Rhumb and GeographicLib::RhumbLine
+ * classes
  *
- * Copyright (c) Charles Karney (2014-2023) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2014-2023) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/Rhumb.hpp>
 #include <GeographicLib/DST.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about enum-float expressions
-#  pragma warning (disable: 5055)
-#endif
 
 namespace GeographicLib {
 

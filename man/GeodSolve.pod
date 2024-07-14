@@ -34,8 +34,8 @@ on standard output.  This is the direct geodesic calculation.
 
 =item 2.
 
-With the B<-i> command line argument, B<GeodSolve> performs the inverse
-geodesic calculation.  It reads lines containing I<lat1> I<lon1> I<lat2>
+With the B<-i> option, B<GeodSolve> performs the inverse geodesic
+calculation.  It reads lines containing I<lat1> I<lon1> I<lat2>
 I<lon2> and prints the corresponding values of I<azi1> I<azi2> I<s12>.
 
 =item 3.

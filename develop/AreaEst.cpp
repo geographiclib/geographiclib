@@ -3454,7 +3454,8 @@ Math::real CosSeries(Math::real sinx, Math::real cosx,
   return cosx * (y0 - y1);    // cos(x) * (y0 - y1)
 }
 
-Math::real SinSeries(Math::real sinx, Math::real cosx, const Math::real c[], int n) {
+Math::real SinSeries(Math::real sinx, Math::real cosx, const Math::real c[],
+                     int n) {
   // Evaluate
   // y = sum(c[i] * sin((2*i+1) * x), i, 0, n-1)
   // using Clenshaw summation.
@@ -3477,12 +3478,12 @@ Math::real fft_check(const vector<Math::real>& vals,
                      const vector<Math::real>& tx,
                      bool centerp = false) {
   Math::real maxerr = 0;
-  int N = vals.size();
+  int N = int(vals.size());
   for (int i = 0; i < N; ++i) {
     Math::real
       sig = (2*i + (centerp ? 1 : 2))/Math::real(4*N) * Math::pi(),
       err = fabs(vals[i] - SinSeries(sin(sig), cos(sig),
-                                     tx.data(), tx.size()));
+                                     tx.data(), int(tx.size())));
     maxerr = fmax(err, maxerr);
   }
   return maxerr;
@@ -3491,7 +3492,7 @@ Math::real fft_check(const vector<Math::real>& vals,
 // Implement DST-III (centerp = false) or DST-IV (centerp = true)
 void fft_transform(const vector<Math::real>& in, vector<Math::real>& out,
                    bool centerp = false, bool check = false) {
-  int N = in.size(); out.resize(N);
+  int N = int(in.size()); out.resize(N);
 #if HAVE_FFTW
   fftw_r2r_kind kind = centerp ? FFTW_RODFT11 : FFTW_RODFT01;
   fftw_plan p;
@@ -3551,7 +3552,7 @@ void fft_transform2(const vector<Math::real>& oldin,
   // newin[1], oldin[1], newin[2], oldin[2], etc.
 
   // oldin is only touched with check = true
-  int N = newin.size();
+  int N = int(newin.size());
   fft_transform(newin, newout, true, false);
   newout.resize(2*N);
   for (int i = N; i < 2*N; ++i)
@@ -3611,7 +3612,8 @@ void C4falt(int prec, Math::real n, Math::real alp0, int N,
 }
 
 Math::real maxerr(const vector<Math::real> C4a, const vector<Math::real> C4b) {
-  int Na = C4a.size(), Nb = C4b.size(), N0 = min(Na, Nb), N1 = max(Na, Nb);
+  int Na = int(C4a.size()), Nb = int(C4b.size()),
+    N0 = min(Na, Nb), N1 = max(Na, Nb);
   vector<Math::real> diff = Nb > Na ? C4b : C4a;
   for (int i = 0; i < N0; ++i)
     diff[i] -= Nb > Na ? C4a[i] : C4b[i];
@@ -3661,10 +3663,12 @@ int main(int argc, const char* const argv[]) {
         // prec = 0 means use 30th order taylor series
         // prec = -1 means use N=30 DST
       case -1:
-      case 0: eps = numeric_limits<Math::real>::infinity(); break; // Use TaylorI4
+      case 0: eps = numeric_limits<Math::real>::infinity();
+        break;                  // Use TaylorI4
       case 1: eps = numeric_limits<float>::epsilon() / 2; break;
       case 2: eps = numeric_limits<double>::epsilon() / 2; break;
-      case 3: eps = numeric_limits<long double>::epsilon() / 2; break;
+      case 3: eps = Math::real(numeric_limits<long double>::epsilon()) / 2;
+        break;
       case 4: eps = pow(Math::real(0.5), 113); break;
 #if GEOGRAPHICLIB_PRECISION > 1
         // Skip case 5 for float prec to avoid underflow to 0
@@ -3765,7 +3769,7 @@ int main(int argc, const char* const argv[]) {
           if (ok) break;
           if (prec <= 0) break;
         }
-        N = C4x.size();
+        N = int(C4x.size());
         /*
           Math::real erry = 0;
           // Assess summing last few scaled coefficients as a less expensive
@@ -3785,10 +3789,12 @@ int main(int argc, const char* const argv[]) {
         // prec = 0 means use 30th order taylor series
         // prec = -1 means use N=30 DST
       case -1:
-      case 0: eps = numeric_limits<Math::real>::infinity(); break; // Use TaylorI4
+      case 0: eps = numeric_limits<Math::real>::infinity();
+        break;                  // Use TaylorI4
       case 1: eps = numeric_limits<float>::epsilon() / 2; break;
       case 2: eps = numeric_limits<double>::epsilon() / 2; break;
-      case 3: eps = numeric_limits<long double>::epsilon() / 2; break;
+      case 3: eps = Math::real(numeric_limits<long double>::epsilon()) / 2;
+        break;
       case 4: eps = pow(Math::real(0.5), 113); break;
 #if GEOGRAPHICLIB_PRECISION > 1
         // Skip case 5 for float prec to avoid underflow to 0
@@ -3891,7 +3897,7 @@ int main(int argc, const char* const argv[]) {
             if (ok) break;
             if (prec <= 0) break;
           }
-          N = C4x.size();
+          N = int(C4x.size());
           /*
             Math::real erry = 0;
             // Assess summing last few scaled coefficients as a less expensive

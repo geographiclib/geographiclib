@@ -2,7 +2,7 @@
  * \file NearestNeighbor.hpp
  * \brief Header for GeographicLib::NearestNeighbor class
  *
- * Copyright (c) Charles Karney (2016-2020) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2016-2020) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -17,7 +17,6 @@
 #include <cstring>
 #include <limits>
 #include <cmath>
-#include <iostream>
 #include <sstream>
 // Only for GeographicLib::GeographicErr
 #include <GeographicLib/Constants.hpp>
@@ -28,12 +27,6 @@
 #include <boost/serialization/split_member.hpp>
 #include <boost/serialization/array.hpp>
 #include <boost/serialization/vector.hpp>
-#endif
-
-#if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions
-#  pragma warning (push)
-#  pragma warning (disable: 4127)
 #endif
 
 namespace GeographicLib {
@@ -829,9 +822,5 @@ namespace std {
   }
 
 } // namespace std
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_NEARESTNEIGHBOR_HPP

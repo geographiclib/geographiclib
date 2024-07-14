@@ -1,9 +1,9 @@
 Updating version
-  pom.xml include -SNAPSHOT in version
   CMakeLists.txt set PROJECT_VERSION_SUFFIX to "-alpha" + LIBVERSION_{API,BUILD}
   configure.ac AC_INIT + GEOGRAPHICLIB_VERSION_* + LT_{CURRENT,REVISION,AGE}
-  devel/test-distribution VERSION, SUFFIX, BRANCH
+  develop/test-distribution VERSION, SUFFIX, BRANCH
   doc/GeographicLib.dox.in set date to mm-dd start new change log entry
+  examples/CMakeLists.txt in find_package (GeographicLib ...)
 
 CMake configuration
 
@@ -106,7 +106,6 @@ Release checklist:
 Merge all changes to main
 test-distribution.sh: set SUFFIX= and BRANCH=main
 CMakeLists.txt set PROJECT_VERSION_SUFFIX suffix to ""
-pom.xml keeps SNAPSHOT for now
 Update NEWS
 Set date in NEWS and GeographicLib.dox.in
 run develop/test-distribution.sh
@@ -123,8 +122,6 @@ In build directory:
 checkin and tag release branch & push
 tag main branch
 
-trigger build on build-open
-
 update binaries for cgi applications
   make stage-cgi deploy-cgi
   ssh -t karney,geographiclib@shell.sourceforge.net create
@@ -137,7 +134,7 @@ set default downloads for distrib-C++ on sourceforge
 
 post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
 
-VERSION=2.2
+VERSION=2.3
 
 Brew...
 
@@ -145,7 +142,7 @@ Brew...
   cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
   git checkout master; git pull?
   edit geographiclib.rb
-  changing url and sha256
+  changing url (use github release tag) and shasum -a 256
 
   export HOMEBREW_NO_INSTALL_FROM_API=1
   brew uninstall geographiclib
@@ -166,6 +163,7 @@ conda-forge...
 
   geographiclib-cpp-feedstock
   edit README.md recipe/bld.bat recipe/build.sh recipe/meta.yaml
+  check build number in meta.yaml
   needs patch file to turn off tests in signtest.cpp
 
   conda remove -y -n build --all
@@ -184,12 +182,14 @@ conda-forge...
   GeoConvert --version
 
   git checkout -b v$VERSION
+  commit changes
   conda deactivate
   conda activate build
-  conda install -c conda-forge conda-smithy
+  conda install -y -c conda-forge conda-smithy
   conda smithy rerender
   commit changes
   git push --set-upstream cffk v$VERSION
+  conda deactivate
 
 vcpkg...
   git pull

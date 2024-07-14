@@ -1,12 +1,14 @@
 # Compile test programs
-set (TESTPROGRAMS geodtest signtest polygontest)
+set (TESTPROGRAMS geodtest signtest polygontest intersecttest)
+
+add_custom_target (testprograms)
+add_dependencies (testprograms tools)
 
 if (GEOGRAPHICLIB_PRECISION GREATER 1)
 
-  add_custom_target (testprograms)
   foreach (TESTPROGRAM ${TESTPROGRAMS})
 
-    add_executable (${TESTPROGRAM} ${TESTPROGRAM}.cpp)
+    add_executable (${TESTPROGRAM} EXCLUDE_FROM_ALL ${TESTPROGRAM}.cpp)
     add_dependencies (testprograms ${TESTPROGRAM})
     target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES}
       ${HIGHPREC_LIBRARIES})
@@ -19,6 +21,8 @@ if (GEOGRAPHICLIB_PRECISION GREATER 1)
   set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
 
 endif ()
+
+# add_custom_target (test DEPENDS tools testprograms tools)
 
 # Here are the tests for GeographicLib
 if (DEFINED ENV{GEOGRAPHICLIB_DATA})
@@ -918,3 +922,13 @@ if (EXISTS "${_DATADIR}/gravity/grs80.egm")
   set_tests_properties (Gravity3 PROPERTIES PASS_REGULAR_EXPRESSION
     "^-?0\\.000 -?0\\.000 -?0.000")
 endif ()
+
+add_test (NAME Intersect1 COMMAND IntersectTool
+  -p 0 --input-string "50N 4W 147.7W 0 0 90" -c)
+set_tests_properties (Intersect1
+  PROPERTIES PASS_REGULAR_EXPRESSION "^6058049 -3311253 0[\r\n]")
+
+add_test (NAME Intersect2 COMMAND IntersectTool
+  -p 0 --input-string "50N 4W 147.7W 0 180 0" -c -R 2.6e7)
+set_tests_properties (Intersect2
+  PROPERTIES PASS_REGULAR_EXPRESSION "^-494582 14052230 0 14546812[\r\n]19529110 -5932344 0 25461454[\r\n]nan nan 0 nan[\r\n]")

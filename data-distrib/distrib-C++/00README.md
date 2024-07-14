@@ -25,4 +25,4 @@ Other links:
   https://geographiclib.sourceforge.io/doc/library.html#languages
 * Old versions of Geographiclib:
   https://sourceforge.net/projects/geographiclib/files/distrib
-* Author: Charles Karney, <charles@karney.com>
+* Author: Charles Karney, <karney@alum.mit.edu>

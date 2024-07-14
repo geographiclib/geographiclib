@@ -1,5 +1,7 @@
 # Build the library...
 
+add_custom_target (libs ALL)
+
 # Include all the .cpp files in the library.
 set (SOURCES
   Accumulator.cpp
@@ -27,6 +29,7 @@ set (SOURCES
   Gnomonic.cpp
   GravityCircle.cpp
   GravityModel.cpp
+  Intersect.cpp
   LambertConformalConic.cpp
   LocalCartesian.cpp
   MGRS.cpp
@@ -97,11 +100,13 @@ if (GEOGRAPHICLIB_SHARED_LIB)
   add_library (${PROJECT_SHARED_LIBRARIES} SHARED ${SOURCES} ${HEADERS})
   add_library (${PROJECT_NAME}::${PROJECT_SHARED_LIBRARIES}
     ALIAS ${PROJECT_SHARED_LIBRARIES})
+  add_dependencies (libs ${PROJECT_SHARED_LIBRARIES})
 endif ()
 if (GEOGRAPHICLIB_STATIC_LIB)
   add_library (${PROJECT_STATIC_LIBRARIES} STATIC ${SOURCES} ${HEADERS})
   add_library (${PROJECT_NAME}::${PROJECT_STATIC_LIBRARIES}
     ALIAS ${PROJECT_STATIC_LIBRARIES})
+  add_dependencies (libs ${PROJECT_STATIC_LIBRARIES})
 endif ()
 
 add_library (${PROJECT_INTERFACE_LIBRARIES} INTERFACE)

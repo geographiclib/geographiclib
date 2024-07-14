@@ -2,7 +2,7 @@
  * \file EllipticFunction.hpp
  * \brief Header for GeographicLib::EllipticFunction class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -64,7 +64,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
 
-    enum { num_ = 13 }; // Max depth required for sncndn; probably 5 is enough.
+    enum { num_ = 25 }; // Max depth required for sncndn; probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
     real _kKc, _eEc, _dDc, _pPic, _gGc, _hHc;
   public:
@@ -566,12 +566,33 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
+     * The Jacobi amplitude function.
+     *
+     * @param[in] x the argument.
+     * @return the value of am(\e x, \e k)
+     **********************************************************************/
+    Math::real am(real x) const;
+
+    /**
+     * The Jacobi amplitude function and associated elliptic functions.
+     *
+     * @param[in] x the argument.
+     * @param[out] sn sn(\e x, \e k).
+     * @param[out] cn cn(\e x, \e k).
+     * @param[out] dn dn(\e x, \e k).
+     * @return the value of am(\e x, \e k)
+     **********************************************************************/
+    Math::real am(real x, real& sn, real& cn, real& dn) const;
+
+    /**
      * The Jacobi elliptic functions.
      *
      * @param[in] x the argument.
      * @param[out] sn sn(\e x, \e k).
      * @param[out] cn cn(\e x, \e k).
      * @param[out] dn dn(\e x, \e k).
+     *
+     * For this routine <i>k</i> is restricted to the interval [0, 1].
      **********************************************************************/
     void sncndn(real x, real& sn, real& cn, real& dn) const;
 

@@ -33,12 +33,16 @@ endif ()
 
 set (DEVELPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect
-  ClosestApproach M12zero GeodShort NormalTest)
+  ClosestApproach M12zero GeodShort NormalTest GeoidHeightTable)
 
 if (Boost_FOUND AND NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
   # Skip LevelEllipsoid for quad precision because of compiler errors
   # with boost 1.69 and g++ 9.2.1 (Fedora 30).  Problem reported as
-  # https://github.com/boostorg/odeint/issues/40
+  # https://github.com/boostorg/odeint/issues/40.
+  # This problem is resolved see https://github.com/boostorg/odeint/pull/63
+  # and will be included in boost 1.85.
+  # HOWEVER, my patch given in https://github.com/boostorg/odeint/issues/75
+  # fixes this problem too.
   set (DEVELPROGRAMS ${DEVELPROGRAMS} LevelEllipsoid)
   include_directories ("${Boost_INCLUDE_DIRS}")
   if (APPLE)
@@ -82,6 +86,21 @@ set (DEVELPROGRAMS ${DEVELPROGRAMS} AreaEst)
 add_executable (reformat EXCLUDE_FROM_ALL reformat.cpp)
 add_dependencies (develprograms reformat)
 set (DEVELPROGRAMS ${DEVELPROGRAMS} reformat)
+
+find_package (OpenMP QUIET)
+if (OPENMP_FOUND OR OpenMP_FOUND)
+  set_target_properties (GeoidHeightTable PROPERTIES
+    COMPILE_FLAGS ${OpenMP_CXX_FLAGS})
+  if (OpenMP_CXX_INCLUDE_DIRS)
+    set_target_properties (GeoidHeightTable PROPERTIES
+      INCLUDE_DIRECTORIES ${OpenMP_CXX_INCLUDE_DIRS})
+  endif ()
+  if (NOT WIN32)
+    set_target_properties (GeoidHeightTable PROPERTIES
+      LINK_FLAGS ${OpenMP_CXX_FLAGS})
+  endif ()
+  target_link_libraries (GeoidHeightTable ${OpenMP_CXX_LIBRARIES})
+endif ()
 
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)
   # Add _d suffix for your debug versions of the tools

@@ -2,7 +2,7 @@
  * \file DMS.hpp
  * \brief Header for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2008-2022) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -12,12 +12,6 @@
 
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Utility.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about dll vs vector and constant conditional expressions
-#  pragma warning (push)
-#  pragma warning (disable: 4251 4127)
-#endif
 
 namespace GeographicLib {
 
@@ -208,7 +202,7 @@ namespace GeographicLib {
      *   - U+201d right double quote (&rdquo;)
      *   - U+201f reversed-9 double quote (‟)
      *   - U+02ba modifier letter double prime (ʺ)
-     *   - '&nbsp;' any two consecutive symbols for minutes
+     *   - '&thinsp;' any two consecutive symbols for minutes
      * - plus sign:
      *   - + plus
      *   - U+2795 heavy plus (➕)
@@ -389,9 +383,5 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
-
-#if defined(_MSC_VER)
-#  pragma warning (pop)
-#endif
 
 #endif  // GEOGRAPHICLIB_DMS_HPP

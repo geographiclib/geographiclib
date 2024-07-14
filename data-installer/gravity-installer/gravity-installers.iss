@@ -43,7 +43,7 @@ VersionInfoTextVersion={#Version}
 VersionInfoCopyright=Public Domain
 AppVersion={#Version}
 AppComments={#NAME} gravity model
-AppContact=charles@karney.com
+AppContact=karney@alum.mit.edu
 UninstallDisplayName={#Project} gravity model {#NAME}
 DiskSpanning=no
 

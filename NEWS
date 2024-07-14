@@ -4,7 +4,81 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.2
+The current version of the library is 2.4
+
+Changes between 2.4 (released 2024-07-14) and 2.3 versions:
+
+   * Math::sind, Math::sincosd, etc., now return accurate results for
+     arguments = 30d, 45d, 60d, ...
+
+   * Add Math::hypot3.
+
+   * Add EllipticFunction::am.
+
+   * Make constructor for AuxAngle explicit.
+
+   * Include notes for plate carree areas.
+
+   * C++14 compliant compiler required (this requirement tracks the
+     Boost Math library).
+
+   * CMake configuration changes
+     + update cmake_minimum_required to 3.16.0.
+     + exclude the tools and doc targets from the default build (make
+       all) if these components won't be installed (BINDIR or DOCDIR
+       set to OFF).
+     + testprograms is now excluded from the default build and it now
+       depends on tools.  Before running the test suite, build
+       testprograms, e.g., make testprograms test.
+     + added a target libs to build only the static and/or shared
+       libraries.
+     + document the use of CMake's FetchContent as an alternative to
+       find_package.
+     + stop requiring that CMAKE_CROSSCOMPILING match with
+       find_package(GeographicLib).
+
+   * Internal code changes
+     + stop using reserved identifiers (_N in the DST class and _R in
+       the Intersect class).
+     + remove the workaround for the boost-quadmath bug with
+       setprecision(0).
+     + GEOGRAPHICLIB_PANIC(msg) macro now takes a message argument.
+
+Changes between 2.3 (released 2023-07-25) and 2.2 versions:
+
+   * Add the Intersect class and the IntersectTool utility.  The
+     methods are described in "Geodesic intersections",
+     https://arxiv.org/abs/2308.00495.
+
+   * Add typedefs Geodesic::LineClass, GeodesicExact::LineClass,
+     Rhumb::LineClass, GeodesicLine::BaseClass,
+     GeodesicLineExact::BaseClass, RhumbLine::BaseClass.
+
+   * Geodesic constructor accepts optional third argument exact, default
+     false.  If true, then the calculations are delegated to
+     GeodesicExact.  GeodSolve and Planimeter now use this simplified
+     interface.
+
+   * PolygonAreaExact is deprecated; use PolygonArea instead.
+
+   * Bug in Planimeter -Q (introduced in version 2.2) has been fixed.
+
+   * TransverseMercator constructor accepts optional arguments exact
+     and extendp (default false for both).  If exact = true, then the
+     calculations are delegated to TransverseMercatorExact.
+     TransverseMercatorProj now uses this simplified interface.
+
+   * Minor fixes:
+     + Fix documentation bug for TransverseMercatorProj (incorrectly
+       stated that -t for the extended domain was the default).
+     + Remove unnecessary friend declarations for Ellipsoid in
+       AlbersEqualArea and TransverseMercator. (As of version 2.2,
+       Ellipsoid uses the AuxLatitude class for this functionality.)
+     + Small change in EllipticFunction to speed up the default
+       contructor.
+     + Remove workaround for boost 1.76 with enums (not needed for boost
+       1.78).
+     + Remove unused header from NearestNeighbor.
 
 Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
 
@@ -24,8 +98,8 @@ Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
      + rhumb lines which include a pole as one of the endpoints are
        treated properly (previously point at the pole were moved
        slightly away from the pole);
-     + this treatment of rhumb areas is described in polygons,
-       https://arxiv.org/abs/2303.03219.
+     + this treatment of rhumb areas is described in "The area of
+       rhumb polygons", https://arxiv.org/abs/2303.03219.
 
    * The -E option for Planimeter(1) is now a toggle switching on
      exact treatment for geodesics (-G option), rhumb lines (-R
@@ -871,8 +945,7 @@ Changes between 1.42 (released 2015-04-28) and 1.41 versions:
     versions 1.40 and 1.41).
 
   * Mark the computation of the gradient of the geoid height in the
-    Geoid class and the <a href="GeoidEval.1.html">GeoidEval</a> utility
-    as deprecated.
+    Geoid class and the GeoidEval utility as deprecated.
 
   * Work around the boost-quadmath bug with setprecision(0).
 

@@ -16,6 +16,7 @@ bin_PROGRAMS = CartConvert \
 	GeodesicProj \
 	GeoidEval \
 	Gravity \
+	IntersectTool \
 	MagneticField \
 	Planimeter \
 	RhumbSolve \
@@ -96,6 +97,18 @@ Gravity_SOURCES = Gravity.cpp \
 	../include/GeographicLib/SphericalHarmonic.hpp \
 	../include/GeographicLib/SphericalHarmonic1.hpp \
 	../include/GeographicLib/Utility.hpp
+IntersectTool_SOURCES = IntersectTool.cpp \
+	../man/IntersectTool.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Geodesic.hpp \
+	../include/GeographicLib/GeodesicExact.hpp \
+	../include/GeographicLib/GeodesicLine.hpp \
+	../include/GeographicLib/GeodesicLineExact.hpp \
+	../include/GeographicLib/Intersect.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
 MagneticField_SOURCES = MagneticField.cpp \
 	../man/MagneticField.usage \
 	../include/GeographicLib/Config.h \
@@ -130,6 +143,7 @@ RhumbSolve_SOURCES = RhumbSolve.cpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Ellipsoid.hpp \
 	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Rhumb.hpp \
 	../include/GeographicLib/Utility.hpp
 TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../man/TransverseMercatorProj.usage \

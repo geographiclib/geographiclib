@@ -2,7 +2,7 @@
  * \file Utility.hpp
  * \brief Header for GeographicLib::Utility class
  *
- * Copyright (c) Charles Karney (2011-2022) <charles@karney.com> and licensed
+ * Copyright (c) Charles Karney (2011-2024) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -19,9 +19,9 @@
 #include <cstring>
 
 #if defined(_MSC_VER)
-// Squelch warnings about constant conditional expressions and unsafe gmtime
+// Squelch warnings about constant conditional expressions
 #  pragma warning (push)
-#  pragma warning (disable: 4127 4996)
+#  pragma warning (disable: 4127)
 #endif
 
 namespace GeographicLib {
@@ -320,6 +320,7 @@ namespace GeographicLib {
     template<typename ExtT, typename IntT, bool bigendp>
       static void readarray(std::istream& str, IntT array[], size_t num) {
 #if GEOGRAPHICLIB_PRECISION < 4
+      // for C++17 use if constexpr
       if (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
           std::numeric_limits<ExtT>::is_integer)
@@ -328,6 +329,7 @@ namespace GeographicLib {
           str.read(reinterpret_cast<char*>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
+          // for C++17 use if constexpr
           if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
             for (size_t i = num; i--;)
               array[i] = Math::swab<IntT>(array[i]);
@@ -569,24 +571,6 @@ namespace GeographicLib {
       return x < 0 ? std::string("-inf") :
         (x > 0 ? std::string("inf") : std::string("nan"));
     std::ostringstream s;
-#if GEOGRAPHICLIB_PRECISION == 4
-    // boost-quadmath treats precision == 0 as "use as many digits as
-    // necessary" (see https://svn.boost.org/trac/boost/ticket/10103 and
-    // https://github.com/boostorg/multiprecision/issues/416)
-    // Fixed by https://github.com/boostorg/multiprecision/pull/389
-    if (p == 0) {
-      using std::signbit; using std::fabs;
-      using std::round; using std::fmod;
-      int n = signbit(x) ? -1 : 1; x = fabs(x);
-      Math::real ix = round(x); // Rounds ties away from zero (up for positive)
-      // Implement the "round ties to even" rule
-      if (2 * (ix - x) == 1 && fmod(ix, Math::real(2)) == 1) --ix;
-      s << std::fixed << std::setprecision(1) << n*ix;
-      std::string r(s.str());
-      // strip off trailing ".0"
-      return r.substr(0, (std::max)(int(r.size()) - 2, 0));
-    }
-#endif
     if (p >= 0) s << std::fixed << std::setprecision(p);
     s << x; return s.str();
   }

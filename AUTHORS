@@ -1,4 +1,4 @@
-Charles Karney <charles@karney.com>
+Charles Karney <karney@alum.mit.edu>
 Francesco Paolo Lovergine <frankie@debian.org> (autoconfiscation)
 Mathieu Peyréga <mathieu.peyrega@gmail.com> (help with gravity models)
 Andrew MacIntyre <Andrew.MacIntyre@acma.gov.au> (python/setup.py)
@@ -12,3 +12,4 @@ Jonathan Takahashi <jtakahashi@gmail.com> (boost-python sample)
 William Wall <wallw@users.sourceforge.net> (Javascript wrapper doc)
 Thomas Warner <warnerta@gmail.com> (Excel wrapper)
 Mark Borgerding <mark@borgerding.net> (KISS FFT)
+Jared Aurentz <jaredaurentz@gmail.com> (Trigfun::chop)
