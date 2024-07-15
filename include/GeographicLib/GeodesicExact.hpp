@@ -65,10 +65,11 @@ namespace GeographicLib {
    *
    * The algorithms are described in
    * - C. F. F. Karney,
-   *   <a href="https://arxiv.org/abs/2208.00492">
-   *   Geodesics on an arbitrary ellipsoid of revolution</a>, Aug. 2022;
-   *   preprint <a href="https://arxiv.org/abs/2208.00492">
-   *   arxiv:2208.00492</a>.
+   *   <a href="https://doi.org/10.1007/s00190-023-01813-2">
+   *   Geodesics on an arbitrary ellipsoid of revolution</a>,
+   *   J. Geodesy <b>98</b>, 4:1--14 (2024);
+   *   DOI: <a href="https://doi.org/10.1007/s00190-023-01813-2">
+   *   10.1007/s00190-023-01813-2</a>.
    * .
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesic problems.
