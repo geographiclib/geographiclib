@@ -5718,6 +5718,9 @@ Q[5]= + 6/121 * n^5
       + 1/121 * n^6;
 Q[6]= - 7/169 * n^6;
 \endverbatim
+The ratio \f$(Q(\phi_2) - Q(\phi_1))/\phi_{12}\f$ should be evaluated
+using \ref dividedclenshaw "divided differences".  This obviates the
+need for special treatment of the case \f$\phi_2 \approx \phi_1\f$.
 
 The formulation used in GRASS differs in three respects:
 - The overall multiplicative factor is \f$b^2\f$ instead of \f$c^2\f$.
