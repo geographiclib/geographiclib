@@ -3560,10 +3560,11 @@ GeodesicExact and GeodesicLineExact solve the geodesic problem using
 elliptic integrals.  The formulation of geodesic in terms of incomplete
 elliptic integrals is given in
  - C. F. F. Karney,
-   <a href="https://arxiv.org/abs/2208.00492">
-   Geodesics on an arbitrary ellipsoid of revolution</a>, Aug. 2022;
-   preprint <a href="https://arxiv.org/abs/2208.00492">
-   arxiv:2208.00492</a>.
+   <a href="https://doi.org/10.1007/s00190-023-01813-2">
+   Geodesics on an arbitrary ellipsoid of revolution</a>,
+   J. Geodesy <b>98</b>, 4:1--14 (2024);
+   DOI: <a href="https://doi.org/10.1007/s00190-023-01813-2">
+   10.1007/s00190-023-01813-2</a>.
  .
 
 The key relations used by GeographicLib are
