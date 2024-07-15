@@ -134,14 +134,14 @@ set default downloads for distrib-C++ on sourceforge
 
 post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
 
-VERSION=2.3
+VERSION=2.4
 
 Brew...
 
   brew update + brew upgrade
   cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
-  git checkout master; git pull?
-  edit geographiclib.rb
+  git checkout master; git pull
+  edit g/geographiclib.rb
   changing url (use github release tag) and shasum -a 256
 
   export HOMEBREW_NO_INSTALL_FROM_API=1
@@ -153,7 +153,7 @@ Brew...
   brew style geographiclib
 
   git checkout -b geographiclib/$VERSION
-  git add geographiclib.rb
+  git add g/geographiclib.rb
   git commit -m "geographiclib $VERSION"
   git push --set-upstream cffk geographiclib/$VERSION
 
@@ -162,15 +162,18 @@ Brew...
 conda-forge...
 
   geographiclib-cpp-feedstock
+  git pull
   edit README.md recipe/bld.bat recipe/build.sh recipe/meta.yaml
-  check build number in meta.yaml
+  reset build number in meta.yaml to 0
   needs patch file to turn off tests in signtest.cpp
-
+  next time add to build requirements in meta.yaml
+    - {{ stdlib("c") }}
   conda remove -y -n build --all
   conda create -y -n build
   conda activate build
   conda install -y conda-build conda-verify conda-forge-pinning
 
+  in top level directory...
   conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
   Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.tar.bz2
 
@@ -187,15 +190,14 @@ conda-forge...
   conda activate build
   conda install -y -c conda-forge conda-smithy
   conda smithy rerender
-  commit changes
+  commit changes with git commit -m "MNT: Re-rendered with conda-build...
   git push --set-upstream cffk v$VERSION
   conda deactivate
 
 vcpkg...
   git pull
   git checkout -b geographiclib/$VERSION
-  update ports/geographiclib
-
+  update ports/geographiclib (remove port-version if 0)
   ./vcpkg remove geographiclib
   ./vcpkg install 'geographiclib[tools]'
   binaries in installed/x64-linux/tools/geographiclib

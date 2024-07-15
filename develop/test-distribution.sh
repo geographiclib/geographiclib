@@ -36,10 +36,10 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.4
-SUFFIX=
+VERSION=2.5
+SUFFIX=-alpha
 DISTVERSION=$VERSION$SUFFIX
-BRANCH=main
+BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
     DEVELSOURCE=$HOME/geographiclib
@@ -488,9 +488,7 @@ git push --tags
 # update conda-forge
 #   url = git@github.com:conda-forge/geographiclib-cpp-feedstock
 #   conda build recipe
-# upload matlab packages
 # update binaries for cgi applications
-# trigger build on build-open
 EOF
 echo cat $TEMP/tasks.txt
 cat $TEMP/tasks.txt
