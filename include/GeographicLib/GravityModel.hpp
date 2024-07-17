@@ -159,6 +159,17 @@ namespace GeographicLib {
        **********************************************************************/
       ALL = CAP_ALL,
     };
+    
+    /**
+     * Move constructs a gravity model.
+     **********************************************************************/
+    GravityModel(GravityModel&&) = default;
+    
+    /**
+     * Move assigns a gravity model.
+     **********************************************************************/
+    GravityModel& operator=(GravityModel&&) = default;
+    
     /** \name Setting up the gravity model
      **********************************************************************/
     ///@{
