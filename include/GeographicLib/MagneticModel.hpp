@@ -93,12 +93,12 @@ namespace GeographicLib {
     // nor copy assignment
     MagneticModel& operator=(const MagneticModel&) = delete;
   public:
-    
+
     /**
      * Move constructs a magnetic model.
      **********************************************************************/
     MagneticModel(MagneticModel&&) = default;
-    
+
     /**
      * Move assigns a magnetic model.
      **********************************************************************/
