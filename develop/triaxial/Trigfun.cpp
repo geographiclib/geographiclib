@@ -328,7 +328,7 @@ namespace GeographicLib {
     for (; k < maxit ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure Trigfun::root"), false)
-           || GEOGRAPHICLIB_PANIC;) {
+           || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root");) {
       // This inverse problem uses lots of iterations
       //   20 60 -90 180 127.4974 24.6254 2.4377
       // Need to figure out why.

@@ -320,7 +320,6 @@ namespace GeographicLib {
   void TriaxialLine::Optimize() {
     _f.ComputeInverse();
   }
-
   TriaxialLine::fline::disttx
   TriaxialLine::fline::Hybrid(const fics& fic,
                               Angle bet2,

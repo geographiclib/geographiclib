@@ -659,7 +659,7 @@ namespace GeographicLib {
          cntn < maxcnt ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure Triaxial::findroot"), false)
-           || GEOGRAPHICLIB_PANIC;) {
+           || GEOGRAPHICLIB_PANIC("Convergence failure Triaxial::findroot");) {
       // These inverse problems use lots of iterations
       //  22  48  90   1 -48.5628 -5.7915 0.7706
       //  56 115 -89 179 113.5952 179.8512 1.6130

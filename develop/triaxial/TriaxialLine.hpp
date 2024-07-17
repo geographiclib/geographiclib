@@ -326,14 +326,14 @@ namespace GeographicLib {
       }
       return std::pair<real, real>(z, rint((x - z) / y));
     }
+    TriaxialLine(fline f, fline::fics fic,
+                 gline g, gline::gics gic);
 
   public:
     TriaxialLine(const Triaxial& t) : _t(t) {}
     TriaxialLine(const Triaxial& t,
                  Angle bet1, Angle omg1, Angle alp1);
     TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1);
-    TriaxialLine(fline f, fline::fics fic,
-                 gline g, gline::gics gic);
     void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
                   int* countn = nullptr, int* countb = nullptr) const;
     void Position(real s12, real& bet2, real& omg2, real& alp2,
@@ -355,6 +355,26 @@ namespace GeographicLib {
     void pos1(Angle& bet1, Angle& omg1, Angle& alp1) const;
     void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
     void Optimize();
+
+    real fbetm() const { return gamma() != 0 ?
+        fbet().HalfPeriod() * fbet().Slope() :
+        fbet().Max();
+    }
+    real fomgm() const { return gamma() != 0 ?
+        fomg().HalfPeriod() * fomg().Slope() :
+        fomg().Max();
+    }
+
+    real gbetm() const { return gamma() != 0 ?
+        gbet().HalfPeriod() * gbet().Slope() :
+        gbet().Max();
+    }
+    real gomgm() const { return gamma() != 0 ?
+        gomg().HalfPeriod() * gomg().Slope() :
+        gomg().Max();
+    }
+    real df() const { return _f.df; }
+    real deltashift() const { return _f.deltashift; }
   };
 
 } // namespace GeographicLib
