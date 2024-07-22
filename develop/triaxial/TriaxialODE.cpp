@@ -19,7 +19,8 @@ namespace GeographicLib {
 
   TriaxialODE::TriaxialODE(const Triaxial& t,
                            Triaxial::vec3 r1, Triaxial::vec3 v1,
-                           bool extended, bool interp, real eps)
+                           bool extended, bool interp,
+                           bool dense, real eps)
     : _t(t)
     , _b(t.b())
     , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(3)/4) : eps)
@@ -28,51 +29,59 @@ namespace GeographicLib {
     , _r1(r1)
     , _v1(v1)
     , _extended(extended)
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    , _interp(interp)
+    , _dense(dense)
+#else
+    , _interp(false && interp)
+    , _dense(false && dense)
+#endif
     , _dir(0)
     , _nsteps(0)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    , _step6(_eps, real(0), real(1), real(1), real(0), interp)
-    , _step10(_eps, real(0), real(1), real(1), real(0), interp)
-#else
+    , _dstep6(_eps, real(0), real(1), real(1), real(0), interp)
+    , _dstep10(_eps, real(0), real(1), real(1), real(0), interp)
+#endif
     , _step6(_eps, real(0))
     , _step10(_eps, real(0))
-#endif
   {
     _t.Norm(_r1, _v1);
-#if !GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    (void) interp;
-#endif
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1,
                            Angle alp1,
-                           bool extended, bool interp, real eps)
+                           bool extended, bool interp,
+                           bool dense, real eps)
     : _t(t)
     , _b(t.b())
     , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(3)/4) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
     , _extended(extended)
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    , _interp(interp)
+    , _dense(dense)
+#else
+    , _interp(false && interp)
+    , _dense(false && dense)
+#endif
     , _dir(0)
     , _nsteps(0)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    , _step6(_eps, real(0), real(1), real(1), real(0), interp)
-    , _step10(_eps, real(0), real(1), real(1), real(0), interp)
-#else
+    , _dstep6(_eps, real(0), real(1), real(1), real(0), interp)
+    , _dstep10(_eps, real(0), real(1), real(1), real(0), interp)
+#endif
     , _step6(_eps, real(0))
     , _step10(_eps, real(0))
-#endif
   {
     _t.elliptocart2(bet1, omg1, alp1, _r1, _v1);
-#if !GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    (void) interp;
-#endif
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
-                           bool extended, bool interp, real eps)
+                           bool extended, bool interp,
+                           bool dense, real eps)
     : TriaxialODE(t, Angle(bet1), Angle(omg1), Angle(alp1),
-                  extended, interp, eps)
+                  extended, interp, dense, eps)
   {}
 
   void TriaxialODE::Norm(vec6& y) const {
@@ -131,28 +140,32 @@ namespace GeographicLib {
       _y6 = vec6{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
         _dir * _v1[0], _dir * _v1[1], _dir * _v1[2]};
       _s = 0;
+      if (_dense) {
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-      _step6.initialize(_y6, _s, 1/real(4));
-      (void) _step6.do_step(fun);
-      ++_nsteps;
+        _dstep6.initialize(_y6, _s, 1/real(4));
+        (void) _dstep6.do_step(fun);
+        ++_nsteps;
 #endif
+      }
     }
     s12 *= _dir;
+    if (_dense) {
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    if (s12 < _step6.previous_time())
-      return false;
-    while (_step6.current_time() < s12) {
-      (void) _step6.do_step(fun);
-      ++_nsteps;
-    }
-    _step6.calc_state(s12, _y6);
-#else
-    if (s12 < _s)
-      return false;
-    else if (s12 > _s)
-      _nsteps += integrate_adaptive(_step6, fun, _y6, _s, s12,
-                                    fmax(s12 - _s, 1/real(4)));
+      if (s12 < _dstep6.previous_time())
+        return false;
+      while (_dstep6.current_time() < s12) {
+        (void) _dstep6.do_step(fun);
+        ++_nsteps;
+      }
+      _dstep6.calc_state(s12, _y6);
 #endif
+    } else {
+      if (s12 < _s)
+        return false;
+      else if (s12 > _s)
+        _nsteps += integrate_adaptive(_step6, fun, _y6, _s, s12,
+                                      fmax(s12 - _s, 1/real(4)));
+    }
     _s = s12;
     Norm(_y6);
     r2 = {_b * _y6[0], _b * _y6[1], _b * _y6[2]};
@@ -178,28 +191,32 @@ namespace GeographicLib {
         _dir * _v1[0], _dir * _v1[1], _dir * _v1[2],
         0, 1, 1, 0};
       _s = 0;
+      if (_dense) {
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-      _step10.initialize(_y10, _s, 1/real(4));
-      (void) _step10.do_step(fun);
-      ++_nsteps;
+        _dstep10.initialize(_y10, _s, 1/real(4));
+        (void) _dstep10.do_step(fun);
+        ++_nsteps;
+      }
 #endif
     }
     s12 *= _dir;
+    if (_dense) {
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    if (s12 < _step10.previous_time())
-      return false;
-    while (_step10.current_time() < s12) {
-      (void) _step10.do_step(fun);
-      ++_nsteps;
-    }
-    _step10.calc_state(s12, _y10);
-#else
-    if (s12 < _s)
-      return false;
-    else if (s12 > _s)
-      _nsteps += integrate_adaptive(_step10, fun, _y10, _s, s12,
-                                    fmax(s12 - _s, 1/real(4)));
+      if (s12 < _dstep10.previous_time())
+        return false;
+      while (_dstep10.current_time() < s12) {
+        (void) _dstep10.do_step(fun);
+        ++_nsteps;
+      }
+      _dstep10.calc_state(s12, _y10);
 #endif
+    } else {
+      if (s12 < _s)
+        return false;
+      else if (s12 > _s)
+        _nsteps += integrate_adaptive(_step10, fun, _y10, _s, s12,
+                                      fmax(s12 - _s, 1/real(4)));
+    }
     Norm(_y10);
     r2 = {_b * _y10[0], _b * _y10[1], _b * _y10[2]};
     v2 = {_dir * _y10[3], _dir * _y10[4], _dir * _y10[5]};

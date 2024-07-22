@@ -387,6 +387,7 @@ int main(int argc, const char* const argv[]) {
             if (cart) {
               TriaxialODE l(t, bet2, omg2, alp2, false);
               l.Position(-s12, bet1a, omg1a, alp1a);
+              *output << l.NSteps() << " ";
             } else
               t.Direct(bet2, omg2, alp2, -s12, bet1a, omg1a, alp1a);
             std::pair<real, real> diff =
@@ -395,9 +396,29 @@ int main(int argc, const char* const argv[]) {
                     << Utility::str(ceil(diff.second / errscale)) << eol;
           } else {
             ang bet2a, omg2a, alp2a;
+            // forward bench timings
+
+            // double
+            // Jacobi: (60+18.91)/0.5e6*1e3 0.15782
+            // dense, interp: (4*60+39.54)/0.5e3 0.55908
+            //  10*eps: (4*60+15.96)/0.5e3 0.51192
+            //  eps/10: (5*60+51.12)/0.5e3 0.70224
+            // dense, !interp: (60+38.24)/0.5e3 0.19648
+            // !dense: (60+9.63)/0.5e3 0.13926
+            //  eps/10: (60+18.14)/0.5e3 0.15628
+            //  eps/100: (60+28.17)/0.5e3 0.17634
+
+            // long double
+            // Jacobi: (3*60+50.73)/0.5e3 0.46146
+            // dense, interp: (10*60+55.83)/0.5e3 1.31166
             if (cart) {
-              TriaxialODE l(t, bet1, omg1, alp1, false);
+              using std::pow;
+              real eps = pow(std::numeric_limits<real>::epsilon(), real(3)/4);
+              // t,bet,omg1,alp1, extended=t, interp=t, dense=t, eps=0
+              eps = 0;
+              TriaxialODE l(t, bet1, omg1, alp1, true, true, true, eps);
               l.Position(s12, bet2a, omg2a, alp2a);
+              *output << l.NSteps() << " ";
             } else
               t.Direct(bet1, omg1, alp1, s12, bet2a, omg2a, alp2a);
             std::pair<real, real> diff =

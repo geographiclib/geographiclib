@@ -26,9 +26,8 @@
 #include <boost/numeric/odeint.hpp>
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
-#else
-#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #endif
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 
 namespace GeographicLib {
 
@@ -41,21 +40,24 @@ namespace GeographicLib {
     typedef Angle ang;
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     typedef
-    boost::numeric::odeint::bulirsch_stoer_dense_out<vec6, real> step6;
+    boost::numeric::odeint::bulirsch_stoer_dense_out<vec6, real> dstep6;
     typedef
-    boost::numeric::odeint::bulirsch_stoer_dense_out<vec10, real> step10;
-#else
+    boost::numeric::odeint::bulirsch_stoer_dense_out<vec10, real> dstep10;
+#endif
     typedef
     boost::numeric::odeint::bulirsch_stoer<vec6, real> step6;
     typedef
     boost::numeric::odeint::bulirsch_stoer<vec10, real> step10;
-#endif
     Triaxial _t;
     real _b, _eps;
     vec3 _axesn, _axes2n, _r1, _v1;
-    bool _extended;
+    bool _extended, _interp, _dense;
     int _dir;
     long _nsteps;
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    dstep6 _dstep6;
+    dstep10 _dstep10;
+#endif
     step6 _step6;
     step10 _step10;
     real _s;
@@ -72,11 +74,14 @@ namespace GeographicLib {
 
   public:
     TriaxialODE(const Triaxial& t, vec3 r1, vec3 v1,
-                bool extended = true, bool interp = true, real eps = 0);
+                bool extended = true, bool interp = true,
+                bool dense = true, real eps = 0);
     TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1,
-                bool extended = true, bool interp = true, real eps = 0);
+                bool extended = true, bool interp = true,
+                bool dense = true, real eps = 0);
     TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
-                bool extended = true, bool interp = true, real eps = 0);
+                bool extended = true, bool interp = true,
+                bool dense = true, real eps = 0);
     bool Position(real s12, vec3& r2, vec3& v2);
     bool Position(real s12, vec3& r2, vec3& v2,
                   real& m12, real& M12, real& M21);
