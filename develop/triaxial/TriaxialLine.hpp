@@ -26,13 +26,13 @@ namespace GeographicLib {
 
     class ffun {
     private:
-      real _kap, _kapp, _eps, _mu;
-      bool _tx;
+      real _kap, _kapp, _eps, _mu, _sqrtkapp;
+      bool _tx, _newumb;
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _tol;
       int _nmax;
-      Trigfun _chiinv;
+      Trigfun _dfinv;
       int _countn, _countb;
       real _max;
       bool _invp;
@@ -42,6 +42,8 @@ namespace GeographicLib {
       // mu == 0
       static real dfp(real c, real kap, real kapp, real eps);
       static real dfvp(real cn, real dn, real kap, real kapp, real eps);
+      static real newdfp(real c, real kap, real kapp, real eps);
+      static real newdfvp(real cn, real dn, real kap, real kapp, real eps);
       // mu < 0
       static real fpsip(real s, real c, real kap, real kapp,
                         real eps, real mu);
@@ -49,34 +51,32 @@ namespace GeographicLib {
       real root(real z, real x0, int* countn, int* countb) const;
     public:
       ffun() {}
-      ffun(real kap, real kapp, real eps, real mu, real epspow = 1,
-           real nmaxmult = 0);
-      ffun(real kap, real kapp, real eps, real mu, bool tx,
+      ffun(real kap, real kapp, real eps, real mu, bool newumb,
+           real epspow = 1, real nmaxmult = 0);
+      ffun(real kap, real kapp, real eps, real mu, bool tx, bool newumb,
            real epsow, real nmaxmult);
-      static real lam(real x) {
-        using std::tan; using std::asinh; using std::fabs;
-        // A consistent large value for x near pi/2.  Also deals with the issue
-        // that tan(pi/2) may be negative, e.g., for long doubles.
-        return fabs(x) < Math::pi()/2 ? asinh(tan(x)) :
-          (x < 0 ? -1 : 1) * Triaxial::BigValue();
-      }
-      static real gd(real x) {
-        using std::atan; using std::sinh;
-        return atan(sinh(x));
-      }
       real operator()(real u) const {
         if (_mu == 0) {
-          real phi = gd(u);
+          real phi = gd(u, _newumb ? _sqrtkapp : 1);
           return u - _fun(_tx ? _ell.F(phi) : phi);
         } else
           return _fun(u);
       }
       real deriv(real u) const {
-        using std::cosh; using std::sqrt;
+        using std::cosh; using std::sinh; using std::sqrt;
         if (_mu == 0) {
-          real phi = gd(u), sch = 1/cosh(u);
+          real phi = gd(u, _newumb ? _sqrtkapp : 1),
+            // sch = dphi/du
+            sch = _newumb ?
+            _sqrtkapp * cosh(u) / (_kapp + Math::sq(sinh(u))) :
+            1/cosh(u);
+          // for _tx and _newumb dv/du = 1/sqrt(kapp+sinh(u)^2)
           return 1 - _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
-            ( _tx ? sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch)) : 1);
+            ( _tx ? (_newumb ? 
+                     // Use _ell.k2() == _kap here
+                     _sqrtkapp * cosh(u) / sqrt(_kapp + Math::sq(sinh(u))) :
+                     sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch))) :
+              1);
         } else
           return _fun.deriv(u);
       }
@@ -92,14 +92,16 @@ namespace GeographicLib {
       }
       void ComputeInverse();
       real fwd(real phi) const {
-        return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);
+        return _mu == 0 ? lam(phi, _newumb ? _sqrtkapp : 1) :
+          (_tx ? _ell.F(phi) : phi);
       }
       real rev(real u) const {
-        return _mu == 0 ? gd(u) : (_tx ? _ell.am(u) : u);
+        return _mu == 0 ? gd(u, _newumb ? _sqrtkapp : 1) :
+          (_tx ? _ell.am(u) : u);
       }
       int NCoeffs() const { return _fun.NCoeffs(); }
       int NCoeffsInv() const {
-        return _mu == 0 ? _chiinv.NCoeffs() : _fun.NCoeffsInv();
+        return _mu == 0 ? _dfinv.NCoeffs() : _fun.NCoeffsInv();
       }
       std::pair<int, int> InvCounts() const {
         return _mu == 0 ? std::pair<int, int>(_countn, _countb) :
@@ -115,12 +117,25 @@ namespace GeographicLib {
       real Max() const {
         return _max;
       }
+      void DumpTable() const {
+        int ndiv = 5;
+        for (int i = -3*ndiv; i <= 3*ndiv; ++i) {
+          real u = i/real(ndiv),
+            f = (*this)(u),
+            u0 = inv0(f),
+            u1 = inv1(f),
+            u2 = inv2(f);
+          std::cout << i << " " << u << " " << f << " 0: "
+                    << u0-u << " 1: " << u1-u << " 2: "
+                    << u2-u << "\n";
+        }
+      }
     };
 
     class gfun {
     private:
-      real _kap, _kapp, _eps, _mu;
-      bool _tx;
+      real _kap, _kapp, _eps, _mu, _sqrtkapp;
+      bool _tx, _newumb;
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _max;
@@ -134,6 +149,7 @@ namespace GeographicLib {
       static real g0p(real c, real kap, real kapp, real eps);
       // static real gf0p(real c, real kap, real kapp);
       static real gf0up(real u, real kap, real kapp);
+      static real gf0upalt(real u, real kap, real kapp);
       static real g0vp(real cn, real kap, real /*kapp*/, real eps);
       // _mu < 0
       static real gpsip(real s, real c, real kap, real kapp,
@@ -144,21 +160,30 @@ namespace GeographicLib {
       static real gfvp(real cn, real kap, real mu);
     public:
       gfun() {}
-      gfun(real kap, real kapp, real eps, real mu);
-      gfun(real kap, real kapp, real eps, real mu, bool tx);
+      gfun(real kap, real kapp, real eps, real mu, bool newumb);
+      gfun(real kap, real kapp, real eps, real mu, bool tx, bool newumb);
       real operator()(real u) const {
         if (_mu == 0) {
-          real phi = ffun::gd(u);
+          real phi = gd(u, _newumb ? _sqrtkapp : 1);
           return _fun(_tx ? _ell.F(phi) : phi);
         } else
           return _fun(u);
       }
+
       real deriv(real u) const {
-        using std::cosh; using std::sqrt;
+        using std::cosh; using std::sinh; using std::sqrt;
         if (_mu == 0) {
-          real phi = ffun::gd(u), sch = 1/cosh(u);
+          real phi = gd(u, _newumb ? _sqrtkapp : 1),
+            // sch = dphi/du
+            sch = _newumb ?
+            _sqrtkapp * cosh(u) / (_kapp + Math::sq(sinh(u))) :
+            1/cosh(u);
           return _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
-            ( _tx ? sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch)) : 1);
+            ( _tx ? (_newumb ? 
+                     // Use _ell.k2() == _kap here
+                     _sqrtkapp * cosh(u) / sqrt(_kapp + Math::sq(sinh(u))) :
+                     sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch))) :
+              1);
         } else
           return _fun.deriv(u);
       }
@@ -294,22 +319,43 @@ namespace GeographicLib {
       real z = mult * Triaxial::BigValue();
       return fmax(-z, fmin(z, x));
     }
-    static real lamang0(Angle x) {
+    static real lamang0(Angle x, real mult = 1) {
       // lam(x) when x is an ang -- no clamping
       using std::asinh; using std::fabs;
-      return asinh(x.t());
+      return asinh(mult * x.t());
     }
-    static real lamang(Angle x) {
+    static real lamang(Angle x, real mult = 1) {
       // lam(x) when x is an ang -- with clamping
       // A consistent large value for x near pi/2.
-      return clamp(lamang0(x));
+      return clamp(lamang0(x, mult));
+    }
+    static real lam(real x, real mult = 1) {
+      using std::tan; using std::asinh; using std::fabs;
+      // A consistent large value for x near pi/2.  Also deals with the issue
+      // that tan(pi/2) may be negative, e.g., for long doubles.
+      return fabs(x) < Math::pi()/2 ? asinh(mult * tan(x)) :
+        (x < 0 ? -1 : 1) * Triaxial::BigValue();
+    }
+    static real gd(real x, real mult = 1) {
+      using std::atan; using std::sinh;
+      return atan(sinh(x) / mult);
+    }
+    static ang anglam(real u, real mult = 1) {
+      using std::sinh;
+      return Angle(sinh(u), mult, 0);
+    }
+    static real mcosh(real u, real mult = 1) {
+      using std::cosh; using std::sinh; using std::hypot;
+      return mult == 1 ? cosh(u) : hypot(sinh(u), mult) / mult;
     }
     static real EllipticThresh() {
       static real thresh = 1/real(8);
       return thresh;
     }
+  public:
     const ffun& fbet() const { return _f.fbet(); }
     const ffun& fomg() const { return _f.fomg(); }
+  private:
     const gfun& gbet() const { return _g.gbet(); }
     const gfun& gomg() const { return _g.gomg(); }
 
