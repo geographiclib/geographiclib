@@ -47,7 +47,7 @@ namespace GeographicLib {
       // mu < 0
       static real fpsip(real s, real c, real kap, real kapp,
                         real eps, real mu);
-      static real fvp(real dn, real kap, real kapp, real eps, real /* mu */);
+      static real fvp(real dn, real kap, real kapp, real eps, real mu);
       real root(real z, real x0, int* countn, int* countb) const;
     public:
       ffun() {}
@@ -72,7 +72,7 @@ namespace GeographicLib {
             1/cosh(u);
           // for _tx and _newumb dv/du = 1/sqrt(kapp+sinh(u)^2)
           return 1 - _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
-            ( _tx ? (_newumb ? 
+            ( _tx ? (_newumb ?
                      // Use _ell.k2() == _kap here
                      _sqrtkapp * cosh(u) / sqrt(_kapp + Math::sq(sinh(u))) :
                      sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch))) :
@@ -135,7 +135,7 @@ namespace GeographicLib {
     class gfun {
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkapp;
-      bool _tx, _newumb;
+      bool _tx, _newumb, _gdag;
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _max;
@@ -145,12 +145,18 @@ namespace GeographicLib {
       static real gup(real cn, real dn, real kap, real kapp,
                       real eps, real mu);
       static real gfup(real cn, real kap, real mu);
+      // gdagger = g - mu * f variants
+      static real gdagphip(real c, real kap, real kapp, real eps, real mu);
+      static real gfdagphip(real c, real kap, real mu);
+      static real gdagup(real cn, real dn, real kap, real kapp,
+                         real eps, real mu);
+      static real gfdagup(real cn, real kap, real mu);
       // _mu == 0
       static real g0p(real c, real kap, real kapp, real eps);
       // static real gf0p(real c, real kap, real kapp);
       static real gf0up(real u, real kap, real kapp);
       static real gf0upalt(real u, real kap, real kapp);
-      static real g0vp(real cn, real kap, real /*kapp*/, real eps);
+      static real g0vp(real cn, real kap, real kapp, real eps);
       // _mu < 0
       static real gpsip(real s, real c, real kap, real kapp,
                         real eps, real mu);
@@ -158,10 +164,18 @@ namespace GeographicLib {
       static real gvp(real cn, real dn, real kap, real kapp,
                       real eps, real mu);
       static real gfvp(real cn, real kap, real mu);
+      // gdagger = g - mu * f variants
+      static real gdagpsip(real s, real c, real kap, real kapp,
+                           real eps, real mu);
+      static real gfdagpsip(real s, real c, real kap, real mu);
+      static real gdagvp(real cn, real dn, real kap, real kapp,
+                         real eps, real mu);
+      static real gfdagvp(real dn, real kap, real mu);
     public:
       gfun() {}
-      gfun(real kap, real kapp, real eps, real mu, bool newumb);
-      gfun(real kap, real kapp, real eps, real mu, bool tx, bool newumb);
+      gfun(real kap, real kapp, real eps, real mu, bool newumb, bool gdag);
+      gfun(real kap, real kapp, real eps, real mu, bool tx,
+           bool newumb, bool gdag);
       real operator()(real u) const {
         if (_mu == 0) {
           real phi = gd(u, _newumb ? _sqrtkapp : 1);
@@ -179,7 +193,7 @@ namespace GeographicLib {
             _sqrtkapp * cosh(u) / (_kapp + Math::sq(sinh(u))) :
             1/cosh(u);
           return _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
-            ( _tx ? (_newumb ? 
+            ( _tx ? (_newumb ?
                      // Use _ell.k2() == _kap here
                      _sqrtkapp * cosh(u) / sqrt(_kapp + Math::sq(sinh(u))) :
                      sqrt(_ell.kp2() + _ell.k2() * Math::sq(sch))) :

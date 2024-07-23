@@ -304,7 +304,7 @@ namespace GeographicLib {
     int k = 0, maxit = 150, b = 0;
     real p = Math::pi()/2 * 0;
     real xa0 = xa, x00 = x0, xb0 = xb;
-    if (0) {
+    if (debug) {
       /*
       xa = xa-1e-10;
       xb = xb+1e-10;
@@ -362,10 +362,8 @@ namespace GeographicLib {
         dx = - v/vp;
       if (debug)
         cout <<"XX " << k << " " << xa-p << " " << x-p << " " << xb-p << " "
-             << dx << " " << x + dx-p << " " << v << endl;
-      // FIX
-      //      if (!(fabs(v) > vtol0))
-      if (fabs(v) <= vtol0) {
+             << dx << " " << x + dx-p << " " << v << " " << vp << endl;
+      if (!(fabs(v) > vtol0)) {
         if (debug) cout << "break " << k << endl;
         break;
       } else if (s*v > 0)

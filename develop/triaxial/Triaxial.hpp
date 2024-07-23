@@ -54,6 +54,7 @@ namespace GeographicLib {
     real _e2, _k2, _kp2, _k, _kp;
     bool _umbalt,               // how coordinates wrap with umbilical lines
       _newumb,                  // new formulation for umblilical lines
+      _gdag,                    // use gdag = g - mu * f
       _debug;                   // print out diagnostics
     static real BigValue() {
       using std::log;
@@ -87,6 +88,8 @@ namespace GeographicLib {
     void umbalt(bool numbalt) { _umbalt = numbalt; }
     bool newumb() const { return _newumb; }
     void newumb(bool nnewumb) { _newumb = nnewumb; }
+    bool gdag() const { return _gdag; }
+    void gdag(bool ngdag) { _gdag = ngdag; }
     void debug(bool ndebug) { _debug = ndebug; }
     static bool AngNorm(Angle& bet, Angle& omg, Angle& alp,
                         bool alt = false) {

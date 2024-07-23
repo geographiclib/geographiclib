@@ -30,6 +30,7 @@ namespace GeographicLib {
     , _axes({_a, _b, _c})
     , _umbalt(false)
     , _newumb(false)
+    , _gdag(false)
     , _debug(false)
   {
     real s = (_a - _c) * (_a + _c);
@@ -61,6 +62,7 @@ namespace GeographicLib {
     , _kp(sqrt(_kp2))
     , _umbalt(false)
     , _newumb(false)
+    , _gdag(false)
     , _debug(false)
   {
     _a = _b * sqrt(1 + _e2 * _kp2);
