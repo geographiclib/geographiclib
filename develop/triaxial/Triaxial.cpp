@@ -29,9 +29,10 @@ namespace GeographicLib {
     , _c(c)
     , _axes({_a, _b, _c})
     , _umbalt(false)
-    , _newumb(false)
-    , _gdag(false)
+    , _newumb(true)
+    , _gdag(true)
     , _debug(false)
+    , _ellipthresh(1/real(8))
   {
     real s = (_a - _c) * (_a + _c);
     _e2 = s / Math::sq(_b);
@@ -61,9 +62,10 @@ namespace GeographicLib {
     , _k(sqrt(_k2))
     , _kp(sqrt(_kp2))
     , _umbalt(false)
-    , _newumb(false)
-    , _gdag(false)
+    , _newumb(true)
+    , _gdag(true)
     , _debug(false)
+    , _ellipthresh(1/real(8))
   {
     _a = _b * sqrt(1 + _e2 * _kp2);
     _c = _b * sqrt(1 - _e2 * _k2);
@@ -742,7 +744,8 @@ namespace GeographicLib {
       betdiff = -2 * bet.c() * bet.s() * _k2 * Math::sq(alp.s()),
       omgdiff = -2 * omg.c() * omg.s() * _kp2 * Math::sq(alp.c()),
       maxdiff = fmax( fabs(alpdiff), fmax( fabs(betdiff), fabs(omgdiff) ) );
-    // cout << "GAMDIFF " << gam/ numeric_limits<real>::epsilon() << " " << maxdiff << "\n";
+    // cout << "GAMDIFF " << gam/ numeric_limits<real>::epsilon() << " "
+    //      << maxdiff << "\n";
     if (fabs(gam) <= 2 * maxdiff * numeric_limits<real>::epsilon())
       // Set gam = 0 if a change of alp, bet, or omg by epsilon would include
       // gam = 0.

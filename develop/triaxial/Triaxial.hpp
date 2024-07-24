@@ -56,6 +56,8 @@ namespace GeographicLib {
       _newumb,                  // new formulation for umblilical lines
       _gdag,                    // use gdag = g - mu * f
       _debug;                   // print out diagnostics
+    // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
+    real _ellipthresh;
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
@@ -87,10 +89,12 @@ namespace GeographicLib {
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) { _umbalt = numbalt; }
     bool newumb() const { return _newumb; }
-    void newumb(bool nnewumb) { _newumb = nnewumb; }
+    void newumb(bool newumb) { _newumb = newumb; }
     bool gdag() const { return _gdag; }
-    void gdag(bool ngdag) { _gdag = ngdag; }
-    void debug(bool ndebug) { _debug = ndebug; }
+    void gdag(bool gdag) { _gdag = gdag; }
+    void debug(bool debug) { _debug = debug; }
+    real ellipthresh() const { return _ellipthresh; }
+    void ellipthresh(real ellipthresh) { _ellipthresh = ellipthresh; }
     static bool AngNorm(Angle& bet, Angle& omg, Angle& alp,
                         bool alt = false) {
       using std::signbit;

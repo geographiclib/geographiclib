@@ -51,10 +51,8 @@ namespace GeographicLib {
       real root(real z, real x0, int* countn, int* countb) const;
     public:
       ffun() {}
-      ffun(real kap, real kapp, real eps, real mu, bool newumb,
-           real epspow = 1, real nmaxmult = 0);
-      ffun(real kap, real kapp, real eps, real mu, bool tx, bool newumb,
-           real epsow, real nmaxmult);
+      ffun(real kap, real kapp, real eps, real mu, const Triaxial& t,
+           real epsow = 1, real nmaxmult = 0);
       real operator()(real u) const {
         if (_mu == 0) {
           real phi = gd(u, _newumb ? _sqrtkapp : 1);
@@ -173,9 +171,7 @@ namespace GeographicLib {
       static real gfdagvp(real dn, real kap, real mu);
     public:
       gfun() {}
-      gfun(real kap, real kapp, real eps, real mu, bool newumb, bool gdag);
-      gfun(real kap, real kapp, real eps, real mu, bool tx,
-           bool newumb, bool gdag);
+      gfun(real kap, real kapp, real eps, real mu, const Triaxial& t);
       real operator()(real u) const {
         if (_mu == 0) {
           real phi = gd(u, _newumb ? _sqrtkapp : 1);
@@ -361,10 +357,6 @@ namespace GeographicLib {
     static real mcosh(real u, real mult = 1) {
       using std::cosh; using std::sinh; using std::hypot;
       return mult == 1 ? cosh(u) : hypot(sinh(u), mult) / mult;
-    }
-    static real EllipticThresh() {
-      static real thresh = 1/real(8);
-      return thresh;
     }
   public:
     const ffun& fbet() const { return _f.fbet(); }

@@ -363,10 +363,8 @@ namespace GeographicLib {
                              real epspow, real nmaxmult)
     : _t(t)
     , _gm(gam)
-    , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, _t._newumb,
-            epspow, nmaxmult)
-    , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, _t._newumb,
-            epspow, nmaxmult)
+    , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, t, epspow, nmaxmult)
+    , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, t, epspow, nmaxmult)
     , _invp(false)
     {
       df = _gm.gamma == 0 ? _fbet.Max() - _fomg.Max() : 0;
@@ -385,8 +383,8 @@ namespace GeographicLib {
   TriaxialLine::gline::gline(const Triaxial& t, const Triaxial::gamblk& gam)
     : _t(t)
     , _gm(gam)
-    , _gbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, _t._newumb, _t._gdag)
-    , _gomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, _t._newumb, _t._gdag)
+    , _gbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, _t)
+    , _gomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, _t)
     , s0(_gm.gamma == 0 ? _gbet.Max() + _gomg.Max() : 0)
   {}
 
@@ -610,95 +608,89 @@ namespace GeographicLib {
   }
 
   TriaxialLine::ffun::ffun(real kap, real kapp, real eps, real mu,
-                           bool newumb, real epspow, real nmaxmult)
-    : ffun(kap, kapp, eps, mu,
-               (mu > 0 ? mu / (kap + mu) :
-                (mu < 0 ? -mu / kap :
-                 kapp)) < EllipticThresh(), newumb, epspow, nmaxmult)
-  {}
-
-  TriaxialLine::ffun::ffun(real kap, real kapp, real eps, real mu, bool tx,
-                           bool newumb, real epspow, real nmaxmult)
+                           const Triaxial& t, real epspow, real nmaxmult)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    , _tx(tx)
-    , _newumb(newumb)
+    , _newumb(t._newumb)
     , _tol(pow(numeric_limits<real>::epsilon(), epspow))
     , _invp(false)
   {
-    real k2 = 0, kp2 = 1;
-    if (_tx) {
-      k2 = _mu > 0 ? _kap / (_kap + _mu) :
-        (_mu < 0 ? (_kap + _mu) / _kap :
-         _kap);                    // _mu == 0
-      kp2 = _mu > 0 ? _mu / (_kap + _mu) :
-        (_mu < 0 ? -_mu / _kap :
-         _kapp);                // _mu == 0
-    }
-    _ell = EllipticFunction(k2, 0, kp2, 1);
     if (_mu > 0) {
-      _fun = _tx ?
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp,
-                    eps = _eps, mu = _mu, ell = _ell]
-                   (real u) -> real
-                   { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
-                     return fup(cn, kap, kapp, eps, mu); },
-                   _ell.K(), false, epspow, nmaxmult) :
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                   (real phi) -> real
-                   { return fphip(cos(phi), kap, kapp, eps, mu); },
-                   Math::pi()/2, false, epspow, nmaxmult);
+      _tx = _mu / (_kap + _mu) < t._ellipthresh;
+      if (_tx) {
+        _ell = EllipticFunction(_kap / (_kap + _mu), 0, _mu / (_kap + _mu), 1);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp,
+                           eps = _eps, mu = _mu, ell = _ell]
+                          (real u) -> real
+                          { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                            return fup(cn, kap, kapp, eps, mu); },
+                          _ell.K(), false, epspow, nmaxmult);
+      } else
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                          (real phi) -> real
+                          { return fphip(cos(phi), kap, kapp, eps, mu); },
+                          Math::pi()/2, false, epspow, nmaxmult);
     } else if (_mu < 0) {
-      _fun = _tx ?
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp,
-                    eps = _eps, mu = _mu, ell = _ell]
-                   (real v) -> real
-                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                     return fvp(dn, kap, kapp, eps, mu); },
-                   _ell.K(), false, epspow, nmaxmult) :
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                   (real psi) -> real
-                   { return fpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
-                   Math::pi()/2);
-    } else {                    // _mu == 0
+      _tx = -_mu / _kap < t._ellipthresh;
+      if (_tx) {
+        _ell = EllipticFunction((_kap + _mu) / _kap, 0, -_mu / _kap, 1);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp,
+                           eps = _eps, mu = _mu, ell = _ell]
+                          (real v) -> real
+                          { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                            return fvp(dn, kap, kapp, eps, mu); },
+                          _ell.K(), false, epspow, nmaxmult);
+      } else
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                          (real psi) -> real
+                          { return fpsip(sin(psi), cos(psi),
+                                         kap, kapp, eps, mu); },
+                          Math::pi()/2);
+    } else if (_mu == 0) {
+      _tx = _kapp < t._ellipthresh;
       // N.B. Don't compute the inverse of _fun so not really necessary to
       // supply epspow and nmaxmult args to TrigfunExt.
-      _fun = _newumb ?
-        (_tx ?
-         TrigfunExt(
-                    [kap = _kap, kapp = _kapp,
-                     eps = _eps, ell = _ell]
-                    (real v) -> real
-                    { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                      return newdfvp(cn, dn, kap, kapp, eps); },
-                    2 * _ell.K(), true, epspow, nmaxmult) :
-         TrigfunExt(
-                    [kap = _kap, kapp = _kapp, eps = _eps]
-                    (real phi) -> real
-                    { return newdfp(cos(phi), kap, kapp, eps); },
-                    Math::pi(), true, epspow, nmaxmult)) :
-        (_tx ?
-         TrigfunExt(
-                    [kap = _kap, kapp = _kapp,
-                     eps = _eps, ell = _ell]
-                    (real v) -> real
-                    { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                      return dfvp(cn, dn, kap, kapp, eps); },
-                    2 * _ell.K(), true, epspow, nmaxmult) :
-         TrigfunExt(
-                    [kap = _kap, kapp = _kapp, eps = _eps]
-                    (real phi) -> real
-                    { return dfp(cos(phi), kap, kapp, eps); },
-                    Math::pi(), true, epspow, nmaxmult));
+      if (_tx) {
+        _ell = EllipticFunction(_kap, 0, _kapp, 1);
+        _fun = _newumb ?
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp,
+                      eps = _eps, ell = _ell]
+                     (real v) -> real
+                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                       return newdfvp(cn, dn, kap, kapp, eps); },
+                     2 * _ell.K(), true, epspow, nmaxmult) :
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp,
+                      eps = _eps, ell = _ell]
+                     (real v) -> real
+                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                       return dfvp(cn, dn, kap, kapp, eps); },
+                     2 * _ell.K(), true, epspow, nmaxmult);
+      } else
+        _fun = _newumb ?
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp, eps = _eps]
+                     (real phi) -> real
+                     { return newdfp(cos(phi), kap, kapp, eps); },
+                     Math::pi(), true, epspow, nmaxmult) :
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp, eps = _eps]
+                     (real phi) -> real
+                     { return dfp(cos(phi), kap, kapp, eps); },
+                     Math::pi(), true, epspow, nmaxmult);
+    } else {
+      // _mu == NaN
     }
     _nmax = nmaxmult ? int(ceil(nmaxmult * _fun.NCoeffs())) : 1 << 16;
+    // N.B. _max < 0 for _mu == 0 && _newumb && eps < 0
     _max = _mu == 0 ?
       _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max();
   }
@@ -792,105 +784,97 @@ namespace GeographicLib {
   }
 
   TriaxialLine::gfun::gfun(real kap, real kapp, real eps, real mu,
-                           bool newumb, bool gdag)
-    : gfun(kap, kapp, eps, mu,
-               (mu > 0 ? mu / (kap + mu) :
-                (mu < 0 ? -mu / kap :
-                 kapp)) < EllipticThresh(),
-           newumb, gdag)
-  {}
-
-  TriaxialLine::gfun::gfun(real kap, real kapp, real eps, real mu,
-                           bool tx, bool newumb, bool gdag)
+                           const Triaxial& t)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    , _tx(tx)
-    , _newumb(newumb)
-    , _gdag(gdag)
+    , _newumb(t._newumb)
+    , _gdag(t._gdag)
   {
-    real k2 = 0, kp2 = 1;
-    if (_tx) {
-      k2 = _mu > 0 ? _kap / (_kap + _mu) :
-        (_mu < 0 ? (_kap + _mu) / _kap :
-         _kap);                    // _mu == 0
-      kp2 = _mu > 0 ? _mu / (_kap + _mu) :
-        (_mu < 0 ? -_mu / _kap :
-         _kapp);                // _mu == 0
-    }
-    _ell = EllipticFunction(k2, 0, kp2, 1);
-    if (_mu > 0 && _gdag) {
-      _fun = _tx ?
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp,
-                    eps = _eps, mu = _mu, ell = _ell]
-                   (real u) -> real
-                   { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
-                     return gdagup(cn, dn, kap, kapp, eps, mu); },
-                   _ell.K()) :
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                   (real phi) -> real
-                   { return gdagphip(cos(phi), kap, kapp, eps, mu); },
-                   Math::pi()/2);
-    } else if (_mu > 0) {
-      _fun = _tx ?
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp,
-                    eps = _eps, mu = _mu, ell = _ell]
-                   (real u) -> real
-                   { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
-                     return gup(cn, dn, kap, kapp, eps, mu); },
-                   _ell.K()) :
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                   (real phi) -> real
-                   { return gphip(cos(phi), kap, kapp, eps, mu); },
-                   Math::pi()/2);
-    } else if (_mu < 0 && _gdag) {
-      _fun = _tx ?
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp,
-                    eps = _eps, mu = _mu, ell = _ell]
-                   (real v) -> real
-                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                     return gdagvp(cn, dn, kap, kapp, eps, mu); },
-                   _ell.K()) :
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                   (real psi) -> real
-                   { return gdagpsip(sin(psi), cos(psi),
-                                     kap, kapp, eps, mu); },
-                   Math::pi()/2);
+    if (_mu > 0) {
+      _tx = _mu / (_kap + _mu) < t._ellipthresh;
+      if (_tx) {
+        _ell = EllipticFunction(_kap / (_kap + _mu), 0, _mu / (_kap + _mu), 1);
+        _fun = _gdag ?
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp,
+                      eps = _eps, mu = _mu, ell = _ell]
+                     (real u) -> real
+                     { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                       return gdagup(cn, dn, kap, kapp, eps, mu); },
+                     _ell.K()) :
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp,
+                      eps = _eps, mu = _mu, ell = _ell]
+                     (real u) -> real
+                     { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                       return gup(cn, dn, kap, kapp, eps, mu); },
+                     _ell.K());
+      } else
+        _fun = _gdag ?
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                     (real phi) -> real
+                     { return gdagphip(cos(phi), kap, kapp, eps, mu); },
+                     Math::pi()/2) :
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                     (real phi) -> real
+                     { return gphip(cos(phi), kap, kapp, eps, mu); },
+                     Math::pi()/2);
     } else if (_mu < 0) {
-      _fun = _tx ?
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp,
-                    eps = _eps, mu = _mu, ell = _ell]
-                   (real v) -> real
-                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                     return gvp(cn, dn, kap, kapp, eps, mu); },
-                   _ell.K()) :
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                   (real psi) -> real
-                   { return gpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
-                   Math::pi()/2);
-    } else {                    // _mu == 0  (gdag variant not relevant)
-      _fun = _tx ?
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
-                   (real v) -> real
-                   { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                     return g0vp(cn, kap, kapp, eps); },
-                   2*_ell.K(), true) :
-        TrigfunExt(
-                   [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
-                   (real phi) -> real
-                   { return g0p(cos(phi), kap, kapp, eps); },
-                   Math::pi(), true);
+      _tx = -_mu / _kap < t._ellipthresh;
+      if (_tx) {
+        _ell = EllipticFunction((_kap + _mu) / _kap, 0, -_mu / _kap, 1);
+        _fun = _gdag ?
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp,
+                      eps = _eps, mu = _mu, ell = _ell]
+                     (real v) -> real
+                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                       return gdagvp(cn, dn, kap, kapp, eps, mu); },
+                     _ell.K()) :
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp,
+                      eps = _eps, mu = _mu, ell = _ell]
+                     (real v) -> real
+                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                       return gvp(cn, dn, kap, kapp, eps, mu); },
+                     _ell.K());
+      } else
+        _fun = _gdag ?
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                     (real psi) -> real
+                     { return gdagpsip(sin(psi), cos(psi),
+                                       kap, kapp, eps, mu); },
+                     Math::pi()/2) :
+          TrigfunExt(
+                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                     (real psi) -> real
+                     { return gpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
+                     Math::pi()/2);
+    } else if (_mu == 0) {
+      // gdag variant not relevant
+      _tx = _kapp < t._ellipthresh;
+      if (_tx) {
+        _ell = EllipticFunction(_kap, 0, _kapp, 1);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
+                          (real v) -> real
+                          { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                            return g0vp(cn, kap, kapp, eps); },
+                          2*_ell.K(), true);
+      } else
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
+                          (real phi) -> real
+                          { return g0p(cos(phi), kap, kapp, eps); },
+                          Math::pi(), true);
+    } else {
+      // _mu == NaN
     }
     _max = _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
       _fun.Max();
@@ -971,7 +955,8 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
     return (1 + eps*kapp) * kap * c / (s * (sqrt(kapp * (1 - eps*c2)) + s));
   }
-  Math::real TriaxialLine::ffun::newdfp(real c, real kap, real kapp, real eps) {
+  Math::real TriaxialLine::ffun::newdfp(real c,
+                                        real kap, real kapp, real eps) {
     // function dfp = dfpf(phi, kappa, epsilon)
     // return derivative of Delta f*
     // s = sqrt(1 - kap * sin(phi)^2)
@@ -985,8 +970,8 @@ namespace GeographicLib {
     return (1 + eps*kapp) * kap * cn /
       (sqrt(kapp * (1 - eps*kap * Math::sq(cn))) + dn);
   }
-  Math::real TriaxialLine::ffun::newdfvp(real cn, real /* dn */, real kap,
-                                      real kapp, real eps) {
+  Math::real TriaxialLine::ffun::newdfvp(real cn, real /* dn */,
+                                         real kap, real kapp, real eps) {
     // function dfvp = dfvpf(v, kap, eps)
     // return derivative of Delta f_v*
     return eps*kap * sqrt(kapp) * cn /
