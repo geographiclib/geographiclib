@@ -151,7 +151,7 @@ namespace GeographicLib {
     // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1950.pdf
     // mpreal needs T(0) here
     cosx += T(0);                            // special values from F.10.1.12
-    if (sinx == 0) sinx = copysign(sinx, x); // special values from F.10.1.13
+    if (sinx == 0) sinx = copysign(sinx, x+t); // special values from F.10.1.13
   }
 
   template<typename T> T Math::sind(T x) {

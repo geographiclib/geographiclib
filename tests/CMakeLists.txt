@@ -569,6 +569,12 @@ add_test (NAME GeodSolve98 COMMAND GeodSolve
 set_tests_properties (GeodSolve98 PROPERTIES PASS_REGULAR_EXPRESSION
   ".* 5910062452739\\.9[34].")
 
+# Test case https://github.com/geographiclib/geographiclib-js/issues/3
+add_test (NAME GeodSolve99 COMMAND GeodSolve
+  -i --input-string "45 0 -45 179.572719")
+set_tests_properties (GeodSolve99 PROPERTIES PASS_REGULAR_EXPRESSION
+  "90\\.00000028 90\\.00000028 19987083\\.007")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

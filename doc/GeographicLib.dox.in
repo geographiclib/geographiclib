@@ -748,6 +748,12 @@ project (geodesictest)
 
 find_package (GeographicLib REQUIRED)
 
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release")
+endif ()
+
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 \endverbatim
@@ -764,6 +770,12 @@ FetchContent_Declare(GeographicLib
   GIT_TAG        r@PROJECT_VERSION@
 )
 FetchContent_MakeAvailable(GeographicLib)
+
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release")
+endif ()
 
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} GeographicLib::GeographicLib)
