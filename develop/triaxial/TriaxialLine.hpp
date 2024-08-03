@@ -27,7 +27,7 @@ namespace GeographicLib {
     class ffun {
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkapp;
-      bool _tx, _newumb;
+      bool _tx, _newumb, _oblpro;
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _tol;
@@ -48,13 +48,20 @@ namespace GeographicLib {
       static real fpsip(real s, real c, real kap, real kapp,
                         real eps, real mu);
       static real fvp(real dn, real kap, real kapp, real eps, real mu);
+      // oblate/prolate variants for kap = 1, kapp = 0
+      static real dfpsioblp(real s, real c, real eps, real mu);
       real root(real z, real x0, int* countn, int* countb) const;
     public:
       ffun() {}
       ffun(real kap, real kapp, real eps, real mu, const Triaxial& t,
            real epsow = 1, real nmaxmult = 0);
       real operator()(real u) const {
-        if (_mu == 0) {
+        using std::tan; using std::sin; using std::cos;
+        using std::atan2; using std::sqrt;
+        if (_oblpro && _kapp == 0 && _mu <= 0)
+          return (_mu == 0 ? tan(u) :
+                  atan2(sqrt(-_mu) * sin(u), cos(u)) / sqrt(-_mu)) - _fun(u);
+        else if (_mu == 0) {
           real phi = gd(u, _newumb ? _sqrtkapp : 1);
           return u - _fun(_tx ? _ell.F(phi) : phi);
         } else
@@ -62,7 +69,10 @@ namespace GeographicLib {
       }
       real deriv(real u) const {
         using std::cosh; using std::sinh; using std::sqrt;
-        if (_mu == 0) {
+        using std::sin; using std::cos;
+        if (_oblpro && _kapp == 0 && _mu <= 0)
+          return 1 / (Math::sq(cos(u)) - _mu * Math::sq(sin(u))) - _fun(u);
+        else if (_mu == 0) {
           real phi = gd(u, _newumb ? _sqrtkapp : 1),
             // sch = dphi/du
             sch = _newumb ?
@@ -133,7 +143,7 @@ namespace GeographicLib {
     class gfun {
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkapp;
-      bool _tx, _newumb, _gdag;
+      bool _tx, _newumb, _gdag, _oblpro;
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _max;
@@ -169,11 +179,17 @@ namespace GeographicLib {
       static real gdagvp(real cn, real dn, real kap, real kapp,
                          real eps, real mu);
       static real gfdagvp(real dn, real kap, real mu);
+      // oblate/prolate variants for kap = 1, kapp = 0
+      static real gpsioblp(real s, real c, real eps, real mu);
+      static real gfpsioblp(real s, real c, real mu);
     public:
       gfun() {}
       gfun(real kap, real kapp, real eps, real mu, const Triaxial& t);
       real operator()(real u) const {
-        if (_mu == 0) {
+        if (_oblpro && ((_kapp == 0 && _mu <= 0) ||
+                        (_kap == 0 && _mu >- 0)))
+          return _fun(u);
+        else if (_mu == 0) {
           real phi = gd(u, _newumb ? _sqrtkapp : 1);
           return _fun(_tx ? _ell.F(phi) : phi);
         } else
@@ -182,7 +198,10 @@ namespace GeographicLib {
 
       real deriv(real u) const {
         using std::cosh; using std::sinh; using std::sqrt;
-        if (_mu == 0) {
+        if (_oblpro && ((_kapp == 0 && _mu <= 0) ||
+                        (_kap == 0 && _mu >- 0)))
+          return _fun.deriv(u);
+        else if (_mu == 0) {
           real phi = gd(u, _newumb ? _sqrtkapp : 1),
             // sch = dphi/du
             sch = _newumb ?

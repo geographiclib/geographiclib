@@ -592,7 +592,7 @@ namespace GeographicLib {
     // then we know we are going to chop the vector, but the precise chopping
     // point CUTOFF still remains to be determined in Step 3.
 
-    int j2, plateauPoint;
+    int j2, plateauPoint = n;
     real logtol = log(tol);
     for (j = 2; j <= n; ++j) {  // j is a MATLAB index (starts at 1)
       j2 = int(round(1.25*j + 5));

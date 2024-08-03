@@ -1,10 +1,16 @@
 cmake_minimum_required (VERSION 3.13.0)
-project (trixial)
+project (triaxial)
 
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
 find_package (Boost REQUIRED)
+
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release")
+endif ()
 
 if (NOT MSVC)
   set (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -76,4 +82,10 @@ add_executable (Geod3Test Geod3Test.cpp Trigfun.cpp Trigfun.hpp
   Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
   Angle.cpp Angle.hpp TriaxialODE.cpp TriaxialODE.hpp)
 target_link_libraries (Geod3Test ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES})
+
+add_executable (Geod2Test Geod2Test.cpp Trigfun.cpp Trigfun.hpp
+  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
+  TriaxialODE.cpp TriaxialODE.hpp Angle.cpp Angle.hpp)
+target_link_libraries (Geod2Test ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})

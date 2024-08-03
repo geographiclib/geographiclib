@@ -55,6 +55,7 @@ namespace GeographicLib {
     bool _umbalt,               // how coordinates wrap with umbilical lines
       _newumb,                  // new formulation for umblilical lines
       _gdag,                    // use gdag = g - mu * f
+      _oblpro,                  // include treatment of oblate/prolate cases
       _debug;                   // print out diagnostics
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
@@ -92,6 +93,8 @@ namespace GeographicLib {
     void newumb(bool newumb) { _newumb = newumb; }
     bool gdag() const { return _gdag; }
     void gdag(bool gdag) { _gdag = gdag; }
+    bool oblpro() const { return _oblpro; }
+    void oblpro(bool oblpro) { _oblpro = oblpro; }
     void debug(bool debug) { _debug = debug; }
     real ellipthresh() const { return _ellipthresh; }
     void ellipthresh(real ellipthresh) { _ellipthresh = ellipthresh; }
@@ -129,8 +132,7 @@ namespace GeographicLib {
     void cart2toellip(Angle bet, Angle omg,
                       vec3 v, Angle& alp) const;
     void elliptocart2(Angle bet, Angle omg, vec3& r) const;
-    void elliptocart2(Angle bet, Angle omg,
-                      Angle alp,
+    void elliptocart2(Angle bet, Angle omg, Angle alp,
                       vec3& r, vec3& v) const;
     real EuclideanInverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
                           Angle& alp1, Angle& alp2) const;
@@ -139,9 +141,8 @@ namespace GeographicLib {
     std::pair<real, real> EuclideanDiff(Angle bet1, Angle omg1, Angle alp1,
                                         Angle bet2, Angle omg2, Angle alp2)
       const;
-    std::pair<real, real> EuclideanDiff(vec3 r1, vec3 v1,
-                                        vec3 r2, vec3 v2)
-      const;
+    static std::pair<real, real> EuclideanDiff(vec3 r1, vec3 v1,
+                                               vec3 r2, vec3 v2);
     class gamblk {
     public:
       // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2

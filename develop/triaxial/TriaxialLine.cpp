@@ -615,10 +615,31 @@ namespace GeographicLib {
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
     , _newumb(t._newumb)
+    , _oblpro(t._oblpro)
     , _tol(pow(numeric_limits<real>::epsilon(), epspow))
     , _invp(false)
   {
-    if (_mu > 0) {
+    // mu in [-kap, kapp], eps in (-inf, 1/kap)
+    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu >+ 0 not allowed
+      // _kap == 1
+      _tx = false;
+      _fun = TrigfunExt(
+                        [kap = _kap, kapp = _kapp,
+                         eps = _eps, mu = _mu]
+                        (real psi) -> real
+                        { return dfpsioblp(sin(psi), cos(psi), eps, mu); },
+                        Math::pi()/2, false, epspow, nmaxmult);
+    } else if (_oblpro && _kap == 0 && _mu >= 0) { // mu < 0 not allowed
+      // _kapp == 1
+      _tx = false;
+      if (_mu > 0)
+        _fun = TrigfunExt(
+                          [mu = _mu]
+                          (real /* phi */) -> real
+                          { return 1/sqrt(mu); },
+                          Math::pi()/2, false, epspow, nmaxmult);
+      // _mu == 0 treated specifally
+    } else if (_mu > 0) {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
       if (_tx) {
         _ell = EllipticFunction(_kap / (_kap + _mu), 0, _mu / (_kap + _mu), 1);
@@ -652,7 +673,7 @@ namespace GeographicLib {
                           (real psi) -> real
                           { return fpsip(sin(psi), cos(psi),
                                          kap, kapp, eps, mu); },
-                          Math::pi()/2);
+                          Math::pi()/2, false, epspow, nmaxmult);
     } else if (_mu == 0) {
       _tx = _kapp < t._ellipthresh;
       // N.B. Don't compute the inverse of _fun so not really necessary to
@@ -688,6 +709,7 @@ namespace GeographicLib {
                      Math::pi(), true, epspow, nmaxmult);
     } else {
       // _mu == NaN
+      _tx = false;
     }
     _nmax = nmaxmult ? int(ceil(nmaxmult * _fun.NCoeffs())) : 1 << 16;
     // N.B. _max < 0 for _mu == 0 && _newumb && eps < 0
@@ -792,8 +814,27 @@ namespace GeographicLib {
     , _sqrtkapp(sqrt(_kapp))
     , _newumb(t._newumb)
     , _gdag(t._gdag)
+    , _oblpro(t._oblpro)
   {
-    if (_mu > 0) {
+    // mu in [-kap, kapp], eps in (-inf, 1/kap)
+    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu >+ 0 not allowed
+      // _kap == 1
+      _tx = false;
+      _fun = TrigfunExt(
+                        [kap = _kap, kapp = _kapp,
+                         eps = _eps, mu = _mu]
+                        (real psi) -> real
+                        { return gpsioblp(sin(psi), cos(psi), eps, mu); },
+                        Math::pi()/2, false);
+    } else if (_oblpro && _kap == 0 && _mu >= 0) { // mu < 0 not allowed
+      // _kapp == 1
+      _tx = false;
+      _fun = TrigfunExt(
+                        [mu = _mu]
+                        (real /* phi */) -> real
+                        { return 0; },
+                        Math::pi()/2, false);
+    } else if (_mu > 0) {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
       if (_tx) {
         _ell = EllipticFunction(_kap / (_kap + _mu), 0, _mu / (_kap + _mu), 1);
@@ -875,6 +916,7 @@ namespace GeographicLib {
                           Math::pi(), true);
     } else {
       // _mu == NaN
+      _tx = false;
     }
     _max = _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
       _fun.Max();
@@ -1049,10 +1091,21 @@ namespace GeographicLib {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
     return dn2 * sqrt( kap * (1 - eps * c2) / (kapp + c2) );
   }
-
   Math::real TriaxialLine::gfun::gfdagvp(real dn, real kap, real /* mu */) {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
     return c2;
+  }
+  // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0
+  Math::real TriaxialLine::ffun::dfpsioblp(real s, real c, real eps, real mu) {
+    real c2 = Math::sq(c) - mu * Math::sq(s);
+    return eps / (1 + sqrt(1 - eps * c2));
+  }
+  Math::real TriaxialLine::gfun::gpsioblp(real s, real c, real eps, real mu) {
+    real c2 = Math::sq(c) - mu * Math::sq(s);
+    return sqrt(1 - eps * c2);
+  }
+  Math::real TriaxialLine::gfun::gfpsioblp(real s, real c, real mu) {
+    return gfdagpsip(s, c, 1, mu);
   }
 
 } // namespace GeographicLib

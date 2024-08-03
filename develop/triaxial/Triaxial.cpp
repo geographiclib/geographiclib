@@ -31,6 +31,7 @@ namespace GeographicLib {
     , _umbalt(false)
     , _newumb(true)
     , _gdag(true)
+    , _oblpro(false)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
@@ -64,6 +65,7 @@ namespace GeographicLib {
     , _umbalt(false)
     , _newumb(true)
     , _gdag(true)
+    , _oblpro(false)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
@@ -840,7 +842,7 @@ namespace GeographicLib {
   }
 
   pair<Math::real, Math::real>
-  Triaxial::EuclideanDiff(vec3 r1, vec3 v1, vec3 r2, vec3 v2) const {
+  Triaxial::EuclideanDiff(vec3 r1, vec3 v1, vec3 r2, vec3 v2) {
     return pair<real, real>
       (Math::hypot3(r2[0] - r1[0], r2[1] - r1[1], r2[2] - r1[2]),
        Math::hypot3(v2[0] - v1[0], v2[1] - v1[1], v2[2] - v1[2]));

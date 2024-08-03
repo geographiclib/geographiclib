@@ -109,7 +109,7 @@ namespace GeographicLib {
      *
      * @param[in] n the number of points to use.
      **********************************************************************/
-    Trigfun() : _m(0) {}
+    Trigfun() : _m(0), _max(-1) {}
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
             bool centerp, real halfp, int n,
             real tol = std::numeric_limits<real>::epsilon());
