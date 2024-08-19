@@ -325,10 +325,11 @@ cat <<EOF
       with <a href="https://geographiclib.sourceforge.io/">
       GeographicLib</a>.  This methods are described in
       C. F. F. Karney,
-      <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
-        polygons</a>,
-      Technical Report, SRI International, March 2023; URL
-      <a href="https://arxiv.org/abs/2303.03219">arxiv:2303.03219</a>.
+      <a href="https://doi.org/10.1007/s11200-024-0709-z"><i>The area
+         of rhumb polygons</i></a>,
+      Stud. Geophys. Geod. (2024); DOI:
+      <a href="https://doi.org/10.1007/s11200-024-0709-z">
+         10.1007/s11200-024-0709-z</a>.
     </p>
     <hr>
     <address>Charles Karney
