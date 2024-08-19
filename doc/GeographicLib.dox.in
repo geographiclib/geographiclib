@@ -5008,10 +5008,11 @@ Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 
 This material is now written up in
  - C. F. F. Karney,<br>
-   <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
-   polygons</a>,<br>
-   Technical Report, SRI International, March 2023.<br>
-   <a href="https://arxiv.org/abs/2303.03219">arxiv:2303.03219</a>
+   <a href="https://doi.org/10.1007/s11200-024-0709-z"><i>The area
+   of rhumb polygons</i></a>,<br>
+   Stud. Geophys. Geod. (2024).<br> DOI:
+   <a href="https://doi.org/10.1007/s11200-024-0709-z">
+   10.1007/s11200-024-0709-z</a>
  .
 The series expansions described in the paper are available in
  - C. F. F. Karney,<br>
@@ -5281,8 +5282,9 @@ out simply and accurately.  The approaches using series apply only if
 
 \section rhumbarea The area under a rhumb line
 
-<b>NOTE:</b> Section 3 of the report,
-<a href="https://arxiv.org/abs/2303.03219">The area of rhumb polygons</a>,
+<b>NOTE:</b> Section 3 of the paper,
+<a href="https://doi.org/10.1007/s11200-024-0709-z">
+The area of rhumb polygons</a>,
 provides an improved treatment of this problem.
 
 The area between a rhumb line and the equator is given by
@@ -7763,8 +7765,8 @@ git repository for GeographicLib</a>.
        treated properly (previously point at the pole were moved
        slightly away from the pole);
      - this treatment of rhumb areas is described in
-       <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
-       polygons</a>.
+       <a href="https://doi.org/10.1007/s11200-024-0709-z">The area of
+       rhumb polygons</a>.
    - The -E option for <a href="Planimeter.1.html">Planimeter(1)</a> is
      now a toggle switching on exact treatment for geodesics (-G
      option), rhumb lines (-R option), authlatic lines (-Q option).

@@ -65,10 +65,11 @@ namespace GeographicLib {
    *
    * This implementation is described in
    * - C. F. F. Karney,<br>
-   *   <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
-   *   polygons</a>,<br>
-   *   Technical Report, SRI International, March 2023.<br>
-   *   <a href="https://arxiv.org/abs/2303.03219">arxiv:2303.03219</a>
+   *   <a href="https://doi.org/10.1007/s11200-024-0709-z">
+   *   <i>The area of rhumb polygons</i></a>,<br>
+   *   Stud. Geophys. Geod. (2024);
+   *   DOI: <a href="https://doi.org/10.1007/s11200-024-0709-z">
+   *   10.1007/s11200-024-0709-z</a>.
    * .
    * For more information on rhumb lines see \ref rhumb.
    *

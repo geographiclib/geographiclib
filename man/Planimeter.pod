@@ -242,8 +242,9 @@ DOI L<https://doi.org/10.1007/s00190-012-0578-z>;
 addenda: L<https://geographiclib.sourceforge.io/geod-addenda.html>.
 
 The algorithm for the area of a rhumb polygon is given in Section 3 of
-C. F. F. Karney, I<The area of rhumb polygons>, Technical Report, SRI
-International (2023); URL: L<https://arxiv.org/abs/2303.03219>.
+C. F. F. Karney, I<The area of rhumb polygons>,
+Stud. Geophys. Geod. (2024);
+DOI L<https://doi.org/10.1007/s11200-024-0709-z>.
 
 =head1 AUTHOR
 
