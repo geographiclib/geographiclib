@@ -1,6 +1,6 @@
 =head1 NAME
 
-IntersectTool -- perform rhumb line calculations
+IntersectTool -- find the intersection of geodesics
 
 =head1 SYNOPSIS
 
