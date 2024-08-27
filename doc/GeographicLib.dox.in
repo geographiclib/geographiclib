@@ -5650,6 +5650,18 @@ Longitude/latitude pairs should be regarded not as the coordinates for a
 planar projection but as positions on the reference ellipsoid, with
 lines then defined as geodesic segments.)
 
+The situation with Google Earth is a little murky.  Polygons are
+displayed with plate carrée lines if they are "filled".  If only the
+outline is displayed, then the edges are great circles.  In either case,
+the area of a polygon is computed on the authalic sphere with radius
+6371007.181&thinsp;m, keeping the geographic latitudes of the points
+fixed.  For this reason, areas close to a pole will be underestimated by
+\f$O(f)\f$ while areas close to the equator are overestimated by
+\f$O(f)\f$.  If, instead, the points are transferred to the sphere
+keeping the authalic latitudes fixed, the result would be much more
+accurate.  The <code>-Q</code> option with the <code>Planimeter</code>
+utility uses this method.
+
 In any case, there may be some reason to compute the area of a polygon
 made up of plate carrée lines.  The derivation closely follows that for
 rhumb lines given in \ref rhumbarea, but now with \f$\lambda\f$ linearly
