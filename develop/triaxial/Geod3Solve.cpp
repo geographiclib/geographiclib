@@ -340,8 +340,12 @@ int main(int argc, const char* const argv[]) {
             for (int i = nmin, k = 0; i <= nmax; ++i, ++k)
               l.Position(i * ds, bet2v[k], omg2v[k], alp2v[k]);
             if (!unroll) {
-              for (int k = 0; k <= nmax - nmin; ++k)
+              for (int k = 0; k <= nmax - nmin; ++k) {
                 Triaxial::AngNorm(bet2v[k], omg2v[k], alp2v[k]);
+                bet2v[k] = bet2v[k].base();
+                omg2v[k] = omg2v[k].base();
+                alp2v[k] = alp2v[k].base();
+              }
             }
           }
           if (bench || cart) {
