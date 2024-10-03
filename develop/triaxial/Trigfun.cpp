@@ -18,17 +18,17 @@ namespace GeographicLib {
   using namespace std;
 
   Trigfun::Trigfun(const function<real(real)>& f, bool odd, bool sym,
-                   bool centerp, real halfp, int n, real tol) {
+                   bool centerp, real halfp, int n, int nmax, real tol) {
     if (n == 0) {
       int n = 16;
       Trigfun t(f, odd, sym, false, halfp, n);
-      while (n < (1 << 17)) {
-        int K = t.chop(t._coeff, tol)
-          /*, K1 =  t.chop(t._coeff, numeric_limits<real>::epsilon(), true)*/;
+      while (n <= nmax) {
+        int K = chop(t._coeff, tol)
+          /*, K1 =  chop(t._coeff, numeric_limits<real>::epsilon(), true)*/;
         //        cout << "Chop " << K << " " << n << "\n";
         if (K < n) {
           t._m = K;
-          t._n = _sym ? K : K - 1;
+          t._n = t._sym ? K : K - 1;
           t._coeff.resize(K);
           *this = t;
           return;
@@ -55,9 +55,47 @@ namespace GeographicLib {
     */
   }
 
+  Trigfun::Trigfun(const function<real(real)>& f, bool odd, bool sym,
+                   real halfp, int nmax, real tol) {
+    *this = Trigfun(f, odd, sym, false, halfp, 0, nmax, tol);
+  }
+
+  Trigfun::Trigfun(const function<real(real, real)>& f, bool odd, bool sym,
+                   real halfp, int nmax, real tol) {
+    // Initialize with 2 samples
+    Trigfun t(
+              [&f] (real x) -> real
+              { return f(x, Math::NaN()); },
+              odd, sym, false, halfp, 2, nmax, tol);
+    while (t._n <= nmax) {
+      int K = chop(t._coeff, tol)
+        /*, K1 =  chop(t._coeff, numeric_limits<real>::epsilon(), true)*/;
+      //        cout << "Chop " << K << " " << n << "\n";
+      if (K < t._n) {
+        t._m = K;
+        t._n = t._sym ? K : K - 1;
+        t._coeff.resize(K);
+        *this = t;
+        return;
+      }
+      // bool centerp = true;
+      int M = t._n;
+      real p = halfp / (sym ? 2 : 1), d = p / t._n, o = d/2;
+      vector<real> F(M);
+      for (int i = 0; i < M; ++i)
+        F[i] = f(o + d * i, t(o + d * i));
+      t.refine(initbysamples(F, odd, sym, true, halfp));
+      //      n *= 2;
+    }
+    *this = t;
+    return;
+  }
+
   Trigfun Trigfun::initbysamples(const vector<real>& F,
                                  bool odd, bool sym, bool centerp,
                                  Math::real halfp) {
+    if (!(isfinite(halfp) && halfp > 0))
+      throw GeographicErr("Trigfun::initbysamples halfp not positive");
     typedef kissfft<real> fft_t;
     bool debug = false;
     int n = int(F.size()) - (!(odd || sym || centerp) ? 1 : 0),
@@ -250,30 +288,26 @@ namespace GeographicLib {
       c[0] = _odd ? 0 : _coeff[0] * mult;
     return Trigfun(c, !_odd, _sym, _h);
   }
+
   Math::real Trigfun::root(real z, const function<real(real)>& fp,
                            int* countn, int* countb, real tol) const {
-    // y = pi/h * x
-    // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
-    real s = _h / (Math::pi() * _coeff[0]),
-      x0 = s * z, dx = s * Max();
-    // cout << "QQF\n";
-    return Max() == 0 ? x0 :
-      root(z, fp, x0, x0 - dx, x0 + dx, countn, countb, tol);
+    return root(z, fp, Math::NaN(), countn, countb, tol);
   }
+
   Math::real Trigfun::root(real z, const function<real(real)>& fp,
                            real x0,
                            int* countn, int* countb, real tol) const {
     // y = pi/h * x
     // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
-    real s = _h / (Math::pi() * _coeff[0]),
-      x00 = s * z, dx = s * Max();
-    x0 = fmin(x00 + dx, fmax(x00 - dx, x0));
+    real hr = Math::pi() * _coeff[0], s = _h / hr,
+      x00 = s * z, dx = fabs(s) * Max();
+    x0 = isfinite(x0) ? fmin(x00 + dx, fmax(x00 - dx, x0)) : x00;
     //    cout << "QQG\n";
-    real ret = Max() == 0 ? x0 :
-      root(z, fp, x0, x00 - dx, x00 + dx, countn, countb, tol);
-    //    cout << "QQGE\n";
-    return ret;
+    return dx == 0 ? x0 :
+      root(*(this), z, fp, x0, x00 - dx, x00 + dx, _h, fabs(hr),
+           s > 0 ? 1 : -1, countn, countb, tol);
   }
+
   Math::real Trigfun::root(const function<real(real)>& f,
                            real z, const function<real(real)>& fp,
                            real x0, real xa, real xb,
@@ -283,8 +317,8 @@ namespace GeographicLib {
     // cout << "QQH\n";
     real ret =
     root([&f, &fp] (real x) -> pair<real, real>
-                { return pair<real, real>(f(x), fp(x)); },
-                z, x0, xa, xb, xscale, zscale, s, countn, countb, tol);
+         { return pair<real, real>(f(x), fp(x)); },
+         z, x0, xa, xb, xscale, zscale, s, countn, countb, tol);
     // cout << "QQHE" << endl;
     return ret;
   }
@@ -385,124 +419,29 @@ namespace GeographicLib {
     return x;
   }
 
-  Math::real Trigfun::root(real z, const function<real(real)>& fp,
-                           real x0, real xa, real xb,
-                           int* countn, int* countb, real tol) const {
-    if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
-      throw GeographicErr("Can only find root Trigfun with a secular term");
-    // cout << "QQB " << xa << " " << x0 << " " << xb << "\n";
-    return root(*(this), z, fp, x0, xa, xb, _h, _coeff[0] * Math::pi(),
-                _coeff[0] > 0 ? 1 : -1, countn, countb, tol);
-  }
-
-  // f is the function to be inverted (odd periodic with +ve secular term)
-  // fp is its derivative
-  // hp is half period, hr is half range (value at hp)
-  // f(x) - hr/hp * x lies in [minf, maxf].
-  Trigfun Trigfun::InverseInit(const function<real(real)>& f,
-                               const function<real(real)>& fp,
-                               real hp, real hr,
-                               real minf, real maxf,
-                               int* countn, int* countb,
-                               real tol, int nmax) {
-    return InverseInit([&f, &fp] (real x) -> pair<real, real>
-                       { return pair<real, real>(f(x), fp(x)); },
-                       hp, hr, minf, maxf, countn, countb, tol, nmax);
-  }
-
-  Trigfun Trigfun::InverseInit(const function<pair<real, real>(real)>& ffp,
-                               real hp, real hr,
-                               real minf, real maxf,
-                               int* countn, int* countb,
-                               real tol, int nmax) {
-    // z = hr/hp * x + d, d in [minf, maxf]
-    // x = hp/hr * z - hp/hr * d
-    bool debug = false, debugcnt = false;
-    bool odd = true, sym = false;
-    int np = 4,
-      s = hr > 0 ? 1 : -1;
-    real
-      nhp = hr * s, nhr = hp * s, c0p = nhr / Math::pi(),
-      dxm = -hp/hr * (s > 0 ? maxf : minf),
-      dxp = -hp/hr * (s > 0 ? minf : maxf);
-    vector<real> F(np, real(0));
-    real z, x;
-    z = nhp/2; x = nhr/nhp * z;
-    // cout << "QQC\n";
-    F[1] = root(ffp, z, x + (dxm+dxp)/2, x + dxm, x + dxp,
-                hp, nhp, s, countn, countb, tol) - x;
-    real dz = nhp/2, z0 = dz/2;
-    for (int i = 0; i < np/2; ++i) {
-      z = z0 + i * dz;
-      x = nhr/nhp * z;
-      real x0 = x + F[1] * sqrt(real(0.5));
-      // cout << "QQD\n";
-      F[2 * i] = root(ffp, z, x0, x + dxm, x + dxp,
-                      hp, nhp, s, countn, countb, tol) - x;
-    }
-    Trigfun t(initbysamples(F, odd, sym, false, nhp));
-    if (debug) {
-      for (size_t i = 0; i < F.size(); ++i)
-        cout << "f " << i << " " << F[i] << "\n";
-      for (int q = 0; q < int(t._coeff.size()); ++q)
-        cout << "t " << q << " " << t._coeff[q] << "\n";
-    }
-    for (int m = 4; m <= nmax; m *= 2) {
-      dz /= 2;  z0 /= 2;
-      F.resize(m);
-      int cntn = 0, cntb = 0;
-      for (int i = 0; i < m; ++i) {
-        z = z0 + i * dz;
-        x = nhr/nhp * z;
-        real x0 = fmin(x + dxp, fmax(x + dxm, t(z) + x));
-        // cout << "QQE\n";
-        F[i] = root(ffp, z, x0, x + dxm, x + dxp,
-                    hp, nhp, s, &cntn, &cntb, tol) - x;
-      }
-      if (debugcnt)
-        cout << "Inversecnt " << m << " "
-             << cntn/real(m) << " " << cntb/real(m) << "\n";
-      if (countn) *countn += cntn;
-      if (countb) *countb += cntb;
-      Trigfun tx(initbysamples(F, odd, sym, true, nhp));
-      if (debug) {
-        for (size_t i = 0; i < F.size(); ++i)
-          cout << "f " << i << " " << F[i] << "\n";
-        for (int q = 0; q < int(tx._coeff.size()); ++q)
-          cout << "t " << q << " " << tx._coeff[q] << "\n";
-      }
-      t.refine(tx);
-      t._coeff[0] = c0p;
-      int K = t.chop(t._coeff, tol);
-      t._coeff[0] = 0;
-      if (debug) {
-        cout << "ChopX "
-             << t.chop(t._coeff, tol) << " "
-             << 2*m << "\n";
-        /*
-        for (int q = 0; q < int(t._coeff.size()); ++q)
-          cout << q << " " << t._coeff[q] << "\n";
-        */
-      }
-      if (K < int(t._coeff.size())) {
-        t._m = K;
-        t._n = t._sym ? K : K - 1;
-        t._coeff.resize(K);
-        break;
-      }
-      if (nmax < 1 << 16 && cntn < 2*m)
-        break;
-    }
-    t._coeff[0] = c0p;
-    return t;
+  Math::real Trigfun::inversep(real z,
+                              const function<Math::real(Math::real)>& fp,
+                              real dx0,
+                              int* countn, int* countb, real tol) const {
+    real hr = Math::pi() * _coeff[0], nslope = _h / hr;
+    return root(z, fp, z * nslope + dx0, countn, countb, tol) - nslope * z;
   }
 
   Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp,
-                          int* countn, int* countb, real tol, int nmax) const {
+                             int* countn, int* countb,
+                             real tol, int nmax) const {
     if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
       throw GeographicErr("Can only invert Trigfun with a secular term");
-    return InverseInit(*this, fp, _h, Math::pi() * _coeff[0], -Max(), Max(),
-                       countn, countb, tol, nmax);
+    int s = _coeff[0] > 0 ? 1 : -1;
+    real hp = _h, hr = Math::pi() * _coeff[0],
+      nhp = hr * s, nhr = hp * s, c0p = nhr / Math::pi();
+     Trigfun t(
+               [this, &fp, countn, countb, tol]
+               (real z, real dx0) -> real
+               { return inversep(z, fp, dx0, countn, countb, tol); },
+               _odd, _sym, nhp, nmax, tol);
+     t._coeff[0] = c0p;
+     return t;
   }
 
   int Trigfun::chop(const vector<real>& c, real tol, bool integral) {
@@ -657,7 +596,7 @@ namespace GeographicLib {
       , _sym(sym)
         // N.B. tol defaults to epsilon() here.  We need to compute the
         // integral accurately.
-      , _f(Trigfun(_fp, false, _sym, false, halfp, 0).integral())
+      , _f(Trigfun(_fp, false, _sym, halfp).integral())
       , _tol( pow(numeric_limits<real>::epsilon(), epspow) )
       , _nmax( nmaxmult ? int(ceil(nmaxmult * _f.NCoeffs())) :
                1 << 16 )

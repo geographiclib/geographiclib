@@ -82,10 +82,11 @@ void EllipTest(Math::real k2, Math::real kp2) {
   EllipticFunction ell(k2, 0, kp2, 1);
   auto f = [&ell] (real x) -> real {
     return 1/ell.Delta(sin(x), cos(x)); };
-  Trigfun t(f, false, false, false, Math::pi()/2, 0);
+  Trigfun t(f, false, false, Math::pi()/2);
   Trigfun F(t.integral());
-  Trigfun Finv(F.invert(f));
   int countn = 0, countb = 0;
+  Trigfun Finv(F.invert(f, &countn, &countb));
+  cerr << t.NCoeffs() << " " << F.NCoeffs() << " " << Finv.NCoeffs() << "\n";
   for (int i = 0; i <= 100; ++i) {
     real z = i/real(10),
       x = Finv(z),

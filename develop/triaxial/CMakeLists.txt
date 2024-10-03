@@ -50,42 +50,49 @@ if (CONVERT_WARNINGS_TO_ERRORS)
   endif ()
 endif ()
 
+set (BUILD_SHARED_LIBS ON)
+
+set (SOURCES
+  Trigfun.cpp
+  Triaxial.cpp
+  TriaxialLine.cpp
+  Angle.cpp
+  TriaxialODE.cpp)
+
+set (HEADERS
+  Trigfun.hpp
+  Triaxial.hpp
+  TriaxialLine.hpp
+  Angle.hpp
+  TriaxialODE.hpp)
+
+add_library (trilib ${SOURCES} ${HEADERS})
+
 add_executable (randgeod randgeod.cpp)
 target_link_libraries (randgeod ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
-add_executable (TrigfunTest TrigfunTest.cpp Trigfun.cpp Trigfun.hpp
-  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-  Angle.cpp Angle.hpp)
-target_link_libraries (TrigfunTest ${GeographicLib_LIBRARIES}
+add_executable (TrigfunTest TrigfunTest.cpp)
+
+target_link_libraries (TrigfunTest trilib ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
-add_executable (TriaxialTest TriaxialTest.cpp Trigfun.cpp Trigfun.hpp
-  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-  Angle.cpp Angle.hpp)
-target_link_libraries (TriaxialTest ${GeographicLib_LIBRARIES}
+add_executable (TriaxialTest TriaxialTest.cpp)
+target_link_libraries (TriaxialTest trilib ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
-add_executable (Geod3Solve Geod3Solve.cpp Trigfun.cpp Trigfun.hpp
-  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-  TriaxialODE.cpp TriaxialODE.hpp Angle.cpp Angle.hpp)
-target_link_libraries (Geod3Solve ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
+add_executable (Geod3Solve Geod3Solve.cpp)
+target_link_libraries (Geod3Solve trilib ${GeographicLib_LIBRARIES}
+  ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+
+add_executable (TriRand TriRand.cpp)
+target_link_libraries (TriRand trilib ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
-add_executable (TriRand TriRand.cpp Trigfun.cpp Trigfun.hpp
-  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-  Angle.cpp Angle.hpp)
-target_link_libraries (TriRand ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
+add_executable (Geod3Test Geod3Test.cpp)
+target_link_libraries (Geod3Test trilib ${GeographicLib_LIBRARIES}
+  ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
 
-add_executable (Geod3Test Geod3Test.cpp Trigfun.cpp Trigfun.hpp
-  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-  Angle.cpp Angle.hpp TriaxialODE.cpp TriaxialODE.hpp)
-target_link_libraries (Geod3Test ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
-
-add_executable (Geod2Test Geod2Test.cpp Trigfun.cpp Trigfun.hpp
-  Triaxial.cpp Triaxial.hpp TriaxialLine.cpp TriaxialLine.hpp
-  TriaxialODE.cpp TriaxialODE.hpp Angle.cpp Angle.hpp)
-target_link_libraries (Geod2Test ${BOOST_LIBRARIES} ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
+add_executable (Geod2Test Geod2Test.cpp)
+target_link_libraries (Geod2Test trilib ${GeographicLib_LIBRARIES}
+  ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})

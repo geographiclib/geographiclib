@@ -726,15 +726,15 @@ namespace GeographicLib {
                   (real phi) -> real
                   { real u = lam(phi, _sqrtkapp);
                     return inv1(u) - u; },
-                  true, true, false, Math::pi(), 0,
-                  _tol) :
+                  true, true, Math::pi(),
+                  1 << 16, _tol) :
           Trigfun(
                   [this]
                   (real phi) -> real
                   { real u = lam(phi);
                     return inv1(u) - u; },
-                  true, true, false, Math::pi(), 0,
-                  _tol);
+                  true, true, Math::pi(),
+                  1 << 16, _tol);
       else
         _fun.ComputeInverse();
     }

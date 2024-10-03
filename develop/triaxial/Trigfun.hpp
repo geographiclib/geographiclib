@@ -102,57 +102,41 @@ namespace GeographicLib {
       , _p(2*_h)
       , _max(-1)
     {}
+    /**
+     * Constructor given a function.  Specify n = 0 to do auto
+     **********************************************************************/
+    Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
+            bool centerp, real halfp, int n, int nmax = 1 << 16,
+            real tol = std::numeric_limits<real>::epsilon());
 
   public:
     /**
-     * Constructor specifying the number of points to use.
-     *
-     * @param[in] n the number of points to use.
+     * Default constructor specifying the number of points to use.
      **********************************************************************/
     Trigfun() : _m(0), _max(-1) {}
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
-            bool centerp, real halfp, int n,
+            real halfp, int nmax = 1 << 16,
+            real tol = std::numeric_limits<real>::epsilon());
+    Trigfun(const std::function<real(real, real)>& f, bool odd, bool sym,
+            real halfp, int nmax = 1 << 16,
             real tol = std::numeric_limits<real>::epsilon());
     real check(const std::vector<real>& F, bool centerp,
                real tol = std::numeric_limits<real>::epsilon()) const;
     //    real eval(real x) const;
     real operator()(real x) const;
     static Trigfun initbysamples(const std::vector<real>& F,
-                                 bool odd, bool sym, bool centerp,
-                                 real halfp);
+                                 bool odd, bool sym, bool centerp, real halfp);
     void refine(const Trigfun& tb);
     Trigfun integral() const;
-    // Solve f(x) - z = 0 for x, fp is the derivative
-    real root(real z, const std::function<real(real)>& fp,
-              int* countn = nullptr, int* countb = nullptr,
-              real tol = std::numeric_limits<real>::epsilon()) const;
+    // Given z, find x, s.t. z = f(x); fp is the derivative f'.  This defines x
+    // = finv(z).  x0 is an estimate of x (NaN means no information)
     real root(real z, const std::function<real(real)>& fp,
               real x0,
               int* countn = nullptr, int* countb = nullptr,
               real tol = std::numeric_limits<real>::epsilon()) const;
-    // Solve f(x) - z = 0 with x in (xa, xb)
     real root(real z, const std::function<real(real)>& fp,
-              real x0, real xa, real xb,
               int* countn = nullptr, int* countb = nullptr,
               real tol = std::numeric_limits<real>::epsilon()) const;
-    // f is the function to be inverted (odd periodic with +ve secular term)
-    // fp is its derivative
-    // hp is half period, hr is half range
-    // f(x) - hr/hp * x lies in [minf, maxf].
-    static Trigfun InverseInit(const std::function<real(real)>& f,
-                               const std::function<real(real)>& fp,
-                               real hp, real hr,
-                               real minf, real maxf,
-                               int* countn = nullptr, int* countb = nullptr,
-                               real tol = std::numeric_limits<real>::epsilon(),
-                               int nmax = 1 << 16);
-    static Trigfun InverseInit(const
-                               std::function<std::pair<real, real>(real)>& ffp,
-                               real hp, real hr,
-                               real minf, real maxf,
-                               int* countn = nullptr, int* countb = nullptr,
-                               real tol = std::numeric_limits<real>::epsilon(),
-                               int nmax = 1 << 16);
     // Solve f(x) = z for x, given x in [xa, xb];
     // fp(x) = df(x)/dx
     // s is sign of fp
@@ -170,11 +154,16 @@ namespace GeographicLib {
                      real xscale = 1, real zscale = 1, int s = 1,
                      int* countn = nullptr, int* countb = nullptr,
                      real tol = std::numeric_limits<real>::epsilon());
+    // Given z, return dx = finv(z) - nslope * z
+    // dx0 is an estimate of dx (NaN means no information)
+    real inversep(real z, const std::function<Math::real(Math::real)>& fp,
+                  real dx0 = Math::NaN(),
+                  int* countn = nullptr, int* countb = nullptr,
+                  real tol = std::numeric_limits<real>::epsilon()) const;
     Trigfun invert(const std::function<real(real)>& fp,
                    int* countn = nullptr, int* countb = nullptr,
                    real tol = std::numeric_limits<real>::epsilon(),
                    int nmax = 1 << 16) const;
-
     int NCoeffs() const { return _m; }
     real Max() const;
     real HalfPeriod() const { return _h; }
