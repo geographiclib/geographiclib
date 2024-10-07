@@ -45,6 +45,7 @@ namespace GeographicLib {
       _k2  = (_b - _c) * (_b + _c) / s;
     }
     _k = sqrt(_k2); _kp = sqrt(_kp2);
+    // _oblpro = _k2 == 0 || _kp2 == 0;
     real ksum = _k2 + _kp2;
     if (! (isfinite(_a) && isfinite(_b) && isfinite(_c) &&
            _a >= _b && _b >= _c && _c >= 0 && _b > 0 &&
@@ -342,7 +343,7 @@ namespace GeographicLib {
     bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
       // both points on middle ellipse
-      lf = TL::fline(*this, gamblk{});
+      lf = TL::fline(*this, gamblk());
       if (umb1 && umb2 && bet2.s() > 0 && omg2.c() < 0) {
         // process opposite umbilical points
         fic = TL::fline::fics(lf, bet1, omg1, ang{_kp, _k});
@@ -448,7 +449,7 @@ namespace GeographicLib {
       }
     } else if (umb1) {
       // umbilical point to general point
-      lf = TL::fline(*this, gamblk{});
+      lf = TL::fline(*this, gamblk());
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
       (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
@@ -491,7 +492,7 @@ namespace GeographicLib {
       alpa = ang( _kp * fabs(omg1.s()), _k * fabs(bet1.c()));
       alpb = alpa;
 
-      lf = TL::fline(*this, gamblk{});
+      lf = TL::fline(*this, gamblk());
       fic = TL::fline::fics(lf, bet1, omg1, alpb);
       unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
       for (; !done && qb <= 4U; ++qb, ++qa) {
@@ -758,7 +759,7 @@ namespace GeographicLib {
       // for gam == 0, we have nu = nup = 0
       nu = sqrt(fabs(gam)) / (gam > 0 ? _k : _kp),
       nup = gamp / (gam > 0 ? _k : _kp);
-    return gamblk{gam, nu, nup};
+    return gamblk(gam, nu, nup);
   }
 
   TriaxialLine Triaxial::Line(Angle bet1, Angle omg1, Angle alp1) const {

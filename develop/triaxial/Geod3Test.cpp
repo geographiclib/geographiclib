@@ -137,10 +137,20 @@ void angletest() {
   }
 }
 
+void dfinvtest() {
+  Triaxial t(sqrt(real(2)), 1, sqrt(1/real(2)));
+  TriaxialLine l(t, Angle(90), Angle(0), Angle(45));
+  l.Optimize();
+}
+
 int main(int argc, const char* const argv[]) {
   try {
     typedef Math::real real;
     Utility::set_digits();
+    if (0) {
+      dfinvtest();
+      return 0;
+    }
     if (0) {
       angletest();
       return 0;

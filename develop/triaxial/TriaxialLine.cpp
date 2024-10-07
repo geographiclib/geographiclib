@@ -617,7 +617,7 @@ namespace GeographicLib {
     , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
-    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu >+ 0 not allowed
+    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu > 0 not allowed
       // _kap == 1
       _tx = false;
       _fun = TrigfunExt(
@@ -700,21 +700,41 @@ namespace GeographicLib {
 
   void TriaxialLine::ffun::ComputeInverse() {
     if (!_invp) {
-      if (_mu == 0)
+      if (_mu == 0) {
+        _countn = _countb = 0;
         _dfinv = Trigfun(
                          [this]
-                         (real phi) -> real
+                         (real phi, real x0) -> real
                          { real u = lam(phi, _sqrtkapp);
-                           return inv1(u) - u; },
-                         true, true, Math::pi());
-      else
+                           return
+                             root(u, lam(x0, _sqrtkapp), &_countn, &_countb,
+                                  sqrt(numeric_limits<real>::epsilon()))
+                             - u; },
+                         true, true, Math::pi(),
+                         int(ceil(real(1.5) * NCoeffs())),
+                         sqrt(numeric_limits<real>::epsilon()));
+        /*
+        cout << "HERE " << _kapp << " " << NCoeffs() << " "
+             << _dfinv.NCoeffs() << " "
+             << _countn << " " << _countb << "\n";
+        _invp = true;
+        _countn = 0; _countb = 0;
+        for (int i = 0; i <= 20; ++i) {
+          real u = i/real(5), z = (*this)(u),
+            u1 = inv2(z, &_countn, &_countb);
+          cout << u << " " << z << " " << u1-u << "\n";
+        }
+        cout << _countn << " " << _countb << "\n";
+        */
+      } else
         _fun.ComputeInverse();
     }
     _invp = true;
   }
 
   Math::real TriaxialLine::ffun::root(real z, real x0,
-                                      int* countn, int* countb) const {
+                                      int* countn, int* countb,
+                                      real tol) const {
     if (_mu != 0) return Math::NaN();
     if (!isfinite(z)) return z; // Deals with +/-inf and nan
     real d = fabs(Max())
@@ -730,7 +750,7 @@ namespace GeographicLib {
                          { return pair<real, real>((*this)(u), deriv(u)); },
                          z,
                          x0, xa, xb,
-                         Math::pi()/2, Math::pi()/2, 1, countn, countb);
+                         Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
   }
 
   // Approximate inverse using _chiinv or _fun.inv0

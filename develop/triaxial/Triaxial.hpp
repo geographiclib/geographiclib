@@ -162,6 +162,9 @@ namespace GeographicLib {
       //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for gam < 0
       //   unused for gam == 0
         nu, nup;
+      gamblk() : gamma(0), nu(0), nup(0) {}
+      gamblk(real gammax, real nux, real nupx)
+        : gamma(gammax), nu(nux), nup(nupx) {}
     };
     gamblk gamma(Angle bet, Angle omg, Angle alp)
       const;

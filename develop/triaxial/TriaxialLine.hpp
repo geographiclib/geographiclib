@@ -48,7 +48,8 @@ namespace GeographicLib {
       static real fvp(real dn, real kap, real kapp, real eps, real mu);
       // oblate/prolate variants for kap = 1, kapp = 0
       static real dfpsioblp(real s, real c, real eps, real mu);
-      real root(real z, real x0, int* countn, int* countb) const;
+      real root(real z, real x0, int* countn, int* countb,
+                real tol = std::numeric_limits<real>::epsilon()) const;
     public:
       ffun() {}
       ffun(real kap, real kapp, real eps, real mu, const Triaxial& t);
@@ -84,7 +85,7 @@ namespace GeographicLib {
 
       // Approximate inverse using _finv
       real inv0(real z) const;
-      // Accurate inverse by direct Newton (not using _finv)
+      // Accurate (to tol) inverse by direct Newton (not using _finv)
       real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
       // Accurate inverse correcting result from _finv
       real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
