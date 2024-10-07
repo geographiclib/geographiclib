@@ -114,8 +114,8 @@ namespace GeographicLib {
       solve2u(deltax, sig2n.first, fbet(), fomg(), gbet(), gomg(), u2, v2,
               countn, countb);
       bet2 = fbet().rev(u2); omg2 = fomg().rev(v2);
-      bet2a = anglam(u2, _t._newumb ? _t._kp : 1);
-      omg2a = anglam(v2, _t._newumb ? _t._k : 1);
+      bet2a = anglam(u2, _t._kp);
+      omg2a = anglam(v2, _t._k);
       int parity = fmod(sig2n.second, real(2)) ? -1 : 1;
       if (_t._umbalt) {
         Ex = _fic.eE * parity;
@@ -123,8 +123,8 @@ namespace GeographicLib {
         bet2a += ang::cardinal(2 * sig2n.second);
         bet2a = bet2a.flipsign(_fic.nN) + _fic.bet0;
         // replace cos(bet)/cos(omg) by sech(u)/sech(v)
-        alp2a = ang(_fic.nN * _t._kp * Ex / mcosh(v2, _t._newumb ? _t._k : 1),
-                    _t._k / mcosh(u2, _t._newumb ? _t._kp : 1)).
+        alp2a = ang(_fic.nN * _t._kp * Ex / mcosh(v2, _t._k),
+                    _t._k / mcosh(u2, _t._kp)).
           rebase(_fic.alp0);
       } else {
         Nx = _fic.nN * parity;
@@ -133,8 +133,8 @@ namespace GeographicLib {
         bet2a = bet2a.reflect((_fic.bet0.c() * Nx) < 0, _fic.bet0.c() < 0)
           .rebase(_fic.bet0);
         // replace cos(bet)/cos(omg) by sech(u)/sech(v)
-        alp2a = ang(_fic.eE * _t._kp / mcosh(v2, _t._newumb ? _t._k : 1),
-                    _t._k * Nx / mcosh(u2, _t._newumb ? _t._kp : 1)).
+        alp2a = ang(_fic.eE * _t._kp / mcosh(v2, _t._k),
+                    _t._k * Nx / mcosh(u2, _t._kp)).
           rebase(_fic.alp0);
       }
     } else {
@@ -323,6 +323,7 @@ namespace GeographicLib {
   void TriaxialLine::Optimize() {
     _f.ComputeInverse();
   }
+
   TriaxialLine::fline::disttx
   TriaxialLine::fline::Hybrid(const fics& fic,
                               Angle bet2,
@@ -367,8 +368,7 @@ namespace GeographicLib {
     , _invp(false)
     {
       df = _gm.gamma == 0 ? _fbet.Max() - _fomg.Max() : 0;
-      deltashift = _gm.gamma == 0 ?
-        2*df - (t._newumb ? 0 : log(_t._k2/_t._kp2)) : 0;
+      deltashift = _gm.gamma == 0 ? 2*df : 0;
     }
 
   void TriaxialLine::fline::ComputeInverse() {
@@ -464,8 +464,8 @@ namespace GeographicLib {
         // umbalt definition of alp0
         ang alp0x(fic.alp1.nearest(2U));
         alp2a = ang(fic.nN * _t._kp * fic.eE *
-                    parity / mcosh(v2, _t._newumb ? _t._k : 1),
-                    _t._k / mcosh(u2, _t._newumb ? _t._kp : 1)).rebase(alp0x);
+                    parity / mcosh(v2, _t._k),
+                    _t._k / mcosh(u2, _t._kp)).rebase(alp0x);
         ii = int(bet2n.second);
         // Move forward from umbilical point
         bet2a += ang::eps();
@@ -481,9 +481,9 @@ namespace GeographicLib {
         bet2a = ang::radians(bet2);
         // !umbalt definition of alp0
         ang alp0x(fic.alp1.nearest(1U));
-        alp2a = ang(fic.eE * _t._kp / mcosh(v2, _t._newumb ? _t._k : 1),
+        alp2a = ang(fic.eE * _t._kp / mcosh(v2, _t._k),
                     _t._k * fic.nN *
-                    parity / mcosh(u2, _t._newumb ? _t._kp : 1)).rebase(alp0x);
+                    parity / mcosh(u2, _t._kp)).rebase(alp0x);
         ii = int(omg2n.second);
         // Move forward from umbilical point
         omg2a += ang::eps();
@@ -543,8 +543,8 @@ namespace GeographicLib {
       } else {
         bet0 = bet1.nearest(2U);
         omg0 = omg1.nearest(2U);
-        delta = nN * f.fbet()(lamang(bet1 - bet0, t._newumb ? t._kp : 1)) -
-          eE * f.fomg()(lamang(omg1 - omg0, t._newumb ? t._k : 1));
+        delta = nN * f.fbet()(lamang(bet1 - bet0, t._kp)) -
+          eE * f.fomg()(lamang(omg1 - omg0, t._k));
       }
     } else {
       // gamma = NaN
@@ -579,8 +579,8 @@ namespace GeographicLib {
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps)
         delta = f.deltashift/2 - log(fabs(alp1.t()));
       else
-        delta = nN * f.fbet()(lamang(bet1 - bet0, t._newumb ? t._kp : 1)) -
-          eE * f.fomg()(lamang(omg1 - omg0, t._newumb ? t._k : 1));
+        delta = nN * f.fbet()(lamang(bet1 - bet0, t._kp)) -
+          eE * f.fomg()(lamang(omg1 - omg0, t._k));
     } else {
       // gamma = NaN
     }
@@ -594,8 +594,8 @@ namespace GeographicLib {
     } else if (g.gamma() == 0) {
       const Triaxial& t = g.t();
       sig1 = fic.nN *
-        g.gbet()(lamang(fic.bet1 - fic.bet0, t._newumb ? t._kp : 1)) +
-        fic.eE * g.gomg()(lamang(fic.omg1 - fic.omg0, t._newumb ? t._k : 1));
+        g.gbet()(lamang(fic.bet1 - fic.bet0, t._kp)) +
+        fic.eE * g.gomg()(lamang(fic.omg1 - fic.omg0, t._k));
     } else {
       // gamma = NaN
     }
@@ -613,7 +613,6 @@ namespace GeographicLib {
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    , _newumb(t._newumb)
     , _oblpro(t._oblpro)
     , _invp(false)
   {
@@ -676,39 +675,25 @@ namespace GeographicLib {
       _tx = _kapp < t._ellipthresh;
       if (_tx) {
         _ell = EllipticFunction(_kap, 0, _kapp, 1);
-        _fun = _newumb ?
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp,
-                      eps = _eps, ell = _ell]
-                     (real v) -> real
-                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                       return newdfvp(cn, dn, kap, kapp, eps); },
-                     2 * _ell.K(), true) :
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp,
-                      eps = _eps, ell = _ell]
-                     (real v) -> real
-                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                       return dfvp(cn, dn, kap, kapp, eps); },
-                     2 * _ell.K(), true);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp,
+                           eps = _eps, ell = _ell]
+                          (real v) -> real
+                          { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                            return dfvp(cn, dn, kap, kapp, eps); },
+                          2 * _ell.K(), true);
       } else
-        _fun = _newumb ?
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp, eps = _eps]
-                     (real phi) -> real
-                     { return newdfp(cos(phi), kap, kapp, eps); },
-                     Math::pi(), true) :
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp, eps = _eps]
-                     (real phi) -> real
-                     { return dfp(cos(phi), kap, kapp, eps); },
-                     Math::pi(), true);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp, eps = _eps]
+                          (real phi) -> real
+                          { return dfp(cos(phi), kap, kapp, eps); },
+                          Math::pi(), true);
     } else {
       // _mu == NaN
       _tx = false;
     }
     _nmax = _fun.NCoeffs();
-    // N.B. _max < 0 for _mu == 0 && _newumb && eps < 0
+    // N.B. _max < 0 for _mu == 0 && eps < 0
     _max = _mu == 0 ?
       _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max();
   }
@@ -716,19 +701,12 @@ namespace GeographicLib {
   void TriaxialLine::ffun::ComputeInverse() {
     if (!_invp) {
       if (_mu == 0)
-        _dfinv = _newumb ?
-          Trigfun(
-                  [this]
-                  (real phi) -> real
-                  { real u = lam(phi, _sqrtkapp);
-                    return inv1(u) - u; },
-                  true, true, Math::pi()) :
-          Trigfun(
-                  [this]
-                  (real phi) -> real
-                  { real u = lam(phi);
-                    return inv1(u) - u; },
-                  true, true, Math::pi());
+        _dfinv = Trigfun(
+                         [this]
+                         (real phi) -> real
+                         { real u = lam(phi, _sqrtkapp);
+                           return inv1(u) - u; },
+                         true, true, Math::pi());
       else
         _fun.ComputeInverse();
     }
@@ -753,37 +731,13 @@ namespace GeographicLib {
                          z,
                          x0, xa, xb,
                          Math::pi()/2, Math::pi()/2, 1, countn, countb);
-    /* DEAD CODE
-    return _tx ?
-      Trigfun::root(
-                    [fun = _fun, ell = _ell]
-                    (real u) -> pair<real, real>
-                    { real phi = gd(u), sch = 1/cosh(u);
-                      return pair<real, real>
-                        (u - fun(ell.F(phi)),
-                         1 - fun.deriv(ell.F(phi)) * sch /
-                         sqrt(ell.kp2() + ell.k2() * Math::sq(sch))); },
-                    z,
-                    x0, xa, xb,
-                    Math::pi()/2, Math::pi()/2, 1, countn, countb) :
-      Trigfun::root(
-                    [fun = _fun]
-                    (real u) -> pair<real, real>
-                    { real phi = gd(u), sch = 1/cosh(u);
-                      return pair<real, real>
-                        (u - fun(phi),
-                         1 - fun.deriv(phi) * sch); },
-                    z,
-                    x0, xa, xb,
-                    Math::pi()/2, Math::pi()/2, 1, countn, countb);
-    */
   }
 
   // Approximate inverse using _chiinv or _fun.inv0
   Math::real TriaxialLine::ffun::inv0(real z) const {
     if (!_invp) return Math::NaN();
     return _mu == 0 ?
-      z + _dfinv(gd(z, _newumb ? _sqrtkapp : 1)) : _fun.inv0(z);
+      z + _dfinv(gd(z, _sqrtkapp)) : _fun.inv0(z);
   }
 
   // Accurate inverse by direct Newton (not using _finv)
@@ -806,8 +760,6 @@ namespace GeographicLib {
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    , _newumb(t._newumb)
-    , _gdag(t._gdag)
     , _oblpro(t._oblpro)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
@@ -832,67 +784,38 @@ namespace GeographicLib {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
       if (_tx) {
         _ell = EllipticFunction(_kap / (_kap + _mu), 0, _mu / (_kap + _mu), 1);
-        _fun = _gdag ?
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp,
-                      eps = _eps, mu = _mu, ell = _ell]
-                     (real u) -> real
-                     { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
-                       return gdagup(cn, dn, kap, kapp, eps, mu); },
-                     _ell.K()) :
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp,
-                      eps = _eps, mu = _mu, ell = _ell]
-                     (real u) -> real
-                     { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
-                       return gup(cn, dn, kap, kapp, eps, mu); },
-                     _ell.K());
+        _fun =TrigfunExt(
+                         [kap = _kap, kapp = _kapp,
+                          eps = _eps, mu = _mu, ell = _ell]
+                         (real u) -> real
+                         { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                           return gup(cn, dn, kap, kapp, eps, mu); },
+                         _ell.K());
       } else
-        _fun = _gdag ?
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                     (real phi) -> real
-                     { return gdagphip(cos(phi), kap, kapp, eps, mu); },
-                     Math::pi()/2) :
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                     (real phi) -> real
-                     { return gphip(cos(phi), kap, kapp, eps, mu); },
-                     Math::pi()/2);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                          (real phi) -> real
+                          { return gphip(cos(phi), kap, kapp, eps, mu); },
+                          Math::pi()/2);
     } else if (_mu < 0) {
       _tx = -_mu / _kap < t._ellipthresh;
       if (_tx) {
         _ell = EllipticFunction((_kap + _mu) / _kap, 0, -_mu / _kap, 1);
-        _fun = _gdag ?
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp,
-                      eps = _eps, mu = _mu, ell = _ell]
-                     (real v) -> real
-                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                       return gdagvp(cn, dn, kap, kapp, eps, mu); },
-                     _ell.K()) :
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp,
-                      eps = _eps, mu = _mu, ell = _ell]
-                     (real v) -> real
-                     { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-                       return gvp(cn, dn, kap, kapp, eps, mu); },
-                     _ell.K());
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp,
+                           eps = _eps, mu = _mu, ell = _ell]
+                          (real v) -> real
+                          { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                            return gvp(cn, dn, kap, kapp, eps, mu); },
+                          _ell.K());
       } else
-        _fun = _gdag ?
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                     (real psi) -> real
-                     { return gdagpsip(sin(psi), cos(psi),
-                                       kap, kapp, eps, mu); },
-                     Math::pi()/2) :
-          TrigfunExt(
-                     [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
-                     (real psi) -> real
-                     { return gpsip(sin(psi), cos(psi), kap, kapp, eps, mu); },
-                     Math::pi()/2);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
+                          (real psi) -> real
+                          { return gpsip(sin(psi), cos(psi),
+                                            kap, kapp, eps, mu); },
+                          Math::pi()/2);
     } else if (_mu == 0) {
-      // gdag variant not relevant
       _tx = _kapp < t._ellipthresh;
       if (_tx) {
         _ell = EllipticFunction(_kap, 0, _kapp, 1);
@@ -920,17 +843,13 @@ namespace GeographicLib {
     real sn = 0, cn = 0, dn = 0;
     if (_mu != 0 && _tx)
       (void) _ell.am(u, sn, cn, dn);
-    if (_mu > 0 && _gdag)
-      return _tx ? gfdagup(cn, _kap, _mu) : gfdagphip(cos(u), _kap, _mu);
-    else if (_mu > 0)
+    if (_mu > 0)
       return _tx ? gfup(cn, _kap, _mu) : gfphip(cos(u), _kap, _mu);
-    else if (_mu < 0 && _gdag)
-      return _tx ? gfdagvp(dn, _kap, _mu) :
-        gfdagpsip(sin(u), cos(u), _kap, _mu);
     else if (_mu < 0)
-      return _tx ? gfvp(cn, _kap, _mu) : gfpsip(cos(u), _kap, _mu);
+      return _tx ? gfvp(dn, _kap, _mu) :
+        gfpsip(sin(u), cos(u), _kap, _mu);
     else                      // _mu == 0
-      return _newumb ? gf0upalt(u, _kap, _kapp) :  gf0up(u, _kap, _kapp);
+      return gf0up(u, _kap, _kapp);
   }
 
   // _mu > 0
@@ -940,20 +859,11 @@ namespace GeographicLib {
     return sqrt((1 - eps * c2) / ((kapp + c2) * (c2 + mu)) );
   }
   Math::real TriaxialLine::gfun::gphip(real c, real kap, real kapp,
-                                       real eps, real mu) {
-    real c2 = kap * Math::sq(c);
-    return sqrt((c2 + mu) * (1 - eps * c2) / (kapp + c2) );
-  }
-  Math::real TriaxialLine::gfun::gfphip(real c, real kap, real mu) {
-    real c2 = kap * Math::sq(c);
-    return c2 + mu;
-  }
-  Math::real TriaxialLine::gfun::gdagphip(real c, real kap, real kapp,
                                           real eps, real mu) {
     real c2 = kap * Math::sq(c);
     return c2 * sqrt((1 - eps * c2) / ((kapp + c2) * (c2 + mu)) );
   }
-  Math::real TriaxialLine::gfun::gfdagphip(real c, real kap, real /* mu */) {
+  Math::real TriaxialLine::gfun::gfphip(real c, real kap, real /* mu */) {
     real c2 = kap * Math::sq(c);
     return c2;
   }
@@ -963,51 +873,28 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(cn);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * (kap + mu)) );
   }
-  Math::real TriaxialLine::gfun::gup(real cn, real dn, real kap, real kapp,
+  Math::real TriaxialLine::gfun::gup(real cn, real /* dn */,
+                                     real kap, real kapp,
                                      real eps, real mu) {
-    real c2 = kap * Math::sq(cn);
-    return sqrt( (kap + mu) * (1 - eps * c2) / (kapp + c2) ) * Math::sq(dn);
-  }
-  Math::real TriaxialLine::gfun::gfup(real cn, real kap, real mu) {
-    real c2 = kap * Math::sq(cn);
-    return c2 + mu;           // or (kap + mu) * Math::sq(dn);
-  }
-  Math::real TriaxialLine::gfun::gdagup(real cn, real /* dn */,
-                                        real kap, real kapp,
-                                        real eps, real mu) {
     real c2 = kap * Math::sq(cn);
     return c2 * sqrt( (1 - eps * c2) / ((kapp + c2) * (kap + mu)) );
   }
-  Math::real TriaxialLine::gfun::gfdagup(real cn, real kap, real /* mu */) {
+  Math::real TriaxialLine::gfun::gfup(real cn, real kap, real /* mu */) {
     real c2 = kap * Math::sq(cn);
     return c2;
   }
 
   // _mu == 0
-  Math::real TriaxialLine::ffun::dfp(real c, real kap, real kapp, real eps) {
-    // function dfp = dfpf(phi, kappa, epsilon)
-    // return derivative of Delta f
-    // s = sqrt(1 - kap * sin(phi)^2)
-    real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
-    return (1 + eps*kapp) * kap * c / (s * (sqrt(kapp * (1 - eps*c2)) + s));
-  }
-  Math::real TriaxialLine::ffun::newdfp(real c,
-                                        real kap, real kapp, real eps) {
+  Math::real TriaxialLine::ffun::dfp(real c,
+                                     real kap, real kapp, real eps) {
     // function dfp = dfpf(phi, kappa, epsilon)
     // return derivative of Delta f*
     // s = sqrt(1 - kap * sin(phi)^2)
     real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
     return eps*kap * sqrt(kapp) * c / (s * (1 + sqrt(1 - eps*c2)));
   }
-  Math::real TriaxialLine::ffun::dfvp(real cn, real dn, real kap,
-                                      real kapp, real eps) {
-    // function dfvp = dfvpf(v, kap, eps)
-    // return derivative of Delta f_v
-    return (1 + eps*kapp) * kap * cn /
-      (sqrt(kapp * (1 - eps*kap * Math::sq(cn))) + dn);
-  }
-  Math::real TriaxialLine::ffun::newdfvp(real cn, real /* dn */,
-                                         real kap, real kapp, real eps) {
+  Math::real TriaxialLine::ffun::dfvp(real cn, real /* dn */,
+                                      real kap, real kapp, real eps) {
     // function dfvp = dfvpf(v, kap, eps)
     // return derivative of Delta f_v*
     return eps*kap * sqrt(kapp) * cn /
@@ -1017,21 +904,9 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(c);
     return sqrt( kap * (1 - eps * c2) / (kapp + c2) ) * c;
   }
-  /*
-    Math::real TriaxialLine::gfun::gf0p(real c, real kap, real kapp) {
-    real c2 = sqrt(kap * kapp) * kap * Math::sq(c);
-    return c2;
-    }
-  */
   Math::real TriaxialLine::gfun::gf0up(real u, real kap, real kapp) {
     // Adjust by sqrt(kap * kappp) to account of factor removed from f
     // functions.
-    return sqrt(kap / kapp) / Math::sq(cosh(u));
-  }
-
-  Math::real TriaxialLine::gfun::gf0upalt(real u, real kap, real kapp) {
-    // Adjust by sqrt(kap * kappp) to account of factor removed from f
-    // functions.  This is the "newumb" version of gf0up.
     return sqrt(kap * kapp) / ( kapp + Math::sq(sinh(u)) );
   }
   Math::real TriaxialLine::gfun::g0vp(real cn, real kap, real /* kapp */,
@@ -1046,46 +921,26 @@ namespace GeographicLib {
     return sqrt( (1 - eps * c2) / ((kapp + c2) * c2) ) ;
   }
   Math::real TriaxialLine::gfun::gpsip(real s, real c, real kap, real kapp,
-                                       real eps, real mu) {
-    // kap * cos(phi)^2
-    real c2 = kap * Math::sq(c) - mu * Math::sq(s);
-    return (kap + mu) *
-      sqrt( (1 - eps * c2) / ((kapp + c2) * c2) ) * Math::sq(c);
-  }
-  Math::real TriaxialLine::gfun::gfpsip(real c, real kap, real mu) {
-    return (kap + mu) * Math::sq(c);
-  }
-  Math::real TriaxialLine::gfun::gdagpsip(real s, real c, real kap, real kapp,
                                           real eps, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return sqrt(c2 * (1 - eps * c2) / (kapp + c2)) ;
   }
-  Math::real TriaxialLine::gfun::gfdagpsip(real s, real c, real kap, real mu) {
+  Math::real TriaxialLine::gfun::gfpsip(real s, real c, real kap, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return c2;
   }
   Math::real TriaxialLine::ffun::fvp(real dn, real kap, real kapp,
-                       real eps, real /* mu */) {
+                                     real eps, real /* mu */) {
     real c2 = kap * Math::sq(dn);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * kap) );
   }
-  Math::real TriaxialLine::gfun::gvp(real cn, real dn, real kap, real kapp,
-                                     real eps, real mu) {
-    real c2 = kap * Math::sq(dn);
-    return (kap + mu) *
-      sqrt( (1 - eps * c2) / (kap * (kapp + c2))) * Math::sq(cn);
-  }
-  Math::real TriaxialLine::gfun::gfvp(real cn, real kap, real mu) {
-    // alternatively mu + kap * Math::sq(dn)
-    return (kap + mu) * Math::sq(cn);
-  }
-  Math::real TriaxialLine::gfun::gdagvp(real /* cn */, real dn,
-                                        real kap, real kapp,
-                                        real eps, real /* mu */) {
+  Math::real TriaxialLine::gfun::gvp(real /* cn */, real dn,
+                                     real kap, real kapp,
+                                     real eps, real /* mu */) {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
     return dn2 * sqrt( kap * (1 - eps * c2) / (kapp + c2) );
   }
-  Math::real TriaxialLine::gfun::gfdagvp(real dn, real kap, real /* mu */) {
+  Math::real TriaxialLine::gfun::gfvp(real dn, real kap, real /* mu */) {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
     return c2;
   }
@@ -1099,7 +954,7 @@ namespace GeographicLib {
     return sqrt(1 - eps * c2);
   }
   Math::real TriaxialLine::gfun::gfpsioblp(real s, real c, real mu) {
-    return gfdagpsip(s, c, 1, mu);
+    return gfpsip(s, c, 1, mu);
   }
 
 } // namespace GeographicLib

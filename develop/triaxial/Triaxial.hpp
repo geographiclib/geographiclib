@@ -53,8 +53,6 @@ namespace GeographicLib {
     vec3 _axes;
     real _e2, _k2, _kp2, _k, _kp;
     bool _umbalt,               // how coordinates wrap with umbilical lines
-      _newumb,                  // new formulation for umblilical lines
-      _gdag,                    // use gdag = g - mu * f
       _oblpro,                  // include treatment of oblate/prolate cases
       _debug;                   // print out diagnostics
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
@@ -89,10 +87,6 @@ namespace GeographicLib {
     const vec3& axes() const { return _axes; }
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) { _umbalt = numbalt; }
-    bool newumb() const { return _newumb; }
-    void newumb(bool newumb) { _newumb = newumb; }
-    bool gdag() const { return _gdag; }
-    void gdag(bool gdag) { _gdag = gdag; }
     bool oblpro() const { return _oblpro; }
     void oblpro(bool oblpro) { _oblpro = oblpro; }
     void debug(bool debug) { _debug = debug; }
