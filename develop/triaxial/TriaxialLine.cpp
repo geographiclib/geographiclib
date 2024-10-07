@@ -30,7 +30,7 @@ namespace GeographicLib {
     alp1.round();
     _t = t;
     Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
-    _f = fline(t, gam, 0.5, 1.5);
+    _f = fline(t, gam);
     _fic = fline::fics(_f, bet1, omg1, alp1);
     _g = gline(t, gam);
     _gic = gline::gics(_g, _fic);
@@ -359,12 +359,11 @@ namespace GeographicLib {
     return ArcPos0(fic, tau12.base(), bet2a, omg2a, alp2a, true);
   }
 
-  TriaxialLine::fline::fline(const Triaxial& t, Triaxial::gamblk gam,
-                             real epspow, real nmaxmult)
+  TriaxialLine::fline::fline(const Triaxial& t, Triaxial::gamblk gam)
     : _t(t)
     , _gm(gam)
-    , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, t, epspow, nmaxmult)
-    , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, t, epspow, nmaxmult)
+    , _fbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, t)
+    , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, t)
     , _invp(false)
     {
       df = _gm.gamma == 0 ? _fbet.Max() - _fomg.Max() : 0;
@@ -608,7 +607,7 @@ namespace GeographicLib {
   }
 
   TriaxialLine::ffun::ffun(real kap, real kapp, real eps, real mu,
-                           const Triaxial& t, real epspow, real nmaxmult)
+                           const Triaxial& t)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
@@ -616,7 +615,6 @@ namespace GeographicLib {
     , _sqrtkapp(sqrt(_kapp))
     , _newumb(t._newumb)
     , _oblpro(t._oblpro)
-    , _tol(pow(numeric_limits<real>::epsilon(), epspow))
     , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
@@ -628,7 +626,7 @@ namespace GeographicLib {
                          eps = _eps, mu = _mu]
                         (real psi) -> real
                         { return dfpsioblp(sin(psi), cos(psi), eps, mu); },
-                        Math::pi()/2, false, epspow, nmaxmult);
+                        Math::pi()/2, false);
     } else if (_oblpro && _kap == 0 && _mu >= 0) { // mu < 0 not allowed
       // _kapp == 1
       _tx = false;
@@ -637,7 +635,7 @@ namespace GeographicLib {
                           [mu = _mu]
                           (real /* phi */) -> real
                           { return 1/sqrt(mu); },
-                          Math::pi()/2, false, epspow, nmaxmult);
+                          Math::pi()/2, false);
       // _mu == 0 treated specifally
     } else if (_mu > 0) {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
@@ -649,13 +647,13 @@ namespace GeographicLib {
                           (real u) -> real
                           { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
                             return fup(cn, kap, kapp, eps, mu); },
-                          _ell.K(), false, epspow, nmaxmult);
+                          _ell.K(), false);
       } else
         _fun = TrigfunExt(
                           [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
                           (real phi) -> real
                           { return fphip(cos(phi), kap, kapp, eps, mu); },
-                          Math::pi()/2, false, epspow, nmaxmult);
+                          Math::pi()/2, false);
     } else if (_mu < 0) {
       _tx = -_mu / _kap < t._ellipthresh;
       if (_tx) {
@@ -666,18 +664,16 @@ namespace GeographicLib {
                           (real v) -> real
                           { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
                             return fvp(dn, kap, kapp, eps, mu); },
-                          _ell.K(), false, epspow, nmaxmult);
+                          _ell.K(), false);
       } else
         _fun = TrigfunExt(
                           [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
                           (real psi) -> real
                           { return fpsip(sin(psi), cos(psi),
                                          kap, kapp, eps, mu); },
-                          Math::pi()/2, false, epspow, nmaxmult);
+                          Math::pi()/2, false);
     } else if (_mu == 0) {
       _tx = _kapp < t._ellipthresh;
-      // N.B. Don't compute the inverse of _fun so not really necessary to
-      // supply epspow and nmaxmult args to TrigfunExt.
       if (_tx) {
         _ell = EllipticFunction(_kap, 0, _kapp, 1);
         _fun = _newumb ?
@@ -687,31 +683,31 @@ namespace GeographicLib {
                      (real v) -> real
                      { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
                        return newdfvp(cn, dn, kap, kapp, eps); },
-                     2 * _ell.K(), true, epspow, nmaxmult) :
+                     2 * _ell.K(), true) :
           TrigfunExt(
                      [kap = _kap, kapp = _kapp,
                       eps = _eps, ell = _ell]
                      (real v) -> real
                      { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
                        return dfvp(cn, dn, kap, kapp, eps); },
-                     2 * _ell.K(), true, epspow, nmaxmult);
+                     2 * _ell.K(), true);
       } else
         _fun = _newumb ?
           TrigfunExt(
                      [kap = _kap, kapp = _kapp, eps = _eps]
                      (real phi) -> real
                      { return newdfp(cos(phi), kap, kapp, eps); },
-                     Math::pi(), true, epspow, nmaxmult) :
+                     Math::pi(), true) :
           TrigfunExt(
                      [kap = _kap, kapp = _kapp, eps = _eps]
                      (real phi) -> real
                      { return dfp(cos(phi), kap, kapp, eps); },
-                     Math::pi(), true, epspow, nmaxmult);
+                     Math::pi(), true);
     } else {
       // _mu == NaN
       _tx = false;
     }
-    _nmax = nmaxmult ? int(ceil(nmaxmult * _fun.NCoeffs())) : 1 << 16;
+    _nmax = _fun.NCoeffs();
     // N.B. _max < 0 for _mu == 0 && _newumb && eps < 0
     _max = _mu == 0 ?
       _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max();
@@ -726,15 +722,13 @@ namespace GeographicLib {
                   (real phi) -> real
                   { real u = lam(phi, _sqrtkapp);
                     return inv1(u) - u; },
-                  true, true, Math::pi(),
-                  1 << 16, _tol) :
+                  true, true, Math::pi()) :
           Trigfun(
                   [this]
                   (real phi) -> real
                   { real u = lam(phi);
                     return inv1(u) - u; },
-                  true, true, Math::pi(),
-                  1 << 16, _tol);
+                  true, true, Math::pi());
       else
         _fun.ComputeInverse();
     }

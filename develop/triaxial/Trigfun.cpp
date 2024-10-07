@@ -363,7 +363,7 @@ namespace GeographicLib {
            (throw GeographicLib::GeographicErr
             ("Convergence failure Trigfun::root"), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root");) {
-      // This inverse problem uses lots of iterations
+      // TODO: This inverse problem uses lots of iterations
       //   20 60 -90 180 127.4974 24.6254 2.4377
       // Need to figure out why.
       if (false && k == maxit/2) {
@@ -428,8 +428,8 @@ namespace GeographicLib {
   }
 
   Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp,
-                             int* countn, int* countb,
-                             real tol, int nmax) const {
+                          int* countn, int* countb,
+                          real tol, int nmax) const {
     if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
       throw GeographicErr("Can only invert Trigfun with a secular term");
     int s = _coeff[0] > 0 ? 1 : -1;
@@ -591,15 +591,14 @@ namespace GeographicLib {
   }
 
   TrigfunExt::TrigfunExt(const function<real(real)>& fp, real halfp,
-               bool sym, real epspow, real nmaxmult)
+               bool sym)
       : _fp(fp)
       , _sym(sym)
         // N.B. tol defaults to epsilon() here.  We need to compute the
         // integral accurately.
       , _f(Trigfun(_fp, false, _sym, halfp).integral())
-      , _tol( pow(numeric_limits<real>::epsilon(), epspow) )
-      , _nmax( nmaxmult ? int(ceil(nmaxmult * _f.NCoeffs())) :
-               1 << 16 )
+      , _tol(pow(numeric_limits<real>::epsilon(), 1/real(2)))
+      , _nmax(_f.NCoeffs())
       , _invp(false)
     {}
 

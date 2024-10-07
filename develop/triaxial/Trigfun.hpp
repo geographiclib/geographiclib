@@ -212,9 +212,7 @@ namespace GeographicLib {
      * Constructor specifying the derivative, an even periodic function
      **********************************************************************/
     TrigfunExt(const std::function<real(real)>& fp, real halfp,
-               bool sym = false,
-               real epspow = 1,
-               real nmaxmult = 0);
+               bool sym = false);
     real operator()(real x) const { return _f(x); }
     real deriv(real x) const { return _fp(x); }
     void ComputeInverse() {

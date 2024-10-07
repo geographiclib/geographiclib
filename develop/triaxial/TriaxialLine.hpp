@@ -53,8 +53,7 @@ namespace GeographicLib {
       real root(real z, real x0, int* countn, int* countb) const;
     public:
       ffun() {}
-      ffun(real kap, real kapp, real eps, real mu, const Triaxial& t,
-           real epsow = 1, real nmaxmult = 0);
+      ffun(real kap, real kapp, real eps, real mu, const Triaxial& t);
       real operator()(real u) const {
         using std::tan; using std::sin; using std::cos;
         using std::atan2; using std::sqrt;
@@ -280,8 +279,7 @@ namespace GeographicLib {
         int ind2;
       };
       fline() {}
-      fline(const Triaxial& t, Triaxial::gamblk gm,
-            real epspow = 1, real nmaxmult = 0);
+      fline(const Triaxial& t, Triaxial::gamblk gm);
       const ffun& fbet() const { return _fbet; }
       const ffun& fomg() const { return _fomg; }
       const Triaxial& t() const { return _t; }

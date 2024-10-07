@@ -346,7 +346,7 @@ namespace GeographicLib {
     bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
       // both points on middle ellipse
-      lf = TL::fline(*this, gamblk{}, 0.5, 1.5);
+      lf = TL::fline(*this, gamblk{});
       if (umb1 && umb2 && bet2.s() > 0 && omg2.c() < 0) {
         // process opposite umbilical points
         fic = TL::fline::fics(lf, bet1, omg1, ang{_kp, _k});
@@ -429,7 +429,7 @@ namespace GeographicLib {
       // set direction for probe as +/-90 based on sign of omg12
       alp1 = ang::cardinal(eE);
       bet1.reflect(true);
-      lf = TL::fline(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
+      lf = TL::fline(*this, gamma(bet1, omg1, alp1));
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
       omg2a -= omg2;
@@ -452,7 +452,7 @@ namespace GeographicLib {
       }
     } else if (umb1) {
       // umbilical point to general point
-      lf = TL::fline(*this, gamblk{}, 0.5, 1.5);
+      lf = TL::fline(*this, gamblk{});
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
       (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
@@ -495,7 +495,7 @@ namespace GeographicLib {
       alpa = ang( _kp * fabs(omg1.s()), _k * fabs(bet1.c()));
       alpb = alpa;
 
-      lf = TL::fline(*this, gamblk{}, 0.5, 1.5);
+      lf = TL::fline(*this, gamblk{});
       fic = TL::fline::fics(lf, bet1, omg1, alpb);
       unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
       for (; !done && qb <= 4U; ++qb, ++qa) {
@@ -539,7 +539,7 @@ namespace GeographicLib {
                       fa, fb,
                       &countn, &countb);
       alp1.round();
-      lf = TL::fline(*this, gamma(bet1, omg1, alp1), 0.5, 1.5);
+      lf = TL::fline(*this, gamma(bet1, omg1, alp1));
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
       backside = signbit(bet2a.c());
@@ -636,7 +636,7 @@ namespace GeographicLib {
                                Angle bet2, Angle omg2) {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     gamblk gam = t.gamma(b1, o1, a1);
-    TriaxialLine::fline l(t, gam, 0.5, 1.5);
+    TriaxialLine::fline l(t, gam);
     TriaxialLine::fline::fics ic(l, b1, o1, a1);
     return l.Hybrid0(ic, bet2, omg2);
   }
