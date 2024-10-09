@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2024-07-14
+\date 20yy-mm-dd
 
 \section abstract Abstract
 
@@ -743,7 +743,7 @@ print out \verbatim
   5551.76 km \endverbatim
 Here is a complete CMakeList.txt files you can use to build this test
 code using the installed library: \verbatim
-cmake_minimum_required (VERSION 3.16.0)
+cmake_minimum_required (VERSION 3.17.0)
 project (geodesictest)
 
 find_package (GeographicLib REQUIRED)
@@ -761,7 +761,7 @@ target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 If GeographicLib is not installed on your system, you can download and
 compile the library as part of your project using CMake's
 <code>FetchContent</code> with: \verbatim
-cmake_minimum_required (VERSION 3.16.0)
+cmake_minimum_required (VERSION 3.17.0)
 project (geodesictest)
 
 include(FetchContent)
@@ -7695,6 +7695,12 @@ git repository for GeographicLib</a>.
    - Improve documentation for Intersect class + tool to treat case of
      equally close intersectons.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
+   (released 20yy-mm-dd)
+   - CMake configuration change
+     - update cmake_minimum_required to 3.17.0 (to facilitate
+       integration with Qt projects).
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.4</a>
    (released 2024-07-14)
