@@ -29,7 +29,7 @@ namespace GeographicLib {
     , _c(c)
     , _axes({_a, _b, _c})
     , _umbalt(false)
-    , _oblpro(false)
+    , _oblpro(true)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
@@ -45,7 +45,6 @@ namespace GeographicLib {
       _k2  = (_b - _c) * (_b + _c) / s;
     }
     _k = sqrt(_k2); _kp = sqrt(_kp2);
-    // _oblpro = _k2 == 0 || _kp2 == 0;
     real ksum = _k2 + _kp2;
     if (! (isfinite(_a) && isfinite(_b) && isfinite(_c) &&
            _a >= _b && _b >= _c && _c >= 0 && _b > 0 &&
@@ -62,7 +61,7 @@ namespace GeographicLib {
     , _k(sqrt(_k2))
     , _kp(sqrt(_kp2))
     , _umbalt(false)
-    , _oblpro(false)
+    , _oblpro(true)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {

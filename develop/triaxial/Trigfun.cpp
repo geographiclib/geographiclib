@@ -18,12 +18,13 @@ namespace GeographicLib {
   using namespace std;
 
   Trigfun::Trigfun(const function<real(real)>& f, bool odd, bool sym,
-                   bool centerp, real halfp, int n, int nmax, real tol) {
+                   bool centerp, real halfp, int n, int nmax, real tol,
+                   real scale) {
     if (n == 0) {
       int n = 16;
       Trigfun t(f, odd, sym, false, halfp, n);
       while (n <= nmax) {
-        int K = chop(t._coeff, tol)
+        int K = chop(t._coeff, tol, scale)
           /*, K1 =  chop(t._coeff, numeric_limits<real>::epsilon(), true)*/;
         //        cout << "Chop " << K << " " << n << "\n";
         if (K < n) {
@@ -56,19 +57,19 @@ namespace GeographicLib {
   }
 
   Trigfun::Trigfun(const function<real(real)>& f, bool odd, bool sym,
-                   real halfp, int nmax, real tol) {
-    *this = Trigfun(f, odd, sym, false, halfp, 0, nmax, tol);
+                   real halfp, int nmax, real tol, real scale) {
+    *this = Trigfun(f, odd, sym, false, halfp, 0, nmax, tol, scale);
   }
 
   Trigfun::Trigfun(const function<real(real, real)>& f, bool odd, bool sym,
-                   real halfp, int nmax, real tol) {
+                   real halfp, int nmax, real tol, real scale) {
     // Initialize with 2 samples
     Trigfun t(
               [&f] (real x) -> real
               { return f(x, Math::NaN()); },
-              odd, sym, false, halfp, 2, nmax, tol);
+              odd, sym, false, halfp, 2);
     while (t._n <= nmax) {
-      int K = chop(t._coeff, tol)
+      int K = chop(t._coeff, tol, scale)
         /*, K1 =  chop(t._coeff, numeric_limits<real>::epsilon(), true)*/;
       //        cout << "Chop " << K << " " << n << "\n";
       if (K < t._n) {
@@ -429,7 +430,7 @@ namespace GeographicLib {
 
   Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp,
                           int* countn, int* countb,
-                          real tol, int nmax) const {
+                          real tol, int nmax, real scale) const {
     if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
       throw GeographicErr("Can only invert Trigfun with a secular term");
     int s = _coeff[0] > 0 ? 1 : -1;
@@ -439,12 +440,12 @@ namespace GeographicLib {
                [this, &fp, countn, countb, tol]
                (real z, real dx0) -> real
                { return inversep(z, fp, dx0, countn, countb, tol); },
-               _odd, _sym, nhp, nmax, tol);
+               _odd, _sym, nhp, nmax, tol, scale);
      t._coeff[0] = c0p;
      return t;
   }
 
-  int Trigfun::chop(const vector<real>& c, real tol, bool integral) {
+  int Trigfun::chop(const vector<real>& c, real tol, real scale) {
     // This is a clone of Chebfun's standardChop function.  For C++, the return
     // value is number of terms to retain.  Index of last term is one less than
     // this.
@@ -511,12 +512,13 @@ namespace GeographicLib {
 
     vector<real> m(n);
     int j = n;
-    m[--j] = fabs(c[n - 1] / (integral ? n : 1));
+    m[--j] = fabs(c[n - 1]);
     for (; j;) {
       --j;
-      m[j] = fmax(fabs(c[j] / (integral ? j + 1 : 1)), m[j + 1]);
+      m[j] = fmax(fabs(c[j]), m[j + 1]);
     }
     if (m[0] == 0) return 1;
+    if (scale >= 0) m[0] = fmax(scale, m[0]);
     for (j = n; j;)
       m[--j] /= m[0];
 

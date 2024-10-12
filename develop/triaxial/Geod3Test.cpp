@@ -16,7 +16,7 @@ using namespace GeographicLib;
 using namespace std;
 
 int usage(int retval, bool /*brief*/) {
-  ( retval ? std::cerr : std::cout ) << "Bad input\n";
+  ( retval ? cerr : cout ) << "Bad input\n";
   return retval;
 }
 
@@ -160,6 +160,8 @@ int main(int argc, const char* const argv[]) {
     int div = 1;
     {
       Triaxial t(sqrt(real(2)), 1, sqrt(1/real(2)));
+      // Triaxial t(1, 1, 1/real(2));
+      // Triaxial t(2, 1, 1);
       int bet1, omg1, bet2, omg2;
       real alp1, alp2, s12, m12, M12, M21;
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
@@ -172,32 +174,32 @@ int main(int argc, const char* const argv[]) {
       return 0;
     }
     for (int m = 1; m < argc; ++m) {
-      std::string arg(argv[m]);
+      string arg(argv[m]);
       if (arg == "-n") {
         if (++m == argc) return usage(1, true);
         try {
-          num = Utility::val<int>(std::string(argv[m]));
+          num = Utility::val<int>(string(argv[m]));
         }
-        catch (const std::exception&) {
-          std::cerr << "num " << argv[m] << " is not a number\n";
+        catch (const exception&) {
+          cerr << "num " << argv[m] << " is not a number\n";
           return 1;
         }
       } else if (arg == "-d") {
         if (++m == argc) return usage(1, true);
         try {
-          div = Utility::val<int>(std::string(argv[m]));
+          div = Utility::val<int>(string(argv[m]));
         }
-        catch (const std::exception&) {
-          std::cerr << "div " << argv[m] << " is not a number\n";
+        catch (const exception&) {
+          cerr << "div " << argv[m] << " is not a number\n";
           return 1;
         }
       } else if (arg == "-k") {
         if (++m == argc) return usage(1, true);
         try {
-          skew = Utility::val<int>(std::string(argv[m]));
+          skew = Utility::val<int>(string(argv[m]));
         }
-        catch (const std::exception&) {
-          std::cerr << "skew " << argv[m] << " is not a number\n";
+        catch (const exception&) {
+          cerr << "skew " << argv[m] << " is not a number\n";
           return 1;
         }
       } else
@@ -222,12 +224,12 @@ int main(int argc, const char* const argv[]) {
     }
     div = div + skew + num;
   }
-  catch (const std::exception& e) {
-    std::cerr << "Caught exception: " << e.what() << "\n";
+  catch (const exception& e) {
+    cerr << "Caught exception: " << e.what() << "\n";
     return 1;
   }
   catch (...) {
-    std::cerr << "Caught unknown exception\n";
+    cerr << "Caught unknown exception\n";
     return 1;
   }
 }

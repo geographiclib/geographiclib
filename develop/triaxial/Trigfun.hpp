@@ -51,8 +51,7 @@ namespace GeographicLib {
     std::vector<real> _coeff;
     real _h, _q, _p;              // half, quarter, whole period
     mutable real _max;
-    static int chop(const std::vector<real>& c, real tol,
-                    bool integral = false);
+    static int chop(const std::vector<real>& c, real tol, real scale = -1);
     // Function samples over half/quarter period of !sym/sym
     // odd sym cent  samples            nF  nC
     //  f   f   f    |-|-|-|-|-|-|-|-|  n+1 n+1 (4)
@@ -107,7 +106,8 @@ namespace GeographicLib {
      **********************************************************************/
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
             bool centerp, real halfp, int n, int nmax = 1 << 16,
-            real tol = std::numeric_limits<real>::epsilon());
+            real tol = std::numeric_limits<real>::epsilon(),
+            real scale = -1);
 
   public:
     /**
@@ -116,10 +116,12 @@ namespace GeographicLib {
     Trigfun() : _m(0), _max(-1) {}
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
             real halfp, int nmax = 1 << 16,
-            real tol = std::numeric_limits<real>::epsilon());
+            real tol = std::numeric_limits<real>::epsilon(),
+            real scale = -1);
     Trigfun(const std::function<real(real, real)>& f, bool odd, bool sym,
             real halfp, int nmax = 1 << 16,
-            real tol = std::numeric_limits<real>::epsilon());
+            real tol = std::numeric_limits<real>::epsilon(),
+            real scale = -1);
     real check(const std::vector<real>& F, bool centerp,
                real tol = std::numeric_limits<real>::epsilon()) const;
     //    real eval(real x) const;
@@ -163,7 +165,7 @@ namespace GeographicLib {
     Trigfun invert(const std::function<real(real)>& fp,
                    int* countn = nullptr, int* countb = nullptr,
                    real tol = std::numeric_limits<real>::epsilon(),
-                   int nmax = 1 << 16) const;
+                   int nmax = 1 << 16, real scale = -1) const;
     int NCoeffs() const { return _m; }
     real Max() const;
     real HalfPeriod() const { return _h; }

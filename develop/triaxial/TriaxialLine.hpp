@@ -46,7 +46,9 @@ namespace GeographicLib {
       static real fpsip(real s, real c, real kap, real kapp,
                         real eps, real mu);
       static real fvp(real dn, real kap, real kapp, real eps, real mu);
-      // oblate/prolate variants for kap = 1, kapp = 0
+      // oblate/prolate variant for kap = 0, kapp = 1
+      static real dfphioblp(real phi, real eps, real mu);
+      // oblate/prolate variant for kap = 1, kapp = 0
       static real dfpsioblp(real s, real c, real eps, real mu);
       real root(real z, real x0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
@@ -58,8 +60,10 @@ namespace GeographicLib {
         using std::atan2; using std::sqrt;
         if (_oblpro && _kapp == 0 && _mu <= 0)
           return (_mu == 0 ? tan(u) :
-                  atan2(sqrt(-_mu) * sin(u), cos(u)) / sqrt(-_mu)) - _fun(u);
+                  atan2(sqrt(-_mu) * sin(u), cos(u)) / sqrt(-_mu)) -
+            _fun(u);
         else if (_mu == 0) {
+          // This is sqrt(kap * kapp) * f(u)
           real phi = gd(u, _sqrtkapp);
           return u - _fun(_tx ? _ell.F(phi) : phi);
         } else
@@ -71,6 +75,7 @@ namespace GeographicLib {
         if (_oblpro && _kapp == 0 && _mu <= 0)
           return 1 / (Math::sq(cos(u)) - _mu * Math::sq(sin(u))) - _fun(u);
         else if (_mu == 0) {
+          // This is sqrt(kap * kapp) * f'(u)
           real phi = gd(u, _sqrtkapp),
             // sch = dphi/du
             sch = _sqrtkapp * cosh(u) / (_kapp + Math::sq(sinh(u)));
@@ -141,6 +146,7 @@ namespace GeographicLib {
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _max;
+      bool _invp;
       // _mu > 0
       static real gphip(real c, real kap, real kapp, real eps, real mu);
       static real gfphip(real c, real kap, real mu);
@@ -158,6 +164,9 @@ namespace GeographicLib {
       static real gvp(real cn, real dn, real kap, real kapp,
                          real eps, real mu);
       static real gfvp(real dn, real kap, real mu);
+      // oblate/prolate variants for kap = 0, kapp = 1
+      static real gphioblp(real phi, real eps, real mu);
+      static real gfphioblp(real phi, real mu);
       // oblate/prolate variants for kap = 1, kapp = 0
       static real gpsioblp(real s, real c, real eps, real mu);
       static real gfpsioblp(real s, real c, real mu);
@@ -166,7 +175,7 @@ namespace GeographicLib {
       gfun(real kap, real kapp, real eps, real mu, const Triaxial& t);
       real operator()(real u) const {
         if (_oblpro && ((_kapp == 0 && _mu <= 0) ||
-                        (_kap == 0 && _mu >- 0)))
+                        (_kap == 0 && _mu >= 0)))
           return _fun(u);
         else if (_mu == 0) {
           real phi = gd(u, _sqrtkapp);
@@ -178,7 +187,7 @@ namespace GeographicLib {
       real deriv(real u) const {
         using std::cosh; using std::sinh; using std::sqrt;
         if (_oblpro && ((_kapp == 0 && _mu <= 0) ||
-                        (_kap == 0 && _mu >- 0)))
+                        (_kap == 0 && _mu >= 0)))
           return _fun.deriv(u);
         else if (_mu == 0) {
           real phi = gd(u, _sqrtkapp),
@@ -192,9 +201,18 @@ namespace GeographicLib {
           return _fun.deriv(u);
       }
       real gfderiv(real u) const;
-      // Don't need these
-      // real inv(real y) const { return _fun.inv(y); }
-      // real inv1(real y) const { return _fun.inv1(y); }
+#if 0
+      // Approximate inverse using _finv
+      real inv0(real z) const;
+      // Accurate (to tol) inverse by direct Newton (not using _finv)
+      real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
+      // Accurate inverse correcting result from _finv
+      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
+      real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
+        return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
+      }
+      void ComputeInverse();
+#endif
       // Use ffun versions of these
       // real fwd(real phi) const {
       //   return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);

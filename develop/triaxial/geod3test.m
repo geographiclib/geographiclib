@@ -1,5 +1,4 @@
-function errs = geod3test(dat)
-  t = triaxial(sqrt([2,1,1/2]));
+function errs = geod3test(t, dat)
   ell1 = dat(:,1:2);
   alp1 = dat(:,3);
   ell2 = dat(:,4:5);
@@ -9,7 +8,6 @@ function errs = geod3test(dat)
   [r1, v1] = t.elliptocart2(ell1, alp1);
   [r2, v2] = t.elliptocart2(ell2, alp2);
   s12a = t.distance(r1, r2);
-  r2a = r2;
   [r2a, v2a] = t.reckon(r1, v1, s12);
   [r1a, v1a] = t.reckon(r2, v2, -s12);
   err1 = abs(s12a - s12);

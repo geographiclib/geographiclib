@@ -314,7 +314,7 @@ namespace GeographicLib {
     Position(s13, bet2, omg2, alp2);
     if (reverse) {
       alp2.reflect(true, true);
-      // TODO check if point 2 is an umbilical point
+      // TODO: check if point 2 is an umbilical point
     }
     _fic = fline::fics(_f, bet2, omg2, alp2);
     _gic = gline::gics(_g, _fic);
@@ -631,9 +631,9 @@ namespace GeographicLib {
       _tx = false;
       if (_mu > 0)
         _fun = TrigfunExt(
-                          [mu = _mu]
-                          (real /* phi */) -> real
-                          { return 1/sqrt(mu); },
+                          [eps = _eps, mu = _mu]
+                          (real phi) -> real
+                          { return dfphioblp(phi, eps, mu); },
                           Math::pi()/2, false);
       // _mu == 0 treated specifally
     } else if (_mu > 0) {
@@ -781,9 +781,10 @@ namespace GeographicLib {
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
     , _oblpro(t._oblpro)
+    , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
-    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu >+ 0 not allowed
+    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu > 0 not allowed
       // _kap == 1
       _tx = false;
       _fun = TrigfunExt(
@@ -796,9 +797,9 @@ namespace GeographicLib {
       // _kapp == 1
       _tx = false;
       _fun = TrigfunExt(
-                        [mu = _mu]
-                        (real /* phi */) -> real
-                        { return 0; },
+                        [eps = _eps, mu = _mu]
+                        (real phi) -> real
+                        { return gphioblp(phi, eps, mu); },
                         Math::pi()/2, false);
     } else if (_mu > 0) {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
@@ -860,8 +861,13 @@ namespace GeographicLib {
   }
 
   Math::real TriaxialLine::gfun::gfderiv(real u) const {
+    // return g'(u)/f'(u)
     real sn = 0, cn = 0, dn = 0;
-    if (_mu != 0 && _tx)
+    if (_oblpro && _kapp == 0 && _mu <= 0) // mu > 0 not allowed
+      return gfpsioblp(sin(u), cos(u), _mu);
+    else if (_oblpro && _kap == 0 && _mu >= 0) // mu < 0 not allowed
+      return gfphioblp(u, _mu);
+    else if (_mu != 0 && _tx)
       (void) _ell.am(u, sn, cn, dn);
     if (_mu > 0)
       return _tx ? gfup(cn, _kap, _mu) : gfphip(cos(u), _kap, _mu);
@@ -869,15 +875,39 @@ namespace GeographicLib {
       return _tx ? gfvp(dn, _kap, _mu) :
         gfpsip(sin(u), cos(u), _kap, _mu);
     else                      // _mu == 0
+      // This includes factor of sqrt(kap * kapp) because of adjustment of
+      // definition of f for mu == 0.
       return gf0up(u, _kap, _kapp);
   }
+#if 0
+  // Approximate inverse using _chiinv or _fun.inv0
+  Math::real TriaxialLine::gfun::inv0(real z) const {
+    if (!_invp) return Math::NaN();
+    return _mu == 0 ?
+      z + _dfinv(gd(z, _sqrtkapp)) : _fun.inv0(z);
+  }
 
-  // _mu > 0
+  // Accurate inverse by direct Newton (not using _finv)
+  Math::real TriaxialLine::gfun::inv1(real z, int* countn, int* countb) const {
+    return _mu == 0 ? root(z, z, countn, countb) :
+      _fun.inv1(z, countn, countb);
+  }
+
+  // Accurate inverse correcting result from _finv
+  Math::real TriaxialLine::gfun::inv2(real z, int* countn, int* countb) const {
+    if (!_invp) return Math::NaN();
+    return _mu == 0 ? root(z, inv0(z), countn, countb) :
+      _fun.inv2(z, countn, countb);
+  }
+  void TriaxialLine::gfun::ComputeInverse() {...}
+#endif
+  // _mu > 0 && !_tx
   Math::real TriaxialLine::ffun::fphip(real c, real kap, real kapp,
                                        real eps, real mu) {
     real c2 = kap * Math::sq(c);
     return sqrt((1 - eps * c2) / ((kapp + c2) * (c2 + mu)) );
   }
+  // This is non-negative
   Math::real TriaxialLine::gfun::gphip(real c, real kap, real kapp,
                                           real eps, real mu) {
     real c2 = kap * Math::sq(c);
@@ -888,11 +918,13 @@ namespace GeographicLib {
     return c2;
   }
 
+  // _mu > 0 && _tx
   Math::real TriaxialLine::ffun::fup(real cn, real kap, real kapp,
                                      real eps, real mu) {
     real c2 = kap * Math::sq(cn);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * (kap + mu)) );
   }
+  // This is non-negative
   Math::real TriaxialLine::gfun::gup(real cn, real /* dn */,
                                      real kap, real kapp,
                                      real eps, real mu) {
@@ -904,42 +936,50 @@ namespace GeographicLib {
     return c2;
   }
 
-  // _mu == 0
+  // _mu == 0 && !_tx
   Math::real TriaxialLine::ffun::dfp(real c,
                                      real kap, real kapp, real eps) {
     // function dfp = dfpf(phi, kappa, epsilon)
-    // return derivative of Delta f*
+    // return derivative of sqrt(kap * kapp) * Delta f
     // s = sqrt(1 - kap * sin(phi)^2)
     real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
     return eps*kap * sqrt(kapp) * c / (s * (1 + sqrt(1 - eps*c2)));
-  }
-  Math::real TriaxialLine::ffun::dfvp(real cn, real /* dn */,
-                                      real kap, real kapp, real eps) {
-    // function dfvp = dfvpf(v, kap, eps)
-    // return derivative of Delta f_v*
-    return eps*kap * sqrt(kapp) * cn /
-      (1  + sqrt(1 - eps*kap * Math::sq(cn)));
   }
   Math::real TriaxialLine::gfun::g0p(real c, real kap, real kapp, real eps) {
     real c2 = kap * Math::sq(c);
     return sqrt( kap * (1 - eps * c2) / (kapp + c2) ) * c;
   }
-  Math::real TriaxialLine::gfun::gf0up(real u, real kap, real kapp) {
-    // Adjust by sqrt(kap * kappp) to account of factor removed from f
-    // functions.
-    return sqrt(kap * kapp) / ( kapp + Math::sq(sinh(u)) );
+
+  // _mu == 0 && _tx
+  Math::real TriaxialLine::ffun::dfvp(real cn, real /* dn */,
+                                      real kap, real kapp, real eps) {
+    // function dfvp = dfvpf(v, kap, eps)
+    // return derivative of sqrt(kap * kapp) * Delta f_v
+    return eps*kap * sqrt(kapp) * cn /
+      (1  + sqrt(1 - eps*kap * Math::sq(cn)));
   }
   Math::real TriaxialLine::gfun::g0vp(real cn, real kap, real /* kapp */,
                                       real eps) {
     real c2 = kap * Math::sq(cn);
     return sqrt( kap * (1 - eps * c2) ) * cn;
   }
-  // _mu < 0
+
+  // _mu == 0 (_tx ignored)
+  Math::real TriaxialLine::gfun::gf0up(real u, real kap, real kapp) {
+    // Subst tan(phi) = sinh(u) /sqrt(kapp) in
+    // kap * cos(phi)^2 gives kap*kapp/(kapp + sinh(u)^2)
+    // Divide by sqrt(kap * kappp) to account of factor removed from f
+    // functions.
+    return sqrt(kap * kapp) / ( kapp + Math::sq(sinh(u)) );
+  }
+
+  // _mu < 0 && !_tx
   Math::real TriaxialLine::ffun::fpsip(real s, real c, real kap, real kapp,
                                        real eps, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * c2) ) ;
   }
+  // This is positive
   Math::real TriaxialLine::gfun::gpsip(real s, real c, real kap, real kapp,
                                           real eps, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
@@ -949,11 +989,14 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return c2;
   }
+
+  // _mu < 0 && _tx
   Math::real TriaxialLine::ffun::fvp(real dn, real kap, real kapp,
                                      real eps, real /* mu */) {
     real c2 = kap * Math::sq(dn);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * kap) );
   }
+  // This is positive
   Math::real TriaxialLine::gfun::gvp(real /* cn */, real dn,
                                      real kap, real kapp,
                                      real eps, real /* mu */) {
@@ -964,6 +1007,20 @@ namespace GeographicLib {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
     return c2;
   }
+
+  // oblate/prolate variants for kap = 0, kapp = 1, mu > 0
+  Math::real TriaxialLine::ffun::dfphioblp(real /* phi */, real /* eps */,
+                                           real mu) {
+    return 1 / sqrt(mu);
+  }
+  Math::real TriaxialLine::gfun::gphioblp(real /* phi */, real /* eps */,
+                                          real /* mu */) {
+    return 0;
+  }
+  Math::real TriaxialLine::gfun::gfphioblp(real /* phi */, real /* mu */) {
+    return 0;
+  }
+
   // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0
   Math::real TriaxialLine::ffun::dfpsioblp(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);

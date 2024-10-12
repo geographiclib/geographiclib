@@ -196,8 +196,8 @@ namespace GeographicLib {
         _dstep10.initialize(_y10, _s, 1/real(4));
         (void) _dstep10.do_step(fun);
         ++_nsteps;
-      }
 #endif
+      }
     }
     s12 *= _dir;
     if (_dense) {

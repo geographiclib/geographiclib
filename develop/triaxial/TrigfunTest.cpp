@@ -123,8 +123,10 @@ int main() {
   try {
     Utility::set_digits();
     typedef Math::real real;
-    if (0) BasicTest();
     if (1) {
+      BasicTest();
+    }
+    if (0) {
       real kp2 = 0.00001, k2 = 1 - kp2;
       //    k2 = -0.1; kp2 = 1 - k2;
       EllipTest(k2, kp2);
