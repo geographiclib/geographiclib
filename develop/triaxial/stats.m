@@ -32,7 +32,7 @@ function [s, newdat, cats] = stats(dat, targetstat)
       end
     end
   end
-  
+
   cats = [cat1, cat2, [1:length(cat1)]'];
 end
 function res = cat(bet,omg)

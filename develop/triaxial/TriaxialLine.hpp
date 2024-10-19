@@ -47,22 +47,49 @@ namespace GeographicLib {
                         real eps, real mu);
       static real fvp(real dn, real kap, real kapp, real eps, real mu);
       // oblate/prolate variant for kap = 0, kapp = 1
-      static real dfphioblp(real phi, real eps, real mu);
+      static real fphioblp(real phi, real eps, real mu);
       // oblate/prolate variant for kap = 1, kapp = 0
       static real dfpsioblp(real s, real c, real eps, real mu);
       real root(real z, real x0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
+
+      // Approximate inverse using _finv
+      real inv0(real z) const;
+      // Accurate (to tol) inverse by direct Newton (not using _finv)
+      real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
+      // Accurate inverse correcting result from _finv
+      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
+
     public:
+      // Summary of f and g functions, ** = don't compute inverse
+      // kap == 0 (mu >= 0) (oblate/prolate symmetry coordinate)
+      //  f = fphiobl / sqrt(mu), fphioblp = 1 inversion trivial
+      //  g = gphiobl, gphioblp = 0 **
+      // kapp == 0 (mu <= 0) (oblate/prolate non-symmetry coordinate)
+      //  f = (atan(sqrt(-mu)*tan(psi)) - dfpsiobl) / sqrt(-mu)
+      //    mu == 0 **
+      //    mu < 0 TODO: invert
+      //  g = gpsiobl
+      // kap, kapp > 0
+      // mu > 0
+      //  f = fphi or fu
+      //  g = gphi or gu **
+      // mu < 0
+      //  f = fpsi or fv
+      //  g = gpsi or gv **
+      // mu == 0
       ffun() {}
       ffun(real kap, real kapp, real eps, real mu, const Triaxial& t);
       real operator()(real u) const {
         using std::tan; using std::sin; using std::cos;
         using std::atan2; using std::sqrt;
-        if (_oblpro && _kapp == 0 && _mu <= 0)
-          return (_mu == 0 ? tan(u) :
-                  atan2(sqrt(-_mu) * sin(u), cos(u)) / sqrt(-_mu)) -
-            _fun(u);
-        else if (_mu == 0) {
+        if (_oblpro && _kapp == 0 && _mu <= 0) {
+          // This is sqrt(-mu) * f(u)
+          real s = sin(u), c = cos(u);
+          // term u - atan2(s, c) makes result a continuous function of u
+          return atan2(sqrt(-_mu) * s, c) + (u - atan2(s, c))
+            - _fun(u);
+        } else if (_mu == 0) {
           // This is sqrt(kap * kapp) * f(u)
           real phi = gd(u, _sqrtkapp);
           return u - _fun(_tx ? _ell.F(phi) : phi);
@@ -73,7 +100,9 @@ namespace GeographicLib {
         using std::cosh; using std::sinh; using std::sqrt;
         using std::sin; using std::cos;
         if (_oblpro && _kapp == 0 && _mu <= 0)
-          return 1 / (Math::sq(cos(u)) - _mu * Math::sq(sin(u))) - _fun(u);
+          // This is sqrt(-mu) * f'(u)
+          return sqrt(-_mu) / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
+            - _fun.deriv(u);
         else if (_mu == 0) {
           // This is sqrt(kap * kapp) * f'(u)
           real phi = gd(u, _sqrtkapp),
@@ -88,12 +117,6 @@ namespace GeographicLib {
           return _fun.deriv(u);
       }
 
-      // Approximate inverse using _finv
-      real inv0(real z) const;
-      // Accurate (to tol) inverse by direct Newton (not using _finv)
-      real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
-      // Accurate inverse correcting result from _finv
-      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
       }
@@ -170,6 +193,16 @@ namespace GeographicLib {
       // oblate/prolate variants for kap = 1, kapp = 0
       static real gpsioblp(real s, real c, real eps, real mu);
       static real gfpsioblp(real s, real c, real mu);
+      real root(real z, real x0, int* countn, int* countb,
+                real tol = std::numeric_limits<real>::epsilon()) const;
+
+      // Approximate inverse using _finv
+      real inv0(real z) const;
+      // Accurate (to tol) inverse by direct Newton (not using _finv)
+      real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
+      // Accurate inverse correcting result from _finv
+      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
+
     public:
       gfun() {}
       gfun(real kap, real kapp, real eps, real mu, const Triaxial& t);
@@ -201,18 +234,10 @@ namespace GeographicLib {
           return _fun.deriv(u);
       }
       real gfderiv(real u) const;
-#if 0
-      // Approximate inverse using _finv
-      real inv0(real z) const;
-      // Accurate (to tol) inverse by direct Newton (not using _finv)
-      real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
-      // Accurate inverse correcting result from _finv
-      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
       }
       void ComputeInverse();
-#endif
       // Use ffun versions of these
       // real fwd(real phi) const {
       //   return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);

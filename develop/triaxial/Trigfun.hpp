@@ -164,8 +164,9 @@ namespace GeographicLib {
                   real tol = std::numeric_limits<real>::epsilon()) const;
     Trigfun invert(const std::function<real(real)>& fp,
                    int* countn = nullptr, int* countb = nullptr,
+                   int nmax = 1 << 16,
                    real tol = std::numeric_limits<real>::epsilon(),
-                   int nmax = 1 << 16, real scale = -1) const;
+                   real scale = -1) const;
     int NCoeffs() const { return _m; }
     real Max() const;
     real HalfPeriod() const { return _h; }
@@ -214,13 +215,13 @@ namespace GeographicLib {
      * Constructor specifying the derivative, an even periodic function
      **********************************************************************/
     TrigfunExt(const std::function<real(real)>& fp, real halfp,
-               bool sym = false);
+               bool sym = false, real scale = -1);
     real operator()(real x) const { return _f(x); }
     real deriv(real x) const { return _fp(x); }
     void ComputeInverse() {
       if (!_invp && !_sym) {
         _countn = _countb = 0;
-        _finv = _f.invert(_fp, &_countn, &_countb, _tol, _nmax);
+        _finv = _f.invert(_fp, &_countn, &_countb, _nmax, _tol);
         _invp = true;
       }
     }

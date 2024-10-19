@@ -430,7 +430,7 @@ namespace GeographicLib {
 
   Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp,
                           int* countn, int* countb,
-                          real tol, int nmax, real scale) const {
+                          int nmax, real tol, real scale) const {
     if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))
       throw GeographicErr("Can only invert Trigfun with a secular term");
     int s = _coeff[0] > 0 ? 1 : -1;
@@ -593,12 +593,14 @@ namespace GeographicLib {
   }
 
   TrigfunExt::TrigfunExt(const function<real(real)>& fp, real halfp,
-               bool sym)
+                         bool sym, real scale)
       : _fp(fp)
       , _sym(sym)
         // N.B. tol defaults to epsilon() here.  We need to compute the
         // integral accurately.
-      , _f(Trigfun(_fp, false, _sym, halfp).integral())
+      , _f(Trigfun(_fp, false, _sym, halfp,
+                   1 << 16, numeric_limits<real>::epsilon(),
+                   scale).integral())
       , _tol(sqrt(numeric_limits<real>::epsilon()))
       , _nmax(int(ceil(real(1.5) * _f.NCoeffs())))
       , _invp(false)
