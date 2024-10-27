@@ -82,6 +82,7 @@ void errreport(const Triaxial& t,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
   typedef Math::real real;
   typedef Angle ang;
+  bool oblprotest = t.k2() == 0 || t.kp2() == 0;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else
@@ -90,10 +91,12 @@ void errreport(const Triaxial& t,
   ang
     bet1x(bet1), omg1x(omg1), alp1x(alp1),
     bet2x(bet2), omg2x(omg2), alp2x(alp2), alp1a, alp2a;
-  real s12a;
-  TriaxialLine l0 =
-    t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
-  real errs = fabs(s12 - s12a);
+  real s12a, errs = 0;
+  if (!oblprotest) {
+    TriaxialLine l0 =
+      t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
+    errs = fabs(s12 - s12a);
+  }
   Triaxial::vec3 r1, v1, r2, v2;
   t.elliptocart2(bet1x, omg1x, alp1x, r1, v1);
   t.elliptocart2(bet2x, omg2x, alp2x, r2, v2);
@@ -101,12 +104,18 @@ void errreport(const Triaxial& t,
   Triaxial::vec3 r1a, v1a, r2a, v2a;
   TriaxialLine l1(t, bet1x, omg1x, alp1x);
   TriaxialLine l2(t, bet2x, omg2x, alp2x);
+  real errr1 = 0, errv1 = 0,
+    errr2 = 0, errv2 = 0;
   l2.Position(-s12, bet1a, omg1a, alp1a);
-  t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
-  real errr1 = vecdiff(r1, r1a), errv1 = vecdiff(v1, v1a);
-  l1.Position(s12, bet2a, omg2a, alp2a);
-  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
-  real errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a);
+  if (!oblprotest || l2.gamma() != 0) {
+    t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
+    errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
+  }
+  if (!oblprotest || l1.gamma() != 0) {
+    l1.Position(s12, bet2a, omg2a, alp2a);
+    t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
+    errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
+  }
   cout << fixed << setprecision(0)
        << ceil(errs/eps) << " "
        << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "
@@ -159,7 +168,45 @@ int main(int argc, const char* const argv[]) {
     int skew = 10;
     int div = 1;
     {
-      Triaxial t(sqrt(real(2)), 1, sqrt(1/real(2)));
+      real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1;
+      for (int m = 1; m < argc; ++m) {
+        string arg(argv[m]);
+        if (arg == "-t") {
+          if (m + 3 >= argc) return usage(1, true);
+          try {
+            a = Utility::val<real>(string(argv[m + 1]));
+            b = Utility::fract<real>(string(argv[m + 2]));
+            c = Utility::fract<real>(string(argv[m + 2]));
+          }
+          catch (const exception& e) {
+            cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+            return 1;
+          }
+          m += 2;
+        } else if (arg == "-e") {
+          if (m + 4 >= argc) return usage(1, true);
+          try {
+            b = Utility::val<real>(string(argv[m + 1]));
+            e2 = Utility::fract<real>(string(argv[m + 2]));
+            k2 = Utility::fract<real>(string(argv[m + 3]));
+            kp2 = Utility::fract<real>(string(argv[m + 4]));
+          }
+          catch (const exception& e) {
+            cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+            return 1;
+          }
+          m += 4;
+        } else
+          return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
+      }
+      // testset.txt -t 1 3/2 1/3 2/3
+      // testobl.txt -t 1 3/4 1 0
+      // testpro.txt -t 1 3 0 1
+      // testspha.txt -t 1 0 1 0
+      // testsphb.txt -t 1 0 2/3 1/3
+      // testsphc.txt -t 1 0 1/3 2/3
+      // testsphd.txt -t 1 0 0 1
+      Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);
       int bet1, omg1, bet2, omg2;

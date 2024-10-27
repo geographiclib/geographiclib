@@ -421,7 +421,7 @@ namespace GeographicLib {
     } else if (bet1.s() == 0 && bet2.s() == 0) {
       // both points on equator
       ang omg12 = (omg2 - omg1).base();
-      int eE = omg12.s() > 0 ? 1 : -1;
+      int eE = signbit(omg12.s()) ? -1 : 1; // Fix #1 for triaxial sphere
       // set direction for probe as +/-90 based on sign of omg12
       alp1 = ang::cardinal(eE);
       bet1.reflect(true);
@@ -432,6 +432,13 @@ namespace GeographicLib {
       if (eE * omg2a.s() >= 0) {
         // geodesic follows the equator
         d = lf.ArcPos0(fic, omg12.flipsign(eE), bet2a, omg2a, alp2, false);
+        if (_debug)
+          cout << "d val " << eE << " "
+               << real(omg12.flipsign(eE)) << " "
+               << real(bet2a) << " " << real(omg2a) << " "
+               << real(alp2) << " "
+               << d.betw2 << " " << d.omgw2 << " "
+               << d.ind2 << "\n";
         if (_debug) msg = "bet1/2 = 0 equatorial";
         done = true;
       } else {
@@ -501,6 +508,8 @@ namespace GeographicLib {
         }
         if (qb < 4U) {
           f[qb] = lf.Hybrid0(fic, bet2, omg2);
+          if (_debug)
+            cout << "f[qb] " << qb << " " << f[qb] << "\n";
           if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
             alp1 = alpb;
             d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
@@ -510,10 +519,18 @@ namespace GeographicLib {
             break;
           }
         }
-        if (qb && (f[qa & 3U] < 0 && f[qb & 3U] > 0)) {
+        if (qb && (f[qa & 3U] < 0 && f[qb & 3U] > 0) &&
+            // Fix #2 for triaxial sphere
+            // Expect f[qb] - f[qa] <= pi.  The following condition catches
+            // cases where f[qb] = pi and f[qa] = -pi.  This can happen with e2
+            // == 0 and bet2 == - bet1.  Here "4" is a standin for pi+eps.
+            f[qb & 3U] - f[qa & 3U] < 4) {
           break;
         }
       }
+      if (_debug)
+        cout << "fDD " << done << " " << qa << " " << qb << " "
+             << f[qa & 3U] << " " << f[qb & 3U] << "\n";
       if (!done) {
         fa = f[qa & 3U]; fb = f[qb & 3U];
         alpa.setquadrant(qa);
@@ -523,6 +540,8 @@ namespace GeographicLib {
 
     int countn = 0, countb = 0;
     if (!done) {
+      if (_debug)
+        cout << "X " << done << " " << msg << "\n";
       alp1 = findroot(
                       [this, &bet1, &omg1, &bet2, &omg2]
                       (const ang& alp) -> Math::real
@@ -659,6 +678,10 @@ namespace GeographicLib {
     ang xm;                  // The return value
     int cntn = 0, cntb = 0, maxcnt = 100;
     bool trip = false, correct = false;
+    bool debug = false;
+    if (debug)
+      cout << "H " << real(xa) << " " << fa << " "
+           << real(xb) << " " << fb << "\n";
     for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
          cntn < maxcnt ||
            (throw GeographicLib::GeographicErr

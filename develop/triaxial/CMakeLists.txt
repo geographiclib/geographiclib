@@ -69,7 +69,7 @@ set (HEADERS
 add_library (trilib ${SOURCES} ${HEADERS})
 
 add_executable (randgeod randgeod.cpp)
-target_link_libraries (randgeod ${GeographicLib_LIBRARIES}
+target_link_libraries (randgeod trilib ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (TrigfunTest TrigfunTest.cpp)

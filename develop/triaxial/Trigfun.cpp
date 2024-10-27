@@ -292,6 +292,7 @@ namespace GeographicLib {
 
   Math::real Trigfun::root(real z, const function<real(real)>& fp,
                            int* countn, int* countb, real tol) const {
+    //    cout << "QQX\n";
     return root(z, fp, Math::NaN(), countn, countb, tol);
   }
 
@@ -303,7 +304,7 @@ namespace GeographicLib {
     real hr = Math::pi() * _coeff[0], s = _h / hr,
       x00 = s * z, dx = fabs(s) * Max();
     x0 = isfinite(x0) ? fmin(x00 + dx, fmax(x00 - dx, x0)) : x00;
-    //    cout << "QQG\n";
+    //    cout << "QQG " << dx << "\n";
     return dx == 0 ? x0 :
       root(*(this), z, fp, x0, x00 - dx, x00 + dx, _h, fabs(hr),
            s > 0 ? 1 : -1, countn, countb, tol);
@@ -315,12 +316,12 @@ namespace GeographicLib {
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
                            real tol) {
-    // cout << "QQH\n";
+    //    cout << "QQH\n";
     real ret =
     root([&f, &fp] (real x) -> pair<real, real>
          { return pair<real, real>(f(x), fp(x)); },
          z, x0, xa, xb, xscale, zscale, s, countn, countb, tol);
-    // cout << "QQHE" << endl;
+    //    cout << "QQHE" << endl;
     return ret;
   }
 
@@ -332,6 +333,8 @@ namespace GeographicLib {
                            real tol) {
     // Solve v = f(x) - z = 0
     bool debug = false;
+    if (x0 == xa && x0 == xb)
+      return x0;
     real vtol0 = tol * zscale,
       vtol1 = pow(tol, real(0.75)) * zscale,
       xtol = pow(tol, real(0.75)) * xscale,

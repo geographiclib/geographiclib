@@ -4,6 +4,7 @@
 #include <utility>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Utility.hpp>
+#include "Triaxial.hpp"
 
 using namespace GeographicLib;
 using namespace std;
@@ -160,7 +161,7 @@ int main(int argc, const char* const argv[]) {
       }
       return 0;
     }
-    real a = 1, f = 0;
+    real a = 1, f = 0, b = 1, e2 = 0, k2 = 1, kp2 = 0;
     unsigned seed = 0;
     int prec0 = 0,              // Precisions relative to 1m
       prec1 = 9,
@@ -178,6 +179,19 @@ int main(int argc, const char* const argv[]) {
           return 1;
         }
         m += 2;
+      } else if (arg == "-t") {
+        if (m + 4 >= argc) return usage(1, true);
+        try {
+          b = Utility::val<real>(string(argv[m + 1]));
+          e2 = Utility::fract<real>(string(argv[m + 2]));
+          k2 = Utility::fract<real>(string(argv[m + 3]));
+          kp2 = Utility::fract<real>(string(argv[m + 4]));
+        }
+        catch (const exception& e) {
+          cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+          return 1;
+        }
+        m += 4;
       } else if (arg == "-s") {
         if (++m == argc) return usage(1, true);
         try {
@@ -224,6 +238,9 @@ int main(int argc, const char* const argv[]) {
       cout << "foo\n";
     RandLoc rnd(a, a, a*(1 - f), seed, 0);
     Geodesic geod(a, f, true);
+    Triaxial t0 = f < 0 ? Triaxial(a * (1 - f), a, a) :
+      Triaxial(a, a, a * (1 - f)),
+      t1(b, e2, k2, kp2);
     int preci = prec0 + 5;
     real rndfac = pow(real(10), preci);
     if (0) {
@@ -265,13 +282,13 @@ int main(int argc, const char* const argv[]) {
           }
         }
         cout << fmt(beta1, preci) << " "
-                  << fmt(omega1, preci) << " "
-                  << fmt(azi1, prec1 + 5) << " "
-                  << fmt(beta2, preci) << " "
-                  << fmt(omega2, preci) << " "
-                  << fmt(azi2, prec1 + 5) << " "
-                  << fmt(s12, prec1 + 7)<< " "
-                  << fmt(m12, prec1 + 7) << "\n";
+             << fmt(omega1, preci) << " "
+             << fmt(azi1, prec1 + 5) << " "
+             << fmt(beta2, preci) << " "
+             << fmt(omega2, preci) << " "
+             << fmt(azi2, prec1 + 5) << " "
+             << fmt(s12, prec1 + 7)<< " "
+             << fmt(m12, prec1 + 7) << "\n";
       }
     } else {
       real bet1, omg1, bet2, omg2;
@@ -286,24 +303,41 @@ int main(int argc, const char* const argv[]) {
 #endif
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
-        if (f < 0) {
-          rotate(bet1, omg1, alp1, 1);
-          rotate(bet2, omg2, alp2, 1);
-        }
-        phi1 = Math::atand(Math::tand(bet1) / (1 - f));
-        phi2 = Math::atand(Math::tand(bet2) / (1 - f));
-        geod.Inverse(phi1, omg1, phi2, omg2,
-                     s12, alp1, alp2, m12, M12, M21);
-        if (f < 0) {
-          rotate(bet1, omg1, alp1, -1);
-          rotate(bet2, omg2, alp2, -1);
-        }
-        if (false && f < 0 &&
-            bet1 + bet2 == 0 && Math::cosd(alp1) * Math::cosd(alp2) < 0) {
-          // Attempt to standardize the azimuth when there's more than one
-          // shortest geodesic.  SKIP FOR NOW.
-          alp1 = 180 - alp1;
-          alp2 = 180 - alp2;
+        if (f == 0) {
+          Triaxial::vec3 r1, r2, v1, v2;
+          Angle phi1, lam1, phi2, lam2, alp1a, alp2a;
+          t1.elliptocart2(Angle(bet1), Angle(omg1), r1);
+          t1.elliptocart2(Angle(bet2), Angle(omg2), r2);
+          t0.cart2toellip(r1, phi1, lam1);
+          t0.cart2toellip(r2, phi2, lam2);
+          geod.Inverse(real(phi1), real(lam1), real(phi2), real(lam2),
+                       s12, alp1, alp2);
+          t0.elliptocart2(phi1, lam1, Angle(alp1), r1, v1);
+          t0.elliptocart2(phi2, lam2, Angle(alp2), r2, v2);
+          t1.cart2toellip(Angle(bet1), Angle(omg1), v1, alp1a);
+          t1.cart2toellip(Angle(bet2), Angle(omg2), v2, alp2a);
+          alp1 = real(alp1a);
+          alp2 = real(alp2a);
+        } else {
+          if (f < 0) {
+            rotate(bet1, omg1, alp1, 1);
+            rotate(bet2, omg2, alp2, 1);
+          }
+          phi1 = Math::atand(Math::tand(bet1) / (1 - f));
+          phi2 = Math::atand(Math::tand(bet2) / (1 - f));
+          geod.Inverse(phi1, omg1, phi2, omg2,
+                       s12, alp1, alp2, m12, M12, M21);
+          if (f < 0) {
+            rotate(bet1, omg1, alp1, -1);
+            rotate(bet2, omg2, alp2, -1);
+          }
+          if (false && f < 0 &&
+              bet1 + bet2 == 0 && Math::cosd(alp1) * Math::cosd(alp2) < 0) {
+            // Attempt to standardize the azimuth when there's more than one
+            // shortest geodesic.  SKIP FOR NOW.
+            alp1 = 180 - alp1;
+            alp2 = 180 - alp2;
+          }
         }
         cout << int(bet1) << " " << int(omg1) << " "
              << nicestr(real(alp1), prec, true) << " "

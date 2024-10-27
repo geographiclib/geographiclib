@@ -269,6 +269,7 @@ namespace GeographicLib {
     //   = fx'(x) * (gfx'(x) + gfy'(y))
     // where gfx'(y) = gx'(x)/fx'(x)
     //       gfy'(y) = gy'(y)/fy'(y)
+    //    cout << "BBX0\n";
     x = Trigfun::root(
                       [&fx, &fy, &gx, &gy, f0, g0]
                       (real x) -> pair<real, real>
@@ -279,6 +280,7 @@ namespace GeographicLib {
                                                  gy.gfderiv(y))); },
                       g0, x0, xa, xb, xscale, zscale, 1,
                       countn, countb);
+    //    cout << "BBX1\n";
     y = fy.inv(fx(x) - f0);
     // Do one round of 2d Newton
     // Trial solution z0 = [x0, y0]'
@@ -347,8 +349,8 @@ namespace GeographicLib {
         psi12 = ang(0, copysign(real(1), psi12.c()), 0, true);
       tau12 = psi12;
     } else if (gamma() <= 0) {
-      bet2a = bet2; bet2a.reflect(false, fic.nN < 0);
-      ang bet12 = bet2a - fic.bet1;
+      ang bet2b = bet2; bet2b.reflect(false, fic.nN < 0);
+      ang bet12 = bet2b - fic.bet1;
       bet12.reflect(fic.nN < 0);
       // convert -180deg to 180deg
       if (signbit(bet12.s()))
@@ -390,10 +392,37 @@ namespace GeographicLib {
   Math::real TriaxialLine::fline::Hybrid0(const fics& fic,
                                           Angle bet2, Angle omg2)
   const {
+    bool debug = false;
     ang bet2a, omg2a, alp2a, omg2b(omg2);
     (void) Hybrid(fic, bet2, bet2a, omg2a, alp2a);
     (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
+    if (debug)
+      cout << "H0 "
+           << real(fic.bet1) << " "
+           << real(fic.omg1) << " "
+           << real(fic.alp1) << " "
+           << real(bet2a) << " " << real(omg2a) << " "
+           << real(alp2a) << " " << real(omg2b) << "\n"
+           << fic.omg1.s() << " " << fic.omg1.c() << " "
+           << omg2a.s() << " " << omg2a.c() << " "
+           << omg2b.s() << " " << omg2b.c() << " ";
     omg2a -= omg2b;
+    if (debug)
+      cout << omg2a.s() << " " << omg2a.c() << " " << omg2a.c() + 1 << "\n";
+    // This test has been superceded by Fix #2 for triaxial sphere in
+    // Triaxial.hpp
+    if (false && _t._e2 < 128 * numeric_limits<real>::epsilon() &&
+        ( 1 + omg2a.c() <= 1 - numeric_limits<real>::epsilon() &&
+          fabs(omg2a.s()) <= 16 * numeric_limits<real>::epsilon() ) &&
+        (signbit(omg2a.s()) ^ signbit(fic.alp1.s()))) {
+      if (debug)
+        cout << "HERE\n";
+      // This is the only place where the limit e2 -> 0 is treated specially.
+      // We're following a great circle path the opposite latitude and we need
+      // to ensure that the sign of the longitude difference (+/-pi) matches
+      // the sign of alp1.
+      omg2a = ang(copysign(real(0), fic.alp1.s()), real(-1));
+    }
     return omg2a.radians0();
   }
 
@@ -416,6 +445,11 @@ namespace GeographicLib {
         u2 = fomg().fwd(fic.eE * omg2a.radians());
         v2 = fbet().inv(fomg()(u2) + fic.delta);
         psi2 = ang::radians(fbet().rev(v2));
+    if (_t._debug)
+      cout << "AP " << real(tau12) << " "
+           << real(omg2a) << " "
+           << fic.eE * omg2a.radians() << " " << u2 << " "
+           << fomg()(u2) + fic.delta << " " << v2 << "\n";
       }
       // Already normalized
       bet2a = ang(gm().nup * psi2.s(),
@@ -613,7 +647,8 @@ namespace GeographicLib {
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    , _oblpro(t._oblpro)
+    // Restrict oblpro treatment to mu == 0
+    , _oblpro(t._oblpro && _mu == 0)
     , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
@@ -751,6 +786,7 @@ namespace GeographicLib {
     x0 = fmin(xb, fmax(xa, x0));
     // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
     // N.B. use default tol for root, because we want accurate answers here
+    //    cout << "BBA\n";
     return Trigfun::root(
                          [this]
                          (real u) -> pair<real, real>
@@ -769,6 +805,7 @@ namespace GeographicLib {
 
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::ffun::inv1(real z, int* countn, int* countb) const {
+    //    cout << "BBZ\n";
     return _mu == 0 ? root(z, z, countn, countb) :
       _fun.inv1(z, countn, countb);
   }
@@ -787,10 +824,12 @@ namespace GeographicLib {
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    , _oblpro(t._oblpro)
+    // Restrict oblpro treatment to mu == 0
+    , _oblpro(t._oblpro && _mu == 0)
     , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
+    // Restrict oblpro treatment to mu == 0
     if (_oblpro && _kapp == 0 && _mu <= 0) { // mu > 0 not allowed
       // _kap == 1
       _tx = false;
@@ -899,6 +938,7 @@ namespace GeographicLib {
     x0 = fmin(xb, fmax(xa, x0));
     // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
     // N.B. use default tol for root, because we want accurate answers here
+    //    cout << "BBD\n";
     return Trigfun::root(
                          [this]
                          (real u) -> pair<real, real>
