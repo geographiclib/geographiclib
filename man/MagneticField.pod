@@ -58,7 +58,7 @@ The WGS84 ellipsoid is used, I<a> = 6378137 m, I<f> = 1/298.257223563.
 
 =item B<-n> I<name>
 
-use magnetic field model I<name> instead of the default C<wmm2020>.  See
+use magnetic field model I<name> instead of the default C<wmm2025>.  See
 L</MODELS>.
 
 =item B<-d> I<dir>
@@ -176,6 +176,12 @@ following models
     wmm2020, the World Magnetic Model 2020, which approximates the
       main magnetic field for the period 2020-2025.  See
       https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+    wmm2025, the World Magnetic Model 2025, which approximates the
+      main magnetic field for the period 2025-2030.  See
+      https://www.ncei.noaa.gov/products/world-magnetic-model
+    wmmhr2025, the World Magnetic Model High Resolution 2025, a high
+      resolution version of wmm2025.  See
+      https://www.ncei.noaa.gov/products/world-magnetic-model-high-resolution
     igrf11, the International Geomagnetic Reference Field (11th
       generation), which approximates the main magnetic field for
       the period 1900-2015.  See

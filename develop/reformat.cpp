@@ -276,8 +276,9 @@ int main(int argc, char* argv[]) {
         }
       }
     } else if (model == "wmm2015" || model == "wmm2015v2" ||
-               model == "wmm2020" || model == "igrf12" ||
-               model == "igrf13") {
+               model == "wmm2020" ||
+               model == "wmm2025" || model == "wmmhr2025" ||
+               model == "igrf12" || model == "igrf13") {
       // Download WMM2015COF.zip
       // http://ngdc.noaa.gov/geomag/WMM/WMM_coeff.shtml
       // wmm2015 coefficients are in WMM2015COF/WMM.COF
@@ -290,6 +291,14 @@ int main(int argc, char* argv[]) {
       // http://ngdc.noaa.gov/geomag/WMM/WMM_coeff.shtml
       // wmm2020 coefficients are in WMM2020COF/WMM.COF
       //
+      // Download WMM2025COF.zip
+      // https://www.ncei.noaa.gov/products/world-magnetic-model
+      // wmm2025 coefficients are in WMM2025COF/WMM.COF
+      //
+      // Download WMMHR2025COF.zip
+      // https://www.ncei.noaa.gov/products/world-magnetic-model-high-resolution
+      // wmmhr2025 coefficients are in WMMHR2025COF/WMMHR.COF
+      //
       // igrf12 coefficients
       // http://ngdc.noaa.gov/IAGA/vmod/geomag70_linux.tar.gz
       // igrf12 coefficients are in geomag70_linux/IGRF12.COF
@@ -300,13 +309,17 @@ int main(int argc, char* argv[]) {
       std::string id = model == "wmm2015" ? "WMM2015A" :
         (model == "wmm2015v2" ?  "WMM2015B" :
          (model == "wmm2020" ? "WMM2020A" :
-          (model == "igrf12" ? "IGRF12-A" : "IGRF13-A")));
+          (model == "wmm2025" ? "WMM2025A" :
+           (model == "wmmhr2025" ? "WMM2025H" :
+            (model == "igrf12" ? "IGRF12-A" : "IGRF13-A")))));
       fout.write(id.c_str(), 8);
       std::string filename = model == "wmm2015" ? "WMM2015COF/WMM.COF"
         : (model == "wmm2015v2" ? "WMM2015v2COF/WMM.COF"
            : (model == "wmm2020" ? "WMM2020COF/WMM.COF"
-              : (model == "igrf12" ? "geomag70_linux-2015/IGRF12.COF"
-                 : "geomag70_linux-2020/IGRF13.COF")));
+              : (model == "wmm2025" ? "WMM2025COF/WMM.COF"
+                 : (model == "wmmhr2025" ? "WMMHR2025COF/WMMHR.COF"
+                    : (model == "igrf12" ? "geomag70_linux-2015/IGRF12.COF"
+                       : "geomag70_linux-2020/IGRF13.COF")))));
       std::ifstream fin(filename.c_str());
       std::string ss;
       bool start = true;
@@ -324,8 +337,10 @@ int main(int argc, char* argv[]) {
         double c, s, c1, s1;
         if (start) {
           if (model == "wmm2015" || model == "wmm2015v2" ||
-              model == "wmm2020") {
+              model == "wmm2020" || model == "wmm2025" ) {
             N = 12; N1 = 12;
+          } else if (model == "wmmhr2025") {
+            N = 133; N1 = 133;
           } else {
             std::string mm;
             if (!(is >> mm >> mm >> N >> N1))
@@ -357,7 +372,8 @@ int main(int argc, char* argv[]) {
         if (!std::getline(fin, ss))
           ss = "";
         if (model == "wmm2015" || model == "wmm2015v2" ||
-            model == "wmm2020") {
+            model == "wmm2020" ||
+            model == "wmm2025" || model == "wmmhr2025") {
           if (ss.size() && ss[0] == '9')
             ss = "";
           if (ss.size() == 0) {
