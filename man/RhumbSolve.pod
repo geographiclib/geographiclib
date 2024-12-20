@@ -243,7 +243,7 @@ L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 
 This solution for rhumb line is described in C. F. F. Karney,
 I<The area of rhumb polygons>,
-Stud. Geophys. Geod. (2024);
+Stud. Geophys. Geod. 68(3--4), 99--120 (2024);
 DOI L<https://doi.org/10.1007/s11200-024-0709-z>.
 
 The Wikipedia page, Rhumb line,

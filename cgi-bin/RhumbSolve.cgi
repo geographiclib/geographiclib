@@ -327,7 +327,7 @@ cat <<EOF
       C. F. F. Karney,
       <a href="https://doi.org/10.1007/s11200-024-0709-z"><i>The area
          of rhumb polygons</i></a>,
-      Stud. Geophys. Geod. (2024); DOI:
+      Stud. Geophys. Geod. <b>68</b>(3&ndash;4), 99&ndash;120 (2024); DOI:
       <a href="https://doi.org/10.1007/s11200-024-0709-z">
          10.1007/s11200-024-0709-z</a>.
     </p>

@@ -67,7 +67,7 @@ namespace GeographicLib {
    * - C. F. F. Karney,<br>
    *   <a href="https://doi.org/10.1007/s11200-024-0709-z">
    *   <i>The area of rhumb polygons</i></a>,<br>
-   *   Stud. Geophys. Geod. (2024);
+   *   Stud. Geophys. Geod. 68(3--4), 99--120 (2024);
    *   DOI: <a href="https://doi.org/10.1007/s11200-024-0709-z">
    *   10.1007/s11200-024-0709-z</a>.
    * .
