@@ -400,6 +400,7 @@ namespace GeographicLib {
                 str << std::scientific
                     << std::setprecision(std::numeric_limits<ExtT>::digits10-1)
                     << x;
+                // Code for GEOGRAPHILIB_PRECISION > 2 and types double/real
                 if (val<ExtT>(str.str()) == x)
                   array[i++] = val<IntT>(str.str());
                 else

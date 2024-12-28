@@ -135,7 +135,7 @@ set default downloads for distrib-C++ on sourceforge
 
 post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
 
-VERSION=2.4
+VERSION=2.5
 
 Brew...
 
@@ -167,8 +167,6 @@ conda-forge...
   edit README.md recipe/bld.bat recipe/build.sh recipe/meta.yaml
   reset build number in meta.yaml to 0
   needs patch file to turn off tests in signtest.cpp
-  next time add to build requirements in meta.yaml
-    - {{ stdlib("c") }}
   conda remove -y -n build --all
   conda create -y -n build
   conda activate build
@@ -198,7 +196,9 @@ conda-forge...
 vcpkg...
   git pull
   git checkout -b geographiclib/$VERSION
-  update ports/geographiclib (remove port-version if 0)
+  update ports/geographiclib
+    vcpkg.json -- version
+    portfile.cmake -- SHA512 (remove port-version if 0)
   ./vcpkg remove geographiclib
   ./vcpkg install 'geographiclib[tools]'
   binaries in installed/x64-linux/tools/geographiclib

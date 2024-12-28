@@ -213,7 +213,7 @@ These models approximate the magnetic field due to the earth's core and
 the ionosphere, the magnetosphere, nearby magnetized materials,
 electrical machinery, etc.
 
-By default, the C<wmm2020> magnetic model is used.  This may changed by
+By default, the C<wmm2025> magnetic model is used.  This may changed by
 setting the environment variable C<GEOGRAPHICLIB_MAGNETIC_NAME> or with
 the B<-n> option.
 
@@ -234,7 +234,7 @@ L<https://geographiclib.sourceforge.io/C++/doc/magnetic.html#magneticinst>.
 
 =item B<GEOGRAPHICLIB_MAGNETIC_NAME>
 
-Override the compile-time default magnetic name of C<wmm2020>.  The
+Override the compile-time default magnetic name of C<wmm2025>.  The
 B<-h> option reports the value of B<GEOGRAPHICLIB_MAGNETIC_NAME>, if
 defined, otherwise it reports the compile-time value.  If the B<-n>
 I<name> option is used, then I<name> takes precedence.
@@ -269,11 +269,11 @@ way.
 
 =head1 EXAMPLES
 
-The magnetic field from WMM2020 in Timbuktu on 2020-12-25
+The magnetic field from WMM2025 in Timbuktu on 2025-01-01
 
-    echo 2020-12-25 16:46:33N 3:00:34W 300 | MagneticField -r
-    => -1.47 11.98 33994.9 33983.7 -871.7 7214.7 34752.1
-       0.13 -0.02 21.9 23.9 77.9 -8.4 19.7
+    echo 2025-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
+    => -1.04 12.00 34015.6 34010.0 -618.0 7232.0 34775.9
+       0.11 0.01 4.2 5.4 63.7 5.4 5.3
 
 The first two numbers returned are the declination and inclination of
 the field.  The second line gives the annual change.

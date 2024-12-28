@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 20yy-mm-dd
+\date 2024-12-28
 
 \section abstract Abstract
 
@@ -21,7 +21,7 @@ GeographicLib is a small C++ library for
 - geodesic and rhumb line calculations;
 - conversions between geographic, UTM, UPS, MGRS, geocentric, and local
   cartesian coordinates;
-- gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2020)
+- gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2025)
   calculations.
 
 The emphasis is on returning accurate results with errors close to
@@ -2683,6 +2683,14 @@ The supported models are
    <a href="https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2020</a>, which approximates the main magnetic field
    for the period 2020--2025.
+ - <b>wmm2025</b>, the
+   <a href="https://www.ncei.noaa.gov/products/world-magnetic-model"> World
+   Magnetic Model 2025</a>, which approximates the main magnetic field
+   for the period 2025--2030.
+ - <b>wmmhr2025</b>, the
+   <a href="https://www.ncei.noaa.gov/products/world-magnetic-model-high-resolution">
+   World Magnetic Model High Resolution 2025</a>, a high resolution version of
+   wmm2025.
  - <b>igrf11</b>, the
    <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
@@ -2695,6 +2703,10 @@ The supported models are
    <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (13th generation)</a>, which approximates
    the main magnetic field for the period 1900--2025.
+ - <b>igrf14</b>, the
+   <a href="https://www.ncei.noaa.gov/products/international-geomagnetic-reference-field">
+   International Geomagnetic Reference Field (14th generation)</a>,
+   which approximates the main magnetic field for the period 1900--2030.
  - <b>emm2010</b>, the
    <a href="https://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
@@ -2785,6 +2797,34 @@ https://sourceforge.net/projects/geographiclib/files/magnetic-distrib
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2020.zip">
  link</a> (2)</center>
 <tr>
+ <td>wmm2025
+ <td><center>12</center>
+ <td><center>2025--2030</center>
+ <td><center>3</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2025.tar.bz2">
+ link</a> (2)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2025.exe">
+ link</a> (1759)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2025.zip">
+ link</a> (2)</center>
+<tr>
+ <td>wmmhr2025
+ <td><center>133</center>
+ <td><center>2025--2030</center>
+ <td><center>281</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmmhr2025.tar.bz2">
+ link</a> (37)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmmhr2025.exe">
+ link</a> (1792)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmmhr2025.zip">
+ link</a> (46)</center>
+<tr>
  <td>igrf11
  <td><center>13</center>
  <td><center>1900--2015</center>
@@ -2826,6 +2866,20 @@ https://sourceforge.net/projects/geographiclib/files/magnetic-distrib
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf13.zip">
  link</a> (8)</center>
+<tr>
+ <td>igrf14
+ <td><center>13</center>
+ <td><center>1900--2030</center>
+ <td><center>29</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf14.tar.bz2">
+ link</a> (8)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf14.exe">
+ link</a> (1764)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf14.zip">
+ link</a> (9)</center>
 <tr>
  <td>emm2010
  <td><center>739</center>
@@ -2899,7 +2953,7 @@ Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
 \verbatim
    mkdir -p /usr/local/share/GeographicLib
-   tar xofjC wmm2020.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC wmm2025.tar.bz2 /usr/local/share/GeographicLib
    tar xofjC emm2010.tar.bz2 /usr/local/share/GeographicLib
    etc.
 \endverbatim
