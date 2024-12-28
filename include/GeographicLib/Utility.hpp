@@ -347,10 +347,73 @@ namespace GeographicLib {
             str.read(reinterpret_cast<char*>(buffer), n * sizeof(ExtT));
             if (!str.good())
               throw GeographicErr("Failure reading data");
-            for (int j = 0; j < n; ++j)
-              // fix endian-ness and cast to IntT
-              array[i++] = IntT(bigendp == Math::bigendian ? buffer[j] :
-                                Math::swab<ExtT>(buffer[j]));
+            for (int j = 0; j < n; ++j) {
+              // fix endian-ness
+              ExtT x = bigendp == Math::bigendian ? buffer[j] :
+                Math::swab<ExtT>(buffer[j]);
+#if GEOGRAPHICLIB_PRECISION > 2
+              // for C++17 use if constexpr folding in test of
+              if (typeid(ExtT) == typeid(double) &&
+                    typeid(IntT) == typeid(Math::real)) {
+                // readarray is used to read in coefficient data rapidly.  Thus
+                // 8.3n is stored in its IEEE double representation.  This is
+                // fine is the working precision is double.  However, when
+                // working at higher precision, how should be interpret the
+                // constant 8.3 appearing in a published table?  Possibilities
+                // are
+                //
+                // (a) treat this as an exact decimal number 83/10;
+                //
+                // (b) treat this as the approximate decimal representation of
+                // an exact double precision number 2336242306698445/2^48 =
+                // 8.300000000000000710542735760100185871124267578125
+                //
+                // Here use (a) if the number of significant digits in the
+                // number is 15 or less.  Otherwise, we use (b).
+                //
+                // We implement this as follows.  Any double which can be
+                // represented as a decimal number with precision 14 = digis10
+                // - 1 (= 15 sig figs) is treated as an approximation to that
+                // decimal number.  The high precision number is then obtained
+                // by reading the decimal number at that precision.  Otherwise
+                // the double is treated as exact.  The high precision number
+                // is obtained by adding zeros in the binary fraction.
+                //
+                // N.B. printing with precision 14 = digis10 - 1 allows short
+                // numbers to be represended with trailing zeros.  This isn't
+                // necessarily the case with precision = digits10, e.g., 8.3
+                // becomes 8.300000000000001
+                //
+                // This prescription doesn't exactly implement the method
+                // proposed.  If the published table of numbers includes
+                // 8.300000000000001, this will be interpreted as 8.3.  This
+                // doesn't apply to any published magnetic or gravity data.
+                // E.g., the coefficients for EGM96, resp. EGM2008, are given
+                // with precision 11, resp. 14.
+                //
+                // This conversion of doubles to Math::real comes at a
+                // substantial cost.  It adds about 14 s to the time it takes
+                // to read the egm2008 gravity model for quad and mpfr
+                // precisions.  This is acceptable, however, because high
+                // precision is only used for benchmarking.
+                std::ostringstream str;
+                str << std::scientific
+                    << std::setprecision(std::numeric_limits<ExtT>::digits10-1)
+                    << x;
+                if (val<ExtT>(str.str()) == x)
+                  array[i++] = val<IntT>(str.str());
+                else
+                  array[i++] = IntT(x);
+              } else {
+                // Code for GEOGRAPHILIB_PRECISION > 2 but types not
+                // double/real
+                array[i++] = IntT(x);
+              }
+#else
+              // Code for GEOGRAPHILIB_PRECISION <= 2
+              array[i++] = IntT(x);
+#endif
+            }
             k -= n;
           }
         }

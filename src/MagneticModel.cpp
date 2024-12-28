@@ -109,6 +109,11 @@ namespace GeographicLib {
     if (n != string::npos)
       n -= 5;
     string version(line, 5, n);
+    // version 2 added treatment of NumConstants.  The MagneticModel class now
+    // accepts NumConstants for version = 1 or 2.  (The version logic was
+    // necessary to allow old versions of GeographicLib, which didn't
+    // understand NumConstants, to complain when it encountered a version 2
+    // file.)
     if (!(version == "1" || version == "2"))
       throw GeographicErr("Unknown version in " + _filename + ": " + version);
     string key, val;

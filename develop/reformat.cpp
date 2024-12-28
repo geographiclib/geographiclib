@@ -18,8 +18,8 @@ void storecos(std::vector<double>& C, int N, int M,
               double v, int n, int m) {
   if (v == 0)
     return;
-  if (n < 0 || n > N || m < 0 || m > M)
-    throw std::runtime_error("Invalid coefficient");
+  if (!(n >= 0 && n <= N && m >= 0 && m <= M))
+    throw std::runtime_error("Invalid degree or order");
   C[cosind(N, M, n, m)] = v;
 }
 
@@ -27,8 +27,8 @@ void storesin(std::vector<double>& S, int N, int M,
               double v, int n, int m) {
   if (v == 0)
     return;
-  if (n < 0 || n > N || m <= 0 || m > M)
-    throw std::runtime_error("Invalid coefficient");
+  if (!(n >= 0 && n <= N && m > 0 && m <= M))
+    throw std::runtime_error("Invalid degree or order");
   S[sinind(N, M, n, m)] = v;
 }
 
@@ -278,7 +278,8 @@ int main(int argc, char* argv[]) {
     } else if (model == "wmm2015" || model == "wmm2015v2" ||
                model == "wmm2020" ||
                model == "wmm2025" || model == "wmmhr2025" ||
-               model == "igrf12" || model == "igrf13") {
+               // defer treatment of igfr1[23] tp igrf14 below
+               model == "igrf12xx" || model == "igrf13xx") {
       // Download WMM2015COF.zip
       // http://ngdc.noaa.gov/geomag/WMM/WMM_coeff.shtml
       // wmm2015 coefficients are in WMM2015COF/WMM.COF
@@ -341,7 +342,7 @@ int main(int argc, char* argv[]) {
             N = 12; N1 = 12;
           } else if (model == "wmmhr2025") {
             N = 133; N1 = 133;
-          } else {
+          } else { 
             std::string mm;
             if (!(is >> mm >> mm >> N >> N1))
               throw std::runtime_error("Short read on header");
@@ -393,6 +394,65 @@ int main(int argc, char* argv[]) {
           }
         }
       }
+    } else if (model == "igrf12" || model == "igrf13" || model == "igrf14") {
+      std::string id = "IGRFnn-A";
+      id[4] = model[4]; id[5] = model[5];
+      fout.write(id.c_str(), 8);
+      // https://www.ngdc.noaa.gov/IAGA/vmod/coeffs/igrf12coeffs.txt
+      // https://www.ngdc.noaa.gov/IAGA/vmod/coeffs/igrf13coeffs.txt
+      // https://www.ngdc.noaa.gov/IAGA/vmod/coeffs/igrf14coeffs.txt
+      std::string filename = model + "coeffs.txt";
+      std::ifstream fin(filename.c_str());
+      // format for igrf14coeffs.txt (gen = 14)
+      // comments start with #
+      // 2 lines of headers
+      // data = c/sflag n m coeffsx(gen+12) sv
+      // coeffs are for 1990+5*i for i in [0, gen+12)
+      // sv covers period 1900+5*(gen+12) + [-5,0]
+      // order for first 20 columns 1900-1995 is 10
+      // order for rest 13
+      // order of last sv column is 8
+      int L = 10*(model[4]-'0') + (model[5]-'0') + 13, // gen + 13
+        L0 = 20;
+      std::vector<std::vector<double>> C(L);
+      std::vector<std::vector<double>> S(L);
+      std::vector<int> N(L);
+      std::vector<int> M(L);
+      for (int l = 0; l < L; ++l) {
+        N[l] = l == L-1 ? 8 : (l < L0 ? 10 : 13);
+        M[l] = N[l];
+        int K = (M[l] + 1) * (2*N[l] - M[l] + 2) / 2;
+        C[l].resize(K, 0.0);
+        S[l].resize(K - (N[l] + 1), 0.0);
+      }
+      std::string ss;
+      int nhead = 0;
+      while (nhead < 2) {
+        if (!std::getline(fin, ss) || ss.empty())
+          throw std::runtime_error("Short read on file");
+        if (ss[0] == '#') continue;
+        ++nhead;
+      }
+      char flag;
+      int n, m;
+      double v;
+      while (std::getline(fin, ss)) {
+        std::istringstream is(ss);
+        if (!(is >> flag >> n >> m))
+          throw std::runtime_error("Short read on data");
+        for (int l = 0; l < L; ++l) {
+          if (!(is >> v))
+            throw std::runtime_error("Short read on coeffs");
+          if (flag == 'g')
+            storecos(C[l], N[l], M[l], v, n, m);
+          else if (flag == 'h')
+            storesin(S[l], N[l], M[l], v, n, m);
+          else
+            throw std::runtime_error("Bad flag value");
+        }
+      }
+      for (int l = 0; l < L; ++l)
+        storecoeff(fout, C[l], S[l], M[l], N[l]);
     } else if (model == "egm2008" || model == "egm96" || model == "egm84"
                || model == "wgs84") {
       std::string id = model == "egm2008" ? "EGM2008A" :

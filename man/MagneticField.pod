@@ -194,6 +194,10 @@ following models
       generation), which approximates the main magnetic field for
       the period 1900-2025.  See
       https://ngdc.noaa.gov/IAGA/vmod/igrf.html
+    igrf14, the International Geomagnetic Reference Field (14th
+      generation), which approximates the main magnetic field for
+      the period 1900-2030.  See
+      https://www.ncei.noaa.gov/products/international-geomagnetic-reference-field
     emm2010, the Enhanced Magnetic Model 2010, which approximates
       the main and crustal magnetic fields for the period 2010-2015.
       See https://ngdc.noaa.gov/geomag/EMM/index.html

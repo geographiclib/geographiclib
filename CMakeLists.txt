@@ -50,7 +50,7 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 26)
-set (LIBVERSION_BUILD 26.1.0)
+set (LIBVERSION_BUILD 26.1.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -327,7 +327,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.64)
+    find_package (Boost 1.70 CONFIG)
     if (Boost_FOUND)
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()

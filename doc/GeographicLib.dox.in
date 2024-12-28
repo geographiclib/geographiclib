@@ -1952,7 +1952,7 @@ The first line of the .egm file must consist of "EGMF-v" where EGMF
 stands for "Earth Gravity Model Format" and v is the version number of
 the format (currently "1").
 
-The rest of the File is read a line at a time.  A # character and
+The rest of the file is read a line at a time.  A # character and
 everything after it are discarded.  If the result is just white space it
 is discarded.  The remaining lines are of the form "KEY WHITESPACE
 VALUE".  In general, the KEY and the VALUE are case-sensitive.
@@ -2664,10 +2664,10 @@ expand the internal magnetic potential of the earth as sum of spherical
 harmonics.  They neglect magnetic fields due to the ionosphere, the
 magnetosphere, nearby magnetized materials, electric machinery, etc.
 Users of MagneticModel are advised to read the
-<a href="https://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
-Warning"</a> this is provided with igrf11.  Although the advice is
-specific to igrf11, many of the comments apply to all magnetic field
-models.
+<a href="https://www.ncei.noaa.gov/products/international-geomagnetic-reference-field/health-warning">
+"Health Warning"</a> this is provided with igrf.  Although the advice
+is specific to the igrf models, many of the comments apply to all
+magnetic field models.
 
 The supported models are
  - <b>wmm2010</b>, the
@@ -2714,7 +2714,8 @@ Go to
 
 \section magneticinst Installing the magnetic field models
 
-These magnetic models are available for download:
+These magnetic models are available for download from this directoy
+https://sourceforge.net/projects/geographiclib/files/magnetic-distrib
 <center>
 <table>
 <caption>Available magnetic models</caption>
@@ -2934,7 +2935,7 @@ The first line of the .wmm file must consist of "WMMF-v" where WMMF
 stands for "World Magnetic Model Format" and v is the version number of
 the format (currently "2").
 
-The rest of the File is read a line at a time.  A # character and
+The rest of the file is read a line at a time.  A # character and
 everything after it are discarded.  If the result is just white space it
 is discarded.  The remaining lines are of the form "KEY WHITESPACE
 VALUE".  In general, the KEY and the VALUE are case-sensitive.
@@ -2993,11 +2994,16 @@ Other keywords are ignored.
 
 The coefficient file NAME.wmm.cof is a binary file in little endian
 order.  The first 8 bytes of this file must match the ID given in
-NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
-coefficients.  The first NumModels of these model the magnetic field at
-Epoch + \e i * DeltaEpoch for 0 &le; \e i &lt; NumModels.  The last set of
-coefficients model the rate of change of the magnetic field at Epoch +
-(NumModels &minus; 1) * DeltaEpoch.  The format for each set of coefficients
+
+NAME.wmm.  This is followed by NumModels + 1 + NumConstants sets of
+spherical harmonic coefficients.  The first NumModels of these model the
+magnetic field at Epoch + \e i * DeltaEpoch for 0 &le; \e i &lt;
+NumModels.  The next set of coefficients model the rate of change of the
+magnetic field at Epoch + (NumModels &minus; 1) * DeltaEpoch.  If
+NumConstants > 0, the last set of coefficients model the constant short
+wavelength contributions to the magnetic field.
+
+The format for each set of coefficients
 is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
    This must satisfy \e N &ge; &minus;1.
@@ -7698,9 +7704,22 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
    (released 20yy-mm-dd)
-   - CMake configuration change
-     - update cmake_minimum_required to 3.17.0 (to facilitate
-       integration with Qt projects).
+   - New magnetic models provided
+     - World Magnetic Model 2025, wmm2025; this covers the period
+       2025--2030.  This is now the model returned by
+       MagneticModel::DefaultMagneticName and is default magnetic model
+       for <a href="MagneticField.1.html">MagneticField</a> (replacing
+       wmm2020 which is only valid thru the end of 2024).
+     - World Magnetic Model High Resolution 2025, wmmhr2025; this is a
+       high-resolution version of wmm2025 including terms up to degree
+       133 (as opposed to 12 for wmm2025).
+     - International Geomagnetic Reference Field (14th generation),
+       igrf14, which approximates the main magnetic field of the earth
+       for the period 1900--2030.
+   - Update CMake's cmake_minimum_required to 3.17.0 (to facilitate
+     integration with Qt projects).
+   - For GEOGRAPHICLIB_PRECISION > 2, readarray treats doubles as
+     approximations to exact decimal constants.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.4</a>
    (released 2024-07-14)
