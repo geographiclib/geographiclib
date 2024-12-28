@@ -108,6 +108,7 @@ test-distribution.sh: set SUFFIX= and BRANCH=main
 CMakeLists.txt set PROJECT_VERSION_SUFFIX suffix to ""
 Update NEWS
 Set date in NEWS and GeographicLib.dox.in
+Commit to git
 run develop/test-distribution.sh
 run windows build
 copy windows installers to data-distrib/distrib-C++

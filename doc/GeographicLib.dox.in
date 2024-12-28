@@ -7703,7 +7703,7 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
-   (released 20yy-mm-dd)
+   (released 2024-12-28)
    - New magnetic models provided
      - World Magnetic Model 2025, wmm2025; this covers the period
        2025--2030.  This is now the model returned by

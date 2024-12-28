@@ -4,7 +4,29 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.4
+The current version of the library is 2.5
+
+Changes between 2.5 (released 2024-12-28) and 2.4 versions:
+
+   * New magnetic models provided
+
+     + World Magnetic Model 2025, wmm2025; this covers the period
+       2025-2030.  This is now the model returned by
+       MagneticModel::DefaultMagneticName and is default magnetic
+       model for MagneticField (replacing wmm2020 which is only valid
+       thru the end of 2024).
+     + World Magnetic Model High Resolution 2025, wmmhr2025; this is a
+       high-resolution version of wmm2025 including terms up to degree
+       133 (as opposed to 12 for wmm2025).
+     + International Geomagnetic Reference Field (14th generation),
+       igrf14, which approximates the main magnetic field of the earth
+       for the period 1900-2030.
+
+   * Update CMake's cmake_minimum_required to 3.17.0 (to facilitate
+     integration with Qt projects).
+
+   * For GEOGRAPHICLIB_PRECISION > 2, readarray treats doubles as
+     approximations to exact decimal constants.
 
 Changes between 2.4 (released 2024-07-14) and 2.3 versions:
 
