@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2024-07-14
+\date 20yy-mm-dd
 
 \section abstract Abstract
 
@@ -743,10 +743,16 @@ print out \verbatim
   5551.76 km \endverbatim
 Here is a complete CMakeList.txt files you can use to build this test
 code using the installed library: \verbatim
-cmake_minimum_required (VERSION 3.16.0)
+cmake_minimum_required (VERSION 3.17.0)
 project (geodesictest)
 
 find_package (GeographicLib REQUIRED)
+
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release")
+endif ()
 
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
@@ -755,7 +761,7 @@ target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 If GeographicLib is not installed on your system, you can download and
 compile the library as part of your project using CMake's
 <code>FetchContent</code> with: \verbatim
-cmake_minimum_required (VERSION 3.16.0)
+cmake_minimum_required (VERSION 3.17.0)
 project (geodesictest)
 
 include(FetchContent)
@@ -764,6 +770,12 @@ FetchContent_Declare(GeographicLib
   GIT_TAG        r@PROJECT_VERSION@
 )
 FetchContent_MakeAvailable(GeographicLib)
+
+if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+  # Set a default build type for single-configuration cmake generators
+  # if no build type is set.
+  set (CMAKE_BUILD_TYPE "Release")
+endif ()
 
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} GeographicLib::GeographicLib)
@@ -1940,7 +1952,7 @@ The first line of the .egm file must consist of "EGMF-v" where EGMF
 stands for "Earth Gravity Model Format" and v is the version number of
 the format (currently "1").
 
-The rest of the File is read a line at a time.  A # character and
+The rest of the file is read a line at a time.  A # character and
 everything after it are discarded.  If the result is just white space it
 is discarded.  The remaining lines are of the form "KEY WHITESPACE
 VALUE".  In general, the KEY and the VALUE are case-sensitive.
@@ -2652,10 +2664,10 @@ expand the internal magnetic potential of the earth as sum of spherical
 harmonics.  They neglect magnetic fields due to the ionosphere, the
 magnetosphere, nearby magnetized materials, electric machinery, etc.
 Users of MagneticModel are advised to read the
-<a href="https://www.ngdc.noaa.gov/IAGA/vmod/igrfhw.html">"Health
-Warning"</a> this is provided with igrf11.  Although the advice is
-specific to igrf11, many of the comments apply to all magnetic field
-models.
+<a href="https://www.ncei.noaa.gov/products/international-geomagnetic-reference-field/health-warning">
+"Health Warning"</a> this is provided with igrf.  Although the advice
+is specific to the igrf models, many of the comments apply to all
+magnetic field models.
 
 The supported models are
  - <b>wmm2010</b>, the
@@ -2702,7 +2714,8 @@ Go to
 
 \section magneticinst Installing the magnetic field models
 
-These magnetic models are available for download:
+These magnetic models are available for download from this directoy
+https://sourceforge.net/projects/geographiclib/files/magnetic-distrib
 <center>
 <table>
 <caption>Available magnetic models</caption>
@@ -2922,7 +2935,7 @@ The first line of the .wmm file must consist of "WMMF-v" where WMMF
 stands for "World Magnetic Model Format" and v is the version number of
 the format (currently "2").
 
-The rest of the File is read a line at a time.  A # character and
+The rest of the file is read a line at a time.  A # character and
 everything after it are discarded.  If the result is just white space it
 is discarded.  The remaining lines are of the form "KEY WHITESPACE
 VALUE".  In general, the KEY and the VALUE are case-sensitive.
@@ -2981,11 +2994,16 @@ Other keywords are ignored.
 
 The coefficient file NAME.wmm.cof is a binary file in little endian
 order.  The first 8 bytes of this file must match the ID given in
-NAME.wmm.  This is followed by NumModels + 1 sets of spherical harmonic
-coefficients.  The first NumModels of these model the magnetic field at
-Epoch + \e i * DeltaEpoch for 0 &le; \e i &lt; NumModels.  The last set of
-coefficients model the rate of change of the magnetic field at Epoch +
-(NumModels &minus; 1) * DeltaEpoch.  The format for each set of coefficients
+
+NAME.wmm.  This is followed by NumModels + 1 + NumConstants sets of
+spherical harmonic coefficients.  The first NumModels of these model the
+magnetic field at Epoch + \e i * DeltaEpoch for 0 &le; \e i &lt;
+NumModels.  The next set of coefficients model the rate of change of the
+magnetic field at Epoch + (NumModels &minus; 1) * DeltaEpoch.  If
+NumConstants > 0, the last set of coefficients model the constant short
+wavelength contributions to the magnetic field.
+
+The format for each set of coefficients
 is:
  - \e N, the maximum degree of the sum stored as a 4-byte signed integer.
    This must satisfy \e N &ge; &minus;1.
@@ -3560,10 +3578,11 @@ GeodesicExact and GeodesicLineExact solve the geodesic problem using
 elliptic integrals.  The formulation of geodesic in terms of incomplete
 elliptic integrals is given in
  - C. F. F. Karney,
-   <a href="https://arxiv.org/abs/2208.00492">
-   Geodesics on an arbitrary ellipsoid of revolution</a>, Aug. 2022;
-   preprint <a href="https://arxiv.org/abs/2208.00492">
-   arxiv:2208.00492</a>.
+   <a href="https://doi.org/10.1007/s00190-023-01813-2">
+   Geodesics on an arbitrary ellipsoid of revolution</a>,
+   J. Geodesy <b>98</b>, 4:1--14 (2024);
+   DOI: <a href="https://doi.org/10.1007/s00190-023-01813-2">
+   10.1007/s00190-023-01813-2</a>.
  .
 
 The key relations used by GeographicLib are
@@ -5007,10 +5026,11 @@ Back to \ref jacobi.  Forward to \ref greatellipse.  Up to \ref contents.
 
 This material is now written up in
  - C. F. F. Karney,<br>
-   <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
-   polygons</a>,<br>
-   Technical Report, SRI International, March 2023.<br>
-   <a href="https://arxiv.org/abs/2303.03219">arxiv:2303.03219</a>
+   <a href="https://doi.org/10.1007/s11200-024-0709-z"><i>The area
+   of rhumb polygons</i></a>,<br>
+   Stud. Geophys. Geod. 68(3--4), 99--120 (2024).<br> DOI:
+   <a href="https://doi.org/10.1007/s11200-024-0709-z">
+   10.1007/s11200-024-0709-z</a>
  .
 The series expansions described in the paper are available in
  - C. F. F. Karney,<br>
@@ -5280,8 +5300,9 @@ out simply and accurately.  The approaches using series apply only if
 
 \section rhumbarea The area under a rhumb line
 
-<b>NOTE:</b> Section 3 of the report,
-<a href="https://arxiv.org/abs/2303.03219">The area of rhumb polygons</a>,
+<b>NOTE:</b> Section 3 of the paper,
+<a href="https://doi.org/10.1007/s11200-024-0709-z">
+The area of rhumb polygons</a>,
 provides an improved treatment of this problem.
 
 The area between a rhumb line and the equator is given by
@@ -5635,6 +5656,18 @@ Longitude/latitude pairs should be regarded not as the coordinates for a
 planar projection but as positions on the reference ellipsoid, with
 lines then defined as geodesic segments.)
 
+The situation with Google Earth is a little murky.  Polygons are
+displayed with plate carrée lines if they are "filled".  If only the
+outline is displayed, then the edges are great circles.  In either case,
+the area of a polygon is computed on the authalic sphere with radius
+6371007.181&thinsp;m, keeping the geographic latitudes of the points
+fixed.  For this reason, areas close to a pole will be underestimated by
+\f$O(f)\f$ while areas close to the equator are overestimated by
+\f$O(f)\f$.  If, instead, the points are transferred to the sphere
+keeping the authalic latitudes fixed, the result would be much more
+accurate.  The <code>-Q</code> option with the <code>Planimeter</code>
+utility uses this method.
+
 In any case, there may be some reason to compute the area of a polygon
 made up of plate carrée lines.  The derivation closely follows that for
 rhumb lines given in \ref rhumbarea, but now with \f$\lambda\f$ linearly
@@ -5688,44 +5721,52 @@ where \f$Q_l = O(n^l)\f$ is a series in \f$n\f$.  Here is the series
 expansion accurate to 6th order:
 
 \verbatim
-Q[0]= - 1
-      + 2/3 * n
-      + 22/45 * n^2
-      + 22/945 * n^3
-      - 274/2025 * n^4
-      - 33974/467775 * n^5
-      + 2578106/638512875 * n^6;
-Q[1]= + 2/9 * n
-      - 1/27 * n^2
-      - 74/405 * n^3
-      - 506/8505 * n^4
-      + 3506/127575 * n^5
-      + 131242/4209975 * n^6;
-Q[2]= - 3/25 * n^2
-      + 0 * n^3
-      + 14/125 * n^4
-      + 22/525 * n^5
-      - 566/39375 * n^6;
-Q[3]= + 4/49 * n^3
-      + 1/147 * n^4
-      - 178/2205 * n^5
-      - 1474/46305 * n^6;
-Q[4]= - 5/81 * n^4
-      - 2/243 * n^5
-      + 46/729 * n^6;
-Q[5]= + 6/121 * n^5
-      + 1/121 * n^6;
-Q[6]= - 7/169 * n^6;
+Q[0] = - 1
+       + 2/3 * n
+       + 22/45 * n^2
+       + 22/945 * n^3
+       - 274/2025 * n^4
+       - 33974/467775 * n^5
+       + 2578106/638512875 * n^6;
+Q[1] = + 2/9 * n
+       - 1/27 * n^2
+       - 74/405 * n^3
+       - 506/8505 * n^4
+       + 3506/127575 * n^5
+       + 131242/4209975 * n^6;
+Q[2] = - 3/25 * n^2
+       + 0 * n^3
+       + 14/125 * n^4
+       + 22/525 * n^5
+       - 566/39375 * n^6;
+Q[3] = + 4/49 * n^3
+       + 1/147 * n^4
+       - 178/2205 * n^5
+       - 1474/46305 * n^6;
+Q[4] = - 5/81 * n^4
+       - 2/243 * n^5
+       + 46/729 * n^6;
+Q[5] = + 6/121 * n^5
+       + 1/121 * n^6;
+Q[6] = - 7/169 * n^6;
 \endverbatim
+The ratio \f$(Q(\phi_2) - Q(\phi_1))/\phi_{12}\f$ should be evaluated
+using \ref dividedclenshaw "divided differences".  This obviates the
+need for special treatment of the case \f$\phi_2 \approx \phi_1\f$.
 
-The formulation used in GRASS differs in three respects:
+The formulation used in GRASS differs in four respects:
 - The overall multiplicative factor is \f$b^2\f$ instead of \f$c^2\f$.
 - The expansion parameter is \f$e^2\f$ instead of \f$n\f$.
 - The series is expressed in terms of \f$\cos^{2l+1}\phi\f$ instead of
   \f$\cos((2l+1)\phi)\f$.
+- It switches to using the derivative \f$Q'(\phi)\f$ when \f$\phi_2
+  \approx \phi_1\f$.
 .
 The first two choices increase the truncation error of the results.  The
-last increases the roundoff error in the result.
+third increases the roundoff error in the result.  The last increases
+either the truncation error or the roundoff error depending on whether
+the derivative is used.  Finally the series is only taken to 3rd order
+in \f$e^2\f$; this results in a fairly large truncation error.
 
 This series given here was generated by the Maxima code
 <a href="platecarreearea.mac">platecarreearea.mac</a>.  This code allows
@@ -7661,6 +7702,25 @@ git repository for GeographicLib</a>.
      equally close intersectons.
 \endif
 
+ - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
+   (released 2024-12-28)
+   - New magnetic models provided
+     - World Magnetic Model 2025, wmm2025; this covers the period
+       2025--2030.  This is now the model returned by
+       MagneticModel::DefaultMagneticName and is default magnetic model
+       for <a href="MagneticField.1.html">MagneticField</a> (replacing
+       wmm2020 which is only valid thru the end of 2024).
+     - World Magnetic Model High Resolution 2025, wmmhr2025; this is a
+       high-resolution version of wmm2025 including terms up to degree
+       133 (as opposed to 12 for wmm2025).
+     - International Geomagnetic Reference Field (14th generation),
+       igrf14, which approximates the main magnetic field of the earth
+       for the period 1900--2030.
+   - Update CMake's cmake_minimum_required to 3.17.0 (to facilitate
+     integration with Qt projects).
+   - For GEOGRAPHICLIB_PRECISION > 2, readarray treats doubles as
+     approximations to exact decimal constants.
+
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.4</a>
    (released 2024-07-14)
    - Math::sind, Math::sincosd, etc., now return accurate results for
@@ -7754,8 +7814,8 @@ git repository for GeographicLib</a>.
        treated properly (previously point at the pole were moved
        slightly away from the pole);
      - this treatment of rhumb areas is described in
-       <a href="https://arxiv.org/abs/2303.03219">The area of rhumb
-       polygons</a>.
+       <a href="https://doi.org/10.1007/s11200-024-0709-z">The area of
+       rhumb polygons</a>.
    - The -E option for <a href="Planimeter.1.html">Planimeter(1)</a> is
      now a toggle switching on exact treatment for geodesics (-G
      option), rhumb lines (-R option), authlatic lines (-Q option).

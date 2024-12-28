@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    CartConvert --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.4/CartConvert.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.5/CartConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "       cartesian\n"

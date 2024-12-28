@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    RhumbSolve --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.4/RhumbSolve.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.5/RhumbSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -200,8 +200,8 @@ int usage(int retval, bool brief) {
 "       <https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.\n"
 "\n"
 "       This solution for rhumb line is described in C. F. F. Karney, The  area\n"
-"       of  rhumb  polygons,  Technical  Report, SRI International (2023); URL:\n"
-"       <https://arxiv.org/abs/2303.03219>.\n"
+"       of  rhumb  polygons, Stud. Geophys. Geod. 68(3--4), 99--120 (2024); DOI\n"
+"       <https://doi.org/10.1007/s11200-024-0709-z>.\n"
 "\n"
 "       The           Wikipedia           page,           Rhumb           line,\n"
 "       <https://en.wikipedia.org/wiki/Rhumb_line>.\n"

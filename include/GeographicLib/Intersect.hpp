@@ -26,7 +26,7 @@ namespace GeographicLib {
    * - The geodesics are defined by a position (latitude and longitude) and an
    *   azimuth.  In this case the \e closest intersection is found.
    * - The geodesics are defined by two endpoints.  The intersection of the two
-   *   segments is found.  It they don't intersect, the the closest
+   *   segments is found.  If they don't intersect, then the closest
    *   intersection is returned.
    * - The geodesics are defined as an intersection point, a single position
    *   and two azimuths.  In this case, the next closest intersection is found.

@@ -55,7 +55,7 @@
 .\" ========================================================================
 .\"
 .IX Title "MAGNETICFIELD 1"
-.TH MAGNETICFIELD 1 2024-07-14 "GeographicLib 2.4" "GeographicLib Utilities"
+.TH MAGNETICFIELD 1 2024-12-28 "GeographicLib 2.5" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -116,7 +116,7 @@ The WGS84 ellipsoid is used, \fIa\fR = 6378137 m, \fIf\fR = 1/298.257223563.
 .IX Header "OPTIONS"
 .IP "\fB\-n\fR \fIname\fR" 4
 .IX Item "-n name"
-use magnetic field model \fIname\fR instead of the default \f(CW\*(C`wmm2020\*(C'\fR.  See
+use magnetic field model \fIname\fR instead of the default \f(CW\*(C`wmm2025\*(C'\fR.  See
 "MODELS".
 .IP "\fB\-d\fR \fIdir\fR" 4
 .IX Item "-d dir"
@@ -213,6 +213,12 @@ following models
 \&    wmm2020, the World Magnetic Model 2020, which approximates the
 \&      main magnetic field for the period 2020\-2025.  See
 \&      https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml
+\&    wmm2025, the World Magnetic Model 2025, which approximates the
+\&      main magnetic field for the period 2025\-2030.  See
+\&      https://www.ncei.noaa.gov/products/world\-magnetic\-model
+\&    wmmhr2025, the World Magnetic Model High Resolution 2025, a high
+\&      resolution version of wmm2025.  See
+\&      https://www.ncei.noaa.gov/products/world\-magnetic\-model\-high\-resolution
 \&    igrf11, the International Geomagnetic Reference Field (11th
 \&      generation), which approximates the main magnetic field for
 \&      the period 1900\-2015.  See
@@ -225,6 +231,10 @@ following models
 \&      generation), which approximates the main magnetic field for
 \&      the period 1900\-2025.  See
 \&      https://ngdc.noaa.gov/IAGA/vmod/igrf.html
+\&    igrf14, the International Geomagnetic Reference Field (14th
+\&      generation), which approximates the main magnetic field for
+\&      the period 1900\-2030.  See
+\&      https://www.ncei.noaa.gov/products/international\-geomagnetic\-reference\-field
 \&    emm2010, the Enhanced Magnetic Model 2010, which approximates
 \&      the main and crustal magnetic fields for the period 2010\-2015.
 \&      See https://ngdc.noaa.gov/geomag/EMM/index.html

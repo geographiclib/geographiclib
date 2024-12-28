@@ -1,9 +1,9 @@
-cmake_minimum_required (VERSION 3.16.0)
+cmake_minimum_required (VERSION 3.17.0)
 project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
-set (PROJECT_VERSION_MINOR 4)
+set (PROJECT_VERSION_MINOR 5)
 set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
@@ -50,7 +50,7 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 26)
-set (LIBVERSION_BUILD 26.1.0)
+set (LIBVERSION_BUILD 26.1.1)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -327,7 +327,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.64)
+    find_package (Boost 1.70 CONFIG)
     if (Boost_FOUND)
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()

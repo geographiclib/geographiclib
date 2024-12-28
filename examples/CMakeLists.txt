@@ -19,7 +19,7 @@
 #
 #   -D GeographicLib_DIR=${PROJECT_BINARY_DIR}
 
-cmake_minimum_required (VERSION 3.16.0)
+cmake_minimum_required (VERSION 3.17.0)
 
 set (EXAMPLES0
   example-Accumulator.cpp
@@ -100,7 +100,7 @@ else ()
   set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
-find_package (GeographicLib 2.4 REQUIRED)
+find_package (GeographicLib 2.5 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
 
 set (CMAKE_CXX_STANDARD 14)

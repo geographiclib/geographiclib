@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Planimeter --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.4/Planimeter.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.5/Planimeter.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -214,8 +214,9 @@ int usage(int retval, bool brief) {
 "       <https://geographiclib.sourceforge.io/geod-addenda.html>.\n"
 "\n"
 "       The algorithm for the area of a rhumb polygon is given in Section 3  of\n"
-"       C.  F.  F.  Karney,  The  area of rhumb polygons, Technical Report, SRI\n"
-"       International (2023); URL: <https://arxiv.org/abs/2303.03219>.\n"
+"       C.  F.  F.  Karney,  The  area  of rhumb polygons, Stud. Geophys. Geod.\n"
+"       68(3--4),               99--120               (2024);               DOI\n"
+"       <https://doi.org/10.1007/s11200-024-0709-z>.\n"
 "\n"
 "AUTHOR\n"
 "       Planimeter was written by Charles Karney.\n"
