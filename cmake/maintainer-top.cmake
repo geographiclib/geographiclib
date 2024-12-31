@@ -74,8 +74,10 @@ if (RSYNC)
   add_custom_target (deploy-data
     COMMAND
       ${RSYNC} --delete -av --exclude '*~'
-      ${PROJECT_SOURCE_DIR}/data-distrib/*-distrib ${DATATOP}/
-    COMMAND ${RSYNC} --delete -av ${DATATOP}/*-distrib
+      ${PROJECT_SOURCE_DIR}/data-distrib/*-distrib
+      ${PROJECT_SOURCE_DIR}/data-distrib/testdata
+      ${DATATOP}/
+    COMMAND ${RSYNC} --delete -av ${DATATOP}/*-distrib ${DATATOP}/testdata
       ${USER}@frs.sourceforge.net:/home/frs/project/geographiclib/)
   add_custom_target (deploy-doc
     COMMAND ${RSYNC} --delete -av -e ssh ${DOCROOT} ${WEBDEPLOY}/htdocs/)
