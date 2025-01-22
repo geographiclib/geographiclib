@@ -112,10 +112,10 @@ option (USE_BOOST_FOR_EXAMPLES
 if (USE_BOOST_FOR_EXAMPLES)
   # quad precision numbers appeared in Boost 1.54.  Various
   # workarounds stopped being needed with Boost 1.64.
-  find_package (Boost 1.64 COMPONENTS serialization)
+  find_package (Boost 1.70 CONFIG COMPONENTS serialization)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.64)
+    find_package (Boost 1.70 CONFIG)
   endif ()
 endif ()
 

@@ -23,7 +23,7 @@ set (PYTHON_VERSION 2.7)
 find_package (PythonLibs ${PYTHON_VERSION} REQUIRED)
 
 # Required boost-python + boost-devel
-find_package (Boost REQUIRED COMPONENTS python)
+find_package (Boost CONFIG REQUIRED COMPONENTS python)
 
 find_package (GeographicLib REQUIRED COMPONENTS SHARED)
 
