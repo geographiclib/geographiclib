@@ -324,6 +324,7 @@ namespace GeographicLib {
 
   void TriaxialLine::Optimize() {
     _f.ComputeInverse();
+    _g.ComputeInverse();
   }
 
   TriaxialLine::fline::disttx
@@ -386,8 +387,17 @@ namespace GeographicLib {
     , _gm(gam)
     , _gbet(_t._k2 , _t._kp2,  _t._e2, -_gm.gamma, _t)
     , _gomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, _t)
+    , _invp(false)
     , s0(_gm.gamma == 0 ? _gbet.Max() + _gomg.Max() : 0)
   {}
+
+  void TriaxialLine::gline::ComputeInverse() {
+    if (!_invp) {
+      _gbet.ComputeInverse();
+      _gomg.ComputeInverse();
+      _invp = true;
+    }
+  }
 
   Math::real TriaxialLine::fline::Hybrid0(const fics& fic,
                                           Angle bet2, Angle omg2)
@@ -647,32 +657,51 @@ namespace GeographicLib {
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    // Restrict oblpro treatment to mu == 0
-    , _oblpro(t._oblpro && _mu == 0)
+    // If oblpro extend special treatment of oblate/prolate cases to mu != 0.
+    , _oblpro(t._oblpro)
     , _invp(false)
+    , _biaxr(_kap == 0 && (_mu == 0 || (_oblpro && _mu > 0)))
+    , _biaxl(_kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
+    , _umb(_kap != 0 && _kapp != 0 && _mu == 0)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
-    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu > 0 not allowed
-      // _kap == 1
+    if (_biaxr) {
+      // oblate/prolate rotating coordinate
+      // _kapp == 1, mu < 0 not allowed
+      _tx = false;
+      // f multiplied by sqrt(mu)
+      _fun = TrigfunExt(
+                        [eps = _eps, mu = _mu]
+                        (real phi) -> real
+                        // This is a trivial case f' = 1
+                        { return fphioblp(phi, eps, mu); },
+                        Math::pi()/2, false);
+    } else if (_biaxl) {
+      // oblate/prolate librating coordinate
+      // _kap == 1, mu > 0 not allowed
       // Include scale = 1 in TrigfunExt constructor because this function gets
-      // added atan(sqrt(-mu) * tan(phi)).
+      // subtracted from atan(sqrt(-mu) * tan(phi)).
+      // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
       _tx = false;
       // f multiplied by sqrt(-mu)
+      /*
+      if (_tx) {
+        _ell = EllipticFunction(1 + _mu, 0, -_mu, 1);
+        _fun = TrigfunExt(
+                          [kap = _kap, kapp = _kapp,
+                           eps = _eps, mu = _mu, ell = _ell]
+                          (real v) -> real
+                          { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
+                            return dfvoblp(dn, eps, mu); },
+                          _ell.K(), false, 1);
+      } else
+      */
       _fun = TrigfunExt(
                         [kap = _kap, kapp = _kapp,
                          eps = _eps, mu = _mu]
                         (real psi) -> real
                         { return dfpsioblp(sin(psi), cos(psi), eps, mu); },
                         Math::pi()/2, false, 1);
-    } else if (_oblpro && _kap == 0 && _mu >= 0) { // mu < 0 not allowed
-      // _kapp == 1
-      _tx = false;
-      // f multiplied by sqrt(mu)
-      _fun = TrigfunExt(
-                        [eps = _eps, mu = _mu]
-                        (real phi) -> real
-                        { return fphioblp(phi, eps, mu); },
-                        Math::pi()/2, false);
     } else if (_mu > 0) {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
       if (_tx) {
@@ -708,7 +737,7 @@ namespace GeographicLib {
                           { return fpsip(sin(psi), cos(psi),
                                          kap, kapp, eps, mu); },
                           Math::pi()/2, false);
-    } else if (_mu == 0) {
+    } else if (_umb) {
       _tx = _kapp < t._ellipthresh;
       // f multiplied by sqrt(kap*kapp)
       // Include scale = 1 in TrigfunExt constructor because this function gets
@@ -732,89 +761,169 @@ namespace GeographicLib {
       // _mu == NaN
       _tx = false;
     }
-    _nmax = _fun.NCoeffs();
-    // N.B. _max < 0 for _mu == 0 && eps < 0
-    _max = _mu == 0 ?
-      _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max();
+    _max = _umb ? fabs(_fun(_tx ? _ell.K() : Math::pi()/2)) :
+      (_biaxl ? Math::pi()/2 + _fun.Max() : _fun.Max());
+  }
+
+  Math::real TriaxialLine::ffun::operator()(real u) const {
+    if (_biaxl) {
+      // This is sqrt(-mu) * f(u)
+      // **HERE**
+      return modang(u, sqrt(-_mu)) - _fun(u);
+    } else if (_umb) {
+      // This is sqrt(kap * kapp) * f(u)
+      real phi = gd(u, _sqrtkapp);
+      return u - _fun(_tx ? _ell.F(phi) : phi);
+    } else
+      return _fun(u);
+  }
+
+  Math::real TriaxialLine::ffun::deriv(real u) const {
+    if (_biaxl) {
+      // This is sqrt(-mu) * f'(u)
+      /*
+      if (_tx) {
+        // DLMF (22.6.1): sn^2 + cn^2 =  k^2*sn^2 + dn^2 = 1
+        // dn^2 = cn^2 + k'^2*sn^2 = cn^2 - mu*sn^2
+        // k'^2 = -mu
+        real sn, cn, dn;
+        (void) _ell.am(u, sn, cn, dn);
+        return sqrt(-_mu) / Math::sq(dn) - _fun.deriv(u);
+      } else
+      */
+      // f0(x) = atan(sqrt(-mu) * tanx(u))
+      // f0'(x) = sqrt(-mu) / (cos(u)^2 - mu * sin(u)^2)
+      // **HERE**
+      return sqrt(-_mu) / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
+        - _fun.deriv(u);
+    } else if (_umb) {
+      // This is sqrt(kap * kapp) * f'(u)
+      real phi = gd(u, _sqrtkapp),
+        t = _kapp + Math::sq(sinh(u));
+      // dphi/du = _sqrtkapp * cosh(u) / t;
+      // for tx w = F(phi, sqrtkap)
+      //   dw/dphi = 1/sqrt(kapp + kap*cos(phi)^2)
+      //           = sqrt(t)/(sqrtkapp *cosh(u))
+      //   N.B. cos(phi)^2 = kapp/t
+      //   dw/du = dw/dphi*dphi/du = 1/sqrt(t)
+      return 1 - _fun.deriv(_tx ? _ell.F(phi) : phi) /
+        ( _tx ? sqrt(t) : t / (_sqrtkapp * cosh(u)) );
+    } else
+      return _fun.deriv(u);
   }
 
   void TriaxialLine::ffun::ComputeInverse() {
     if (!_invp) {
-      if (_mu == 0) {
+      if (_biaxl && _mu < 0) {
         _countn = _countb = 0;
         // Include scale = 1 in TrigfunExt constructor because _dfinv gets
         // added to u.
+        // Ars are fun, odd, sym, halfp, nmax, tol, scale
+        // **HERE**
         _dfinv = Trigfun(
                          [this]
-                         (real phi, real x0) -> real
-                         { real u = lam(phi, _sqrtkapp);
-                           return
-                             root(u, lam(x0, _sqrtkapp), &_countn, &_countb,
-                                  sqrt(numeric_limits<real>::epsilon()))
-                             - u; },
+                         (real z, real u1) -> real
+                         {
+                           real u0 = modang(z/Slope(), 1/sqrt(-_mu));
+                           return root(z, u0 + u1, &_countn, &_countb,
+                                       sqrt(numeric_limits<real>::epsilon()))
+                             - u0;
+                         },
+                         true, false, Slope() * HalfPeriod(),
+                         int(ceil(real(1.5) * NCoeffs())),
+                         sqrt(numeric_limits<real>::epsilon()), HalfPeriod());
+      } else if (_umb) {
+        _countn = _countb = 0;
+        // Include scale = 1 in TrigfunExt constructor because _dfinv gets
+        // added to z.
+        _dfinv = Trigfun(
+                         [this]
+                         (real phi, real u1) -> real
+                         {
+                           real z = lam(phi, _sqrtkapp);
+                           return root(z, z + u1, &_countn, &_countb,
+                                       sqrt(numeric_limits<real>::epsilon()))
+                             - z;
+                         },
                          true, true, Math::pi(),
                          int(ceil(real(1.5) * NCoeffs())),
                          sqrt(numeric_limits<real>::epsilon()), 1);
-        /*
-        cout << "HERE " << _kapp << " " << NCoeffs() << " "
-             << _dfinv.NCoeffs() << " "
-             << _countn << " " << _countb << "\n";
-        _invp = true;
-        _countn = 0; _countb = 0;
-        for (int i = 0; i <= 20; ++i) {
-          real u = i/real(5), z = (*this)(u),
-            u1 = inv2(z, &_countn, &_countb);
-          cout << u << " " << z << " " << u1-u << "\n";
-        }
-        cout << _countn << " " << _countb << "\n";
-        */
       } else
         _fun.ComputeInverse();
     }
     _invp = true;
   }
 
-  Math::real TriaxialLine::ffun::root(real z, real x0,
+  Math::real TriaxialLine::ffun::root(real z, real u0,
                                       int* countn, int* countb,
                                       real tol) const {
-    if (_mu != 0) return Math::NaN();
     if (!isfinite(z)) return z; // Deals with +/-inf and nan
-    real d = fabs(Max())
-      + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
-      xa = z - d,
-      xb = z + d;
-    x0 = fmin(xb, fmax(xa, x0));
-    // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
-    // N.B. use default tol for root, because we want accurate answers here
-    //    cout << "BBA\n";
-    return Trigfun::root(
-                         [this]
-                         (real u) -> pair<real, real>
-                         { return pair<real, real>((*this)(u), deriv(u)); },
-                         z,
-                         x0, xa, xb,
-                         Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
+    if (_biaxl) {
+      // z = 1/sqrt(-mu)
+      // here f(u) = atan(sqrt(-mu)*tan(u))/sqrt(-mu)-Deltaf(u)
+      // let fx(u) = sqrt(-mu) * f(u); fun(u) = sqrt(-mu)*Deltaf(u)
+      // z = fx(u) = modang(u, sqrt(-mu)) - fun(u)
+      // fun(u) is monotonically increasing/decreasing quasilinear function
+      // period pi.  Combined function is quasilinear
+      // z = s * u +/- m; period = pi
+      // Inverting:
+      // u = z/s +/- m/s; period s*pi
+      // u = fxinv(z) = modang(z/x, 1/sqrt(-mu)) + funinv(z)
+      // funinv(z) periodic function of z period (1-s)*pi
+      real d = Max(),
+        ua = (z - d) / Slope(),
+        ub = (z + d) / Slope();
+      u0 = fmin(ub, fmax(ua, u0));
+      return Trigfun::root(
+                           [this]
+                           (real u) -> pair<real, real>
+                           { return pair<real, real>((*this)(u), deriv(u)); },
+                           z,
+                           u0, ua, ub,
+                           HalfPeriod(), HalfPeriod()/Slope(), 1,
+                           countn, countb, tol);
+    } else if (_umb) {
+      real d = Max()
+        + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
+        ua = z - d,
+        ub = z + d;
+      u0 = fmin(ub, fmax(ua, u0));
+      return Trigfun::root(
+                           [this]
+                           (real u) -> pair<real, real>
+                           { return pair<real, real>((*this)(u), deriv(u)); },
+                           z,
+                           u0, ua, ub,
+                           Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
+    } else
+      return Math::NaN();
   }
 
-  // Approximate inverse using _chiinv or _fun.inv0
+  // Approximate inverse using _dfinv _fun.inv0
   Math::real TriaxialLine::ffun::inv0(real z) const {
     if (!_invp) return Math::NaN();
-    return _mu == 0 ?
-      z + _dfinv(gd(z, _sqrtkapp)) : _fun.inv0(z);
+    // For the inverse in the umbilical case, just use gd(z, _sqrtkapp) and not
+    // F(gd(z, _sqrt(kapp)))
+    return _umb ? z + _dfinv(gd(z, _sqrtkapp)) :
+      (_biaxl ? modang(z/Slope(), 1/sqrt(-_mu)) + (_mu == 0 ? 0 : _dfinv(z)) :
+       _fun.inv0(z));
   }
 
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::ffun::inv1(real z, int* countn, int* countb) const {
     //    cout << "BBZ\n";
-    return _mu == 0 ? root(z, z, countn, countb) :
-      _fun.inv1(z, countn, countb);
+    return _umb ? root(z, z, countn, countb) :
+      (_biaxl ? (_mu == 0 ? modang(z/Slope(), 1/sqrt(-_mu)) :
+                 root(z, modang(z/Slope(), 1/sqrt(-_mu)), countn, countb)) :
+       _fun.inv1(z, countn, countb));
   }
 
   // Accurate inverse correcting result from _finv
   Math::real TriaxialLine::ffun::inv2(real z, int* countn, int* countb) const {
     if (!_invp) return Math::NaN();
-    return _mu == 0 ? root(z, inv0(z), countn, countb) :
-      _fun.inv2(z, countn, countb);
+    return _biaxl && _mu == 0 ? inv1(z) :
+      (_umb || _biaxl ? root(z, inv0(z), countn, countb) :
+       _fun.inv2(z, countn, countb));
   }
 
   TriaxialLine::gfun::gfun(real kap, real kapp, real eps, real mu,
@@ -824,28 +933,40 @@ namespace GeographicLib {
     , _eps(eps)
     , _mu(mu)
     , _sqrtkapp(sqrt(_kapp))
-    // Restrict oblpro treatment to mu == 0
-    , _oblpro(t._oblpro && _mu == 0)
+    // If oblpro extend special treatment of oblate/prolate cases to mu != 0.
+    , _oblpro(t._oblpro)
     , _invp(false)
+    , _biaxr(_kap == 0 && (_mu == 0 || (_oblpro && _mu > 0)))
+    , _biaxl(_kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
+    , _umb(_kap != 0 && _kapp != 0 && _mu == 0)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
-    // Restrict oblpro treatment to mu == 0
-    if (_oblpro && _kapp == 0 && _mu <= 0) { // mu > 0 not allowed
-      // _kap == 1
+    if (_biaxr) {
+      // oblate/prolate symmetry coordinate
+      // _kapp == 1, mu < 0 not allowed
       _tx = false;
+      _fun = TrigfunExt(
+                        [eps = _eps, mu = _mu]
+                        (real phi) -> real
+                        // degenerate f' = 0
+                        { return gphioblp(phi, eps, mu); },
+                        Math::pi()/2, false);
+    } else if (_biaxl) {
+      // oblate/prolate non-symmetry coordinate
+      // _kap == 1, mu > 0 not allowed
+      // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
+      _tx = false;
+      /*
+        if (_tx) {
+        _ell = EllipticFunction(1 + _mu, 0, -_mu, 1);
+        // Never completed this
+        } else
+      */
       _fun = TrigfunExt(
                         [kap = _kap, kapp = _kapp,
                          eps = _eps, mu = _mu]
                         (real psi) -> real
                         { return gpsioblp(sin(psi), cos(psi), eps, mu); },
-                        Math::pi()/2, false);
-    } else if (_oblpro && _kap == 0 && _mu >= 0) { // mu < 0 not allowed
-      // _kapp == 1
-      _tx = false;
-      _fun = TrigfunExt(
-                        [eps = _eps, mu = _mu]
-                        (real phi) -> real
-                        { return gphioblp(phi, eps, mu); },
                         Math::pi()/2, false);
     } else if (_mu > 0) {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
@@ -882,7 +1003,7 @@ namespace GeographicLib {
                           { return gpsip(sin(psi), cos(psi),
                                             kap, kapp, eps, mu); },
                           Math::pi()/2);
-    } else if (_mu == 0) {
+    } else if (_umb) {
       _tx = _kapp < t._ellipthresh;
       if (_tx) {
         _ell = EllipticFunction(_kap, 0, _kapp, 1);
@@ -902,70 +1023,121 @@ namespace GeographicLib {
       // _mu == NaN
       _tx = false;
     }
-    _max = _mu == 0 ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-      _fun.Max();
+    _max = _umb ? fabs(_fun(_tx ? _ell.K() : Math::pi()/2)) : _fun.Max();
+  }
+
+  Math::real TriaxialLine::gfun::operator()(real u) const {
+    if (_umb) {
+      real phi = gd(u, _sqrtkapp);
+      return _fun(_tx ? _ell.F(phi) : phi);
+    } else
+      return _fun(u);
+  }
+
+  Math::real TriaxialLine::gfun::deriv(real u) const {
+    if (_umb) {
+      real phi = gd(u, _sqrtkapp),
+        t = _kapp + Math::sq(sinh(u));
+      // See comments in ffun::deriv
+      return _fun.deriv(_tx ? _ell.F(phi) : phi) /
+        ( _tx ? sqrt(t) : t / (_sqrtkapp * cosh(u)) );
+    } else
+      return _fun.deriv(u);
   }
 
   Math::real TriaxialLine::gfun::gfderiv(real u) const {
     // return g'(u)/f'(u)
     real sn = 0, cn = 0, dn = 0;
-    if (_oblpro && _kapp == 0 && _mu <= 0) // mu > 0 not allowed
-      return gfpsioblp(sin(u), cos(u), _mu);
-    else if (_oblpro && _kap == 0 && _mu >= 0) // mu < 0 not allowed
-      return gfphioblp(u, _mu);
-    else if (_mu != 0 && _tx)
-      (void) _ell.am(u, sn, cn, dn);
-    if (_mu > 0)
-      return _tx ? gfup(cn, _kap, _mu) : gfphip(cos(u), _kap, _mu);
-    else if (_mu < 0)
-      return _tx ? gfvp(dn, _kap, _mu) :
-        gfpsip(sin(u), cos(u), _kap, _mu);
-    else                      // _mu == 0
-      // This includes factor of sqrt(kap * kapp) because of adjustment of
-      // definition of f for mu == 0.
-      return gf0up(u, _kap, _kapp);
+   if (_biaxr)
+     return gfphioblp(u, _mu);
+   else if (_biaxl) // mu > 0 not allowed
+     return gfpsioblp(sin(u), cos(u), _mu);
+   else if (_umb)
+     // This includes factor of sqrt(kap * kapp) because of adjustment of
+     // definition of f for umbilical geodesics.
+     return gf0up(u, _kap, _kapp);
+   else {
+     if (_tx)
+       (void) _ell.am(u, sn, cn, dn);
+     if (_mu > 0)
+       return _tx ? gfup(cn, _kap, _mu) : gfphip(cos(u), _kap, _mu);
+     else if (_mu < 0)
+       return _tx ? gfvp(dn, _kap, _mu) :
+         gfpsip(sin(u), cos(u), _kap, _mu);
+     else
+       return Math::NaN();
+   }
   }
 
-  Math::real TriaxialLine::gfun::root(real z, real x0,
-                                      int* countn, int* countb,
-                                      real tol) const {
-    if (_mu != 0) return Math::NaN();
+  void TriaxialLine::gfun::ComputeInverse() {
+    if (!_invp && !_biaxr) {
+      _fun.ComputeInverse();
+      _invp = true;
+    }
+  }
+
+  Math::real TriaxialLine::gfun::root(real /*z*/, real /*u0*/,
+                                      int* /*countn*/, int* /*countb*/,
+                                      real /*tol*/) const {
+    // This function isn't neeed.  General inversion mechanisms in Trigfun
+    // suffice.
+    return Math::NaN();
+    /*
     if (!isfinite(z)) return z; // Deals with +/-inf and nan
-    real d = fabs(Max())
-      + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
-      xa = z - d,
-      xb = z + d;
-    x0 = fmin(xb, fmax(xa, x0));
-    // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
-    // N.B. use default tol for root, because we want accurate answers here
-    //    cout << "BBD\n";
-    return Trigfun::root(
-                         [this]
-                         (real u) -> pair<real, real>
-                         { return pair<real, real>((*this)(u), deriv(u)); },
-                         z,
-                         x0, xa, xb,
-                         Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
+    if (_umb) {
+      real d = fabs(Max())
+        + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
+        ua = z - d,
+        ub = z + d;
+      u0 = fmin(ub, fmax(ua, u0));
+      // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
+      return Trigfun::root(
+                           [this]
+                           (real u) -> pair<real, real>
+                           { return pair<real, real>((*this)(u), deriv(u)); },
+                           z,
+                           u0, ua, ub,
+                           Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
+    } else
+      return Math::NaN();
+    */
   }
 
   // Approximate inverse using _chiinv or _fun.inv0
   Math::real TriaxialLine::gfun::inv0(real z) const {
-    if (!_invp) return Math::NaN();
-    return _mu == 0 ? Math::NaN() : _fun.inv0(z);
+    if (!_invp || _biaxr) return Math::NaN();
+    real u = _fun.inv0(z);
+    if (_umb) {
+      if (_tx)
+        u = _ell.am(u);
+      return lam(u, _sqrtkapp);
+    } else
+      return u;
   }
 
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::gfun::inv1(real z, int* countn, int* countb) const {
-    return _mu == 0 ? Math::NaN() : _fun.inv1(z, countn, countb);
+    if (_biaxr) return Math::NaN();
+    real u = _fun.inv1(z, countn, countb);
+    if (_umb) {
+      if (_tx)
+        u = _ell.am(u);
+      return lam(u, _sqrtkapp);
+    } else
+      return u;
   }
 
   // Accurate inverse correcting result from _finv
   Math::real TriaxialLine::gfun::inv2(real z, int* countn, int* countb) const {
-    if (!_invp) return Math::NaN();
-    return _mu == 0 ? root(z, inv0(z), countn, countb) :
-      _fun.inv2(z, countn, countb);
+    if (!_invp || _biaxr) return Math::NaN();
+    real u = _fun.inv2(z, countn, countb);
+    if (_umb) {
+      if (_tx)
+        u = _ell.am(u);
+      return lam(u, _sqrtkapp);
+    } else
+      return u;
   }
-  void TriaxialLine::gfun::ComputeInverse() {}
 
   // _mu > 0 && !_tx
   Math::real TriaxialLine::ffun::fphip(real c, real kap, real kapp,
@@ -1047,7 +1219,7 @@ namespace GeographicLib {
   }
   // This is positive
   Math::real TriaxialLine::gfun::gpsip(real s, real c, real kap, real kapp,
-                                          real eps, real mu) {
+                                       real eps, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return sqrt(c2 * (1 - eps * c2) / (kapp + c2)) ;
   }
@@ -1089,7 +1261,7 @@ namespace GeographicLib {
     return 0;
   }
 
-  // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0
+  // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0, !_tx
   Math::real TriaxialLine::ffun::dfpsioblp(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
     // Multiply by f functions by sqrt(abs(mu))
@@ -1097,6 +1269,7 @@ namespace GeographicLib {
   }
   Math::real TriaxialLine::gfun::gpsioblp(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
+    // return gpsip(s, c, 1, 0, eps, mu) but with the factor c2 canceled
     return sqrt(1 - eps * c2);
   }
   Math::real TriaxialLine::gfun::gfpsioblp(real s, real c, real mu) {
@@ -1104,7 +1277,27 @@ namespace GeographicLib {
     // f' = sqrt(1-eps*cos(phi)^2)/cos(phi)^2
     // g' = sqrt(1-eps*cos(phi)^2)
     // g'/f' = cos(phi)^2
+    // Adjust by sqrt(-mu) to accommodate this factor in dfpsioblp
     return gfpsip(s, c, 1, mu) / sqrt(-mu);
   }
+
+#if 0
+  // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0, _tx
+  Math::real TriaxialLine::ffun::dfvoblp(real dn, real eps, real mu) {
+    real c2 = Math::sq(dn);
+    // Multiply by f functions by sqrt(abs(mu))
+    return sqrt(-mu) * eps * dn / (1 + sqrt(1 - eps * c2));
+  }
+  // This is positive
+  Math::real TriaxialLine::gfun::gvoblp(real /* cn */, real dn,
+                                     real eps, real /* mu */) {
+    // return gvp(dn, cn, 1, 0, epd, mu) but with cancelation
+    real c2 = Math::sq(dn);
+    return dn * sqrt(1 - eps * c2);
+  }
+  Math::real TriaxialLine::gfun::gfvoblp(real dn, real mu) {
+    return gfvp(dn, 1, mu) / sqrt(-mu);
+  }
+#endif
 
 } // namespace GeographicLib

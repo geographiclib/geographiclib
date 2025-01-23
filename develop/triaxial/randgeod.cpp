@@ -168,18 +168,7 @@ int main(int argc, const char* const argv[]) {
       num = 1000;
     for (int m = 1; m < argc; ++m) {
       string arg(argv[m]);
-      if (arg == "-e") {
-        if (m + 2 >= argc) return usage(1, true);
-        try {
-          a = Utility::val<real>(string(argv[m + 1]));
-          f = Utility::fract<real>(string(argv[m + 2]));
-        }
-        catch (const exception& e) {
-          cerr << "Error decoding arguments of -e: " << e.what() << "\n";
-          return 1;
-        }
-        m += 2;
-      } else if (arg == "-t") {
+      if (arg == "-t") {
         if (m + 4 >= argc) return usage(1, true);
         try {
           b = Utility::val<real>(string(argv[m + 1]));
@@ -188,7 +177,7 @@ int main(int argc, const char* const argv[]) {
           kp2 = Utility::fract<real>(string(argv[m + 4]));
         }
         catch (const exception& e) {
-          cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+          cerr << "Error decoding arguments of -t: " << e.what() << "\n";
           return 1;
         }
         m += 4;
@@ -236,6 +225,8 @@ int main(int argc, const char* const argv[]) {
     cerr << "-s " << seed << "\n";
     if (num + prec0 + prec1 + seed == 0)
       cout << "foo\n";
+    a = b;
+    f = (kp2 == 0 ? 1 : -1) * (sqrt(1 + e2 * kp2) - sqrt(1 - e2 * k2));
     RandLoc rnd(a, a, a*(1 - f), seed, 0);
     Geodesic geod(a, f, true);
     Triaxial t0 = f < 0 ? Triaxial(a * (1 - f), a, a) :
@@ -311,7 +302,7 @@ int main(int argc, const char* const argv[]) {
           t0.cart2toellip(r1, phi1, lam1);
           t0.cart2toellip(r2, phi2, lam2);
           geod.Inverse(real(phi1), real(lam1), real(phi2), real(lam2),
-                       s12, alp1, alp2);
+                       s12, alp1, alp2, m12, M12, M21);
           t0.elliptocart2(phi1, lam1, Angle(alp1), r1, v1);
           t0.elliptocart2(phi2, lam2, Angle(alp2), r2, v2);
           t1.cart2toellip(Angle(bet1), Angle(omg1), v1, alp1a);

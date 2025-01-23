@@ -31,11 +31,10 @@ namespace GeographicLib {
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _tol;
-      int _nmax;
       Trigfun _dfinv;
       int _countn, _countb;
       real _max;
-      bool _invp;
+      bool _invp, _biaxr, _biaxl, _umb;
       // mu > 0
       static real fphip(real c, real kap, real kapp, real eps, real mu);
       static real fup(real cn, real kap, real kapp, real eps, real mu);
@@ -48,9 +47,24 @@ namespace GeographicLib {
       static real fvp(real dn, real kap, real kapp, real eps, real mu);
       // oblate/prolate variant for kap = 0, kapp = 1
       static real fphioblp(real phi, real eps, real mu);
-      // oblate/prolate variant for kap = 1, kapp = 0
+      // oblate/prolate variant for kap = 1, kapp = 0, mu <= 0, !_tx
       static real dfpsioblp(real s, real c, real eps, real mu);
-      real root(real z, real x0, int* countn, int* countb,
+      // NOT USED
+      // oblate/prolate variant for kap = 1, kapp = 0, mu <= 0, _tx
+      // static real dfvoblp(real dn, real eps, real mu);
+
+      // Return atan(m * tan(x)) keeping result continuous.  Only defined for
+      // !signbit(m).
+      static real modang(real x, real m) {
+        using std::sin; using std::cos; using std::atan2; using std::signbit;
+        if (signbit(m)) return Math::NaN();
+        real s = sin(x), c = cos(x), n = 1;
+        // This is needed to avoid nans if m == inf.
+        if (m > 1) { n = 1/m; m = 1; }
+        // x - atan2(s, c) provides multiple of 2*pi to make result continuous
+        return atan2(m * s, n * c) + (x - atan2(s, c));
+      }
+      real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
 
       // Approximate inverse using _finv
@@ -61,88 +75,77 @@ namespace GeographicLib {
       real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
 
     public:
-      // Summary of f and g functions, ** = don't compute inverse
-      // kap == 0 (mu >= 0) (oblate/prolate symmetry coordinate)
+      // Summary of f and g functions
+      // _biaxr  = kap == 0 (mu >= 0) (oblate/prolate rotating coordinate)
       //  f = fphiobl / sqrt(mu), fphioblp = 1 inversion trivial
-      //  g = gphiobl, gphioblp = 0 **
-      // kapp == 0 (mu <= 0) (oblate/prolate non-symmetry coordinate)
+      //  g = gphiobl, gphioblp = 0
+      // _biaxl = kapp == 0 (mu <= 0) (oblate/prolate librating coordinate)
       //  f = (atan(sqrt(-mu)*tan(psi)) - dfpsiobl) / sqrt(-mu)
       //    mu == 0 **
+      //     atan(sqrt(-mu)*tan(psi)) -> round(psi/pi)*pi
       //    mu < 0 TODO: invert
       //  g = gpsiobl
-      // kap, kapp > 0
-      // mu > 0
+      // mu > 0 && kap*kapp > 0 (triaxial rotating coordinate)
+      //        (also optionally mu > 0 && kap == 0)
       //  f = fphi or fu
       //  g = gphi or gu **
-      // mu < 0
+      // mu < 0 && kap*kapp > 0 (trixial librating coordinate)
+      //        (also optionally mu < 0 && kapp == 0)
       //  f = fpsi or fv
       //  g = gpsi or gv **
-      // mu == 0
+      // _umb = mu == 0 && kap*kapp > 0 (trixial umbilic)
+      //  f = (u + df)/sqrt(kap*kapp) or (u + dfv)/sqrt(kap*kapp)
+      //  g = g0 or g0v
+      //
+      // Handing of f funtions needs to be handled specially for
+      // _biaxl
+      //   leading order behavior is seperated out
+      //   N.B. inverse of f is discontinuous for mu == 0
+      //   functions which need special treatment
+      //     operator(), deriv, inv, ComputeInverse, Slope, Max
+      // _umb
+      //   leading order behavior is seperated out
+      // otherwise everything is handled by generic routines
+      //
+      // Handling of g function is always generic
+      // _biaxr
+      //   functions which need special treatment
+      //   inv
+      // _umb
+      //   functions which need special treatment
+      //    Slope, fwd, rev, Max
+      //
       ffun() {}
       ffun(real kap, real kapp, real eps, real mu, const Triaxial& t);
-      real operator()(real u) const {
-        using std::tan; using std::sin; using std::cos;
-        using std::atan2; using std::sqrt;
-        if (_oblpro && _kapp == 0 && _mu <= 0) {
-          // This is sqrt(-mu) * f(u)
-          real s = sin(u), c = cos(u);
-          // term u - atan2(s, c) makes result a continuous function of u
-          return atan2(sqrt(-_mu) * s, c) + (u - atan2(s, c))
-            - _fun(u);
-        } else if (_mu == 0) {
-          // This is sqrt(kap * kapp) * f(u)
-          real phi = gd(u, _sqrtkapp);
-          return u - _fun(_tx ? _ell.F(phi) : phi);
-        } else
-          return _fun(u);
-      }
-      real deriv(real u) const {
-        using std::cosh; using std::sinh; using std::sqrt;
-        using std::sin; using std::cos;
-        if (_oblpro && _kapp == 0 && _mu <= 0)
-          // This is sqrt(-mu) * f'(u)
-          return sqrt(-_mu) / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
-            - _fun.deriv(u);
-        else if (_mu == 0) {
-          // This is sqrt(kap * kapp) * f'(u)
-          real phi = gd(u, _sqrtkapp),
-            // sch = dphi/du
-            sch = _sqrtkapp * cosh(u) / (_kapp + Math::sq(sinh(u)));
-          // for _tx we have dv/du = 1/sqrt(kapp+sinh(u)^2)
-          return 1 - _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
-            ( _tx ?             // Use _ell.k2() == _kap here
-              _sqrtkapp * cosh(u) / sqrt(_kapp + Math::sq(sinh(u))) :
-              1);
-        } else
-          return _fun.deriv(u);
-      }
+      real operator()(real u) const;
+      real deriv(real u) const;
 
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
       }
       void ComputeInverse();
       real fwd(real phi) const {
-        return _mu == 0 ? lam(phi, _sqrtkapp) :
+        return _umb ? lam(phi, _sqrtkapp) :
           (_tx ? _ell.F(phi) : phi);
       }
       real rev(real u) const {
-        return _mu == 0 ? gd(u, _sqrtkapp) :
+        return _umb ? gd(u, _sqrtkapp) :
           (_tx ? _ell.am(u) : u);
       }
       int NCoeffs() const { return _fun.NCoeffs(); }
       int NCoeffsInv() const {
-        return _mu == 0 ? _dfinv.NCoeffs() : _fun.NCoeffsInv();
+        return _umb || _biaxl ? _dfinv.NCoeffs() : _fun.NCoeffsInv();
       }
       std::pair<int, int> InvCounts() const {
-        return _mu == 0 ? std::pair<int, int>(_countn, _countb) :
+        return _umb || _biaxl ? std::pair<int, int>(_countn, _countb) :
           _fun.InvCounts();
       }
       bool txp() const { return _tx; }
       real HalfPeriod() const {
-        return _mu == 0 ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
+        return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
       }
       real Slope() const {
-        return _mu == 0 ? 1 : _fun.Slope();
+        return _umb ? 1 : (_biaxl ? 1 - _fun.Slope() : _fun.Slope());
       }
       real Max() const {
         return _max;
@@ -169,7 +172,7 @@ namespace GeographicLib {
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _max;
-      bool _invp;
+      bool _invp, _biaxr, _biaxl, _umb;
       // _mu > 0
       static real gphip(real c, real kap, real kapp, real eps, real mu);
       static real gfphip(real c, real kap, real mu);
@@ -187,13 +190,17 @@ namespace GeographicLib {
       static real gvp(real cn, real dn, real kap, real kapp,
                          real eps, real mu);
       static real gfvp(real dn, real kap, real mu);
-      // oblate/prolate variants for kap = 0, kapp = 1
+      // oblate/prolate variants for kap = 0, kapp = 1, mu >= 0
       static real gphioblp(real phi, real eps, real mu);
       static real gfphioblp(real phi, real mu);
-      // oblate/prolate variants for kap = 1, kapp = 0
+      // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0
       static real gpsioblp(real s, real c, real eps, real mu);
       static real gfpsioblp(real s, real c, real mu);
-      real root(real z, real x0, int* countn, int* countb,
+      // NOT USED
+      // static real gvoblp(real cn, real dn, real eps, real mu);
+      // static real gfvoblp(real dn, real mu);
+
+      real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
 
       // Approximate inverse using _finv
@@ -206,33 +213,8 @@ namespace GeographicLib {
     public:
       gfun() {}
       gfun(real kap, real kapp, real eps, real mu, const Triaxial& t);
-      real operator()(real u) const {
-        if (_oblpro && ((_kapp == 0 && _mu <= 0) ||
-                        (_kap == 0 && _mu >= 0)))
-          return _fun(u);
-        else if (_mu == 0) {
-          real phi = gd(u, _sqrtkapp);
-          return _fun(_tx ? _ell.F(phi) : phi);
-        } else
-          return _fun(u);
-      }
-
-      real deriv(real u) const {
-        using std::cosh; using std::sinh; using std::sqrt;
-        if (_oblpro && ((_kapp == 0 && _mu <= 0) ||
-                        (_kap == 0 && _mu >= 0)))
-          return _fun.deriv(u);
-        else if (_mu == 0) {
-          real phi = gd(u, _sqrtkapp),
-            // sch = dphi/du
-            sch = _sqrtkapp * cosh(u) / (_kapp + Math::sq(sinh(u)));
-          return _fun.deriv(_tx ? _ell.F(phi) : phi) * sch /
-            ( _tx ?             // Use _ell.k2() == _kap here
-              _sqrtkapp * cosh(u) / sqrt(_kapp + Math::sq(sinh(u))) :
-              1);
-        } else
-          return _fun.deriv(u);
-      }
+      real operator()(real u) const;
+      real deriv(real u) const;
       real gfderiv(real u) const;
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
@@ -240,20 +222,20 @@ namespace GeographicLib {
       void ComputeInverse();
       // Use ffun versions of these
       // real fwd(real phi) const {
-      //   return _mu == 0 ? lam(phi) : (_tx ? _ell.F(phi) : phi);
+      //   return _umb ? lam(phi) : (_tx ? _ell.F(phi) : phi);
       // }
       // real rev(real u) const {
-      //   return _mu == 0 ? gd(u) : (_tx ? _ell.am(u) : u);
+      //   return _umb ? gd(u) : (_tx ? _ell.am(u) : u);
       // }
       int NCoeffs() const { return _fun.NCoeffs(); }
-      //    int NCoeffsInv() const { return _fun.NCoeffsInv(); }
-      //    std::pair<int, int> InvCounts() const { return _fun.InvCounts(); }
+      int NCoeffsInv() const { return _fun.NCoeffsInv(); }
+      std::pair<int, int> InvCounts() const { return _fun.InvCounts(); }
       bool txp() const { return _tx; }
       real HalfPeriod() const {
-        return _mu == 0 ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
+        return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
       }
       real Slope() const {
-        return _mu == 0 ? 1 : _fun.Slope();
+        return _umb ? 1 : _fun.Slope();
       }
       real Max() const {
         return _max;
@@ -319,6 +301,7 @@ namespace GeographicLib {
       Triaxial _t;
       Triaxial::gamblk _gm;
       gfun _gbet, _gomg;
+      bool _invp;
     public:
       real s0;
       class gics {
@@ -336,6 +319,7 @@ namespace GeographicLib {
       real gamma() const { return _gm.gamma; }
       const Triaxial::gamblk& gm() const { return _gm; }
       real dist(gics ic, fline::disttx d) const;
+      void ComputeInverse();
     };
 
     Triaxial _t;
@@ -363,7 +347,7 @@ namespace GeographicLib {
     static real clamp(real x, real mult = 1) {
       using std::fmax; using std::fmin;
       real z = mult * Triaxial::BigValue();
-      return fmax(-z, fmin(z, x));
+      return Math::clamp(x, -z, z);
     }
     static real lamang0(Angle x, real mult = 1) {
       // lam(x) when x is an ang -- no clamping

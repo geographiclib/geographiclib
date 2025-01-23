@@ -21,6 +21,23 @@
 #  endif
 #endif
 
+// Boost bugs when using high precision:
+//    https://github.com/boostorg/odeint/issues/40
+//    https://github.com/boostorg/odeint/issues/75 (duplicate)
+// fixed in
+//    https://github.com/boostorg/odeint/pull/63
+//    Commit 68950d8
+//
+// This will be included in Boost 1.85.
+//
+// In the meantime, put the patch for commit 68950d8 in
+// /usr/include/boost/odeint.patch and applied it with
+//    patch -p3 -b < odeint.patch 
+// -> patching file numeric/odeint/algebra/detail/extract_value_type.hpp
+//
+// Removed my temporary fix to
+//    numeric/odeint/stepper/controlled_runge_kutta.hpp
+
 #include "Angle.hpp"
 #include "Triaxial.hpp"
 #include <boost/numeric/odeint.hpp>

@@ -4,7 +4,7 @@ project (triaxial)
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
-find_package (Boost REQUIRED)
+find_package (Boost 1.70 CONFIG REQUIRED)
 
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   # Set a default build type for single-configuration cmake generators
@@ -96,3 +96,9 @@ target_link_libraries (Geod3Test trilib ${GeographicLib_LIBRARIES}
 add_executable (Geod2Test Geod2Test.cpp)
 target_link_libraries (Geod2Test trilib ${GeographicLib_LIBRARIES}
   ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+
+if (GEOGRAPHICLIB_PRECISION LESS 5)
+  add_executable (odetest odetest.cpp)
+  target_link_libraries (odetest
+    ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+endif ()
