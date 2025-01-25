@@ -336,7 +336,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     message (WARNING "Cannot support quad precision, switching to double")
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
+elseif (GEOGRAPHICLIB_PRECISION GREATER_EQUAL 5)
   # Install MPFR C++ version 3.6.9 (2022-01-18) or later from
   # https://github.com/advanpix/mpreal and install mpreal.h in the
   # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
@@ -405,6 +405,11 @@ configure_file (
   include/GeographicLib/Config.h.in
   include/GeographicLib/Config.h
   @ONLY)
+
+if (MPREAL_FIXED_PRECISION LESS 0)
+  message (ERROR
+    "MPREAL_FIXED_PRECISION must be a non-negative integer")
+endif ()
 
 # The documentation depends on doxygen.
 if (BUILD_DOCUMENTATION)

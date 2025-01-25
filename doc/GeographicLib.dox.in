@@ -7758,6 +7758,9 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.6</a>
    (released 2025-mm-dd)
+   - Add Math::clamp.
+   - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
+     fixed precision.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
    (released 2024-12-28)

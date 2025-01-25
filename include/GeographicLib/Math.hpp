@@ -40,26 +40,31 @@
 #include <limits>
 
 #if GEOGRAPHICLIB_PRECISION == 4
-#include <memory>
-#include <boost/version.hpp>
-#include <boost/multiprecision/float128.hpp>
-#include <boost/math/special_functions.hpp>
-#elif GEOGRAPHICLIB_PRECISION == 5
-#include <mpreal.h>
+#  include <memory>
+#  include <boost/version.hpp>
+#  include <boost/multiprecision/float128.hpp>
+#  include <boost/math/special_functions.hpp>
+#elif GEOGRAPHICLIB_PRECISION >= 5
+#  if GEOGRAPHICLIB_PRECISION > 5
+#    define MPREAL_FIXED_PRECISION GEOGRAPHICLIB_PRECISION
+#  else
+#    define MPREAL_FIXED_PRECISION 0
+#  endif
+#  include <mpreal.h>
 #endif
 
 #if GEOGRAPHICLIB_PRECISION > 3
 // volatile keyword makes no sense for multiprec types
-#define GEOGRAPHICLIB_VOLATILE
+#  define GEOGRAPHICLIB_VOLATILE
 // Signal a convergence failure with multiprec types by throwing an exception
 // at loop exit.
-#define GEOGRAPHICLIB_PANIC(msg) \
-  (throw GeographicLib::GeographicErr(msg), false)
+#  define GEOGRAPHICLIB_PANIC(msg) \
+    (throw GeographicLib::GeographicErr(msg), false)
 #else
-#define GEOGRAPHICLIB_VOLATILE volatile
+#  define GEOGRAPHICLIB_VOLATILE volatile
 // Ignore convergence failures with standard floating points types by allowing
 // loop to exit cleanly.
-#define GEOGRAPHICLIB_PANIC(msg) false
+#  define GEOGRAPHICLIB_PANIC(msg) false
 #endif
 
 namespace GeographicLib {
@@ -104,7 +109,7 @@ namespace GeographicLib {
     typedef extended real;
 #elif GEOGRAPHICLIB_PRECISION == 4
     typedef boost::multiprecision::float128 real;
-#elif GEOGRAPHICLIB_PRECISION == 5
+#elif GEOGRAPHICLIB_PRECISION >= 5
     typedef mpfr::mpreal real;
 #else
     typedef double real;
@@ -170,9 +175,10 @@ namespace GeographicLib {
      * @param[in] ndigits the number of bits of precision.
      * @return the resulting number of bits of precision.
      *
-     * This only has an effect when GEOGRAPHICLIB_PRECISION = 5.  See also
+     * This only has an effect when GEOGRAPHICLIB_PRECISION >= 5.  See also
      * Utility::set_digits for caveats about when this routine should be
-     * called.
+     * called.  If GEOGRAPHICLIB_PRECISION > 5, the precision is set to the
+     * compile-time value of GEOGRAPHICLIB_PRECISION and \e ndigits is ignored.
      **********************************************************************/
     static int set_digits(int ndigits);
 
@@ -511,6 +517,21 @@ namespace GeographicLib {
      *   <i>z</i><sup>2</sup>).
      **********************************************************************/
     template<typename T> static T hypot3(T x, T y, T z);
+
+    /**
+     * Implement work-alike to C++17 clamp function
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @param[in] a
+     * @param[in] b
+     * @return \e x if it lies in [<i>a</i>, <i>b</i>]; otherise return the
+     *   nearest boundary value.
+     *
+     * Requires \e a &lt; \e b.  Unlike std::clamp, \e x can be a NaN (and
+     * this is then returned).
+     **********************************************************************/
+    template<typename T> static T clamp(T x, T a, T b);
 
     /**
      * The NaN (not a number)

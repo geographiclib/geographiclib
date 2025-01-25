@@ -54,7 +54,14 @@ typedef Math::real T;
 
 static int equiv(T x, T y) {
   using std::isnan;             // Needed for Centos 7, ubuntu 14
-  return ( (isnan(x) && isnan(y)) || (x == y && signbit(x) == signbit(y)) ) ?
+#if GEOGRAPHICLIB_PRECISION >= 5
+  bool eq = isfinite(x) && isfinite(y) ?
+    (fabs(x - y) <= numeric_limits<T>::epsilon() * fmax(fabs(x), fabs(y))) :
+    x == y;
+#else
+  bool eq = x == y;
+#endif
+  return ( (isnan(x) && isnan(y)) || (eq && signbit(x) == signbit(y)) ) ?
     0 : 1;
 }
 
@@ -99,6 +106,7 @@ static int checkEquals(T x, T y, T d) {
   } while (false)
 
 int main() {
+  Utility::set_digits();
   T inf = Math::infinity(),
     nan = Math::NaN(),
     eps = numeric_limits<T>::epsilon(),

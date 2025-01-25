@@ -540,13 +540,15 @@ namespace GeographicLib {
      *   256 (i.e., about 77 decimal digits).
      * @return the resulting number of bits of precision.
      *
-     * This only has an effect when GEOGRAPHICLIB_PRECISION = 5.  The
+     * This only has an effect when GEOGRAPHICLIB_PRECISION >= 5.  The
      * precision should only be set once and before calls to any other
      * GeographicLib functions.  (Several functions, for example Math::pi(),
      * cache the return value in a static local variable.  The precision needs
      * to be set before a call to any such functions.)  In multi-threaded
      * applications, it is necessary also to set the precision in each thread
-     * (see the example GeoidToGTX.cpp).
+     * (see the example GeoidToGTX.cpp).  If GEOGRAPHICLIB_PRECISION > 5, then
+     * the precision is set to GEOGRAPHICLIB_PRECISION, the compile-time value,
+     * and \e ndigits is ignored.
      *
      * \note Use Math::digits() to return the current precision in bits.
      **********************************************************************/

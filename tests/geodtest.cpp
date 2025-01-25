@@ -8,6 +8,7 @@
  **********************************************************************/
 
 #include <iostream>
+#include <GeographicLib/Utility.hpp>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/GeodesicExact.hpp>
 
@@ -193,6 +194,7 @@ static int testarcdirect(T f = 1) {
 }
 
 int main() {
+  Utility::set_digits();
   int n = 0, i;
 
   i = testinverse<Geodesic>(); n += i;

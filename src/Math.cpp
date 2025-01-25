@@ -14,32 +14,35 @@ namespace GeographicLib {
   using namespace std;
 
   void Math::dummy() {
-    static_assert(GEOGRAPHICLIB_PRECISION >= 1 && GEOGRAPHICLIB_PRECISION <= 5,
-                  "Bad value of precision");
+    static_assert(GEOGRAPHICLIB_PRECISION >= 1, "Bad value of precision");
   }
 
   int Math::digits() {
-#if GEOGRAPHICLIB_PRECISION != 5
-    return numeric_limits<real>::digits;
-#else
+#if GEOGRAPHICLIB_PRECISION == 5
     return numeric_limits<real>::digits();
+#else
+    return numeric_limits<real>::digits;
 #endif
   }
 
   int Math::set_digits(int ndigits) {
-#if GEOGRAPHICLIB_PRECISION != 5
-    (void)ndigits;
-#else
+#if GEOGRAPHICLIB_PRECISION >= 5
+#  if GEOGRAPHICLIB_PRECISION > 5
+    // This sets ndigits = GEOGRAPHICLIB_PRECISION
+    ndigits = numeric_limits<real>::digits;
+#  endif
     mpfr::mpreal::set_default_prec(ndigits >= 2 ? ndigits : 2);
+#else
+    (void)ndigits;
 #endif
     return digits();
   }
 
   int Math::digits10() {
-#if GEOGRAPHICLIB_PRECISION != 5
-    return numeric_limits<real>::digits10;
-#else
+#if GEOGRAPHICLIB_PRECISION == 5
     return numeric_limits<real>::digits10();
+#else
+    return numeric_limits<real>::digits10;
 #endif
   }
 
@@ -191,21 +194,22 @@ namespace GeographicLib {
     sincosd(x, s, c);
     // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1950.pdf
     T r = s / c;  // special values from F.10.1.14
-    // With C++17 this becomes clamp(s / c, -overflow, overflow);
-    // Use max/min here (instead of fmax/fmin) to preserve NaN
-    return min(max(r, -overflow), overflow);
+    return clamp(r, -overflow, overflow);
   }
 
   template<typename T> T Math::atan2d(T y, T x) {
     // In order to minimize round-off errors, this function rearranges the
     // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
-    // converting it to degrees and mapping the result to the correct
-    // quadrant.
+    // converting it to degrees and mapping the result to the correct quadrant.
+    // With mpreal we could use T(mpfr::atan2u(y, x, td)); but we're not ready
+    // for this yet.
     int q = 0;
     if (fabs(y) > fabs(x)) { swap(x, y); q = 2; }
     if (signbit(x)) { x = -x; ++q; }
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
-    T ang = atan2(y, x) / degree<T>();
+    // Replace atan2(y, x) / degree<T>() by this to ensure that special values
+    // (45, 90, etc.) are returned.
+    T ang = (atan2(y, x) / pi<T>()) * T(hd);
     switch (q) {
     case 1: ang = copysign(T(hd), y) - ang; break;
     case 2: ang =            qd      - ang; break;
@@ -274,6 +278,11 @@ namespace GeographicLib {
 #endif
   }
 
+  template<typename T> T Math::clamp(T x, T a, T b) {
+    // Use max/min here (instead of fmax/fmin) to preserve NaN
+    return min(max(x, a), b);
+  }
+
   template<typename T> T Math::NaN() {
 #if defined(_MSC_VER)
     return numeric_limits<T>::has_quiet_NaN ?
@@ -316,6 +325,7 @@ namespace GeographicLib {
   template T    GEOGRAPHICLIB_EXPORT Math::taupf        <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::tauf         <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::hypot3       <T>(T, T, T);      \
+  template T    GEOGRAPHICLIB_EXPORT Math::clamp        <T>(T, T, T);      \
   template T    GEOGRAPHICLIB_EXPORT Math::NaN          <T>();             \
   template T    GEOGRAPHICLIB_EXPORT Math::infinity     <T>();
 
