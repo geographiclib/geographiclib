@@ -199,13 +199,13 @@ int main(int argc, const char* const argv[]) {
         } else
           return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
       }
-      // testset.txt -t 1 3/2 1/3 2/3
-      // testobl.txt -t 1 3/4 1 0
-      // testpro.txt -t 1 3 0 1
-      // testspha.txt -t 1 0 1 0
-      // testsphb.txt -t 1 0 2/3 1/3
-      // testsphc.txt -t 1 0 1/3 2/3
-      // testsphd.txt -t 1 0 0 1
+      // testset.txt -e 1 3/2 1/3 2/3
+      // testobl.txt -e 1 3/4 1 0
+      // testpro.txt -e 1 3 0 1
+      // testspha.txt -e 1 0 1 0
+      // testsphb.txt -e 1 0 2/3 1/3
+      // testsphc.txt -e 1 0 1/3 2/3
+      // testsphd.txt -e 1 0 0 1
       Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);

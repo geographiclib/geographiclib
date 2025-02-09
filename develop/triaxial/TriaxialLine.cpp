@@ -455,11 +455,11 @@ namespace GeographicLib {
         u2 = fomg().fwd(fic.eE * omg2a.radians());
         v2 = fbet().inv(fomg()(u2) + fic.delta);
         psi2 = ang::radians(fbet().rev(v2));
-    if (_t._debug)
-      cout << "AP " << real(tau12) << " "
-           << real(omg2a) << " "
-           << fic.eE * omg2a.radians() << " " << u2 << " "
-           << fomg()(u2) + fic.delta << " " << v2 << "\n";
+        if (_t._debug)
+          cout << "AP " << real(tau12) << " "
+               << real(omg2a) << " "
+               << fic.eE * omg2a.radians() << " " << u2 << " "
+               << fomg()(u2) + fic.delta << " " << v2 << "\n";
       }
       // Already normalized
       bet2a = ang(gm().nup * psi2.s(),
@@ -761,7 +761,8 @@ namespace GeographicLib {
       // _mu == NaN
       _tx = false;
     }
-    _max = _umb ? fabs(_fun(_tx ? _ell.K() : Math::pi()/2)) :
+    // N.B. _max < 0 for _umb && eps < 0
+    _max = _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
       (_biaxl ? Math::pi()/2 + _fun.Max() : _fun.Max());
   }
 
@@ -814,7 +815,9 @@ namespace GeographicLib {
 
   void TriaxialLine::ffun::ComputeInverse() {
     if (!_invp) {
-      if (_biaxl && _mu < 0) {
+      if (_biaxl) {
+        if (_mu == 0) return;   // _fun == 0 and there's an analytic inverse
+        // now _mu < 0
         _countn = _countb = 0;
         // Include scale = 1 in TrigfunExt constructor because _dfinv gets
         // added to u.
@@ -883,7 +886,7 @@ namespace GeographicLib {
                            HalfPeriod(), HalfPeriod()/Slope(), 1,
                            countn, countb, tol);
     } else if (_umb) {
-      real d = Max()
+      real d = fabs(Max())
         + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
         ua = z - d,
         ub = z + d;
@@ -932,6 +935,7 @@ namespace GeographicLib {
     , _kapp(kapp)
     , _eps(eps)
     , _mu(mu)
+    , _sqrtkap(sqrt(_kap))
     , _sqrtkapp(sqrt(_kapp))
     // If oblpro extend special treatment of oblate/prolate cases to mu != 0.
     , _oblpro(t._oblpro)
@@ -1001,7 +1005,7 @@ namespace GeographicLib {
                           [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]
                           (real psi) -> real
                           { return gpsip(sin(psi), cos(psi),
-                                            kap, kapp, eps, mu); },
+                                         kap, kapp, eps, mu); },
                           Math::pi()/2);
     } else if (_umb) {
       _tx = _kapp < t._ellipthresh;
@@ -1023,12 +1027,14 @@ namespace GeographicLib {
       // _mu == NaN
       _tx = false;
     }
-    _max = _umb ? fabs(_fun(_tx ? _ell.K() : Math::pi()/2)) : _fun.Max();
+    // _max is positive since _fun is monotonically increasing
+    _max = _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max();
   }
 
   Math::real TriaxialLine::gfun::operator()(real u) const {
     if (_umb) {
       real phi = gd(u, _sqrtkapp);
+      // cout << "BB " << u << " " << phi << " " << _fun(phi) << "\n";
       return _fun(_tx ? _ell.F(phi) : phi);
     } else
       return _fun(u);
@@ -1048,95 +1054,115 @@ namespace GeographicLib {
   Math::real TriaxialLine::gfun::gfderiv(real u) const {
     // return g'(u)/f'(u)
     real sn = 0, cn = 0, dn = 0;
-   if (_biaxr)
-     return gfphioblp(u, _mu);
-   else if (_biaxl) // mu > 0 not allowed
-     return gfpsioblp(sin(u), cos(u), _mu);
-   else if (_umb)
-     // This includes factor of sqrt(kap * kapp) because of adjustment of
-     // definition of f for umbilical geodesics.
-     return gf0up(u, _kap, _kapp);
-   else {
-     if (_tx)
-       (void) _ell.am(u, sn, cn, dn);
-     if (_mu > 0)
-       return _tx ? gfup(cn, _kap, _mu) : gfphip(cos(u), _kap, _mu);
-     else if (_mu < 0)
-       return _tx ? gfvp(dn, _kap, _mu) :
-         gfpsip(sin(u), cos(u), _kap, _mu);
-     else
-       return Math::NaN();
-   }
+    if (_biaxr)
+      return gfphioblp(u, _mu);
+    else if (_biaxl) // mu > 0 not allowed
+      return gfpsioblp(sin(u), cos(u), _mu);
+    else if (_umb)
+      // This includes factor of sqrt(kap * kapp) because of adjustment of
+      // definition of f for umbilical geodesics.
+      return gf0up(u, _kap, _kapp);
+    else {
+      if (_tx)
+        (void) _ell.am(u, sn, cn, dn);
+      if (_mu > 0)
+        return _tx ? gfup(cn, _kap, _mu) : gfphip(cos(u), _kap, _mu);
+      else if (_mu < 0)
+        return _tx ? gfvp(dn, _kap, _mu) :
+          gfpsip(sin(u), cos(u), _kap, _mu);
+      else
+        return Math::NaN();
+    }
   }
 
   void TriaxialLine::gfun::ComputeInverse() {
-    if (!_invp && !_biaxr) {
+    if (!(_invp || _biaxr || _umb)) {
+      // If _umb, the inverse isn't periodic
       _fun.ComputeInverse();
+      /*
+      real u = 1, z = _fun(u);
+      cout << "HERE " << u << " " << z << " " << _fun.inv0(z) << "\n";
+      for (int i = -100; i <= 100; ++i) {
+        real u = real(i)/10;
+        cout << "DD " << u << " " << _fun(u) << "\n";
+      }
+      */
       _invp = true;
     }
   }
 
-  Math::real TriaxialLine::gfun::root(real /*z*/, real /*u0*/,
-                                      int* /*countn*/, int* /*countb*/,
-                                      real /*tol*/) const {
+  Math::real TriaxialLine::gfun::root(real z, real u0,
+                                      int* countn, int* countb,
+                                      real tol) const {
     // This function isn't neeed.  General inversion mechanisms in Trigfun
-    // suffice.
-    return Math::NaN();
-    /*
-    if (!isfinite(z)) return z; // Deals with +/-inf and nan
-    if (_umb) {
-      real d = fabs(Max())
-        + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
-        ua = z - d,
-        ub = z + d;
-      u0 = fmin(ub, fmax(ua, u0));
-      // Solve z = u - _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
-      return Trigfun::root(
-                           [this]
-                           (real u) -> pair<real, real>
-                           { return pair<real, real>((*this)(u), deriv(u)); },
-                           z,
-                           u0, ua, ub,
-                           Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
-    } else
-      return Math::NaN();
-    */
+    // suffice.  NO, the trigfun for _umb is not invertible.
+    if (!(isfinite(z) && _umb))
+      return Math::NaN();       // Deals with +/-inf and nan
+    // Now we're dealing with _umb.
+    if (fabs(z) >= Max())
+      return copysign(Triaxial::BigValue(), z);
+    real ua = -Triaxial::BigValue(), ub = -ua;
+    u0 = fmin(ub, fmax(ua, u0));
+    // Solve z = _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
+    return Trigfun::root(
+                         [this]
+                         (real u) -> pair<real, real>
+                         { return pair<real, real>((*this)(u), deriv(u)); },
+                         z,
+                         u0, ua, ub,
+                         Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
   }
 
-  // Approximate inverse using _chiinv or _fun.inv0
+  // Approximate inverse using _fun.inv0.  For _umb, use inverse of _eps = 0
+  // function massaged to match slope at origin and vlues at +/- inf.
   Math::real TriaxialLine::gfun::inv0(real z) const {
-    if (!_invp || _biaxr) return Math::NaN();
-    real u = _fun.inv0(z);
-    if (_umb) {
-      if (_tx)
-        u = _ell.am(u);
-      return lam(u, _sqrtkapp);
-    } else
-      return u;
+    /*
+    cout << "QQQ " << _invp << " " << _umb << " "
+         << z << " " << _max << " " << _eps*_kap << " "
+         << (_sqrtkapp/_sqrtkap *
+             tan(atan(_sqrtkap/_sqrtkapp) / _max * z)) << " "
+         << atanh(_sqrtkapp/_sqrtkap *
+                  tan(atan(_sqrtkap/_sqrtkapp) / _max * z)) / sqrt(1 - _eps*_kap)
+         << "\n";
+    */
+    return _invp ? _fun.inv0(z) :
+      (_umb ?
+       // In limit _eps -> 0
+       //   g(u) = atan(_sqrtkap/_sqrtkapp * tanh(u))
+       // at u = 0, dg/du = _sqrtkap/_sqrtkapp
+       //    u = inf, g = atan(_sqrtkap/_sqrtkapp)
+       //
+       // For _eps finite
+       // at u = 0, dg/du = _sqrtkap/_sqrtkapp * sqrt(1 - _eps*_kap)
+       //    u = inf, g = _max
+       // Note: at u = 0
+       //   du/dphi = _sqrtkapp, so
+       //   dg/dphi = _sqrtkap * sqrt(1 - _eps*_kap) -- OK
+       //
+       // Approximate g(u) for _eps finite by
+       // g(u) = _max / atan(_sqrtkap/_sqrtkapp) *
+       //   atan(_sqrtkap/_sqrtkapp *
+       //        tanh(sqrt(1 - _eps*_kap) * atan(_sqrtkap/_sqrtkapp) / _max
+       //             * u))
+       // Values at +/- inf and slope at origin match.
+       //
+       // Solve z = g(u) gives u = u0:
+       atanh(_sqrtkapp/_sqrtkap * tan(atan(_sqrtkap/_sqrtkapp) / _max * z)) /
+       (sqrt(1 - _eps*_kap) * atan(_sqrtkap/_sqrtkapp) / _max)
+       : Math::NaN());
   }
 
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::gfun::inv1(real z, int* countn, int* countb) const {
     if (_biaxr) return Math::NaN();
-    real u = _fun.inv1(z, countn, countb);
-    if (_umb) {
-      if (_tx)
-        u = _ell.am(u);
-      return lam(u, _sqrtkapp);
-    } else
-      return u;
+    return _umb ? root(z, inv0(z), countn, countb) :
+      _fun.inv1(z, countn, countb);
   }
 
   // Accurate inverse correcting result from _finv
   Math::real TriaxialLine::gfun::inv2(real z, int* countn, int* countb) const {
-    if (!_invp || _biaxr) return Math::NaN();
-    real u = _fun.inv2(z, countn, countb);
-    if (_umb) {
-      if (_tx)
-        u = _ell.am(u);
-      return lam(u, _sqrtkapp);
-    } else
-      return u;
+    if (!_invp) return Math::NaN();
+    return _fun.inv2(z, countn, countb);
   }
 
   // _mu > 0 && !_tx
@@ -1299,5 +1325,78 @@ namespace GeographicLib {
     return gfvp(dn, 1, mu) / sqrt(-mu);
   }
 #endif
+
+  void TriaxialLine::inversedump(ostream& os) const {
+    /*
+    real u = 1.0, z = gbet()(u), uu = gbet().inv0(z);
+    cout << "AA " << u << " " << z << " " << uu << "\n";
+    return;
+    */
+    os << "[b, e2, k2, kp2, gam] = deal("
+       << _t.b() << ", " << _t.e2() << ", "
+       << _t.k2() << ", " << _t.kp2() << ", "
+       << _f.gamma() << ");\n";
+    os << "tx = ["
+       << fbet().txp() << ", " << gbet().txp() << ", "
+       << fomg().txp() << ", " << gomg().txp() << "];\n" ;
+    _f.inversedump(os);
+    _g.inversedump(os);
+  }
+  void TriaxialLine::fline::inversedump(ostream& os) const {
+    _fbet.inversedump(os, "fbet");
+    _fomg.inversedump(os, "fomg");
+  }
+  void TriaxialLine::gline::inversedump(ostream& os) const {
+    _gbet.inversedump(os, "gbet");
+    _gomg.inversedump(os, "gomg");
+  }
+  void TriaxialLine::ffun::inversedump(ostream& os, const string& name) const {
+    os << "% " << name << "\n";
+    int ndiv = 20;
+    real ds = 1/real(100);
+    int num = int(round(fmin(3*HalfPeriod(), real(10)) * ndiv));
+    os << "% u f(u) inv0(f) inv1(f) inv2(f) "
+       << "u0-u u1-u u2-u  f'(u) delf delf-f'\n";
+    os << name << " = [\n";
+    for (int i = -num; i <= num; ++i) {
+      real u = i/real(ndiv),
+        f = (*this)(u),
+        f1 = deriv(u),
+        df = ((*this)(u + ds/2) - (*this)(u - ds/2)) / ds,
+        u0 = inv0(f),
+        u1 = inv1(f),
+        u2 = inv2(f);
+      os << u << " " << f << " "
+         << u0 << " " << u1 << " " << u2 << " "
+         << u0-u << " " << u1-u << " " << u2-u << " "
+         << f1 << " " << df << " " << df-f1 << ";\n";
+    }
+    os << "];\n";
+  }
+
+  void TriaxialLine::gfun::inversedump(ostream& os, const string& name) const {
+    os << "% " << name << "\n";
+    int ndiv = 20;
+    real ds = 1/real(100);
+    int num = int(round(fmin(3*HalfPeriod(), real(10)) * ndiv));
+    os << "% u g(u) inv0(g) inv1(g) inv2(g) "
+       << "u0-u u1-u u2-u  g'(u) delg delg-g' g'/f'\n";
+    os << name << " = [\n";
+    for (int i = -num; i <= num; ++i) {
+      real u = i/real(ndiv),
+        g = (*this)(u),
+        g1 = deriv(u),
+        dg = ((*this)(u + ds/2) - (*this)(u - ds/2)) / ds,
+        u0 = inv0(g),
+        u1 = inv1(g),
+        u2 = inv2(g),
+        gf1 = gfderiv(u);
+      os << u << " " << g << " "
+         << u0 << " " << u1 << " " << u2 << " "
+         << u0-u << " " << u1-u << " " << u2-u << " "
+         << g1 << " " << dg << " " << dg-g1 << " " << gf1 << ";\n";
+    }
+    os << "];\n";
+  }
 
 } // namespace GeographicLib

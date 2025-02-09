@@ -13,12 +13,14 @@
 #include <array>
 #include <GeographicLib/Constants.hpp>
 
-#if !defined(GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT)
-#  if GEOGRAPHICLIB_PRECISION < 5
-#    define GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT 1
-#  else
-#    define GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT 0
-#  endif
+// Boost's dense output expects numeric_limits<real>::digits to be a constant
+// and not a function.  So we can't use GEOGRAPHICLIB_PRECISION == 5.  High
+// precision results can be obtained with GEOGRAPHICLIB_PRECISION > 5, e.g.,
+// GEOGRAPHICLIB_PRECISION == 256.
+#if GEOGRAPHICLIB_PRECISION == 5
+#  define GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT 0
+#else
+#  define GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT 1
 #endif
 
 // Boost bugs when using high precision:

@@ -11,6 +11,7 @@
 #define GEOGRAPHICLIB_TRIAXIALLINE_HPP 1
 
 #include <utility>
+#include <ostream>
 #include <GeographicLib/Constants.hpp>
 #include "Angle.hpp"
 #include "Trigfun.hpp"
@@ -150,24 +151,12 @@ namespace GeographicLib {
       real Max() const {
         return _max;
       }
-      void DumpTable() const {
-        int ndiv = 5;
-        for (int i = -3*ndiv; i <= 3*ndiv; ++i) {
-          real u = i/real(ndiv),
-            f = (*this)(u),
-            u0 = inv0(f),
-            u1 = inv1(f),
-            u2 = inv2(f);
-          std::cout << i << " " << u << " " << f << " 0: "
-                    << u0-u << " 1: " << u1-u << " 2: "
-                    << u2-u << "\n";
-        }
-      }
+      void inversedump(std::ostream& os, const std::string& name) const;
     };
 
     class gfun {
     private:
-      real _kap, _kapp, _eps, _mu, _sqrtkapp;
+      real _kap, _kapp, _eps, _mu, _sqrtkap, _sqrtkapp;
       bool _tx, _oblpro;
       EllipticFunction _ell;
       TrigfunExt _fun;
@@ -203,6 +192,7 @@ namespace GeographicLib {
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
 
+    public:                     // TEMPORARY
       // Approximate inverse using _finv
       real inv0(real z) const;
       // Accurate (to tol) inverse by direct Newton (not using _finv)
@@ -240,6 +230,7 @@ namespace GeographicLib {
       real Max() const {
         return _max;
       }
+      void inversedump(std::ostream& os, const std::string& name) const;
     };
 
     class fline {
@@ -294,6 +285,7 @@ namespace GeographicLib {
                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
                      bool betp = true) const;
       void ComputeInverse();
+      void inversedump(std::ostream& os) const;
     };
 
     class gline {
@@ -320,6 +312,7 @@ namespace GeographicLib {
       const Triaxial::gamblk& gm() const { return _gm; }
       real dist(gics ic, fline::disttx d) const;
       void ComputeInverse();
+      void inversedump(std::ostream& os) const;
     };
 
     Triaxial _t;
@@ -363,8 +356,8 @@ namespace GeographicLib {
       using std::tan; using std::asinh; using std::fabs;
       // A consistent large value for x near pi/2.  Also deals with the issue
       // that tan(pi/2) may be negative, e.g., for long doubles.
-      return fabs(x) < Math::pi()/2 ? asinh(mult * tan(x)) :
-        (x < 0 ? -1 : 1) * Triaxial::BigValue();
+      return fabs(x) >= Math::pi()/2 ? copysign(Triaxial::BigValue(), x) :
+        asinh(mult * tan(x));
     }
     static real gd(real x, real mult = 1) {
       using std::atan; using std::sinh;
@@ -447,6 +440,7 @@ namespace GeographicLib {
     }
     real df() const { return _f.df; }
     real deltashift() const { return _f.deltashift; }
+    void inversedump(std::ostream& os) const;
   };
 
 } // namespace GeographicLib

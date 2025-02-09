@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.13.0)
 project (triaxial)
 
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
-find_package (GeographicLib 2 REQUIRED)
+find_package (GeographicLib 2.6 CONFIG REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
 find_package (Boost 1.70 CONFIG REQUIRED)
 
@@ -73,7 +73,6 @@ target_link_libraries (randgeod trilib ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
 add_executable (TrigfunTest TrigfunTest.cpp)
-
 target_link_libraries (TrigfunTest trilib ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES})
 
@@ -96,6 +95,10 @@ target_link_libraries (Geod3Test trilib ${GeographicLib_LIBRARIES}
 add_executable (Geod2Test Geod2Test.cpp)
 target_link_libraries (Geod2Test trilib ${GeographicLib_LIBRARIES}
   ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+
+add_executable (InvDump InvDump.cpp)
+target_link_libraries (InvDump trilib ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES})
 
 if (GEOGRAPHICLIB_PRECISION LESS 5)
   add_executable (odetest odetest.cpp)
