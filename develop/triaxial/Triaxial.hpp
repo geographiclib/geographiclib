@@ -158,9 +158,9 @@ namespace GeographicLib {
       //   cpsi2 = (k2*cb2-gamma)/(k2-gamma)
       real gamma,
       // [nu, nup]
-      //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for gam > 0,
-      //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for gam < 0
-      //   unused for gam == 0
+      //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for !signbit(gam)
+      //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for signbit(gam)
+      //   unused for umbilics
         nu, nup;
       gamblk() : gamma(0), nu(0), nup(0) {}
       gamblk(real gammax, real nux, real nupx)

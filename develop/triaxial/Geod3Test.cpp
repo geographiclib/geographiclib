@@ -107,11 +107,11 @@ void errreport(const Triaxial& t,
   real errr1 = 0, errv1 = 0,
     errr2 = 0, errv2 = 0;
   l2.Position(-s12, bet1a, omg1a, alp1a);
-  if (!oblprotest || l2.gamma() != 0) {
+  if (true || !oblprotest || l2.gamma() != 0) {
     t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
     errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
   }
-  if (!oblprotest || l1.gamma() != 0) {
+  if (true || !oblprotest || l1.gamma() != 0) {
     l1.Position(s12, bet2a, omg2a, alp2a);
     t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
     errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);

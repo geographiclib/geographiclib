@@ -67,14 +67,27 @@ namespace GeographicLib {
     real sig2 = _gic.sig1 + s12/_t._b;
     real bet2, omg2;
     int Ex, Nx;
-    if (_f.gamma() > 0) {
+    if (gamma() > 0 || _t._kp2 == 0) {
       real u2, v2;
-      if (fbet().NCoeffsInv() <= fomg().NCoeffsInv())
-        solve2(-_fic.delta, sig2, fomg(), fbet(), gomg(), gbet(), u2, v2,
-               countn, countb);
-      else
-        solve2( _fic.delta, sig2, fbet(), fomg(), gbet(), gomg(), v2, u2,
-                countn, countb);
+      if (_t._kp2 == 0 && (_t._oblpro || gamma() == 0)) {
+        // If oblate, treat via biaxial machinery for
+        // _t._oblpro: all cases
+        // !_t._oblpro: meridional only
+
+        // gomg()(x) == 0, so the g equation becomes gbet()(v2) = sig2
+        v2 = gbet().inv(sig2);
+        // fomg().inv(x) is just x, but keep it general
+        u2 = fomg().inv(fbet()(v2) - _fic.delta);
+      } else {
+        // The general trixial machinery.  If !_t._oblpro, this is used for
+        // non-meridional geodesics on an oblate ellipsoid.
+        if (fbet().NCoeffsInv() <= fomg().NCoeffsInv())
+          solve2(-_fic.delta, sig2, fomg(), fbet(), gomg(), gbet(), u2, v2,
+                 countn, countb);
+        else
+          solve2( _fic.delta, sig2, fbet(), fomg(), gbet(), gomg(), v2, u2,
+                  countn, countb);
+      }
       omg2 = _fic.eE * fomg().rev(u2);
       omg2a = ang::radians(omg2);
       ang psi2 = ang::radians(fbet().rev(v2));
@@ -85,14 +98,27 @@ namespace GeographicLib {
       alp2a = ang(_fic.eE * hypot(_t._k * _f.gm().nu, _t._kp * omg2a.c()),
                   _fic.bet0.c() * _t._k * _f.gm().nup * psi2.c())
         .rebase(_fic.alp0);
-    } else if (_f.gamma() < 0) {
+    } else if (gamma() < 0 || _t._k2 == 0) {
       real u2, v2;
-      if (fomg().NCoeffsInv() <= fbet().NCoeffsInv())
-        solve2( _fic.delta, sig2, fbet(), fomg(), gbet(), gomg(), u2, v2,
-                countn, countb);
-      else
-        solve2(-_fic.delta, sig2, fomg(), fbet(), gomg(), gbet(), v2, u2,
-               countn, countb);
+      if (_t._k2 == 0 && (_t._oblpro || gamma() == 0)) {
+        // If prolate, treat via biaxial machinery for
+        // _t._oblpro: all cases
+        // !_t._oblpro: meridional only
+
+        // gbet()(x) == 0, so the g equation becomes gomg()(v2) = sig2
+        v2 = gomg().inv(sig2);
+        // fbet().inv(x) is just x, but keep it general
+        u2 = fbet().inv(fomg()(v2) + _fic.delta);
+      } else {
+        // The general trixial machinery.  If !_t._oblpro, this is used for
+        // non-meridional geodesics on a prolate ellipsoid.
+        if (fomg().NCoeffsInv() <= fbet().NCoeffsInv())
+          solve2( _fic.delta, sig2, fbet(), fomg(), gbet(), gomg(), u2, v2,
+                  countn, countb);
+        else
+          solve2(-_fic.delta, sig2, fomg(), fbet(), gomg(), gbet(), v2, u2,
+                 countn, countb);
+      }
       bet2 = _fic.nN * fbet().rev(u2);
       bet2a = ang::radians(bet2);
       ang psi2 = ang::radians(fomg().rev(v2));
@@ -103,7 +129,7 @@ namespace GeographicLib {
       alp2a = ang(_fic.omg0.c() * _t._kp * _f.gm().nup * psi2.c(),
                   _fic.nN * hypot(_t._kp * _f.gm().nu, _t._k * bet2a.c()))
         .rebase(_fic.alp0);
-    } else if (_f.gamma() == 0) {
+    } else if (gamma() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
       if (sig2n.first - _g.s0 >= -5 * numeric_limits<real>::epsilon()) {
         sig2n.first = -_g.s0;
@@ -117,7 +143,8 @@ namespace GeographicLib {
       bet2a = anglam(u2, _t._kp);
       omg2a = anglam(v2, _t._k);
       int parity = fmod(sig2n.second, real(2)) ? -1 : 1;
-      if (_t._umbalt) {
+      if (signbit(gamma())) {
+        // if t._k2 == 0 then meridional prolate
         Ex = _fic.eE * parity;
         omg2a = omg2a.flipsign(Ex).rebase(_fic.omg0);
         bet2a += ang::cardinal(2 * sig2n.second);
@@ -127,6 +154,7 @@ namespace GeographicLib {
                     _t._k / mcosh(u2, _t._kp)).
           rebase(_fic.alp0);
       } else {
+        // if t._kp2 == 0 then meridional oblate
         Nx = _fic.nN * parity;
         omg2a += ang::cardinal(2 * sig2n.second);
         omg2a = omg2a.flipsign(_fic.eE) + _fic.omg0;
@@ -557,7 +585,7 @@ namespace GeographicLib {
       alp1 = ang(alp1.s(), - Math::sq(eps), alp1.n(), true);
     eE = signbit(alp1.s()) ? -1 : 1;
     nN = signbit(alp1.c()) ? -1 : 1;
-    if (gm.gamma > 0) {
+    if (gm.gamma > 0 || t._kp2 == 0) {
       bet0 = bet1.nearest(2U);
       alp0 = alp1.nearest(1U);
       psi1 = ang(t._k * bet1.s(),
@@ -566,7 +594,7 @@ namespace GeographicLib {
       v0 = f.fbet().fwd(psi1.radians());
       u0 = f.fomg().fwd(eE * omg1.radians());
       delta = f.fbet()(v0) - f.fomg()(u0);
-    } else if (gm.gamma < 0) {
+    } else if (gm.gamma < 0 || t._k2 == 0) {
       omg0 = omg1.nearest(2U);
       alp0 = alp1.nearest(2U);
       // Need Angle(0, 0) to be treated like Angle(0, 1) here.
@@ -577,7 +605,7 @@ namespace GeographicLib {
       u0 = f.fbet().fwd(nN * bet1.radians());
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gm.gamma == 0) {
-      alp0 = alp1.nearest(t._umbalt ? 2U : 1U);
+      alp0 = alp1.nearest(signbit(f.gamma()) ? 2U : 1U);
       // N.B. factor of k*kp omitted
       // bet0, omg0 are the middle of the initial umbilical segment
       if (fabs(bet1.c()) < 8*eps && fabs(omg1.c()) < 8*eps) {
@@ -631,12 +659,12 @@ namespace GeographicLib {
   }
 
   TriaxialLine::gline::gics::gics(const gline& g, const fline::fics& fic) {
-    if (g.gamma() > 0) {
+    const Triaxial& t = g.t();
+    if (g.gamma() > 0 || t._kp2 == 0) {
       sig1 = g.gbet()(fic.v0) + g.gomg()(fic.u0);
-    } else if (g.gamma() < 0) {
+    } else if (g.gamma() < 0 || t._k2 == 0) {
       sig1 = g.gbet()(fic.u0) + g.gomg()(fic.v0);
     } else if (g.gamma() == 0) {
-      const Triaxial& t = g.t();
       sig1 = fic.nN *
         g.gbet()(lamang(fic.bet1 - fic.bet0, t._kp)) +
         fic.eE * g.gomg()(lamang(fic.omg1 - fic.omg0, t._k));
@@ -769,7 +797,6 @@ namespace GeographicLib {
   Math::real TriaxialLine::ffun::operator()(real u) const {
     if (_biaxl) {
       // This is sqrt(-mu) * f(u)
-      // **HERE**
       return modang(u, sqrt(-_mu)) - _fun(u);
     } else if (_umb) {
       // This is sqrt(kap * kapp) * f(u)
@@ -914,7 +941,6 @@ namespace GeographicLib {
 
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::ffun::inv1(real z, int* countn, int* countb) const {
-    //    cout << "BBZ\n";
     return _umb ? root(z, z, countn, countb) :
       (_biaxl ? (_mu == 0 ? modang(z/Slope(), 1/sqrt(-_mu)) :
                  root(z, modang(z/Slope(), 1/sqrt(-_mu)), countn, countb)) :
@@ -1335,7 +1361,7 @@ namespace GeographicLib {
     os << "[b, e2, k2, kp2, gam] = deal("
        << _t.b() << ", " << _t.e2() << ", "
        << _t.k2() << ", " << _t.kp2() << ", "
-       << _f.gamma() << ");\n";
+       << gamma() << ");\n";
     os << "tx = ["
        << fbet().txp() << ", " << gbet().txp() << ", "
        << fomg().txp() << ", " << gomg().txp() << "];\n" ;

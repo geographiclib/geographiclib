@@ -768,20 +768,23 @@ namespace GeographicLib {
       maxdiff = fmax( fabs(alpdiff), fmax( fabs(betdiff), fabs(omgdiff) ) );
     // cout << "GAMDIFF " << gam/ numeric_limits<real>::epsilon() << " "
     //      << maxdiff << "\n";
-    if (fabs(gam) <= 2 * maxdiff * numeric_limits<real>::epsilon())
+    if (fabs(gam) <= 2 * maxdiff * numeric_limits<real>::epsilon()) {
       // Set gam = 0 if a change of alp, bet, or omg by epsilon would include
       // gam = 0.
       gam = 0;
-    real gamp = gam == 0 ? 0 :
-      (gam > 0 ? // sqrt(k2 - gamma)
+      // If (_umbalt and not oblate) or prolate, set gam = -0
+      if ((_umbalt && _kp2 > 0) || _k2 == 0) gam = -gam;
+    }
+    real gamp = false ? 0 :
+      (!signbit(gam) ? // sqrt(k2 - gamma)
        hypot(_k * hypot(bet.s(), alp.c()*bet.c()),
              _kp * omg.s()*alp.c()) :
        // sqrt(kp2 + gamma)
        hypot(_k *  bet.c()*alp.s(),
              _kp * hypot(omg.c(), alp.s()*omg.s()))),
       // for gam == 0, we have nu = nup = 0
-      nu = sqrt(fabs(gam)) / (gam > 0 ? _k : _kp),
-      nup = gamp / (gam > 0 ? _k : _kp);
+      nu = sqrt(fabs(gam)) / (!signbit(gam) ? _k : _kp),
+      nup = gamp / (!signbit(gam) ? _k : _kp);
     return gamblk(gam, nu, nup);
   }
 
