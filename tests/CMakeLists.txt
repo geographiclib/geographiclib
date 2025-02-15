@@ -4,7 +4,7 @@ set (TESTPROGRAMS geodtest signtest polygontest intersecttest)
 add_custom_target (testprograms)
 add_dependencies (testprograms tools)
 
-if (GEOGRAPHICLIB_PRECISION GREATER 1)
+if (BUILD_TESTING AND (GEOGRAPHICLIB_PRECISION GREATER 1))
 
   foreach (TESTPROGRAM ${TESTPROGRAMS})
 
