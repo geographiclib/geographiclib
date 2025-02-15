@@ -34,6 +34,12 @@ namespace GeographicLib {
     _fic = fline::fics(_f, bet1, omg1, alp1);
     _g = gline(t, gam);
     _gic = gline::gics(_g, _fic);
+    if (0) {
+    cout << "FIC " << real(_fic.psi1) << " "
+         << _fic.u0 << " " << _fic.v0 << " " << _fic.delta << " "
+         << _fic.nN << " " << _fic.eE << "\n";
+    cout << "GIC " << _gic.sig1 << " " << _gic.s13 << "\n";
+    }
   }
 
   TriaxialLine::TriaxialLine(const Triaxial& t, real bet1, real omg1,
@@ -591,9 +597,31 @@ namespace GeographicLib {
       psi1 = ang(t._k * bet1.s(),
                  bet0.c() * alp1.c() *
                  hypot(t._k * bet1.c(), t._kp * omg1.c()));
+      // k = 1, kp = 0, sqrt(-mu) = bet1.c() * fabs(alp1.s())
+      // modang(psi1, sqrt(-mu)) = atan2(bet1.s() * fabs(alp1.s()),
+      //                                 bet0.c() * alp1.c());
+      // assume fbet().fwd(x) = x in this case
+
       v0 = f.fbet().fwd(psi1.radians());
       u0 = f.fomg().fwd(eE * omg1.radians());
-      delta = f.fbet()(v0) - f.fomg()(u0);
+      delta = (t._kp2 == 0 ?
+               atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
+               - f.fbet().df(v0)
+               : f.fbet()(v0)) - f.fomg()(u0);
+      if (0) {
+      real d = Math::degree();
+      cout << "V0 " << v0/d << " "
+           << atan2(0 * psi1.s(), psi1.c())/d << "\n";
+      cout << "INFIC " << real(alp1) << " " << real(psi1) << " "
+           << cos(psi1.radians()) << " " << psi1.c() << " "
+           << real(bet1) << " " << real(bet0) << " "
+           << v0/d << " " << u0/d << " "
+           << (t._kp2 == 0 ?
+               atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
+               - f.fbet().df(v0)
+               : f.fbet()(v0))/d << " "
+           << f.fomg()(u0)/d << " " << delta/d << "\n";
+      }
     } else if (gm.gamma < 0 || t._k2 == 0) {
       omg0 = omg1.nearest(2U);
       alp0 = alp1.nearest(2U);
@@ -601,9 +629,18 @@ namespace GeographicLib {
       psi1 = ang(t._kp * omg1.s(),
                  omg0.c() * alp1.s() *
                  hypot(t._k * bet1.c(), t._kp * omg1.c()));
+      // For k = 0, kp = 1, sqrt(-mu) = omg1.c() * fabs(alp1.c())
+      // modang(psi1, sqrt(-mu)) = atan2(omg1.s() * fabs(alp1.c()),
+      //                                 omg0.c() * alp1.s());
+      // assume fomg().fwd(x) = x in this case
+
       v0 = f.fomg().fwd(psi1.radians());
       u0 = f.fbet().fwd(nN * bet1.radians());
-      delta = f.fbet()(u0) - f.fomg()(v0);
+      delta = f.fbet()(u0) -
+        (t._k2 == 0 ?
+         atan2(omg1.s() * fabs(alp1.c()), omg0.c() * alp1.s()) -
+         f.fomg().df(v0) :
+         f.fomg()(v0));
     } else if (gm.gamma == 0) {
       alp0 = alp1.nearest(signbit(f.gamma()) ? 2U : 1U);
       // N.B. factor of k*kp omitted
@@ -805,6 +842,20 @@ namespace GeographicLib {
     } else
       return _fun(u);
   }
+
+  // THIS ISN"T USED
+  // Math::real TriaxialLine::ffun::operator()(Angle ang) const {
+  //   real u = ang.radians();
+  //   if (_biaxl) {
+  //     // This is sqrt(-mu) * f(u)
+  //     return ang.modang(sqrt(-_mu)).radians() - _fun(u);
+  //   } else if (_umb) {
+  //     // This is sqrt(kap * kapp) * f(u)
+  //     real phi = gd(u, _sqrtkapp);
+  //     return u - _fun(_tx ? _ell.F(phi) : phi);
+  //   } else
+  //     return _fun(u);
+  // }
 
   Math::real TriaxialLine::ffun::deriv(real u) const {
     if (_biaxl) {

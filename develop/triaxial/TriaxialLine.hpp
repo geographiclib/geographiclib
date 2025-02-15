@@ -57,13 +57,7 @@ namespace GeographicLib {
       // Return atan(m * tan(x)) keeping result continuous.  Only defined for
       // !signbit(m).
       static real modang(real x, real m) {
-        using std::sin; using std::cos; using std::atan2; using std::signbit;
-        if (signbit(m)) return Math::NaN();
-        real s = sin(x), c = cos(x), n = 1;
-        // This is needed to avoid nans if m == inf.
-        if (m > 1) { n = 1/m; m = 1; }
-        // x - atan2(s, c) provides multiple of 2*pi to make result continuous
-        return atan2(m * s, n * c) + (x - atan2(s, c));
+        return Angle::radians(x).modang(m).radians();
       }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
@@ -119,7 +113,10 @@ namespace GeographicLib {
       ffun() {}
       ffun(real kap, real kapp, real eps, real mu, const Triaxial& t);
       real operator()(real u) const;
+      // THIS ISN"T USED
+      // real operator()(Angle ang) const;
       real deriv(real u) const;
+      real df(real u) const { return _fun(u); }
 
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);

@@ -24,6 +24,8 @@ namespace GeographicLib {
    * sine and cosine, and the number of turns.  The angle is then
    *   2*pi*n + atan2(sin, cos)
    *
+   * N.B. n is stored as a real.  This allows it to be inf or nan.
+   *
    * Example of use:
    * xx include example-Angle.cpp
    **********************************************************************/
@@ -91,6 +93,8 @@ namespace GeographicLib {
     unsigned quadrant() const;
     Angle& reflect(bool flips, bool flipc = false, bool swapp = false);
     Angle flipsign(int mult) const;
+    // Scale the sine component by m
+    Angle modang(real m) const;
   };
 
   inline Angle::Angle(real s, real c, real num, bool normp)
@@ -99,12 +103,13 @@ namespace GeographicLib {
     , _n(num)
   {
     using std::isfinite; using std::isnan; using std::isinf;
-    using std::hypot; using std::copysign; using std::rint;
+    using std::hypot; using std::copysign;
     _n = rint(_n);
     if (!normp) {
       real h = hypot(_s, _c);
       if (h == 0) {
-        _s = 0; _c = 1;
+        // retain the sign of _s = +/-0
+        _c = copysign(real(1), _c);
       } else if (isfinite(h)) {
         _s /= h; _c /= h;
       } else if (isnan(h) || (isinf(_s) && isinf(_c)))
@@ -262,6 +267,15 @@ namespace GeographicLib {
 
   inline Angle Angle::flipsign(int mult) const {
     return mult < 0 ? -*this : *this;
+  }
+
+  inline Angle Angle::modang(real m) const {
+    using std::signbit;
+    return signbit(m) ? Angle::NaN() :
+      // Avoid nans if m == inf.
+      Angle( _s * (m > 1 ? 1 : m),
+             _c / (m > 1 ? m : 1),
+             _n );
   }
 
   inline Angle Angle::cardinal(real q) {
