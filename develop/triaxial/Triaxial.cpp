@@ -124,7 +124,7 @@ namespace GeographicLib {
     real tz = hypot(_k, _kp * omg.s()), tx = hypot(_k * bet.c(), _kp);
     // At oblate pole tx = 0; at prolate pole, tz = 0
     if (tx == 0 || tz == 0 || !(bet.c() == 0 && omg.s() == 0)) {
-      // No a triaxial umbilical point
+      // Not a triaxial umbilical point
       vec3
         N = tx == 0 ?
         vec3{-omg.c() * bet.s(), -omg.s() * bet.s(), tx * bet.s()} :

@@ -168,7 +168,7 @@ int main(int argc, const char* const argv[]) {
       num = 1000;
     for (int m = 1; m < argc; ++m) {
       string arg(argv[m]);
-      if (arg == "-t") {
+      if (arg == "-e") {
         if (m + 4 >= argc) return usage(1, true);
         try {
           b = Utility::val<real>(string(argv[m + 1]));
@@ -294,7 +294,7 @@ int main(int argc, const char* const argv[]) {
 #endif
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
-        if (f == 0) {
+        if (f == 0 && kp2 * k2 > 0) {
           Triaxial::vec3 r1, r2, v1, v2;
           Angle phi1, lam1, phi2, lam2, alp1a, alp2a;
           t1.elliptocart2(Angle(bet1), Angle(omg1), r1);
@@ -310,7 +310,7 @@ int main(int argc, const char* const argv[]) {
           alp1 = real(alp1a);
           alp2 = real(alp2a);
         } else {
-          if (f < 0) {
+          if (signbit(f)) {
             rotate(bet1, omg1, alp1, 1);
             rotate(bet2, omg2, alp2, 1);
           }
@@ -318,11 +318,11 @@ int main(int argc, const char* const argv[]) {
           phi2 = Math::atand(Math::tand(bet2) / (1 - f));
           geod.Inverse(phi1, omg1, phi2, omg2,
                        s12, alp1, alp2, m12, M12, M21);
-          if (f < 0) {
+          if (signbit(f)) {
             rotate(bet1, omg1, alp1, -1);
             rotate(bet2, omg2, alp2, -1);
           }
-          if (false && f < 0 &&
+          if (false && signbit(f) &&
               bet1 + bet2 == 0 && Math::cosd(alp1) * Math::cosd(alp2) < 0) {
             // Attempt to standardize the azimuth when there's more than one
             // shortest geodesic.  SKIP FOR NOW.
