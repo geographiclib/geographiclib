@@ -422,20 +422,20 @@ namespace GeographicLib {
     } else if (bet1.s() == 0 && bet2.s() == 0) {
       // both points on equator
       ang omg12 = (omg2 - omg1).base();
-      int eE = signbit(omg12.s()) ? -1 : 1; // Fix #1 for triaxial sphere
+      int E = signbit(omg12.s()) ? -1 : 1; // Fix #1 for triaxial sphere
       // set direction for probe as +/-90 based on sign of omg12
-      alp1 = ang::cardinal(eE);
+      alp1 = ang::cardinal(E);
       bet1.reflect(true);
       lf = TL::fline(*this, gamma(bet1, omg1, alp1));
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
       omg2a -= omg2;
-      if (eE * omg2a.s() >= 0) {
+      if (E * omg2a.s() >= 0) {
         // geodesic follows the equator
-        d = lf.ArcPos0(fic, omg12.flipsign(eE), bet2a, omg2a, alp2, false);
+        d = lf.ArcPos0(fic, omg12.flipsign(E), bet2a, omg2a, alp2, false);
         if (_debug)
-          cout << "d val " << eE << " "
-               << real(omg12.flipsign(eE)) << " "
+          cout << "d val " << E << " "
+               << real(omg12.flipsign(E)) << " "
                << real(bet2a) << " " << real(omg2a) << " "
                << real(alp2) << " "
                << d.betw2 << " " << d.omgw2 << " "
@@ -446,12 +446,12 @@ namespace GeographicLib {
         // geodesic does not follow the equator
         alpb = ang::cardinal(-1) - ang::eps();
         alpa = -alpb;
-        (eE > 0 ? fa : fb) = omg2a.radians0();
-        alp1.setquadrant(eE > 0 ? 3U : 0U);
-        fic.setquadrant(lf, eE > 0 ? 3U : 0U);
+        (E > 0 ? fa : fb) = omg2a.radians0();
+        alp1.setquadrant(E > 0 ? 3U : 0U);
+        fic.setquadrant(lf, E > 0 ? 3U : 0U);
         (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
         omg2a -= omg2;
-        (eE > 0 ? fb : fa) = omg2a.radians0();
+        (E > 0 ? fb : fa) = omg2a.radians0();
         if (_debug) msg = "general bet1/2 = 0 non-equatorial";
       }
     } else if (umb1) {

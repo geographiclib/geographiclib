@@ -254,7 +254,7 @@ namespace GeographicLib {
         //   umbalt: alp0 = cardinal(even)
           bet0, omg0, alp0;
         real u0, v0, delta;     // starting point geodesic
-        int nN, eE;             // Northgoing / eastgoing
+        int N, E;             // Northgoing / eastgoing
         fics() {}
         fics(const fline& f,
              Angle bet1, Angle omg1, Angle alp1);
