@@ -237,7 +237,7 @@ namespace GeographicLib {
       ffun _fbet, _fomg;
       bool _invp;
     public:
-      real df, deltashift;
+      real deltashift;
       class fics {
         // bundle of data setting the initial conditions for a geodesic
       public:
@@ -435,7 +435,7 @@ namespace GeographicLib {
         gomg().HalfPeriod() * gomg().Slope() :
         gomg().Max();
     }
-    real df() const { return _f.df; }
+    //    real df() const { return _f.df; }
     real deltashift() const { return _f.deltashift; }
     void inversedump(std::ostream& os) const;
   };

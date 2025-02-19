@@ -162,7 +162,10 @@ namespace GeographicLib {
       //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for signbit(gam)
       //   unused for umbilics
         nu, nup;
-      gamblk() : gamma(0), nu(0), nup(0) {}
+      // Default values for gamma = +/-0
+      gamblk(bool neg = false)
+        : gamma(neg ? -real(0) : real(0)), nu(0), nup(1)
+      {}
       gamblk(real gammax, real nux, real nupx)
         : gamma(gammax), nu(nux), nup(nupx) {}
     };

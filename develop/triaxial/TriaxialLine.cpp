@@ -85,9 +85,9 @@ namespace GeographicLib {
         // fomg().inv(x) is just x, but keep it general
         u2 = fomg().inv(fbet()(v2) - _fic.delta);
       } else {
-        // The general trixial machinery.  If !_t._oblpro, this is used for
+        // The general triaxial machinery.  If !_t._oblpro, this is used for
         // non-meridional geodesics on an oblate ellipsoid.
-        if (fbet().NCoeffsInv() <= fomg().NCoeffsInv())
+        if (fbet().NCoeffs() <= fomg().NCoeffs())
           solve2(-_fic.delta, sig2, fomg(), fbet(), gomg(), gbet(), u2, v2,
                  countn, countb);
         else
@@ -116,9 +116,9 @@ namespace GeographicLib {
         // fbet().inv(x) is just x, but keep it general
         u2 = fbet().inv(fomg()(v2) + _fic.delta);
       } else {
-        // The general trixial machinery.  If !_t._oblpro, this is used for
+        // The general triaxial machinery.  If !_t._oblpro, this is used for
         // non-meridional geodesics on a prolate ellipsoid.
-        if (fomg().NCoeffsInv() <= fbet().NCoeffsInv())
+        if (fomg().NCoeffs() <= fbet().NCoeffs())
           solve2( _fic.delta, sig2, fbet(), fomg(), gbet(), gomg(), u2, v2,
                   countn, countb);
         else
@@ -366,6 +366,7 @@ namespace GeographicLib {
                               Angle bet2,
                               Angle& bet2a, Angle& omg2a, Angle& alp2a)
     const {
+    // XXX fix for oblate/prolate
     ang tau12;
     if (gamma() > 0) {
       real spsi = _t._k * bet2.s(),
@@ -404,8 +405,9 @@ namespace GeographicLib {
     , _fomg(_t._kp2, _t._k2 , -_t._e2,  _gm.gamma, t)
     , _invp(false)
     {
-      df = _gm.gamma == 0 ? _fbet.Max() - _fomg.Max() : 0;
-      deltashift = _gm.gamma == 0 ? 2*df : 0;
+      // Only needed for umbilical lines
+      deltashift = _t._k2 > 0 && _t._kp2 > 0 && _gm.gamma == 0 ?
+        2 * (_fbet.Max() - _fomg.Max()) : Math::NaN();
     }
 
   void TriaxialLine::fline::ComputeInverse() {
@@ -475,8 +477,9 @@ namespace GeographicLib {
                                Angle& bet2a, Angle& omg2a, Angle& alp2a,
                                bool betp)
     const {
+    // XXX fix for oblate/prolate
     disttx ret{Math::NaN(), Math::NaN(), 0};
-    if (gamma() > 0) {
+    if (gamma() > 0 || _t._kp2 == 0) {
       ang psi2;
       real u2, v2;
       if (betp) {
@@ -503,7 +506,7 @@ namespace GeographicLib {
                   fic.bet0.c() * _t._k * gm().nup * psi2.c()).rebase(fic.alp0);
       ret.betw2 = v2;
       ret.omgw2 = u2;
-    } else if (gamma() < 0) {
+    } else if (gamma() < 0 || _t._k2 == 0) {
       ang psi2;
       real u2, v2;
       if (betp) {

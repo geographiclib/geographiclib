@@ -45,10 +45,8 @@ namespace GeographicLib {
       _k2  = (_b - _c) * (_b + _c) / s;
     }
     _k = sqrt(_k2); _kp = sqrt(_kp2);
-    real ksum = _k2 + _kp2;
     if (! (isfinite(_a) && isfinite(_b) && isfinite(_c) &&
-           _a >= _b && _b >= _c && _c >= 0 && _b > 0 &&
-           fabs(ksum - 1) <= numeric_limits<real>::epsilon()) )
+           _a >= _b && _b >= _c && _c >= 0 && _b > 0) )
       throw GeographicErr("Bad semiaxes for triaxial ellipsoid");
   }
 
@@ -58,20 +56,21 @@ namespace GeographicLib {
     , _e2(e2)
     , _k2(k2)
     , _kp2(kp2)
-    , _k(sqrt(_k2))
-    , _kp(sqrt(_kp2))
     , _umbalt(false)
     , _oblpro(true)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
+    real ksum = _k2 + _kp2;
+    _k2 /= ksum;
+    _kp2 /= ksum;
+    _k = sqrt(_k2);
+    _kp = sqrt(_kp2);
     _a = _b * sqrt(1 + _e2 * _kp2);
     _c = _b * sqrt(1 - _e2 * _k2);
     _axes = vec3({_a, _b, _c});
-    real ksum = _k2 + _kp2;
     if (! (isfinite(_a) && isfinite(_b) && isfinite(_c) &&
-           _a >= _b && _b >= _c && _c >= 0 && _b > 0 &&
-           fabs(ksum - 1) <= numeric_limits<real>::epsilon()) )
+           _a >= _b && _b >= _c && _c >= 0 && _b > 0) )
       throw GeographicErr("Bad semiaxes for triaxial ellipsoid");
   }
 
@@ -239,40 +238,74 @@ namespace GeographicLib {
     omg1.round();
     bet2.round();
     omg2.round();
+    bool oblate = _kp2 == 0, prolate = _k2 == 0;
+
+    // In triaxial + oblate cases, [bet, omg] are initially put into [-90,90] x
+    // [-180,180].  For prolate case, maybe we instead put [bet, omg] into
+    // [-180,180] x [0,180].
+    // What about rotating coordinates to make
+    //   oblate: omg1 = 0
+    //   prolate: bet1 = -90
+    // this eliminates many of the special cases
+
     ang bet10(bet1), omg10(omg1);
-    bool flip1 = AngNorm(bet1, omg1), flip2 = AngNorm(bet2, omg2);
-    bool umb1 = bet1.c() == 0 && omg1.s() == 0,
-      umb2 = bet2.c() == 0 && omg2.s() == 0;
+    // If prolate put omg in [ 0, 180], bet in [-180, 180]
+    //       else put bet in [-90, 90], omg in [-180, 180]
+    bool flip1 = AngNorm(bet1, omg1, prolate),
+      flip2 = AngNorm(bet2, omg2, prolate);
+    // oblate, set these to bet[12].c() == 0
+    // prolate, set these to omg[12].s() == 0
+    bool umb1 = (prolate || bet1.c() == 0) && (oblate || omg1.s() == 0),
+      umb2 = (prolate || bet2.c() == 0) && (oblate || omg2.s() == 0);
     bool swap12;
     {
-      ang tmp1(bet1), tmp2(bet2);
+      // For prolate, swap based on omg, switch 1 & 2 because poles are at
+      // 0/180, instead of +/-90.
+      ang tmp1(prolate ? omg2 : bet1), tmp2(prolate ? omg1 : bet2);
       tmp1.setquadrant(0U); tmp2.setquadrant(0U);
       ang tmp12 = tmp2 - tmp1; // |bet2| - |bet1|
       swap12 = tmp12.s() > 0; // is |bet2| > |bet1|
-      if (tmp12.s() == 0) {
+      if (!oblate && !prolate && tmp12.s() == 0) {
+        // don't need to do this if oblate or prolate
         tmp1 = omg1; tmp2 = omg2;
         tmp1.setquadrant(0U); tmp2.setquadrant(0U);
         tmp12 = tmp2 - tmp1;
         swap12 = tmp12.s() < 0; // is |omg2| < |omg1|
       }
-      // N.B. No swapping if bet1 = +0 and bet1 = -0.
+      // N.B. No swapping if bet1 = +0 and bet2 = -0.
     }
     if (swap12) {
       swap(bet1, bet2);
       swap(omg1, omg2);
       swap(umb1, umb2);
     }
-    // Now |bet1| > |bet2|
+    if (oblate) {
+      // Rotate, subtracting omg1 from omg[12], so omg1 = 0
+      omg2 -= omg1;
+      omg1 = ang::cardinal(0);
+    } else if (prolate) {
+      // Rotate, subtracting bet1 + 90 from bet[12], so bet1 = -90
+      bet2 -= bet1 + ang::cardinal(1);
+      bet1 = ang::cardinal(-1);
+    }
+    // Now |bet1| >= |bet2|
     bool flipz = bet1.s() > 0;
-    if (flipz) {
+    if (flipz) {                // Not needed for prolate, bet1 already -90
       bet1.reflect(true);
       bet2.reflect(true);
     }
-    bool flipy = omg1.s() < 0 || (omg1.s() == 0 && omg2.s() < 0);
+    // Now bet1 <= 0
+    bool flipy = prolate ? signbit(bet2.c()) :
+      signbit(omg1.s()) || (omg1.s() == 0 && signbit(omg2.s()));
     if (flipy) {
-      omg1.reflect(true);
-      omg2.reflect(true);
+      if (prolate)
+        bet2.reflect(false, true);
+      else {
+        omg1.reflect(true);
+        omg2.reflect(true);
+      }
     }
+    // For oblate omg2 >= 0, for prolate bet2 in [-90, 90]
     bool flipx = signbit(omg1.c());
     if (flipx) {
       omg1.reflect(false, true);
@@ -280,53 +313,90 @@ namespace GeographicLib {
     }
     bool flipomg = bet2.c() == 0 && signbit(omg2.s());
     // Eliminate coordinate ambiguity bet2 = +/90 and omg2 < 0 for point 2
-    // Point 1 is already done with flipy
+    // Point 1 is already done with flipy.  (Maybe skip for oblate?)
     if (flipomg) omg2.reflect(true);
 
     // Now bet1 <= 0, bet1 <= bet2 <= -bet1, 0 <= omg1 <= 90
     //
+    // Oblate: omg1 = 0, omg2 >= 0; rotation results in meridional geodesics
+    //   following triaxial middle ellipse (omg2 = 0/180); minor ellipse folded
+    //   into middle ellipse.
+    //
+    // Prolate: bet1 = -90, bet2 in [-90,90], omg2 >= 0; rotation results in
+    //   meridional geodesics following triaxial middle ellipse (bet2 = +/-90);
+    //   major ellipse folded into middle ellipse.
+    //
     // Distinguish two general categories of solution
     //
-    // A The geodesic follows one of the principal ellipse (this means, of
+    // A The geodesic follows one of the principal ellipses (this means, of
     //   course, that both points need to be on the same principal ellipse) and
     //   the initial and final azimuth are easily determined.  The subcases
     //   are:
     //
     //   a Minor ellipse, omg = +/-90: the ellipse is followed regardless of
-    //     the points; however we treat this using B (and the solution along
+    //     the points; however we treat this using B.d (and the solution along
     //     the ellipse is found on the first iteration).
+    //     Oblate: this becomes the middle ellipse case, A.c.
+    //     Prolate: same as triaxial case.
     //
     //   b Major ellipse, bet = 0: the ellipse is followed provided that both
     //     points are close enough "equatorial geodesics".  From point 1 we
     //     follow an equatorial geodesic +/- 180deg in arc distance (= psi
     //     variable).  If point 2 is within the resulting span of longitudes,
     //     the geodesic is equatorial (compute with ArcPos0).  Other do search
-    //     iwith strategy B.
+    //     with strategy B.
+    //     Oblate: same as triaxial case, except conjugate point is trivially
+    //       found
+    //     Prolate: treated by middle ellipse cases A.c.2 and A.c.3.
     //
     //   c Middle ellipse, bet = +/-90 or omg = 0,180: the ellipse is followed
     //     provided that both points are close enough "meridional geodesics".
     //     The four umbilical points divide the middle ellipse into 4 segments.
+    //     Oblate: same as triaxial case, but geodesic always follows ellipse.
+    //     Prolate: this becomes the major ellipse case, A.b
+    //
     //     There are several subcases:
     //
     //     1 opposite umbilical points: multiple shortest geodesic, two of
     //       which follow the middle ellipse.  But it's more useful to return
     //       the one going through bet = 0, omg = 90.  Then all the others can
     //       be generated by multipling tan(alp1) and tan(alp2) by a constant.
+    //       Oblate/prolate: opposite poles
     //
     //     2 bet1 = -90, bet2 = -90: geodesic follows ellipse (compute with
     //       ArcPos0).  Points may be adjacent umbilical points.
-    //
+    //       Oblate: same pole
+    //       Prolate: meridional geodesic, same side of poles
+
     //     3 bet1 = -90, bet2 = 90: geodesic may follow the ellipse if if they
     //       are close enough.  See case A.b for strategy.  Points may be
     //       adjacent umbilical points.
+    //       Oblate: treated by A.c.1
+    //       Prolate: meridional geodesic, opposite sides of poles
     //
     //     4 |bet2| != 90: geodesic follows the ellipse.  Compute with Hybrid.
+    //       Oblate: meridinal geodesic
     //
     // B The geodesic does not follow a principal ellipse
     //
     //   a point 1 is an umbilical point, gam = 0, so we know alp2
+    //     Oblate: remaining meridional cases
+    //     Prolate: remaining meridional cases
     //
     //   b bet1 = -90: do a search with alp1 bracket = [-90+eps, 90-eps].
+    //     Oblate: already treated by B.a
+    //     Prolate: same as triaxial case
+    //
+    //   c omg1 = 0: do a search with alp1 bracket = [eps, 180-eps], or
+    //     [-180+eps, -eps], depending on the sign of omg2.
+    //
+    //   d general case, bracket search by two neighboring umbilical
+    //     directions.  This treats case A.a.
+    //     Oblate: there are only two distinct meridional directions, we can
+    //       automatically bracket the search in alp1 by [0,180] (because omg1
+    //       = 0, omg2 > 0).
+    //     Prolate: ditto but bracket alp1 by [-90,90] (because bet1 = -90,
+    //       bet2 in (-90,90)).
 
     // Set up variables for search
     real fa, fb;
@@ -342,21 +412,22 @@ namespace GeographicLib {
     // flag for progress
     bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
-      // both points on middle ellipse
-      lf = TL::fline(*this, gamblk());
+      // Case A.c, both points on middle ellipse
+      lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
       if (umb1 && umb2 && bet2.s() > 0 && omg2.c() < 0) {
-        // process opposite umbilical points
-        fic = TL::fline::fics(lf, bet1, omg1, ang{_kp, _k});
-        alp1 = ang(_kp * exp(lf.df), _k);
+        // Case A.c.1, process opposite umbilical points
+        // For oblate/prolate this gives 0/90
+        alp1 = oblate || prolate ? ang(_kp, _k, 0, true) :
+          ang(exp(lf.deltashift/2), 1);
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
         d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, true);
         if (_debug) msg = "opposite umbilics";
         backside = signbit(bet2a.c());
         done = true;
       } else if (bet1.c() == 0 && bet2.c() == 0) {
-        // bet1 = -90, bet2 = +/-90
+        // Case A.c.{2,3}, bet1 = -90, bet2 = +/-90
         if (bet2.s() < 1) {
-          // bet1 = bet2 = -90
+          // Case A.c.2, bet1 = bet2 = -90
           alp1 = ang::cardinal(1);
           fic = TL::fline::fics(lf, bet1, omg1, alp1);
           ang omg12 = omg2 - omg1;
@@ -373,7 +444,7 @@ namespace GeographicLib {
           if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
           done = true;
         } else {
-          // bet1 = -90, bet2 = 90
+          // Case A.c.3, bet1 = -90, bet2 = 90
           // need to see how far apart the points are
           // If point 1 is at [-90, 0], direction is 0 else -90.
           alp1 = ang::cardinal(omg1.s() == 0 ? 0 : -1);
@@ -409,8 +480,8 @@ namespace GeographicLib {
           }
         }
       } else {
-        // other meridional cases, invoke Hybrid with the following value of
-        // alp1
+        // Case A.c.4, other meridional cases, invoke Hybrid with the following
+        // value of alp1
         alp1 = ang::cardinal(bet1.c() == 0 ?
                              (omg2.c() < 1 ? 1 : (omg1.s() == 0 ? 0 : -1)) :
                              (omg2.c() > 0 ? 0 : 2));
@@ -420,7 +491,7 @@ namespace GeographicLib {
         done = true;
       }
     } else if (bet1.s() == 0 && bet2.s() == 0) {
-      // both points on equator
+      // Case A.b, both points on equator
       ang omg12 = (omg2 - omg1).base();
       int E = signbit(omg12.s()) ? -1 : 1; // Fix #1 for triaxial sphere
       // set direction for probe as +/-90 based on sign of omg12
@@ -455,8 +526,8 @@ namespace GeographicLib {
         if (_debug) msg = "general bet1/2 = 0 non-equatorial";
       }
     } else if (umb1) {
-      // umbilical point to general point
-      lf = TL::fline(*this, gamblk());
+      // Case B.a, umbilical point to general point
+      lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
       (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
@@ -466,7 +537,7 @@ namespace GeographicLib {
       if (_debug) msg = "umbilic to general";
       done = true;
     } else if (bet1.c() == 0) {
-      // bet1 = -90 to general point
+      // Case B.b, bet1 = -90 to general point
       if (!signbit(omg2.s())) {
         alpa = ang::cardinal(-1) + ang::eps();
         alpb = -alpa;
@@ -480,26 +551,28 @@ namespace GeographicLib {
       }
       if (_debug) msg = "general bet = -90";
     } else if (omg1.s() == 0) {
-      // omg1 = 0 to general point
+      // Case B.c, omg1 = 0 to general point
       if (omg2.s() > 0) {
         alpa = ang::eps();
         alpb = ang::cardinal(2) - alpa;
         fa = -omg2.radians();
         fb = (ang::cardinal(2)-omg2).radians0();
       } else {
-        alpa = ang(-numeric_limits<real>::epsilon()/(1<<20), -1);
-        alpb = ang(-numeric_limits<real>::epsilon()/(1<<20),  1);
+        // alpb = -ang::eps();
+        // alpa = ang::cardinal(-2) - alpb;
+        alpa = ang(-numeric_limits<real>::epsilon()/(1<<20), -1, 0, true);
+        alpb = ang(-numeric_limits<real>::epsilon()/(1<<20),  1, 0, true);
         fa = (ang::cardinal(2)-omg2).radians0();
         fb = -omg2.radians();
       }
       if (_debug) msg = "general omg1 = 0";
     } else {
-      // general case
+      // Case B.d, general case
       real f[4];
       alpa = ang( _kp * fabs(omg1.s()), _k * fabs(bet1.c()));
       alpb = alpa;
 
-      lf = TL::fline(*this, gamblk());
+      lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
       fic = TL::fline::fics(lf, bet1, omg1, alpb);
       unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
       for (; !done && qb <= 4U; ++qb, ++qa) {
@@ -541,6 +614,7 @@ namespace GeographicLib {
 
     int countn = 0, countb = 0;
     if (!done) {
+      // Iterative search for the solution
       if (_debug)
         cout << "X " << done << " " << msg << "\n";
       alp1 = findroot(
@@ -569,8 +643,9 @@ namespace GeographicLib {
     s12 = lg.dist(gic, d);
 
     if (_debug)
-    cerr << "A " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+      cerr << "A "
+           << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+           << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     // Undo switches in reverse order flipz, swap12, flip1
     if (flipomg) {
       omg2.reflect(true);
@@ -578,8 +653,9 @@ namespace GeographicLib {
     }
 
     if (_debug)
-    cerr << "B " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+    cerr << "B "
+         << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+         << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipx) {
       omg1.reflect(false, true);
       omg2.reflect(false, true);
@@ -588,18 +664,21 @@ namespace GeographicLib {
     }
 
     if (_debug)
-    cerr << "C " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+      cerr << "C "
+           << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+           << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipy) {
       omg1.reflect(true);
-      omg2.reflect(true, true);
+      // This was omg2.reflect(true, true); (by mistake?)
+      omg2.reflect(true);
       alp1.reflect(true);
       alp2.reflect(true);
     }
 
     if (_debug)
-    cerr << "D " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-               << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+      cerr << "D "
+           << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+           << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipz) {
       bet1.reflect(true);
       bet2.reflect(true);
@@ -608,8 +687,9 @@ namespace GeographicLib {
     }
 
     if (_debug)
-    cerr << "E " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-         << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+      cerr << "E "
+           << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+           << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (swap12) {
       swap(bet1, bet2);
       swap(omg1, omg2);
@@ -624,14 +704,16 @@ namespace GeographicLib {
     }
 
     if (_debug)
-    cerr << "F " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-         << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+      cerr << "F "
+           << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+           << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flip1) Flip(bet1, omg1, alp1);
     if (flip2) Flip(bet2, omg2, alp2);
     alp1.setn(); alp2.setn();
     if (_debug)
-    cerr << "G " << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-         << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+      cerr << "G "
+           << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+           << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
 
     fic = TL::fline::fics(lf, bet10, omg10, alp1);
     gic = TL::gline::gics(lg, fic);

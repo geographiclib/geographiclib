@@ -284,7 +284,7 @@ namespace GeographicLib {
     q = rint(q);
     int iq = int(remainder(q, real(4)));
     // iq is in [-2, 2];
-    // We could fold iq = -2 to iq = 2; but this way work too.
+    // We could fold iq = -2 to iq = 2; but this way works too.
     real s, c, z = 0;
     switch (iq) {
     case -2: s = -z; c = -1; break;
