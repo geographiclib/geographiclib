@@ -409,6 +409,9 @@ namespace GeographicLib {
     TL::fline::fics fic;
     TL::fline::disttx d;
 
+    if (_debug)
+      cout << "COORDS " << real(bet1) << " " << real(omg1) << " "
+           << real(bet2) << " " << real(omg2) << "\n";
     // flag for progress
     bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
@@ -428,13 +431,15 @@ namespace GeographicLib {
         // Case A.c.{2,3}, bet1 = -90, bet2 = +/-90
         if (bet2.s() < 1) {
           // Case A.c.2, bet1 = bet2 = -90
-          alp1 = ang::cardinal(1);
+          alp1 = ang::cardinal(oblate ? 2 : 1);
           fic = TL::fline::fics(lf, bet1, omg1, alp1);
           ang omg12 = omg2 - omg1;
           if (omg12.s() == 0 && omg12.c() < 0) {
             // adjacent E/W umbilical points
             // Should be able to get ArcPos0 to return this?
-            d = TL::fline::disttx{-BigValue(), BigValue(), 0 };
+            d = oblate || prolate ?
+              TL::fline::disttx{ -lf.fbet().Max(), lf.fomg().Max(), 0 } :
+              TL::fline::disttx{ -BigValue(), BigValue(), 0 };
             if (_debug) msg = "adjacent EW umbilics";
             alp2 = ang::cardinal(0);
           } else {
@@ -453,7 +458,9 @@ namespace GeographicLib {
           if (omg1.s() == 0 && omg2.s() == 0) {
             // adjacent N/S umbilical points
             // Should be able to get ArcPos0 to return this?
-            d = TL::fline::disttx{BigValue(), -BigValue(), 0};
+            d = oblate || prolate ?
+              TL::fline::disttx{ lf.fbet().Max(), -lf.fomg().Max(), 0} :
+              TL::fline::disttx{ BigValue(), -BigValue(), 0};
             alp2 = ang::cardinal(1);
             if (_debug) msg = "adjacent NS umbilics";
             done = true;
@@ -555,7 +562,7 @@ namespace GeographicLib {
       if (omg2.s() > 0) {
         alpa = ang::eps();
         alpb = ang::cardinal(2) - alpa;
-        fa = -omg2.radians();
+        fa = -omg2.radians0();
         fb = (ang::cardinal(2)-omg2).radians0();
       } else {
         // alpb = -ang::eps();
@@ -563,7 +570,7 @@ namespace GeographicLib {
         alpa = ang(-numeric_limits<real>::epsilon()/(1<<20), -1, 0, true);
         alpb = ang(-numeric_limits<real>::epsilon()/(1<<20),  1, 0, true);
         fa = (ang::cardinal(2)-omg2).radians0();
-        fb = -omg2.radians();
+        fb = -omg2.radians0();
       }
       if (_debug) msg = "general omg1 = 0";
     } else {

@@ -114,13 +114,15 @@ namespace GeographicLib {
       ffun(real kap, real kapp, real eps, real mu, const Triaxial& t);
       real operator()(real u) const;
       // THIS ISN"T USED
-      // real operator()(Angle ang) const;
+      Angle operator()(const Angle& ang) const;
       real deriv(real u) const;
       real df(real u) const { return _fun(u); }
 
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
       }
+      Angle inv(const Angle& z,
+                int* countn = nullptr, int* countb = nullptr) const;
       void ComputeInverse();
       real fwd(real phi) const {
         return _umb ? lam(phi, _sqrtkapp) :
@@ -253,8 +255,10 @@ namespace GeographicLib {
         //   !umbalt: alp0 = cardinal(odd)
         //   umbalt: alp0 = cardinal(even)
           bet0, omg0, alp0;
+        // Angle versions of u0, v0, delta, defer for now
+        // Angle u0a, v0a, deltaa;
         real u0, v0, delta;     // starting point geodesic
-        int N, E;             // Northgoing / eastgoing
+        int N, E;               // Northgoing / eastgoing
         fics() {}
         fics(const fline& f,
              Angle bet1, Angle omg1, Angle alp1);

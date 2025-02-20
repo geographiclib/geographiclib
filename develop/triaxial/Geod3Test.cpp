@@ -92,7 +92,7 @@ void errreport(const Triaxial& t,
     bet1x(bet1), omg1x(omg1), alp1x(alp1),
     bet2x(bet2), omg2x(omg2), alp2x(alp2), alp1a, alp2a;
   real s12a, errs = 0;
-  if (!oblprotest) {
+  if (true || !oblprotest) {
     TriaxialLine l0 =
       t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
     errs = fabs(s12 - s12a);

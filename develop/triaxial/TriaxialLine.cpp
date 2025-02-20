@@ -481,6 +481,7 @@ namespace GeographicLib {
     disttx ret{Math::NaN(), Math::NaN(), 0};
     if (gamma() > 0 || _t._kp2 == 0) {
       ang psi2;
+      // ang u2a, v2a, psi2a;
       real u2, v2;
       if (betp) {
         psi2 = tau12 + fic.psi1;
@@ -490,13 +491,17 @@ namespace GeographicLib {
       } else {
         omg2a = fic.omg1 + tau12.flipsign(fic.E);
         u2 = fomg().fwd(fic.E * omg2a.radians());
+        // u2a = fic.E < 0 ? -omg2a : omg2a;
         v2 = fbet().inv(fomg()(u2) + fic.delta);
+        // v2a = fbet().inv(fomg()(u2a) + fic.deltaa);
         psi2 = ang::radians(fbet().rev(v2));
+        // psi2a = v2a;
+        // psi2 = psi2a;
         if (_t._debug)
-          cout << "AP " << real(tau12) << " "
+          cout << "AP " << real(psi2) << " " << real(tau12) << " "
                << real(omg2a) << " "
                << fic.E * omg2a.radians() << " " << u2 << " "
-               << fomg()(u2) + fic.delta << " " << v2 << "\n";
+               << fomg()(u2) + fic.delta << " " << v2/Math::degree() << "\n";
       }
       // Already normalized
       bet2a = ang(gm().nup * psi2.s(),
@@ -504,6 +509,36 @@ namespace GeographicLib {
                   0, true).rebase(fic.bet0);
       alp2a = ang(fic.E * hypot(_t._k * gm().nu, _t._kp * omg2a.c()),
                   fic.bet0.c() * _t._k * gm().nup * psi2.c()).rebase(fic.alp0);
+      if (false)
+        cout << "AP2 " << real(bet2a) << " "
+             << real(fic.omg1) << " " << real(omg2a) << " "
+             << real(alp2a) << "\n";
+      if (false)
+        cout << "AP3 "
+             << fic.u0/Math::degree()+90 << " " << fic.v0/Math::degree()+90 << " "
+             << u2/Math::degree() << " " << v2/Math::degree() << " "
+             << fbet().inv(fomg()(fic.u0) + fic.delta)/Math::degree() << " "
+             << fic.delta/Math::degree() << "\n";
+      if (false) {
+        for (int i = -360; i <= 360; i += 10) {
+          ang a{real(i)},
+            fba = fbet()(a),
+            foa = fomg()(a),
+            ifba = fbet()(fba),
+            ifoa = fomg()(foa);
+          real p = a.radians(), d = Math::degree(),
+            fb = fbet()(fbet().fwd(p)),
+            fo = fomg()(fomg().fwd(p)),
+            ifb = fbet().inv(fb),
+            ifo = fomg().inv(fo);
+            cout << "QQ " << i << " "
+                 << fb/d << " " << ifb/d << " "
+                 << fo/d << " " << ifo/d << "\n";
+            cout << "PP " << i << " "
+                 << real(fba) << " " << real(ifba) << " "
+                 << real(foa) << " " << real(ifoa) << "\n";
+        }
+      }
       ret.betw2 = v2;
       ret.omgw2 = u2;
     } else if (gamma() < 0 || _t._k2 == 0) {
@@ -604,26 +639,29 @@ namespace GeographicLib {
       // modang(psi1, sqrt(-mu)) = atan2(bet1.s() * fabs(alp1.s()),
       //                                 bet0.c() * alp1.c());
       // assume fbet().fwd(x) = x in this case
-
       v0 = f.fbet().fwd(psi1.radians());
       u0 = f.fomg().fwd(E * omg1.radians());
+      // Only used for biaxial cases when fwd rev is the identity
+      // v0a = psi1;
+      // u0a = E < 0 ? -omg1 : omg1;
       delta = (t._kp2 == 0 ?
                atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
                - f.fbet().df(v0)
                : f.fbet()(v0)) - f.fomg()(u0);
+      // deltaa = f.fbet()(v0a) - f.fomg()(u0a);
       if (0) {
-      real d = Math::degree();
-      cout << "V0 " << v0/d << " "
-           << atan2(0 * psi1.s(), psi1.c())/d << "\n";
-      cout << "INFIC " << real(alp1) << " " << real(psi1) << " "
-           << cos(psi1.radians()) << " " << psi1.c() << " "
-           << real(bet1) << " " << real(bet0) << " "
-           << v0/d << " " << u0/d << " "
-           << (t._kp2 == 0 ?
-               atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
-               - f.fbet().df(v0)
-               : f.fbet()(v0))/d << " "
-           << f.fomg()(u0)/d << " " << delta/d << "\n";
+        real d = Math::degree();
+        cout << "V0 " << v0/d << " "
+             << atan2(0 * psi1.s(), psi1.c())/d << "\n";
+        cout << "INFIC " << real(alp1) << " " << real(psi1) << " "
+             << cos(psi1.radians()) << " " << psi1.c() << " "
+             << real(bet1) << " " << real(bet0) << " "
+             << v0/d << " " << u0/d << " "
+             << (t._kp2 == 0 ?
+                 atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
+                 - f.fbet().df(v0)
+                 : f.fbet()(v0))/d << " "
+             << f.fomg()(u0)/d << " " << delta/d << "\n";
       }
     } else if (gm.gamma < 0 || t._k2 == 0) {
       omg0 = omg1.nearest(2U);
@@ -846,19 +884,23 @@ namespace GeographicLib {
       return _fun(u);
   }
 
-  // THIS ISN"T USED
-  // Math::real TriaxialLine::ffun::operator()(Angle ang) const {
-  //   real u = ang.radians();
-  //   if (_biaxl) {
-  //     // This is sqrt(-mu) * f(u)
-  //     return ang.modang(sqrt(-_mu)).radians() - _fun(u);
-  //   } else if (_umb) {
-  //     // This is sqrt(kap * kapp) * f(u)
-  //     real phi = gd(u, _sqrtkapp);
-  //     return u - _fun(_tx ? _ell.F(phi) : phi);
-  //   } else
-  //     return _fun(u);
-  // }
+  // THIS ISN"T USED ?
+  Angle TriaxialLine::ffun::operator()(const Angle& ang) const {
+    if (_biaxr)
+      return ang;
+    else if (_biaxl && _mu == 0)
+      return ang.modang(sqrt(-_mu));
+    real u = ang.radians();
+    if (_biaxl)
+      // This is sqrt(-mu) * f(u)
+      return ang.modang(sqrt(-_mu)) - ang::radians(_fun(u));
+    else if (_umb) {
+      // This is sqrt(kap * kapp) * f(u)
+      real phi = gd(u, _sqrtkapp);
+      return ang::radians(u - _fun(_tx ? _ell.F(phi) : phi));
+    } else
+      return ang::radians(_fun(u));
+  }
 
   Math::real TriaxialLine::ffun::deriv(real u) const {
     if (_biaxl) {
@@ -996,7 +1038,9 @@ namespace GeographicLib {
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::ffun::inv1(real z, int* countn, int* countb) const {
     return _umb ? root(z, z, countn, countb) :
-      (_biaxl ? (_mu == 0 ? modang(z/Slope(), 1/sqrt(-_mu)) :
+      (_biaxl ? (_mu == 0 ?
+                 // In this case _fun.Slope() = 0 and Slope() = 1
+                 modang(z/Slope(), 1/sqrt(-_mu)) :
                  root(z, modang(z/Slope(), 1/sqrt(-_mu)), countn, countb)) :
        _fun.inv1(z, countn, countb));
   }
@@ -1007,6 +1051,16 @@ namespace GeographicLib {
     return _biaxl && _mu == 0 ? inv1(z) :
       (_umb || _biaxl ? root(z, inv0(z), countn, countb) :
        _fun.inv2(z, countn, countb));
+  }
+
+  Angle TriaxialLine::ffun::inv(const Angle& z, int* countn, int* countb)
+    const {
+    if (_biaxr)
+      return z;
+    else if (_biaxl && _mu == 0)
+      return z.modang(1/sqrt(-_mu));
+    else
+      return ang::radians(inv(z.radians(), countn, countb));
   }
 
   TriaxialLine::gfun::gfun(real kap, real kapp, real eps, real mu,
