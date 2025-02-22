@@ -549,6 +549,9 @@ namespace GeographicLib {
         u2 = fbet().fwd(fic.N * bet2a.radians());
         v2 = fomg().inv(fbet()(u2) - fic.delta);
         psi2 = ang::radians(fomg().rev(v2));
+        if (0)
+          cout << "QQX " << real(bet2a) << " "
+               << u2 << " " << v2 << " " << real(psi2) << "\n";
       } else {
         psi2 = tau12 + fic.psi1;
         v2 = fomg().fwd(psi2.radians());
@@ -562,6 +565,9 @@ namespace GeographicLib {
       alp2a = ang(fic.omg0.c() * _t._kp * gm().nup * psi2.c(),
                   fic.N * hypot(_t._kp * gm().nu, _t._k * bet2a.c()))
         .rebase(fic.alp0);
+      if (0)
+      cout << "QQY " << fic.omg0.c() * _t._kp * gm().nup * psi2.c() << " "
+           << fic.N * hypot(_t._kp * gm().nu, _t._k * bet2a.c()) << "\n";
       ret.betw2 = u2;
       ret.omgw2 = v2;
     } else if (gamma() == 0) {

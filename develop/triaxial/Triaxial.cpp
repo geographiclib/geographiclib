@@ -342,12 +342,15 @@ namespace GeographicLib {
     //   b Major ellipse, bet = 0: the ellipse is followed provided that both
     //     points are close enough "equatorial geodesics".  From point 1 we
     //     follow an equatorial geodesic +/- 180deg in arc distance (= psi
-    //     variable).  If point 2 is within the resulting span of longitudes,
-    //     the geodesic is equatorial (compute with ArcPos0).  Other do search
-    //     with strategy B.
+    //     variable).
     //     Oblate: same as triaxial case, except conjugate point is trivially
     //       found
     //     Prolate: treated by middle ellipse cases A.c.2 and A.c.3.
+    //
+    //     1 If point 2 is within the resulting span of longitudes, the
+    //       geodesic is equatorial (compute with ArcPos0).
+    //
+    //     2 Otherwise, do search with strategy B.
     //
     //   c Middle ellipse, bet = +/-90 or omg = 0,180: the ellipse is followed
     //     provided that both points are close enough "meridional geodesics".
@@ -376,6 +379,7 @@ namespace GeographicLib {
     //
     //     4 |bet2| != 90: geodesic follows the ellipse.  Compute with Hybrid.
     //       Oblate: meridinal geodesic
+    //       Prolate: same pole
     //
     // B The geodesic does not follow a principal ellipse
     //
@@ -424,7 +428,7 @@ namespace GeographicLib {
           ang(exp(lf.deltashift/2), 1);
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
         d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, true);
-        if (_debug) msg = "opposite umbilics";
+        if (_debug) msg = "A.c opposite umbilics";
         backside = signbit(bet2a.c());
         done = true;
       } else if (bet1.c() == 0 && bet2.c() == 0) {
@@ -440,11 +444,11 @@ namespace GeographicLib {
             d = oblate || prolate ?
               TL::fline::disttx{ -lf.fbet().Max(), lf.fomg().Max(), 0 } :
               TL::fline::disttx{ -BigValue(), BigValue(), 0 };
-            if (_debug) msg = "adjacent EW umbilics";
+            if (_debug) msg = "A.c.2 adjacent EW umbilics";
             alp2 = ang::cardinal(0);
           } else {
             d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
-            if (_debug) msg = "bet1/2 = -90";
+            if (_debug) msg = "A.c.2 bet1/2 = -90";
           }
           if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
           done = true;
@@ -452,6 +456,8 @@ namespace GeographicLib {
           // Case A.c.3, bet1 = -90, bet2 = 90
           // need to see how far apart the points are
           // If point 1 is at [-90, 0], direction is 0 else -90.
+          // XXX Maybe alp1 needs fixing
+
           alp1 = ang::cardinal(omg1.s() == 0 ? 0 : -1);
           fic = TL::fline::fics(lf, bet1, omg1, alp1);
           // If point 1 is [-90, 0] and point 2 is [90, 0]
@@ -462,27 +468,44 @@ namespace GeographicLib {
               TL::fline::disttx{ lf.fbet().Max(), -lf.fomg().Max(), 0} :
               TL::fline::disttx{ BigValue(), -BigValue(), 0};
             alp2 = ang::cardinal(1);
-            if (_debug) msg = "adjacent NS umbilics";
+            if (_debug) msg = "A.c.3 adjacent NS umbilics";
             done = true;
           } else {
             d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+            if (_debug)
+              cout << "APX "
+                   << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+                   << real(bet2a) << " " << real(omg2a) << " "
+                   << real(alp2) << "\n";
+            // XXX FIX HERE for prolate case -90 -1 90 177
+
             omg2a -= omg2;
             if (omg2a.s() > 0) {
               ang omg12 = omg2 + omg1;
               d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
               if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
-              if (_debug) msg = "bet1/2 = -/+90 meridional";
+              if (_debug) msg = "A.c.3 bet1/2 = -/+90 meridional";
               done = true;
             } else {
               alpa = ang::cardinal(-1) + ang::eps();
-              fa = omg2a.radians0();
-              alpb.setquadrant(0U);
-              fic.setquadrant(lf, 0U);
-              (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
-              omg2a -= omg2;
-              alpb = -alpa;
-              fb = omg2a.radians0();
-              if (_debug) msg = "general bet1/2 = -/+90, non-meridional";
+              if (false & prolate) {
+                fa = -omg2.radians0();
+                alpb = -alpa;
+                fb = (ang::cardinal(2) - omg2).radians0();
+              } else {
+                fa = omg2a.radians0();
+                alpb.setquadrant(0U);
+                fic.setquadrant(lf, 0U);
+                (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+                omg2a -= omg2;
+                alpb = -alpa;
+                fb = omg2a.radians0();
+              }
+              if (0)
+                cout << "ALP/F "
+                     << real(alpa) << " " << fa << " "
+                     << real(alpb) << " " << fb << "\n";
+              if (_debug) msg = "A.c.3 general bet1/2 = -/+90, non-meridional";
             }
           }
         }
@@ -490,11 +513,16 @@ namespace GeographicLib {
         // Case A.c.4, other meridional cases, invoke Hybrid with the following
         // value of alp1
         alp1 = ang::cardinal(bet1.c() == 0 ?
-                             (omg2.c() < 1 ? 1 : (omg1.s() == 0 ? 0 : -1)) :
+                             // TODO: CHECK omg2.c() < 1 test
+                             (omg2.c() < 1 ? 1 :
+                              (omg1.s() == 0 && !prolate ? 0 : -1)) :
                              (omg2.c() > 0 ? 0 : 2));
+        if (0)
+        cout << "ALP1 " << real(alp1) << " "
+             << bet1.c() << " " << omg2.c() << "\n";
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
         d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
-        if (_debug) msg = "other meridional";
+        if (_debug) msg = "A.c.4 other meridional";
         done = true;
       }
     } else if (bet1.s() == 0 && bet2.s() == 0) {
@@ -518,7 +546,7 @@ namespace GeographicLib {
                << real(alp2) << " "
                << d.betw2 << " " << d.omgw2 << " "
                << d.ind2 << "\n";
-        if (_debug) msg = "bet1/2 = 0 equatorial";
+        if (_debug) msg = "A.b.1 bet1/2 = 0 equatorial";
         done = true;
       } else {
         // geodesic does not follow the equator
@@ -530,18 +558,27 @@ namespace GeographicLib {
         (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
         omg2a -= omg2;
         (E > 0 ? fb : fa) = omg2a.radians0();
-        if (_debug) msg = "general bet1/2 = 0 non-equatorial";
+        if (_debug) msg = "A.b.2 general bet1/2 = 0 non-equatorial";
       }
     } else if (umb1) {
       // Case B.a, umbilical point to general point
       lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
+      if (0)
+        cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
-      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
+      (void) lf.ArcPos0(fic, prolate ? omg1 - omg2 : bet1 - bet2,
+                        bet2a, omg2a, alp2, !prolate);
+      //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
+      if (0)
+        cout << "APOUT "
+           << real(bet2a) << " " << real(omg2a) << " " << real(alp1) << "\n";
       if (alp1.s() < 0) alp1 += ang::cardinal(1);
+      if (prolate) alp1 += ang::cardinal(1);
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      d = lf.ArcPos0(fic, bet2 - bet1, bet2a, omg2a, alp2);
-      if (_debug) msg = "umbilic to general";
+      d = lf.ArcPos0(fic,  prolate ? omg2 - omg1 : bet2 - bet1,
+                     bet2a, omg2a, alp2, !prolate);
+      if (_debug) msg = "B.a umbilic to general";
       done = true;
     } else if (bet1.c() == 0) {
       // Case B.b, bet1 = -90 to general point
@@ -556,7 +593,7 @@ namespace GeographicLib {
         fa = (ang::cardinal(2) - omg2).radians0();
         fb = -omg2.radians();
       }
-      if (_debug) msg = "general bet = -90";
+      if (_debug) msg = "B.b general bet = -90";
     } else if (omg1.s() == 0) {
       // Case B.c, omg1 = 0 to general point
       if (omg2.s() > 0) {
@@ -572,7 +609,7 @@ namespace GeographicLib {
         fa = (ang::cardinal(2)-omg2).radians0();
         fb = -omg2.radians0();
       }
-      if (_debug) msg = "general omg1 = 0";
+      if (_debug) msg = "B.c general omg1 = 0";
     } else {
       // Case B.d, general case
       real f[4];
@@ -594,7 +631,7 @@ namespace GeographicLib {
           if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
             alp1 = alpb;
             d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
-            if (_debug) msg = "accidental umbilic";
+            if (_debug) msg = "B.d accidental umbilic";
             backside = signbit(bet2a.c()); // qb == 1U || qb == 2U;
             done = true;
             break;
@@ -616,7 +653,7 @@ namespace GeographicLib {
         fa = f[qa & 3U]; fb = f[qb & 3U];
         alpa.setquadrant(qa);
       }
-      if (_debug) msg = "general";
+      if (_debug) msg = "B.d general";
     }
 
     int countn = 0, countb = 0;
