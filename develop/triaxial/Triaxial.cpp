@@ -570,8 +570,9 @@ namespace GeographicLib {
       if (0)
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
-      (void) lf.ArcPos0(fic, prolate ? omg1 - omg2 : bet1 - bet2,
-                        bet2a, omg2a, alp1, !prolate);
+      bool betp = _k2 > _kp2;
+      (void) lf.ArcPos0(fic, betp ? bet1 - bet2 :  omg1 - omg2,
+                        bet2a, omg2a, alp1, betp);
       //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
       if (0)
         cout << "APOUT "

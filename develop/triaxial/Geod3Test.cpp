@@ -82,7 +82,6 @@ void errreport(const Triaxial& t,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
   typedef Math::real real;
   typedef Angle ang;
-  bool oblprotest = t.k2() == 0 || t.kp2() == 0;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else
@@ -92,32 +91,46 @@ void errreport(const Triaxial& t,
     bet1x(bet1), omg1x(omg1), alp1x(alp1),
     bet2x(bet2), omg2x(omg2), alp2x(alp2), alp1a, alp2a;
   real s12a, errs = 0;
-  if (true || !oblprotest) {
-    TriaxialLine l0 =
-      t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
-    errs = fabs(s12 - s12a);
-  }
+  TriaxialLine l0 =
+    t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
+  errs = fabs(s12 - s12a);
+
   Triaxial::vec3 r1, v1, r2, v2;
+  Triaxial::vec3 r1a, v1a, r2a, v2a;
+  ang bet1a, omg1a, bet2a, omg2a;
+  // direct checks for inverse calculation using alp1a, alp2a, s12a
+  t.elliptocart2(bet1x, omg1x, alp1a, r1, v1);
+  t.elliptocart2(bet2x, omg2x, alp2a, r2, v2);
+  TriaxialLine l1i(t, bet1x, omg1x, alp1a);
+  TriaxialLine l2i(t, bet2x, omg2x, alp2a);
+  real errr1i = 0, errv1i = 0,
+    errr2i = 0, errv2i = 0;
+  l2i.Position(-s12a, bet1a, omg1a, alp1a);
+  t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
+  errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
+  l1i.Position(s12a, bet2a, omg2a, alp2a);
+  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
+  errr2i = vecdiff(r2, r2a); errv2i = vecdiff(v2, v2a);
+
+  // direct checks for test sets using alp1x, alp2x, s12
   t.elliptocart2(bet1x, omg1x, alp1x, r1, v1);
   t.elliptocart2(bet2x, omg2x, alp2x, r2, v2);
-  ang bet1a, omg1a, bet2a, omg2a;
-  Triaxial::vec3 r1a, v1a, r2a, v2a;
   TriaxialLine l1(t, bet1x, omg1x, alp1x);
   TriaxialLine l2(t, bet2x, omg2x, alp2x);
   real errr1 = 0, errv1 = 0,
     errr2 = 0, errv2 = 0;
   l2.Position(-s12, bet1a, omg1a, alp1a);
-  if (true || !oblprotest || l2.gamma() != 0) {
-    t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
-    errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
-  }
-  if (true || !oblprotest || l1.gamma() != 0) {
-    l1.Position(s12, bet2a, omg2a, alp2a);
-    t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
-    errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
-  }
+  t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
+  cout << real(bet1a) << " " << real(omg1a) << " " << real(alp1a) << "\n";
+  errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
+  l1.Position(s12, bet2a, omg2a, alp2a);
+  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
+  errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
+
   cout << fixed << setprecision(0)
        << ceil(errs/eps) << " "
+       << ceil(errr2i/eps) << " " << ceil(errv2i/eps) << " "
+       << ceil(errr1i/eps) << " " << ceil(errv1i/eps) << " "
        << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "
        << ceil(errr1/eps) << " " << ceil(errv1/eps) << endl;
 }

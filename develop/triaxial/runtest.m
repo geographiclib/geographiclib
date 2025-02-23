@@ -33,6 +33,6 @@ function runtest(d, n, k)
   dat = dat(k:n:end, :);
   q = size(dat, 1);
   for i = 1:q
-    fprintf(1, '%06d %d %d %d %d %d\n', geod3test(t, dat(i,:)));
+    fprintf(1, '%06d %d %d %d %d %d %d %d %d %d\n', geod3test(t, dat(i,:)));
   end
 end
