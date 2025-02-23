@@ -117,6 +117,7 @@ namespace GeographicLib {
       Angle operator()(const Angle& ang) const;
       real deriv(real u) const;
       real df(real u) const { return _fun(u); }
+      real dfp(real u) const { return _fun.deriv(u); }
 
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
@@ -145,7 +146,8 @@ namespace GeographicLib {
         return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
       }
       real Slope() const {
-        return _umb ? 1 : (_biaxl ? 1 - _fun.Slope() : _fun.Slope());
+        return _umb ? 1 :
+          (_biaxl ? 1 - sqrt(-_mu) * _fun.Slope() : _fun.Slope());
       }
       real Max() const {
         return _max;

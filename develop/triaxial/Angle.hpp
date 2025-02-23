@@ -212,7 +212,8 @@ namespace GeographicLib {
 
   inline bool Angle::zerop(real mult) const {
     using std::fabs;
-    return _c > 0 && fabs(_s) <= mult * std::numeric_limits<real>::epsilon();
+    return _n == 0 &&_c > 0 &&
+      fabs(_s) <= mult * std::numeric_limits<real>::epsilon();
   }
 
   inline bool Angle::operator==(const Angle& p) const {

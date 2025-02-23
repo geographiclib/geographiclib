@@ -433,7 +433,7 @@ namespace GeographicLib {
         done = true;
       } else if (bet1.c() == 0 && bet2.c() == 0) {
         // Case A.c.{2,3}, bet1 = -90, bet2 = +/-90
-        if (bet2.s() < 1) {
+        if (bet2.s() < 0) {
           // Case A.c.2, bet1 = bet2 = -90
           alp1 = ang::cardinal(oblate ? 2 : 1);
           fic = TL::fline::fics(lf, bet1, omg1, alp1);
@@ -459,6 +459,9 @@ namespace GeographicLib {
           // XXX Maybe alp1 needs fixing
 
           alp1 = ang::cardinal(omg1.s() == 0 ? 0 : -1);
+          if (0)
+            cout << "FIC " << real(bet1) << " " << real(omg1) << " "
+                 << real(alp1) << "\n";
           fic = TL::fline::fics(lf, bet1, omg1, alp1);
           // If point 1 is [-90, 0] and point 2 is [90, 0]
           if (omg1.s() == 0 && omg2.s() == 0) {
@@ -513,8 +516,8 @@ namespace GeographicLib {
         // Case A.c.4, other meridional cases, invoke Hybrid with the following
         // value of alp1
         alp1 = ang::cardinal(bet1.c() == 0 ?
-                             // TODO: CHECK omg2.c() < 1 test
-                             (omg2.c() < 1 ? 1 :
+                             // TODO: CHECK omg2.c() < 1 test; CHANGE TO < 0
+                             (omg2.c() < 0 ? 1 :
                               (omg1.s() == 0 && !prolate ? 0 : -1)) :
                              (omg2.c() > 0 ? 0 : 2));
         if (0)
@@ -568,7 +571,7 @@ namespace GeographicLib {
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
       (void) lf.ArcPos0(fic, prolate ? omg1 - omg2 : bet1 - bet2,
-                        bet2a, omg2a, alp2, !prolate);
+                        bet2a, omg2a, alp1, !prolate);
       //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
       if (0)
         cout << "APOUT "

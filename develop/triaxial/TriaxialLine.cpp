@@ -9,6 +9,7 @@
 
 #include "TriaxialLine.hpp"
 #include <iostream>
+#include <iomanip>
 
 namespace GeographicLib {
 
@@ -35,10 +36,10 @@ namespace GeographicLib {
     _g = gline(t, gam);
     _gic = gline::gics(_g, _fic);
     if (0) {
-    cout << "FIC " << real(_fic.psi1) << " "
-         << _fic.u0 << " " << _fic.v0 << " " << _fic.delta << " "
-         << _fic.N << " " << _fic.E << "\n";
-    cout << "GIC " << _gic.sig1 << " " << _gic.s13 << "\n";
+      cout << "FIC " << real(_fic.psi1) << " "
+           << _fic.u0 << " " << _fic.v0 << " " << _fic.delta << " "
+           << _fic.N << " " << _fic.E << "\n";
+      cout << "GIC " << _gic.sig1 << " " << _gic.s13 << "\n";
     }
   }
 
@@ -547,10 +548,48 @@ namespace GeographicLib {
       if (betp) {
         bet2a = fic.bet1 + tau12.flipsign(fic.N);
         u2 = fbet().fwd(fic.N * bet2a.radians());
-        v2 = fomg().inv(fbet()(u2) - fic.delta);
-        psi2 = ang::radians(fomg().rev(v2));
+        if (gamma() == 0 && tau12 == tau12.nearest(2U)) {
+          // special case for finding conjugate points on meridional geodesics,
+          // gamma = 0, tau12 = multiple of pi.
+          real npi = (tau12.ncardinal() + fic.psi1.nearest(2U).ncardinal())
+            * Math::pi()/2;
+          // Don't worry about the case where we start at a pole -- this is
+          // already handled in Triaxial::Inverse.
+          //
+          // Solve F(tpsi2) = tpsi2 - Deltaf(n*pi + atan(tpsi2))
+          //                = (tan(psi1) - Deltaf(psi1)) = c
+          //
+          // for tpsi2, starting guess tpsi2 = tan(psi1).
+          // Test case prolate 1 3 0 1
+          // p1 = [-90, -1]
+          // [sx,a1x,a2x] = t.distance(p1,[90,178.9293750483]) -> a1x = 90
+          // [sx,a1x,a2x] = t.distance(p1,[90,178.9293750484]) -> a1x = 90.0023
+          //   omg1 = -91 -> omg2 = 178.9293750483-90 = 88.9293750483
+          real c = fic.psi1.t() - fomg().df(fic.psi1.radians()),
+            l = exp(Triaxial::BigValue()),
+            tpsi2 = Trigfun::root([this, npi] (real tpsi) -> pair<real, real>
+                                  {
+                                    real psi = atan(tpsi);
+                                    return pair<real, real>
+                                      (tpsi - fomg().df(npi + psi),
+                                       1 - fomg().dfp(psi) /
+                                       (1 + Math::sq(tpsi)));
+                                  },
+                                  c, fic.psi1.t(), -l, l);
+          psi2 = ang(tpsi2, 1) + tau12 + fic.psi1.nearest(2U);
+          if (0)
+            cout << "RR psi1/2 "
+                 << real(fic.psi1) << " "
+                 << real(psi2) << "\n";
+          v2 = psi2.radians();
+        } else {
+          v2 = fomg().inv(fbet()(u2) - fic.delta);
+          psi2 = ang::radians(fomg().rev(v2));
+        }
         if (0)
-          cout << "QQX " << real(bet2a) << " "
+          cout << "QQX " << real(tau12) << " "
+               << gamma() << " "
+               << real(bet2a) << " "
                << u2 << " " << v2 << " " << real(psi2) << "\n";
       } else {
         psi2 = tau12 + fic.psi1;
@@ -652,7 +691,7 @@ namespace GeographicLib {
       // u0a = E < 0 ? -omg1 : omg1;
       delta = (t._kp2 == 0 ?
                atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
-               - f.fbet().df(v0)
+               - sqrt(gm.gamma) * f.fbet().df(v0)
                : f.fbet()(v0)) - f.fomg()(u0);
       // deltaa = f.fbet()(v0a) - f.fomg()(u0a);
       if (0) {
@@ -665,7 +704,7 @@ namespace GeographicLib {
              << v0/d << " " << u0/d << " "
              << (t._kp2 == 0 ?
                  atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
-                 - f.fbet().df(v0)
+                 - sqrt(gm.gamma) * f.fbet().df(v0)
                  : f.fbet()(v0))/d << " "
              << f.fomg()(u0)/d << " " << delta/d << "\n";
       }
@@ -680,13 +719,18 @@ namespace GeographicLib {
       // modang(psi1, sqrt(-mu)) = atan2(omg1.s() * fabs(alp1.c()),
       //                                 omg0.c() * alp1.s());
       // assume fomg().fwd(x) = x in this case
-
+      if (0)
+        cout << "FICS " << real(omg1) << " " << real(omg0) << " "
+             << real(psi1) << " "
+             << t._kp * omg1.s() << " "
+             << omg0.c() * alp1.s() * hypot(t._k * bet1.c(),
+                                            t._kp * omg1.c()) << "\n";
       v0 = f.fomg().fwd(psi1.radians());
       u0 = f.fbet().fwd(N * bet1.radians());
       delta = f.fbet()(u0) -
         (t._k2 == 0 ?
-         atan2(omg1.s() * fabs(alp1.c()), omg0.c() * alp1.s()) -
-         f.fomg().df(v0) :
+         atan2(omg1.s() * fabs(alp1.c()), omg0.c() * alp1.s())
+         - sqrt(-gm.gamma) * f.fomg().df(v0) :
          f.fomg()(v0));
     } else if (gm.gamma == 0) {
       alp0 = alp1.nearest(signbit(f.gamma()) ? 2U : 1U);
@@ -791,8 +835,6 @@ namespace GeographicLib {
     } else if (_biaxl) {
       // oblate/prolate librating coordinate
       // _kap == 1, mu > 0 not allowed
-      // Include scale = 1 in TrigfunExt constructor because this function gets
-      // subtracted from atan(sqrt(-mu) * tan(phi)).
       // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
       _tx = false;
       // f multiplied by sqrt(-mu)
@@ -813,7 +855,7 @@ namespace GeographicLib {
                          eps = _eps, mu = _mu]
                         (real psi) -> real
                         { return dfpsioblp(sin(psi), cos(psi), eps, mu); },
-                        Math::pi()/2, false, 1);
+                        Math::pi()/2, false);
     } else if (_mu > 0) {
       _tx = _mu / (_kap + _mu) < t._ellipthresh;
       if (_tx) {
@@ -875,13 +917,13 @@ namespace GeographicLib {
     }
     // N.B. _max < 0 for _umb && eps < 0
     _max = _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-      (_biaxl ? Math::pi()/2 + _fun.Max() : _fun.Max());
+      (_biaxl ? Math::pi()/2 + sqrt(-_mu) * _fun.Max() : _fun.Max());
   }
 
   Math::real TriaxialLine::ffun::operator()(real u) const {
     if (_biaxl) {
       // This is sqrt(-mu) * f(u)
-      return modang(u, sqrt(-_mu)) - _fun(u);
+      return modang(u, sqrt(-_mu)) - sqrt(-_mu) * _fun(u);
     } else if (_umb) {
       // This is sqrt(kap * kapp) * f(u)
       real phi = gd(u, _sqrtkapp);
@@ -899,7 +941,7 @@ namespace GeographicLib {
     real u = ang.radians();
     if (_biaxl)
       // This is sqrt(-mu) * f(u)
-      return ang.modang(sqrt(-_mu)) - ang::radians(_fun(u));
+      return ang.modang(sqrt(-_mu)) - ang::radians(sqrt(-_mu) * _fun(u));
     else if (_umb) {
       // This is sqrt(kap * kapp) * f(u)
       real phi = gd(u, _sqrtkapp);
@@ -925,7 +967,7 @@ namespace GeographicLib {
       // f0'(x) = sqrt(-mu) / (cos(u)^2 - mu * sin(u)^2)
       // **HERE**
       return sqrt(-_mu) / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
-        - _fun.deriv(u);
+        - sqrt(-_mu) * _fun.deriv(u);
     } else if (_umb) {
       // This is sqrt(kap * kapp) * f'(u)
       real phi = gd(u, _sqrtkapp),
@@ -1430,8 +1472,11 @@ namespace GeographicLib {
   // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0, !_tx
   Math::real TriaxialLine::ffun::dfpsioblp(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
-    // Multiply by f functions by sqrt(abs(mu))
-    return sqrt(-mu) * eps / (1 + sqrt(1 - eps * c2));
+    // f functions are multiplied by sqrt(abs(mu)) but don't include this
+    // factor here; instead include it in operator()(). etc.  This was we can
+    // still use this function in the limit mu -> 0 to determine the conjugate
+    // point on a meridian.
+    return eps / (1 + sqrt(1 - eps * c2));
   }
   Math::real TriaxialLine::gfun::gpsioblp(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
