@@ -416,6 +416,7 @@ namespace GeographicLib {
     if (_debug)
       cout << "COORDS " << real(bet1) << " " << real(omg1) << " "
            << real(bet2) << " " << real(omg2) << "\n";
+    //    bet1.setn(0); omg1.setn(0); bet2.setn(0); omg2.setn(0);
     // flag for progress
     bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
@@ -570,8 +571,8 @@ namespace GeographicLib {
       if (0)
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
-      bool betp = _k2 > _kp2;
-      (void) lf.ArcPos0(fic, betp ? bet1 - bet2 :  omg1 - omg2,
+      bool betp = _k2 > _kp2;   // This could be betb = !prolate;
+      (void) lf.ArcPos0(fic, (betp ? bet1 - bet2 :  omg1 - omg2).base(),
                         bet2a, omg2a, alp1, betp);
       //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
       if (0)
@@ -580,8 +581,8 @@ namespace GeographicLib {
       if (alp1.s() < 0) alp1 += ang::cardinal(1);
       if (prolate) alp1 += ang::cardinal(1);
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      d = lf.ArcPos0(fic,  prolate ? omg2 - omg1 : bet2 - bet1,
-                     bet2a, omg2a, alp2, !prolate);
+      d = lf.ArcPos0(fic, (betp ? bet2 - bet1 : omg2 - omg1).base(),
+                     bet2a, omg2a, alp2, betp);
       if (_debug) msg = "B.a umbilic to general";
       done = true;
     } else if (bet1.c() == 0) {
