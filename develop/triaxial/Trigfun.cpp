@@ -330,13 +330,13 @@ namespace GeographicLib {
                            real x0, real xa, real xb,
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
-                           real tol) {
+                           real tol,
+                           int indicator) {
     // Solve v = f(x) - z = 0
-    bool debug = false;
+    bool debug = indicator > 0;
     if (x0 == xa && x0 == xb)
       return x0;
-    real vtol0 = tol * zscale,
-      vtol1 = pow(tol, real(0.75)) * zscale,
+    real vtol = tol * zscale,
       xtol = pow(tol, real(0.75)) * xscale,
       x = x0, oldv = Math::infinity();
     int k = 0, maxit = 150, b = 0;
@@ -347,10 +347,10 @@ namespace GeographicLib {
       xa = xa-1e-10;
       xb = xb+1e-10;
       */
+      cout << "SCALE " << xscale << " " << zscale << "\n";
       pair<real, real> vala = ffp(xa);
       pair<real, real> val0 = ffp(x0);
       pair<real, real> valb = ffp(xb);
-      cout << scientific;
       cout << "DAT " << s << " " << x0-xa << " " << xb-x0 << " " << z << "\n";
       cout << "DAT "
            << xa << " " << vala.first - z << " " << vala.second << "\n";
@@ -362,7 +362,6 @@ namespace GeographicLib {
         cout << "DATBAD\n";
       //      debug = true; //z > 1.749675 && z < 1.749677;
     }
-    if (debug) cout << "ss0 " << k << endl;
     for (; k < maxit ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure Trigfun::root"), false)
@@ -399,10 +398,10 @@ namespace GeographicLib {
         vp = val.second,
         dx = - v/vp;
       if (debug)
-        cout <<"XX " << k << " " << xa-p << " " << x-p << " " << xb-p << " "
+        cout << "XX " << k << " " << xa-p << " " << x-p << " " << xb-p << " "
              << dx << " " << x + dx-p << " " << v << " " << vp << endl;
-      if (!(fabs(v) > vtol0)) {
-        if (debug) cout << "break " << k << endl;
+      if (!(fabs(v) > (k < 2 ? 0 : vtol))) {
+        if (debug) cout << "break1 " << k << endl;
         break;
       } else if (s*v > 0)
         xb = fmin(xb, x);
@@ -414,8 +413,12 @@ namespace GeographicLib {
           cout << "bis " << xa-x << " " << x-xb << endl;
         x = (xa + xb)/2;
         ++b;
-      } else if (!(fabs(dx) > xtol && fabs(v) > vtol1))
+      } else if (!(fabs(dx) > xtol)) {
+        if (debug)
+          cout << "break2 " << k << " "
+               << dx << " " << xtol << endl;
         break;
+      }
       oldv = fabs(v);
     }
     if (countn) *countn += k;

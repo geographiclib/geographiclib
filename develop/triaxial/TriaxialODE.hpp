@@ -30,7 +30,7 @@
 //    https://github.com/boostorg/odeint/pull/63
 //    Commit 68950d8
 //
-// This will be included in Boost 1.85.
+// This will be included in Boost 1.85.  (Fedora 41 uses Boost 1.83.)
 //
 // In the meantime, put the patch for commit 68950d8 in
 // /usr/include/boost/odeint.patch and applied it with

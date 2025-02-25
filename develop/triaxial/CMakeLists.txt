@@ -1,6 +1,20 @@
 cmake_minimum_required (VERSION 3.13.0)
 project (triaxial)
 
+# Adding files from repo triaxial/src to geographiclib/src/triaxial
+# This follows https://stackoverflow.com/a/11426261/837055
+
+# cd ~/git/triaxial
+# git log --pretty=email --patch-with-stat --reverse --full-index --binary -m --first-parent -- src > /tmp/patch
+
+# cd /tmp
+# git clone ~/geographiclib
+# cd geographiclib
+# git am --committer-date-is-author-date -p2 --directory=src/triaxial < /tmp/patch
+
+# Check everything is OK.
+# git push
+
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2.6 CONFIG REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})

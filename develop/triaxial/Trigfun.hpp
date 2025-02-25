@@ -155,7 +155,8 @@ namespace GeographicLib {
                      real x0, real xa, real xb,
                      real xscale = 1, real zscale = 1, int s = 1,
                      int* countn = nullptr, int* countb = nullptr,
-                     real tol = std::numeric_limits<real>::epsilon());
+                     real tol = std::numeric_limits<real>::epsilon(),
+                     int indicator = 0);
     // Given z, return dx = finv(z) - nslope * z
     // dx0 is an estimate of dx (NaN means no information)
     real inversep(real z, const std::function<Math::real(Math::real)>& fp,

@@ -121,7 +121,6 @@ void errreport(const Triaxial& t,
     errr2 = 0, errv2 = 0;
   l2.Position(-s12, bet1a, omg1a, alp1a);
   t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
-  cout << real(bet1a) << " " << real(omg1a) << " " << real(alp1a) << "\n";
   errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
   l1.Position(s12, bet2a, omg2a, alp2a);
   t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
