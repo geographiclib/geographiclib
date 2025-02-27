@@ -75,6 +75,10 @@ Math::real vecdiff(const Triaxial::vec3& a, const Triaxial::vec3& b) {
   return Math::hypot3(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
 }
 
+void print3(Triaxial::vec3 v) {
+  cout << v[0] << " " << v[1] << " " << v[2] << "\n";
+}
+
 void errreport(const Triaxial& t,
                Math::real bet1, Math::real omg1, Math::real alp1,
                Math::real bet2, Math::real omg2, Math::real alp2,
@@ -82,6 +86,7 @@ void errreport(const Triaxial& t,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
   typedef Math::real real;
   typedef Angle ang;
+  real debug = false;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else
@@ -101,6 +106,11 @@ void errreport(const Triaxial& t,
   // direct checks for inverse calculation using alp1a, alp2a, s12a
   t.elliptocart2(bet1x, omg1x, alp1a, r1, v1);
   t.elliptocart2(bet2x, omg2x, alp2a, r2, v2);
+  if (debug) {
+    cout << "2X "
+         << real(bet2x) << " " << real(omg2x) << " " << real(alp2a) << "\n";
+    print3(r2); print3(v2);
+  }
   TriaxialLine l1i(t, bet1x, omg1x, alp1a);
   TriaxialLine l2i(t, bet2x, omg2x, alp2a);
   real errr1i = 0, errv1i = 0,
@@ -109,7 +119,15 @@ void errreport(const Triaxial& t,
   t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
   errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
   l1i.Position(s12a, bet2a, omg2a, alp2a);
+  if (debug)
+    cout << "1X "
+         << real(bet1x) << " " << real(omg1x) << " " << real(alp1a) << "\n";
   t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
+  if (debug) {
+    cout << "2A "
+         << real(bet2a) << " " << real(omg2a) << " " << real(alp2a) << "\n";
+    print3(r2a); print3(v2a);
+  }
   errr2i = vecdiff(r2, r2a); errv2i = vecdiff(v2, v2a);
 
   // direct checks for test sets using alp1x, alp2x, s12

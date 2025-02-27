@@ -514,17 +514,18 @@ namespace GeographicLib {
     if (gamma() > 0 || _t._kp2 == 0) {
       ang psi2;
       // ang u2a, v2a, psi2a;
-      real u2, v2;
+      real u2, v2, u2x = 0;
       if (betp) {
         psi2 = tau12 + fic.psi1;
-        v2 = fbet().fwd(psi2.radians());
+        v2 = fbet().fwd(psi2.radians())+0e-10;
         u2 = fomg().inv(fbet()(v2) - fic.delta);
         omg2a = ang::radians(fic.E * fomg().rev(u2));
       } else {
         omg2a = fic.omg1 + tau12.flipsign(fic.E);
         u2 = fomg().fwd(fic.E * omg2a.radians());
         // u2a = fic.E < 0 ? -omg2a : omg2a;
-        v2 = fbet().inv(fomg()(u2) + fic.delta);
+        u2x = fomg()(u2) + fic.delta,
+        v2 = fbet().inv(u2x);
         // v2a = fbet().inv(fomg()(u2a) + fic.deltaa);
         psi2 = ang::radians(fbet().rev(v2));
         // psi2a = v2a;
@@ -539,18 +540,34 @@ namespace GeographicLib {
       bet2a = ang(gm().nup * psi2.s(),
                   fic.bet0.c() * hypot(psi2.c(), gm().nu * psi2.s()),
                   0, true).rebase(fic.bet0);
-      alp2a = ang(fic.E * hypot(_t._k * gm().nu, _t._kp * omg2a.c()),
-                  fic.bet0.c() * _t._k * gm().nup * psi2.c()).rebase(fic.alp0);
-      if (false)
+      // For oblate, kp2 == 0, and !betp
+      // psi2 = modang(u2x, 1/sqrt(gam))
+      //      = atan2(u2x.s(), u2x.c()*sqrt(gam))
+      // psi2.c() = u2x.c()*sqrt(gam)/abs(u2x.s())
+      // nu = sqrt(gam)
+      // alp2a = atan2(fic.E * hypot(_t._k * gm().nu, _t._kp * omg2a.c()),
+      //            fic.bet0.c() * _t._k * gm().nup * psi2.c())
+      //       = atan2(fic.E * gm().nu, fic.bet0.c() * psi2.c())
+      //       = atan2(fic.E * sqrt(gam),
+      //               fic.bet0.c() * u2x.c()*sqrt(gam)/abs(u2x.s())
+      //       = atan2(fic.E * abs(u2x.s()),
+      //               fic.bet0.c() * u2x.c())
+      alp2a = _t._kp2 == 0 && !betp ?
+        ang(fic.E * fabs(sin(u2x)), fic.bet0.c() * cos(u2x)) :
+        ang(fic.E * hypot(_t._k * gm().nu, _t._kp * omg2a.c()),
+            fic.bet0.c() * _t._k * gm().nup * psi2.c()).rebase(fic.alp0);
+      if (_t._debug) {
         cout << "AP2 " << real(bet2a) << " "
              << real(fic.omg1) << " " << real(omg2a) << " "
-             << real(alp2a) << "\n";
-      if (false)
+             << real(alp2a) << " "
+             << fic.E * hypot(_t._k * gm().nu, _t._kp * omg2a.c()) << " "
+             << fic.bet0.c() * _t._k * gm().nup * psi2.c() << "\n";
         cout << "AP3 "
              << fic.u0/Math::degree()+90 << " " << fic.v0/Math::degree()+90 << " "
              << u2/Math::degree() << " " << v2/Math::degree() << " "
              << fbet().inv(fomg()(fic.u0) + fic.delta)/Math::degree() << " "
              << fic.delta/Math::degree() << "\n";
+      }
       if (false) {
         for (int i = -360; i <= 360; i += 10) {
           ang a{real(i)},
@@ -655,12 +672,15 @@ namespace GeographicLib {
           .rebase(fic.omg0);
         // umbalt definition of alp0
         ang alp0x(fic.alp1.nearest(2U));
-        alp2a = ang(fic.N * _t._kp * fic.E *
+        // Conflict XXX
+        // testset -50 180 20 0 want fic.N multiplying s()
+        // testspha -20 90 20 -90 wants fic.N multiplying c()
+        alp2a = ang(_t._kp * fic.E *
                     parity / mcosh(v2, _t._k),
-                    _t._k / mcosh(u2, _t._kp)).rebase(alp0x);
+                    fic.N * _t._k / mcosh(u2, _t._kp)).rebase(alp0x);
         ii = int(bet2n.second);
         // Move forward from umbilical point
-        bet2a += ang::eps();
+        bet2a += ang::eps().flipsign(fic.N);
       } else {
         omg2a = fic.omg1 + tau12.flipsign(fic.E);
         pair<real, real> omg2n =
@@ -678,7 +698,7 @@ namespace GeographicLib {
                     parity / mcosh(u2, _t._kp)).rebase(alp0x);
         ii = int(omg2n.second);
         // Move forward from umbilical point
-        omg2a += ang::eps();
+        omg2a += ang::eps().flipsign(fic.E);
       }
       ret.betw2 = u2;
       ret.omgw2 = v2;
@@ -792,13 +812,13 @@ namespace GeographicLib {
     int oE = E, oN = N;
     E = signbit(alp1.s()) ? -1 : 1;
     N = signbit(alp1.c()) ? -1 : 1;
-    if (gam > 0) {
+    if (gam > 0 || t._kp2 == 0) {
       alp0 = alp1.nearest(1U);
       psi1.reflect(false, N != oN);
       v0 = f.fbet().fwd(psi1.radians());
       u0 *= E/oE;
       delta = f.fbet()(v0) - f.fomg()(u0);
-    } else if (gam < 0) {
+    } else if (gam < 0 || t._k2 == 0) {
       alp0 = alp1.nearest(2U);
       psi1.reflect(false, E != oE);
       v0 = f.fomg().fwd(psi1.radians());

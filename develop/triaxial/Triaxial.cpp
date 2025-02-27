@@ -316,6 +316,10 @@ namespace GeographicLib {
     // Point 1 is already done with flipy.  (Maybe skip for oblate?)
     if (flipomg) omg2.reflect(true);
 
+    // Reset umb[12] w/o treating prolate/oblate specially.
+    umb1 = bet1.c() == 0 && omg1.s() == 0;
+    umb2 = bet2.c() == 0 && omg2.s() == 0;
+
     // Now bet1 <= 0, bet1 <= bet2 <= -bet1, 0 <= omg1 <= 90
     //
     // Oblate: omg1 = 0, omg2 >= 0; rotation results in meridional geodesics
@@ -428,7 +432,9 @@ namespace GeographicLib {
         alp1 = oblate || prolate ? ang(_kp, _k, 0, true) :
           ang(exp(lf.deltashift/2), 1);
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
-        d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, true);
+        bool betp = _k2 > _kp2;
+        d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, betp);
+        if (oblate || prolate) alp2 += ang::cardinal(oblate ? 2 : -1);
         if (_debug) msg = "A.c opposite umbilics";
         backside = signbit(bet2a.c());
         done = true;
@@ -436,6 +442,8 @@ namespace GeographicLib {
         // Case A.c.{2,3}, bet1 = -90, bet2 = +/-90
         if (bet2.s() < 0) {
           // Case A.c.2, bet1 = bet2 = -90
+          // If oblate, bet1 = -90, omg1 = 0, need alp1 = omg2 to follow omg2
+          // meridian.
           alp1 = ang::cardinal(oblate ? 2 : 1);
           fic = TL::fline::fics(lf, bet1, omg1, alp1);
           ang omg12 = omg2 - omg1;
@@ -446,7 +454,7 @@ namespace GeographicLib {
               TL::fline::disttx{ -lf.fbet().Max(), lf.fomg().Max(), 0 } :
               TL::fline::disttx{ -BigValue(), BigValue(), 0 };
             if (_debug) msg = "A.c.2 adjacent EW umbilics";
-            alp2 = ang::cardinal(0);
+            alp2 = ang::cardinal(prolate ? 1 : 0);
           } else {
             d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
             if (_debug) msg = "A.c.2 bet1/2 = -90";
@@ -471,34 +479,37 @@ namespace GeographicLib {
             d = oblate || prolate ?
               TL::fline::disttx{ lf.fbet().Max(), -lf.fomg().Max(), 0} :
               TL::fline::disttx{ BigValue(), -BigValue(), 0};
-            alp2 = ang::cardinal(1);
+            alp2 = ang::cardinal(oblate ? 0 : (prolate ? 2 : 1));
             if (_debug) msg = "A.c.3 adjacent NS umbilics";
             done = true;
           } else {
-            d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
-            if (_debug)
-              cout << "APX "
-                   << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
-                   << real(bet2a) << " " << real(omg2a) << " "
-                   << real(alp2) << "\n";
+            // FIX ME for oblate
+            if (omg1.s() == 0)
+              omg2a = ang::cardinal(2);
+            else
+              d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
             // XXX FIX HERE for prolate case -90 -1 90 177
-
             omg2a -= omg2;
             if (omg2a.s() > 0) {
               ang omg12 = omg2 + omg1;
+              // FIX ME for oblate
               d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
+              if (_debug)
+                cout << "APX "
+                     << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+                     << real(bet2a) << " " << real(omg2a) << " "
+                     << real(alp2) << "\n";
               if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
               if (_debug) msg = "A.c.3 bet1/2 = -/+90 meridional";
               done = true;
             } else {
               alpa = ang::cardinal(-1) + ang::eps();
-              if (false & prolate) {
+              if (false && prolate) {
                 fa = -omg2.radians0();
                 alpb = -alpa;
                 fb = (ang::cardinal(2) - omg2).radians0();
               } else {
                 fa = omg2a.radians0();
-                alpb.setquadrant(0U);
                 fic.setquadrant(lf, 0U);
                 (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
                 omg2a -= omg2;
@@ -516,17 +527,21 @@ namespace GeographicLib {
       } else {
         // Case A.c.4, other meridional cases, invoke Hybrid with the following
         // value of alp1
-        alp1 = ang::cardinal(bet1.c() == 0 ?
-                             // TODO: CHECK omg2.c() < 1 test; CHANGE TO < 0
-                             (omg2.c() < 0 ? 1 :
-                              (omg1.s() == 0 && !prolate ? 0 : -1)) :
-                             (omg2.c() > 0 ? 0 : 2));
+        // If oblate, bet1 = -90, omg1 = 0, need alp1 = omg2 to follow omg2
+        // meridian.
+        alp1 = oblate ? omg2 :
+          ang::cardinal(bet1.c() == 0 ?
+                        // TODO: CHECK omg2.c() < 1 test; CHANGE TO < 0
+                        (omg2.c() < 0 ? 1 :
+                         (omg1.s() == 0 && !prolate ? 0 : -1)) :
+                        (omg2.c() > 0 ? 0 : 2));
         if (0)
         cout << "ALP1 " << real(alp1) << " "
              << bet1.c() << " " << omg2.c() << "\n";
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
         d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
         if (_debug) msg = "A.c.4 other meridional";
+        backside = signbit(bet2a.c());
         done = true;
       }
     } else if (bet1.s() == 0 && bet2.s() == 0) {
@@ -568,6 +583,8 @@ namespace GeographicLib {
       // Case B.a, umbilical point to general point
       lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
+      // RETHINK THIS.  If we know alp2, we can compute delta.  This should be
+      // enough to find alp1.
       if (0)
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
@@ -580,6 +597,7 @@ namespace GeographicLib {
            << real(bet2a) << " " << real(omg2a) << " " << real(alp1) << "\n";
       if (alp1.s() < 0) alp1 += ang::cardinal(1);
       if (prolate) alp1 += ang::cardinal(1);
+      if (oblate) alp1 += omg2;
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       d = lf.ArcPos0(fic, (betp ? bet2 - bet1 : omg2 - omg1).base(),
                      bet2a, omg2a, alp2, betp);
@@ -624,6 +642,7 @@ namespace GeographicLib {
       lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
       fic = TL::fline::fics(lf, bet1, omg1, alpb);
       unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
+      if (_debug) msg = "B.d general";
       for (; !done && qb <= 4U; ++qb, ++qa) {
         if (qb) {
           alpb.setquadrant(qb);
@@ -658,7 +677,6 @@ namespace GeographicLib {
         fa = f[qa & 3U]; fb = f[qb & 3U];
         alpa.setquadrant(qa);
       }
-      if (_debug) msg = "B.d general";
     }
 
     int countn = 0, countb = 0;
@@ -746,7 +764,7 @@ namespace GeographicLib {
       swap(umb1, umb2);
       // points not swapped if umb1 == true
       alp1 += ang::cardinal(2);
-      if (umb2)
+      if (umb2 && !(prolate || oblate))
         alp2 += ang::cardinal((signbit(alp2.s()) ? -1 : 1) * bet2.s());
       else
         alp2 += ang::cardinal(2);
@@ -772,7 +790,7 @@ namespace GeographicLib {
       cerr << countn << " " << countb << " "
            << lf.gamma() << " "
            << lf.fbet().NCoeffs() << " " << lf.fomg().NCoeffs() << " "
-           << lg.gbet().NCoeffs() << " " << lg.gomg().NCoeffs() << " "
+           << lg.gbet().NCoeffs() << " " << lg.gomg().NCoeffs() << " MSG "
            << msg << "\n";
     return TL(move(lf), move(fic), move(lg), move(gic));
   }
@@ -913,7 +931,7 @@ namespace GeographicLib {
        // sqrt(kp2 + gamma)
        hypot(_k *  bet.c()*alp.s(),
              _kp * hypot(omg.c(), alp.s()*omg.s()))),
-      // for gam == 0, we have nu = nup = 0
+      // for gam == 0, we have nu = 0, nup = 1
       nu = sqrt(fabs(gam)) / (!signbit(gam) ? _k : _kp),
       nup = gamp / (!signbit(gam) ? _k : _kp);
     return gamblk(gam, nu, nup);
