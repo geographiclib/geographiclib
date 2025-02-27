@@ -589,15 +589,39 @@ namespace GeographicLib {
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
       bool betp = _k2 > _kp2;   // This could be betb = !prolate;
-      (void) lf.ArcPos0(fic, (betp ? bet1 - bet2 :  omg1 - omg2).base(),
-                        bet2a, omg2a, alp1, betp);
-      //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
-      if (0)
-        cout << "APOUT "
-           << real(bet2a) << " " << real(omg2a) << " " << real(alp1) << "\n";
-      if (alp1.s() < 0) alp1 += ang::cardinal(1);
-      if (prolate) alp1 += ang::cardinal(1);
-      if (oblate) alp1 += omg2;
+      if (0) {
+        (void) lf.ArcPos0(fic, (betp ? bet1 - bet2 :  omg1 - omg2).base(),
+                          bet2a, omg2a, alp1, betp);
+        //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
+        if (0)
+          cout << "APOUT "
+               << real(bet2a) << " " << real(omg2a) << " " << real(alp1) << "\n";
+        if (alp1.s() < 0) alp1 += ang::cardinal(1);
+        if (prolate) alp1 += ang::cardinal(1);
+        if (oblate) alp1 += omg2;
+      } else {
+        // cout << "DELTA " << fic.delta/Math::degree() << "\n";
+        alp1 = oblate ?
+          // For oblate
+          // delta =
+          //   atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())) - omg1
+          // Here omg1 = -90 (because of pi/2 shift in ext. vs int. omg)
+          // bet1.s() = -1, bet0.c() = 1, alp1.s() > 0, so
+          // alp1 = 90 - delta
+          ang::cardinal(1) - ang::radians(fic.delta) :
+         (prolate ?
+          // For prolate
+          // delta =
+          //   bet1 - atan2(omg1.s() * fabs(alp1.c()), omg0.c() * alp1.s())
+          // Here bet1 = -90, omg1.s() = -1, alp1.c() > 0, omg0.c() = 1
+          // delta = bet1 + atan2(alp1.c(), alp1.s()) = -90 + 90 - alp1
+          // alp1 = -delta
+          -ang::radians(fic.delta) :
+          // For triaxial case at an umbilic point
+          // delta = f.deltashift/2 - log(fabs(alp1.t()));
+          // alp1.t() = exp(f.deltashift/2 - delta)
+          ang(exp(lf.deltashift/2 - fic.delta), 1));
+      }
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       d = lf.ArcPos0(fic, (betp ? bet2 - bet1 : omg2 - omg1).base(),
                      bet2a, omg2a, alp2, betp);
@@ -709,6 +733,9 @@ namespace GeographicLib {
     TL::gline::gics gic(lg, fic);
     s12 = lg.dist(gic, d);
 
+    if (_debug)
+      cerr << "FLIPS " << flip1 << flip2 << flipz << flipy << flipx << flipomg
+           << "\n";
     if (_debug)
       cerr << "A "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
