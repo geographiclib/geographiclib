@@ -762,11 +762,17 @@ namespace GeographicLib {
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipy) {
-      omg1.reflect(true);
-      // This was omg2.reflect(true, true); (by mistake?)
-      omg2.reflect(true);
-      alp1.reflect(true);
-      alp2.reflect(true);
+      if (prolate) {
+        bet2.reflect(false, true);
+        alp1.reflect(false, true);
+        alp2.reflect(false, true);
+      } else {
+        omg1.reflect(true);
+        // This was omg2.reflect(true, true); (by mistake?)
+        omg2.reflect(true);
+        alp1.reflect(true);
+        alp2.reflect(true);
+      }
     }
 
     if (_debug)
