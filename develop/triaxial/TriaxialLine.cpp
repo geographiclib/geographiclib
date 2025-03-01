@@ -540,7 +540,7 @@ namespace GeographicLib {
       bet2a = ang(gm().nup * psi2.s(),
                   fic.bet0.c() * hypot(psi2.c(), gm().nu * psi2.s()),
                   0, true).rebase(fic.bet0);
-      // For oblate, kp2 == 0, and !betp
+      // For oblate, medidional, and !betp: ...
       // psi2 = modang(u2x, 1/sqrt(gam))
       //      = atan2(u2x.s(), u2x.c()*sqrt(gam))
       // psi2.c() = u2x.c()*sqrt(gam)/abs(u2x.s())
@@ -552,10 +552,10 @@ namespace GeographicLib {
       //               fic.bet0.c() * u2x.c()*sqrt(gam)/abs(u2x.s())
       //       = atan2(fic.E * abs(u2x.s()),
       //               fic.bet0.c() * u2x.c())
-      alp2a = _t._kp2 == 0 && !betp ?
+      alp2a = (_t._kp2 == 0 && !betp && gamma() == 0 ?
         ang(fic.E * fabs(sin(u2x)), fic.bet0.c() * cos(u2x)) :
         ang(fic.E * hypot(_t._k * gm().nu, _t._kp * omg2a.c()),
-            fic.bet0.c() * _t._k * gm().nup * psi2.c()).rebase(fic.alp0);
+            fic.bet0.c() * _t._k * gm().nup * psi2.c())).rebase(fic.alp0);
       if (_t._debug) {
         cout << "AP2 " << real(bet2a) << " "
              << real(fic.omg1) << " " << real(omg2a) << " "
