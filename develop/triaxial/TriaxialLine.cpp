@@ -417,6 +417,7 @@ namespace GeographicLib {
         psi12 = ang(0, copysign(real(1), psi12.c()), 0, true);
       tau12 = psi12;
     } else if (gamma() <= 0) {
+      // cout << "GRR " << real(fic.bet1) << " " << real(bet2) << "\n";
       ang bet2b = bet2; bet2b.reflect(false, fic.N < 0);
       ang bet12 = bet2b - fic.bet1;
       bet12.reflect(fic.N < 0);
@@ -633,6 +634,10 @@ namespace GeographicLib {
         } else {
           v2 = fomg().inv(fbet()(u2) - fic.delta);
           psi2 = ang::radians(fomg().rev(v2));
+          if (0)
+            cout << "ARG2 " << fbet()(u2)/Math::degree() << " " << fic.delta/Math::degree() << " "
+                 << (fbet()(u2) - fic.delta)/Math::degree() << " "
+                 << v2/Math::degree() << " " << real(psi2) << " " << real(fic.psi1) << "\n";
         }
         if (0)
           cout << "QQX " << real(tau12) << " "
@@ -644,6 +649,10 @@ namespace GeographicLib {
         v2 = fomg().fwd(psi2.radians());
         u2 = fbet().inv(fomg()(v2) + fic.delta);
         bet2a = ang::radians(fic.N * fbet().rev(u2));
+        if (0)
+          cout << "FOOF1 " << real(tau12) << " " << real(fic.psi1) << " "
+               << real(psi2) << " " << v2/Math::degree() << " "
+               << u2/Math::degree() << " " << real(bet2a) << "\n";
       }
       // Already normalized
       omg2a = ang(gm().nup * psi2.s(),
@@ -653,8 +662,12 @@ namespace GeographicLib {
                   fic.N * hypot(_t._kp * gm().nu, _t._k * bet2a.c()))
         .rebase(fic.alp0);
       if (0)
-      cout << "QQY " << fic.omg0.c() * _t._kp * gm().nup * psi2.c() << " "
-           << fic.N * hypot(_t._kp * gm().nu, _t._k * bet2a.c()) << "\n";
+        cout << "QQY " << fic.omg0.c() * _t._kp * gm().nup * psi2.c() << " "
+             << fic.N * hypot(_t._kp * gm().nu, _t._k * bet2a.c()) << "\n"
+             << "FF " << fic.omg0.c() << " " << _t._kp << " "
+             << gm().nup << " " << psi2.c() << " "
+             << gm().nu << "\n"
+             << "ALP2 " << real(alp2a) << "\n";
       ret.betw2 = u2;
       ret.omgw2 = v2;
     } else if (gamma() == 0) {

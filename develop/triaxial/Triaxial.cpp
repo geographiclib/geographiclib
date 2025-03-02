@@ -529,17 +529,23 @@ namespace GeographicLib {
         // value of alp1
         // If oblate, bet1 = -90, omg1 = 0, need alp1 = omg2 to follow omg2
         // meridian.
+        // If prolate, bet1 = -90, omg1 = 0, need alp1 = -bet2
         alp1 = oblate ? omg2 :
-          ang::cardinal(bet1.c() == 0 ?
-                        // TODO: CHECK omg2.c() < 1 test; CHANGE TO < 0
-                        (omg2.c() < 0 ? 1 :
-                         (omg1.s() == 0 && !prolate ? 0 : -1)) :
-                        (omg2.c() > 0 ? 0 : 2));
-        if (0)
-        cout << "ALP1 " << real(alp1) << " "
-             << bet1.c() << " " << omg2.c() << "\n";
+          (prolate ? -bet2 :
+           ang::cardinal(bet1.c() == 0 ?
+                         // TODO: CHECK omg2.c() < 1 test; CHANGE TO < 0
+                         (omg2.c() < 0 ? 1 :
+                          (omg1.s() == 0 && !prolate ? 0 : -1)) :
+                         (omg2.c() > 0 ? 0 : 2)));
+        if (_debug)
+          cout << "ALP1 " << real(alp1) << " "
+               << bet1.c() << " " << omg2.c() << "\n";
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
-        d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+        d = prolate ?
+          lf.ArcPos0(fic, (omg2-omg1).base(), bet2a, omg2a, alp2, false) :
+          lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+        if (prolate)
+          alp2 += ang::cardinal(1);
         if (_debug) msg = "A.c.4 other meridional";
         backside = signbit(bet2a.c());
         done = true;
