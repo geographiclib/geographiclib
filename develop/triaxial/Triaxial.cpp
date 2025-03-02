@@ -467,7 +467,8 @@ namespace GeographicLib {
           // If point 1 is at [-90, 0], direction is 0 else -90.
           // XXX Maybe alp1 needs fixing
 
-          alp1 = ang::cardinal(omg1.s() == 0 ? 0 : -1);
+          alp1 = ang::cardinal(omg1.s() == 0 && (!prolate || omg2.s() == 0) ?
+                               0 : -1);
           if (0)
             cout << "FIC " << real(bet1) << " " << real(omg1) << " "
                  << real(alp1) << "\n";
@@ -646,7 +647,7 @@ namespace GeographicLib {
         fa = (ang::cardinal(2) - omg2).radians0();
         fb = -omg2.radians();
       }
-      if (_debug) msg = "B.b general bet = -90";
+      if (_debug) msg = "B.b general bet1 = -90";
     } else if (omg1.s() == 0) {
       // Case B.c, omg1 = 0 to general point
       if (omg2.s() > 0) {
