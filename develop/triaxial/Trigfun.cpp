@@ -8,6 +8,8 @@
  **********************************************************************/
 
 #include "Trigfun.hpp"
+// For to_string
+#include <string>
 #include <iostream>
 #include <iomanip>
 
@@ -290,15 +292,19 @@ namespace GeographicLib {
     return Trigfun(c, !_odd, _sym, _h);
   }
 
+  // root sig 1
   Math::real Trigfun::root(real z, const function<real(real)>& fp,
-                           int* countn, int* countb, real tol) const {
+                           int* countn, int* countb, real tol,
+                           ind indicator) const {
     //    cout << "QQX\n";
-    return root(z, fp, Math::NaN(), countn, countb, tol);
+    return root(z, fp, Math::NaN(), countn, countb, tol, indicator);
   }
 
+  // root sig 2
   Math::real Trigfun::root(real z, const function<real(real)>& fp,
                            real x0,
-                           int* countn, int* countb, real tol) const {
+                           int* countn, int* countb, real tol,
+                           ind indicator) const {
     // y = pi/h * x
     // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
     real hr = Math::pi() * _coeff[0], s = _h / hr,
@@ -307,38 +313,41 @@ namespace GeographicLib {
     //    cout << "QQG " << dx << "\n";
     return dx == 0 ? x0 :
       root(*(this), z, fp, x0, x00 - dx, x00 + dx, _h, fabs(hr),
-           s > 0 ? 1 : -1, countn, countb, tol);
+           s > 0 ? 1 : -1, countn, countb, tol, indicator);
   }
 
+  // root sig 3
   Math::real Trigfun::root(const function<real(real)>& f,
                            real z, const function<real(real)>& fp,
                            real x0, real xa, real xb,
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
-                           real tol) {
+                           real tol, ind indicator) {
     //    cout << "QQH\n";
     real ret =
     root([&f, &fp] (real x) -> pair<real, real>
          { return pair<real, real>(f(x), fp(x)); },
-         z, x0, xa, xb, xscale, zscale, s, countn, countb, tol);
+         z, x0, xa, xb, xscale, zscale, s, countn, countb, tol, indicator);
     //    cout << "QQHE" << endl;
     return ret;
   }
 
+  // root sig 4
   Math::real Trigfun::root(const function<pair<real, real>(real)>& ffp,
                            real z,
                            real x0, real xa, real xb,
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
-                           real tol,
-                           int indicator) {
+                           real tol, ind indicator) {
     // Solve v = f(x) - z = 0
-    bool debug = indicator > 0;
+    bool debug = false && indicator == Trigfun::NEWT2;
     if (x0 == xa && x0 == xb)
       return x0;
-    real vtol = tol * zscale,
+    if (tol == 0)
+      tol = numeric_limits<real>::epsilon();
+    real vtol = tol * zscale/100,
       xtol = pow(tol, real(0.75)) * xscale,
-      x = x0, oldv = Math::infinity();
+      x = x0, oldv = Math::infinity(), olddx = oldv;
     int k = 0, maxit = 150, b = 0;
     real p = Math::pi()/2 * 0;
     real xa0 = xa, x00 = x0, xb0 = xb;
@@ -364,11 +373,15 @@ namespace GeographicLib {
     }
     for (; k < maxit ||
            (throw GeographicLib::GeographicErr
-            ("Convergence failure Trigfun::root"), false)
+            ("Convergence failure Trigfun::root case=" +
+             to_string(indicator)), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root");) {
       // TODO: This inverse problem uses lots of iterations
       //   20 60 -90 180 127.4974 24.6254 2.4377
       // Need to figure out why.
+      //
+      // Also convergence failure with direct problem at PREC = 5
+      // echo 0 -3 -175.76701593778909192660079005663163077300058150471621479324932933476684186963409 2.9206543717645378667863502680795020885246451667017769113840327149194026396480270 | ./Geod3Solve  -e 1 3/2 1 2
       if (false && k == maxit/2) {
         debug = true;
         cout << "SCALE " << xscale << " " << zscale << "\n";
@@ -401,14 +414,15 @@ namespace GeographicLib {
         cout << "XX " << k << " " << xa-p << " " << x-p << " " << xb-p << " "
              << dx << " " << x + dx-p << " " << v << " " << vp << endl;
       if (!(fabs(v) > (k < 2 ? 0 : vtol))) {
-        if (debug) cout << "break1 " << k << endl;
+        if (debug) cout << "break1 " << k << " " << fabs(v) << endl;
         break;
       } else if (s*v > 0)
         xb = fmin(xb, x);
       else
         xa = fmax(xa, x);
       x += dx;
-      if (!(xa <= x && x <= xb) || fabs(v) > oldv) {
+      if (!(xa <= x && x <= xb) || fabs(v) > oldv ||
+          (k > 2 && 2 * fabs(dx) > olddx)) {
         if (debug)
           cout << "bis " << xa-x << " " << x-xb << endl;
         x = (xa + xb)/2;
@@ -420,9 +434,12 @@ namespace GeographicLib {
         break;
       }
       oldv = fabs(v);
+      olddx = fabs(dx);
     }
     if (countn) *countn += k;
     if (countb) *countb += b;
+    if (debug)
+      cout << "return " << x << "\n";
     return x;
   }
 
@@ -431,7 +448,8 @@ namespace GeographicLib {
                               real dx0,
                               int* countn, int* countb, real tol) const {
     real hr = Math::pi() * _coeff[0], nslope = _h / hr;
-    return root(z, fp, z * nslope + dx0, countn, countb, tol) - nslope * z;
+    return root(z, fp, z * nslope + dx0, countn, countb, tol, INVERSEP) -
+      nslope * z;
   }
 
   Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp,

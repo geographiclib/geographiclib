@@ -345,8 +345,7 @@ namespace GeographicLib {
                                                 (gx.gfderiv(x) +
                                                  gy.gfderiv(y))); },
                       g0, x0, xa, xb, xscale, zscale, 1,
-                      countn, countb, numeric_limits<real>::epsilon(),
-                      0);
+                      countn, countb, 0, Trigfun::NEWT2);
     y = fy.inv(fx(x) - f0);
     // Do one round of 2d Newton
     // Trial solution z0 = [x0, y0]'
@@ -624,7 +623,8 @@ namespace GeographicLib {
                                        1 - fomg().dfp(psi) /
                                        (1 + Math::sq(tpsi)));
                                   },
-                                  c, fic.psi1.t(), -l, l);
+                                  c, fic.psi1.t(), -l, l, 1, 1, 1,
+                                  nullptr, nullptr, 0, Trigfun::ARCPOS0);
           psi2 = ang(tpsi2, 1) + tau12 + fic.psi1.nearest(2U);
           if (0)
             cout << "RR psi1/2 "
@@ -1119,7 +1119,7 @@ namespace GeographicLib {
                            z,
                            u0, ua, ub,
                            HalfPeriod(), HalfPeriod()/Slope(), 1,
-                           countn, countb, tol);
+                           countn, countb, tol, Trigfun::FFUNROOT);
     } else if (_umb) {
       real d = fabs(Max())
         + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
@@ -1132,7 +1132,8 @@ namespace GeographicLib {
                            { return pair<real, real>((*this)(u), deriv(u)); },
                            z,
                            u0, ua, ub,
-                           Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
+                           Math::pi()/2, Math::pi()/2, 1, countn, countb, tol,
+                           Trigfun::FFUNROOT);
     } else
       return Math::NaN();
   }
@@ -1356,7 +1357,8 @@ namespace GeographicLib {
                          { return pair<real, real>((*this)(u), deriv(u)); },
                          z,
                          u0, ua, ub,
-                         Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
+                         Math::pi()/2, Math::pi()/2, 1, countn, countb, tol,
+                         Trigfun::GFUNROOT);
   }
 
   // Approximate inverse using _fun.inv0.  For _umb, use inverse of _eps = 0

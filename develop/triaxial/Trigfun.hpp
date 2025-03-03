@@ -130,44 +130,57 @@ namespace GeographicLib {
                                  bool odd, bool sym, bool centerp, real halfp);
     void refine(const Trigfun& tb);
     Trigfun integral() const;
+    enum ind {
+      NONE = 0,
+      INV1,
+      NEWT2,
+      ARCPOS0,
+      FFUNROOT,
+      GFUNROOT,
+      INVERSEP,
+      OTHER,
+    };
+
     // Given z, find x, s.t. z = f(x); fp is the derivative f'.  This defines x
     // = finv(z).  x0 is an estimate of x (NaN means no information)
+    // root sig 1
+    real root(real z, const std::function<real(real)>& fp,
+              int* countn = nullptr, int* countb = nullptr,
+              real tol = 0, ind indicator = NONE) const;
+    // root sig 2
     real root(real z, const std::function<real(real)>& fp,
               real x0,
               int* countn = nullptr, int* countb = nullptr,
-              real tol = std::numeric_limits<real>::epsilon()) const;
-    real root(real z, const std::function<real(real)>& fp,
-              int* countn = nullptr, int* countb = nullptr,
-              real tol = std::numeric_limits<real>::epsilon()) const;
+              real tol = 0, ind indicator = NONE) const;
     // Solve f(x) = z for x, given x in [xa, xb];
     // fp(x) = df(x)/dx
     // s is sign of fp
     // xscale and zscale of scales for x and f(x).
+    // root sig 3
     static real root(const std::function<real(real)>& f,
                      real z, const std::function<real(real)>& fp,
                      real x0, real xa, real xb,
                      real xscale = 1, real zscale = 1, int s = 1,
                      int* countn = nullptr, int* countb = nullptr,
-                     real tol = std::numeric_limits<real>::epsilon());
+                     real tol = 0,
+                     ind indicator = NONE);
     // ffp returns a pair [f(x), fp(x)]
+    // root sig 4
     static real root(const std::function<std::pair<real, real>(real)>& ffp,
                      real z,
                      real x0, real xa, real xb,
                      real xscale = 1, real zscale = 1, int s = 1,
                      int* countn = nullptr, int* countb = nullptr,
-                     real tol = std::numeric_limits<real>::epsilon(),
-                     int indicator = 0);
+                     real tol = 0, ind indicator = NONE);
     // Given z, return dx = finv(z) - nslope * z
     // dx0 is an estimate of dx (NaN means no information)
     real inversep(real z, const std::function<Math::real(Math::real)>& fp,
                   real dx0 = Math::NaN(),
                   int* countn = nullptr, int* countb = nullptr,
-                  real tol = std::numeric_limits<real>::epsilon()) const;
+                  real tol = 0) const;
     Trigfun invert(const std::function<real(real)>& fp,
                    int* countn = nullptr, int* countb = nullptr,
-                   int nmax = 1 << 16,
-                   real tol = std::numeric_limits<real>::epsilon(),
-                   real scale = -1) const;
+                   int nmax = 1 << 16, real tol = 0, real scale = -1) const;
     int NCoeffs() const { return _m; }
     real Max() const;
     real HalfPeriod() const { return _h; }
@@ -233,7 +246,8 @@ namespace GeographicLib {
     }
     // Accurate inverse by direct Newton (not using _finv)
     real inv1(real z, int* countn = nullptr, int* countb = nullptr) const {
-      return _sym ? Math::NaN() : _f.root(z, _fp, countn, countb);
+      return _sym ? Math::NaN() : _f.root(z, _fp, countn, countb, 0,
+                                          Trigfun::INV1);
     }
     // Accurate inverse correcting result from _finv
     real inv2(real z, int* countn = nullptr, int* countb = nullptr) const {
