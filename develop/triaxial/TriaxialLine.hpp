@@ -146,6 +146,7 @@ namespace GeographicLib {
         return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
       }
       real Slope() const {
+        using std::sqrt;
         return _umb ? 1 :
           (_biaxl ? 1 - sqrt(-_mu) * _fun.Slope() : _fun.Slope());
       }
@@ -356,7 +357,7 @@ namespace GeographicLib {
       return clamp(lamang0(x, mult));
     }
     static real lam(real x, real mult = 1) {
-      using std::tan; using std::asinh; using std::fabs;
+      using std::tan; using std::asinh; using std::fabs; using std::copysign;
       // A consistent large value for x near pi/2.  Also deals with the issue
       // that tan(pi/2) may be negative, e.g., for long doubles.
       return fabs(x) >= Math::pi()/2 ? copysign(Triaxial::BigValue(), x) :

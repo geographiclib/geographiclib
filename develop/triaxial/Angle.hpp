@@ -103,7 +103,7 @@ namespace GeographicLib {
     , _n(num)
   {
     using std::isfinite; using std::isnan; using std::isinf;
-    using std::hypot; using std::copysign;
+    using std::hypot; using std::copysign; using std::rint;
     _n = rint(_n);
     if (!normp) {
       real h = hypot(_s, _c);

@@ -867,32 +867,40 @@ namespace GeographicLib {
 
     ang xm;                  // The return value
     int cntn = 0, cntb = 0, maxcnt = 100;
-    bool trip = false, correct = false;
+    bool trip = false;
     bool debug = false;
+    // 25 iterations with line 498534 of testset.txt
+    //   43 -2 -43 141
+    // This is a near conjugate case m12 = 0.0003857
+    // 27 iterations with line 360115 of testpro.txt
+    //   -75 29 75 -169
+    real x0 = 180 - 88.502178385428317128; // Offset for debugging output
     if (debug)
       cout << "H " << real(xa) << " " << fa << " "
            << real(xb) << " " << fb << "\n";
-    for (Math::real t = 1/Math::real(2), ab = 0, ft = 0, fm = 0, fc = 0;
+    // tp = 1 - t
+    for (Math::real t = 1/Math::real(2), tp = t, ab = 0, ft = 0, fc = 0;
          cntn < maxcnt ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure Triaxial::findroot"), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Triaxial::findroot");) {
-      // These inverse problems use lots of iterations
-      //  22  48  90   1 -48.5628 -5.7915 0.7706
-      //  56 115 -89 179 113.5952 179.8512 1.6130
-      // -51  89  90   1 -65.9888 10.0598 2.0530
-      // Need to figure out why.
       ang xt = 2*t == 1 ?
         ang(xa.s() + xb.s(), xa.c() + xb.c()) :
-        (2*t < 1 ? xa - ang::radians(t * ab) :
-         xb + ang::radians((1 - t) * ab)),
+        (t < tp ? xa - ang::radians(t * ab) :
+         xb + ang::radians(tp * ab)),
         xc;
       if (trip) {
-        if (correct) xm = xt;   // Update result if not a bisection step
+        xm = xt;
         break;
       }
       ++cntn;
       ft = f(xt);
+      if (ft == 0) {
+        xm = xt;
+        break;
+      }
+      if (debug)
+        cout << "H " << cntn << " " << real(xt)-x0 << " " << ft << "\n";
       if (signbit(ft) == signbit(fa)) {
         xc = xa; xa = xt;
         fc = fa; fa = ft;
@@ -900,11 +908,7 @@ namespace GeographicLib {
         xc = xb; xb = xa; xa = xt;
         fc = fb; fb = fa; fa = ft;
       }
-      if (fabs(fb) < fabs(fa)) {
-        xm = xb; fm = fb;
-      } else {
-        xm = xa; fm = fa;
-      }
+      xm = fabs(fb) < fabs(fa) ? xb : xa;
       // ordering is b - a - c
       ab = (xa-xb).radians0();
       Math::real
@@ -913,25 +917,33 @@ namespace GeographicLib {
         // Scherer has a fabs(cb).  This should be fabs(ab).
         tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
       // Backward tests to deal with NaNs
-      trip =  !(2 * tl < 1 &&
-                fabs(fm) > numeric_limits<Math::real>::epsilon());
-      // If trip update xm one more time, then Hybrid solution is called once
-      // more outside this route to update bet2, omg2, alp2, etc.
-      if (trip) tl = 0;
+      trip =  !(2 * tl < 1);
+      // Increase the amount away from the boundary to make the next iteration.
+      // Otherwise we get two equal values of f near the boundary and a
+      // bisection is triggered.
+      tl = fmin(1/real(32), 16*tl);
       Math::real
         xi = ab / cb,
-        phi = (fa-fb) / (fc-fb);
-      if ( 2 * tl < 1 && xi / (1 + sqrt(1 - xi)) < phi && phi < sqrt(xi) ) {
+        xip = ca / cb,          // 1 - xi
+        phi = (fa-fb) / (fc-fb),
+        phip = (fc-fa) / (fc-fb); // 1 - phi
+      if (!trip && Math::sq(phip) < xip && Math::sq(phi) < xi) {
         t = fa/(fb-fa) * fc/(fb-fc) - ca/ab * fa/(fc-fa) * fb/(fc-fb);
+        if (debug)
+          cout << "J1 " << cntn << " "  << t << " " << 1 - t << "\n";
         // This equation matches the pseudocode in Scherer.  His Eq (6.40)
         // reads t = fa/(fb-fa) * fc/(fb-fc) + ca/cb * fc/(fc-fa) * fb/(fb-fa);
         // this is wrong.
-        t = fmin(1 - tl, fmax(tl, t));
-        correct = true;
+        tp = fb/(fb-fa) * fc/(fc-fa) + cb/ab * fa/(fc-fa) * fb/(fc-fb);
+        t = fmax(tl, t);
+        tp = fmax(tl, tp);
+        // t = fmin(1 - tl, fmax(tl, t));
+        // tp = fmin(1 - tl, fmax(tl, tp));
       } else {
-        t = 1/Math::real(2);
+        t = tp = 1/Math::real(2);
         ++cntb;
-        correct = false;
+        if (debug)
+          cout << "J2 " << cntn << " " << t << " " << 1 - t << "\n";
       }
     }
     if (countn) *countn += cntn;

@@ -74,7 +74,7 @@ namespace GeographicLib {
     real sig2 = _gic.sig1 + s12/_t._b;
     real bet2, omg2;
     int Ex, Nx;
-    if (_t._debug)
+    if (0)
       cout << "POS " << gamma() << " "
            << fbet().NCoeffs() << " " << fomg().NCoeffs() << "\n";
     if (gamma() > 0 || _t._kp2 == 0) {
@@ -531,7 +531,7 @@ namespace GeographicLib {
         psi2 = ang::radians(fbet().rev(v2));
         // psi2a = v2a;
         // psi2 = psi2a;
-        if (_t._debug)
+        if (0)
           cout << "AP " << real(psi2) << " " << real(tau12) << " "
                << real(omg2a) << " "
                << fic.E * omg2a.radians() << " " << u2 << " "
@@ -557,7 +557,7 @@ namespace GeographicLib {
         ang(fic.E * fabs(sin(u2x)), fic.bet0.c() * cos(u2x)) :
         ang(fic.E * hypot(_t._k * gm().nu, _t._kp * omg2a.c()),
             fic.bet0.c() * _t._k * gm().nup * psi2.c())).rebase(fic.alp0);
-      if (_t._debug) {
+      if (0) {
         cout << "AP2 " << real(bet2a) << " "
              << real(fic.omg1) << " " << real(omg2a) << " "
              << real(alp2a) << " "

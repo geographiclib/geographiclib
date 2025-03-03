@@ -450,7 +450,7 @@ int main(int argc, const char* const argv[]) {
       }
       catch (const std::exception& e) {
         // Write error message cout so output lines match input lines
-        *output << "ERROR: " << e.what() << "\n";
+        *output << "ERROR: " << e.what() << " " << s << "\n";
         retval = 1;
       }
     }
