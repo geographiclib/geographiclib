@@ -28,7 +28,7 @@ namespace GeographicLib {
     class ffun {
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkapp;
-      bool _tx, _oblpro;
+      bool _tx, _oblpro, _merid;
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _tol;
@@ -159,7 +159,7 @@ namespace GeographicLib {
     class gfun {
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkap, _sqrtkapp;
-      bool _tx, _oblpro;
+      bool _tx, _oblpro, _merid;
       EllipticFunction _ell;
       TrigfunExt _fun;
       real _max;

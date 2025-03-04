@@ -879,6 +879,7 @@ namespace GeographicLib {
     , _sqrtkapp(sqrt(_kapp))
     // If oblpro extend special treatment of oblate/prolate cases to mu != 0.
     , _oblpro(t._oblpro)
+    , _merid(t._merid)
     , _invp(false)
     , _biaxr(_kap == 0 && (_mu == 0 || (_oblpro && _mu > 0)))
     , _biaxl(_kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
@@ -1186,6 +1187,7 @@ namespace GeographicLib {
     , _sqrtkapp(sqrt(_kapp))
     // If oblpro extend special treatment of oblate/prolate cases to mu != 0.
     , _oblpro(t._oblpro)
+    , _merid(t._merid)
     , _invp(false)
     , _biaxr(_kap == 0 && (_mu == 0 || (_oblpro && _mu > 0)))
     , _biaxl(_kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))

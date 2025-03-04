@@ -29,7 +29,8 @@ namespace GeographicLib {
     , _c(c)
     , _axes({_a, _b, _c})
     , _umbalt(false)
-    , _oblpro(true)
+    , _oblpro(false)
+    , _merid(false)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
@@ -57,7 +58,8 @@ namespace GeographicLib {
     , _k2(k2)
     , _kp2(kp2)
     , _umbalt(false)
-    , _oblpro(true)
+    , _oblpro(false)
+    , _merid(false)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
