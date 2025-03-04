@@ -347,8 +347,8 @@ namespace GeographicLib {
       tol = numeric_limits<real>::epsilon();
     real vtol = tol * zscale/100,
       xtol = pow(tol, real(0.75)) * xscale,
-      x = x0, oldv = Math::infinity(), olddx = oldv;
-    int k = 0, maxit = 150, b = 0;
+      x = x0, oldx = Math::infinity(), oldv = oldx, olddx = oldx;
+    int k = 0, maxit = 2*150, b = 0;
     real p = Math::pi()/2 * 0;
     real xa0 = xa, x00 = x0, xb0 = xb;
     if (debug) {
@@ -378,10 +378,7 @@ namespace GeographicLib {
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root");) {
       // TODO: This inverse problem uses lots of iterations
       //   20 60 -90 180 127.4974 24.6254 2.4377
-      // Need to figure out why.
-      //
-      // Also convergence failure with direct problem at PREC = 5
-      // echo 0 -3 -175.76701593778909192660079005663163077300058150471621479324932933476684186963409 2.9206543717645378667863502680795020885246451667017769113840327149194026396480270 | ./Geod3Solve  -e 1 3/2 1 2
+      // Need to figure out why.  (Probably fixed by now.)
       if (false && k == maxit/2) {
         debug = true;
         cout << "SCALE " << xscale << " " << zscale << "\n";
@@ -424,15 +421,23 @@ namespace GeographicLib {
       if (!(xa <= x && x <= xb) || fabs(v) > oldv ||
           (k > 2 && 2 * fabs(dx) > olddx)) {
         if (debug)
-          cout << "bis " << xa-x << " " << x-xb << endl;
+          cout << "bis " << k << " " << xa-x << " " << x-xb << " ";
         x = (xa + xb)/2;
         ++b;
+        if (x == oldx) {
+          if (debug)
+            cout << "break3 " << k << " " << x << " " << dx << "\n";
+          break;
+        }
       } else if (!(fabs(dx) > xtol)) {
         if (debug)
-          cout << "break2 " << k << " "
-               << dx << " " << xtol << endl;
+          cout << "break2 " << k << " " << dx << " " << xtol << endl;
         break;
       }
+      if (debug)
+        cout << "GAPS " << k << " " << dx << " " <<  x-xa << " " << xb-x << " "
+             << oldx << " " << x << " " << (oldx - x) << "\n";
+      oldx = x;
       oldv = fabs(v);
       olddx = fabs(dx);
     }

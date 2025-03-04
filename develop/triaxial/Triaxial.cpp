@@ -874,6 +874,9 @@ namespace GeographicLib {
     // This is a near conjugate case m12 = 0.0003857
     // 27 iterations with line 360115 of testpro.txt
     //   -75 29 75 -169
+    // Converge failures with line 40045 of testsph[bc]
+    // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 2 1 -i
+    // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 1 2 -i
     real x0 = 180 - 88.502178385428317128; // Offset for debugging output
     if (debug)
       cout << "H " << real(xa) << " " << fa << " "
