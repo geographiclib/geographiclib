@@ -877,7 +877,7 @@ namespace GeographicLib {
     // Converge failures with line 40045 of testsph[bc]
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 2 1 -i
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 1 2 -i
-    real x0 = 180 - 88.502178385428317128; // Offset for debugging output
+    real x0 = 0;                // Offset for debugging output
     if (debug)
       cout << "H " << real(xa) << " " << fa << " "
            << real(xb) << " " << fb << "\n";
@@ -898,12 +898,12 @@ namespace GeographicLib {
       }
       ++cntn;
       ft = f(xt);
-      if (ft == 0) {
+      if (debug)
+        cout << "H " << cntn << " " << real(xt)-x0 << " " << ft << "\n";
+      if (!(fabs(ft) >= numeric_limits<Math::real>::epsilon())) {
         xm = xt;
         break;
       }
-      if (debug)
-        cout << "H " << cntn << " " << real(xt)-x0 << " " << ft << "\n";
       if (signbit(ft) == signbit(fa)) {
         xc = xa; xa = xt;
         fc = fa; fa = ft;
@@ -920,7 +920,7 @@ namespace GeographicLib {
         // Scherer has a fabs(cb).  This should be fabs(ab).
         tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
       // Backward tests to deal with NaNs
-      trip =  !(2 * tl < 1);
+      trip = !(2 * tl < 1);
       // Increase the amount away from the boundary to make the next iteration.
       // Otherwise we get two equal values of f near the boundary and a
       // bisection is triggered.
