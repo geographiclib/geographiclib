@@ -721,13 +721,13 @@ namespace GeographicLib {
                       [this, &bet1, &omg1, &bet2, &omg2]
                       (const ang& alp) -> Math::real
                       {
-                        return HybridA(*this,
-                                       bet1, omg1, alp,
-                                       bet2, omg2);
+                        return HybridA(bet1, omg1, alp, bet2, omg2);
                       },
                       alpa,  alpb,
                       fa, fb,
                       &countn, &countb);
+      if (_debug)
+        cout << "ALP1 " << real(alp1) << "\n";
       alp1.round();
       lf = TL::fline(*this, gamma(bet1, omg1, alp1));
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
@@ -837,13 +837,12 @@ namespace GeographicLib {
     return TL(move(lf), move(fic), move(lg), move(gic));
   }
 
-  Math::real Triaxial::HybridA(const Triaxial& t,
-                               Angle bet1, Angle omg1,
+  Math::real Triaxial::HybridA(Angle bet1, Angle omg1,
                                Angle alp1,
-                               Angle bet2, Angle omg2) {
+                               Angle bet2, Angle omg2) const {
     ang b1{bet1}, o1{omg1}, a1{alp1};
-    gamblk gam = t.gamma(b1, o1, a1);
-    TriaxialLine::fline l(t, gam);
+    gamblk gam = gamma(b1, o1, a1);
+    TriaxialLine::fline l(*this, gam);
     TriaxialLine::fline::fics ic(l, b1, o1, a1);
     return l.Hybrid0(ic, bet2, omg2);
   }
@@ -879,10 +878,11 @@ namespace GeographicLib {
     // Converge failures with line 40045 of testsph[bc]
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 2 1 -i
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 1 2 -i
-    real x0 = 0;                // Offset for debugging output
+    real x0 = -88.974388706914264728; // Offset for debugging output
     if (debug)
       cout << "H " << real(xa) << " " << fa << " "
-           << real(xb) << " " << fb << "\n";
+           << real(xb) << " " << fb << " "
+           << f(ang(x0)) << "\n";
     // tp = 1 - t
     for (Math::real t = 1/Math::real(2), tp = t, ab = 0, ft = 0, fc = 0;
          cntn < maxcnt ||
@@ -896,6 +896,8 @@ namespace GeographicLib {
         xc;
       if (trip) {
         xm = xt;
+        if (debug)
+          cout << "BREAKA\n";
         break;
       }
       ++cntn;
@@ -904,6 +906,8 @@ namespace GeographicLib {
         cout << "H " << cntn << " " << real(xt)-x0 << " " << ft << "\n";
       if (!(fabs(ft) >= numeric_limits<Math::real>::epsilon())) {
         xm = xt;
+        if (debug)
+          cout << "BREAKB\n";
         break;
       }
       if (signbit(ft) == signbit(fa)) {
@@ -922,7 +926,11 @@ namespace GeographicLib {
         // Scherer has a fabs(cb).  This should be fabs(ab).
         tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
       // Backward tests to deal with NaNs
+      if (debug)
+        cout << "R " << cntn << " " << ab << " " << cb << "\n";
       trip = !(2 * tl < 1);
+      if (trip && debug)
+        cout << "TRIP " << ab << "\n";
       // Increase the amount away from the boundary to make the next iteration.
       // Otherwise we get two equal values of f near the boundary and a
       // bisection is triggered.

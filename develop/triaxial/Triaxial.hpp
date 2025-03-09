@@ -41,10 +41,8 @@ namespace GeographicLib {
       alp.reflect(true, true);
     }
 
-    static real HybridA(const Triaxial& t,
-                        Angle bet1, Angle omg1,
-                        Angle alp1,
-                        Angle bet2, Angle omg2);
+    real HybridA(Angle bet1, Angle omg1, Angle alp1,
+                 Angle bet2, Angle omg2) const;
     static Angle findroot(const std::function<Math::real(const Angle&)>& f,
                           Angle xa,  Angle xb,
                           Math::real fa, Math::real fb,

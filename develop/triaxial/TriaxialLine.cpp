@@ -511,6 +511,14 @@ namespace GeographicLib {
     const {
     // XXX fix for oblate/prolate
     disttx ret{Math::NaN(), Math::NaN(), 0};
+    bool debug = false;
+    real fxx = (_t.oblpro() ? sqrt(fabs(gamma())) : 1);
+    if (debug)
+      cout << "AP0 " << setprecision(17)
+           << _t.oblpro() << " " << real(tau12) << " "
+           << gamma() << " " << sqrt(fabs(gamma())) << " "
+           << fic.delta / fxx  << "\n"
+           << setprecision(6);
     if (gamma() > 0 || _t._kp2 == 0) {
       ang psi2;
       // ang u2a, v2a, psi2a;
@@ -634,10 +642,23 @@ namespace GeographicLib {
         } else {
           v2 = fomg().inv(fbet()(u2) - fic.delta);
           psi2 = ang::radians(fomg().rev(v2));
-          if (0)
-            cout << "ARG2 " << fbet()(u2)/Math::degree() << " " << fic.delta/Math::degree() << " "
-                 << (fbet()(u2) - fic.delta)/Math::degree() << " "
-                 << v2/Math::degree() << " " << real(psi2) << " " << real(fic.psi1) << "\n";
+          if (debug) {
+            cout << "ARG2 " << setprecision(17) << _t.oblpro() << " "
+                 << fic.delta/fxx << " "
+                 << fbet()(u2)/fxx << " "
+                 << (fbet()(u2) - fic.delta)/fxx << " "
+                 << v2/Math::degree() << " " << real(psi2) << " " << real(fic.psi1) << "\n"
+                 << setprecision(6);
+            real psi20 = 14 * Math::degree(),
+              v20 = fomg().fwd(psi20),
+              fomg0 = fomg()(v20),
+              v21 = fomg().inv(fomg0),
+              psi21 = fomg().rev(v21);
+            cout << "ARG3 " << setprecision(17) << _t.oblpro() << " "
+                 << psi20/Math::degree() << " " << v20 << " " << fomg0/fxx << "\n" << setprecision(6);
+            cout << "ARG3 " << setprecision(17) << _t.oblpro() << " "
+                 << psi21/Math::degree() << " " << v21 << " " << fomg0/fxx << "\n" << setprecision(6);
+          }
         }
         if (0)
           cout << "QQX " << real(tau12) << " "
@@ -719,6 +740,7 @@ namespace GeographicLib {
     } else {
       // gamma == NaN
     }
+
     omg2a += ang::cardinal(1);
     return ret;
   }
@@ -753,7 +775,7 @@ namespace GeographicLib {
       // Only used for biaxial cases when fwd rev is the identity
       // v0a = psi1;
       // u0a = E < 0 ? -omg1 : omg1;
-      delta = (t._kp2 == 0 ?
+      delta = (t._kp2 == 0 && (t._oblpro || gm.gamma == 0) ?
                atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
                - sqrt(gm.gamma) * f.fbet().df(v0)
                : f.fbet()(v0)) - f.fomg()(u0);
@@ -766,7 +788,7 @@ namespace GeographicLib {
              << cos(psi1.radians()) << " " << psi1.c() << " "
              << real(bet1) << " " << real(bet0) << " "
              << v0/d << " " << u0/d << " "
-             << (t._kp2 == 0 ?
+             << (t._kp2 == 0 && (t._oblpro || gm.gamma == 0) ?
                  atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())
                  - sqrt(gm.gamma) * f.fbet().df(v0)
                  : f.fbet()(v0))/d << " "
@@ -792,7 +814,7 @@ namespace GeographicLib {
       v0 = f.fomg().fwd(psi1.radians());
       u0 = f.fbet().fwd(N * bet1.radians());
       delta = f.fbet()(u0) -
-        (t._k2 == 0 ?
+        (t._k2 == 0 && (t._oblpro || gm.gamma == 0) ?
          atan2(omg1.s() * fabs(alp1.c()), omg0.c() * alp1.s())
          - sqrt(-gm.gamma) * f.fomg().df(v0) :
          f.fomg()(v0));
@@ -830,12 +852,14 @@ namespace GeographicLib {
       psi1.reflect(false, N != oN);
       v0 = f.fbet().fwd(psi1.radians());
       u0 *= E/oE;
+      // This isn't right if _oblpro
       delta = f.fbet()(v0) - f.fomg()(u0);
     } else if (gam < 0 || t._k2 == 0) {
       alp0 = alp1.nearest(2U);
       psi1.reflect(false, E != oE);
       v0 = f.fomg().fwd(psi1.radians());
       u0 *= N/oN;
+      // This isn't right if _oblpro
       delta = f.fbet()(u0) - f.fomg()(v0);
     } else if (gam == 0) {
       // Only expect to invoke setquadrant in this case
@@ -1607,9 +1631,9 @@ namespace GeographicLib {
     os << "% " << name << "\n";
     int ndiv = 20;
     real ds = 1/real(100);
-    int num = int(round(fmin(3*HalfPeriod(), real(10)) * ndiv));
+    int num = int(round(fmin(3*HalfPeriod(), real(30)) * ndiv));
     os << "% u f(u) inv0(f) inv1(f) inv2(f) "
-       << "u0-u u1-u u2-u  f'(u) delf delf-f'\n";
+       << "u0-u u1-u u2-u  f'(u) delf delf-f' phi fwd(phi) fwd(phi)-u\n";
     os << name << " = [\n";
     for (int i = -num; i <= num; ++i) {
       real u = i/real(ndiv),
@@ -1618,11 +1642,14 @@ namespace GeographicLib {
         df = ((*this)(u + ds/2) - (*this)(u - ds/2)) / ds,
         u0 = inv0(f),
         u1 = inv1(f),
-        u2 = inv2(f);
+        u2 = inv2(f),
+        phi = rev(u),
+        ux = fwd(phi);
       os << u << " " << f << " "
          << u0 << " " << u1 << " " << u2 << " "
          << u0-u << " " << u1-u << " " << u2-u << " "
-         << f1 << " " << df << " " << df-f1 << ";\n";
+         << f1 << " " << df << " " << df-f1 << " "
+         << phi << " " << ux << " " << ux-u << ";\n";
     }
     os << "];\n";
   }

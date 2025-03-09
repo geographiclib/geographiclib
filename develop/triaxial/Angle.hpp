@@ -62,6 +62,9 @@ namespace GeographicLib {
     Angle(real s, real c, real num = 0, bool normp = false);
     explicit Angle(real deg);
     explicit operator real() const;
+    static Angle degrees(real deg);
+    real degrees() const;
+    real degrees0() const;
     static Angle radians(real rad);
     real radians() const;
     real radians0() const;
@@ -134,6 +137,18 @@ namespace GeographicLib {
 
   inline Angle::operator Math::real() const {
     return Math::td * _n + Math::atan2d(_s, _c);
+  }
+
+  inline Angle Angle::degrees(Math::real deg) {
+    return Angle(deg);
+  }
+
+  inline Math::real Angle::degrees() const {
+    return real(*this);
+  }
+
+  inline Math::real Angle::degrees0() const {
+    return Math::atan2d(_s, _c);
   }
 
   inline Angle Angle::radians(Math::real rad) {
