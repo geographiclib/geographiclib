@@ -39,12 +39,15 @@ namespace GeographicLib {
     , _dir(0)
     , _nsteps(0)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    , _dstep6(_eps, real(0), real(1), real(1), real(0), interp)
-    , _dstep10(_eps, real(0), real(1), real(1), real(0), interp)
+    , _dstep6(_eps, real(0), real(1), real(1), real(0), _interp)
+    , _dstep10(_eps, real(0), real(1), real(1), real(0), _interp)
 #endif
     , _step6(_eps, real(0))
     , _step10(_eps, real(0))
   {
+#if !GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+    (void) _interp;
+#endif
     _t.Norm(_r1, _v1);
   }
 

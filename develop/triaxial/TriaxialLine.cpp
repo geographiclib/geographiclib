@@ -152,7 +152,7 @@ namespace GeographicLib {
       bet2 = fbet().rev(u2); omg2 = fomg().rev(v2);
       bet2a = anglam(u2, _t._kp);
       omg2a = anglam(v2, _t._k);
-      int parity = fmod(sig2n.second, real(2)) ? -1 : 1;
+      int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
       if (signbit(gamma())) {
         // if t._k2 == 0 then meridional prolate
         Ex = _fic.E * parity;
@@ -321,7 +321,7 @@ namespace GeographicLib {
     //       gfy'(y) = gy'(y)/fy'(y)
     //    cout << "BBX0\n";
     if (0) {
-      auto fun = [&fx, &fy, &gx, &gy, f0, g0]
+      auto fun = [&fx, &fy, &gx, &gy, f0]
         (real x) -> pair<real, real>
         { real y = fy.inv(fx(x) - f0);
           return pair<real, real>(gx(x) + gy(y),
@@ -337,7 +337,7 @@ namespace GeographicLib {
       }
     }
     x = Trigfun::root(
-                      [&fx, &fy, &gx, &gy, f0, g0]
+                      [&fx, &fy, &gx, &gy, f0]
                       (real x) -> pair<real, real>
                       { real y = fy.inv(fx(x) - f0);
                         return pair<real, real>(gx(x) + gy(y),
@@ -698,7 +698,7 @@ namespace GeographicLib {
         bet2a = fic.bet1 + tau12.flipsign(fic.N);
         pair<real, real> bet2n =
           remx(fic.N * (bet2a - fic.bet0).radians(), Math::pi());
-        int parity = fmod(bet2n.second, real(2)) ? -1 : 1;
+        int parity = fmod(bet2n.second, real(2)) != 0 ? -1 : 1;
         real deltax = clamp(fic.delta + bet2n.second * deltashift, 2);
         u2 = fbet().fwd(bet2n.first);
         v2 = fomg().inv(fbet()(u2) - deltax);
@@ -719,7 +719,7 @@ namespace GeographicLib {
         omg2a = fic.omg1 + tau12.flipsign(fic.E);
         pair<real, real> omg2n =
           remx(fic.E * (omg2a - fic.omg0).radians(), Math::pi());
-        int parity = fmod(omg2n.second, real(2)) ? -1 : 1;
+        int parity = fmod(omg2n.second, real(2)) != 0 ? -1 : 1;
         real deltax = clamp(fic.delta + omg2n.second * deltashift, 2);
         v2 = fomg().fwd(omg2n.first);
         u2 = fbet().inv(fomg()(v2) + deltax);
@@ -909,6 +909,7 @@ namespace GeographicLib {
     , _biaxl(_kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
     , _umb(_kap != 0 && _kapp != 0 && _mu == 0)
   {
+    (void) _merid;
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
     if (_biaxr) {
       // oblate/prolate rotating coordinate
@@ -940,8 +941,7 @@ namespace GeographicLib {
       } else
       */
       _fun = TrigfunExt(
-                        [kap = _kap, kapp = _kapp,
-                         eps = _eps, mu = _mu]
+                        [eps = _eps, mu = _mu]
                         (real psi) -> real
                         { return dfpsioblp(sin(psi), cos(psi), eps, mu); },
                         Math::pi()/2, false);
@@ -1217,6 +1217,7 @@ namespace GeographicLib {
     , _biaxl(_kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
     , _umb(_kap != 0 && _kapp != 0 && _mu == 0)
   {
+    (void) _merid;
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
     if (_biaxr) {
       // oblate/prolate symmetry coordinate
@@ -1240,8 +1241,7 @@ namespace GeographicLib {
         } else
       */
       _fun = TrigfunExt(
-                        [kap = _kap, kapp = _kapp,
-                         eps = _eps, mu = _mu]
+                        [eps = _eps, mu = _mu]
                         (real psi) -> real
                         { return gpsioblp(sin(psi), cos(psi), eps, mu); },
                         Math::pi()/2, false);
@@ -1292,7 +1292,7 @@ namespace GeographicLib {
                           2*_ell.K(), true);
       } else
         _fun = TrigfunExt(
-                          [kap = _kap, kapp = _kapp, eps = _eps, ell = _ell]
+                          [kap = _kap, kapp = _kapp, eps = _eps]
                           (real phi) -> real
                           { return g0p(cos(phi), kap, kapp, eps); },
                           Math::pi(), true);

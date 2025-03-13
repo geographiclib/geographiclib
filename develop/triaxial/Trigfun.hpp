@@ -49,7 +49,7 @@ namespace GeographicLib {
       _n;                       // Number of samples in half/quarter period
     bool _odd, _sym;
     std::vector<real> _coeff;
-    real _h, _q, _p;              // half, quarter, whole period
+    real _h, _q, _p;            // half, quarter, whole period
     mutable real _max;
     static int chop(const std::vector<real>& c, real tol, real scale = -1);
     // Function samples over half/quarter period of !sym/sym
@@ -100,7 +100,9 @@ namespace GeographicLib {
       , _q(_h/2)
       , _p(2*_h)
       , _max(-1)
-    {}
+    {
+      (void) _p;
+    }
     /**
      * Constructor given a function.  Specify n = 0 to do auto
      **********************************************************************/

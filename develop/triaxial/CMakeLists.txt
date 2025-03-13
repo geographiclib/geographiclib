@@ -17,7 +17,6 @@ project (triaxial)
 
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2.6 CONFIG REQUIRED)
-include_directories (${GeographicLib_INCLUDE_DIRS})
 find_package (Boost 1.70 CONFIG REQUIRED)
 
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
@@ -35,8 +34,9 @@ set (CONVERT_WARNINGS_TO_ERRORS ON)
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# For kissfft.hh
-set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES "$ENV{HOME}/geographiclib/src")
+# For kissfft.hh and boost
+set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
+  "${GeographicLib_INCLUDE_DIRS}/../src" "${Boost_INCLUDE_DIRS}")
 
 # Make the compiler more picky.
 include (CheckCXXCompilerFlag)
@@ -81,38 +81,32 @@ set (HEADERS
   TriaxialODE.hpp)
 
 add_library (trilib ${SOURCES} ${HEADERS})
+target_link_libraries (trilib ${GeographicLib_LIBRARIES}
+  ${GeographicLib_HIGHPREC_LIBRARIES} ${BOOST_LIBRARIES})
 
 add_executable (randgeod randgeod.cpp)
-target_link_libraries (randgeod trilib ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (randgeod trilib)
 
 add_executable (TrigfunTest TrigfunTest.cpp)
-target_link_libraries (TrigfunTest trilib ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (TrigfunTest trilib)
 
 add_executable (TriaxialTest TriaxialTest.cpp)
-target_link_libraries (TriaxialTest trilib ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (TriaxialTest trilib)
 
 add_executable (Geod3Solve Geod3Solve.cpp)
-target_link_libraries (Geod3Solve trilib ${GeographicLib_LIBRARIES}
-  ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (Geod3Solve trilib)
 
 add_executable (TriRand TriRand.cpp)
-target_link_libraries (TriRand trilib ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (TriRand trilib)
 
 add_executable (Geod3Test Geod3Test.cpp)
-target_link_libraries (Geod3Test trilib ${GeographicLib_LIBRARIES}
-  ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (Geod3Test trilib)
 
 add_executable (Geod2Test Geod2Test.cpp)
-target_link_libraries (Geod2Test trilib ${GeographicLib_LIBRARIES}
-  ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (Geod2Test trilib)
 
 add_executable (InvDump InvDump.cpp)
-target_link_libraries (InvDump trilib ${GeographicLib_LIBRARIES}
-  ${GeographicLib_HIGHPREC_LIBRARIES})
+target_link_libraries (InvDump trilib)
 
 if (GEOGRAPHICLIB_PRECISION LESS 5)
   add_executable (odetest odetest.cpp)

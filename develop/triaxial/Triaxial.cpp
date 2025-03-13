@@ -834,7 +834,8 @@ namespace GeographicLib {
            << lf.fbet().NCoeffs() << " " << lf.fomg().NCoeffs() << " "
            << lg.gbet().NCoeffs() << " " << lg.gomg().NCoeffs() << " MSG "
            << msg << "\n";
-    return TL(move(lf), move(fic), move(lg), move(gic));
+    // clang needs std::move instead of move.
+    return TL(std::move(lf), std::move(fic), std::move(lg), std::move(gic));
   }
 
   Math::real Triaxial::HybridA(Angle bet1, Angle omg1,

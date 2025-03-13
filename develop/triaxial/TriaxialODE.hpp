@@ -42,6 +42,10 @@
 
 #include "Angle.hpp"
 #include "Triaxial.hpp"
+
+// Ignore warnings for boost headers
+#pragma clang diagnostic ignored "-Wunused-parameter"
+#pragma clang diagnostic ignored "-Wreorder-ctor"
 #include <boost/numeric/odeint.hpp>
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
 #include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>

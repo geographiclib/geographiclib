@@ -86,7 +86,7 @@ void errreport(const Triaxial& t,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
   typedef Math::real real;
   typedef Angle ang;
-  real debug = false;
+  bool debug = false;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else

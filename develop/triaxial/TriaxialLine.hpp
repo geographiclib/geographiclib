@@ -31,7 +31,7 @@ namespace GeographicLib {
       bool _tx, _oblpro, _merid;
       EllipticFunction _ell;
       TrigfunExt _fun;
-      real _tol;
+      // real _tol;
       Trigfun _dfinv;
       int _countn, _countb;
       real _max;
