@@ -34,9 +34,15 @@ set (CONVERT_WARNINGS_TO_ERRORS ON)
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# For kissfft.hh and boost
-set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
-  "${GeographicLib_INCLUDE_DIRS}/../src" "${Boost_INCLUDE_DIRS}")
+# For kissfft.hh
+if (APPLE)
+  # clang needs Boost include directories too
+  set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
+    "${GeographicLib_INCLUDE_DIRS}/../src" "${Boost_INCLUDE_DIRS}")
+else ()
+  set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
+    "${GeographicLib_INCLUDE_DIRS}/../src")
+endif ()
 
 # Make the compiler more picky.
 include (CheckCXXCompilerFlag)

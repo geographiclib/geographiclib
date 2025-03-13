@@ -38,7 +38,9 @@ namespace GeographicLib {
     real s() const { return _s; }
     real c() const { return _c; }
     real t() const { return _s/_c; }
-    real n() const { return _n; }
+    real n() const {
+      return _n + 0;            // Convert -0 to +0
+    }
     /**
      * The default constructor.
      *
@@ -111,7 +113,9 @@ namespace GeographicLib {
     if (!normp) {
       real h = hypot(_s, _c);
       if (h == 0) {
-        // retain the sign of _s = +/-0
+        // If y is +/-0 and x = -0, +/-π is returned.
+        // If y is +/-0 and x = +0, +/-0 is returned.
+        // So retain the sign of _s = +/-0
         _c = copysign(real(1), _c);
       } else if (isfinite(h)) {
         _s /= h; _c /= h;
@@ -136,7 +140,9 @@ namespace GeographicLib {
   }
 
   inline Angle::operator Math::real() const {
-    return Math::td * _n + Math::atan2d(_s, _c);
+    real d = Math::atan2d(_s, _c);
+    // Preserve sign of +/-0
+    return _n == 0 ? d : d + Math::td * _n;
   }
 
   inline Angle Angle::degrees(Math::real deg) {
@@ -159,7 +165,9 @@ namespace GeographicLib {
   }
 
   inline Math::real Angle::radians() const {
-    return 2 * Math::pi() * _n + radians0();
+    real r = radians0();
+    // Preserve sign of +/-0
+    return _n == 0 ? r : r + 2 * Math::pi() * _n;
   }
 
   inline Math::real Angle::radians0() const {
