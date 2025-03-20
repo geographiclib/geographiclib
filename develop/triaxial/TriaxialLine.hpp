@@ -25,6 +25,178 @@ namespace GeographicLib {
     typedef Math::real real;
     typedef Angle ang;
 
+    class hfun {
+      // This combines ffun abd gfun in order to minimize the duplication of
+      // code.
+      // Establish consistent notation for coordinates:
+      // theta = rotating coord, omega-90 or beta for circum- or transpolar
+      // phi = librating coord, beta or omega-90 for circum- or transpolar
+      // psi = rotating equivalent of phi
+      // zeta = a generic version of theta or psi
+      // u = possible change of vars for theta
+      // v = possible change of vars for psi
+      // w = a generic version of u or v
+    private:
+      real _kap, _kapp, _eps, _mu, _sqrtkap, _sqrtkapp;
+      bool _distp, _tx, _oblpro, _merid;
+      EllipticFunction _ell;
+      TrigfunExt _fun;
+      // real _tol;
+      Trigfun _dfinv;
+      int _countn, _countb;
+      real _max;
+      bool _invp, _biaxr, _biaxl, _umb;
+      // The f functions
+      // mu > 0
+      static real fthtp(real c, real kap, real kapp, real eps, real mu);
+      static real fup(real cn, real kap, real kapp, real eps, real mu);
+      // mu == 0
+      static real dfp(real c, real kap, real kapp, real eps);
+      static real dfvp(real cn, real dn, real kap, real kapp, real eps);
+      // mu < 0
+      static real fpsip(real s, real c, real kap, real kapp,
+                        real eps, real mu);
+      static real fvp(real dn, real kap, real kapp, real eps, real mu);
+      // oblate/prolate variant for kap = 0, kapp = 1
+      static real fthtoblp(real tht, real eps, real mu);
+      // oblate/prolate variant for kap = 1, kapp = 0, mu <= 0, !_tx
+      static real dfpsioblp(real s, real c, real eps, real mu);
+      // NOT USED
+      // oblate/prolate variant for kap = 1, kapp = 0, mu <= 0, _tx
+      // static real dfvoblp(real dn, real eps, real mu);
+
+      // The g functions
+      // _mu > 0
+      static real gthtp(real c, real kap, real kapp, real eps, real mu);
+      static real gfthtp(real c, real kap, real mu);
+      static real gup(real cn, real dn, real kap, real kapp,
+                         real eps, real mu);
+      static real gfup(real cn, real kap, real mu);
+      // _mu == 0
+      static real g0p(real c, real kap, real kapp, real eps);
+      static real gf0up(real u, real kap, real kapp);
+      static real g0vp(real cn, real kap, real kapp, real eps);
+      // _mu < 0
+      static real gpsip(real s, real c, real kap, real kapp,
+                           real eps, real mu);
+      static real gfpsip(real s, real c, real kap, real mu);
+      static real gvp(real cn, real dn, real kap, real kapp,
+                         real eps, real mu);
+      static real gfvp(real dn, real kap, real mu);
+      // oblate/prolate variants for kap = 0, kapp = 1, mu >= 0
+      static real gthtoblp(real tht, real eps, real mu);
+      static real gfthtoblp(real tht, real mu);
+      // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0
+      static real gpsioblp(real s, real c, real eps, real mu);
+      static real gfpsioblp(real s, real c, real mu);
+      // NOT USED
+      // static real gvoblp(real cn, real dn, real eps, real mu);
+      // static real gfvoblp(real dn, real mu);
+
+      // Return atan(m * tan(x)) keeping result continuous.  Only defined for
+      // !signbit(m).
+      static real modang(real x, real m) {
+        return Angle::radians(x).modang(m).radians();
+      }
+      real root(real z, real u0, int* countn, int* countb,
+                real tol = std::numeric_limits<real>::epsilon()) const;
+
+      // Approximate inverse using _finv
+      real inv0(real z) const;
+      // Accurate (to tol) inverse by direct Newton (not using _finv)
+      real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
+      // Accurate inverse correcting result from _finv
+      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
+
+    public:
+      // Summary of f and g functions
+      // _biaxr  = kap == 0 (mu >= 0) (oblate/prolate rotating coordinate)
+      //  f = fthtobl / sqrt(mu), fthtoblp = 1 inversion trivial
+      //  g = gthtobl, gthtoblp = 0
+      // _biaxl = kapp == 0 (mu <= 0) (oblate/prolate librating coordinate)
+      //  f = (atan(sqrt(-mu)*tan(psi)) - dfpsiobl) / sqrt(-mu)
+      //    mu == 0 **
+      //     atan(sqrt(-mu)*tan(psi)) -> round(psi/pi)*pi
+      //    mu < 0 TODO: invert
+      //  g = gpsiobl
+      // mu > 0 && kap*kapp > 0 (triaxial rotating coordinate)
+      //        (also optionally mu > 0 && kap == 0)
+      //  f = ftht or fu
+      //  g = gtht or gu **
+      // mu < 0 && kap*kapp > 0 (trixial librating coordinate)
+      //        (also optionally mu < 0 && kapp == 0)
+      //  f = fpsi or fv
+      //  g = gpsi or gv **
+      // _umb = mu == 0 && kap*kapp > 0 (trixial umbilic)
+      //  f = (u + df)/sqrt(kap*kapp) or (u + dfv)/sqrt(kap*kapp)
+      //  g = g0 or g0v
+      //
+      // Handing of f funtions needs to be handled specially for
+      // _biaxl
+      //   leading order behavior is seperated out
+      //   N.B. inverse of f is discontinuous for mu == 0
+      //   functions which need special treatment
+      //     operator(), deriv, inv, ComputeInverse, Slope, Max
+      // _umb
+      //   leading order behavior is seperated out
+      // otherwise everything is handled by generic routines
+      //
+      // Handling of g function is always generic
+      // _biaxr
+      //   functions which need special treatment
+      //   inv
+      // _umb
+      //   functions which need special treatment
+      //    Slope, fwd, rev, Max
+      //
+      hfun() {}
+      hfun(bool distp, real kap, real kapp, real eps, real mu,
+           const Triaxial& t);
+      real operator()(real u) const;
+      // THIS ISN"T USED
+      Angle operator()(const Angle& ang) const;
+      real deriv(real u) const;
+      real gfderiv(real u) const;
+      real df(real u) const { return _fun(u); }
+      real dfp(real u) const { return _fun.deriv(u); }
+
+      real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
+        return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
+      }
+      Angle inv(const Angle& z,
+                int* countn = nullptr, int* countb = nullptr) const;
+      void ComputeInverse();
+      real fwd(real zeta) const {
+        return _umb ? lam(zeta, _sqrtkapp) :
+          (_tx ? _ell.F(zeta) : zeta);
+      }
+      real rev(real w) const {
+        return _umb ? gd(w, _sqrtkapp) :
+          (_tx ? _ell.am(w) : w);
+      }
+      int NCoeffs() const { return _fun.NCoeffs(); }
+      int NCoeffsInv() const {
+        return _umb || _biaxl ? _dfinv.NCoeffs() : _fun.NCoeffsInv();
+      }
+      std::pair<int, int> InvCounts() const {
+        return _umb || _biaxl ? std::pair<int, int>(_countn, _countb) :
+          _fun.InvCounts();
+      }
+      bool txp() const { return _tx; }
+      real HalfPeriod() const {
+        return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
+      }
+      real Slope() const {
+        using std::sqrt;
+        return _umb ? 1 :
+          (_biaxl ? 1 - sqrt(-_mu) * _fun.Slope() : _fun.Slope());
+      }
+      real Max() const {
+        return _max;
+      }
+      void inversedump(std::ostream& os, const std::string& name) const;
+    };
+
     class ffun {
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkapp;
