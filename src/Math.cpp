@@ -33,7 +33,7 @@ namespace GeographicLib {
 #  endif
     mpfr::mpreal::set_default_prec(ndigits >= 2 ? ndigits : 2);
 #else
-    (void)ndigits;
+    (void) ndigits;
 #endif
     return digits();
   }

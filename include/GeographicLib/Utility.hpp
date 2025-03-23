@@ -316,6 +316,16 @@ namespace GeographicLib {
      * @param[out] array the output array of type IntT (internal).
      * @param[in] num the size of the array.
      * @exception GeographicErr if the data cannot be read.
+     *
+     * This routine is used to read binary data files for the Geoid,
+     * GravityModel, and MagneticModel classes.  In the case of GravityModel
+     * and MagneticMode, the data is published by a government agency as text
+     * files, and the coefficient to realize the models are converted to a
+     * double precision binary format to minimize storage and to simplify
+     * reading the data.
+     *
+     * For GEOGRAPHIC_PRECISION == 2, the data is read faithfully.  TODO
+     * expand.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static void readarray(std::istream& str, IntT array[], size_t num) {

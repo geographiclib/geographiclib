@@ -24,13 +24,13 @@ int main(int argc, const char* const argv[]) {
     int auxin = GeographicLib::Utility::val<int>(std::string(argv[2]));
     double a = 1+n, b = 1-n;    // Equatorial radius and polar semi-axis
     latitude aux(latitude::axes(a, b));
-    bool series = false;        // Don't use series method
+    bool exact = true;          // Do the exact calculation
     std::cout << std::setprecision(9) << std::fixed;
     int m = 1;
     for (int l = 0; l < 90*m; ++l) {
       angle phi(angle::degrees((l+0.5)/m));
       for (int auxout = 0; auxout < latitude::AUXNUMBER; ++auxout) {
-        angle eta = aux.Convert(auxin, auxout, phi, series);
+        angle eta = aux.Convert(auxin, auxout, phi, exact);
         std::cout << (auxout ? " " : "") << eta.degrees();
       }
       std::cout << "\n";

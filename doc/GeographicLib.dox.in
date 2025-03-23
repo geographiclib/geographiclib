@@ -7761,6 +7761,12 @@ git repository for GeographicLib</a>.
    - Add Math::clamp.
    - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
      fixed precision.
+   - With GEOGRAPHICLIB_PRECISION > 2, Utility::readarray interpret
+     doubles in external file as approximations to an exact decimal
+     number.  See the documentaion of this routine for details.
+   - WARNING: C++17 compliant compiler will be required for the next
+     release.  Support for builds with Visual Studio 14 (2015) will then
+     stop.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
    (released 2024-12-28)
