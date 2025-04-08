@@ -92,7 +92,7 @@ int main(int argc, const char* const argv[]) {
       dms = false, full = false, unroll = true,
       longfirst = false,
       lineseq = false, cart = false, bench = false, reverse = false,
-      debug = false, oblpro = false, merid = false;
+      debug = false, oblpro = false, merid = false, combine = false;
     real
       a = 6378172, b = 6378102, c = 6356752;
     ang bet1, omg1, alp1, bet2, omg2, alp2;
@@ -180,6 +180,8 @@ int main(int argc, const char* const argv[]) {
         oblpro = true;
       else if (arg == "--merid")
         merid = true;
+      else if (arg == "--combine")
+        combine = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -265,6 +267,7 @@ int main(int argc, const char* const argv[]) {
     t.debug(debug);
     t.oblpro(oblpro);
     t.merid(merid);
+    t.combine(combine);
     using std::round; using std::log10; using std::fabs; using std::ceil;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),

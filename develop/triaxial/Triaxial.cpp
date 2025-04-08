@@ -31,6 +31,7 @@ namespace GeographicLib {
     , _umbalt(false)
     , _oblpro(false)
     , _merid(false)
+    , _combine(false)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
@@ -415,7 +416,7 @@ namespace GeographicLib {
     // and for the final result
     ang bet2a, omg2a;
 
-    TL::fline lf;
+    TL::fline lf(*this);
     TL::fline::fics fic;
     TL::fline::disttx d;
 
@@ -427,12 +428,12 @@ namespace GeographicLib {
     bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
       // Case A.c, both points on middle ellipse
-      lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
+      lf = TL::fline(*this, gamblk(*this, (_umbalt && _kp2 > 0) || _k2 == 0));
       if (umb1 && umb2 && bet2.s() > 0 && omg2.c() < 0) {
         // Case A.c.1, process opposite umbilical points
         // For oblate/prolate this gives 0/90
         alp1 = oblate || prolate ? ang(_kp, _k, 0, true) :
-          ang(exp(lf.deltashift/2), 1);
+          ang(exp(lf.deltashift()/2), 1);
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
         bool betp = _k2 > _kp2;
         d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, betp);
@@ -590,7 +591,7 @@ namespace GeographicLib {
       }
     } else if (umb1) {
       // Case B.a, umbilical point to general point
-      lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
+      lf = TL::fline(*this, gamblk(*this, (_umbalt && _kp2 > 0) || _k2 == 0));
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
       // RETHINK THIS.  If we know alp2, we can compute delta.  This should be
       // enough to find alp1.
@@ -627,9 +628,9 @@ namespace GeographicLib {
           // alp1 = -delta
           -ang::radians(fic.delta) :
           // For triaxial case at an umbilic point
-          // delta = f.deltashift/2 - log(fabs(alp1.t()));
-          // alp1.t() = exp(f.deltashift/2 - delta)
-          ang(exp(lf.deltashift/2 - fic.delta), 1));
+          // delta = f.deltashift()/2 - log(fabs(alp1.t()));
+          // alp1.t() = exp(f.deltashift()/2 - delta)
+          ang(exp(lf.deltashift()/2 - fic.delta), 1));
       }
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       d = lf.ArcPos0(fic, (betp ? bet2 - bet1 : omg2 - omg1).base(),
@@ -672,7 +673,7 @@ namespace GeographicLib {
       alpa = ang( _kp * fabs(omg1.s()), _k * fabs(bet1.c()));
       alpb = alpa;
 
-      lf = TL::fline(*this, gamblk((_umbalt && _kp2 > 0) || _k2 == 0));
+      lf = TL::fline(*this, gamblk(*this, (_umbalt && _kp2 > 0) || _k2 == 0));
       fic = TL::fline::fics(lf, bet1, omg1, alpb);
       unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
       if (_debug) msg = "B.d general";
@@ -965,7 +966,65 @@ namespace GeographicLib {
     return xm;
   }
 
+  Triaxial::gamblk::gamblk(const Triaxial& t,
+                           Angle bet, Angle omg, Angle alp) {
+    real a = t.k() * bet.c() * alp.s(), b = t.kp() * omg.s() * alp.c();
+    gamma = (a - b) * (a + b);
+    // This direct test case
+    // -30 -86 58.455576621187896848 -1.577754271270003
+    // fails badly with reverse direct if gamma is not set to zero here.
+    // Neighboring values of alp as double are
+    // 58.455576621187890, 58.455576621187895, 58.455576621187900
+    // 30 86 90 180
+    // dgam/dalp = 2*alp.c()*alp.s() * hypot(t.k * bet.c(), t.kp * omg.s())
+    real
+      alpdiff = 2 * alp.c() * alp.s()
+      * (t.k2() * Math::sq(bet.c())+t.kp2() * Math::sq(omg.s())),
+      betdiff = -2 * bet.c() * bet.s() * t.k2() * Math::sq(alp.s()),
+      omgdiff = -2 * omg.c() * omg.s() * t.kp2() * Math::sq(alp.c()),
+      maxdiff = fmax( fabs(alpdiff), fmax( fabs(betdiff), fabs(omgdiff) ) );
+    // cout << "GAMDIFF " << gamma/ numeric_limits<real>::epsilon() << " "
+    //      << maxdiff << "\n";
+    if (fabs(gamma) <= 2 * maxdiff * numeric_limits<real>::epsilon()) {
+      // Set gamma = 0 if a change of alp, bet, or omg by epsilon would include
+      // gamma = 0.
+      gamma = 0;
+      // If (_umbalt and not oblate) or prolate, set gamma = -0
+      if ((t.umbalt() && t.kp2() > 0) || t.k2() == 0) gamma = -gamma;
+    }
+    transpolar = signbit(gamma);
+    gammax = fabs(gamma);
+    kx2 = !transpolar ? t.k2() : t.kp2();
+    kxp2 = transpolar ? t.k2() : t.kp2();
+    kx = !transpolar ? t.k() : t.kp();
+    kxp = transpolar ? t.k() : t.kp();
+    // gammap = sqrt(kx2 - gammax)
+    real gammap = 
+      (!transpolar ?
+       hypot(kx * hypot(bet.s(), alp.c()*bet.c()),
+             kxp * omg.s()*alp.c()) :
+       hypot(kxp *  bet.c()*alp.s(),
+             kx * hypot(omg.c(), alp.s()*omg.s())));
+    // for gam == 0, we have nu = 0, nup = 1
+    nu = sqrt(gammax) / kx;
+    nup = gammap / kx;
+  }
+
+  Triaxial::gamblk::gamblk(const Triaxial& t, bool neg)
+    : transpolar(neg)
+    , gamma(transpolar ? -real(0) : real(0))
+    , nu(0)
+    , nup(1)
+    , gammax(0)
+    , kx2(!transpolar ? t.k2() : t.kp2())
+    , kxp2(transpolar ? t.k2() : t.kp2())
+    , kx(!transpolar ? t.k() : t.kp())
+    , kxp(transpolar ? t.k() : t.kp())
+  {}
+
   Triaxial::gamblk Triaxial::gamma(Angle bet, Angle omg, Angle alp) const {
+    return gamblk(*this, bet, omg, alp);
+#if 0
     real a = _k * bet.c() * alp.s(), b = _kp * omg.s() * alp.c(),
       gam = (a - b) * (a + b);
     // This direct test case
@@ -1001,6 +1060,7 @@ namespace GeographicLib {
       nu = sqrt(fabs(gam)) / (!signbit(gam) ? _k : _kp),
       nup = gamp / (!signbit(gam) ? _k : _kp);
     return gamblk(gam, nu, nup);
+#endif
   }
 
   TriaxialLine Triaxial::Line(Angle bet1, Angle omg1, Angle alp1) const {

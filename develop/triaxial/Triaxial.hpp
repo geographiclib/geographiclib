@@ -53,6 +53,7 @@ namespace GeographicLib {
     bool _umbalt,               // how coordinates wrap with umbilical lines
       _oblpro,                  // include treatment of oblate/prolate cases
       _merid,                   // triaxial treatment of biaxial meridians
+      _combine,                 // combine transpolar and circumpolar
       _debug;                   // print out diagnostics
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
@@ -83,6 +84,8 @@ namespace GeographicLib {
     real e2() const { return _e2; }
     real k2() const { return _k2; }
     real kp2() const { return _kp2; }
+    real k() const { return _k; }
+    real kp() const { return _kp; }
     const vec3& axes() const { return _axes; }
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) { _umbalt = numbalt; }
@@ -90,6 +93,8 @@ namespace GeographicLib {
     void oblpro(bool oblpro) { _oblpro = oblpro; }
     bool merid() const { return _merid; }
     void merid(bool merid) { _merid = merid; }
+    bool combine() const { return _combine; }
+    void combine(bool combine) { _combine = combine; }
     bool debug() const { return _debug; }
     void debug(bool debug) { _debug = debug; }
     real ellipthresh() const { return _ellipthresh; }
@@ -141,6 +146,7 @@ namespace GeographicLib {
                                                vec3 r2, vec3 v2);
     class gamblk {
     public:
+      bool transpolar;
       // gamma = (k * cbet * salp)^2 - (kp * somg * calp)^2
       //       = k2*cb2*sa2 - kp2*so2*ca2
       // Need accurate expressions for
@@ -163,13 +169,14 @@ namespace GeographicLib {
       //   = [sqrt(gam)/k, sqrt(1 - gam/k2)] for !signbit(gam)
       //   = [sqrt(-gam)/kp, sqrt(1 + gam/kp2)] for signbit(gam)
       //   unused for umbilics
-        nu, nup;
+        nu, nup,
+        gammax, kx2, kxp2, kx, kxp;
       // Default values for gamma = +/-0
-      gamblk(bool neg = false)
-        : gamma(neg ? -real(0) : real(0)), nu(0), nup(1)
-      {}
-      gamblk(real gammax, real nux, real nupx)
-        : gamma(gammax), nu(nux), nup(nupx) {}
+      gamblk() {}
+      gamblk(const Triaxial& t, bool neg = false);
+      gamblk(const Triaxial& t, Angle bet, Angle omg, Angle alp);
+      //       gamblk(real gammax, real nux, real nupx)
+      //        : gamma(gammax), nu(nux), nup(nupx) {}
     };
     gamblk gamma(Angle bet, Angle omg, Angle alp)
       const;
