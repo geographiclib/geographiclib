@@ -242,6 +242,7 @@ namespace GeographicLib {
     bet2.round();
     omg2.round();
     bool oblate = _kp2 == 0, prolate = _k2 == 0;
+    bool comb = _combine;
 
     // In triaxial + oblate cases, [bet, omg] are initially put into [-90,90] x
     // [-180,180].  For prolate case, maybe we instead put [bet, omg] into
@@ -418,7 +419,9 @@ namespace GeographicLib {
 
     TL::fline lf(*this);
     TL::fline::fics fic;
+    TL::fline::ficsx ficx;
     TL::fline::disttx d;
+    TL::fline::disttxx dx;
 
     if (_debug)
       cout << "COORDS " << real(bet1) << " " << real(omg1) << " "
@@ -434,9 +437,15 @@ namespace GeographicLib {
         // For oblate/prolate this gives 0/90
         alp1 = oblate || prolate ? ang(_kp, _k, 0, true) :
           ang(exp(lf.deltashift()/2), 1);
-        fic = TL::fline::fics(lf, bet1, omg1, alp1);
+        if (!comb)
+          fic = TL::fline::fics(lf, bet1, omg1, alp1);
+        else
+          ficx = TL::fline::ficsx(lf, bet1, omg1, alp1);
         bool betp = _k2 > _kp2;
-        d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, betp);
+        if (!comb)
+          d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, betp);
+        else
+          dx = lf.ArcPos0x(ficx, ang::cardinal(2), bet2a, omg2a, alp2, betp);
         if (oblate || prolate) alp2 += ang::cardinal(oblate ? 2 : -1);
         if (_debug) msg = "A.c opposite umbilics";
         backside = signbit(bet2a.c());
@@ -448,18 +457,31 @@ namespace GeographicLib {
           // If oblate, bet1 = -90, omg1 = 0, need alp1 = omg2 to follow omg2
           // meridian.
           alp1 = ang::cardinal(oblate ? 2 : 1);
-          fic = TL::fline::fics(lf, bet1, omg1, alp1);
+          if (!comb)
+            fic = TL::fline::fics(lf, bet1, omg1, alp1);
+          else
+            ficx = TL::fline::ficsx(lf, bet1, omg1, alp1);
           ang omg12 = omg2 - omg1;
           if (omg12.s() == 0 && omg12.c() < 0) {
             // adjacent E/W umbilical points
             // Should be able to get ArcPos0 to return this?
-            d = oblate || prolate ?
-              TL::fline::disttx{ -lf.fbet().Max(), lf.fomg().Max(), 0 } :
-              TL::fline::disttx{ -BigValue(), BigValue(), 0 };
+            if (!comb)
+              d = oblate || prolate ?
+                TL::fline::disttx{ -lf.fbet().Max(), lf.fomg().Max(), 0 } :
+                TL::fline::disttx{ -BigValue(), BigValue(), 0 };
+            else
+              dx = oblate ?
+                TL::fline::disttxx{ -lf.fpsi().Max(), lf.ftht().Max(), 0 } :
+                prolate ?
+                TL::fline::disttxx{ lf.fpsi().Max(), -lf.ftht().Max(), 0 } :
+                TL::fline::disttxx{ -BigValue(), BigValue(), 0 };
             if (_debug) msg = "A.c.2 adjacent EW umbilics";
             alp2 = ang::cardinal(prolate ? 1 : 0);
           } else {
-            d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
+            if (!comb)
+              d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
+            else
+              dx = lf.ArcPos0x(ficx, omg12.base(), bet2a, omg2a, alp2, false);
             if (_debug) msg = "A.c.2 bet1/2 = -90";
           }
           if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
@@ -475,14 +497,24 @@ namespace GeographicLib {
           if (0)
             cout << "FIC " << real(bet1) << " " << real(omg1) << " "
                  << real(alp1) << "\n";
-          fic = TL::fline::fics(lf, bet1, omg1, alp1);
+          if (!comb)
+            fic = TL::fline::fics(lf, bet1, omg1, alp1);
+          else
+            ficx = TL::fline::ficsx(lf, bet1, omg1, alp1);
           // If point 1 is [-90, 0] and point 2 is [90, 0]
           if (omg1.s() == 0 && omg2.s() == 0) {
             // adjacent N/S umbilical points
             // Should be able to get ArcPos0 to return this?
-            d = oblate || prolate ?
-              TL::fline::disttx{ lf.fbet().Max(), -lf.fomg().Max(), 0} :
-              TL::fline::disttx{ BigValue(), -BigValue(), 0};
+            if (!comb)
+              d = oblate || prolate ?
+                TL::fline::disttx{ lf.fbet().Max(), -lf.fomg().Max(), 0 } :
+                TL::fline::disttx{ BigValue(), -BigValue(), 0 };
+            else
+              dx = oblate ?
+                TL::fline::disttxx{ lf.fpsi().Max(), -lf.ftht().Max(), 0 } :
+                prolate ?
+                TL::fline::disttxx{ -lf.fpsi().Max(), lf.ftht().Max(), 0 } :
+                TL::fline::disttxx{ BigValue(), -BigValue(), 0 };
             alp2 = ang::cardinal(oblate ? 0 : (prolate ? 2 : 1));
             if (_debug) msg = "A.c.3 adjacent NS umbilics";
             done = true;
@@ -490,14 +522,21 @@ namespace GeographicLib {
             // FIX ME for oblate
             if (omg1.s() == 0)
               omg2a = ang::cardinal(2);
-            else
-              d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+            else {
+              if (!comb)
+                d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+              else
+                dx = lf.ArcPos0x(ficx, ang::cardinal(2), bet2a, omg2a, alp2);
+            }
             // XXX FIX HERE for prolate case -90 -1 90 177
             omg2a -= omg2;
             if (omg2a.s() > 0) {
               ang omg12 = omg2 + omg1;
               // FIX ME for oblate
-              d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
+              if (!comb)
+                d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
+              else
+                dx = lf.ArcPos0x(ficx, omg12.base(), bet2a, omg2a, alp2, false);
               if (_debug)
                 cout << "APX "
                      << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
@@ -514,8 +553,14 @@ namespace GeographicLib {
                 fb = (ang::cardinal(2) - omg2).radians0();
               } else {
                 fa = omg2a.radians0();
-                fic.setquadrant(lf, 0U);
-                (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+                if (!comb) {
+                  fic.setquadrant(lf, 0U);
+                  (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+                } else {
+                  ficx.setquadrant(lf, 0U);
+                  (void) lf.ArcPos0x(ficx, ang::cardinal(2),
+                                     bet2a, omg2a, alp2);
+                }
                 omg2a -= omg2;
                 alpb = -alpa;
                 fb = omg2a.radians0();
@@ -544,10 +589,17 @@ namespace GeographicLib {
         if (_debug)
           cout << "ALP1 " << real(alp1) << " "
                << bet1.c() << " " << omg2.c() << "\n";
-        fic = TL::fline::fics(lf, bet1, omg1, alp1);
-        d = prolate ?
-          lf.ArcPos0(fic, (omg2-omg1).base(), bet2a, omg2a, alp2, false) :
-          lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+        if (!comb) {
+          fic = TL::fline::fics(lf, bet1, omg1, alp1);
+          d = prolate ?
+            lf.ArcPos0(fic, (omg2-omg1).base(), bet2a, omg2a, alp2, false) :
+            lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+        } else {
+          ficx = TL::fline::ficsx(lf, bet1, omg1, alp1);
+          dx = prolate ?
+            lf.ArcPos0x(ficx, (omg2-omg1).base(), bet2a, omg2a, alp2, false) :
+            lf.Hybridx(ficx, bet2, bet2a, omg2a, alp2);
+        }
         if (prolate)
           alp2 += ang::cardinal(1);
         if (_debug) msg = "A.c.4 other meridional";
@@ -562,12 +614,20 @@ namespace GeographicLib {
       alp1 = ang::cardinal(E);
       bet1.reflect(true);
       lf = TL::fline(*this, gamma(bet1, omg1, alp1));
-      fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+      if (!comb) {
+        fic = TL::fline::fics(lf, bet1, omg1, alp1);
+        (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+      } else {
+        ficx = TL::fline::ficsx(lf, bet1, omg1, alp1);
+        (void) lf.ArcPos0x(ficx, ang::cardinal(2), bet2a, omg2a, alp2);
+      }
       omg2a -= omg2;
       if (E * omg2a.s() >= 0) {
         // geodesic follows the equator
-        d = lf.ArcPos0(fic, omg12.flipsign(E), bet2a, omg2a, alp2, false);
+        if (!comb)
+          d = lf.ArcPos0(fic, omg12.flipsign(E), bet2a, omg2a, alp2, false);
+        else
+          dx = lf.ArcPos0x(ficx, omg12.flipsign(E), bet2a, omg2a, alp2, false);
         if (_debug)
           cout << "d val " << E << " "
                << real(omg12.flipsign(E)) << " "
@@ -583,8 +643,13 @@ namespace GeographicLib {
         alpa = -alpb;
         (E > 0 ? fa : fb) = omg2a.radians0();
         alp1.setquadrant(E > 0 ? 3U : 0U);
-        fic.setquadrant(lf, E > 0 ? 3U : 0U);
-        (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+        if (!comb) {
+          fic.setquadrant(lf, E > 0 ? 3U : 0U);
+          (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+        } else {
+          ficx.setquadrant(lf, E > 0 ? 3U : 0U);
+          (void) lf.ArcPos0x(ficx, ang::cardinal(2), bet2a, omg2a, alp2);
+        }
         omg2a -= omg2;
         (E > 0 ? fb : fa) = omg2a.radians0();
         if (_debug) msg = "A.b.2 general bet1/2 = 0 non-equatorial";
@@ -597,11 +662,18 @@ namespace GeographicLib {
       // enough to find alp1.
       if (0)
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
-      fic = TL::fline::fics(lf, bet2, omg2, alp2);
+      if (!comb)
+        fic = TL::fline::fics(lf, bet2, omg2, alp2);
+      else
+        ficx = TL::fline::ficsx(lf, bet2, omg2, alp2);
       bool betp = _k2 > _kp2;   // This could be betb = !prolate;
       if (0) {
-        (void) lf.ArcPos0(fic, (betp ? bet1 - bet2 :  omg1 - omg2).base(),
-                          bet2a, omg2a, alp1, betp);
+        if (!comb)
+          (void) lf.ArcPos0(fic, (betp ? bet1 - bet2 :  omg1 - omg2).base(),
+                            bet2a, omg2a, alp1, betp);
+        else
+          (void) lf.ArcPos0x(ficx, (betp ? bet1 - bet2 :  omg1 - omg2).base(),
+                             bet2a, omg2a, alp1, betp);
         //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
         if (0)
           cout << "APOUT "
@@ -611,6 +683,8 @@ namespace GeographicLib {
         if (oblate) alp1 += omg2;
       } else {
         // cout << "DELTA " << fic.delta/Math::degree() << "\n";
+        real delta = !comb ? fic.delta :
+          (lf.transpolar() ? -1 : 1) * ficx.delta;
         alp1 = oblate ?
           // For oblate
           // delta =
@@ -618,7 +692,7 @@ namespace GeographicLib {
           // Here omg1 = -90 (because of pi/2 shift in ext. vs int. omg)
           // bet1.s() = -1, bet0.c() = 1, alp1.s() > 0, so
           // alp1 = 90 - delta
-          ang::cardinal(1) - ang::radians(fic.delta) :
+          ang::cardinal(1) - ang::radians(delta) :
          (prolate ?
           // For prolate
           // delta =
@@ -626,15 +700,21 @@ namespace GeographicLib {
           // Here bet1 = -90, omg1.s() = -1, alp1.c() > 0, omg0.c() = 1
           // delta = bet1 + atan2(alp1.c(), alp1.s()) = -90 + 90 - alp1
           // alp1 = -delta
-          -ang::radians(fic.delta) :
+          -ang::radians(delta) :
           // For triaxial case at an umbilic point
           // delta = f.deltashift()/2 - log(fabs(alp1.t()));
           // alp1.t() = exp(f.deltashift()/2 - delta)
-          ang(exp(lf.deltashift()/2 - fic.delta), 1));
+          ang(exp(lf.deltashift()/2 - delta), 1));
       }
-      fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      d = lf.ArcPos0(fic, (betp ? bet2 - bet1 : omg2 - omg1).base(),
-                     bet2a, omg2a, alp2, betp);
+      if (!comb) {
+        fic = TL::fline::fics(lf, bet1, omg1, alp1);
+        d = lf.ArcPos0(fic, (betp ? bet2 - bet1 : omg2 - omg1).base(),
+                       bet2a, omg2a, alp2, betp);
+      } else {
+        ficx = TL::fline::ficsx(lf, bet1, omg1, alp1);
+        dx = lf.ArcPos0x(ficx, (betp ? bet2 - bet1 : omg2 - omg1).base(),
+                         bet2a, omg2a, alp2, betp);
+      }
       if (_debug) msg = "B.a umbilic to general";
       done = true;
     } else if (bet1.c() == 0) {
@@ -674,21 +754,31 @@ namespace GeographicLib {
       alpb = alpa;
 
       lf = TL::fline(*this, gamblk(*this, (_umbalt && _kp2 > 0) || _k2 == 0));
-      fic = TL::fline::fics(lf, bet1, omg1, alpb);
+      if (!comb)
+        fic = TL::fline::fics(lf, bet1, omg1, alpb);
+      else
+        ficx = TL::fline::ficsx(lf, bet1, omg1, alpb);
       unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
       if (_debug) msg = "B.d general";
       for (; !done && qb <= 4U; ++qb, ++qa) {
         if (qb) {
           alpb.setquadrant(qb);
-          fic.setquadrant(lf, qb);
+          if (!comb)
+            fic.setquadrant(lf, qb);
+          else
+            ficx.setquadrant(lf, qb);
         }
         if (qb < 4U) {
-          f[qb] = lf.Hybrid0(fic, bet2, omg2);
+          f[qb] = !comb ? lf.Hybrid0(fic, bet2, omg2) :
+            lf.Hybrid0x(ficx, bet2, omg2);
           if (_debug)
             cout << "f[qb] " << qb << " " << f[qb] << "\n";
           if (fabs(f[qb]) < numeric_limits<real>::epsilon()) {
             alp1 = alpb;
-            d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+            if (!comb)
+              d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+            else
+              dx = lf.Hybridx(ficx, bet2, bet2a, omg2a, alp2);
             if (_debug) msg = "B.d accidental umbilic";
             backside = signbit(bet2a.c()); // qb == 1U || qb == 2U;
             done = true;
@@ -731,8 +821,13 @@ namespace GeographicLib {
         cout << "ALP1 " << real(alp1) << "\n";
       alp1.round();
       lf = TL::fline(*this, gamma(bet1, omg1, alp1));
-      fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+      if (!comb) {
+        fic = TL::fline::fics(lf, bet1, omg1, alp1);
+        d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+      } else {
+        ficx = TL::fline::ficsx(lf, bet1, omg1, alp1);
+        dx = lf.Hybridx(ficx, bet2, bet2a, omg2a, alp2);
+      }
       backside = signbit(bet2a.c());
     }
 
@@ -741,13 +836,14 @@ namespace GeographicLib {
 
     TL::gline lg(*this, lf.gm());
     TL::gline::gics gic(lg, fic);
-    s12 = lg.dist(gic, d);
+    TL::gline::gicsx gicx(lg, ficx);
+    s12 = !comb ? lg.dist(gic, d) : lg.distx(gicx, dx);
 
     if (_debug)
-      cerr << "FLIPS " << flip1 << flip2 << flipz << flipy << flipx << flipomg
+      cout << "FLIPS " << flip1 << flip2 << flipz << flipy << flipx << flipomg
            << "\n";
     if (_debug)
-      cerr << "A "
+      cout << "A "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     // Undo switches in reverse order flipz, swap12, flip1
@@ -757,7 +853,7 @@ namespace GeographicLib {
     }
 
     if (_debug)
-    cerr << "B "
+    cout << "B "
          << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
          << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipx) {
@@ -768,7 +864,7 @@ namespace GeographicLib {
     }
 
     if (_debug)
-      cerr << "C "
+      cout << "C "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipy) {
@@ -786,7 +882,7 @@ namespace GeographicLib {
     }
 
     if (_debug)
-      cerr << "D "
+      cout << "D "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flipz) {
@@ -797,7 +893,7 @@ namespace GeographicLib {
     }
 
     if (_debug)
-      cerr << "E "
+      cout << "E "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (swap12) {
@@ -814,39 +910,65 @@ namespace GeographicLib {
     }
 
     if (_debug)
-      cerr << "F "
+      cout << "F "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     if (flip1) Flip(bet1, omg1, alp1);
     if (flip2) Flip(bet2, omg2, alp2);
     alp1.setn(); alp2.setn();
     if (_debug)
-      cerr << "G "
+      cout << "G "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
 
-    fic = TL::fline::fics(lf, bet10, omg10, alp1);
-    gic = TL::gline::gics(lg, fic);
-    gic.s13 = fmax(real(0), s12);
+    if (!comb) {
+      fic = TL::fline::fics(lf, bet10, omg10, alp1);
+      gic = TL::gline::gics(lg, fic);
+      gic.s13 = 0 + fmax(real(0), s12);
+    } else {
+      ficx = TL::fline::ficsx(lf, bet10, omg10, alp1);
+      gicx = TL::gline::gicsx(lg, ficx);
+      gicx.s13 = 0 + fmax(real(0), s12);
+    }
 
     if (_debug)
-      cerr << countn << " " << countb << " "
+      cout << countn << " " << countb << " "
            << lf.gamma() << " "
            << lf.fbet().NCoeffs() << " " << lf.fomg().NCoeffs() << " "
            << lg.gbet().NCoeffs() << " " << lg.gomg().NCoeffs() << " MSG "
            << msg << "\n";
     // clang needs std::move instead of move.
-    return TL(std::move(lf), std::move(fic), std::move(lg), std::move(gic));
+    return !comb ?
+      TL(std::move(lf), std::move(fic), std::move(lg), std::move(gic)) :
+      TL(std::move(lf), std::move(ficx), std::move(lg), std::move(gicx));
   }
 
   Math::real Triaxial::HybridA(Angle bet1, Angle omg1,
                                Angle alp1,
-                               Angle bet2, Angle omg2) const {
+                               Angle bet2a, Angle omg2b) const {
+    bool comb = _combine;
     ang b1{bet1}, o1{omg1}, a1{alp1};
+    // a1 -= ang(1e-8);
     gamblk gam = gamma(b1, o1, a1);
     TriaxialLine::fline l(*this, gam);
-    TriaxialLine::fline::fics ic(l, b1, o1, a1);
-    return l.Hybrid0(ic, bet2, omg2);
+    real domg;
+    if (!comb) {
+      TriaxialLine::fline::fics ic(l, b1, o1, a1);
+      domg = l.Hybrid0(ic, bet2a, omg2b);
+    } else {
+      TriaxialLine::fline::ficsx icx(l, b1, o1, a1);
+      domg = l.Hybrid0x(icx, bet2a, omg2b);
+      // adjustment by pi needed for this case
+      // echo 0 0 0 125 | ./Geod3Solve -i -e 1 3/2 1 2 --debug --combine
+      // First call is with gamma == 0, so check this...
+      //      if (domg < -1) domg += Math::pi();
+    }
+    if (_debug)
+      cout << "HA " << signbit(gam.gamma) << " " << gam.gamma << " "
+           << real(bet1) << " " << real(omg1) << " "
+           << real(alp1) << " " << real(bet2a) << " " << real(omg2b) << " "
+           << domg << "\n";
+    return domg;
   }
 
   // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference
@@ -999,7 +1121,7 @@ namespace GeographicLib {
     kx = !transpolar ? t.k() : t.kp();
     kxp = transpolar ? t.k() : t.kp();
     // gammap = sqrt(kx2 - gammax)
-    real gammap = 
+    real gammap =
       (!transpolar ?
        hypot(kx * hypot(bet.s(), alp.c()*bet.c()),
              kxp * omg.s()*alp.c()) :

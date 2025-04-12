@@ -34,7 +34,7 @@
 //
 // In the meantime, put the patch for commit 68950d8 in
 // /usr/include/boost/odeint.patch and applied it with
-//    patch -p3 -b < odeint.patch 
+//    patch -p3 -b < odeint.patch
 // -> patching file numeric/odeint/algebra/detail/extract_value_type.hpp
 //
 // Removed my temporary fix to

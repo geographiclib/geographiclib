@@ -267,6 +267,12 @@ namespace GeographicLib {
         real betw2, omgw2;
         int ind2;
       };
+      class disttxx {
+        // bundle of data to pass along for distance
+      public:
+        real phiw2, thtw2;
+        int ind2;
+      };
       fline() {}
       fline(const Triaxial&t, bool neg = false);
       fline(const Triaxial& t, Triaxial::gamblk gm);
@@ -281,16 +287,28 @@ namespace GeographicLib {
       real kxp2() const { return _gm.kxp2; }
       real kx() const { return _gm.kx; }
       real kxp() const { return _gm.kxp; }
+      real nu() const { return _gm.nu; }
+      real nup() const { return _gm.nup; }
       real deltashift() const { return _deltashift; }
       bool transpolar() const { return _gm.transpolar; }
       const Triaxial::gamblk& gm() const { return _gm; }
-      real Hybrid0(const fics& ic,
-                   Angle bet2, Angle omg2) const;
+      // Run fline to its first intersection with bet and return omg2 - omg2b
+      real Hybrid0(const fics& fic, Angle bet2, Angle omg2b) const;
+      real Hybrid0x(const ficsx& ficx, Angle bet2, Angle omg2b) const;
+      // Run fline to its first intersection with bet and return resulting
+      // bet2a, omg2a, alp2a (without angle normalization) and distance
+      // calculation object
       disttx Hybrid(const fics& fic, Angle bet2,
                     Angle& bet2a, Angle& omg2a, Angle& alp2a) const;
+      disttxx Hybridx(const ficsx& ficx, Angle bet2,
+                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
+                      bool betp = true) const;
       disttx ArcPos0(const fics& fic, Angle tau12,
                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
                      bool betp = true) const;
+      disttxx ArcPos0x(const ficsx& ficx, Angle tau12,
+                       Angle& bet2a, Angle& omg2a, Angle& alp2a,
+                       bool betp = true) const;
       void ComputeInverse();
       void inversedump(std::ostream& os) const;
     };
@@ -318,7 +336,7 @@ namespace GeographicLib {
       public:
         real sig1, s13;         // starting point
         gicsx() {}
-        gicsx(const gline& g, const fline::fics& fic);
+        gicsx(const gline& g, const fline::ficsx& fic);
       };
       gline() {}
       gline(const Triaxial& t, bool neg = false);
@@ -337,6 +355,7 @@ namespace GeographicLib {
       const Triaxial& t() const { return _t; }
       const Triaxial::gamblk& gm() const { return _gm; }
       real dist(gics ic, fline::disttx d) const;
+      real distx(gicsx icx, fline::disttxx dx) const;
       void ComputeInverse();
       void inversedump(std::ostream& os) const;
     };
@@ -425,6 +444,8 @@ namespace GeographicLib {
     }
     TriaxialLine(fline f, fline::fics fic,
                  gline g, gline::gics gic);
+    TriaxialLine(fline f, fline::ficsx ficx,
+                 gline g, gline::gicsx gicx);
 
   public:
     TriaxialLine(const Triaxial& t) : _t(t), _f(_t), _g(_t) {}
@@ -448,6 +469,9 @@ namespace GeographicLib {
     // bet1 == 0, alp1 in (-90,90), omg2 = 0,
     //                   alp1 = +/-90 omg2 = conj pt
     void Hybrid(Angle bet2,
+                Angle& bet2a, Angle& omg2a, Angle& alp2a,
+                real& s12) const;
+    void Hybridx(Angle bet2,
                 Angle& bet2a, Angle& omg2a, Angle& alp2a,
                 real& s12) const;
     real gamma() const { return _f.gamma(); }

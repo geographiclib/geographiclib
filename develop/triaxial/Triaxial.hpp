@@ -41,8 +41,10 @@ namespace GeographicLib {
       alp.reflect(true, true);
     }
 
+    // Run geodesic from bet1, omg1, alp1, find its first intersection with bet
+    // = bet2a and return omg2a - omg2b
     real HybridA(Angle bet1, Angle omg1, Angle alp1,
-                 Angle bet2, Angle omg2) const;
+                 Angle bet2a, Angle omg2b) const;
     static Angle findroot(const std::function<Math::real(const Angle&)>& f,
                           Angle xa,  Angle xb,
                           Math::real fa, Math::real fb,
