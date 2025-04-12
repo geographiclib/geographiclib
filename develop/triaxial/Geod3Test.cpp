@@ -197,7 +197,7 @@ int main(int argc, const char* const argv[]) {
     int num = 1000;
     int skew = 10;
     int div = 1;
-    bool oblpro = false, merid = false, combine = false;
+    bool oblpro = false, merid = false;
     {
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1;
       for (int m = 1; m < argc; ++m) {
@@ -231,8 +231,6 @@ int main(int argc, const char* const argv[]) {
           oblpro = true;
         else if (arg == "--merid")
           merid = true;
-        else if (arg == "--combine")
-          combine = true;
         else
           return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
       }
@@ -250,7 +248,6 @@ int main(int argc, const char* const argv[]) {
       real alp1, alp2, s12, m12, M12, M21;
       t.oblpro(oblpro);
       t.merid(merid);
-      t.combine(combine);
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
         if (0)

@@ -1,7 +1,7 @@
 #! /bin/sh
 SUF=$1
 while read n l; do
-    ./Geod3Test --combine -e $l < ../test$n.txt > test$n.out$SUF &
+    ./Geod3Test -e $l < ../test$n.txt > test$n.out$SUF &
     sleep 1
 done <<EOF
 set 1 3/2 1 2

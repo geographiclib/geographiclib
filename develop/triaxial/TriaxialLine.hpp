@@ -70,7 +70,7 @@ namespace GeographicLib {
       static real gthtp(real c, real kap, real kapp, real eps, real mu);
       static real gfthtp(real c, real kap, real mu);
       static real gup(real cn, real dn, real kap, real kapp,
-                         real eps, real mu);
+                      real eps, real mu);
       static real gfup(real cn, real kap, real mu);
       // _mu == 0
       static real g0p(real c, real kap, real kapp, real eps);
@@ -78,10 +78,10 @@ namespace GeographicLib {
       static real g0vp(real cn, real kap, real kapp, real eps);
       // _mu < 0
       static real gpsip(real s, real c, real kap, real kapp,
-                           real eps, real mu);
+                        real eps, real mu);
       static real gfpsip(real s, real c, real kap, real mu);
       static real gvp(real cn, real dn, real kap, real kapp,
-                         real eps, real mu);
+                      real eps, real mu);
       static real gfvp(real dn, real kap, real mu);
       // oblate/prolate variants for kap = 0, kapp = 1, mu >= 0
       static real gthtoblp(real tht, real eps, real mu);
@@ -201,40 +201,11 @@ namespace GeographicLib {
     private:
       Triaxial _t;
       Triaxial::gamblk _gm;
-      // Variables swapped so
-      //      bool _transpolar;
-      // real _gammax, _kx2, _kxp2, _kx, _kxp;
       real _deltashift;
-      hfun _fbet, _fomg;
-      hfun _ftht, _fpsi;
+      hfun _fpsi, _ftht;
       bool _invp;
     public:
       class fics {
-        // bundle of data setting the initial conditions for a geodesic
-      public:
-        Angle bet1, omg1, alp1, // starting point (omg displaced by -pi/2)
-          psi1,                 // librating coord as rotating angle psi
-        // Angles about which quantities oscillate
-        // circumpolar:
-        //   omg0 not used, bet0 = cardinal(even), alp0 = cardinal(odd)
-        // transpolar:
-        //   bet0 not used, omg0 = cardinal(even), alp0 = cardinal(even)
-        // umbilical
-        //   bet0, omg0 = cardinal(even) = middle of starting segment
-        //   !umbalt: alp0 = cardinal(odd)
-        //   umbalt: alp0 = cardinal(even)
-          bet0, omg0, alp0;
-        // Angle versions of u0, v0, delta, defer for now
-        // Angle u0a, v0a, deltaa;
-        real u0, v0, delta;     // starting point geodesic
-        int N, E;               // Northgoing / eastgoing
-        fics() {}
-        fics(const fline& f,
-             Angle bet1, Angle omg1, Angle alp1);
-
-        void setquadrant(const fline& f, unsigned q);
-      };
-      class ficsx {
         // bundle of data setting the initial conditions for a geodesic
       public:
         //        bool transpolar;
@@ -254,20 +225,13 @@ namespace GeographicLib {
         // Angle versions of u0, v0, delta, defer for now
         // Angle u0a, v0a, deltaa;
         real u0, v0, delta;     // starting point geodesic
-        int N, E;               // Northgoing / eastgoing
-        ficsx() {}
-        ficsx(const fline& f,
-              Angle bet1, Angle omg1, Angle alp1);
-
+        int Nx, Ex;             // Northgoing / eastgoing relative to tht
+        fics() {}
+        fics(const fline& f,
+             Angle bet1, Angle omg1, Angle alp1);
         void setquadrant(const fline& f, unsigned q);
       };
       class disttx {
-        // bundle of data to pass along for distance
-      public:
-        real betw2, omgw2;
-        int ind2;
-      };
-      class disttxx {
         // bundle of data to pass along for distance
       public:
         real phiw2, thtw2;
@@ -276,10 +240,14 @@ namespace GeographicLib {
       fline() {}
       fline(const Triaxial&t, bool neg = false);
       fline(const Triaxial& t, Triaxial::gamblk gm);
-      const hfun& fbet() const { return _fbet; }
-      const hfun& fomg() const { return _fomg; }
       const hfun& fpsi() const { return _fpsi; }
       const hfun& ftht() const { return _ftht; }
+      const hfun& fbet() const {
+        return !transpolar() ? fpsi() : ftht();
+      }
+      const hfun& fomg() const {
+        return transpolar() ? fpsi() : ftht();
+      }
       const Triaxial& t() const { return _t; }
       real gamma() const { return _gm.gamma; }
       real gammax() const { return _gm.gammax; }
@@ -294,21 +262,15 @@ namespace GeographicLib {
       const Triaxial::gamblk& gm() const { return _gm; }
       // Run fline to its first intersection with bet and return omg2 - omg2b
       real Hybrid0(const fics& fic, Angle bet2, Angle omg2b) const;
-      real Hybrid0x(const ficsx& ficx, Angle bet2, Angle omg2b) const;
       // Run fline to its first intersection with bet and return resulting
       // bet2a, omg2a, alp2a (without angle normalization) and distance
       // calculation object
       disttx Hybrid(const fics& fic, Angle bet2,
-                    Angle& bet2a, Angle& omg2a, Angle& alp2a) const;
-      disttxx Hybridx(const ficsx& ficx, Angle bet2,
-                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
-                      bool betp = true) const;
+                    Angle& bet2a, Angle& omg2a, Angle& alp2a,
+                    bool betp = true) const;
       disttx ArcPos0(const fics& fic, Angle tau12,
                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
                      bool betp = true) const;
-      disttxx ArcPos0x(const ficsx& ficx, Angle tau12,
-                       Angle& bet2a, Angle& omg2a, Angle& alp2a,
-                       bool betp = true) const;
       void ComputeInverse();
       void inversedump(std::ostream& os) const;
     };
@@ -317,10 +279,7 @@ namespace GeographicLib {
     private:
       Triaxial _t;
       Triaxial::gamblk _gm;
-      // bool _transpolar;
-      // real _gammax, _kx2, _kxp2, _kx, _kxp;
-      hfun _gbet, _gomg;
-      hfun _gtht, _gpsi;
+      hfun _gpsi, _gtht;
       bool _invp;
     public:
       real s0;
@@ -330,13 +289,6 @@ namespace GeographicLib {
         real sig1, s13;         // starting point
         gics() {}
         gics(const gline& g, const fline::fics& fic);
-      };
-      class gicsx {
-        // bundle of data setting the initial conditions for a distance calc
-      public:
-        real sig1, s13;         // starting point
-        gicsx() {}
-        gicsx(const gline& g, const fline::ficsx& fic);
       };
       gline() {}
       gline(const Triaxial& t, bool neg = false);
@@ -348,14 +300,17 @@ namespace GeographicLib {
       real kx() const { return _gm.kx; }
       real kxp() const { return _gm.kxp; }
       bool transpolar() const { return _gm.transpolar; }
-      const hfun& gbet() const { return _gbet; }
-      const hfun& gomg() const { return _gomg; }
       const hfun& gpsi() const { return _gpsi; }
       const hfun& gtht() const { return _gtht; }
+      const hfun& gbet() const {
+        return !transpolar() ? gpsi() : gtht();
+      }
+      const hfun& gomg() const {
+        return transpolar() ? gpsi() : gtht();
+      }
       const Triaxial& t() const { return _t; }
       const Triaxial::gamblk& gm() const { return _gm; }
       real dist(gics ic, fline::disttx d) const;
-      real distx(gicsx icx, fline::disttxx dx) const;
       void ComputeInverse();
       void inversedump(std::ostream& os) const;
     };
@@ -363,10 +318,8 @@ namespace GeographicLib {
     Triaxial _t;
     fline _f;
     fline::fics _fic;
-    fline::ficsx _ficx;
     gline _g;
     gline::gics _gic;
-    gline::gicsx _gicx;
     static void solve2(real f0, real g0,
                        const hfun& fx, const hfun& fy,
                        const hfun& gx, const hfun& gy,
@@ -444,8 +397,6 @@ namespace GeographicLib {
     }
     TriaxialLine(fline f, fline::fics fic,
                  gline g, gline::gics gic);
-    TriaxialLine(fline f, fline::ficsx ficx,
-                 gline g, gline::gicsx gicx);
 
   public:
     TriaxialLine(const Triaxial& t) : _t(t), _f(_t), _g(_t) {}
@@ -457,11 +408,6 @@ namespace GeographicLib {
     void Position(real s12, real& bet2, real& omg2, real& alp2,
                   bool unroll = true,
                   int* countn = nullptr, int* countb = nullptr) const;
-    void Positionx(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
-                   int* countn = nullptr, int* countb = nullptr) const;
-    void Positionx(real s12, real& bet2, real& omg2, real& alp2,
-                   bool unroll = true,
-                   int* countn = nullptr, int* countb = nullptr) const;
     // Find first crossing of bet = bet2.  NaN returned if
     // no crossing.  Assume bet1 in [-90,0] (or maybe (-90,0]) and bet2 in
     // [bet2, -bet2].   Special cases, bet2 = bet1...
@@ -469,9 +415,6 @@ namespace GeographicLib {
     // bet1 == 0, alp1 in (-90,90), omg2 = 0,
     //                   alp1 = +/-90 omg2 = conj pt
     void Hybrid(Angle bet2,
-                Angle& bet2a, Angle& omg2a, Angle& alp2a,
-                real& s12) const;
-    void Hybridx(Angle bet2,
                 Angle& bet2a, Angle& omg2a, Angle& alp2a,
                 real& s12) const;
     real gamma() const { return _f.gamma(); }

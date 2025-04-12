@@ -55,7 +55,6 @@ namespace GeographicLib {
     bool _umbalt,               // how coordinates wrap with umbilical lines
       _oblpro,                  // include treatment of oblate/prolate cases
       _merid,                   // triaxial treatment of biaxial meridians
-      _combine,                 // combine transpolar and circumpolar
       _debug;                   // print out diagnostics
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
@@ -95,8 +94,6 @@ namespace GeographicLib {
     void oblpro(bool oblpro) { _oblpro = oblpro; }
     bool merid() const { return _merid; }
     void merid(bool merid) { _merid = merid; }
-    bool combine() const { return _combine; }
-    void combine(bool combine) { _combine = combine; }
     bool debug() const { return _debug; }
     void debug(bool debug) { _debug = debug; }
     real ellipthresh() const { return _ellipthresh; }
