@@ -50,25 +50,31 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
 #endif
   typedef Math::real real;
   typedef Angle ang;
-  ang bet1x(bet1), omg1x(omg1),
-    bet2x(bet2), omg2x(omg2);
+  bool odep = false;
+  ang bet1x(bet1), omg1x(omg1), bet2x(bet2), omg2x(omg2);
   real s12;
   ang alp1, alp2;
   TriaxialLine l =
     t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1, alp2, s12);
-  ang bet1a, omg1a, bet2a, omg2a;
   Triaxial::vec3 r2, v2;
-  real m12, M12, M21;
-  l.pos1(bet1a, omg1a, alp1);
-  TriaxialODE direct(t, bet1, omg1, real(alp1));
-  direct.Position(s12, r2, v2, m12, M12, M21);
-  t.cart2toellip(bet2x, omg2x, v2, alp2);
+  real m12 = 0, M12 = 1, M21 = 1;
+  if (odep) {
+    // ang bet1a, omg1a;
+    // l.pos1(bet1a, omg1a, alp1);
+    TriaxialODE direct(t, bet1, omg1, real(alp1));
+    direct.Position(s12, r2, v2, m12, M12, M21);
+    // t.cart2toellip(bet2x, omg2x, v2, alp2);
+  }
   cout << bet1 << " " << omg1 << " "
        << nicestr(real(alp1), prec, true) << " "
        << bet2 << " " << omg2 << " "
-       << nicestr(real(alp2), prec, true) << " "
-       << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " "
-       << nicestr(M12, prec+2) << " " << nicestr(M21, prec+2) << endl;
+       << nicestr(real(alp2), prec, true);
+  if (odep)
+    cout << " "
+         << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " "
+         << nicestr(M12, prec+2) << " " << nicestr(M21, prec+2) << endl;
+  else
+    cout << endl;
 }
 
 Math::real vecdiff(const Triaxial::vec3& a, const Triaxial::vec3& b) {
@@ -234,13 +240,14 @@ int main(int argc, const char* const argv[]) {
         else
           return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
       }
-      // testset.txt -e 1 3/2 1/3 2/3
-      // testobl.txt -e 1 3/4 1 0
-      // testpro.txt -e 1 3 0 1
-      // testspha.txt -e 1 0 1 0
-      // testsphb.txt -e 1 0 2/3 1/3
-      // testsphc.txt -e 1 0 1/3 2/3
-      // testsphd.txt -e 1 0 0 1
+      // testobl.txt  -e 1 3/4 3 0
+      // testsetb.txt -e 1 1   2 1
+      // testset.txt  -e 1 3/2 1 2
+      // testpro.txt  -e 1 3   0 3
+      // testspha.txt -e 1 0   3 0
+      // testsphb.txt -e 1 0   2 1
+      // testsphc.txt -e 1 0   1 2
+      // testsphd.txt -e 1 0   0 3
       Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);
