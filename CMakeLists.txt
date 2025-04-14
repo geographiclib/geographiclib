@@ -298,6 +298,12 @@ if (CONVERT_WARNINGS_TO_ERRORS)
   endif ()
 endif ()
 
+if (NOT MSVC)
+  # Don't treat creation of NaNs as exceptions.
+  # N.B., flags -fno-rounding-math -fno-signaling-nans included by default
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-trapping-math -fno-math-errno")
+endif ()
+
 # Tell Intel compiler to do arithmetic accurately.  This is needed to
 # stop the compiler from ignoring parentheses in expressions like
 # (a + b) + c and from simplifying 0.0 + x to x (which is wrong if
@@ -327,7 +333,9 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.70 CONFIG)
+    # The earliest Boost version to include
+    # https://github.com/boostorg/multiprecision/pull/389
+    find_package (Boost 1.79 CONFIG)
     if (Boost_FOUND)
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()

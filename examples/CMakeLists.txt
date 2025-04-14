@@ -110,12 +110,12 @@ option (USE_BOOST_FOR_EXAMPLES
   "Look for Boost library when compiling examples" ON)
 
 if (USE_BOOST_FOR_EXAMPLES)
-  # quad precision numbers appeared in Boost 1.54.  Various
-  # workarounds stopped being needed with Boost 1.64.
-  find_package (Boost 1.70 CONFIG COMPONENTS serialization)
+  # The earliest Boost version to include
+  # https://github.com/boostorg/multiprecision/pull/389
+  find_package (Boost 1.79 CONFIG COMPONENTS serialization)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.70 CONFIG)
+    find_package (Boost 1.79 CONFIG)
   endif ()
 endif ()
 

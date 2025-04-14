@@ -7756,19 +7756,16 @@ git repository for GeographicLib</a>.
      equally close intersectons.
 \endif
 
- - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.6</a>
+ - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
    (released 2025-mm-dd)
    - Add Math::clamp.
    - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
      fixed precision.
-   - With GEOGRAPHICLIB_PRECISION > 2, Utility::readarray interpret
-     doubles in external file as approximations to an exact decimal
-     number.  See the documentaion of this routine for details.
    - WARNING: C++17 compliant compiler will be required for the next
      release.  Support for builds with Visual Studio 14 (2015) will then
      stop.
 
- - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
+ - <a href="https://geographiclib.sourceforge.io/C++/2.5">Version 2.5</a>
    (released 2024-12-28)
    - New magnetic models provided
      - World Magnetic Model 2025, wmm2025; this covers the period
@@ -7784,8 +7781,9 @@ git repository for GeographicLib</a>.
        for the period 1900--2030.
    - Update CMake's cmake_minimum_required to 3.17.0 (to facilitate
      integration with Qt projects).
-   - For GEOGRAPHICLIB_PRECISION > 2, readarray treats doubles as
-     approximations to exact decimal constants.
+   - With GEOGRAPHICLIB_PRECISION > 2, Utility::readarray interprets
+     doubles in external file as approximations to an exact decimal
+     number.  See the documentaion of this routine for details.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.4</a>
    (released 2024-07-14)
