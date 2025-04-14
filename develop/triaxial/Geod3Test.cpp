@@ -68,10 +68,10 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
   cout << bet1 << " " << omg1 << " "
        << nicestr(real(alp1), prec, true) << " "
        << bet2 << " " << omg2 << " "
-       << nicestr(real(alp2), prec, true);
+       << nicestr(real(alp2), prec, true) << " "
+       << nicestr(s12, prec+2);
   if (odep)
-    cout << " "
-         << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " "
+    cout << " " << nicestr(m12, prec+2) << " "
          << nicestr(M12, prec+2) << " " << nicestr(M21, prec+2) << endl;
   else
     cout << endl;
