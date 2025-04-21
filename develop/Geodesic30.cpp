@@ -38,11 +38,6 @@ namespace GeographicLib {
 
   using namespace std;
 
-  // Underflow guard.  We require
-  //   tiny_ * epsilon() > 0
-  //   tiny_ + epsilon() == epsilon()
-  template<typename real>
-  const real Geodesic30<real>::tiny_ = sqrt(numeric_limits<real>::min());
   template<typename real>
   const real Geodesic30<real>::tol0_ = numeric_limits<real>::epsilon();
   // Increase multiplier in defn of tol1_ from 100 to 200 to fix inverse case
@@ -57,7 +52,11 @@ namespace GeographicLib {
 
   template<typename real>
   Geodesic30<real>::Geodesic30(real a, real f)
-    : _a(a)
+    // Underflow guard.  We require
+    //   tiny_ * epsilon() > 0
+    //   tiny_ + epsilon() == epsilon()
+    : tiny_(sqrt(numeric_limits<real>::min()))
+    , _a(a)
     , _f(f <= 1 ? f : 1/f)
     , _f1(1 - _f)
     , _e2(_f * (2 - _f))

@@ -108,17 +108,18 @@ int main(int argc, char* argv[]) {
         GravityCircle c(g.Circle(lat, h, GravityModel::GEOID_HEIGHT));
         for (int ilon = 0; ilon < nlon; ++ilon) { // Loop over longitudes
           real lon = (2*ilon < nlon ? ilon : ilon - nlon)  / real(ndeg),
-            h = c.GeoidHeight(lon);
+            g = c.GeoidHeight(lon);
           switch (mode) {
           case PGM:
-            Ns[ilat - ilat0][ilon] =
-              std::max(0, std::min((1<<16)-1, int((h - offset)/scale + half)));
+            Ns[ilat - ilat0][ilon] = (unsigned short)
+              (std::max(0, std::min((1<<16)-1,
+                                    int((g - offset)/scale + half))));
             break;
           case PGM4:
-            Nu[ilat - ilat0][ilon] = unsigned((h - offset)/scale + half);
+            Nu[ilat - ilat0][ilon] = unsigned((g - offset)/scale + half);
             break;
           case GTX:
-            Nf[ilat - ilat0][ilon] = float(h);
+            Nf[ilat - ilat0][ilon] = float(g);
             break;
           }
         } // longitude loop

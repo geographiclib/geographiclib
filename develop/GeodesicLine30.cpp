@@ -36,7 +36,8 @@ namespace GeographicLib {
   GeodesicLine30<real>::GeodesicLine30(const Geodesic30<real>& g,
                                        real lat1, real lon1, real azi1,
                                        unsigned caps)
-    : _a(g._a)
+    : tiny_(g.tiny_)
+    , _a(g._a)
     , _f(g._f)
     , _b(g._b)
     , _c2(g._c2)
@@ -61,7 +62,7 @@ namespace GeographicLib {
     phi = lat1 * Math::degree<real>();
     // Ensure cbet1 = +epsilon at poles
     sbet1 = _f1 * sin(phi);
-    cbet1 = abs(lat1) == 90 ? Geodesic30<real>::tiny_ : cos(phi);
+    cbet1 = abs(lat1) == 90 ? tiny_ : cos(phi);
     Geodesic30<real>::SinCosNorm(sbet1, cbet1);
 
     // Evaluate alp0 from sin(alp1) * cos(bet1) = sin(alp0),
@@ -176,7 +177,7 @@ namespace GeographicLib {
     cbet2 = hypot(_salp0, _calp0 * csig2);
     if (cbet2 == 0)
       // I.e., salp0 = 0, csig2 = 0.  Break the degeneracy in this case
-      cbet2 = csig2 = Geodesic30<real>::tiny_;
+      cbet2 = csig2 = tiny_;
     // tan(omg2) = sin(alp0) * tan(sig2)
     somg2 = _salp0 * ssig2; comg2 = csig2;  // No need to normalize
     // tan(alp0) = cos(sig2)*tan(alp2)
@@ -240,7 +241,7 @@ namespace GeographicLib {
         // being attached to 0 correctly.  The following ensures the correct
         // behavior.
         if (salp12 == 0 && calp12 < 0) {
-          salp12 = Geodesic30<real>::tiny_ * _calp1;
+          salp12 = tiny_ * _calp1;
           calp12 = -1;
         }
       } else {

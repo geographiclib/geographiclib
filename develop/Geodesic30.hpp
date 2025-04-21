@@ -132,7 +132,7 @@ namespace GeographicLib {
     static const int nC4x_ = (nC4_ * (nC4_ + 1)) / 2;
     static const unsigned maxit_ = 50;
 
-    static const real tiny_;
+    real tiny_;
     static const real tol0_;
     static const real tol1_;
     static const real tol2_;
