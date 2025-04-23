@@ -89,7 +89,7 @@ namespace GeographicLib {
     real kp() const { return _kp; }
     const vec3& axes() const { return _axes; }
     bool umbalt() const { return _umbalt; }
-    void umbalt(bool numbalt) { _umbalt = numbalt; }
+    void umbalt(bool numbalt) { if (_k2 > 0 && _kp2 > 0) _umbalt = numbalt; }
     bool oblpro() const { return _oblpro; }
     void oblpro(bool oblpro) { _oblpro = oblpro; }
     bool merid() const { return _merid; }

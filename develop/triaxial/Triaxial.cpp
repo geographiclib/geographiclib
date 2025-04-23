@@ -49,6 +49,7 @@ namespace GeographicLib {
     if (! (isfinite(_a) && isfinite(_b) && isfinite(_c) &&
            _a >= _b && _b >= _c && _c >= 0 && _b > 0) )
       throw GeographicErr("Bad semiaxes for triaxial ellipsoid");
+    if (_k2 == 0) _umbalt = true;
   }
 
   Triaxial::Triaxial(Math::real b, Math::real e2,
@@ -74,6 +75,7 @@ namespace GeographicLib {
     if (! (isfinite(_a) && isfinite(_b) && isfinite(_c) &&
            _a >= _b && _b >= _c && _c >= 0 && _b > 0) )
       throw GeographicErr("Bad semiaxes for triaxial ellipsoid");
+    if (_k2 == 0) _umbalt = true;
   }
 
   void Triaxial::Norm(vec3& r) const {
@@ -453,9 +455,9 @@ namespace GeographicLib {
             // adjacent E/W umbilical points
             // Should be able to get ArcPos0 to return this?
             d = oblate ?
-              TL::fline::disttx{ -lf.fpsi().Max(), lf.ftht().Max(), 0 } :
+              TL::fline::disttx{ -Math::pi()/2, -Math::pi()/2, 0 } :
               prolate ?
-              TL::fline::disttx{ lf.fpsi().Max(), -lf.ftht().Max(), 0 } :
+              TL::fline::disttx{ Math::pi()/2, -Math::pi()/2, 0 } :
               TL::fline::disttx{ -BigValue(), BigValue(), 0 };
             if (_debug) msg = "A.c.2 adjacent EW umbilics";
             alp2 = ang::cardinal(prolate ? 1 : 0);
@@ -482,9 +484,9 @@ namespace GeographicLib {
             // adjacent N/S umbilical points
             // Should be able to get ArcPos0 to return this?
             d = oblate ?
-              TL::fline::disttx{ lf.fpsi().Max(), -lf.ftht().Max(), 0 } :
+              TL::fline::disttx{ Math::pi()/2, -Math::pi()/2, 0 } :
               prolate ?
-              TL::fline::disttx{ -lf.fpsi().Max(), lf.ftht().Max(), 0 } :
+              TL::fline::disttx{ -Math::pi()/2, Math::pi()/2, 0 } :
               TL::fline::disttx{ BigValue(), -BigValue(), 0 };
             alp2 = ang::cardinal(oblate ? 0 : (prolate ? 2 : 1));
             if (_debug) msg = "A.c.3 adjacent NS umbilics";

@@ -38,14 +38,14 @@ namespace GeographicLib {
       // w = a generic version of u or v
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkap, _sqrtkapp;
-      bool _distp, _tx, _oblpro, _merid;
+      bool _distp, _tx, _oblpro;
       EllipticFunction _ell;
       TrigfunExt _fun;
       // real _tol;
       Trigfun _dfinv;
       int _countn, _countb;
       real _max;
-      bool _invp, _biaxr, _biaxl, _umb;
+      bool _umb, _meridr, _meridl, _biaxr, _biaxl, _invp;
       // The f functions
       // mu > 0
       static real fthtp(real c, real kap, real kapp, real eps, real mu);

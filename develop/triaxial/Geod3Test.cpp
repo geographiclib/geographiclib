@@ -212,8 +212,8 @@ int main(int argc, const char* const argv[]) {
           if (m + 3 >= argc) return usage(1, true);
           try {
             a = Utility::val<real>(string(argv[m + 1]));
-            b = Utility::fract<real>(string(argv[m + 2]));
-            c = Utility::fract<real>(string(argv[m + 2]));
+            b = Utility::val<real>(string(argv[m + 2]));
+            c = Utility::val<real>(string(argv[m + 2]));
           }
           catch (const exception& e) {
             cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -248,6 +248,8 @@ int main(int argc, const char* const argv[]) {
       // testsphb.txt -e 1 0   2 1
       // testsphc.txt -e 1 0   1 2
       // testsphd.txt -e 1 0   0 3
+      // testhu.txt   -e 1 7577279780/1130005142289 1942065235 6378137
+      // equiv to     -t 6378172/6378102 1 6356752/6378102
       Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);

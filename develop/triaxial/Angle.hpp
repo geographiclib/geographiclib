@@ -140,7 +140,7 @@ namespace GeographicLib {
   }
 
   inline Angle::operator Math::real() const {
-    real d = Math::atan2d(_s, _c);
+    real d = degrees0();
     // Preserve sign of +/-0
     return _n == 0 ? d : d + Math::td * _n;
   }

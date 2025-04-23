@@ -69,9 +69,10 @@ namespace GeographicLib {
                               Angle& bet2a, Angle& omg2a, Angle& alp2a,
                               int* countn, int* countb) const {
     // Compute points at distance s12
+    // cout << "XX " << _fic.delta << " " << _gic.sig1 << "\n";
     real sig2 = _gic.sig1 + s12/_t._b;
     Angle &phi2a = bet2a, &tht2a = omg2a;
-    if (_f.gammax() > 0 || _f.kxp2() == 0) {
+    if (_f.gammax() > 0 || (!_t._merid && _f.kxp2() == 0)) {
       real u2, v2;
       if (_f.kxp2() == 0 && (_t._oblpro || _f.gammax() == 0)) {
         // If oblate, treat via biaxial machinery for
@@ -82,6 +83,9 @@ namespace GeographicLib {
         v2 = gpsi().inv(sig2);
         // ftht().inv(x) is just x, but keep it general
         u2 = ftht().inv(fpsi()(v2) - _fic.delta);
+        if (_t.debug())
+          cout << "XX " << v2/Math::degree() << " " << u2/Math::degree() << " "
+               << _fic.delta/Math::degree() << "\n";
       } else {
         // The general triaxial machinery.  If !_t._oblpro, this is used for
         // non-meridional geodesics on an oblate ellipsoid.
@@ -103,28 +107,59 @@ namespace GeographicLib {
         .rebase(_fic.alp0);
     } else if (_f.gammax() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
-      if (sig2n.first - _g.s0 >= -5 * numeric_limits<real>::epsilon()) {
-        sig2n.first = -_g.s0;
-        ++sig2n.second;
+      real u2, v2;
+      if (_f.kxp2() == 0) {
+        // gtht()(x) == 0, so the g equation becomes gpsi()(v2) = sig2
+        v2 = gpsi().inv(sig2n.first);
+        phi2a = ang::radians(v2);
+        int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
+        int Ny = _fic.Nx * parity;
+        // cout << "ZZ " << sig2 << " " << sig2n.first << " " << sig2n.second << " " << Ny << "\n";
+        phi2a = phi2a.reflect(signbit(_fic.phi0.c() * Ny),
+                              signbit(_fic.phi0.c())).rebase(_fic.phi0);
+        // ftht().inv(x) is just x, but keep it general
+        // u2 = ftht().inv(fpsi()(v2) - _fic.delta);
+        tht2a = ang::radians(_fic.delta) +
+          ang::cardinal(2 * _fic.Ex * sig2n.second);
+        // cout << "YY " << sig2 << " "
+        // << sig2n.first << " " << sig2n.second << "\n";
+        alp2a = ang(_fic.Ex * real(0), _fic.Nx * parity, 0, true).
+          rebase(_fic.alp0);
+        /*
+        ang psi2 = ang::radians(fpsi().rev(v2));
+        // Already normalized
+        phi2a = ang(_f.gm().nup * psi2.s(),
+                    _fic.phi0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
+                    0, true).rebase(_fic.phi0);
+        alp2a = ang(_fic.Ex * hypot(_f.kx() * _f.gm().nu, _f.kxp() * tht2a.c()),
+                    _fic.phi0.c() * _f.kx() * _f.gm().nup * psi2.c())
+          .rebase(_fic.alp0);
+        cerr << "FOO " << sig2 << " " << _g.s0 << "\n";
+        cerr << "FOO " << sig2n.first << " " << sig2n.second << "\n";
+        */
+      } else {
+        if (sig2n.first - _g.s0 >= -5 * numeric_limits<real>::epsilon()) {
+          sig2n.first = -_g.s0;
+          ++sig2n.second;
+        }
+        real deltax = clamp(_fic.delta + sig2n.second * _f.deltashift(), 1);
+        solve2u(deltax, sig2n.first, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
+                countn, countb);
+        // phi2 = fpsi().rev(u2); tht2 = ftht().rev(v2);
+        phi2a = anglam(u2, _f.kxp());
+        tht2a = anglam(v2, _f.kx());
+        int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
+        // if t._kp2 == 0 then meridional oblate
+        int Ny = _fic.Nx * parity;
+        tht2a += ang::cardinal(2 * sig2n.second);
+        tht2a = tht2a.flipsign(_fic.Ex) + _fic.tht0;
+        phi2a = phi2a.reflect(signbit(_fic.phi0.c() * Ny),
+                              signbit(_fic.phi0.c())).rebase(_fic.phi0);
+        // replace cos(phi)/cos(tht) by sech(u)/sech(v)
+        alp2a = ang(_fic.Ex * _f.kxp() / mcosh(v2, _f.kx()),
+                    _f.kx() * Ny / mcosh(u2, _f.kxp())).
+          rebase(_fic.alp0);
       }
-      real u2, v2,
-        deltax = clamp(_fic.delta + sig2n.second * _f.deltashift(), 1);
-      solve2u(deltax, sig2n.first, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
-              countn, countb);
-      // phi2 = fpsi().rev(u2); tht2 = ftht().rev(v2);
-      phi2a = anglam(u2, _f.kxp());
-      tht2a = anglam(v2, _f.kx());
-      int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
-      // if t._kp2 == 0 then meridional oblate
-      int Ny = _fic.Nx * parity;
-      tht2a += ang::cardinal(2 * sig2n.second);
-      tht2a = tht2a.flipsign(_fic.Ex) + _fic.tht0;
-      phi2a = phi2a.reflect((_fic.phi0.c() * Ny) < 0, _fic.phi0.c() < 0)
-        .rebase(_fic.phi0);
-      // replace cos(phi)/cos(tht) by sech(u)/sech(v)
-      alp2a = ang(_fic.Ex * _f.kxp() / mcosh(v2, _f.kx()),
-                  _f.kx() * Ny / mcosh(u2, _f.kxp())).
-        rebase(_fic.alp0);
     } else {
       // gamma = NaN
     }
@@ -158,9 +193,15 @@ namespace GeographicLib {
                             real& x, real& y,
                             int* countn, int* countb) {
     // Return x and y, s.t.
-    // fx(x) - fy(y) = f0
-    // gx(x) + gy(y) = g0
-    // We assume that fy.inv() is available
+    //   fx(x) - fy(y) = f0
+    //   gx(x) + gy(y) = g0
+    //
+    // We use x as the control variable and assume that fy.inv() is available
+    // Given a guess for x, compute y = fy.inv(fx(x)-f0) and solve the 1d
+    // problem:
+    //
+    //   gx(x) + gy(fy.inv(fx(x)-f0)) - g0 = 0
+    //
     // fx(x) = fxs*x +/- fxm,
     // fy(y) = fys*y +/- fym,
     // gx(x) = gxs*x +/- gxm,
@@ -420,8 +461,9 @@ namespace GeographicLib {
     , _invp(false)
   {
     // Only needed for umbilical lines
-    _deltashift = _t._k2 > 0 && _t._kp2 > 0 && _gm.gamma == 0 ?
-      2 * (_fpsi.Max() - _ftht.Max()) : Math::NaN();
+    _deltashift = _gm.gamma == 0 ?
+      (_t.k2() > 0 && _t.kp2() > 0 ? 2 * (_fpsi.Max() - _ftht.Max()) : 0) :
+      Math::NaN();
   }
 
   void TriaxialLine::fline::ComputeInverse() {
@@ -480,7 +522,7 @@ namespace GeographicLib {
     disttx ret{Math::NaN(), Math::NaN(), 0};
     bool psip = transpolar() ? !betp : betp;
     Angle &phi2a = bet2a, &tht2a = omg2a;
-    if (gammax() > 0 || kxp2() == 0) { // *OK*
+    if (gammax() > 0 || (!_t._merid && kxp2() == 0)) { // *OK*
       ang psi2;
       real u2, v2, u2x = 0;
       if (psip) {
@@ -632,7 +674,7 @@ namespace GeographicLib {
       alp1 = ang(alp1.s(), - Math::sq(eps), alp1.n(), true);
     Ex = signbit(alp1.s()) ? -1 : 1;
     Nx = signbit(alp1.c()) ? -1 : 1;
-    if (f.gammax() > 0 || f.kxp2() == 0) {
+    if (f.gammax() > 0 || (!t._merid && f.kxp2() == 0)) {
       phi0 = phi1.nearest(2U);
       alp0 = alp1.nearest(1U);
       psi1 = ang(f.kx() * phi1.s(),
@@ -655,17 +697,39 @@ namespace GeographicLib {
     } else if (f.gammax() == 0) {
       // alp0 = alp1.nearest(signbit(f.gamma()) ? 2U : 1U);
       alp0 = alp1.nearest(1U);
-      // N.B. factor of k*kp omitted
-      // bet0, omg0 are the middle of the initial umbilical segment
-      if (fabs(phi1.c()) < 8*eps && fabs(tht1.c()) < 8*eps) {
-        phi0 = phi1.nearest(1U) + ang::cardinal(Nx);
-        tht0 = tht1.nearest(1U) + ang::cardinal(Ex);
-        delta = f.deltashift()/2 - log(fabs(alp1.t()));
+      if (f.kxp2() == 0) {
+        // meridonal geodesic on biaxial ellipsoid
+        // N.B. factor of sqrt(f.gammax()) omitted
+        // Implicitly assume phi1 in [-90, 90] for now
+        phi0 = phi1.nearest(2U); // phi0 = 0
+        tht0 = tht1;
+        if (phi1.c() == 0) {
+          tht0 += alp1.flipsign(signbit(phi1.s()) ? 1 : -1);
+          if (!signbit(phi1.s()))
+            tht0.reflect(true, true);
+          Nx = signbit(phi1.s()) ? 1 : -1;
+        }
+        v0 = f.fpsi().fwd((phi1-phi0).radians());
+        u0 = 0;
+        delta = f.ftht()(tht0.radians());
+        if (0)
+          cout << "AA " << real(tht1) << " " << real(tht0) << " "
+               << real(alp1) << " " << signbit(phi1.s()) << " "
+               << real(alp1.flipsign(signbit(phi1.s()) ? 1 : -1)) << " "
+               << delta/Math::degree() << " " << Ex << " " << Nx << "\n";
       } else {
-        phi0 = phi1.nearest(2U);
-        tht0 = tht1.nearest(2U);
-        delta = Nx * f.fpsi()(lamang(phi1 - phi0, t._kp)) -
-          Ex * f.ftht()(lamang(tht1 - tht0, t._k));
+        // N.B. factor of k*kp omitted
+        // phi0, tht0 are the middle of the initial umbilical segment
+        if (fabs(phi1.c()) < 8*eps && fabs(tht1.c()) < 8*eps) {
+          phi0 = phi1.nearest(1U) + ang::cardinal(Nx);
+          tht0 = tht1.nearest(1U) + ang::cardinal(Ex);
+          delta = f.deltashift()/2 - log(fabs(alp1.t()));
+        } else {
+          phi0 = phi1.nearest(2U);
+          tht0 = tht1.nearest(2U);
+          delta = Nx * f.fpsi()(lamang(phi1 - phi0, t._kp)) -
+            Ex * f.ftht()(lamang(tht1 - tht0, t._k));
+        }
       }
     } else {
       // gamma = NaN
@@ -682,7 +746,7 @@ namespace GeographicLib {
     int oE = Ex, oN = Nx;
     Ex = signbit(alp1.s()) ? -1 : 1;
     Nx = signbit(alp1.c()) ? -1 : 1;
-    if (f.gammax() > 0 || f.kxp2() == 0) {
+    if (f.gammax() > 0 || (!t._merid && f.kxp2() == 0)) {
       alp0 = alp1.nearest(1U);
       psi1.reflect(false, Nx != oN);
       v0 = f.fpsi().fwd(psi1.radians());
@@ -691,8 +755,10 @@ namespace GeographicLib {
       delta = f.fpsi()(v0) - f.ftht()(u0);
     } else if (f.gammax() == 0) {
       // Only expect to invoke setquadrant in this case
-      alp0 = alp1.nearest(t._umbalt ? 2U : 1U);
-      if (fabs(phi1.c()) < 8*eps && fabs(tht1.c()) < 8*eps)
+      alp0 = alp1.nearest(1U);
+      if (f.kxp2() == 0)
+        delta = Ex * f.ftht()((tht1 - tht0).radians());
+      else if (fabs(phi1.c()) < 8*eps && fabs(tht1.c()) < 8*eps)
         delta = f.deltashift()/2 - log(fabs(alp1.t()));
       else
         delta = Nx * f.fpsi()(lamang(phi1 - phi0, f.kxp())) -
@@ -703,11 +769,11 @@ namespace GeographicLib {
   }
 
   TriaxialLine::gline::gics::gics(const gline& g, const fline::fics& fic) {
-    if (g.gammax() > 0 || g.kxp2() == 0) {
+    if (g.gammax() > 0 || (!g.t()._merid && g.kxp2() == 0)) {
       sig1 = g.gpsi()(fic.v0) + g.gtht()(fic.u0);
     } else if (g.gammax() == 0) {
-      sig1 = fic.Nx *
-        g.gpsi()(lamang(fic.phi1 - fic.phi0, g.kxp())) +
+      sig1 = g.kxp2() == 0 ? fic.Nx * g.gpsi()(fic.v0) :
+        fic.Nx * g.gpsi()(lamang(fic.phi1 - fic.phi0, g.kxp())) +
         fic.Ex * g.gtht()(lamang(fic.tht1 - fic.tht0, g.kx()));
     } else {
       // gamma = NaN
@@ -753,18 +819,19 @@ namespace GeographicLib {
     , _sqrtkap(sqrt(_kap))
     , _sqrtkapp(sqrt(_kapp))
     , _distp(distp)
-      // If oblpro extend special treatment of oblate/prolate cases to mu != 0.
+      // If oblpro, extend special treatment of biaxial cases to mu != 0.
     , _oblpro(t._oblpro)
-    , _merid(t._merid)
-    , _invp(false)
-    , _biaxr(_kap == 0 && (_mu == 0 || (_oblpro && _mu > 0)))
-    , _biaxl(_kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
     , _umb(_kap != 0 && _kapp != 0 && _mu == 0)
+      // If _merid, treat meridional cases with triaxial umbilical machinery.
+    , _meridr(_kap == 0 && _mu == 0 && t._merid)
+    , _meridl(_kapp == 0 && _mu == 0 && t._merid)
+    , _biaxr(!_meridr && _kap == 0 && (_mu == 0 || (_oblpro && _mu > 0)))
+    , _biaxl(!_meridl && _kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
+    , _invp(false)
   {
-    (void) _merid;
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
     if (!_distp) {
-      if (_biaxr) {
+      if (_meridr || _biaxr) {
         // oblate/prolate rotating coordinate
         // _kapp == 1, mu < 0 not allowed
         _tx = false;
@@ -775,24 +842,13 @@ namespace GeographicLib {
                           // This is a trivial case f' = 1
                           { return fthtoblp(tht, eps, mu); },
                           Math::pi()/2, false);
-      } else if (_biaxl) {
+      } else if (_meridl || _biaxl) {
         // oblate/prolate librating coordinate
         // _kap == 1, mu > 0 not allowed
         // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
         _tx = false;
-        // f multiplied by sqrt(-mu)
-        /*
-          if (_tx) {
-          _ell = EllipticFunction(1 + _mu, 0, -_mu, 1);
-          _fun = TrigfunExt(
-          [kap = _kap, kapp = _kapp,
-          eps = _eps, mu = _mu, ell = _ell]
-          (real v) -> real
-          { real sn, cn, dn; (void) ell.am(v, sn, cn, dn);
-          return dfvoblp(dn, eps, mu); },
-          _ell.K(), false, 1);
-          } else
-        */
+        // f explicitly multiplied by sqrt(-mu) in operator()() for _biaxl
+        // For _meridl operator() ignores this
         _fun = TrigfunExt(
                           [eps = _eps, mu = _mu]
                           (real psi) -> real
@@ -801,7 +857,8 @@ namespace GeographicLib {
       } else if (_mu > 0) {
         _tx = _mu / (_kap + _mu) < t._ellipthresh;
         if (_tx) {
-          _ell = EllipticFunction(_kap / (_kap + _mu), 0, _mu / (_kap + _mu), 1);
+          _ell = EllipticFunction(_kap / (_kap + _mu), 0,
+                                  _mu / (_kap + _mu), 1);
           _fun = TrigfunExt(
                             [kap = _kap, kapp = _kapp,
                              eps = _eps, mu = _mu, ell = _ell]
@@ -857,8 +914,8 @@ namespace GeographicLib {
         // _mu == NaN
         _tx = false;
       }
-    } else {
-      if (_biaxr) {
+    } else {                    // _distp
+      if (_biaxr || _meridr) {
         // oblate/prolate symmetry coordinate
         // _kapp == 1, mu < 0 not allowed
         _tx = false;
@@ -868,17 +925,11 @@ namespace GeographicLib {
                           // degenerate f' = 0
                           { return gthtoblp(tht, eps, mu); },
                           Math::pi()/2, false);
-      } else if (_biaxl) {
+      } else if (_biaxl || _meridl) {
         // oblate/prolate non-symmetry coordinate
         // _kap == 1, mu > 0 not allowed
         // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
         _tx = false;
-        /*
-          if (_tx) {
-          _ell = EllipticFunction(1 + _mu, 0, -_mu, 1);
-          // Never completed this
-          } else
-        */
         _fun = TrigfunExt(
                           [eps = _eps, mu = _mu]
                           (real psi) -> real
@@ -887,7 +938,8 @@ namespace GeographicLib {
       } else if (_mu > 0) {
         _tx = _mu / (_kap + _mu) < t._ellipthresh;
         if (_tx) {
-          _ell = EllipticFunction(_kap / (_kap + _mu), 0, _mu / (_kap + _mu), 1);
+          _ell = EllipticFunction(_kap / (_kap + _mu), 0,
+                                  _mu / (_kap + _mu), 1);
           _fun =TrigfunExt(
                            [kap = _kap, kapp = _kapp,
                             eps = _eps, mu = _mu, ell = _ell]
@@ -943,16 +995,20 @@ namespace GeographicLib {
     // N.B. _max < 0 for _umb && eps < 0
     _max = !_distp ?
       ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-        (_biaxl ? Math::pi()/2 + sqrt(-_mu) * _fun.Max() : _fun.Max()) ) :
-      ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max() );
+        (_biaxl ?
+         Math::pi()/2 + sqrt(-_mu) * _fun.Max() : _fun.Max()) ) :
+      ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
+        (_meridl ? _fun(Math::pi()/2) : _fun.Max()) );
   }
 
   Math::real TriaxialLine::hfun::operator()(real u) const {
     if (!_distp) {
-      if (_biaxl) {
+      if (_biaxl)
         // This is sqrt(-mu) * f(u)
         return modang(u, sqrt(-_mu)) - sqrt(-_mu) * _fun(u);
-      } else if (_umb) {
+      else if (_meridl)
+        return 0;
+      else if (_umb) {
         // This is sqrt(kap * kapp) * f(u)
         real phi = gd(u, _sqrtkapp);
         return u - _fun(_tx ? _ell.F(phi) : phi);
@@ -989,7 +1045,7 @@ namespace GeographicLib {
 
   Math::real TriaxialLine::hfun::deriv(real u) const {
     if (!_distp) {
-      if (_biaxl) {
+      if (_biaxl)
         // This is sqrt(-mu) * f'(u)
         /*
           if (_tx) {
@@ -1006,7 +1062,9 @@ namespace GeographicLib {
         // **HERE**
         return sqrt(-_mu) / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
           - sqrt(-_mu) * _fun.deriv(u);
-      } else if (_umb) {
+      else if (_meridl)
+        return 0;
+      else if (_umb) {
         // This is sqrt(kap * kapp) * f'(u)
         real phi = gd(u, _sqrtkapp),
           t = _kapp + Math::sq(sinh(u));
@@ -1035,7 +1093,7 @@ namespace GeographicLib {
   Math::real TriaxialLine::hfun::gfderiv(real u) const {
     // return g'(u)/f'(u)
     real sn = 0, cn = 0, dn = 0;
-    if (_biaxr)
+    if (_biaxr || _meridr)
       return gfthtoblp(u, _mu);
     else if (_biaxl) // mu > 0 not allowed
       return gfpsioblp(sin(u), cos(u), _mu);
@@ -1052,6 +1110,10 @@ namespace GeographicLib {
         return _tx ? gfvp(dn, _kap, _mu) :
           gfpsip(sin(u), cos(u), _kap, _mu);
       else
+        // _meridl and _meridr cases fall through to here.  In these cases one
+        // of g'/f' is singular, so we can't use our general 2-d solution
+        // machinery.  This could easily be fixed (by multiplying by one of the
+        // f').  However, we'll just do the simple 1d solution for this case.
         return Math::NaN();
     }
   }
