@@ -383,8 +383,8 @@ namespace GeographicLib {
     const hfun& gtht() const { return _g.gtht(); }
 
     // remainder with result in
-    //    [-y/2, y/2) is alt = false
-    //    (-y/2, y/2] is alt = true
+    //    [-y/2, y/2) if alt = false (default)
+    //    (-y/2, y/2] if alt = true
     static std::pair<real, real> remx(real x, real y, bool alt = false) {
       using std::remainder; using std::rint;
       real z = remainder(x, y);
@@ -394,6 +394,28 @@ namespace GeographicLib {
         if (z == y/2) z = -y/2;
       }
       return std::pair<real, real>(z, rint((x - z) / y));
+    }
+    // remainder with x in
+    //    [-pi/2, pi/2) if alt = false (default)
+    //    (-pi/2, pi/2] if alt = true
+    // equivalent to remx(x.radians(), Math::pi(), alt)
+    static std::pair<real, real> remx(Angle x, bool alt = false) {
+      using std::signbit;
+      real m = 0;
+      if (signbit(x.c())) {
+        x -= ang::cardinal(2);
+        ++m;
+      }
+      if (x.c() == 0) {
+        if (alt && signbit(x.s())) {
+          x += ang::cardinal(2);
+          --m;
+        } else if (!alt && !signbit(x.s())) {
+          x -= ang::cardinal(2);
+          ++m;
+        }
+      }
+      return  std::pair<real, real>(x.radians0(), m + 2*x.n());
     }
     TriaxialLine(fline f, fline::fics fic,
                  gline g, gline::gics gic);

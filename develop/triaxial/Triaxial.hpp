@@ -52,6 +52,7 @@ namespace GeographicLib {
     real _a, _b, _c;            // semi-axes
     vec3 _axes;
     real _e2, _k2, _kp2, _k, _kp;
+    bool _oblate, _prolate, _biaxial;
     bool _umbalt,               // how coordinates wrap with umbilical lines
       _oblpro,                  // include treatment of oblate/prolate cases
       _merid,                   // triaxial treatment of biaxial meridians

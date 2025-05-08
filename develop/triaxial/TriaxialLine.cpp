@@ -83,7 +83,7 @@ namespace GeographicLib {
         v2 = gpsi().inv(sig2);
         // ftht().inv(x) is just x, but keep it general
         u2 = ftht().inv(fpsi()(v2) - _fic.delta);
-        if (_t.debug())
+        if (false && _t.debug())
           cout << "XX " << v2/Math::degree() << " " << u2/Math::degree() << " "
                << _fic.delta/Math::degree() << "\n";
       } else {
@@ -119,7 +119,7 @@ namespace GeographicLib {
                               signbit(_fic.phi0.c())).rebase(_fic.phi0);
         // ftht().inv(x) is just x, but keep it general
         // u2 = ftht().inv(fpsi()(v2) - _fic.delta);
-        tht2a = ang::radians(_fic.delta) +
+        tht2a = ang::radians(-_fic.Ex * _fic.delta) +
           ang::cardinal(2 * _fic.Ex * sig2n.second);
         // cout << "YY " << sig2 << " "
         // << sig2n.first << " " << sig2n.second << "\n";
@@ -395,7 +395,7 @@ namespace GeographicLib {
     // Is the control variable psi or tht?
     bool psip = !transpolar() ? betp : !betp;
     ang tau12;
-    if (_t.debug())
+    if (false && _t.debug())
       cout << "HHQ " << transpolar() << " " << psip << " " << gammax() << "\n";
     if (psip) {
       ang phi2 = bet2;
@@ -412,11 +412,10 @@ namespace GeographicLib {
                                (phi2.c() - nu()) * (phi2.c() + nu()) :
                                (nup() - phi2.s()) * (nup() + phi2.s())));
         // Need Angle(0, 0) to be treated like Angle(0, 1) here.
-        ang psi2 = ang(spsi, cpsi),
-          psi12 = psi2 - fic.psi1;
+        ang psi12 = (ang(spsi, cpsi) - fic.psi1).base();
         // convert -180deg to 180deg
         if (signbit(psi12.s()))
-          psi12 = ang(0, copysign(real(1), psi12.c()), 0, true);
+         psi12 = ang(0, copysign(real(1), psi12.c()), 0, true);
         tau12 = psi12;
       } else if (gammax() == 0) {
         tau12 = (fic.Nx > 0 ? phi2 - fic.phi1 :
@@ -438,7 +437,7 @@ namespace GeographicLib {
         tau12 = ang::NaN();
     }
     disttx ret = ArcPos0(fic, tau12.base(), bet2a, omg2a, alp2a, betp);
-    if (_t.debug())
+    if (false && _t.debug())
       cout << "HH0X " << real(fic.psi1) << " "
            << real(tau12.base()) << " " << real(omg2a) << "\n";
     return ret;
@@ -504,13 +503,13 @@ namespace GeographicLib {
                                           Angle bet2, Angle omg2b) const {
     ang bet2a, omg2a, alp2a;
     (void) Hybrid(fic, bet2, bet2a, omg2a, alp2a);
-    if (_t.debug())
+    if (false && _t.debug())
       cout << "HH1X " << real(bet2) << " " << real(omg2b) << " "
            << real(bet2a) << " " << real(omg2a) << " ";
     (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
-    if (_t.debug()) cout << real(omg2a) << " ";
+    if (false && _t.debug()) cout << real(omg2a) << " ";
     omg2a -= omg2b;
-    if (_t.debug()) cout << real(omg2a) << "\n";
+    if (false && _t.debug()) cout << real(omg2a) << "\n";
     return omg2a.radians0();
   }
 
@@ -522,17 +521,17 @@ namespace GeographicLib {
     disttx ret{Math::NaN(), Math::NaN(), 0};
     bool psip = transpolar() ? !betp : betp;
     Angle &phi2a = bet2a, &tht2a = omg2a;
-    if (gammax() > 0 || (!_t._merid && kxp2() == 0)) { // *OK*
+    if (gammax() > 0 || (!_t._merid && kxp2() == 0)) {
       ang psi2;
       real u2, v2, u2x = 0;
       if (psip) {
-        psi2 = tau12 + fic.psi1;                      // *OK*
-        v2 = fpsi().fwd(psi2.radians());               // *OK*
-        u2 = ftht().inv(fpsi()(v2) - fic.delta);      // *OK*
-        tht2a = ang::radians(fic.Ex * ftht().rev(u2)); // *OK*
+        psi2 = tau12 + fic.psi1;
+        v2 = fpsi().fwd(psi2.radians());
+        u2 = ftht().inv(fpsi()(v2) - fic.delta);
+        tht2a = ang::radians(fic.Ex * ftht().rev(u2));
       } else {
-        tht2a = fic.tht1 + tau12.flipsign(fic.Ex); // *OK*
-        u2 = ftht().fwd(fic.Ex * tht2a.radians());  // *OK*
+        tht2a = fic.tht1 + tau12.flipsign(fic.Ex);
+        u2 = ftht().fwd(fic.Ex * tht2a.radians());
         if (transpolar() && gammax() == 0 && tau12 == tau12.nearest(2U)) {
           // Special case for finding conjugate points on meridional geodesics,
           // gamma = 0, tau12 = multiple of pi.  This is specialized for
@@ -565,16 +564,18 @@ namespace GeographicLib {
                                   nullptr, nullptr, 0, Trigfun::ARCPOS0);
           psi2 = ang(tpsi2, 1) + tau12 + fic.psi1.nearest(2U);
           v2 = psi2.radians();
+          if (false && t().debug())
+            cout << "PSI2 " << real(fic.psi1) << " " << real(tau12) << " " << npi << " " << c << " " << real(psi2) << "\n";
         } else {
-          u2x = ftht()(u2) + fic.delta;       // *OK*
-          v2 = fpsi().inv(u2x);                // *OK*
-          psi2 = ang::radians(fpsi().rev(v2)); // *OK*
+          u2x = ftht()(u2) + fic.delta;
+          v2 = fpsi().inv(u2x);
+          psi2 = ang::radians(fpsi().rev(v2));
         }
       }
       // Already normalized
       phi2a = ang(nup() * psi2.s(),
                   fic.phi0.c() * hypot(psi2.c(), nu() * psi2.s()),
-                  0, true).rebase(fic.phi0); // *OK*
+                  0, true).rebase(fic.phi0);
       // For oblate, medidional, and !psip: ...
       // psi2 = modang(u2x, 1/sqrt(gam))
       //      = atan2(u2x.s(), u2x.c()*sqrt(gam))
@@ -597,50 +598,173 @@ namespace GeographicLib {
         alp2a = ang(s, c);
       }
       alp2a = alp2a.rebase(fic.alp0);
-      ret.phiw2 = v2;           // *OK*
-      ret.thtw2 = u2;           // *OK*
+      ret.phiw2 = v2;
+      ret.thtw2 = u2;
     } else if (gammax() == 0) {
       real u2, v2;
       int ii;
       if (psip) {
         phi2a = fic.phi1 + tau12.flipsign(fic.Nx);
+        // remainder with result in [-pi/2, pi/2)
         pair<real, real> phi2n =
-          remx(fic.Nx * (phi2a - fic.phi0).radians(), Math::pi());
-        int parity = fmod(phi2n.second, real(2)) != 0 ? -1 : 1;
-        real deltax = clamp(fic.delta + phi2n.second * _deltashift, 2);
+          // remx(fic.Nx * (phi2a - fic.phi0).radians(), Math::pi());
+          remx((phi2a - fic.phi0).flipsign(fic.Nx));
+        if (false && t().debug())
+          cout << "PHI2 " << real((phi2a - fic.phi0).flipsign(fic.Nx)) << " "
+               << phi2n.first << " " << phi2n.second << "\n";
         u2 = fpsi().fwd(phi2n.first);
-        v2 = ftht().inv(fpsi()(u2) - deltax);
-        tht2a = ang::radians(fic.Ex * parity * ftht().rev(v2))
-          .rebase(fic.tht0);
-        // umbalt definition of alp0 (why is this necessary?)
-        ang alp0x(fic.alp1.nearest(2U));
-        // Conflict XXX
-        // testset -50 180 20 0 want fic.Nx multiplying s()
-        // testspha -20 90 20 -90 wants fic.Nx multiplying c()
-        alp2a = ang(kxp() * fic.Ex *
-                    parity / mcosh(v2, kx()),
-                    fic.Nx * kx() / mcosh(u2, kxp())).rebase(alp0x);
+        int parity = fmod(phi2n.second, real(2)) != 0 ? -1 : 1;
+        if (kxp() == 0) {
+          // v2 is independent on u2
+          v2 = 0;
+          tht2a = ang::radians(-fic.Ex * fic.delta) +
+            ang::cardinal(2*fic.Ex*phi2n.second);
+          alp2a = (fic.alp1.nearest(2U) + ang::cardinal(parity < 0 ? 2 : 0))
+            .rebase(fic.alp0);
+          /*
+          alp2a = ang::cardinal(2 * (phi2n.second +
+                                     (fic.phi1.c() == 0 &&
+                                      signbit(fic.alp1.c()) ? 1 : 0)))
+            .rebase(fic.alp0);
+          */
+          if (false && t().debug()) {
+            cout << "ALP " << real(fic.alp1.nearest(2U)) << " "
+                 << parity << " " << real(alp2a) << "\n";
+            cout << "FIC "
+                 << real(fic.phi0) << " " << real(fic.phi1) << " "
+                 << real(fic.tht0) << " " << real(fic.tht1) << " "
+                 << real(fic.alp0) << " " << real(fic.alp1) << " "
+                 << fic.Nx << " " << fic.Ex << " "
+                 << fic.u0 << " " << fic.v0 << " "
+                 << fic.delta/Math::pi() << "\n";
+            cout << "WWW " << fic.Ex << " " << parity << " "
+                 << real(fic.alp0) << " "
+                 << real(alp2a)<< "\n";
+          }
+        } else {
+          real deltax = clamp(fic.delta + phi2n.second * _deltashift, 2);
+          v2 = ftht().inv(fpsi()(u2) - deltax);
+          tht2a = ang::radians(fic.Ex * parity * ftht().rev(v2))
+            .rebase(fic.tht0);
+          // umbalt definition of alp0 (why is this necessary?)
+          ang alp0x(fic.alp1.nearest(2U));
+          // Conflict XXX
+          // testset -50 180 20 0 want fic.Nx multiplying s()
+          // testspha -20 90 20 -90 wants fic.Nx multiplying c()
+          alp2a = (kxp2() == 0 ? tht2a - ang::cardinal(1) :
+                   ang(kxp() * fic.Ex *
+                       parity / mcosh(v2, kx()),
+                       fic.Nx * kx() / mcosh(u2, kxp()))).rebase(alp0x);
+          // Move forward from umbilical point
+          phi2a += ang::eps().flipsign(fic.Nx);
+        }
         ii = int(phi2n.second);
-        // Move forward from umbilical point
-        phi2a += ang::eps().flipsign(fic.Nx);
       } else {
         tht2a = fic.tht1 + tau12.flipsign(fic.Ex);
+        // remainder with result in [-pi/2, pi/2)
         pair<real, real> tht2n =
-          remx(fic.Ex * (tht2a - fic.tht0).radians(), Math::pi());
-        int parity = fmod(tht2n.second, real(2)) != 0 ? -1 : 1;
-        real deltax = clamp(fic.delta + tht2n.second * _deltashift, 2);
+          // remx(fic.Ex * (tht2a - fic.tht0).radians(), Math::pi());
+          remx((tht2a - fic.tht0).flipsign(fic.Ex));
         v2 = ftht().fwd(tht2n.first);
-        u2 = fpsi().inv(ftht()(v2) + deltax);
-        real phi2 = fic.Nx * parity * fpsi().rev(u2);
-        phi2a = ang::radians(phi2);
-        // !umbalt definition of alp0
-        ang alp0x(fic.alp1.nearest(1U));
-        alp2a = ang(fic.Ex * kxp() / mcosh(v2, kx()),
-                    kx() * fic.Nx *
-                    parity / mcosh(u2, kxp())).rebase(alp0x);
+        int parity = fmod(tht2n.second, real(2)) != 0 ? -1 : 1;
+        if (kxp() == 0) {
+          if (fic.phi1.c() != 0 && tau12 == tau12.nearest(2U)) {
+            // STILL TO DO...
+            // Special case for finding conjugate points on meridional
+            // geodesics, gamma = 0, tau12 = multiple of pi.  This is
+            // specialized for prolate ellipsoids for now.
+            real npi = (tau12.ncardinal() + fic.phi1.nearest(2U).ncardinal())
+              * Math::pi()/2;
+            // Don't worry about the case where we start at a pole -- this is
+            // already handled in Triaxial::Inverse.
+            //
+            // Solve F(tpsi2) = tpsi2 - Deltaf(n*pi + atan(tpsi2))
+            //                = (tan(psi1) - Deltaf(psi1)) = c
+            //
+            // for tpsi2, starting guess tpsi2 = tan(psi1).
+            // Test case prolate 1 3 0 1
+            // p1 = [-90, -1]
+            // [sx,a1x,a2x] = t.distance(p1,[90,178.9293750483])
+            //    -> a1x = 90
+            // [sx,a1x,a2x] = t.distance(p1,[90,178.9293750484])
+            //    -> a1x = 90.0023
+            //   omg1 = -91 -> omg2 = 178.9293750483-90 = 88.9293750483
+            real c = fic.Nx * (fic.phi1.t() - fpsi().df(fic.phi1.radians())),
+              l = exp(Triaxial::BigValue()),
+              tpsi2 = Trigfun::root([this, npi] (real tpsi) -> pair<real, real>
+                                    {
+                                      real psi = atan(tpsi);
+                                      return pair<real, real>
+                                        (tpsi - fpsi().df(npi + psi),
+                                         1 - fpsi().dfp(psi) /
+                                         (1 + Math::sq(tpsi)));
+                                    },
+                                    c, fic.psi1.t(), -l, l, 1, 1, 1,
+                                    nullptr, nullptr, 0, Trigfun::ARCPOS0);
+            v2 = atan(tpsi2);
+            phi2a = (ang(tpsi2, 1) + fic.phi1.nearest(2U)).rebase(fic.phi0);
+            if (false && t().debug())
+              cout << "PSI2 " << real(fic.phi1) << " " << real(tau12) << " " << npi << " " << c << " " << real(phi2a) << " " << parity << "\n";
+            alp2a = ang::cardinal(fic.Nx * parity == 1 ? 0 : 2)
+              .rebase(fic.alp0);
+          } else {
+            u2 = v2 == 0 ? 0 : copysign(Math::pi()/2, tht2n.first);
+            if (false && t().debug()) {
+              cout << "FIC "
+                   << real(fic.phi0) << " " << real(fic.phi1) << " "
+                   << real(fic.tht0) << " " << real(fic.tht1) << " "
+                   << real(fic.alp0) << " " << real(fic.alp1) << " "
+                   << real(fic.alp1.nearest(2U)) << " "
+                   << fic.Nx << " " << fic.Ex << " "
+                   << fic.u0 << " " << fic.v0 << " "
+                   << fic.delta/Math::pi() << "\n";
+              cout << "YY " << real(tau12) << "\n";
+              cout << "XX " << real(tht2a) << " "
+                   << tht2n.first/Math::degree() << " "
+                   << tht2n.second << " "
+                   << v2/Math::degree() << " "
+                   << parity<< " " << u2/Math::degree() << "\n";
+            }
+            phi2a = ang::cardinal(fabs(v2) == 0
+                                  ? 0 : copysign(real(1), v2 * fic.Nx))
+              .rebase(fic.phi0);
+            if (false)
+              alp2a = (fic.alp1.nearest(2U) +
+                       (fabs(v2) == 0 ? ang::cardinal(parity < 1 ? 2 : 0) :
+                        ang::radians(v2).flipsign(parity *
+                                                  (signbit(phi2a.s()) ? -1 : 1))
+                        )).rebase(fic.alp0);
+            else
+              alp2a = (fabs(v2) == 0 ?
+                       ang::cardinal(2 /* * fic.Ex * parity*/ ) :
+                       fic.alp1.nearest(2U) +
+                       ang::cardinal(parity == 1 ? 0 : 2) +
+                       ang::radians(v2).flipsign(parity *
+                                                 (signbit(phi2a.s()) ? -1 : 1))
+                       ).rebase(fic.alp0);
+          }
+          if (false && t().debug())
+            cout << "HERE " << real(phi2a) << " "
+                 << real((tht2a - fic.tht0).flipsign(fic.Ex)) << " "
+                 << real(fic.tht0) << " "
+                 << real(fic.tht1) << " " << real(tau12) << " "
+                 << fic.Ex << " "
+                 << v2/Math::degree() << " " << u2/Math::degree() << "\n";
+        } else {
+          real deltax = clamp(fic.delta + tht2n.second * _deltashift, 2);
+          u2 = fpsi().inv(ftht()(v2) + deltax);
+          real phi2 = fic.Nx * parity * fpsi().rev(u2);
+          phi2a = ang::radians(phi2);
+          // !umbalt definition of alp0
+          ang alp0x(fic.alp1.nearest(1U));
+          alp2a = (kxp2() == 0 ? tht2a - fic.tht0 :
+                   ang(fic.Ex * kxp() / mcosh(v2, kx()),
+                       kx() * fic.Nx *
+                       parity / mcosh(u2, kxp()))).rebase(alp0x);
+          tht2a += ang::eps().flipsign(fic.Ex);
+        }
         ii = int(tht2n.second);
         // Move forward from umbilical point
-        tht2a += ang::eps().flipsign(fic.Ex);
       }
       ret.phiw2 = u2;
       ret.thtw2 = v2;
@@ -654,6 +778,10 @@ namespace GeographicLib {
       alp2a.reflect(false, false, true);
     }
     omg2a += ang::cardinal(1);
+    if (false && t().debug())
+      cout << "ARCPOS0 " << psip << " "
+           << real(bet2a) << " " << real(omg2a) << " "
+           << real(alp2a) << "\n"; 
     return ret;
   }
 
@@ -701,17 +829,39 @@ namespace GeographicLib {
         // meridonal geodesic on biaxial ellipsoid
         // N.B. factor of sqrt(f.gammax()) omitted
         // Implicitly assume phi1 in [-90, 90] for now
+
+        // phi1, tht1, alp1 are starting conditions.
+
+        // If alp1 = 0/180, alp1.s() == 0, and phi1 != +/-90, phi1.c() != 0,
+        // then, at baseline equator crossing, phi = phi1.nearest(2U), tht =
+        // tht0 = tht1, alp = alp1
         phi0 = phi1.nearest(2U); // phi0 = 0
+        // psi1 not used, perhaps it should be?
+        // psi1 = ang(phi1.s(), phi0.c() * alp1.c() * fabs(phi1.c())));
         tht0 = tht1;
-        if (phi1.c() == 0) {
-          tht0 += alp1.flipsign(signbit(phi1.s()) ? 1 : -1);
-          if (!signbit(phi1.s()))
-            tht0.reflect(true, true);
-          Nx = signbit(phi1.s()) ? 1 : -1;
+
+        // Othersise at pole, phi1.c() == 0.  Define baseline equator crossing
+        // by alp = alp1.nearest(2U),
+        // phi = phi1 + cardinal(signbit(alp1.c()) ? -1 : 1)
+        // tht0 = tht1 +
+        //   (alp1.nearest(2U)-alp1).flipsign(signbit(phi1.s()) ? -1 : 1)
+        if (false) {
+          if (phi1.c() == 0 && alp1.s() != 0) {
+            tht0 += alp1.flipsign(signbit(phi1.s()) ? 1 : -1);
+            if (!signbit(phi1.s()))
+              tht0.reflect(true, true);
+            Nx = signbit(phi1.s()) ? 1 : -1;
+          }
+        } else {
+          if (phi1.c() == 0) {
+            // phi0 = phi1 + ang::cardinal(signbit(alp1.c()) ? -1 : 1);
+            tht0 += (alp1.nearest(2U)-alp1)
+              .flipsign(signbit(phi1.s()) ? -1 : 1);
+          }
         }
         v0 = f.fpsi().fwd((phi1-phi0).radians());
         u0 = 0;
-        delta = f.ftht()(tht0.radians());
+        delta = -Ex * f.ftht()(tht0.radians());
         if (0)
           cout << "AA " << real(tht1) << " " << real(tht0) << " "
                << real(alp1) << " " << signbit(phi1.s()) << " "
@@ -757,7 +907,7 @@ namespace GeographicLib {
       // Only expect to invoke setquadrant in this case
       alp0 = alp1.nearest(1U);
       if (f.kxp2() == 0)
-        delta = Ex * f.ftht()((tht1 - tht0).radians());
+        delta *= Ex/oE;
       else if (fabs(phi1.c()) < 8*eps && fabs(tht1.c()) < 8*eps)
         delta = f.deltashift()/2 - log(fabs(alp1.t()));
       else
@@ -782,9 +932,14 @@ namespace GeographicLib {
 
   Math::real TriaxialLine::gline::dist(gics ic, fline::disttx d) const {
     real sig2 = gpsi()(d.phiw2) + gtht()(d.thtw2) + d.ind2 * 2*s0;
-    if (t().debug())
-      cout << "DDX " << gpsi()(d.phiw2) << " " << gtht()(d.thtw2) << " "
-           << d.ind2 * 2*s0 << " " << ic.sig1 << "\n";
+    if (false && t().debug()) {
+      cout << "FOO " << gtht()(0) << " " << gtht()(Math::pi()/2) << "\n";
+      cout << "DDX " << d.phiw2/Math::degree() << " "
+           << d.thtw2/Math::degree() << " "
+           << gpsi()(d.phiw2) << " " << gtht()(d.thtw2) << " "
+           << d.ind2 * 2*s0 << " " << ic.sig1 << "\n"
+           << d.ind2 << " " << s0 << "\n";
+    }
     return (sig2 - ic.sig1) * t()._b;
   }
 

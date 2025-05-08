@@ -315,7 +315,10 @@ namespace GeographicLib {
     case -1: s = -1; c =  z; break;
     case  1: s =  1; c =  z; break;
     case  2: s =  z; c = -1; break;
-    default: s =  z; c =  1; break; // iq = 0
+    default:
+      // iq = 0, but distinguish q = +/-0
+      s =  q != 0 ? z : q; c =  1;
+      break;
     }
     return Angle(s, c, rint((q - iq) / 4));
   }
