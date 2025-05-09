@@ -2,10 +2,12 @@
  * \file TriaxialLine.cpp
  * \brief Implementation for GeographicLib::TriaxialLine class
  *
- * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
+
+// Set _oblpro = false, _merid = true
 
 #include "TriaxialLine.hpp"
 #include <iostream>
@@ -72,30 +74,16 @@ namespace GeographicLib {
     // cout << "XX " << _fic.delta << " " << _gic.sig1 << "\n";
     real sig2 = _gic.sig1 + s12/_t._b;
     Angle &phi2a = bet2a, &tht2a = omg2a;
-    if (_f.gammax() > 0 || (!_t._merid && _f.kxp2() == 0)) {
+    if (_f.gammax() > 0) {
       real u2, v2;
-      if (_f.kxp2() == 0 && (_t._oblpro || _f.gammax() == 0)) {
-        // If oblate, treat via biaxial machinery for
-        // _t._oblpro: all cases
-        // !_t._oblpro: meridional only
-
-        // gtht()(x) == 0, so the g equation becomes gpsi()(v2) = sig2
-        v2 = gpsi().inv(sig2);
-        // ftht().inv(x) is just x, but keep it general
-        u2 = ftht().inv(fpsi()(v2) - _fic.delta);
-        if (false && _t.debug())
-          cout << "XX " << v2/Math::degree() << " " << u2/Math::degree() << " "
-               << _fic.delta/Math::degree() << "\n";
-      } else {
-        // The general triaxial machinery.  If !_t._oblpro, this is used for
-        // non-meridional geodesics on an oblate ellipsoid.
-        if (fpsi().NCoeffs() <= ftht().NCoeffs())
-          solve2(-_fic.delta, sig2, ftht(), fpsi(), gtht(), gpsi(), u2, v2,
-                 countn, countb);
-        else
-          solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), v2, u2,
-                 countn, countb);
-      }
+      // The general triaxial machinery.  This is used for non-meridional
+      // geodesics on biaxial ellipsoids.
+      if (fpsi().NCoeffs() <= ftht().NCoeffs())
+        solve2(-_fic.delta, sig2, ftht(), fpsi(), gtht(), gpsi(), u2, v2,
+               countn, countb);
+      else
+        solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), v2, u2,
+               countn, countb);
       tht2a = ang::radians(_fic.Ex * ftht().rev(u2));
       ang psi2 = ang::radians(fpsi().rev(v2));
       // Already normalized
@@ -517,11 +505,11 @@ namespace GeographicLib {
   TriaxialLine::fline::ArcPos0(const fics& fic, Angle tau12,
                                Angle& bet2a, Angle& omg2a, Angle& alp2a,
                                bool betp) const {
-    // XXX fix for oblate/prolate
+    // XXX fix for biaxial
     disttx ret{Math::NaN(), Math::NaN(), 0};
     bool psip = transpolar() ? !betp : betp;
     Angle &phi2a = bet2a, &tht2a = omg2a;
-    if (gammax() > 0 || (!_t._merid && kxp2() == 0)) {
+    if (gammax() > 0) {
       ang psi2;
       real u2, v2, u2x = 0;
       if (psip) {
@@ -532,45 +520,9 @@ namespace GeographicLib {
       } else {
         tht2a = fic.tht1 + tau12.flipsign(fic.Ex);
         u2 = ftht().fwd(fic.Ex * tht2a.radians());
-        if (transpolar() && gammax() == 0 && tau12 == tau12.nearest(2U)) {
-          // Special case for finding conjugate points on meridional geodesics,
-          // gamma = 0, tau12 = multiple of pi.  This is specialized for
-          // prolate ellipsoids for now.
-          real npi = (tau12.ncardinal() + fic.psi1.nearest(2U).ncardinal())
-            * Math::pi()/2;
-          // Don't worry about the case where we start at a pole -- this is
-          // already handled in Triaxial::Inverse.
-          //
-          // Solve F(tpsi2) = tpsi2 - Deltaf(n*pi + atan(tpsi2))
-          //                = (tan(psi1) - Deltaf(psi1)) = c
-          //
-          // for tpsi2, starting guess tpsi2 = tan(psi1).
-          // Test case prolate 1 3 0 1
-          // p1 = [-90, -1]
-          // [sx,a1x,a2x] = t.distance(p1,[90,178.9293750483]) -> a1x = 90
-          // [sx,a1x,a2x] = t.distance(p1,[90,178.9293750484]) -> a1x = 90.0023
-          //   omg1 = -91 -> omg2 = 178.9293750483-90 = 88.9293750483
-          real c = fic.psi1.t() - fpsi().df(fic.psi1.radians()),
-            l = exp(Triaxial::BigValue()),
-            tpsi2 = Trigfun::root([this, npi] (real tpsi) -> pair<real, real>
-                                  {
-                                    real psi = atan(tpsi);
-                                    return pair<real, real>
-                                      (tpsi - fpsi().df(npi + psi),
-                                       1 - fpsi().dfp(psi) /
-                                       (1 + Math::sq(tpsi)));
-                                  },
-                                  c, fic.psi1.t(), -l, l, 1, 1, 1,
-                                  nullptr, nullptr, 0, Trigfun::ARCPOS0);
-          psi2 = ang(tpsi2, 1) + tau12 + fic.psi1.nearest(2U);
-          v2 = psi2.radians();
-          if (false && t().debug())
-            cout << "PSI2 " << real(fic.psi1) << " " << real(tau12) << " " << npi << " " << c << " " << real(psi2) << "\n";
-        } else {
-          u2x = ftht()(u2) + fic.delta;
-          v2 = fpsi().inv(u2x);
-          psi2 = ang::radians(fpsi().rev(v2));
-        }
+        u2x = ftht()(u2) + fic.delta;
+        v2 = fpsi().inv(u2x);
+        psi2 = ang::radians(fpsi().rev(v2));
       }
       // Already normalized
       phi2a = ang(nup() * psi2.s(),
@@ -728,20 +680,12 @@ namespace GeographicLib {
             phi2a = ang::cardinal(fabs(v2) == 0
                                   ? 0 : copysign(real(1), v2 * fic.Nx))
               .rebase(fic.phi0);
-            if (false)
-              alp2a = (fic.alp1.nearest(2U) +
-                       (fabs(v2) == 0 ? ang::cardinal(parity < 1 ? 2 : 0) :
-                        ang::radians(v2).flipsign(parity *
-                                                  (signbit(phi2a.s()) ? -1 : 1))
-                        )).rebase(fic.alp0);
-            else
-              alp2a = (fabs(v2) == 0 ?
-                       ang::cardinal(2 /* * fic.Ex * parity*/ ) :
-                       fic.alp1.nearest(2U) +
-                       ang::cardinal(parity == 1 ? 0 : 2) +
-                       ang::radians(v2).flipsign(parity *
-                                                 (signbit(phi2a.s()) ? -1 : 1))
-                       ).rebase(fic.alp0);
+            alp2a = (fabs(v2) == 0 ?
+                     ang::cardinal(2 /* * fic.Ex * parity*/ ) :
+                     fic.alp1.nearest(2U) +
+                     ang::cardinal(parity == 1 ? 0 : 2) +
+                     ang::radians(v2).flipsign(parity * phi2a.s())
+                     ).rebase(fic.alp0);
           }
           if (false && t().debug())
             cout << "HERE " << real(phi2a) << " "
@@ -802,7 +746,7 @@ namespace GeographicLib {
       alp1 = ang(alp1.s(), - Math::sq(eps), alp1.n(), true);
     Ex = signbit(alp1.s()) ? -1 : 1;
     Nx = signbit(alp1.c()) ? -1 : 1;
-    if (f.gammax() > 0 || (!t._merid && f.kxp2() == 0)) {
+    if (f.gammax() > 0) {
       phi0 = phi1.nearest(2U);
       alp0 = alp1.nearest(1U);
       psi1 = ang(f.kx() * phi1.s(),
@@ -817,10 +761,7 @@ namespace GeographicLib {
       // Only used for biaxial cases when fwd rev is the identity
       // v0a = psi1;
       // u0a = Ex < 0 ? -omg1 : omg1;
-      delta = (f.kxp2() == 0 && (t._oblpro || f.gammax() == 0) ?
-               atan2(phi1.s() * fabs(alp1.s()), phi0.c() * alp1.c())
-               - sqrt(f.gammax()) * f.fpsi().df(v0)
-               : f.fpsi()(v0)) - f.ftht()(u0);
+      delta = f.fpsi()(v0) - f.ftht()(u0);
       // deltaa = f.fbet()(v0a) - f.fomg()(u0a);
     } else if (f.gammax() == 0) {
       // alp0 = alp1.nearest(signbit(f.gamma()) ? 2U : 1U);
@@ -844,20 +785,10 @@ namespace GeographicLib {
         // by alp = alp1.nearest(2U),
         // phi = phi1 + cardinal(signbit(alp1.c()) ? -1 : 1)
         // tht0 = tht1 +
-        //   (alp1.nearest(2U)-alp1).flipsign(signbit(phi1.s()) ? -1 : 1)
-        if (false) {
-          if (phi1.c() == 0 && alp1.s() != 0) {
-            tht0 += alp1.flipsign(signbit(phi1.s()) ? 1 : -1);
-            if (!signbit(phi1.s()))
-              tht0.reflect(true, true);
-            Nx = signbit(phi1.s()) ? 1 : -1;
-          }
-        } else {
-          if (phi1.c() == 0) {
-            // phi0 = phi1 + ang::cardinal(signbit(alp1.c()) ? -1 : 1);
-            tht0 += (alp1.nearest(2U)-alp1)
-              .flipsign(signbit(phi1.s()) ? -1 : 1);
-          }
+        //   (alp1.nearest(2U)-alp1).flipsign(phi1.s())
+        if (phi1.c() == 0) {
+          // phi0 = phi1 + ang::cardinal(signbit(alp1.c()) ? -1 : 1);
+          tht0 += (alp1.nearest(2U)-alp1).flipsign(phi1.s());
         }
         v0 = f.fpsi().fwd((phi1-phi0).radians());
         u0 = 0;
@@ -865,7 +796,7 @@ namespace GeographicLib {
         if (0)
           cout << "AA " << real(tht1) << " " << real(tht0) << " "
                << real(alp1) << " " << signbit(phi1.s()) << " "
-               << real(alp1.flipsign(signbit(phi1.s()) ? 1 : -1)) << " "
+               << real(alp1.flipsign(phi1.s())) << " "
                << delta/Math::degree() << " " << Ex << " " << Nx << "\n";
       } else {
         // N.B. factor of k*kp omitted
@@ -888,7 +819,6 @@ namespace GeographicLib {
 
   void TriaxialLine::fline::fics::setquadrant(const fline& f, unsigned q) {
     const real eps = numeric_limits<real>::epsilon();
-    const Triaxial& t = f.t();
     // If transpolar, switch q = 1 and q = 3.
     alp1.setquadrant(!f.transpolar() || (q & 1U) == 0 ? q : q ^ 2U);
     if (phi1.s() == 0 && fabs(alp1.c()) <= Math::sq(eps))
@@ -896,7 +826,7 @@ namespace GeographicLib {
     int oE = Ex, oN = Nx;
     Ex = signbit(alp1.s()) ? -1 : 1;
     Nx = signbit(alp1.c()) ? -1 : 1;
-    if (f.gammax() > 0 || (!t._merid && f.kxp2() == 0)) {
+    if (f.gammax() > 0) {
       alp0 = alp1.nearest(1U);
       psi1.reflect(false, Nx != oN);
       v0 = f.fpsi().fwd(psi1.radians());
@@ -919,7 +849,7 @@ namespace GeographicLib {
   }
 
   TriaxialLine::gline::gics::gics(const gline& g, const fline::fics& fic) {
-    if (g.gammax() > 0 || (!g.t()._merid && g.kxp2() == 0)) {
+    if (g.gammax() > 0) {
       sig1 = g.gpsi()(fic.v0) + g.gtht()(fic.u0);
     } else if (g.gammax() == 0) {
       sig1 = g.kxp2() == 0 ? fic.Nx * g.gpsi()(fic.v0) :
@@ -974,20 +904,15 @@ namespace GeographicLib {
     , _sqrtkap(sqrt(_kap))
     , _sqrtkapp(sqrt(_kapp))
     , _distp(distp)
-      // If oblpro, extend special treatment of biaxial cases to mu != 0.
-    , _oblpro(t._oblpro)
-    , _umb(_kap != 0 && _kapp != 0 && _mu == 0)
-      // If _merid, treat meridional cases with triaxial umbilical machinery.
-    , _meridr(_kap == 0 && _mu == 0 && t._merid)
-    , _meridl(_kapp == 0 && _mu == 0 && t._merid)
-    , _biaxr(!_meridr && _kap == 0 && (_mu == 0 || (_oblpro && _mu > 0)))
-    , _biaxl(!_meridl && _kapp == 0 && (_mu == 0 || (_oblpro && _mu < 0)))
+    , _umb(!t._biaxial && _mu == 0)
+    , _meridr(_kap == 0 && _mu == 0)
+    , _meridl(_kapp == 0 && _mu == 0)
     , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
     if (!_distp) {
-      if (_meridr || _biaxr) {
-        // oblate/prolate rotating coordinate
+      if (_meridr) {
+        // biaxial rotating coordinate
         // _kapp == 1, mu < 0 not allowed
         _tx = false;
         // f multiplied by sqrt(mu)
@@ -995,10 +920,10 @@ namespace GeographicLib {
                           [eps = _eps, mu = _mu]
                           (real tht) -> real
                           // This is a trivial case f' = 1
-                          { return fthtoblp(tht, eps, mu); },
+                          { return fthtbiax(tht, eps, mu); },
                           Math::pi()/2, false);
-      } else if (_meridl || _biaxl) {
-        // oblate/prolate librating coordinate
+      } else if (_meridl) {
+        // biaxial librating coordinate
         // _kap == 1, mu > 0 not allowed
         // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
         _tx = false;
@@ -1007,7 +932,7 @@ namespace GeographicLib {
         _fun = TrigfunExt(
                           [eps = _eps, mu = _mu]
                           (real psi) -> real
-                          { return dfpsioblp(sin(psi), cos(psi), eps, mu); },
+                          { return dfpsibiax(sin(psi), cos(psi), eps, mu); },
                           Math::pi()/2, false);
       } else if (_mu > 0) {
         _tx = _mu / (_kap + _mu) < t._ellipthresh;
@@ -1070,25 +995,25 @@ namespace GeographicLib {
         _tx = false;
       }
     } else {                    // _distp
-      if (_biaxr || _meridr) {
-        // oblate/prolate symmetry coordinate
+      if (_meridr) {
+        // biaxial symmetry coordinate
         // _kapp == 1, mu < 0 not allowed
         _tx = false;
         _fun = TrigfunExt(
                           [eps = _eps, mu = _mu]
                           (real tht) -> real
                           // degenerate f' = 0
-                          { return gthtoblp(tht, eps, mu); },
+                          { return gthtbiax(tht, eps, mu); },
                           Math::pi()/2, false);
-      } else if (_biaxl || _meridl) {
-        // oblate/prolate non-symmetry coordinate
+      } else if (_meridl) {
+        // biaxial non-symmetry coordinate
         // _kap == 1, mu > 0 not allowed
         // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
         _tx = false;
         _fun = TrigfunExt(
                           [eps = _eps, mu = _mu]
                           (real psi) -> real
-                          { return gpsioblp(sin(psi), cos(psi), eps, mu); },
+                          { return gpsibiax(sin(psi), cos(psi), eps, mu); },
                           Math::pi()/2, false);
       } else if (_mu > 0) {
         _tx = _mu / (_kap + _mu) < t._ellipthresh;
@@ -1149,19 +1074,14 @@ namespace GeographicLib {
     }
     // N.B. _max < 0 for _umb && eps < 0
     _max = !_distp ?
-      ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-        (_biaxl ?
-         Math::pi()/2 + sqrt(-_mu) * _fun.Max() : _fun.Max()) ) :
+      ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max() ) :
       ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
         (_meridl ? _fun(Math::pi()/2) : _fun.Max()) );
   }
 
   Math::real TriaxialLine::hfun::operator()(real u) const {
     if (!_distp) {
-      if (_biaxl)
-        // This is sqrt(-mu) * f(u)
-        return modang(u, sqrt(-_mu)) - sqrt(-_mu) * _fun(u);
-      else if (_meridl)
+      if (_meridl)
         return 0;
       else if (_umb) {
         // This is sqrt(kap * kapp) * f(u)
@@ -1182,15 +1102,8 @@ namespace GeographicLib {
   // Should implement an Angle equivalant of _ell.F(phi)
   Angle TriaxialLine::hfun::operator()(const Angle& ang) const {
     if (_distp) return Angle::NaN();
-    if (_biaxr)
-      return ang;
-    else if (_biaxl && _mu == 0)
-      return ang.modang(sqrt(-_mu));
     real u = ang.radians();
-    if (_biaxl)
-      // This is sqrt(-mu) * f(u)
-      return ang.modang(sqrt(-_mu)) - ang::radians(sqrt(-_mu) * _fun(u));
-    else if (_umb) {
+    if (_umb) {
       // This is sqrt(kap * kapp) * f(u)
       real phi = gd(u, _sqrtkapp);
       return ang::radians(u - _fun(_tx ? _ell.F(phi) : phi));
@@ -1200,24 +1113,7 @@ namespace GeographicLib {
 
   Math::real TriaxialLine::hfun::deriv(real u) const {
     if (!_distp) {
-      if (_biaxl)
-        // This is sqrt(-mu) * f'(u)
-        /*
-          if (_tx) {
-          // DLMF (22.6.1): sn^2 + cn^2 =  k^2*sn^2 + dn^2 = 1
-          // dn^2 = cn^2 + k'^2*sn^2 = cn^2 - mu*sn^2
-          // k'^2 = -mu
-          real sn, cn, dn;
-          (void) _ell.am(u, sn, cn, dn);
-          return sqrt(-_mu) / Math::sq(dn) - _fun.deriv(u);
-          } else
-        */
-        // f0(x) = atan(sqrt(-mu) * tanx(u))
-        // f0'(x) = sqrt(-mu) / (cos(u)^2 - mu * sin(u)^2)
-        // **HERE**
-        return sqrt(-_mu) / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
-          - sqrt(-_mu) * _fun.deriv(u);
-      else if (_meridl)
+      if (_meridl)
         return 0;
       else if (_umb) {
         // This is sqrt(kap * kapp) * f'(u)
@@ -1248,10 +1144,8 @@ namespace GeographicLib {
   Math::real TriaxialLine::hfun::gfderiv(real u) const {
     // return g'(u)/f'(u)
     real sn = 0, cn = 0, dn = 0;
-    if (_biaxr || _meridr)
-      return gfthtoblp(u, _mu);
-    else if (_biaxl) // mu > 0 not allowed
-      return gfpsioblp(sin(u), cos(u), _mu);
+    if (_meridr)
+      return gfthtbiax(u, _mu);
     else if (_umb)
       // This includes factor of sqrt(kap * kapp) because of adjustment of
       // definition of f for umbilical geodesics.
@@ -1276,27 +1170,7 @@ namespace GeographicLib {
   void TriaxialLine::hfun::ComputeInverse() {
     if (!_distp) {
       if (!_invp) {
-        if (_biaxl) {
-          if (_mu == 0) return; // _fun == 0 and there's an analytic inverse
-          // now _mu < 0
-          _countn = _countb = 0;
-          // Include scale = 1 in TrigfunExt constructor because _dfinv gets
-          // added to u.
-          // Ars are fun, odd, sym, halfp, nmax, tol, scale
-          // **HERE**
-          _dfinv = Trigfun(
-                           [this]
-                           (real z, real u1) -> real
-                           {
-                             real u0 = modang(z/Slope(), 1/sqrt(-_mu));
-                             return root(z, u0 + u1, &_countn, &_countb,
-                                         sqrt(numeric_limits<real>::epsilon()))
-                               - u0;
-                           },
-                           true, false, Slope() * HalfPeriod(),
-                           int(ceil(real(1.5) * NCoeffs())),
-                           sqrt(numeric_limits<real>::epsilon()), HalfPeriod());
-        } else if (_umb) {
+        if (_umb) {
           _countn = _countb = 0;
           // Include scale = 1 in TrigfunExt constructor because _dfinv gets
           // added to z.
@@ -1317,7 +1191,7 @@ namespace GeographicLib {
       }
       _invp = true;
     } else {
-      if (!(_invp || _biaxr || _umb)) {
+      if (!(_invp || _umb)) {
         // If _umb, the inverse isn't periodic
         _fun.ComputeInverse();
         /*
@@ -1338,31 +1212,7 @@ namespace GeographicLib {
                                       real tol) const {
     if (!_distp) {
       if (!isfinite(z)) return z; // Deals with +/-inf and nan
-      if (_biaxl) {
-        // z = 1/sqrt(-mu)
-        // here f(u) = atan(sqrt(-mu)*tan(u))/sqrt(-mu)-Deltaf(u)
-        // let fx(u) = sqrt(-mu) * f(u); fun(u) = sqrt(-mu)*Deltaf(u)
-        // z = fx(u) = modang(u, sqrt(-mu)) - fun(u)
-        // fun(u) is monotonically increasing/decreasing quasilinear function
-        // period pi.  Combined function is quasilinear
-        // z = s * u +/- m; period = pi
-        // Inverting:
-        // u = z/s +/- m/s; period s*pi
-        // u = fxinv(z) = modang(z/x, 1/sqrt(-mu)) + funinv(z)
-        // funinv(z) periodic function of z period (1-s)*pi
-        real d = Max(),
-          ua = (z - d) / Slope(),
-          ub = (z + d) / Slope();
-        u0 = fmin(ub, fmax(ua, u0));
-        return Trigfun::root(
-                             [this]
-                             (real u) -> pair<real, real>
-                             { return pair<real, real>((*this)(u), deriv(u)); },
-                             z,
-                             u0, ua, ub,
-                             HalfPeriod(), HalfPeriod()/Slope(), 1,
-                             countn, countb, tol, Trigfun::FFUNROOT);
-      } else if (_umb) {
+      if (_umb) {
         real d = fabs(Max())
           + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
           ua = z - d,
@@ -1406,9 +1256,7 @@ namespace GeographicLib {
       if (!_invp) return Math::NaN();
       // For the inverse in the umbilical case, just use gd(z, _sqrtkapp) and
       // not F(gd(z, _sqrt(kapp)))
-      return _umb ? z + _dfinv(gd(z, _sqrtkapp)) :
-        (_biaxl ? modang(z/Slope(), 1/sqrt(-_mu)) + (_mu == 0 ? 0 : _dfinv(z)) :
-         _fun.inv0(z));
+      return _umb ? z + _dfinv(gd(z, _sqrtkapp)) : _fun.inv0(z);
     } else {
       return _invp ? _fun.inv0(z) :
         (_umb ?
@@ -1441,26 +1289,18 @@ namespace GeographicLib {
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::hfun::inv1(real z, int* countn, int* countb) const {
     if (!_distp)
-      return _umb ? root(z, z, countn, countb) :
-        (_biaxl ? (_mu == 0 ?
-                   // In this case _fun.Slope() = 0 and Slope() = 1
-                   modang(z/Slope(), 1/sqrt(-_mu)) :
-                   root(z, modang(z/Slope(), 1/sqrt(-_mu)), countn, countb)) :
-         _fun.inv1(z, countn, countb));
-    else {
-      if (_biaxr) return Math::NaN();
+      return _umb ? root(z, z, countn, countb) : _fun.inv1(z, countn, countb);
+    else
       return _umb ? root(z, inv0(z), countn, countb) :
         _fun.inv1(z, countn, countb);
-    }
   }
 
   // Accurate inverse correcting result from _finv
   Math::real TriaxialLine::hfun::inv2(real z, int* countn, int* countb) const {
     if (!_invp) return Math::NaN();
     if (!_distp)
-      return _biaxl && _mu == 0 ? inv1(z) :
-        (_umb || _biaxl ? root(z, inv0(z), countn, countb) :
-         _fun.inv2(z, countn, countb));
+      return _umb ? root(z, inv0(z), countn, countb) :
+        _fun.inv2(z, countn, countb);
     else
       return _umb ? root(z, inv0(z), countn, countb) :
         _fun.inv1(z, countn, countb);
@@ -1469,12 +1309,7 @@ namespace GeographicLib {
   Angle TriaxialLine::hfun::inv(const Angle& z, int* countn, int* countb)
     const {
     if (!_distp) return ang::NaN();
-    if (_biaxr)
-      return z;
-    else if (_biaxl && _mu == 0)
-      return z.modang(1/sqrt(-_mu));
-    else
-      return ang::radians(inv(z.radians(), countn, countb));
+    return ang::radians(inv(z.radians(), countn, countb));
   }
 
   // _mu > 0 && !_tx
@@ -1584,23 +1419,23 @@ namespace GeographicLib {
     return c2;
   }
 
-  // oblate/prolate variants for kap = 0, kapp = 1, mu > 0
-  Math::real TriaxialLine::hfun::fthtoblp(real /* tht */, real /* eps */,
+  // biaxial variants for kap = 0, kapp = 1, mu > 0
+  Math::real TriaxialLine::hfun::fthtbiax(real /* tht */, real /* eps */,
                                           real /* mu */) {
     // Multiply by f functions by sqrt(abs(mu))
     // return 1 / sqrt(mu);
     return 1;
   }
-  Math::real TriaxialLine::hfun::gthtoblp(real /* tht */, real /* eps */,
+  Math::real TriaxialLine::hfun::gthtbiax(real /* tht */, real /* eps */,
                                           real /* mu */) {
     return 0;
   }
-  Math::real TriaxialLine::hfun::gfthtoblp(real /* tht */, real /* mu */) {
+  Math::real TriaxialLine::hfun::gfthtbiax(real /* tht */, real /* mu */) {
     return 0;
   }
 
-  // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0, !_tx
-  Math::real TriaxialLine::hfun::dfpsioblp(real s, real c, real eps, real mu) {
+  // biaxial variants for kap = 1, kapp = 0, mu <= 0, !_tx
+  Math::real TriaxialLine::hfun::dfpsibiax(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
     // f functions are multiplied by sqrt(abs(mu)) but don't include this
     // factor here; instead include it in operator()(). etc.  This was we can
@@ -1608,35 +1443,35 @@ namespace GeographicLib {
     // point on a meridian.
     return eps / (1 + sqrt(1 - eps * c2));
   }
-  Math::real TriaxialLine::hfun::gpsioblp(real s, real c, real eps, real mu) {
+  Math::real TriaxialLine::hfun::gpsibiax(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
     // return gpsip(s, c, 1, 0, eps, mu) but with the factor c2 canceled
     return sqrt(1 - eps * c2);
   }
-  Math::real TriaxialLine::hfun::gfpsioblp(real s, real c, real mu) {
+  Math::real TriaxialLine::hfun::gfpsibiax(real s, real c, real mu) {
     // cos(phi)^2 = cos(psi)^2 - mu *sin(psi)^2
     // f' = sqrt(1-eps*cos(phi)^2)/cos(phi)^2
     // g' = sqrt(1-eps*cos(phi)^2)
     // g'/f' = cos(phi)^2
-    // Adjust by sqrt(-mu) to accommodate this factor in dfpsioblp
+    // Adjust by sqrt(-mu) to accommodate this factor in dfpsibiax
     return gfpsip(s, c, 1, mu) / sqrt(-mu);
   }
 
 #if 0
-  // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0, _tx
-  Math::real TriaxialLine::hfun::dfvoblp(real dn, real eps, real mu) {
+  // biaxial variants for kap = 1, kapp = 0, mu <= 0, _tx
+  Math::real TriaxialLine::hfun::dfvbiax(real dn, real eps, real mu) {
     real c2 = Math::sq(dn);
     // Multiply by f functions by sqrt(abs(mu))
     return sqrt(-mu) * eps * dn / (1 + sqrt(1 - eps * c2));
   }
   // This is positive
-  Math::real TriaxialLine::hfun::gvoblp(real /* cn */, real dn,
+  Math::real TriaxialLine::hfun::gvbiax(real /* cn */, real dn,
                                         real eps, real /* mu */) {
     // return gvp(dn, cn, 1, 0, epd, mu) but with cancelation
     real c2 = Math::sq(dn);
     return dn * sqrt(1 - eps * c2);
   }
-  Math::real TriaxialLine::hfun::gfvoblp(real dn, real mu) {
+  Math::real TriaxialLine::hfun::gfvbiax(real dn, real mu) {
     return gfvp(dn, 1, mu) / sqrt(-mu);
   }
 #endif

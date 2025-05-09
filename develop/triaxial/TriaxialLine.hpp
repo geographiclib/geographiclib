@@ -2,7 +2,7 @@
  * \file TriaxialLine.hpp
  * \brief Header for GeographicLib::TriaxialLin class
  *
- * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -38,14 +38,14 @@ namespace GeographicLib {
       // w = a generic version of u or v
     private:
       real _kap, _kapp, _eps, _mu, _sqrtkap, _sqrtkapp;
-      bool _distp, _tx, _oblpro;
+      bool _distp, _tx;
       EllipticFunction _ell;
       TrigfunExt _fun;
       // real _tol;
       Trigfun _dfinv;
       int _countn, _countb;
       real _max;
-      bool _umb, _meridr, _meridl, _biaxr, _biaxl, _invp;
+      bool _umb, _meridr, _meridl, _invp;
       // The f functions
       // mu > 0
       static real fthtp(real c, real kap, real kapp, real eps, real mu);
@@ -57,13 +57,13 @@ namespace GeographicLib {
       static real fpsip(real s, real c, real kap, real kapp,
                         real eps, real mu);
       static real fvp(real dn, real kap, real kapp, real eps, real mu);
-      // oblate/prolate variant for kap = 0, kapp = 1
-      static real fthtoblp(real tht, real eps, real mu);
-      // oblate/prolate variant for kap = 1, kapp = 0, mu <= 0, !_tx
-      static real dfpsioblp(real s, real c, real eps, real mu);
+      // biaxial variant for kap = 0, kapp = 1
+      static real fthtbiax(real tht, real eps, real mu);
+      // biaxial variant for kap = 1, kapp = 0, mu <= 0, !_tx
+      static real dfpsibiax(real s, real c, real eps, real mu);
       // NOT USED
-      // oblate/prolate variant for kap = 1, kapp = 0, mu <= 0, _tx
-      // static real dfvoblp(real dn, real eps, real mu);
+      // biaxial variant for kap = 1, kapp = 0, mu <= 0, _tx
+      // static real dfvbiax(real dn, real eps, real mu);
 
       // The g functions
       // _mu > 0
@@ -83,21 +83,16 @@ namespace GeographicLib {
       static real gvp(real cn, real dn, real kap, real kapp,
                       real eps, real mu);
       static real gfvp(real dn, real kap, real mu);
-      // oblate/prolate variants for kap = 0, kapp = 1, mu >= 0
-      static real gthtoblp(real tht, real eps, real mu);
-      static real gfthtoblp(real tht, real mu);
-      // oblate/prolate variants for kap = 1, kapp = 0, mu <= 0
-      static real gpsioblp(real s, real c, real eps, real mu);
-      static real gfpsioblp(real s, real c, real mu);
+      // biaxial variants for kap = 0, kapp = 1, mu >= 0
+      static real gthtbiax(real tht, real eps, real mu);
+      static real gfthtbiax(real tht, real mu);
+      // biaxial variants for kap = 1, kapp = 0, mu <= 0
+      static real gpsibiax(real s, real c, real eps, real mu);
+      static real gfpsibiax(real s, real c, real mu);
       // NOT USED
-      // static real gvoblp(real cn, real dn, real eps, real mu);
-      // static real gfvoblp(real dn, real mu);
+      // static real gvbiax(real cn, real dn, real eps, real mu);
+      // static real gfvbiax(real dn, real mu);
 
-      // Return atan(m * tan(x)) keeping result continuous.  Only defined for
-      // !signbit(m).
-      static real modang(real x, real m) {
-        return Angle::radians(x).modang(m).radians();
-      }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
 
@@ -110,29 +105,26 @@ namespace GeographicLib {
 
     public:
       // Summary of f and g functions
-      // _biaxr  = kap == 0 (mu >= 0) (oblate/prolate rotating coordinate)
-      //  f = fthtobl / sqrt(mu), fthtoblp = 1 inversion trivial
-      //  g = gthtobl, gthtoblp = 0
-      // _biaxl = kapp == 0 (mu <= 0) (oblate/prolate librating coordinate)
+      // _meridr = kap == 0 && mu == 0 (biaxial meridian rotating coordinate)
+      //  f = fthtbiax / sqrt(mu), fthtbiax = 1 inversion trivial
+      //  g = gthtbiax, gthtbiax = 0
+      // _meridl = kapp == 0 && mu -= 0 (biaxial meridian librating coordinate)
       //  f = (atan(sqrt(-mu)*tan(psi)) - dfpsiobl) / sqrt(-mu)
       //    mu == 0 **
       //     atan(sqrt(-mu)*tan(psi)) -> round(psi/pi)*pi
-      //    mu < 0 TODO: invert
-      //  g = gpsiobl
-      // mu > 0 && kap*kapp > 0 (triaxial rotating coordinate)
-      //        (also optionally mu > 0 && kap == 0)
+      //  g = gpsibiax
+      // mu > 0 (rotating coordinate)
       //  f = ftht or fu
       //  g = gtht or gu **
-      // mu < 0 && kap*kapp > 0 (trixial librating coordinate)
-      //        (also optionally mu < 0 && kapp == 0)
+      // mu < 0 (librating coordinate)
       //  f = fpsi or fv
       //  g = gpsi or gv **
-      // _umb = mu == 0 && kap*kapp > 0 (trixial umbilic)
+      // _umb = !biaxial && mu == 0 (trixial umbilic)
       //  f = (u + df)/sqrt(kap*kapp) or (u + dfv)/sqrt(kap*kapp)
       //  g = g0 or g0v
       //
       // Handing of f funtions needs to be handled specially for
-      // _biaxl
+      // _merid[lr]
       //   leading order behavior is seperated out
       //   N.B. inverse of f is discontinuous for mu == 0
       //   functions which need special treatment
@@ -142,9 +134,6 @@ namespace GeographicLib {
       // otherwise everything is handled by generic routines
       //
       // Handling of g function is always generic
-      // _biaxr
-      //   functions which need special treatment
-      //   inv
       // _umb
       //   functions which need special treatment
       //    Slope, fwd, rev, Max
@@ -176,10 +165,10 @@ namespace GeographicLib {
       }
       int NCoeffs() const { return _fun.NCoeffs(); }
       int NCoeffsInv() const {
-        return _umb || _biaxl ? _dfinv.NCoeffs() : _fun.NCoeffsInv();
+        return _umb ? _dfinv.NCoeffs() : _fun.NCoeffsInv();
       }
       std::pair<int, int> InvCounts() const {
-        return _umb || _biaxl ? std::pair<int, int>(_countn, _countb) :
+        return _umb ? std::pair<int, int>(_countn, _countb) :
           _fun.InvCounts();
       }
       bool txp() const { return _tx; }
@@ -188,8 +177,7 @@ namespace GeographicLib {
       }
       real Slope() const {
         using std::sqrt;
-        return _umb ? 1 :
-          (_biaxl ? 1 - sqrt(-_mu) * _fun.Slope() : _fun.Slope());
+        return _umb ? 1 :  _fun.Slope();
       }
       real Max() const {
         return _max;

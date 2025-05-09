@@ -5,8 +5,8 @@
  * The class provide an accurate representation of angle via 3 numbers, its
  * sine and cosine, and the number of turns.
  *
- * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -97,9 +97,9 @@ namespace GeographicLib {
     Angle& setquadrant(unsigned q);
     unsigned quadrant() const;
     Angle& reflect(bool flips, bool flipc = false, bool swapp = false);
-    Angle flipsign(int mult) const;
+    Angle flipsign(real mult) const;
     // Scale the sine component by m
-    Angle modang(real m) const;
+    //    Angle modang(real m) const;
   };
 
   inline Angle::Angle(real s, real c, real num, bool normp)
@@ -289,10 +289,12 @@ namespace GeographicLib {
     return *this;
   }
 
-  inline Angle Angle::flipsign(int mult) const {
-    return mult < 0 ? -*this : *this;
+  inline Angle Angle::flipsign(real mult) const {
+    using std::signbit;
+    return signbit(mult) ? -*this : *this;
   }
 
+  /*
   inline Angle Angle::modang(real m) const {
     using std::signbit;
     return signbit(m) ? Angle::NaN() :
@@ -301,6 +303,7 @@ namespace GeographicLib {
              _c / (m > 1 ? m : 1),
              _n );
   }
+  */
 
   inline Angle Angle::cardinal(real q) {
     using std::isfinite; using std::rint; using std::remainder;

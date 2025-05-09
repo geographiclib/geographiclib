@@ -2,8 +2,8 @@
  * \file Triaxial.cpp
  * \brief Implementation for GeographicLib::Triaxial class
  *
- * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -29,8 +29,6 @@ namespace GeographicLib {
     , _c(c)
     , _axes({_a, _b, _c})
     , _umbalt(false)
-    , _oblpro(false)
-    , _merid(false)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
@@ -62,8 +60,6 @@ namespace GeographicLib {
     , _k2(k2)
     , _kp2(kp2)
     , _umbalt(false)
-    , _oblpro(false)
-    , _merid(false)
     , _debug(false)
     , _ellipthresh(1/real(8))
   {
@@ -248,7 +244,6 @@ namespace GeographicLib {
     omg1.round();
     bet2.round();
     omg2.round();
-    bool merid = _biaxial && _merid;
 
     // In triaxial + oblate cases, [bet, omg] are initially put into [-90,90] x
     // [-180,180].  For prolate case, maybe we instead put [bet, omg] into
@@ -276,7 +271,7 @@ namespace GeographicLib {
       ang tmp12 = tmp2 - tmp1; // |bet2| - |bet1|
       swap12 = tmp12.s() > 0; // is |bet2| > |bet1|
       if (!_biaxial && tmp12.s() == 0) {
-        // don't need to do this if oblate or prolate
+        // don't need to do this if biaxial
         tmp1 = omg1; tmp2 = omg2;
         tmp1.setquadrant(0U); tmp2.setquadrant(0U);
         tmp12 = tmp2 - tmp1;
@@ -440,14 +435,12 @@ namespace GeographicLib {
         // Case A.c.1, process opposite umbilical points
         // For oblate/prolate this gives 0/90
         alp1 = _biaxial ?
-          (merid ? ang(_k, _kp, 0, true) : ang(_kp, _k, 0, true)) :
+          (_biaxial ? ang(_k, _kp, 0, true) : ang(_kp, _k, 0, true)) :
           ang(exp(lf.deltashift()/2), 1);
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
         bool betp = _k2 > _kp2;
-        if (merid) betp = !betp;
+        if (_biaxial) betp = !betp;
         d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, betp);
-        if (!merid && _biaxial)
-          alp2 += ang::cardinal(_oblate ? 2 : -1);
         if (_debug) msg = "A.c opposite umbilics";
         backside = signbit(bet2a.c());
         done = true;
@@ -464,7 +457,7 @@ namespace GeographicLib {
             // adjacent E/W umbilical points
             // Should be able to get ArcPos0 to return this?
             d = _oblate ?
-              TL::fline::disttx{ (merid ? 1 : -1 ) * Math::pi()/2,
+              TL::fline::disttx{ (_biaxial ? 1 : -1 ) * Math::pi()/2,
                                  -Math::pi()/2, 0 } :
               _prolate ?
               TL::fline::disttx{ Math::pi()/2, -Math::pi()/2, 0 } :
@@ -475,7 +468,8 @@ namespace GeographicLib {
             d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
             if (_debug) msg = "A.c.2 bet1/2 = -90";
           }
-          if (omg2a.s() < 0) alp2.reflect(true); // Is this needed?
+          // not needed
+          // if (omg2a.s() < 0) alp2.reflect(true);
           done = true;
         } else {
           // Case A.c.3, bet1 = -90, bet2 = 90
@@ -522,11 +516,12 @@ namespace GeographicLib {
               d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
               if (_debug)
                 cout << "APX "
-                     << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+                     << real(bet1) << " " << real(omg1) << " "
+                     << real(alp1) << " "
                      << real(bet2a) << " " << real(omg2a) << " "
                      << real(alp2) << " " << real(omg12.base()) << "\n";
-              if (!merid && signbit(omg2a.s()))
-                alp2.reflect(true); // Is this needed?
+              if (!_biaxial && signbit(omg2a.s()))
+                alp2.reflect(true);
               if (_debug) msg = "A.c.3 bet1/2 = -/+90 meridional";
               done = true;
             } else {
@@ -574,10 +569,8 @@ namespace GeographicLib {
           lf.ArcPos0(fic, (omg2-omg1).base(), bet2a, omg2a, alp2, false) :
           lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
         if (_debug) cout << "AAA " << real(alp2) << " " << real(bet2a) << "\n";
-        if (merid && _prolate && signbit(bet2a.c()))
+        if (_biaxial && _prolate && signbit(bet2a.c()))
           alp2.reflect(true,true);
-        if (!merid && _prolate)
-          alp2 += ang::cardinal(1);
         if (_debug) msg = "A.c.4 other meridional";
         backside = signbit(bet2a.c());
         done = true;
@@ -758,7 +751,7 @@ namespace GeographicLib {
       backside = signbit(bet2a.c());
     }
 
-    if (!merid && backside) alp2.reflect(true, true);
+    if (!_biaxial && backside) alp2.reflect(true, true);
     alp2.round();
 
     TL::gline lg(*this, lf.gm());

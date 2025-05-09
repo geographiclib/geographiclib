@@ -2,8 +2,8 @@
  * \file Triaxial.hpp
  * \brief Header for GeographicLib::Triaxial class
  *
- * Copyright (c) Charles Karney (2024) <karney@alum.mit.edu> and licensed under
- * the MIT/X11 License.  For more information, see
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
+ * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
@@ -54,8 +54,6 @@ namespace GeographicLib {
     real _e2, _k2, _kp2, _k, _kp;
     bool _oblate, _prolate, _biaxial;
     bool _umbalt,               // how coordinates wrap with umbilical lines
-      _oblpro,                  // include treatment of oblate/prolate cases
-      _merid,                   // triaxial treatment of biaxial meridians
       _debug;                   // print out diagnostics
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
@@ -91,10 +89,6 @@ namespace GeographicLib {
     const vec3& axes() const { return _axes; }
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) { if (_k2 > 0 && _kp2 > 0) _umbalt = numbalt; }
-    bool oblpro() const { return _oblpro; }
-    void oblpro(bool oblpro) { _oblpro = oblpro; }
-    bool merid() const { return _merid; }
-    void merid(bool merid) { _merid = merid; }
     bool debug() const { return _debug; }
     void debug(bool debug) { _debug = debug; }
     real ellipthresh() const { return _ellipthresh; }

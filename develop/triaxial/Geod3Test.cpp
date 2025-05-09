@@ -203,7 +203,6 @@ int main(int argc, const char* const argv[]) {
     int num = 1000;
     int skew = 10;
     int div = 1;
-    bool oblpro = false, merid = false;
     {
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1;
       for (int m = 1; m < argc; ++m) {
@@ -233,11 +232,7 @@ int main(int argc, const char* const argv[]) {
             return 1;
           }
           m += 4;
-        } else if (arg == "--oblpro")
-          oblpro = true;
-        else if (arg == "--merid")
-          merid = true;
-        else
+        } else
           return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
       }
       // testobl.txt  -e 1 3/4 3 0
@@ -255,8 +250,6 @@ int main(int argc, const char* const argv[]) {
       // Triaxial t(2, 1, 1);
       int bet1, omg1, bet2, omg2;
       real alp1, alp2, s12, m12, M12, M21;
-      t.oblpro(oblpro);
-      t.merid(merid);
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
         if (0)
