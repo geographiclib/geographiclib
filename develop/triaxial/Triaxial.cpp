@@ -586,7 +586,7 @@ namespace GeographicLib {
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
       omg2a -= omg2;
-      if (E * omg2a.s() >= 0) {
+      if (E * omg2a.s() >= -numeric_limits<real>::epsilon()/2) {
         // geodesic follows the equator
         d = lf.ArcPos0(fic, omg12.flipsign(E), bet2a, omg2a, alp2, false);
         if (_debug) msg = "A.b.1 bet1/2 = 0 equatorial";
@@ -735,7 +735,7 @@ namespace GeographicLib {
         cout << "X " << done << " " << msg << "\n";
       alp1 = findroot(
                       [this, &bet1, &omg1, &bet2, &omg2]
-                      (const ang& alp) -> Math::real
+                      (const ang& alp) -> real
                       {
                         return HybridA(bet1, omg1, alp, bet2, omg2);
                       },
@@ -903,13 +903,19 @@ namespace GeographicLib {
     // Converge failures with line 40045 of testsph[bc]
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 2 1 -i
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 1 2 -i
-    real x0 = -88.974388706914264728; // Offset for debugging output
-    if (debug)
+    real x0 = 90; // Offset for debugging output
+    if (debug) {
+      real fx0 = f(ang(x0));
       cout << "H " << real(xa) << " " << fa << " "
            << real(xb) << " " << fb << " "
-           << f(ang(x0)) << "\n";
+           << fx0 / numeric_limits<real>::epsilon() << "\n";
+    }
+    // If fa and fb have the same signs, assume that the root is at one of the
+    // endpoints.
+    if (fa * fb >= 0)
+      return fabs(fa) < fabs(fb) ? xa : xb;
     // tp = 1 - t
-    for (Math::real t = 1/Math::real(2), tp = t, ab = 0, ft = 0, fc = 0;
+    for (real t = 1/real(2), tp = t, ab = 0, ft = 0, fc = 0;
          cntn < maxcnt ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure Triaxial::findroot"), false)
@@ -929,7 +935,7 @@ namespace GeographicLib {
       ft = f(xt);
       if (debug)
         cout << "H " << cntn << " " << real(xt)-x0 << " " << ft << "\n";
-      if (!(fabs(ft) >= numeric_limits<Math::real>::epsilon())) {
+      if (!(fabs(ft) >= numeric_limits<real>::epsilon())) {
         xm = xt;
         if (debug)
           cout << "BREAKB\n";
@@ -945,11 +951,11 @@ namespace GeographicLib {
       xm = fabs(fb) < fabs(fa) ? xb : xa;
       // ordering is b - a - c
       ab = (xa-xb).radians0();
-      Math::real
+      real
         ca = (xc-xa).radians0(),
         cb = ca+ab,
         // Scherer has a fabs(cb).  This should be fabs(ab).
-        tl = numeric_limits<Math::real>::epsilon() / fabs(ab);
+        tl = numeric_limits<real>::epsilon() / fabs(ab);
       // Backward tests to deal with NaNs
       if (debug)
         cout << "R " << cntn << " " << ab << " " << cb << "\n";
@@ -960,7 +966,7 @@ namespace GeographicLib {
       // Otherwise we get two equal values of f near the boundary and a
       // bisection is triggered.
       tl = fmin(1/real(32), 16*tl);
-      Math::real
+      real
         xi = ab / cb,
         xip = ca / cb,          // 1 - xi
         phi = (fa-fb) / (fc-fb),
@@ -978,7 +984,7 @@ namespace GeographicLib {
         // t = fmin(1 - tl, fmax(tl, t));
         // tp = fmin(1 - tl, fmax(tl, tp));
       } else {
-        t = tp = 1/Math::real(2);
+        t = tp = 1/real(2);
         ++cntb;
         if (debug)
           cout << "J2 " << cntn << " " << t << " " << 1 - t << "\n";
