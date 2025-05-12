@@ -26,6 +26,13 @@ namespace GeographicLib {
     , _gic(gic)
   {}
 
+  TriaxialLine::TriaxialLine(const Triaxial& t)
+    : _f(t, Triaxial::gamblk(t, (t._umbalt && t._kp2 > 0) || t._k2 == 0))
+  {
+    // Not worth it...
+    // _f.ComputeInverse();
+  }
+
   TriaxialLine::TriaxialLine(const Triaxial& t,
                              Angle bet1, Angle omg1, Angle alp1) {
     bet1.round();
@@ -351,11 +358,11 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialLine::Hybrid(Angle bet2,
+  void TriaxialLine::Hybrid(Angle betomg2,
                             Angle& bet2a, Angle& omg2a, Angle& alp2a,
-                            real& s12)
+                            real& s12, bool betp)
     const {
-    fline::disttx d = _f.Hybrid(_fic, bet2, bet2a, omg2a, alp2a);
+    fline::disttx d = _f.Hybrid(_fic, betomg2, bet2a, omg2a, alp2a, betp);
     s12 = _g.dist(_gic, d);
   }
 
@@ -377,28 +384,29 @@ namespace GeographicLib {
 
   TriaxialLine::fline::disttx
   TriaxialLine::fline::Hybrid(const fics& fic,
-                              Angle bet2,
+                              Angle betomg2,
                               Angle& bet2a, Angle& omg2a, Angle& alp2a,
                               bool betp) const {
     // Is the control variable psi or tht?
     bool psip = !transpolar() ? betp : !betp;
+    if (!betp) betomg2 -= ang::cardinal(1);
     ang tau12;
     if (false && _t.debug())
       cout << "HHQ " << transpolar() << " " << psip << " " << gammax() << "\n";
     if (psip) {
-      ang phi2 = bet2;
+      ang phi2 = betomg2;
       if (gammax() > 0) {
         real spsi = phi2.s(),
           // In evaluating equivalent expressions, choose the one with minimum
           // cancelation.  Need the 0 + x to convert -0 to +0.  (Note sqrt(-0) =
           // -0 and fmax(+0, -0) may be -0.)
-          //
-          // Maybe we should return nan if geodesic can't't reach phi2 (given by
-          // sqrt(neg) if fmax is skipped).
-          cpsi = 0 + sqrt(fmax(0,
-                               nu() < nup() ?
-                               (phi2.c() - nu()) * (phi2.c() + nu()) :
-                               (nup() - phi2.s()) * (nup() + phi2.s())));
+          cpsi = nu() < nup() ?
+          (phi2.c() - nu()) * (phi2.c() + nu()) :
+          (nup() - phi2.s()) * (nup() + phi2.s());
+        // Return nan if geodesic can't reach phi2 -- given by sqrt(neg) -- but
+        // allow a little slop.
+        cpsi = !(cpsi > -numeric_limits<real>::epsilon()) ? Math::NaN() :
+          (signbit(cpsi) ? 0 : sqrt(cpsi));
         // Need Angle(0, 0) to be treated like Angle(0, 1) here.
         ang psi12 = (ang(spsi, cpsi) - fic.psi1).base();
         // convert -180deg to 180deg
@@ -411,9 +419,9 @@ namespace GeographicLib {
       } else
         tau12 = ang::NaN();
     } else {
-      ang tht2 = bet2;
+      ang tht2 = betomg2;
       if (gammax() >= 0) {
-        // cout << "GRR " << real(fic.bet1) << " " << real(bet2) << "\n";
+        // cout << "GRR " << real(fic.bet1) << " " << real(betomg2) << "\n";
         ang tht2b = tht2; tht2b.reflect(false, fic.Ex < 0);
         ang tht12 = tht2b - fic.tht1;
         tht12.reflect(fic.Ex < 0);
@@ -618,6 +626,7 @@ namespace GeographicLib {
           // remx(fic.Ex * (tht2a - fic.tht0).radians(), Math::pi());
           remx((tht2a - fic.tht0).flipsign(fic.Ex));
         v2 = ftht().fwd(tht2n.first);
+        u2 = 0;
         int parity = fmod(tht2n.second, real(2)) != 0 ? -1 : 1;
         if (kxp() == 0) {
           if (fic.phi1.c() != 0 && tau12 == tau12.nearest(2U)) {
@@ -654,7 +663,8 @@ namespace GeographicLib {
                                     c, fic.psi1.t(), -l, l, 1, 1, 1,
                                     nullptr, nullptr, 0, Trigfun::ARCPOS0);
             v2 = atan(tpsi2);
-            phi2a = (ang(tpsi2, 1) + fic.phi1.nearest(2U)).rebase(fic.phi0);
+            phi2a = (ang(tpsi2, 1) + fic.phi1.nearest(2U))
+              .flipsign(parity*fic.Nx).rebase(fic.phi0);
             if (false && t().debug())
               cout << "PSI2 " << real(fic.phi1) << " " << real(tau12) << " " << npi << " " << c << " " << real(phi2a) << " " << parity << "\n";
             alp2a = ang::cardinal(fic.Nx * parity == 1 ? 0 : 2)

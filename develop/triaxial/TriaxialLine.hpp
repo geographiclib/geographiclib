@@ -253,7 +253,7 @@ namespace GeographicLib {
       // Run fline to its first intersection with bet and return resulting
       // bet2a, omg2a, alp2a (without angle normalization) and distance
       // calculation object
-      disttx Hybrid(const fics& fic, Angle bet2,
+      disttx Hybrid(const fics& fic, Angle betomg2,
                     Angle& bet2a, Angle& omg2a, Angle& alp2a,
                     bool betp = true) const;
       disttx ArcPos0(const fics& fic, Angle tau12,
@@ -405,11 +405,13 @@ namespace GeographicLib {
       }
       return  std::pair<real, real>(x.radians0(), m + 2*x.n());
     }
-    TriaxialLine(fline f, fline::fics fic,
-                 gline g, gline::gics gic);
-
+    // Private constructor to assemble the pieces of the class on exiting
+    // Triaxial::Inverse.
+    TriaxialLine(fline f, fline::fics fic, gline g, gline::gics gic);
+    // Private constructor to provide the umbilical fline object.
+    TriaxialLine(const Triaxial& t);
   public:
-    TriaxialLine(const Triaxial& t) : _t(t), _f(_t), _g(_t) {}
+    // TriaxialLine(const Triaxial& t) : _t(t), _f(_t), _g(_t) {}
     TriaxialLine(const Triaxial& t,
                  Angle bet1, Angle omg1, Angle alp1);
     TriaxialLine(const Triaxial& t, real bet1, real omg1, real alp1);
@@ -424,9 +426,9 @@ namespace GeographicLib {
     // bet1 < 0, alp1 in [-90,90], omg2 = 0
     // bet1 == 0, alp1 in (-90,90), omg2 = 0,
     //                   alp1 = +/-90 omg2 = conj pt
-    void Hybrid(Angle bet2,
+    void Hybrid(Angle betomg2,
                 Angle& bet2a, Angle& omg2a, Angle& alp2a,
-                real& s12) const;
+                real& s12, bool betp = true) const;
     real gamma() const { return _f.gamma(); }
     real Distance() const { return _gic.s13; }
     void SetDistance(real s13) { _gic.s13 = s13; }

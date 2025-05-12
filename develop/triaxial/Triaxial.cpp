@@ -245,6 +245,10 @@ namespace GeographicLib {
     bet2.round();
     omg2.round();
 
+    if (!_umbline)
+      // Initialize _umbline
+      _umbline = make_shared<TriaxialLine>(TriaxialLine(*this));
+
     // In triaxial + oblate cases, [bet, omg] are initially put into [-90,90] x
     // [-180,180].  For prolate case, maybe we instead put [bet, omg] into
     // [-180,180] x [0,180].
@@ -418,7 +422,9 @@ namespace GeographicLib {
     // and for the final result
     ang bet2a, omg2a;
 
-    TL::fline lf(*this);
+    // Much of the initial logic for the inverse solution uses umbilical
+    // geodesics; use the cached value for this.
+    TL::fline lf = _umbline->_f;
     TL::fline::fics fic;
     TL::fline::disttx d;
 
@@ -430,7 +436,6 @@ namespace GeographicLib {
     bool done = false, backside = false;
     if (bet1.c() * omg1.s() == 0 && bet2.c() * omg2.s() == 0) {
       // Case A.c, both points on middle ellipse
-      lf = TL::fline(*this, gamblk(*this, (_umbalt && _kp2 > 0) || _k2 == 0));
       if (umb1 && umb2 && bet2.s() > 0 && omg2.c() < 0) {
         // Case A.c.1, process opposite umbilical points
         // For oblate/prolate this gives 0/90
@@ -475,10 +480,8 @@ namespace GeographicLib {
           // Case A.c.3, bet1 = -90, bet2 = 90
           // need to see how far apart the points are
           // If point 1 is at [-90, 0], direction is 0 else -90.
-          // XXX Maybe alp1 needs fixing
-
-          alp1 = ang::cardinal(omg1.s() == 0 && (!_prolate || omg2.s() == 0) ?
-                               0 : -1);
+          // For prolate use -90.
+          alp1 = ang::cardinal(omg1.s() == 0 && !_prolate ? 0 : -1);
           if (0)
             cout << "FIC " << real(bet1) << " " << real(omg1) << " "
                  << real(alp1) << "\n";
@@ -487,12 +490,10 @@ namespace GeographicLib {
           if (omg1.s() == 0 && omg2.s() == 0) {
             // adjacent N/S umbilical points
             // Should be able to get ArcPos0 to return this?
-            d = _oblate ?
+            d = _biaxial ?
               TL::fline::disttx{ Math::pi()/2, -Math::pi()/2, 0 } :
-              _prolate ?
-              TL::fline::disttx{ -Math::pi()/2, Math::pi()/2, 0 } :
               TL::fline::disttx{ BigValue(), -BigValue(), 0 };
-            alp2 = ang::cardinal(_oblate ? 0 : (_prolate ? 2 : 1));
+            alp2 = ang::cardinal(_oblate ? 0 :  1);
             if (_debug) msg = "A.c.3 adjacent NS umbilics";
             done = true;
           } else {
@@ -510,7 +511,8 @@ namespace GeographicLib {
                    << real(alp2) << "\n";
             // XXX FIX HERE for prolate case -90 -1 90 177
             omg2a -= omg2;
-            if (omg2a.s() > 0) {
+            if (omg2a.s() >= -numeric_limits<real>::epsilon()/2) {
+              // Includes all cases where point 1 = [-90, 0], omg1.s() == 0.
               ang omg12 = omg2 + omg1;
               // FIX ME for oblate
               d = lf.ArcPos0(fic, omg12.base(), bet2a, omg2a, alp2, false);
@@ -526,25 +528,17 @@ namespace GeographicLib {
               done = true;
             } else {
               alpa = ang::cardinal(-1) + ang::eps();
-              if (false && _prolate) {
-                fa = -omg2.radians0();
-                alpb = -alpa;
-                fb = (ang::cardinal(2) - omg2).radians0();
-              } else {
-                fa = omg2a.radians0();
-                fic.setquadrant(lf, 0U);
-                (void) lf.ArcPos0(fic, ang::cardinal(2),
-                                  bet2a, omg2a, alp2);
-                omg2a -= omg2;
-                alpb = -alpa;
-                fb = omg2a.radians0();
-              }
-              if (0)
-                cout << "ALP/F "
-                     << real(alpa) << " " << fa << " "
-                     << real(alpb) << " " << fb << "\n";
-              if (_debug) msg = "A.c.3 general bet1/2 = -/+90, non-meridional";
+              fa = omg2a.radians0();
+              (void) lf.ArcPos0(fic, ang::cardinal(-2), bet2a, omg2a, alp2);
+              omg2a -= omg2;
+              alpb = -alpa;
+              fb = omg2a.radians0();
             }
+            if (_debug)
+              cout << "ALP/F "
+                   << real(alpa) << " " << fa << " "
+                   << real(alpb) << " " << fb << "\n";
+            if (_debug) msg = "A.c.3 general bet1/2 = -/+90, non-meridional";
           }
         }
       } else {
@@ -596,16 +590,13 @@ namespace GeographicLib {
         alpb = ang::cardinal(-1) - ang::eps();
         alpa = -alpb;
         (E > 0 ? fa : fb) = omg2a.radians0();
-        alp1.setquadrant(E > 0 ? 3U : 0U);
-        fic.setquadrant(lf, E > 0 ? 3U : 0U);
-        (void) lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2);
+        (void) lf.ArcPos0(fic, ang::cardinal(-2), bet2a, omg2a, alp2);
         omg2a -= omg2;
         (E > 0 ? fb : fa) = omg2a.radians0();
         if (_debug) msg = "A.b.2 general bet1/2 = 0 non-equatorial";
       }
     } else if (umb1) {
       // Case B.a, umbilical point to general point
-      lf = TL::fline(*this, gamblk(*this, (_umbalt && _kp2 > 0) || _k2 == 0));
       alp2 = ang(_kp * omg2.s(), _k * bet2.c());
       // RETHINK THIS.  If we know alp2, we can compute delta.  This should be
       // enough to find alp1.
@@ -688,7 +679,6 @@ namespace GeographicLib {
       alpa = ang( _kp * fabs(omg1.s()), _k * fabs(bet1.c()));
       alpb = alpa;
 
-      lf = TL::fline(*this, gamblk(*this, (_umbalt && _kp2 > 0) || _k2 == 0));
       fic = TL::fline::fics(lf, bet1, omg1, alpb);
       unsigned qb = 0U, qa = 3U; // qa = qb - 1 (mod 4)
       if (_debug) msg = "B.d general";
@@ -908,12 +898,23 @@ namespace GeographicLib {
       real fx0 = f(ang(x0));
       cout << "H " << real(xa) << " " << fa << " "
            << real(xb) << " " << fb << " "
-           << fx0 / numeric_limits<real>::epsilon() << "\n";
+           << fx0 << "\n";
     }
     // If fa and fb have the same signs, assume that the root is at one of the
-    // endpoints.
-    if (fa * fb >= 0)
-      return fabs(fa) < fabs(fb) ? xa : xb;
+    // endpoints if corresponding f is small.  Otherwise, it's an error.
+    if (fa * fb >= 0) {
+      if (fmin(fabs(fa), fabs(fb)) > 32*numeric_limits<real>::epsilon())
+        throw GeographicLib::GeographicErr("Bad inputs Triaxial::findroot");
+      else if (fmax(fabs(fa), fabs(fb)) > 32*numeric_limits<real>::epsilon())
+        return fabs(fa) < fabs(fb) ? xa : xb;
+      else
+        // If both fa and fb have the same sign and are small, return mean of
+        // the endpoints.  This is the case of antipodal points on a triaxial
+        // sphere, case A.c.3 general bet1/2 = -/+90, non-meridional.  The mean
+        // angle corresponds to the "minor" ellipse where the call to Hybrid
+        // (to compute alp2) gives a well defined result.
+        return ang(xa.s() + xb.s(), xa.c() + xb.c());
+    }
     // tp = 1 - t
     for (real t = 1/real(2), tp = t, ab = 0, ft = 0, fc = 0;
          cntn < maxcnt ||

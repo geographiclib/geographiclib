@@ -16,6 +16,7 @@
 #include <limits>
 #include <functional>
 #include <utility>
+#include <memory>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
 #include "Angle.hpp"
@@ -57,6 +58,7 @@ namespace GeographicLib {
       _debug;                   // print out diagnostics
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
+    mutable std::shared_ptr<TriaxialLine> _umbline;
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
