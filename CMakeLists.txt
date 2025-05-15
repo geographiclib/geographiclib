@@ -141,6 +141,9 @@ endif ()
 option (PACKAGE_DEBUG_LIBS
   "Include debug versions of library in binary package" OFF)
 
+# (10) Should we build the tools as well?
+option (BUILD_TOOLS "Build tools along with the libraries" ON)
+
 # Figure out which libraries to build and set GEOGRAPHICLIB_LIB_TYPE_VAL
 # (used to initialize GEOGRAPHICLIB_SHARED_LIB in
 # include/GeographicLib/Config.h.in)
@@ -452,9 +455,11 @@ if (WIN32)
 endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
-set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
-  GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
-  TransverseMercatorProj)
+if (BUILD_TOOLS)
+  set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
+    GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
+    TransverseMercatorProj)
+endif ()
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
   geographiclib-get-magnetic)
