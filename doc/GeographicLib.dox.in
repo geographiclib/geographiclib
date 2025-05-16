@@ -322,6 +322,9 @@ Here are the steps to compile and install GeographicLib:
     - `PKGDIR` package config
     - `DOCDIR` documentation
     - `EXAMPLEDIR` examples
+    Setting `BINDIR=OFF` has the side effect of removing `tools` from
+    the default `all` target for `make`.  (The tools can still be built
+    with `make tools`.)
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
     C:/ProgramData/GeographicLib for Windows systems) specifies the default
@@ -7761,6 +7764,8 @@ git repository for GeographicLib</a>.
    - Add Math::clamp.
    - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
      fixed precision.
+   - Document that cmake option `-D BINDIR=OFF` removes `tools` from the
+     default `all` target for `make`.
    - WARNING: C++17 compliant compiler will be required for the next
      release.  Support for builds with Visual Studio 14 (2015) will then
      stop.

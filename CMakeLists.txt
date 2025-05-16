@@ -194,7 +194,8 @@ endif ()
 
 # Installation directories.  An empty string or "OFF" disables
 # installation of that component.  These are all relative to
-# CMAKE_INSTALL_PREFIX.
+# CMAKE_INSTALL_PREFIX.  BINDIR=OFF has the side effect of removing the
+# building of tools from the default "all" make target.
 
 # Installation is to ${INCDIR}/GeographicLib
 set (INCDIR "include" CACHE STRING "Where to install header files")
