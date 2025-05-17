@@ -16,8 +16,9 @@ sphc 1 0 1 2
 sphd 1 0 0 3
 hu   1 7577279780/1130005142289 1942065235 6378137
 phu  1 30308952520/4489860107041 3178376 971037955
+oblx 1 150/197 49 1
+prox 1 150/53 1 49
 EOF
-
 exit
 
 Problem case for phu:
@@ -25,10 +26,11 @@ echo 38 83 -38 -98 | ./Geod3Solve -e  1 30308952520/4489860107041 3178376 971037
 3.1293641189285856421 -> 3.12936411894543332
 err = 2e-11
 
-set  err      bad-line inverse-problem
-phu  151757   357892   38   83 -38 -98 -> -38 82 38 -97
-pro  29083732 18182    89    1 -90  89 -> -90  1 89  89
-sphd 12622381 400668   41 -179 -42 104 -> -90  1 89  76
+set  err      bad-line inverse-problem                    alt
+phu  151757   357892   38   83 -38  -98 -> -38 82  38 -97 -38 82 142 97
+phu  105322   94146    51 -118  51 -119 -> -51 61 -51  62 -51 61 -51 62
+pro  29083732 18182    89    1 -90   89 -> -90  1  89  89 -90  1  89 89
+sphd 12622381 400668   41 -179 -42  104 -> -90  1  89  76 -90  1  89 76
 
 These ellipsoids form a series with a/c = 2
 obl  1 3/4 3 0
@@ -67,3 +69,13 @@ p,a=6378137,b=6356787,c=6356717;
 
 a^2/c^2=(1+e2*(1-k2))/(1-e2*k2);
 e2=(a^2-c^2)/(a^2*k2+c^2*(1-k2));
+
+testset time = 666.07user 0.25system 11:08.91elapsed
+669e6/0.5e6 = 1338 1xinverse + 4xdirect
+inverse only = 360.62user 0.25system 6:02.05elapsed
+362/0.5 = 724 1xinverse
+2x direct only = 156.79user 0.19system 2:37.48elapsed
+147/0.5 = 294 2xdirect
+
+shared umbline, inverse only = 326.12user 0.18system 5:27.34elapsed
+(5*60+27)*2 = 654

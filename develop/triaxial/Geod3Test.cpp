@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <sstream>
 #include <limits>
@@ -40,7 +41,8 @@ string nicestr(Math::real x, int prec, bool azi = false) {
   return s;
 }
 
-void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
+void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2,
+            bool odep) {
 #if GEOGRAPHICLIB_PRECISION <= 2
   int prec = 12;
 #elif GEOGRAPHICLIB_PRECISION == 3
@@ -50,7 +52,6 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2) {
 #endif
   typedef Math::real real;
   typedef Angle ang;
-  bool odep = false;
   ang bet1x(bet1), omg1x(omg1), bet2x(bet2), omg2x(omg2);
   real s12;
   ang alp1, alp2;
@@ -185,6 +186,37 @@ void dfinvtest() {
   l.Optimize();
 }
 
+void hybridtest(const Triaxial& t, Math::real bet1, Math::real omg1,
+                Math::real betomg2, bool betp) {
+  typedef Math::real real;
+  typedef Angle ang;
+  ang bet1a(bet1), omg1a(omg1), betomg2a(betomg2),
+    // azimuth of umbilic azimuth
+    alpu(t.kp() * omg1a.s(), t.k() * bet1a.c()),
+    bet2a, omg2a, alp2a;
+  real s12;
+  cout << setprecision(6) << fixed;
+  for (unsigned q = 0u; q < 4u; ++q) {
+    alpu.setquadrant(q);
+    TriaxialLine l(t, bet1a, omg1a, alpu);
+    l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
+    Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
+    cout << real(alpu.base()) << " " << real(bet2a.base()) << " "
+         << real(omg2a.base()) << " " << real(alp2a.base()) << " "
+         << s12 << "\n";
+  }
+  int m = 1;
+  for (int a = -180*m; a <= 180*m; ++a) {
+    ang alp1a = ang(real(a)/m);
+    TriaxialLine l(t, bet1a, omg1a, alp1a);
+    l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
+    Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
+    cout << real(a)/m << " " << real(bet2a.base()) << " "
+         << real(omg2a.base()) << " " << real(alp2a.base()) << " "
+          << s12 << "\n";
+  }
+}
+
 int main(int argc, const char* const argv[]) {
   try {
     typedef Math::real real;
@@ -201,6 +233,7 @@ int main(int argc, const char* const argv[]) {
     int skew = 10;
     int div = 1;
     {
+      bool hybridp = false, odep = false, reportp = false;
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1;
       for (int m = 1; m < argc; ++m) {
         string arg(argv[m]);
@@ -229,7 +262,13 @@ int main(int argc, const char* const argv[]) {
             return 1;
           }
           m += 4;
-        } else
+        } else if (arg == "--hybrid")
+          hybridp = true;
+        else if (arg == "--ode")
+          odep = true;
+        else if (arg == "--report")
+          reportp = true;
+        else
           return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
       }
       // testobl.txt  -e 1 3/4 3 0
@@ -245,14 +284,21 @@ int main(int argc, const char* const argv[]) {
       Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);
-      int bet1, omg1, bet2, omg2;
-      real alp1, alp2, s12, m12, M12, M21;
-      while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
-             >> m12 >> M12 >> M21) {
-        if (0)
-          report(t, bet1, omg1, bet2, omg2);
-        else
-          errreport(t, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
+      if (hybridp) {
+        real bet1, omg1, betomg2;
+        bool betp;
+        while (cin >> bet1 >> omg1 >> betomg2 >> betp)
+          hybridtest(t, bet1, omg1, betomg2, betp);
+      } else {
+        int bet1, omg1, bet2, omg2;
+        real alp1, alp2, s12, m12, M12, M21;
+        while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
+               >> m12 >> M12 >> M21) {
+          if (reportp)
+            report(t, bet1, omg1, bet2, omg2, odep);
+          else
+            errreport(t, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
+        }
       }
       return 0;
     }
@@ -302,7 +348,7 @@ int main(int argc, const char* const argv[]) {
               */
               if (bet1 == 90 && omg1 == 125 &&
                   bet2 == 90 && omg2 == -140)
-                report(t, bet1, omg1, bet2, omg2);
+                report(t, bet1, omg1, bet2, omg2, false);
             }
     }
     div = div + skew + num;
