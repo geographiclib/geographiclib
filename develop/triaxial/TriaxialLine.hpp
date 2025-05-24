@@ -248,8 +248,11 @@ namespace GeographicLib {
       real deltashift() const { return _deltashift; }
       bool transpolar() const { return _gm.transpolar; }
       const Triaxial::gamblk& gm() const { return _gm; }
-      // Run fline to its first intersection with bet and return omg2 - omg2b
-      real Hybrid0(const fics& fic, Angle bet2, Angle omg2b) const;
+      // Run fline to its first intersection with
+      // (for betp) bet2 and return omg2
+      // (for !betp) omg2 and return bet2
+      real Hybrid0(const fics& fic, Angle bet2, Angle omg2,
+                   bool betp = true) const;
       // Run fline to its first intersection with bet and return resulting
       // bet2a, omg2a, alp2a (without angle normalization) and distance
       // calculation object

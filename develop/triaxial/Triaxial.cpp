@@ -30,6 +30,7 @@ namespace GeographicLib {
     , _axes({_a, _b, _c})
     , _umbalt(false)
     , _debug(false)
+    , _hybridalt(false)
     , _ellipthresh(1/real(8))
   {
     real s = (_a - _c) * (_a + _c);
@@ -291,10 +292,12 @@ namespace GeographicLib {
     if (_oblate) {
       // Rotate, subtracting omg1 from omg[12], so omg1 = 0
       omg2 -= omg1;
+      omg2 = omg2.base();
       omg1 = ang::cardinal(0);
     } else if (_prolate) {
       // Rotate, subtracting bet1 + 90 from bet[12], so bet1 = -90
       bet2 -= bet1 + ang::cardinal(1);
+      bet2 = bet2.base();
       bet1 = ang::cardinal(-1);
     }
     // Now |bet1| >= |bet2|
@@ -415,9 +418,11 @@ namespace GeographicLib {
     //     directions.  This treats case A.a.
     //     Oblate/Prolate: already handled by B.b or B.c
 
-    // Set up variables for search
-    real fa, fb;
-    ang alpa, alpb;
+    // Set up variables for search, "h" variables are for hybridalt
+    real fa = Math::NaN(), fb = Math::NaN(),
+      fah = Math::NaN(), fbh = Math::NaN();
+    ang alpa, alpb, alpah, alpbh;
+    bool halt = false;
 
     // and for the final result
     ang bet2a, omg2a;
@@ -534,6 +539,8 @@ namespace GeographicLib {
               fb = omg2a.radians0();
               if (_debug) msg = "A.c.3 general bet1/2 = -/+90, non-meridional";
               done = false;     // A marker
+              if (_hybridalt)
+                halt = false;   // Doesn't make sense for this case
             }
             if (_debug)
               cout << "ALP/F "
@@ -594,6 +601,9 @@ namespace GeographicLib {
         omg2a -= omg2;
         (E > 0 ? fb : fa) = omg2a.radians0();
         if (_debug) msg = "A.b.2 general bet1/2 = 0 non-equatorial";
+        done = false;           // A marker
+        if (_hybridalt)
+          halt = false;   // Doesn't make sense for this case
       }
     } else if (umb1) {
       // Case B.a, umbilical point to general point
@@ -604,40 +614,28 @@ namespace GeographicLib {
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
       bool betp = _k2 > _kp2;   // This could be betb = !_prolate;
-      if (0) {
-        (void) lf.ArcPos0(fic, (betp ? bet1 - bet2 :  omg1 - omg2).base(),
-                          bet2a, omg2a, alp1, betp);
-        //      (void) lf.ArcPos0(fic, bet1 - bet2, bet2a, omg2a, alp1);
-        if (0)
-          cout << "APOUT "
-               << real(bet2a) << " " << real(omg2a) << " " << real(alp1) << "\n";
-        if (alp1.s() < 0) alp1 += ang::cardinal(1);
-        if (_prolate) alp1 += ang::cardinal(1);
-        if (_oblate) alp1 += omg2;
-      } else {
-        // cout << "DELTA " << fic.delta/Math::degree() << "\n";
-        real delta = (lf.transpolar() ? -1 : 1) * fic.delta;
-        alp1 = _oblate ?
-          // For oblate
-          // delta =
-          //   atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())) - omg1
-          // Here omg1 = -90 (because of pi/2 shift in ext. vs int. omg)
-          // bet1.s() = -1, bet0.c() = 1, alp1.s() > 0, so
-          // alp1 = 90 - delta
-          ang::cardinal(1) - ang::radians(delta) :
-          (_prolate ?
-           // For prolate
-           // delta =
-           //   bet1 - atan2(omg1.s() * fabs(alp1.c()), omg0.c() * alp1.s())
-           // Here bet1 = -90, omg1.s() = -1, alp1.c() > 0, omg0.c() = 1
-           // delta = bet1 + atan2(alp1.c(), alp1.s()) = -90 + 90 - alp1
-           // alp1 = -delta
-           -ang::radians(delta) :
-           // For triaxial case at an umbilic point
-           // delta = f.deltashift()/2 - log(fabs(alp1.t()));
-           // alp1.t() = exp(f.deltashift()/2 - delta)
-           ang(exp(lf.deltashift()/2 - delta), 1));
-      }
+      // cout << "DELTA " << fic.delta/Math::degree() << "\n";
+      real delta = (lf.transpolar() ? -1 : 1) * fic.delta;
+      alp1 = _oblate ?
+        // For oblate
+        // delta =
+        //   atan2(bet1.s() * fabs(alp1.s()), bet0.c() * alp1.c())) - omg1
+        // Here omg1 = -90 (because of pi/2 shift in ext. vs int. omg)
+        // bet1.s() = -1, bet0.c() = 1, alp1.s() > 0, so
+        // alp1 = 90 - delta
+        ang::cardinal(1) - ang::radians(delta) :
+        (_prolate ?
+         // For prolate
+         // delta =
+         //   bet1 - atan2(omg1.s() * fabs(alp1.c()), omg0.c() * alp1.s())
+         // Here bet1 = -90, omg1.s() = -1, alp1.c() > 0, omg0.c() = 1
+         // delta = bet1 + atan2(alp1.c(), alp1.s()) = -90 + 90 - alp1
+         // alp1 = -delta
+         -ang::radians(delta) :
+         // For triaxial case at an umbilic point
+         // delta = f.deltashift()/2 - log(fabs(alp1.t()));
+         // alp1.t() = exp(f.deltashift()/2 - delta)
+         ang(exp(lf.deltashift()/2 - delta), 1));
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
       d = lf.ArcPos0(fic, (betp ? bet2 - bet1 : omg2 - omg1).base(),
                      bet2a, omg2a, alp2, betp);
@@ -645,6 +643,8 @@ namespace GeographicLib {
       done = true;
     } else if (bet1.c() == 0) {
       // Case B.b, bet1 = -90 to general point
+      // subsumed by B.a for oblate
+      // general handling for prolate
       if (!signbit(omg2.s())) {
         alpa = ang::cardinal(-1) + ang::eps();
         alpb = -alpa;
@@ -658,8 +658,18 @@ namespace GeographicLib {
       }
       if (_debug) msg = "B.b general bet1 = -90";
       done = false;             // A marker
+      if (_hybridalt && omg1.c() != 0) {
+        // exclude geodesics on the minor ellipse
+        halt = true;
+        fah = (ang::cardinal(1) - bet2).radians0();
+        fbh = (ang::cardinal(-1) - bet2).radians0();
+        alpbh = alpb;
+        alpah = alpa;
+      }
     } else if (omg1.s() == 0) {
       // Case B.c, omg1 = 0 to general point
+      // subsumed by B.a for prolate
+      // general handling of oblate
       if (omg2.s() > 0) {
         alpa = ang::eps();
         alpb = ang::cardinal(2) - alpa;
@@ -726,21 +736,50 @@ namespace GeographicLib {
       // Iterative search for the solution
       if (_debug)
         cout << "X " << done << " " << msg << "\n";
-      alp1 = findroot(
-                      [this, &bet1, &omg1, &bet2, &omg2]
-                      (const ang& alp) -> real
-                      {
-                        return HybridA(bet1, omg1, alp, bet2, omg2);
-                      },
-                      alpa,  alpb,
-                      fa, fb,
-                      &countn, &countb);
+      if (true || !halt)
+        alp1 = findroot(
+                        [this, &bet1, &omg1, &bet2, &omg2]
+                        (const ang& alp) -> real
+                        {
+                          return HybridA(bet1, omg1, alp, bet2, omg2, true);
+                        },
+                        alpa, alpb,
+                        fa, fb,
+                        &countn, &countb);
+      else
+        alp1 = findroot(
+                        [this, &bet1, &omg1, &bet2, &omg2]
+                        (const ang& alp) -> real
+                        {
+                          return HybridA(bet1, omg1, alp, bet2, omg2, false);
+                        },
+                        alpah, alpbh,
+                        fah, fbh,
+                        &countn, &countb);
       if (_debug)
         cout << "ALP1 " << real(alp1) << "\n";
-      alp1.round();
       lf = TL::fline(*this, gamma(bet1, omg1, alp1));
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      d = lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
+      real a = _k2 * Math::sq(bet2.c()), b = _kp2 * Math::sq(omg2.s());
+      // Figure sin/cos alp2 and call lf.Hybrid with betp = |salp2| <
+      // |calp2|.  For !transpolar
+      //   gammax = a * salp2^2 - b * calp2^2
+      //   salp2^2 = (b + gammax) / (a + b)
+      // and use betp = salp2^2 < 1/2
+      // For transpolar
+      //   gammax = - a * salp2^2 + b * calp2^2
+      //   salp2^2 = (b + gammax) / (a + b)
+      // and use betp = salp2^2 < 1/2
+      // For transpolar
+      //   gammax = b * calp2^2 - a * salp2^2
+      //   calp2^2 = (a + gammax) / (a + b)
+      // and use betp = calp2^2 > 1/2
+      bool betp = true;
+      if (_hybridalt && omg1.s() <= fabs(omg2.s()))
+        betp = (lf.transpolar() ?
+                2 * (a + lf.gammax()) > (a + b) :
+                2 * (b + lf.gammax()) < (a + b));
+      d = lf.Hybrid(fic, betp ? bet2 : omg2, bet2a, omg2a, alp2, betp);
       backside = signbit(bet2a.c());
     }
 
@@ -847,22 +886,21 @@ namespace GeographicLib {
     return TL(std::move(lf), std::move(fic), std::move(lg), std::move(gic));
   }
 
-  Math::real Triaxial::HybridA(Angle bet1, Angle omg1,
-                               Angle alp1,
-                               Angle bet2a, Angle omg2b) const {
+  Math::real Triaxial::HybridA(Angle bet1, Angle omg1, Angle alp1,
+                               Angle bet2a, Angle omg2b,
+                               bool betp) const {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     // a1 -= ang(1e-8);
     gamblk gam = gamma(b1, o1, a1);
     TriaxialLine::fline l(*this, gam);
-    real domg;
     TriaxialLine::fline::fics ic(l, b1, o1, a1);
-    domg = l.Hybrid0(ic, bet2a, omg2b);
+    real dang = l.Hybrid0(ic, bet2a, omg2b, betp);
     if (_debug)
       cout << "HA " << signbit(gam.gamma) << " " << gam.gamma << " "
            << real(bet1) << " " << real(omg1) << " "
            << real(alp1) << " " << real(bet2a) << " " << real(omg2b) << " "
-           << domg << "\n";
-    return domg;
+           << dang << "\n";
+    return dang;
   }
 
   // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference
@@ -896,10 +934,17 @@ namespace GeographicLib {
     // Converge failures with line 40045 of testsph[bc]
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 2 1 -i
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 1 2 -i
-    real x0 = 90; // Offset for debugging output
+    //
+    //  Offset for debugging output
+    real x0 = -88.965874767468835986, x0r = -88.966;
+    // return ang(x0);
     if (debug) {
+      for (int i = -1000; i <= 1000; ++i) {
+        real x = x0r+i/real(1000), fx = f(ang(x));
+        cout << "PTS " << setprecision(17) << x << " " << fx << "\n";
+      }
       real fx0 = f(ang(x0));
-      cout << "H " << real(xa) << " " << fa << " "
+      cout << "H0 " << real(xa) << " " << fa << " "
            << real(xb) << " " << fb << " "
            << fx0 << "\n";
     }

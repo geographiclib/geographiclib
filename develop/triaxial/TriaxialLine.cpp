@@ -383,8 +383,7 @@ namespace GeographicLib {
   }
 
   TriaxialLine::fline::disttx
-  TriaxialLine::fline::Hybrid(const fics& fic,
-                              Angle betomg2,
+  TriaxialLine::fline::Hybrid(const fics& fic, Angle betomg2,
                               Angle& bet2a, Angle& omg2a, Angle& alp2a,
                               bool betp) const {
     // Is the control variable psi or tht?
@@ -422,16 +421,25 @@ namespace GeographicLib {
       ang tht2 = betomg2;
       if (gammax() >= 0) {
         // cout << "GRR " << real(fic.bet1) << " " << real(betomg2) << "\n";
-        ang tht2b = tht2; tht2b.reflect(false, fic.Ex < 0);
+        // FIX THIS!! betp shouldn't be appearing here.
+        // Test case
+        // echo -88 21 88 -111 | ./Geod3Solve -i $SET --hybridalt
+        ang tht2b = tht2; tht2b.reflect(false, betp && fic.Ex < 0);
         ang tht12 = tht2b - fic.tht1;
         tht12.reflect(fic.Ex < 0);
         // convert -180deg to 180deg
         if (signbit(tht12.s()))
           tht12 = ang(0, copysign(real(1), tht12.c()), 0, true);
         tau12 = tht12;
+        if (false && _t.debug())
+          cout << "BBB " << real(tht2) << " " << real(tht2b) << " "
+               << real(tht12) << " " << real(fic.tht1) <<  "\n";
       } else
         tau12 = ang::NaN();
     }
+    if (false && _t.debug())
+      cout << "HERE " << transpolar() << psip << betp << " "
+         << real(tau12.base()) << "\n";
     disttx ret = ArcPos0(fic, tau12.base(), bet2a, omg2a, alp2a, betp);
     if (false && _t.debug())
       cout << "HH0X " << real(fic.psi1) << " "
@@ -496,17 +504,23 @@ namespace GeographicLib {
   }
 
   Math::real TriaxialLine::fline::Hybrid0(const fics& fic,
-                                          Angle bet2, Angle omg2b) const {
+                                          Angle bet2, Angle omg2,
+                                          bool betp) const {
     ang bet2a, omg2a, alp2a;
-    (void) Hybrid(fic, bet2, bet2a, omg2a, alp2a);
+    (void) Hybrid(fic, betp ? bet2 : omg2, bet2a, omg2a, alp2a, betp);
     if (false && _t.debug())
-      cout << "HH1X " << real(bet2) << " " << real(omg2b) << " "
+      cout << "HH1X " << real(bet2) << " " << real(omg2) << " "
            << real(bet2a) << " " << real(omg2a) << " ";
-    (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
-    if (false && _t.debug()) cout << real(omg2a) << " ";
-    omg2a -= omg2b;
-    if (false && _t.debug()) cout << real(omg2a) << "\n";
-    return omg2a.radians0();
+    bool angnorm = true || betp;
+    if (angnorm)
+      (void) Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
+    if (betp) {
+      omg2a -= omg2;
+      return omg2a.radians0();
+    } else {
+      bet2a -= bet2;
+      return angnorm ? bet2a.radians0() : bet2.radians();
+    }
   }
 
   TriaxialLine::fline::disttx
@@ -536,18 +550,6 @@ namespace GeographicLib {
       phi2a = ang(nup() * psi2.s(),
                   fic.phi0.c() * hypot(psi2.c(), nu() * psi2.s()),
                   0, true).rebase(fic.phi0);
-      // For oblate, medidional, and !psip: ...
-      // psi2 = modang(u2x, 1/sqrt(gam))
-      //      = atan2(u2x.s(), u2x.c()*sqrt(gam))
-      // psi2.c() = u2x.c()*sqrt(gam)/abs(u2x.s())
-      // nu = sqrt(gam)
-      // alp2a = atan2(fic.Ex * hypot(kx() * nu(), kxp() * tht2a.c()),
-      //            fic.phi0.c() * kx() * nup() * psi2.c())
-      //       = atan2(fic.Ex * nu(), fic.phi0.c() * psi2.c())
-      //       = atan2(fic.Ex * sqrt(gam),
-      //               fic.phi0.c() * u2x.c()*sqrt(gam)/abs(u2x.s())
-      //       = atan2(fic.Ex * abs(u2x.s()),
-      //               fic.phi0.c() * u2x.c())
       if (!transpolar() && kxp2() == 0 && !psip && gammax() == 0)
         alp2a = ang(fic.Ex * fabs(sin(u2x)), fic.phi0.c() * cos(u2x));
       else {

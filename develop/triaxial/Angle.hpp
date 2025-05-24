@@ -254,7 +254,8 @@ namespace GeographicLib {
   }
 
   inline Angle Angle::rebase(const Angle& c) const {
-    return (*this - c).base() + c;
+    Angle t = *this;
+    return t.setn(((*this - c).base() + c).n());
   }
 
   inline Angle& Angle::renormalize() {

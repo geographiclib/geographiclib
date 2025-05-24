@@ -45,7 +45,7 @@ namespace GeographicLib {
     // Run geodesic from bet1, omg1, alp1, find its first intersection with bet
     // = bet2a and return omg2a - omg2b
     real HybridA(Angle bet1, Angle omg1, Angle alp1,
-                 Angle bet2a, Angle omg2b) const;
+                 Angle bet2a, Angle omg2b, bool betp) const;
     static Angle findroot(const std::function<Math::real(const Angle&)>& f,
                           Angle xa,  Angle xb,
                           Math::real fa, Math::real fb,
@@ -55,7 +55,8 @@ namespace GeographicLib {
     real _e2, _k2, _kp2, _k, _kp;
     bool _oblate, _prolate, _biaxial;
     bool _umbalt,               // how coordinates wrap with umbilical lines
-      _debug;                   // print out diagnostics
+      _debug,                   // print out diagnostics
+      _hybridalt;               // favor hybrid solution in terms of omg
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
     mutable std::shared_ptr<TriaxialLine> _umbline;
@@ -93,6 +94,8 @@ namespace GeographicLib {
     void umbalt(bool numbalt) { if (_k2 > 0 && _kp2 > 0) _umbalt = numbalt; }
     bool debug() const { return _debug; }
     void debug(bool debug) { _debug = debug; }
+    bool hybridalt() const { return _hybridalt; }
+    void hybridalt(bool hybridalt) { _hybridalt = hybridalt; }
     real ellipthresh() const { return _ellipthresh; }
     void ellipthresh(real ellipthresh) { _ellipthresh = ellipthresh; }
     static bool AngNorm(Angle& bet, Angle& omg, Angle& alp,
