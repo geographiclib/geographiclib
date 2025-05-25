@@ -737,7 +737,7 @@ namespace GeographicLib {
     if (false && t().debug())
       cout << "ARCPOS0 " << psip << " "
            << real(bet2a) << " " << real(omg2a) << " "
-           << real(alp2a) << "\n"; 
+           << real(alp2a) << "\n";
     return ret;
   }
 

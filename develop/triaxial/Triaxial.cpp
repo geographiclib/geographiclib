@@ -419,10 +419,8 @@ namespace GeographicLib {
     //     Oblate/Prolate: already handled by B.b or B.c
 
     // Set up variables for search, "h" variables are for hybridalt
-    real fa = Math::NaN(), fb = Math::NaN(),
-      fah = Math::NaN(), fbh = Math::NaN();
-    ang alpa, alpb, alpah, alpbh;
-    bool halt = false;
+    real fa = Math::NaN(), fb = Math::NaN();
+    ang alpa, alpb;
 
     // and for the final result
     ang bet2a, omg2a;
@@ -432,6 +430,7 @@ namespace GeographicLib {
     TL::fline lf = _umbline->_f;
     TL::fline::fics fic;
     TL::fline::disttx d;
+    real aa = _k2 * Math::sq(bet2.c()), bb = _kp2 * Math::sq(omg2.s());
 
     if (_debug)
       cout << "COORDS " << real(bet1) << " " << real(omg1) << " "
@@ -447,8 +446,9 @@ namespace GeographicLib {
         alp1 = _biaxial ? ang(_k, _kp, 0, true) :
           ang(exp(lf.deltashift()/2), 1);
         fic = TL::fline::fics(lf, bet1, omg1, alp1);
-        bool betp = _k2 > _kp2;
-        if (_biaxial) betp = !betp;
+        bool betp = _k2 < _kp2;
+        //        if (_biaxial) betp = !betp;
+        //        betp = !betp;
         d = lf.ArcPos0(fic, ang::cardinal(2), bet2a, omg2a, alp2, betp);
         if (_debug) msg = "A.c opposite umbilics";
         backside = signbit(bet2a.c());
@@ -539,8 +539,6 @@ namespace GeographicLib {
               fb = omg2a.radians0();
               if (_debug) msg = "A.c.3 general bet1/2 = -/+90, non-meridional";
               done = false;     // A marker
-              if (_hybridalt)
-                halt = false;   // Doesn't make sense for this case
             }
             if (_debug)
               cout << "ALP/F "
@@ -602,8 +600,6 @@ namespace GeographicLib {
         (E > 0 ? fb : fa) = omg2a.radians0();
         if (_debug) msg = "A.b.2 general bet1/2 = 0 non-equatorial";
         done = false;           // A marker
-        if (_hybridalt)
-          halt = false;   // Doesn't make sense for this case
       }
     } else if (umb1) {
       // Case B.a, umbilical point to general point
@@ -613,7 +609,8 @@ namespace GeographicLib {
       if (0)
         cout << "ALP2 " << real(alp2) << " " << real(bet1 - bet2) << "\n";
       fic = TL::fline::fics(lf, bet2, omg2, alp2);
-      bool betp = _k2 > _kp2;   // This could be betb = !_prolate;
+      //      bool betp = _k2 > _kp2;   // This could be betb = !_prolate;
+      bool betp = aa > bb;
       // cout << "DELTA " << fic.delta/Math::degree() << "\n";
       real delta = (lf.transpolar() ? -1 : 1) * fic.delta;
       alp1 = _oblate ?
@@ -658,14 +655,6 @@ namespace GeographicLib {
       }
       if (_debug) msg = "B.b general bet1 = -90";
       done = false;             // A marker
-      if (_hybridalt && omg1.c() != 0) {
-        // exclude geodesics on the minor ellipse
-        halt = true;
-        fah = (ang::cardinal(1) - bet2).radians0();
-        fbh = (ang::cardinal(-1) - bet2).radians0();
-        alpbh = alpb;
-        alpah = alpa;
-      }
     } else if (omg1.s() == 0) {
       // Case B.c, omg1 = 0 to general point
       // subsumed by B.a for prolate
@@ -736,51 +725,41 @@ namespace GeographicLib {
       // Iterative search for the solution
       if (_debug)
         cout << "X " << done << " " << msg << "\n";
-      if (true || !halt)
-        alp1 = findroot(
-                        [this, &bet1, &omg1, &bet2, &omg2]
-                        (const ang& alp) -> real
-                        {
-                          return HybridA(bet1, omg1, alp, bet2, omg2, true);
-                        },
-                        alpa, alpb,
-                        fa, fb,
-                        &countn, &countb);
-      else
-        alp1 = findroot(
-                        [this, &bet1, &omg1, &bet2, &omg2]
-                        (const ang& alp) -> real
-                        {
-                          return HybridA(bet1, omg1, alp, bet2, omg2, false);
-                        },
-                        alpah, alpbh,
-                        fah, fbh,
-                        &countn, &countb);
+      alp1 = findroot(
+                      [this, &bet1, &omg1, &bet2, &omg2]
+                      (const ang& alp) -> real
+                      {
+                        return HybridA(bet1, omg1, alp, bet2, omg2, true);
+                      },
+                      alpa, alpb,
+                      fa, fb,
+                      &countn, &countb);
       if (_debug)
         cout << "ALP1 " << real(alp1) << "\n";
       lf = TL::fline(*this, gamma(bet1, omg1, alp1));
       fic = TL::fline::fics(lf, bet1, omg1, alp1);
-      real a = _k2 * Math::sq(bet2.c()), b = _kp2 * Math::sq(omg2.s());
+      // Let aa = _k2 * Math::sq(bet2.c()), bb = _kp2 * Math::sq(omg2.s());
       // Figure sin/cos alp2 and call lf.Hybrid with betp = |salp2| <
       // |calp2|.  For !transpolar
-      //   gammax = a * salp2^2 - b * calp2^2
-      //   salp2^2 = (b + gammax) / (a + b)
+      //   gammax = aa * salp2^2 - bb * calp2^2
+      //   salp2^2 = (bb + gammax) / (aa + bb)
       // and use betp = salp2^2 < 1/2
       // For transpolar
-      //   gammax = - a * salp2^2 + b * calp2^2
-      //   salp2^2 = (b + gammax) / (a + b)
+      //   gammax = - aa * salp2^2 + bb * calp2^2
+      //   salp2^2 = (bb + gammax) / (aa + bb)
       // and use betp = salp2^2 < 1/2
       // For transpolar
-      //   gammax = b * calp2^2 - a * salp2^2
-      //   calp2^2 = (a + gammax) / (a + b)
+      //   gammax = bb * calp2^2 - aa * salp2^2
+      //   calp2^2 = (aa + gammax) / (aa + bb)
       // and use betp = calp2^2 > 1/2
       bool betp = true;
       if (_hybridalt && omg1.s() <= fabs(omg2.s()))
         betp = (lf.transpolar() ?
-                2 * (a + lf.gammax()) > (a + b) :
-                2 * (b + lf.gammax()) < (a + b));
+                2 * (aa + lf.gammax()) > (aa + bb) :
+                2 * (bb + lf.gammax()) < (aa + bb));
       d = lf.Hybrid(fic, betp ? bet2 : omg2, bet2a, omg2a, alp2, betp);
-      backside = signbit(bet2a.c());
+      // Don't set backside for !betp and bet2.c() == 0.  Not sure why.
+      backside = (betp || bet2.c() != 0) && signbit(bet2a.c());
     }
 
     if (!_biaxial && backside) alp2.reflect(true, true);
