@@ -5,6 +5,7 @@
 #include <limits>
 #include <cmath>
 #include <utility>
+#include <vector>
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
@@ -62,7 +63,7 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2,
   if (odep) {
     // ang bet1a, omg1a;
     // l.pos1(bet1a, omg1a, alp1);
-    TriaxialODE direct(t, bet1, omg1, real(alp1));
+    TriaxialODE direct(t, ang(bet1), ang(omg1), alp1);
     direct.Position(s12, r2, v2, m12, M12, M21);
     // t.cart2toellip(bet2x, omg2x, v2, alp2);
   }
@@ -93,7 +94,9 @@ void errreport(const Triaxial& t,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
   typedef Math::real real;
   typedef Angle ang;
-  bool debug = false;
+  bool debug = false, invp = true, invdirp = true,
+    dirp = true, optp = false;
+  int num = 0;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else
@@ -107,46 +110,60 @@ void errreport(const Triaxial& t,
   Triaxial::vec3 r1, v1, r2, v2;
   Triaxial::vec3 r1a, v1a, r2a, v2a;
   ang bet1a, omg1a, bet2a, omg2a;
-  real s12a;
-  TriaxialLine l0 =
-    t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
-  errs = fabs(s12 - s12a);
-  if (1) {
-  // direct checks for inverse calculation using alp1a, alp2a, s12a
-  t.elliptocart2(bet1x, omg1x, alp1a, r1, v1);
-  t.elliptocart2(bet2x, omg2x, alp2a, r2, v2);
-  if (debug) {
-    cout << "2X "
-         << real(bet2x) << " " << real(omg2x) << " " << real(alp2a) << "\n";
-    print3(r2); print3(v2);
+  if (invp) {
+    real s12a;
+    TriaxialLine l0 =
+      t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
+    errs = fabs(s12 - s12a);
+    // direct checks for inverse calculation using alp1a, alp2a, s12a
+    t.elliptocart2(bet1x, omg1x, alp1a, r1, v1);
+    t.elliptocart2(bet2x, omg2x, alp2a, r2, v2);
+    if (debug) {
+      cout << "2X "
+           << real(bet2x) << " " << real(omg2x) << " " << real(alp2a) << "\n";
+      print3(r2); print3(v2);
+    }
+    if (invdirp) {
+      TriaxialLine l1i(t, bet1x, omg1x, alp1a);
+      TriaxialLine l2i(t, bet2x, omg2x, alp2a);
+      l2i.Position(-s12a, bet1a, omg1a, alp1a);
+      t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
+      errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
+      l1i.Position(s12a, bet2a, omg2a, alp2a);
+      if (debug)
+        cout << "1X "
+             << real(bet1x) << " " << real(omg1x) << " " << real(alp1a) << "\n";
+      t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
+      if (debug) {
+        cout << "2A "
+             << real(bet2a) << " " << real(omg2a) << " " << real(alp2a) << "\n";
+        print3(r2a); print3(v2a);
+      }
+      errr2i = vecdiff(r2, r2a); errv2i = vecdiff(v2, v2a);
+    }
   }
-  TriaxialLine l1i(t, bet1x, omg1x, alp1a);
-  TriaxialLine l2i(t, bet2x, omg2x, alp2a);
-  l2i.Position(-s12a, bet1a, omg1a, alp1a);
-  t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
-  errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
-  l1i.Position(s12a, bet2a, omg2a, alp2a);
-  if (debug)
-    cout << "1X "
-         << real(bet1x) << " " << real(omg1x) << " " << real(alp1a) << "\n";
-  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
-  if (debug) {
-    cout << "2A "
-         << real(bet2a) << " " << real(omg2a) << " " << real(alp2a) << "\n";
-    print3(r2a); print3(v2a);
-  }
-  errr2i = vecdiff(r2, r2a); errv2i = vecdiff(v2, v2a);
-  // direct checks for test sets using alp1x, alp2x, s12
-  t.elliptocart2(bet1x, omg1x, alp1x, r1, v1);
-  t.elliptocart2(bet2x, omg2x, alp2x, r2, v2);
-  TriaxialLine l1(t, bet1x, omg1x, alp1x);
-  TriaxialLine l2(t, bet2x, omg2x, alp2x);
-  l2.Position(-s12, bet1a, omg1a, alp1a);
-  t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
-  errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
-  l1.Position(s12, bet2a, omg2a, alp2a);
-  t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
-  errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
+  if (dirp) {
+    // direct checks for test sets using alp1x, alp2x, s12
+    t.elliptocart2(bet1x, omg1x, alp1x, r1, v1);
+    t.elliptocart2(bet2x, omg2x, alp2x, r2, v2);
+    TriaxialLine l1(t, bet1x, omg1x, alp1x);
+    TriaxialLine l2(t, bet2x, omg2x, alp2x);
+    if (optp) {
+      l1.Optimize();
+      l2.Optimize();
+    }
+    l2.Position(-s12, bet1a, omg1a, alp1a);
+    t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
+    errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
+    l1.Position(s12, bet2a, omg2a, alp2a);
+    t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
+    errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
+    real ds = real(10)/max(1,num);
+    for (int i = 0; i < num; ++i) {
+      // Extra num - 1 calls
+      l1.Position(i*ds, bet2a, omg2a, alp2a);
+      l2.Position(-i*ds, bet1a, omg1a, alp1a);
+    }
   }
   cout << fixed << setprecision(0)
        << ceil(errs/eps) << " "
@@ -154,6 +171,66 @@ void errreport(const Triaxial& t,
        << ceil(errr1i/eps) << " " << ceil(errv1i/eps) << " "
        << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "
        << ceil(errr1/eps) << " " << ceil(errv1/eps) << endl;
+}
+
+void errODE(TriaxialODE& t,
+            Math::real bet1, Math::real omg1, Math::real alp1,
+            Math::real bet2, Math::real omg2, Math::real alp2,
+            Math::real s12,
+            Math::real m12, Math::real M12, Math::real M21) {
+  typedef Math::real real;
+  typedef Angle ang;
+#if GEOGRAPHICLIB_PRECISION > 3
+  static const real eps = real(1e-20);
+#else
+  static const real eps = numeric_limits<real>::epsilon()/2;
+#endif
+  ang
+    bet1x(bet1), omg1x(omg1), alp1x(alp1),
+    bet2x(bet2), omg2x(omg2), alp2x(alp2);
+  s12 *= 1;
+  Triaxial::vec3 r1, v1, r2, v2;
+  t.t().elliptocart2(bet1x, omg1x, alp1x, r1, v1);
+  t.t().elliptocart2(bet2x, omg2x, alp2x, r2, v2);
+  Triaxial::vec3 r1a, v1a, r2a, v2a;
+  real m12a = 0, M12a = 0, M21a = 0;
+  if (1) {
+    t.Reset(r1, v1);
+    t.Position(s12, r2a, v2a, m12a, M12a, M21a);
+    t.Reset(r2, v2);
+    t.Position(-s12, r1a, v1a);
+    real errr1 = vecdiff(r1, r1a), errv1 = vecdiff(v1, v1a),
+      errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a),
+      errm12 = fabs(m12a - m12),
+      errM12 = fabs(M12a - M12), errM21 = fabs(M21a - M21);
+    cout << fixed << setprecision(0)
+         << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "
+         << ceil(errr1/eps) << " " << ceil(errv1/eps);
+    if (t.Extended())
+      cout << " " << ceil(errm12/eps) << " "
+           << ceil(errM12/eps) << " "  << ceil(errM21/eps);
+    cout << endl;
+  } else {
+    int num = 10;
+    vector<real> s12v(num);
+    vector<Triaxial::vec3> rv, vv;
+    for (int i = 1; i <= num; ++i)
+      s12v[i-1] = i*s12/num;
+    t.Reset(r1, v1);
+    t.Position(s12v, rv, vv);
+    r2a = rv[num-1]; v2a = vv[num-1];
+    for (int i = 1; i <= num; ++i)
+      s12v[i-1] = -i*s12/num;
+    t.Reset(r2, v2);
+    t.Position(s12v, rv, vv);
+    r1a = rv[num-1]; v1a = vv[num-1];
+    real errr1 = vecdiff(r1, r1a), errv1 = vecdiff(v1, v1a),
+      errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a);
+    cout << fixed << setprecision(0)
+         << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "
+         << ceil(errr1/eps) << " " << ceil(errv1/eps);
+    cout << endl;
+  }
 }
 
 void angletest() {
@@ -234,8 +311,9 @@ int main(int argc, const char* const argv[]) {
     int div = 1;
     {
       bool hybridp = false, odep = false, reportp = false,
-        hybridalt = false;
-      real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1;
+        hybridalt = false,
+        odetest = false, extended = false, dense = false, normp = false;
+      real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
       for (int m = 1; m < argc; ++m) {
         string arg(argv[m]);
         if (arg == "-t") {
@@ -271,6 +349,27 @@ int main(int argc, const char* const argv[]) {
           reportp = true;
         else if (arg == "--hybridalt")
           hybridalt = true;
+        else if (arg == "--odetest")
+          odetest = true;
+        else if (arg == "-x")
+          extended = true;
+        else if (arg == "--eps") {
+          if (m + 1 >= argc) return usage(1, true);
+          try {
+            using std::pow;
+            eps = pow(std::numeric_limits<real>::epsilon(),
+                      Utility::fract<real>(std::string(argv[m + 1])));
+          }
+          catch (const std::exception& e) {
+            std::cerr << "Error decoding argument of --eps: "
+                      << e.what() << "\n";
+            return 1;
+          }
+          m += 1;
+        } else if (arg == "--dense")
+          dense = true;
+        else if (arg == "--normp")
+          normp = true;
         else
           return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
       }
@@ -294,14 +393,18 @@ int main(int argc, const char* const argv[]) {
         while (cin >> bet1 >> omg1 >> betomg2 >> betp)
           hybridtest(t, bet1, omg1, betomg2, betp);
       } else {
-        int bet1, omg1, bet2, omg2;
+        real bet1, omg1, bet2, omg2;
         real alp1, alp2, s12, m12, M12, M21;
+        TriaxialODE l(t, extended, dense, normp, eps);
         while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
                >> m12 >> M12 >> M21) {
-          if (reportp)
-            report(t, bet1, omg1, bet2, omg2, odep);
+          if (odetest)
+            errODE(l, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
+          else if (reportp)
+            report(t, int(bet1), int(omg1), int(bet2), int(omg2), odep);
           else
-            errreport(t, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
+            errreport(t, bet1, omg1, alp1, bet2, omg2, alp2, s12,
+                      m12, M12, M21);
         }
       }
       return 0;

@@ -421,7 +421,7 @@ int main(int argc, const char* const argv[]) {
             if (cart) {
               using std::pow;
               real eps = pow(std::numeric_limits<real>::epsilon(), real(3)/4);
-              // t,bet,omg1,alp1, extended=t, interp=t, dense=t, eps=0
+              // t,bet,omg1,alp1, extended=t, dense=t, normp = t, eps=0
               eps = 0;
               TriaxialODE l(t, bet1, omg1, alp1, true, true, true, eps);
               l.Position(s12, bet2a, omg2a, alp2a);
@@ -444,8 +444,15 @@ int main(int argc, const char* const argv[]) {
           if (cart) {
               TriaxialODE l(t, bet1, omg1, alp1, false);
               l.Position(s12, bet2, omg2, alp2);
-          } else
+          } else {
             t.Direct(bet1, omg1, alp1, s12, bet2, omg2, alp2);
+            if (!unroll) {
+              Triaxial::AngNorm(bet2, omg2, alp2);
+              bet2 = bet2.base();
+              omg2 = omg2.base();
+              alp2 = alp2.base();
+            }
+          }
           *output << BetOmgString(bet2, omg2, prec, dms,
                                   dmssep, longfirst) << " "
                   << AzimuthString(alp2, prec, dms, dmssep) << eol;

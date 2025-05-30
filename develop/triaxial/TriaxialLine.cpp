@@ -34,11 +34,12 @@ namespace GeographicLib {
   }
 
   TriaxialLine::TriaxialLine(const Triaxial& t,
-                             Angle bet1, Angle omg1, Angle alp1) {
+                             Angle bet1, Angle omg1, Angle alp1)
+    : _t(t)
+  {
     bet1.round();
     omg1.round();
     alp1.round();
-    _t = t;
     Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
     _f = fline(t, gam);
     _fic = fline::fics(_f, bet1, omg1, alp1);

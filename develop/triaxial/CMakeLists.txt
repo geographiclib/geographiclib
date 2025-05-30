@@ -51,6 +51,9 @@ if (MSVC)
   # Turn on parallel builds for Visual Studio
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++latest /MP")
 else ()
+  # Don't treat creation of NaNs as exceptions.
+  # N.B., flags -fno-rounding-math -fno-signaling-nans included by default
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-trapping-math -fno-math-errno")
   set (FLOAT_CONVERSION_FLAG "-Wfloat-conversion")
   check_cxx_compiler_flag (${FLOAT_CONVERSION_FLAG} FLOAT_CONVERSION)
   if (NOT FLOAT_CONVERSION)
@@ -59,6 +62,7 @@ else ()
   set (CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG} -Wunused")
 endif ()
+
 if (CONVERT_WARNINGS_TO_ERRORS)
   if (MSVC)
     set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
@@ -101,6 +105,9 @@ target_link_libraries (TriaxialTest trilib)
 
 add_executable (Geod3Solve Geod3Solve.cpp)
 target_link_libraries (Geod3Solve trilib)
+
+add_executable (Geod3ODE Geod3ODE.cpp)
+target_link_libraries (Geod3ODE trilib)
 
 add_executable (TriRand TriRand.cpp)
 target_link_libraries (TriRand trilib)

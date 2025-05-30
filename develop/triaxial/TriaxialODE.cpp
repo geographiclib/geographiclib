@@ -18,76 +18,77 @@ namespace GeographicLib {
   using namespace std;
 
   TriaxialODE::TriaxialODE(const Triaxial& t,
+                           bool extended, bool dense, bool normp, real eps)
+    : TriaxialODE(t, vec3{t.a(), 0, 0}, vec3{0, 0, 1},
+                  extended, dense, normp, eps)
+  {}
+
+  TriaxialODE::TriaxialODE(const Triaxial& t,
                            Triaxial::vec3 r1, Triaxial::vec3 v1,
-                           bool extended, bool interp,
-                           bool dense, real eps)
+                           bool extended, bool dense, bool normp, real eps)
     : _t(t)
     , _b(t.b())
-    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(3)/4) : eps)
+    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(),
+                          dense ? real(3)/4 : real(9)/10) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
     , _r1(r1)
     , _v1(v1)
     , _extended(extended)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    , _interp(interp)
     , _dense(dense)
 #else
-    , _interp(false && interp)
     , _dense(false && dense)
 #endif
+    , _normp(normp)
     , _dir(0)
     , _nsteps(0)
+    , _totsteps(0)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    , _dstep6(_eps, real(0), real(1), real(1), real(0), _interp)
-    , _dstep10(_eps, real(0), real(1), real(1), real(0), _interp)
+      // last arg in interp
+    , _dstep6(_eps, real(0), real(1), real(1), real(0), true)
+    , _dstep10(_eps, real(0), real(1), real(1), real(0), true)
 #endif
     , _step6(_eps, real(0))
     , _step10(_eps, real(0))
   {
-#if !GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    (void) _interp;
-#endif
     _t.Norm(_r1, _v1);
+    _t.cart2toellip(_r1, _v1, _bet1, _omg1, _alp1);
   }
 
   TriaxialODE::TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1,
                            Angle alp1,
-                           bool extended, bool interp,
-                           bool dense, real eps)
+                           bool extended, bool dense, bool normp, real eps)
     : _t(t)
     , _b(t.b())
-    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(), real(3)/4) : eps)
+    , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(),
+                          dense ? real(3)/4 : real(9)/10) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
+    , _bet1(bet1)
+    , _omg1(omg1)
+    , _alp1(alp1)
     , _extended(extended)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    , _interp(interp)
     , _dense(dense)
 #else
-    , _interp(false && interp)
     , _dense(false && dense)
 #endif
+    , _normp(normp)
     , _dir(0)
     , _nsteps(0)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    , _dstep6(_eps, real(0), real(1), real(1), real(0), interp)
-    , _dstep10(_eps, real(0), real(1), real(1), real(0), interp)
+      // last arg in interp
+    , _dstep6(_eps, real(0), real(1), real(1), real(0), true)
+    , _dstep10(_eps, real(0), real(1), real(1), real(0), true)
 #endif
     , _step6(_eps, real(0))
     , _step10(_eps, real(0))
   {
-    _t.elliptocart2(bet1, omg1, alp1, _r1, _v1);
+    _t.elliptocart2(_bet1, _omg1, _alp1, _r1, _v1);
   }
 
-  TriaxialODE::TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
-                           bool extended, bool interp,
-                           bool dense, real eps)
-    : TriaxialODE(t, Angle(bet1), Angle(omg1), Angle(alp1),
-                  extended, interp, dense, eps)
-  {}
-
-  void TriaxialODE::Norm(vec6& y) const {
+  void TriaxialODE::Norm6(vec6& y) const {
     real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
     y[0] /= ra; y[1] /= ra; y[2] /= ra;
     vec3 up = {y[0] / _axes2n[0], y[1], y[2] / _axes2n[2]};
@@ -99,152 +100,323 @@ namespace GeographicLib {
     y[3+0] /= f; y[3+1] /= f; y[3+2] /= f;
   }
 
-  void TriaxialODE::Norm(vec10& y) const {
-    vec6 y6{y[0], y[1], y[2], y[3+0], y[3+1], y[3+2]};
-    Norm(y6);
-    for (int i = 0; i < 6; ++i) y[i] = y6[i];
-  }
-
-  TriaxialODE::vec6 TriaxialODE::Accel(const vec6& y) const {
+  void TriaxialODE::Accel6(const vec6& y, vec6& yp) const {
     vec3 up = {y[0] / _axes2n[0], y[1], y[2] / _axes2n[2]};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
       f = -(Math::sq(y[3+0]) / _axes2n[0] +
             Math::sq(y[3+1]) +
             Math::sq(y[3+2]) / _axes2n[2]) / u2;
-    return vec6{y[3+0], y[3+1], y[3+2], f * up[0], f * up[1], f * up[2]};
+    yp = vec6{y[3+0], y[3+1], y[3+2], f * up[0], f * up[1], f * up[2]};
   }
 
-  TriaxialODE::vec10 TriaxialODE::Accel(const vec10& y) const {
+  void TriaxialODE::Accel6N(const vec6& y, vec6& yp) const {
+    real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
+    // merge correction to r with computation of U and put U in yp[3,4,5]
+    yp[3+0] = y[0] / (ra * _axes2n[0]);
+    yp[3+1] = y[1] / ra;
+    yp[3+2] = y[2] / (ra * _axes2n[2]);
+    real u2 = Math::sq(yp[3+0]) + Math::sq(yp[3+1]) + Math::sq(yp[3+2]),
+      uv = yp[3+0] * y[3+0] + yp[3+1] * y[3+1] + yp[3+2] * y[3+2],
+      f = uv/u2;
+    yp[0] = y[3+0] - f * yp[3+0];
+    yp[1] = y[3+1] - f * yp[3+1];
+    yp[2] = y[3+2] - f * yp[3+2];
+    f = Math::hypot3(yp[0], yp[1], yp[2]);
+    // the corrected v (normal to U and with unit magnitude) in yp[0,1,2]
+    yp[0] /= f; yp[1] /= f; yp[2] /= f;
+    f = -(Math::sq(yp[0]) / _axes2n[0] +
+          Math::sq(yp[1]) +
+          Math::sq(yp[2]) / _axes2n[2]) / u2;
+    yp[3+0] *= f; yp[3+1] *= f; yp[3+2] *= f;
+  }
+
+  void TriaxialODE::Norm10(vec10& y) const {
+    vec6 y6{y[0], y[1], y[2], y[3+0], y[3+1], y[3+2]};
+    Norm6(y6);
+    for (int i = 0; i < 6; ++i) y[i] = y6[i];
+  }
+
+  void TriaxialODE::Accel10(const vec10& y, vec10& yp) const {
     vec3 up = {y[0] / _axes2n[0], y[1], y[2] / _axes2n[2]};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
       f = -(Math::sq(y[3+0]) / _axes2n[0] +
             Math::sq(y[3+1]) +
             Math::sq(y[3+2]) / _axes2n[2]) / u2,
       K = 1/Math::sq(u2 * _axesn[0] * _axesn[2]);
-    return vec10{ y[3+0], y[3+1], y[3+2], f * up[0], f * up[1], f * up[2],
-                  y[7], -K * y[6], y[9], -K * y[8] };
+    yp =vec10{
+      y[3+0], y[3+1], y[3+2],
+      f * up[0], f * up[1], f * up[2],
+      y[7], -K * y[6], y[9], -K * y[8] };
   }
 
-  bool TriaxialODE::Position(real s12, vec3& r2, vec3& v2) {
-    static const
-      auto fun = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
-        yp = y; Norm(yp); yp = Accel(yp);
+  void TriaxialODE::Accel10N(const vec10& y, vec10& yp) const {
+    real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
+    // merge correction to r with computation of U and put U in yp[3,4,5]
+    yp[3+0] = y[0] / (ra * _axes2n[0]);
+    yp[3+1] = y[1] / ra;
+    yp[3+2] = y[2] / (ra * _axes2n[2]);
+    real u2 = Math::sq(yp[3+0]) + Math::sq(yp[3+1]) + Math::sq(yp[3+2]),
+      uv = yp[3+0] * y[3+0] + yp[3+1] * y[3+1] + yp[3+2] * y[3+2],
+      f = uv/u2,
+      K = 1/Math::sq(u2 * _axesn[0] * _axesn[2]);
+    yp[0] = y[3+0] - f * yp[3+0];
+    yp[1] = y[3+1] - f * yp[3+1];
+    yp[2] = y[3+2] - f * yp[3+2];
+    f = Math::hypot3(yp[0], yp[1], yp[2]);
+    // the corrected v (normal to U and with unit magnitude) in yp[0,1,2]
+    yp[0] /= f; yp[1] /= f; yp[2] /= f;
+    f = -(Math::sq(yp[0]) / _axes2n[0] +
+          Math::sq(yp[1]) +
+          Math::sq(yp[2]) / _axes2n[2]) / u2;
+    yp[3+0] *= f; yp[3+1] *= f; yp[3+2] *= f;
+    yp[6+0] = y[6+1]; yp[6+1] = -K * y[6+0];
+    yp[8+0] = y[8+1]; yp[8+1] = -K * y[8+0];
+  }
+
+  pair<Math::real, Math::real>
+  TriaxialODE::Position(real s12, vec3& r2, vec3& v2) {
+    real m12, M12, M21;
+    return Position(s12, r2, v2, m12, M12, M21);
+  }
+
+  pair<Math::real, Math::real>
+  TriaxialODE::Position(real s12, vec3& r2, vec3& v2,
+                        real& m12, real& M12, real& M21) {
+    static const auto
+      fun6 = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
+        return _normp ? Accel6N(y, yp) : Accel6(y, yp);
       };
+    static const auto
+      fun10 = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
+        return _normp ? Accel10N(y, yp) : Accel10(y, yp);
+      };
+    s12 /= _b;
+    if (s12 == 0) {
+      r2 = _r1; v2 = _v1;
+      if (_extended) {
+        m12 = copysign(real(0), s12); M12 = M21 = 1;
+      }
+      return pair<real, real>(0, 0);
+    } else if (!isfinite(s12)) {
+      r2 = v2 = {Math::NaN(), Math::NaN(), Math::NaN()};
+      if (_extended) {
+        m12 = M12 = M21 = Math::NaN();
+      }
+      return pair<real, real>(Math::NaN(), Math::NaN());
+    }
+    if (_dir == 0) {
+      _dir = signbit(s12) ? -1 : 1;
+      if (_extended)
+        _y10 = {_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
+          _dir * _v1[0], _dir * _v1[1], _dir * _v1[2],
+          0, 1, 1, 0};
+      else
+        _y6 = vec6{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
+          _dir * _v1[0], _dir * _v1[1], _dir * _v1[2]};
+      _s = 0;
+      if (_dense) {
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+        if (_extended) {
+          _dstep10.initialize(_y10, _s, 1/real(4));
+          (void) _dstep10.do_step(fun10);
+        } else {
+          _dstep6.initialize(_y6, _s, 1/real(4));
+          (void) _dstep6.do_step(fun6);
+        }
+        ++_nsteps;
+#endif
+      }
+    }
+    s12 *= _dir;
+    if (_dense) {
+#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
+      if (s12 < (_extended ?
+                 _dstep10.previous_time() :
+                 _dstep6.previous_time())) {
+        s12 *= _dir;
+        Reset();
+        return Position(s12, r2, v2, m12, M12, M21);
+      }
+      while ((_extended ? _dstep10.current_time() : _dstep6.current_time())
+             < s12) {
+        if (_extended)
+          (void) _dstep10.do_step(fun10);
+        else
+          (void) _dstep6.do_step(fun6);
+        ++_nsteps;
+      }
+      if (_extended)
+        _dstep10.calc_state(s12, _y10);
+      else
+        _dstep6.calc_state(s12, _y6);
+#endif
+    } else {
+      if (s12 < _s) {
+        s12 *= _dir;
+        Reset();
+        return Position(s12, r2, v2, m12, M12, M21);
+      } else if (s12 > _s) {
+        _nsteps += _extended ?
+          integrate_adaptive(_step10, fun10, _y10, _s, s12,
+                             fmax(s12 - _s, 1/real(4))) :
+          integrate_adaptive(_step6, fun6, _y6, _s, s12,
+                             fmax(s12 - _s, 1/real(4)));
+        _s = s12;
+      }
+    }
+    real errr, errv;
     if (_extended) {
-      real m12, M12, M21;
-      return Position(s12, r2, v2, m12, M12, M21);
-    }
-    s12 /= _b;
-    if (s12 == 0) {
-      r2 = _r1; v2 = _v1;
-    }
-    if (_dir == 0) {
-      _dir = s12 < 0 ? -1 : 1;
-      _y6 = vec6{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
-        _dir * _v1[0], _dir * _v1[1], _dir * _v1[2]};
-      _s = 0;
-      if (_dense) {
-#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-        _dstep6.initialize(_y6, _s, 1/real(4));
-        (void) _dstep6.do_step(fun);
-        ++_nsteps;
-#endif
-      }
-    }
-    s12 *= _dir;
-    if (_dense) {
-#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-      if (s12 < _dstep6.previous_time())
-        return false;
-      while (_dstep6.current_time() < s12) {
-        (void) _dstep6.do_step(fun);
-        ++_nsteps;
-      }
-      _dstep6.calc_state(s12, _y6);
-#endif
+      vec10 t = _y10; Norm10(t);
+      r2 = {_b * t[0], _b * t[1], _b * t[2]};
+      v2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
+      m12 = _dir * _b * t[6];
+      M12 = t[8]; M21 = t[7];     // AG Eq 29: dm12/ds2 = M21
+      for (int i = 0; i < 6; ++i)
+        t[i] -= _y10[i];
+      errr = Math::hypot3(t[0], t[1], t[2]);
+      errv = Math::hypot3(t[3+0], t[3+1], t[3+2]);
     } else {
-      if (s12 < _s)
-        return false;
-      else if (s12 > _s)
-        _nsteps += integrate_adaptive(_step6, fun, _y6, _s, s12,
-                                      fmax(s12 - _s, 1/real(4)));
+      vec6 t = _y6; Norm6(t);
+      r2 = {_b * t[0], _b * t[1], _b * t[2]};
+      v2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
+      for (int i = 0; i < 6; ++i)
+        t[i] -= _y6[i];
+      errr = _b * Math::hypot3(t[0], t[1], t[2]);
+      errv = Math::hypot3(t[3+0], t[3+1], t[3+2]);
     }
-    _s = s12;
-    Norm(_y6);
-    r2 = {_b * _y6[0], _b * _y6[1], _b * _y6[2]};
-    v2 = {_dir * _y6[3], _dir * _y6[4], _dir * _y6[5]};
-    return true;
+    return pair<real, real>(errr, errv);
   }
 
-  bool TriaxialODE::Position(real s12, vec3& r2, vec3& v2,
-                             real& m12, real& M12, real& M21) {
-    static const
-      auto fun = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
-      yp = y; Norm(yp); yp = Accel(yp);
+  pair<Math::real, Math::real>
+  TriaxialODE::Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2) {
+    vec3 r2, v2;
+    auto err = Position(s12, r2, v2);
+    _t.cart2toellip(r2, v2, bet2, omg2, alp2);
+    return err;
+  }
+
+  pair<Math::real, Math::real>
+  TriaxialODE::TriaxialODE::Position(real s12,
+                                     Angle& bet2, Angle& omg2, Angle& alp2,
+                                     real& m12, real& M12, real& M21) {
+    vec3 r2, v2;
+    auto err = Position(s12, r2, v2, m12, M12, M21);
+    _t.cart2toellip(r2, v2, bet2, omg2, alp2);
+    return err;
+  }
+
+  vector<size_t> TriaxialODE::sort_indices(const vector<real>& v) {
+    // Return a vector of indices into v in "sorted" order:
+    //   nans and infs in any order
+    //   zeros in any order
+    //   negative values in descending order (away from zero)
+    //   positive values in ascending order
+    //
+    // Adapted from Lukasz Wiklendt https://stackoverflow.com/a/12399290/837055
+    // Initialize original index locations
+    vector<size_t> idx(v.size());
+    iota(idx.begin(), idx.end(), 0);
+    const auto cmp = [](real x, real y) -> bool
+    {
+      const auto t = [](real x) -> int
+      {
+        // assign categoried to numbers
+        // 0 = nans and infs
+        // 1 = zeros
+        // 2 = negative
+        // 3 = positive
+        return !isfinite(x) ? 0 :
+          x == 0 ? 1 :
+          signbit(x) ? 2 : 3;
+      };
+      int tx = t(x), ty = t(y);
+      // the "less-than" comparison: compare on category first and if
+      // categories are equal on absolute values of finite non-zero numbers
+      return tx < ty || (tx == ty && tx >= 2 && fabs(x) < fabs(y));
     };
-    if (!_extended) return false;
-    s12 /= _b;
-    if (s12 == 0) {
-      r2 = _r1; v2 = _v1;
-      m12 = 0; M12 = M21 = 1;
+    sort(idx.begin(), idx.end(),
+         [&v, &cmp](size_t ix, size_t iy) -> bool
+         { return cmp(v[ix], v[iy]); });
+    return idx;
+  }
+
+  void TriaxialODE::Position(const vector<real>& s12,
+                             vector<vec3>& r2, vector<vec3>& v2) {
+    vector<real> m12, M12, M21;
+    Position(s12, r2, v2, m12, M12, M21);
+  }
+
+  void TriaxialODE::Position(const vector<real>& s12,
+                             vector<vec3>& r2, vector<vec3>& v2,
+                             vector<real>& m12,
+                             vector<real>& M12, vector<real>& M21) {
+    size_t n = s12.size();
+    r2.resize(n); v2.resize(n);
+    if (_extended) {
+      m12.resize(n); M12.resize(n); M21.resize(n);
     }
-    if (_dir == 0) {
-      _dir = s12 < 0 ? -1 : 1;
-      _y10 = vec10{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
-        _dir * _v1[0], _dir * _v1[1], _dir * _v1[2],
-        0, 1, 1, 0};
-      _s = 0;
-      if (_dense) {
+    vector<size_t> idx = sort_indices(s12);
+    for (size_t i = 0; i < n; ++i) {
+      size_t k = idx[i];
+      if (_extended)
+        (void) Position(s12[k], r2[k], v2[k], m12[k], M12[k], M21[k]);
+      else
+        (void) Position(s12[k], r2[k], v2[k]);
+    }
+  }
+
+  void TriaxialODE::Position(const vector<real>& s12,
+                             vector<Angle>& bet2, vector<Angle>& omg2,
+                             vector<Angle>& alp2) {
+    vector<vec3> r2, v2;
+    Position(s12, r2, v2);
+    size_t n = s12.size();
+    bet2.resize(n); omg2.resize(n); alp2.resize(n);
+    for (size_t i = 0; i < s12.size(); ++i)
+      _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
+  }
+
+  void TriaxialODE::Position(const vector<real>& s12,
+                             vector<Angle>& bet2, vector<Angle>& omg2,
+                             vector<Angle>& alp2,
+                             vector<real>& m12,
+                             vector<real>& M12, vector<real>& M21) {
+    vector<vec3> r2, v2;
+    Position(s12, r2, v2, m12, M12, M21);
+    size_t n = s12.size();
+    bet2.resize(n); omg2.resize(n); alp2.resize(n);
+    for (size_t i = 0; i < s12.size(); ++i)
+      _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
+  }
+
+  void TriaxialODE::Reset() { _dir = 0; _totsteps += _nsteps; _nsteps = 0; }
+
+  void TriaxialODE::Reset(vec3 r1, vec3 v1) {
+    _r1 = r1;
+    _v1 = v1;
+    _t.Norm(_r1, _v1);
+    _t.cart2toellip(_r1, _v1, _bet1, _omg1, _alp1);
+    Reset();
+  }
+
+  void TriaxialODE::Reset(Angle bet1, Angle omg1, Angle alp1) {
+    _bet1 = bet1; _omg1 = omg1; _alp1 = alp1;
+    _t.elliptocart2(_bet1, _omg1, _alp1, _r1, _v1);
+    Reset();
+    _totsteps = 0;
+  }
+
+  pair<Math::real, Math::real> TriaxialODE::CurrentDistance() const {
+    if (_dir == 0)
+      return pair<real, real>(0, 0);
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-        _dstep10.initialize(_y10, _s, 1/real(4));
-        (void) _dstep10.do_step(fun);
-        ++_nsteps;
-#endif
-      }
+    else if (_dense) {
+      return pair<real, real>(_dir * _dstep10.previous_time(),
+                              _dir * _dstep10.current_time());
     }
-    s12 *= _dir;
-    if (_dense) {
-#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-      if (s12 < _dstep10.previous_time())
-        return false;
-      while (_dstep10.current_time() < s12) {
-        (void) _dstep10.do_step(fun);
-        ++_nsteps;
-      }
-      _dstep10.calc_state(s12, _y10);
 #endif
-    } else {
-      if (s12 < _s)
-        return false;
-      else if (s12 > _s)
-        _nsteps += integrate_adaptive(_step10, fun, _y10, _s, s12,
-                                      fmax(s12 - _s, 1/real(4)));
-    }
-    Norm(_y10);
-    r2 = {_b * _y10[0], _b * _y10[1], _b * _y10[2]};
-    v2 = {_dir * _y10[3], _dir * _y10[4], _dir * _y10[5]};
-    m12 = _dir * _b * _y10[6];
-    M12 = _y10[8]; M21 = _y10[7];     // AG Eq 29: dm12/ds2 = M21
-    return true;
+    else
+      return pair<real, real>(_dir * _s, _dir * _s);
   }
-
-  bool TriaxialODE::Position(real s12,
-                             Angle& bet2, Angle& omg2, Angle& alp2) {
-    vec3 r2, v2;
-    if (!Position(s12, r2, v2)) return false;
-    _t.cart2toellip(r2, v2, bet2, omg2, alp2);
-    return true;
-  }
-
-  bool TriaxialODE::Position(real s12,
-                              Angle& bet2, Angle& omg2, Angle& alp2,
-                              real& m12, real& M12, real& M21) {
-    vec3 r2, v2;
-    if (!Position(s12, r2, v2, m12, M12, M21)) return false;
-    _t.cart2toellip(r2, v2, bet2, omg2, alp2);
-    return true;
-  }
-
-  void TriaxialODE::Reset() { _dir = 0; _nsteps = 0; }
 
 } // namespace GeographicLib

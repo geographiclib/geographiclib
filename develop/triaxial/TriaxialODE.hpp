@@ -10,7 +10,9 @@
 #if !defined(GEOGRAPHICLIB_TRIAXIALODE_HPP)
 #define GEOGRAPHICLIB_TRIAXIALODE_HPP 1
 
+#include <vector>
 #include <array>
+#include <utility>
 #include <GeographicLib/Constants.hpp>
 
 // Boost's dense output expects numeric_limits<real>::digits to be a constant
@@ -30,7 +32,7 @@
 //    https://github.com/boostorg/odeint/pull/63
 //    Commit 68950d8
 //
-// This will be included in Boost 1.85.  (Fedora 41 uses Boost 1.83.)
+// This will be included in Boost 1.85.  (Fedora 42 uses Boost 1.83.)
 //
 // In the meantime, put the patch for commit 68950d8 in
 // /usr/include/boost/odeint.patch and applied it with
@@ -74,12 +76,14 @@ namespace GeographicLib {
     boost::numeric::odeint::bulirsch_stoer<vec6, real> step6;
     typedef
     boost::numeric::odeint::bulirsch_stoer<vec10, real> step10;
-    Triaxial _t;
-    real _b, _eps;
-    vec3 _axesn, _axes2n, _r1, _v1;
-    bool _extended, _interp, _dense;
+    const Triaxial _t;
+    const real _b, _eps;
+    const vec3 _axesn, _axes2n;
+    vec3  _r1, _v1;
+    Angle _bet1, _omg1, _alp1;
+    bool _extended, _dense, _normp;
     int _dir;
-    long _nsteps;
+    long _nsteps, _totsteps;
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     dstep6 _dstep6;
     dstep10 _dstep10;
@@ -91,31 +95,63 @@ namespace GeographicLib {
     vec10 _y10;
     // These private versions of Accel and Norm assume normalized ellipsoid
     // with axes = axesn
-    vec6 Accel(const vec6& y) const;
-    void Norm(vec6& y) const;
-    // These private versions of Accel and Norm assume normalized ellipsoid
-    // with axes = axesn
-    vec10 Accel(const vec10& y) const;
-    void Norm(vec10& y) const;
+    void Norm6(vec6& y) const;
+    void Accel6(const vec6& y, vec6& yp) const;
+    void Accel6N(const vec6& y, vec6& yp) const;
+    void Norm10(vec10& y) const;
+    void Accel10(const vec10& y, vec10& yp) const;
+    void Accel10N(const vec10& y, vec10& yp) const;
+    static std::vector<size_t> sort_indices(const std::vector<real>& v);
 
   public:
+    TriaxialODE(const Triaxial& t,
+                bool extended = false, bool dense = false, bool normp = false,
+                real eps = 0);
     TriaxialODE(const Triaxial& t, vec3 r1, vec3 v1,
-                bool extended = true, bool interp = true,
-                bool dense = true, real eps = 0);
+                bool extended = false, bool dense = false, bool normp = false,
+                real eps = 0);
     TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1,
-                bool extended = true, bool interp = true,
-                bool dense = true, real eps = 0);
-    TriaxialODE(const Triaxial& t, real bet1, real omg1, real alp1,
-                bool extended = true, bool interp = true,
-                bool dense = true, real eps = 0);
-    bool Position(real s12, vec3& r2, vec3& v2);
-    bool Position(real s12, vec3& r2, vec3& v2,
-                  real& m12, real& M12, real& M21);
-    bool Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2);
-    bool Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
-                  real& m12, real& M12, real& M21);
+                bool extended = false, bool dense = false, bool normp = false,
+                real eps = 0);
+    std::pair<Math::real, Math::real> Position(real s12, vec3& r2, vec3& v2);
+    std::pair<Math::real, Math::real> Position(real s12, vec3& r2, vec3& v2,
+                                               real& m12,
+                                               real& M12, real& M21);
+    std::pair<Math::real, Math::real> Position(real s12,
+                                               Angle& bet2, Angle& omg2,
+                                               Angle& alp2);
+    std::pair<Math::real, Math::real> Position(real s12,
+                                               Angle& bet2, Angle& omg2,
+                                               Angle& alp2,
+                                               real& m12,
+                                               real& M12, real& M21);
+
+    void Position(const std::vector<real>& s12,
+                  std::vector<vec3>& r2, std::vector<vec3>& v2);
+    void Position(const std::vector<real>& s12,
+                  std::vector<vec3>& r2, std::vector<vec3>& v2,
+                  std::vector<real>& m12,
+                  std::vector<real>& M12, std::vector<real>& M21);
+    void Position(const std::vector<real>& s12,
+                  std::vector<Angle>& bet2, std::vector<Angle>& omg2,
+                  std::vector<Angle>& alp2);
+    void Position(const std::vector<real>& s12,
+                  std::vector<Angle>& bet2, std::vector<Angle>& omg2,
+                  std::vector<Angle>& alp2,
+                  std::vector<real>& m12,
+                  std::vector<real>& M12, std::vector<real>& M21);
     void Reset();
+    void Reset(vec3 r1, vec3 v1);
+    void Reset(Angle bet1, Angle omg1, Angle alp1);
     long NSteps() const { return _nsteps; }
+    long TotalSteps() const { return _totsteps; }
+    std::pair<Math::real, Math::real> CurrentDistance() const;
+    bool Extended() const { return _extended; }
+    void Position1(vec3& r1, vec3& v1) const { r1 = _r1; v1 = _v1; }
+    void Position1(Angle& bet1, Angle& omg1, Angle& alp1) const {
+      bet1 = _bet1; omg1 = _omg1; alp1 = _alp1;
+    }
+    const Triaxial& t() const { return _t; }
   };
 
 } // namespace GeographicLib

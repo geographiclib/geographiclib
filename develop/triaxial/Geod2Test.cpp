@@ -22,7 +22,7 @@ int main(int argc, const char* const argv[]) {
     typedef Angle ang;
     Utility::set_digits();
     bool skip = false;
-    bool ode = false, extended = false, dense = false, interp = false,
+    bool ode = false, extended = false, dense = false, normp = false,
       alt = false;
     real lg2eps = 20;
     for (int m = 1; m < argc; ++m) {
@@ -35,8 +35,8 @@ int main(int argc, const char* const argv[]) {
         ode = true;
       else if (arg == "--dense")
         dense = true;
-      else if (arg == "--interp")
-        interp = true;
+      else if (arg == "--normp")
+        normp = true;
       else if (arg == "-p") {
         if (++m == argc) {
           std::cerr << "epspow missing\n";
@@ -78,7 +78,7 @@ int main(int argc, const char* const argv[]) {
       real lat2a = 0, lon2a = 0, azi2a = 0;
       if (!skip) {
         if (ode) {
-          TriaxialODE ts(t, r1, v1, extended, interp, dense, eps);
+          TriaxialODE ts(t, r1, v1, extended, dense, normp, eps);
           (void) ts.Position(s12, r2a, v2a);
           nstepa += ts.NSteps();
           nstepb = fmax(nstepb, real(ts.NSteps()));
