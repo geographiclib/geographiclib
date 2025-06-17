@@ -316,6 +316,11 @@ namespace GeographicLib {
                        const hfun& gx, const hfun& gy,
                        real& x, real& y,
                        int* countn = nullptr, int* countb = nullptr);
+    static void solve2g(real f0, real g0,
+                        const hfun& fx, const hfun& fy,
+                        const hfun& gx, const hfun& gy,
+                        real& x, real& y,
+                        int* countn = nullptr, int* countb = nullptr);
     static void solve2u(real f0, real g0,
                         const hfun& fx, const hfun& fy,
                         const hfun& gx, const hfun& gy,
@@ -328,6 +333,13 @@ namespace GeographicLib {
                       real xscale, real zscale,
                       real& x, real& y,
                       int* countn = nullptr, int* countb = nullptr);
+    static void newt2g(real f0, real g0,
+                       const hfun& fx, const hfun& fy,
+                       const hfun& gx, const hfun& gy,
+                       real x0, real xa, real xb,
+                       real xscale, real zscale,
+                       real& x, real& y,
+                       int* countn = nullptr, int* countb = nullptr);
     static real clamp(real x, real mult = 1) {
       using std::fmax; using std::fmin;
       real z = mult * Triaxial::BigValue();

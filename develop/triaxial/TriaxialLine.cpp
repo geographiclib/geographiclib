@@ -80,18 +80,39 @@ namespace GeographicLib {
                               int* countn, int* countb) const {
     // Compute points at distance s12
     // cout << "XX " << _fic.delta << " " << _gic.sig1 << "\n";
+    bool gsolve = true;
     real sig2 = _gic.sig1 + s12/_t._b;
     Angle &phi2a = bet2a, &tht2a = omg2a;
     if (_f.gammax() > 0) {
       real u2, v2;
-      // The general triaxial machinery.  This is used for non-meridional
-      // geodesics on biaxial ellipsoids.
-      if (fpsi().NCoeffs() <= ftht().NCoeffs())
-        solve2(-_fic.delta, sig2, ftht(), fpsi(), gtht(), gpsi(), u2, v2,
-               countn, countb);
-      else
-        solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), v2, u2,
-               countn, countb);
+      if (_f.kxp2() == 0 && !gsolve) {
+        if (0)
+          cout << "A " << _f.gammax() << " " << ftht().HalfPeriod() << " "
+               << fpsi().HalfPeriod() << "\n";
+        // Treat via biaxial machinery...
+        // gtht()(x) == 0, so the g equation becomes gpsi()(v2) = sig2
+        v2 = gpsi().inv(sig2);
+        // ftht()(x) = x/sqrt(gamma); ftht().inv(x) = sqrt(gammax)*x, but keep
+        // it general
+        u2 = ftht().inv(fpsi()(v2) - _fic.delta);
+        if (false && _t.debug())
+          cout << "XX " << v2/Math::degree() << " " << u2/Math::degree() << " "
+               << _fic.delta/Math::degree() << "\n";
+      } else {
+        // The general triaxial machinery.  This is used for non-meridional
+        // geodesics on biaxial ellipsoids.
+        if (gsolve)
+          solve2g(-_fic.delta, sig2, ftht(), fpsi(), gtht(), gpsi(), u2, v2,
+                  countn, countb);
+        else {
+          if (fpsi().NCoeffs() <= ftht().NCoeffs())
+            solve2(-_fic.delta, sig2, ftht(), fpsi(), gtht(), gpsi(), u2, v2,
+                   countn, countb);
+          else
+            solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), v2, u2,
+                   countn, countb);
+        }
+      }
       tht2a = ang::radians(_fic.Ex * ftht().rev(u2));
       ang psi2 = ang::radians(fpsi().rev(v2));
       // Already normalized
@@ -217,11 +238,64 @@ namespace GeographicLib {
     newt2(f0, g0, fx, fy, gx, gy, x0, xm, xp,
           fx.HalfPeriod(), fx.HalfPeriod() * fxs,
           x, y, countn, countb);
-    if (0) {
+    if (0)
       cout << "FEQ " << fx(x) << " " << fy(y) << " " << f0 << " "
            << fx(x) - fy(y) - f0 << "\n"
            << "GEQ " << gx(x) << " " << gy(y) << " " << g0 << " "
            << gx(x) + gy(y) - g0 << "\n";
+    if (0) {
+      cout << "FF "
+           << fx.HalfPeriod() << " " << fx.Slope() << " " << fx.Max() << " "
+           << fy.HalfPeriod() << " " << fy.Slope() << " " << fy.Max() << "\n";
+      cout << "GG "
+           << gx.HalfPeriod() << " " << gx.Slope() << " " << gx.Max() << " "
+           << gy.HalfPeriod() << " " << gy.Slope() << " " << gy.Max() << "\n";
+    }
+  }
+
+  void TriaxialLine::solve2g(real f0, real g0,
+                             const hfun& fx, const hfun& fy,
+                             const hfun& gx, const hfun& gy,
+                             real& x, real& y,
+                             int* countn, int* countb) {
+    // In the biaxial limit gtht()(x) == 0 and gtht.inv is ill-defined, so x
+    // should the tht and y should be psi
+
+    // Return x and y, s.t.
+    //   fx(x) - fy(y) = f0
+    //   gx(x) + gy(y) = g0
+    //
+    // We use x as the control variable and assume that gy.inv() is available
+    // Given a guess for x, compute y = gy.inv(g0 - gx(x)) and solve the 1d
+    // problem:
+    //
+    //   fx(x) - fy(gy.inv(g0 - gx(x))) - f0 = 0
+    //
+    // fx(x) = fxs*x +/- fxm,
+    // fy(y) = fys*y +/- fym,
+    // gx(x) = gxs*x +/- gxm,
+    // gy(y) = gys*y +/- gym;
+    real fxm = fx.Max(), fym = fy.Max(), gxm = gx.Max(), gym = gy.Max(),
+      fxs = fx.Slope(), fys = fy.Slope(), gxs = gx.Slope(), gys = gy.Slope(),
+      // solve
+      //   x = (  fys*g0 + gys*f0 ) / den +/- Dx
+      //   y = (- gxs*f0 + fxs*g0 ) / den +/- Dy
+      // where
+      den = fxs * gys + fys * gxs,
+      qf = fxm + fym, qg = gxm + gym,
+      Dx = (qf * gys + qg * fys) / fabs(den);
+    // Dy = (qf * gxs + qg * fxs) / fabs(den);
+    real x0 = (fys * g0 + gys * f0) / den, // Initial guess
+      xp = x0 + Dx, xm = x0 - Dx;
+    newt2g(f0, g0, fx, fy, gx, gy, x0, xm, xp,
+           fx.HalfPeriod(), fx.HalfPeriod() * fxs,
+           x, y, countn, countb);
+    if (0)
+      cout << "FEQ " << fx(x) << " " << fy(y) << " " << f0 << " "
+           << fx(x) - fy(y) - f0 << "\n"
+           << "GEQ " << gx(x) << " " << gy(y) << " " << g0 << " "
+           << gx(x) + gy(y) - g0 << "\n";
+    if (0) {
       cout << "FF "
            << fx.HalfPeriod() << " " << fx.Slope() << " " << fx.Max() << " "
            << fy.HalfPeriod() << " " << fy.Slope() << " " << fy.Max() << "\n";
@@ -243,6 +317,7 @@ namespace GeographicLib {
     //
     // fx, fy, gx, gy are increasing functions defined in [-1, 1]*pi2
     // Assume fx(0) = fy(0) = gx(0) = gy(0) = 0
+    bool gsolve = false;
     real pi2 = Triaxial::BigValue(),
       sbet = gx.Max(), somg = gy.Max(), stot = sbet + somg,
       dbet = fx.Max(), domg = fy.Max(), del  = dbet - domg;
@@ -280,13 +355,21 @@ namespace GeographicLib {
       //            (s0 <  sbet - somg)
       // or
       //   sign(d0) * s0 < sbet - somg
-      newt2(d0, s0, fx, fy, gx, gy, 0, -pi2, pi2, pi2, pi2,
-            u, v, countn, countb);
+      if (gsolve)
+        newt2g(d0, s0, fx, fy, gx, gy, 0, -pi2, pi2, pi2, pi2,
+               u, v, countn, countb);
+      else
+        newt2(d0, s0, fx, fy, gx, gy, 0, -pi2, pi2, pi2, pi2,
+              u, v, countn, countb);
       if (debug) cout << "UV3 " << u << " " << v << "\n";
     } else {
       // Otherwise, use v is the independent variable
-      newt2(-d0, s0, fy, fx, gy, gx, 0, -pi2, pi2, pi2, pi2,
-            v, u, countn, countb);
+      if (gsolve)
+        newt2g(-d0, s0, fy, fx, gy, gx, 0, -pi2, pi2, pi2, pi2,
+               v, u, countn, countb);
+      else
+        newt2(-d0, s0, fy, fx, gy, gx, 0, -pi2, pi2, pi2, pi2,
+              v, u, countn, countb);
       if (debug) cout << "UV4 " << u << " " << v << "\n";
     }
   }
@@ -338,6 +421,70 @@ namespace GeographicLib {
                       g0, x0, xa, xb, xscale, zscale, 1,
                       countn, countb, 0, Trigfun::NEWT2);
     y = fy.inv(fx(x) - f0);
+    // Do one round of 2d Newton
+    // Trial solution z0 = [x0, y0]'
+    // let t0 = [fx(x0) - fy(y0) - f0, gx(x0) + gy(y0) - g0]'
+    // Updated solution is
+    // z1 = z0 - M . t0
+    // M = 1/(gfx'(x) + gfy'(y) *
+    //   [ gfy'(y)/fx'(x), 1/fx'(x)]
+    //   [-gfx'(x)/fy'(y), 1/fy'(y)]
+    int nfix = 1;
+    for (int i = 0; i < nfix; ++i) {
+      real tf = fx(x) - fy(y) - f0, tg = gx(x) + gy(y) - g0,
+        fxp = fx.deriv(x), fyp = fy.deriv(y),
+        gfxp = gx.gfderiv(x), gfyp =  gy.gfderiv(y),
+        den = gfxp + gfyp;
+      x -= ( gfyp * tf + tg) / (fxp * den);
+      y -= (-gfxp * tf + tg) / (fyp * den);
+      if (countn)
+        ++*countn;
+    }
+  }
+
+  void TriaxialLine::newt2g(real f0, real g0,
+                            const hfun& fx, const hfun& fy,
+                            const hfun& gx, const hfun& gy,
+                            real x0, real xa, real xb,
+                            real xscale, real zscale,
+                            real& x, real& y,
+                            int* countn, int* countb) {
+    // We use x as the control variable and assume that gy.inv() is available
+    // Given a guess for x, compute y = gy.inv(g0 - gx(x)) and solve the 1d
+    // problem:
+    //
+    //   fx(x) - fy(gy.inv(g0 - gx(x))) - f0 = 0
+
+    // Find [x,y] s.t.
+    //   fx(x) - fy(y) - f0 = 0
+    //   gx(x) + gy(y) - g0 = 0
+    // Assume gy.inv is known, then
+    //   y = gy.inv(g0 - gx(x))
+    // and we consider the 1d problem
+    //   fx(x) - fy( gy.inv(g0 - gx(x)) ) - g0 = 0
+    // d/dx of the LHS is
+    //   fx'(x) + fy'(y) / gy'(y) * gx'(x)
+    //    = fx'(x) * (1 + fy'(y)/gy'(y) * gx'(x)/fx'(x))
+    //    = fx'(x) * (1 + gfx'(x) / gfy'(y))
+    // where gfx'(y) = gx'(x)/fx'(x)
+    //       gfy'(y) = gy'(y)/fy'(y)
+    //    cout << "BBX0\n";
+
+    // In the biaxial limit, x = theta, fx(x) = x, gx(x) = 0.
+    // y is found on first guess
+    // d/dx = const, x is found on first iteration
+
+    x = Trigfun::root(
+                      [&fx, &fy, &gx, &gy, g0]
+                      (real x) -> pair<real, real>
+                      { real y = gy.inv(g0 - gx(x));
+                        return pair<real, real>(fx(x) - fy(y),
+                                                fx.deriv(x) *
+                                                (gx.gfderiv(x) / gy.gfderiv(y)
+                                                 + 1)); },
+                      f0, x0, xa, xb, xscale, zscale, 1,
+                      countn, countb, 0, Trigfun::NEWT2G);
+    y = gy.inv(g0 - gx(x));
     // Do one round of 2d Newton
     // Trial solution z0 = [x0, y0]'
     // let t0 = [fx(x0) - fy(y0) - f0, gx(x0) + gy(y0) - g0]'
