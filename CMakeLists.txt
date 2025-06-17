@@ -280,6 +280,9 @@ if (MSVC)
   # Turn on parallel builds for Visual Studio
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++latest /MP")
 else ()
+  # Don't treat creation of NaNs as exceptions.
+  # N.B., flags -fno-rounding-math -fno-signaling-nans included by default
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-trapping-math -fno-math-errno")
   set (FLOAT_CONVERSION_FLAG "-Wfloat-conversion")
   check_cxx_compiler_flag (${FLOAT_CONVERSION_FLAG} FLOAT_CONVERSION)
   if (NOT FLOAT_CONVERSION)
@@ -287,22 +290,6 @@ else ()
   endif ()
   set (CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
-endif ()
-if (CONVERT_WARNINGS_TO_ERRORS)
-  if (MSVC)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-    set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
-    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /WX")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /WX")
-  else ()
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-  endif ()
-endif ()
-
-if (NOT MSVC)
-  # Don't treat creation of NaNs as exceptions.
-  # N.B., flags -fno-rounding-math -fno-signaling-nans included by default
-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-trapping-math -fno-math-errno")
 endif ()
 
 # Tell Intel compiler to do arithmetic accurately.  This is needed to
@@ -316,6 +303,17 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   else ()
     set (CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} -fp-model precise -diag-disable=11074,11076")
+  endif ()
+endif ()
+
+if (CONVERT_WARNINGS_TO_ERRORS)
+  if (MSVC)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+    set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
+    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /WX")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /WX")
+  else ()
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif ()
 endif ()
 

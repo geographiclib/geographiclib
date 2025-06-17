@@ -67,6 +67,7 @@ int main(int argc, const char* const argv[]) {
                 << (exact ? "exact" : "series") << "\n";
       std::cout << std::setprecision(3) << std::scientific;
       using std::atanh; using std::sin; using std::cos; using std::atan2;
+      using std::sqrt;
       real ax = 0, ay = 0;
       real b = a * (1 - f), e = sqrt(f * (2 - f)),
         R = sqrt(a*a/2 + b*b/2 * atanh(e) / e);

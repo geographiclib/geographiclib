@@ -25,7 +25,8 @@ add_dependencies (distrib-man prep-source)
 add_custom_target (distrib-all DEPENDS distrib-man autogen.done)
 add_custom_command (TARGET distrib-all
   COMMAND cd ${DISTRIB_NAME} && echo ${PROJECT_VERSION} > VERSION &&
-  chmod -R g-w .)
+  chmod -R g-w .
+  POST_BUILD)
 add_custom_target (dist
   COMMAND
   cd ${DISTRIB_DIR} &&

@@ -79,5 +79,6 @@ if (MAINTAINER)
     COMMAND
     for f in ${MANPAGES} ${USAGE} ${HTMLMAN}\; do
     install -C -m 644 "$$f" ../distrib/${PACKAGE_DIR}/man\; done
-    COMMENT "Installing man documentation page in source tree")
+    COMMENT "Installing man documentation page in source tree"
+    POST_BUILD)
 endif ()

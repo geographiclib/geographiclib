@@ -71,7 +71,7 @@ namespace GeographicLib {
      *   phi1), where \e beta is the parametric latitude.
      *
      * \note This routine uses the exact formulas and is valid for arbitrary
-     * latitude.
+     * flattening.
      **********************************************************************/
     Math::real DParametric(const AuxAngle& phi1, const AuxAngle& phi2) const;
     /**
@@ -84,7 +84,7 @@ namespace GeographicLib {
      *   phi1), where \e mu is the rectifying latitude.
      *
      * \note This routine uses the exact formulas and is valid for arbitrary
-     * latitude.
+     * flattening.
      **********************************************************************/
     Math::real DRectifying(const AuxAngle& phi1, const AuxAngle& phi2) const;
     /**
@@ -98,7 +98,7 @@ namespace GeographicLib {
      *   and \e chi is the conformal latitude.
      *
      * \note This routine uses the exact formulas and is valid for arbitrary
-     * latitude.
+     * flattening.
      **********************************************************************/
     Math::real DIsometric(const AuxAngle& phi1, const AuxAngle& phi2) const;
     /**
