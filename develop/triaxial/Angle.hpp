@@ -99,7 +99,7 @@ namespace GeographicLib {
     Angle& reflect(bool flips, bool flipc = false, bool swapp = false);
     Angle flipsign(real mult) const;
     // Scale the sine component by m
-    //    Angle modang(real m) const;
+    Angle modang(real m) const;
   };
 
   inline Angle::Angle(real s, real c, real num, bool normp)
@@ -295,7 +295,6 @@ namespace GeographicLib {
     return signbit(mult) ? -*this : *this;
   }
 
-  /*
   inline Angle Angle::modang(real m) const {
     using std::signbit;
     return signbit(m) ? Angle::NaN() :
@@ -304,7 +303,6 @@ namespace GeographicLib {
              _c / (m > 1 ? m : 1),
              _n );
   }
-  */
 
   inline Angle Angle::cardinal(real q) {
     using std::isfinite; using std::rint; using std::remainder;

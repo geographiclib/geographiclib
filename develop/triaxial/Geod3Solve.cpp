@@ -81,19 +81,47 @@ std::string AzimuthString(ang alp, int prec, bool dms, char dmssep) {
     DMS::Encode(real(alp), prec + 5, DMS::NUMBER);
 }
 
+void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg) {
+  using std::isnan; using std::signbit;
+  if (isnan(f)) return;
+  // fwd: biaxial -> triaxial
+  // !fwd: triaxial -> biaxial
+  if (fwd)
+    bet = bet.modang(1 - f);
+  if (signbit(f)) {
+    omg -= ang::cardinal(1);
+    std::swap(bet, omg);
+    omg += ang::cardinal(1);
+  }
+  if (!fwd)
+    bet = bet.modang(1 / (1 - f));
+}
+
+void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg, ang& alp) {
+  using std::isnan; using std::signbit;
+  if (isnan(f)) return;
+  // fwd: biaxial -> triaxial
+  // !fwd: triaxial -> biaxial
+  BiaxialCoords(fwd, f, bet, omg);
+  if (signbit(f)) alp.reflect(false, false, true);
+}
+
 int usage(int retval, bool /*brief*/) { return retval; }
 
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
-    typedef GeographicLib::Angle ang;
+    using std::signbit; using std::isnan;
+    typedef Angle ang;
     Utility::set_digits();
     bool inverse = false,
       dms = false, full = false, unroll = false,
       longfirst = false,
       debug = false, hybridalt = false, linecalc = false;
     real
-      a = 6378172, b = 6378102, c = 6356752;
+      a = 6378172, b = 6378102, c = 6356752,
+      // NaN is a marker to skip biaxial transformation
+      f = Math::NaN();
     ang bet1, omg1, alp1, bet2, omg2, alp2;
     real s12;
     int prec = 3;
@@ -118,6 +146,7 @@ int main(int argc, const char* const argv[]) {
           return 1;
         }
         t = Triaxial(a, b, c);
+        f = Math::NaN();
         m += 3;
       } else if (arg == "-e") {
         // Cayley ellipsoid sqrt([2,1,1/2]) is
@@ -136,7 +165,31 @@ int main(int argc, const char* const argv[]) {
         }
         t = Triaxial(b, e2, k2, kp2);
         a = t.a(); c = t.c();
+        f = Math::NaN();
         m += 4;
+      } else if (arg == "-e2") {
+        if (m + 2 >= argc) return usage(1, true);
+        real A;
+        try {
+          A = Utility::val<real>(std::string(argv[m + 1]));
+          f = Utility::fract<real>(std::string(argv[m + 2]));
+        }
+        // f > 0, k2 = 1, kp2 = 0
+        // a = b = A; c = A * (1 - f)
+        // e2 = factor(subst([a = A, b = A, c = A*(1-f)],(a^2 - c^2)/b^2))
+        //    = f * (2 - f)
+        // f < 0, k2 = 0, kp2 = 1
+        // a = A * (1 - f); b = c = A
+        // e2 = factor(subst([a = A*(1-f), b = A, c = A],(a^2 - c^2)/b^2))
+        //    = -f * (2 - f)
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -e2: " << e.what() << "\n";
+          return 1;
+        }
+        t = Triaxial(A, fabs(f) * (2 - f),
+                     signbit(f) ? 0 : 1, signbit(f) ? 1 : 0);
+        a = t.a(); b = A; c = t.c();
+        m += 2;
       } else if (arg == "-L") {
         linecalc = true;
         inverse = false;
@@ -242,6 +295,9 @@ int main(int argc, const char* const argv[]) {
 
     t.debug(debug);
     t.hybridalt(hybridalt);
+    if (linecalc) {
+      BiaxialCoords(true, f, bet1, omg1, alp1);
+    }
     std::unique_ptr<TriaxialLine> lp = linecalc ?
       std::make_unique<TriaxialLine>(t, bet1, omg1, alp1) : nullptr;
     using std::round; using std::log10; using std::fabs; using std::ceil;
@@ -271,9 +327,13 @@ int main(int argc, const char* const argv[]) {
             throw GeographicErr("Extraneous input: " + strc);
           DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
           DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
+          BiaxialCoords(true, f, bet1, omg1);
+          BiaxialCoords(true, f, bet2, omg2);
           TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2, alp1, alp2, s12);
           if (unroll && full)
             l.Position(s12, bet2, omg2, alp2);
+          BiaxialCoords(false, f, bet1, omg1, alp1);
+          BiaxialCoords(false, f, bet2, omg2, alp2);
           if (full)
             *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
                     << " " << AzimuthString(alp1, prec, dms, dmssep)
@@ -302,14 +362,17 @@ int main(int argc, const char* const argv[]) {
           else {
             DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
             alp1 = DecodeAzimuth(salp1);
+            BiaxialCoords(true, f, bet1, omg1, alp1);
             t.Direct(bet1, omg1, alp1, s12, bet2, omg2, alp2);
           }
           if (!unroll) {
-            Triaxial::AngNorm(bet2, omg2, alp2);
+            Triaxial::AngNorm(bet2, omg2, alp2, !isnan(f) && signbit(f));
             bet2 = bet2.base();
             omg2 = omg2.base();
             alp2 = alp2.base();
           }
+          BiaxialCoords(false, f, bet1, omg1, alp1);
+          BiaxialCoords(false, f, bet2, omg2, alp2);
           if (full)
             *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
                     << " " << AzimuthString(alp1, prec, dms, dmssep)
