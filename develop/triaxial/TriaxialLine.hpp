@@ -218,6 +218,8 @@ namespace GeographicLib {
         fics(const fline& f,
              Angle bet1, Angle omg1, Angle alp1);
         void setquadrant(const fline& f, unsigned q);
+        void pos1(bool transpolar,
+                  Angle& bet10, Angle& omg10, Angle& alp10) const;
       };
       class disttx {
         // bundle of data to pass along for distance

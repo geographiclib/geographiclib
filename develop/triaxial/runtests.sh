@@ -129,7 +129,7 @@ sphd 1 0 0 3
 WGS84 1 595514447126/88957371407509.362414969 1 0
 WGS84 1 595514447126/88957371407509.362414969 1 0
 
-direct compariaons:
+direct comparisons:
 
 outb = baseline            hybridalt
 testhu.outb 6.782325 1079
@@ -167,3 +167,18 @@ testpro.outd 8.462096 2958
 testspha.outd 7.345990 2992
 testsphd.outd 7.206284 3343
 testwgs84.outd 25990.371086 4115152238
+
+gsolve + hybridalt -- new baseline
+testhu.outf 6.815619 1364
+testobl.outf 7.778114 3524
+testoblx.outf 6.122106 563
+testphu.outf 7.490330 41788
+testpro.outf 8.365403 2958
+testprox.outf 8.724349 28263
+testseta.outf 5.295276 896
+testset.outf 5.658956 2924
+testspha.outf 7.225282 2992
+testsphb.outf 4.972187 699
+testsphc.outf 5.046515 988
+testsphd.outf 7.128320 3343
+testwgs84.outf 25990.273243 4115152240

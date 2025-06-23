@@ -53,13 +53,7 @@ namespace GeographicLib {
   {}
 
   void TriaxialLine::pos1(Angle& bet1, Angle& omg1, Angle& alp1) const {
-    bet1 = _fic.phi1; omg1 = _fic.tht1;
-    alp1 = _fic.alp1;
-    if (_f.transpolar()) {
-      swap(bet1, omg1);
-      alp1.reflect(false, false, true);
-    }
-    omg1 += ang::cardinal(1);
+    _fic.pos1(_f.transpolar(), bet1, omg1, alp1);
   }
 
   void TriaxialLine::pos1(real& bet1, real& omg1, real& alp1,
@@ -120,15 +114,18 @@ namespace GeographicLib {
                   _fic.phi0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
                   0, true).rebase(_fic.phi0);
       alp2a = ang(_fic.Ex * hypot(_f.kx() * _f.gm().nu, _f.kxp() * tht2a.c()),
-                  _fic.phi0.c() * _f.kx() * _f.gm().nup * psi2.c())
-        .rebase(_fic.alp0);
+                  _fic.phi0.c() * _f.kx() * _f.gm().nup * psi2.c());
+      if (_t.debug())
+        cout << real(tht2a)*_fic.Ex << " " << real(psi2) << " ";
     } else if (_f.gammax() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
       real u2, v2;
+      ang psi2;
       if (_f.kxp2() == 0) {
         // gtht()(x) == 0, so the g equation becomes gpsi()(v2) = sig2
         v2 = gpsi().inv(sig2n.first);
         phi2a = ang::radians(v2);
+        psi2 = phi2a;
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;
         // cout << "ZZ " << sig2 << " " << sig2n.first << " " << sig2n.second << " " << Ny << "\n";
@@ -140,8 +137,7 @@ namespace GeographicLib {
           ang::cardinal(2 * _fic.Ex * sig2n.second);
         // cout << "YY " << sig2 << " "
         // << sig2n.first << " " << sig2n.second << "\n";
-        alp2a = ang(_fic.Ex * real(0), _fic.Nx * parity, 0, true).
-          rebase(_fic.alp0);
+        alp2a = ang(_fic.Ex * real(0), _fic.Nx * parity, 0, true);
         /*
         ang psi2 = ang::radians(fpsi().rev(v2));
         // Already normalized
@@ -164,6 +160,7 @@ namespace GeographicLib {
                 countn, countb);
         // phi2 = fpsi().rev(u2); tht2 = ftht().rev(v2);
         phi2a = anglam(u2, _f.kxp());
+        psi2 = phi2a;
         tht2a = anglam(v2, _f.kx());
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         // if t._kp2 == 0 then meridional oblate
@@ -174,9 +171,10 @@ namespace GeographicLib {
                               signbit(_fic.phi0.c())).rebase(_fic.phi0);
         // replace cos(phi)/cos(tht) by sech(u)/sech(v)
         alp2a = ang(_fic.Ex * _f.kxp() / mcosh(v2, _f.kx()),
-                    _f.kx() * Ny / mcosh(u2, _f.kxp())).
-          rebase(_fic.alp0);
+                    _f.kx() * Ny / mcosh(u2, _f.kxp()));
       }
+      if (_t.debug())
+        cout << real(tht2a)*_fic.Ex << " " << real(psi2) << " ";
     } else {
       // gamma = NaN
     }
@@ -187,7 +185,36 @@ namespace GeographicLib {
       swap(bet2a, omg2a);
       alp2a.reflect(false, false, true);
     }
+    alp2a = alp2a.rebase(_fic.alp0);
     omg2a += ang::cardinal(1);
+    if (0) {
+      // Angle::rebase debug
+      ang
+        p1 = ang(+0.0, -1, 0, true),
+        p2 = ang(-0.0, -1, 1, true),
+        m1 = ang(-0.0, -1, 0, true),
+        m2 = ang(+0.0, -1, -1, true);
+      cout << "DD " << real(p1) << " " << real(p2) << " "
+           << real(m1) << " " << real(m2) << "\n";
+      cout << "PP "
+           << real(p1.rebase(p1)) << " "
+           << real(p2.rebase(p1)) << " " // bad
+           << real(m1.rebase(p1)) << " " // bad
+           << real(m2.rebase(p1)) << " "
+           << real(p1.rebase(p2)) << " "
+           << real(p2.rebase(p2)) << " "
+           << real(m1.rebase(p2)) << " "
+           << real(m2.rebase(p2)) << "\n";
+      cout << "MM "
+           << real(p1.rebase(m1)) << " "
+           << real(p2.rebase(m1)) << " "
+           << real(m1.rebase(m1)) << " "
+           << real(m2.rebase(m1)) << " "
+           << real(p1.rebase(m2)) << " "
+           << real(p2.rebase(m2)) << " " // bad
+           << real(m1.rebase(m2)) << " " // bad
+           << real(m2.rebase(m2)) << "\n";
+    }
   }
 
   void TriaxialLine::Position(real s12, real& bet2, real& omg2, real& alp2,
@@ -707,7 +734,6 @@ namespace GeographicLib {
           (transpolar() ? s : c) = 1;
         alp2a = ang(s, c);
       }
-      alp2a = alp2a.rebase(fic.alp0);
       ret.phiw2 = v2;
       ret.thtw2 = u2;
     } else if (gammax() == 0) {
@@ -729,8 +755,7 @@ namespace GeographicLib {
           v2 = 0;
           tht2a = ang::radians(-fic.Ex * fic.delta) +
             ang::cardinal(2*fic.Ex*phi2n.second);
-          alp2a = (fic.alp1.nearest(2U) + ang::cardinal(parity < 0 ? 2 : 0))
-            .rebase(fic.alp0);
+          alp2a = fic.alp1.nearest(2U) + ang::cardinal(parity < 0 ? 2 : 0);
           /*
           alp2a = ang::cardinal(2 * (phi2n.second +
                                      (fic.phi1.c() == 0 &&
@@ -756,15 +781,11 @@ namespace GeographicLib {
           v2 = ftht().inv(fpsi()(u2) - deltax);
           tht2a = ang::radians(fic.Ex * parity * ftht().rev(v2))
             .rebase(fic.tht0);
-          // umbalt definition of alp0 (why is this necessary?)
-          ang alp0x(fic.alp1.nearest(2U));
           // Conflict XXX
           // testset -50 180 20 0 want fic.Nx multiplying s()
           // testspha -20 90 20 -90 wants fic.Nx multiplying c()
-          alp2a = (kxp2() == 0 ? tht2a - ang::cardinal(1) :
-                   ang(kxp() * fic.Ex *
-                       parity / mcosh(v2, kx()),
-                       fic.Nx * kx() / mcosh(u2, kxp()))).rebase(alp0x);
+          alp2a = ang(kxp() * fic.Ex * parity / mcosh(v2, kx()),
+                      fic.Nx * kx() / mcosh(u2, kxp()));
           // Move forward from umbilical point
           phi2a += ang::eps().flipsign(fic.Nx);
         }
@@ -817,8 +838,7 @@ namespace GeographicLib {
               .flipsign(parity*fic.Nx).rebase(fic.phi0);
             if (false && t().debug())
               cout << "PSI2 " << real(fic.phi1) << " " << real(tau12) << " " << npi << " " << c << " " << real(phi2a) << " " << parity << "\n";
-            alp2a = ang::cardinal(fic.Nx * parity == 1 ? 0 : 2)
-              .rebase(fic.alp0);
+            alp2a = ang::cardinal(fic.Nx * parity == 1 ? 0 : 2);
           } else {
             u2 = v2 == 0 ? 0 : copysign(Math::pi()/2, tht2n.first);
             if (false && t().debug()) {
@@ -840,12 +860,10 @@ namespace GeographicLib {
             phi2a = ang::cardinal(fabs(v2) == 0
                                   ? 0 : copysign(real(1), v2 * fic.Nx))
               .rebase(fic.phi0);
-            alp2a = (fabs(v2) == 0 ?
-                     ang::cardinal(2 /* * fic.Ex * parity*/ ) :
-                     fic.alp1.nearest(2U) +
-                     ang::cardinal(parity == 1 ? 0 : 2) +
-                     ang::radians(v2).flipsign(parity * phi2a.s())
-                     ).rebase(fic.alp0);
+            alp2a = fabs(v2) == 0 ? ang::cardinal(2 /* * fic.Ex * parity*/ ) :
+              fic.alp1.nearest(2U) +
+              ang::cardinal(parity == 1 ? 0 : 2) +
+              ang::radians(v2).flipsign(parity * phi2a.s());
           }
           if (false && t().debug())
             cout << "HERE " << real(phi2a) << " "
@@ -859,12 +877,8 @@ namespace GeographicLib {
           u2 = fpsi().inv(ftht()(v2) + deltax);
           real phi2 = fic.Nx * parity * fpsi().rev(u2);
           phi2a = ang::radians(phi2);
-          // !umbalt definition of alp0
-          ang alp0x(fic.alp1.nearest(1U));
-          alp2a = (kxp2() == 0 ? tht2a - fic.tht0 :
-                   ang(fic.Ex * kxp() / mcosh(v2, kx()),
-                       kx() * fic.Nx *
-                       parity / mcosh(u2, kxp()))).rebase(alp0x);
+          alp2a = ang(fic.Ex * kxp() / mcosh(v2, kx()),
+                      kx() * fic.Nx * parity / mcosh(u2, kxp()));
           tht2a += ang::eps().flipsign(fic.Ex);
         }
         ii = int(tht2n.second);
@@ -882,6 +896,7 @@ namespace GeographicLib {
       alp2a.reflect(false, false, true);
     }
     omg2a += ang::cardinal(1);
+    alp2a = alp2a.rebase(fic.alp0);
     if (false && t().debug())
       cout << "ARCPOS0 " << psip << " "
            << real(bet2a) << " " << real(omg2a) << " "
@@ -896,6 +911,7 @@ namespace GeographicLib {
     , phi1(bet10)
     , alp1(alp10)
   {
+    alp0 = alp1.nearest(f.transpolar() ? 2U : 1U);
     if (f.transpolar()) {
       swap(tht1, phi1);
       alp1.reflect(false, false, true);
@@ -908,7 +924,6 @@ namespace GeographicLib {
     Nx = signbit(alp1.c()) ? -1 : 1;
     if (f.gammax() > 0) {
       phi0 = phi1.nearest(2U);
-      alp0 = alp1.nearest(1U);
       psi1 = ang(f.kx() * phi1.s(),
                  phi0.c() * alp1.c() *
                  hypot(f.kx() * phi1.c(), f.kxp() * tht1.c()));
@@ -924,8 +939,6 @@ namespace GeographicLib {
       delta = f.fpsi()(v0) - f.ftht()(u0);
       // deltaa = f.fbet()(v0a) - f.fomg()(u0a);
     } else if (f.gammax() == 0) {
-      // alp0 = alp1.nearest(signbit(f.gamma()) ? 2U : 1U);
-      alp0 = alp1.nearest(1U);
       if (f.kxp2() == 0) {
         // meridonal geodesic on biaxial ellipsoid
         // N.B. factor of sqrt(f.gammax()) omitted
@@ -977,35 +990,23 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialLine::fline::fics::setquadrant(const fline& f, unsigned q) {
-    const real eps = numeric_limits<real>::epsilon();
-    // If transpolar, switch q = 1 and q = 3.
-    alp1.setquadrant(!f.transpolar() || (q & 1U) == 0 ? q : q ^ 2U);
-    if (phi1.s() == 0 && fabs(alp1.c()) <= Math::sq(eps))
-      alp1 = ang(alp1.s(), -Math::sq(eps), alp1.n(), true);
-    int oE = Ex, oN = Nx;
-    Ex = signbit(alp1.s()) ? -1 : 1;
-    Nx = signbit(alp1.c()) ? -1 : 1;
-    if (f.gammax() > 0) {
-      alp0 = alp1.nearest(1U);
-      psi1.reflect(false, Nx != oN);
-      v0 = f.fpsi().fwd(psi1.radians());
-      u0 *= Ex/oE;
-      // This isn't right if _oblpro
-      delta = f.fpsi()(v0) - f.ftht()(u0);
-    } else if (f.gammax() == 0) {
-      // Only expect to invoke setquadrant in this case
-      alp0 = alp1.nearest(1U);
-      if (f.kxp2() == 0)
-        delta *= Ex/oE;
-      else if (fabs(phi1.c()) < 8*eps && fabs(tht1.c()) < 8*eps)
-        delta = f.deltashift()/2 - log(fabs(alp1.t()));
-      else
-        delta = Nx * f.fpsi()(lamang(phi1 - phi0, f.kxp())) -
-          Ex * f.ftht()(lamang(tht1 - tht0, f.kx()));
-    } else {
-      // gamma = NaN
+  void TriaxialLine::fline::fics::pos1(bool transpolar,
+                                       Angle& bet10, Angle& omg10,
+                                       Angle& alp10) const {
+    bet10 = phi1; omg10 = tht1;
+    alp10 = alp1;
+    if (transpolar) {
+      swap(bet10, omg10);
+      alp10.reflect(false, false, true);
     }
+    omg10 += ang::cardinal(1);
+  }
+
+  void TriaxialLine::fline::fics::setquadrant(const fline& f, unsigned q) {
+    ang bet1, omg1, alp1;
+    pos1(f.transpolar(), bet1, omg1, alp1);
+    alp1.setquadrant(q);
+    *this = fics(f, bet1, omg1, alp1);
   }
 
   TriaxialLine::gline::gics::gics(const gline& g, const fline::fics& fic) {

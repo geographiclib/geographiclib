@@ -41,6 +41,7 @@ namespace GeographicLib {
     real n() const {
       return _n + 0;            // Convert -0 to +0
     }
+    real n0() const;
     /**
      * The default constructor.
      *
@@ -94,6 +95,7 @@ namespace GeographicLib {
     Angle rebase(const Angle& c) const;
     Angle& renormalize();
     Angle& setn(real n = 0);
+    Angle& setn0(real n = 0);
     Angle& setquadrant(unsigned q);
     unsigned quadrant() const;
     Angle& reflect(bool flips, bool flipc = false, bool swapp = false);
@@ -254,8 +256,10 @@ namespace GeographicLib {
   }
 
   inline Angle Angle::rebase(const Angle& c) const {
+    // This is exact for c = cardinal direction
+    // return (*this - c).base() + c;
     Angle t = *this;
-    return t.setn(((*this - c).base() + c).n());
+    return t.setn0(((*this - c).base() + c).n0());
   }
 
   inline Angle& Angle::renormalize() {
@@ -267,6 +271,17 @@ namespace GeographicLib {
   inline Angle& Angle::setn(Math::real n) {
     using std::rint;
     _n = rint(n);
+    return *this;
+  }
+
+  inline Math::real Angle::n0() const {
+      using std::signbit;
+      return (_n - (_s == 0 && signbit(_s) && _c < 0 ? 1 : 0)) + 0;
+    }
+
+  inline Angle& Angle::setn0(Math::real n) {
+    using std::rint; using std::signbit;
+    _n = rint(n) + (_s == 0 && signbit(_s) && _c < 0 ? 1 : 0);
     return *this;
   }
 
