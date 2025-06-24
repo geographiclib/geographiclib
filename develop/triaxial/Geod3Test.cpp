@@ -311,7 +311,6 @@ int main(int argc, const char* const argv[]) {
     int div = 1;
     {
       bool hybridp = false, odep = false, reportp = false,
-        hybridalt = false,
         odetest = false, extended = false, dense = false, normp = false;
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
       for (int m = 1; m < argc; ++m) {
@@ -347,8 +346,6 @@ int main(int argc, const char* const argv[]) {
           odep = true;
         else if (arg == "--report")
           reportp = true;
-        else if (arg == "--hybridalt")
-          hybridalt = true;
         else if (arg == "--odetest")
           odetest = true;
         else if (arg == "-x")
@@ -386,7 +383,6 @@ int main(int argc, const char* const argv[]) {
       Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);
-      t.hybridalt(hybridalt);
       if (hybridp) {
         real bet1, omg1, betomg2;
         bool betp;

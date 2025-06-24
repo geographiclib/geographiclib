@@ -30,7 +30,7 @@ namespace GeographicLib {
     , _axes({_a, _b, _c})
     , _umbalt(false)
     , _debug(false)
-    , _hybridalt(false)
+    , _hybridalt(true)
     , _ellipthresh(1/real(8))
   {
     real s = (_a - _c) * (_a + _c);
@@ -62,6 +62,7 @@ namespace GeographicLib {
     , _kp2(kp2)
     , _umbalt(false)
     , _debug(false)
+    , _hybridalt(true)
     , _ellipthresh(1/real(8))
   {
     real ksum = _k2 + _kp2;
@@ -879,6 +880,7 @@ namespace GeographicLib {
            << real(bet1) << " " << real(omg1) << " "
            << real(alp1) << " " << real(bet2a) << " " << real(omg2b) << " "
            << dang << "\n";
+    // make -j10 > /dev/null && echo 0 30 0 -135 | ./Geod3Solve -i $SET --debug | head
     return dang;
   }
 

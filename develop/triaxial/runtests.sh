@@ -182,3 +182,6 @@ testsphb.outf 4.972187 699
 testsphc.outf 5.046515 988
 testsphd.outf 7.128320 3343
 testwgs84.outf 25990.273243 4115152240
+
+tht fic.Ex fixes result in minor changes for oblx prox set seta
+g is new baseline
