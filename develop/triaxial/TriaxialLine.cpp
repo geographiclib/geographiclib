@@ -125,7 +125,7 @@ namespace GeographicLib {
         // gtht()(x) == 0, so the g equation becomes gpsi()(v2) = sig2
         v2 = gpsi().inv(sig2n.first);
         phi2a = ang::radians(v2);
-        psi2 = phi2a;
+        psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;
         // cout << "ZZ " << sig2 << " " << sig2n.first << " " << sig2n.second << " " << Ny << "\n";
@@ -159,7 +159,7 @@ namespace GeographicLib {
                 countn, countb);
         // phi2 = fpsi().rev(u2); tht2 = ftht().rev(v2);
         phi2a = anglam(u2, _f.kxp());
-        psi2 = phi2a;
+        psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         tht2a = anglam(v2, _f.kx());
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         // if t._kp2 == 0 then meridional oblate
