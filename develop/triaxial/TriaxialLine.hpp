@@ -342,6 +342,14 @@ namespace GeographicLib {
                        real xscale, real zscale,
                        real& x, real& y,
                        int* countn = nullptr, int* countb = nullptr);
+    static void newt2d(real f0, real g0,
+                       const hfun& fx, const hfun& fy,
+                       const hfun& gx, const hfun& gy,
+                       real xa, real xb, real xscale,
+                       real ya, real yb, real yscale,
+                       real fscale, real gscale,
+                       real& x, real& y,
+                       int* countn = nullptr, int* countb = nullptr);
     static real clamp(real x, real mult = 1) {
       using std::fmax; using std::fmin;
       real z = mult * Triaxial::BigValue();

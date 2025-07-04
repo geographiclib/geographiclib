@@ -302,11 +302,12 @@ namespace GeographicLib {
     // fy(y) = fys*y +/- fym,
     // gx(x) = gxs*x +/- gxm,
     // gy(y) = gys*y +/- gym;
+    bool nestednewt = false;
     real fxm = fx.Max(), fym = fy.Max(), gxm = gx.Max(), gym = gy.Max(),
       fxs = fx.Slope(), fys = fy.Slope(), gxs = gx.Slope(), gys = gy.Slope(),
       // solve
-      //   x = (  fys*g0 + gys*f0 ) / den +/- Dx
-      //   y = (- gxs*f0 + fxs*g0 ) / den +/- Dy
+      //   x = ( fys*g0 + gys*f0 ) / den +/- Dx
+      //   y = ( fxs*g0 - gxs*f0 ) / den +/- Dy
       // where
       den = fxs * gys + fys * gxs,
       qf = fxm + fym, qg = gxm + gym,
@@ -314,9 +315,22 @@ namespace GeographicLib {
     // Dy = (qf * gxs + qg * fxs) / fabs(den);
     real x0 = (fys * g0 + gys * f0) / den, // Initial guess
       xp = x0 + Dx, xm = x0 - Dx;
-    newt2g(f0, g0, fx, fy, gx, gy, x0, xm, xp,
-           fx.HalfPeriod(), fx.HalfPeriod() * fxs,
-           x, y, countn, countb);
+    if (nestednewt)
+      // nested Newton's method
+      newt2g(f0, g0, fx, fy, gx, gy, x0, xm, xp,
+             fx.HalfPeriod(), fx.HalfPeriod() * fxs,
+             x, y, countn, countb);
+    else {                      //  2d Newton's method
+      real y0 = (fxs * g0 - gxs * f0) / den,
+        Dy = (qf * gxs + qg * fxs) / fabs(den),
+        yp = y0 + Dy, ym = y0 - Dy;
+      newt2d(f0, g0, fx, fy, gx, gy,
+             xm, xp, fx.HalfPeriod(),
+             ym, yp, fy.HalfPeriod(),
+             (fx.HalfPeriod() * fxs + fy.HalfPeriod() * fys) / 2,
+             (gx.HalfPeriod() * gxs + gy.HalfPeriod() * gys) / 2,
+             x, y, countn, countb);
+    }
     if (0)
       cout << "FEQ " << fx(x) << " " << fy(y) << " " << f0 << " "
            << fx(x) - fy(y) - f0 << "\n"
@@ -502,9 +516,9 @@ namespace GeographicLib {
     // d/dx = const, x is found on first iteration
 
     x = Trigfun::root(
-                      [&fx, &fy, &gx, &gy, g0]
+                      [&fx, &fy, &gx, &gy, g0, &countn, &countb]
                       (real x) -> pair<real, real>
-                      { real y = gy.inv(g0 - gx(x));
+                      { real y = gy.inv(g0 - gx(x), countn, countb);
                         return pair<real, real>(fx(x) - fy(y),
                                                 fx.deriv(x) *
                                                 (gx.gfderiv(x) / gy.gfderiv(y)
@@ -530,6 +544,200 @@ namespace GeographicLib {
       y -= (-gfxp * tf + tg) / (fyp * den);
       if (countn)
         ++*countn;
+      /*
+      cout << i << " "
+           << scientific << setprecision(2) << tf << " " << tg << " "
+           << fixed << setprecision(6) << x << " " << y << "\n";
+      */
+    }
+  }
+
+  void TriaxialLine::newt2d(real f0, real g0,
+                            const hfun& fx, const hfun& fy,
+                            const hfun& gx, const hfun& gy,
+                            real xa, real xb, real xscale,
+                            real ya, real yb, real yscale,
+                            real fscale, real gscale,
+                            real& x, real& y,
+                            int* countn, int* countb) {
+    // solve
+    //   f = fx(x) - fy(y) - f0 = 0
+    //   g = gx(x) + gy(y) - g0 = 0
+    // for x, y.  Assume that
+    //   fx and fy are increasing functions
+    //   gx and gy are non-decreasing functions
+    // The solution is bracketed by x in [xa, xb], y in [ya, yb]
+    bool debug = true;
+    const int maxit = 2*150;
+    const real tol = numeric_limits<real>::epsilon(),
+      ftol = tol * fscale/100,
+      gtol = tol * gscale/100,
+      xtol = pow(tol, real(0.75)) * xscale,
+      ytol = pow(tol, real(0.75)) * yscale,
+      tolmult = 0;
+    real oldf = Math::infinity(), oldg = oldf, olddx = oldf, olddy = oldf;
+    x = (xa + xb) / 2; y = (ya + yb) / 2;
+    bool bis = false;
+    int ibis = -1, i = 0;
+    for (; i < maxit ||
+           (throw GeographicLib::GeographicErr
+            ("Convergence failure TriaxialLine::newt2d"), false)
+           || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
+      if (countn)
+        ++*countn;
+      real f = fx(x) - fy(y) - f0, g = gx(x) + gy(y) - g0;
+      int
+        find = f == 0 ? 0 : 1 - 2*signbit(f),
+        gind = g == 0 ? 0 : 1 - 2*signbit(g),
+        ind = 3 * find + gind;  // ind in [-4, 4]
+      if ((fabs(f) <= ftol && fabs(g) <= gtol) || isnan(f) || isnan(g)) {
+        if (debug)
+          cout << "break0 " << scientific << f << " " << g << "\n";
+        break;
+      }
+      // Update bounds as follows
+      //
+      // y=-x            y=x
+      // g=0             f=0
+      //   \    ind=-2   /
+      //    \    f<0    /
+      //     \   g>0   /
+      //      \  yb   /
+      //       \  D  /
+      // ind=-4 \   / ind=4
+      //   f<0   \ /   f>0
+      //   g<0    X    g>0
+      //   xa    / \   xb
+      //    A   /   \   C
+      //       /  B  \.
+      //      /  f>0  \.
+      //     /   g<0   \.
+      //    /    ya     \.
+      //   /    ind=2    \.
+      //
+      // Secant method: data at points A, B, C, D allow piecewise lineear
+      // approximations to fx, fy, gx, gy.
+      //
+      // Sort x(A), x(B), x(C), x(D).  We need to approximate fx, gx in the
+      // interval [x(A), x(C)].  x(B) and X(D) can be arbitrarily ordered
+      // relative to [x(A), x(C)] to give:
+      //
+      // x(A), x(C)
+      // x(A), x(B), x(C)
+      // x(A), x(D), x(C)
+      // x(A), x(B), x(D), x(C)
+      // x(A), x(D), x(B), x(C)
+      //
+      // Thus piecewise linear approximations to fx and gx consist of nx = 1,
+      // 2, or 3 pieces.
+      //
+      // Similarly the approximations to fy and gy consist of ny = 1, 2, or 3
+      // pieces.
+      //
+      // Find secant solution to
+      //
+      //  fx(x) - fy(y) - f0 = 0
+      //  gx(x) + gy(y) - g0 = 0
+      //
+      // by solving the nx x ny systems of linear equations and accepting the
+      // solution were [x, y] are in the corresponing intervals.
+
+      // given x in [x(A), x(C)], test x(B), x(D) to find the tightest bracket
+      // x in [x(P), x(Q)].  Linearly interpolate fx using fx(x(P)), fx(x(Q))
+      // and similarly for gx.
+      //
+      // Procedure is similar for fy and gy.
+
+      switch (ind) {
+      case -4: xa = fmax(x, xa); break; // f<0 && g<0
+      case -3: xa = fmax(x, xa); yb = fmin(y, yb); break; // f<0 && g==0
+      case -2: yb = fmin(y, yb); break; // f<0 && g>0
+      case -1: xa = fmax(x, xa); ya = fmax(y, ya); break; // f==0 && g<0
+      case +1: xb = fmin(x, xb); yb = fmin(y, yb); break; // f==0 && g>0
+      case +2: ya = fmax(y, ya); break; // f>0 && g<0
+      case +3: xb = fmin(x, xb); ya = fmax(y, ya); break; // f>0 && g==0
+      case +4: xb = fmin(x, xb); break; // f>0 && g>0
+      default: break; // case 0: f==0 && g==0 already handled
+      }
+      real
+        fxp = fx.deriv(x), fyp = fy.deriv(y),
+        gfxp = gx.gfderiv(x), gfyp =  gy.gfderiv(y),
+        den = gfxp + gfyp,
+        dx = -( gfyp * f + g) / (fxp * den),
+        dy = -(-gfxp * f + g) / (fyp * den),
+        xn = x + dx, yn = y + dy,
+        dxa = 0, dya = 0;
+      bool cond1 = i < ibis + 10 ||
+        ((2*fabs(f) < oldf || 2*fabs(g) < oldg) ||
+         (2*fabs(dx) < olddx || 2*fabs(dy) < olddy)),
+        cond2 = xn >= xa-xtol*tolmult && xn <= xb+xtol*tolmult &&
+        yn >= ya-ytol*tolmult && yn <= yb+ytol*tolmult;
+      if (false && debug)
+        cout << "cond " << cond1 << " " << cond2 << " "
+             << find << " " << gind << " "
+             << i << " " << ibis << " " << (i < ibis + 10) << "\n";
+      if (/* ((i+1) % 20 != 0) && */
+          cond1 && cond2) {
+        oldf = fabs(f); oldg = fabs(g); olddx = fabs(dx); olddy = fabs(dy);
+        x = xn; y = yn;
+        bis = false;
+        if (!(fabs(dx) > xtol || fabs(dy) > ytol) /* && i > ibis + 2 */) {
+          if (debug)
+            cout << "break1 " << scientific << dx << " " << dy << "\n";
+          break;
+        }
+      } else {
+        if (false && !cond2) {
+          // point out of bounding box
+          real fracx = 0.9, fracy = 0.9;
+          if (xn > xb)
+            fracx = fmin(fracx, (xb -x) / dx);
+          else if (xn < xa)
+            fracx = fmin(fracx, (xa - x) / dx);
+          if (yn > yb)
+            fracy = fmin(fracy, (yb - y) / dy);
+          else if (yn < ya)
+            fracy = fmin(fracy, (ya - y) / dy);
+          // real frac = fmin(fracx, fracy)/2;
+          real
+            xnb = x + fracx * dx,
+            ynb = y + fracy * dy;
+          if (debug)
+            cout << "F " << fracx << " " << fracy << "\n";
+          xn = xnb; yn = ynb;
+        } else {
+          if (true) {
+            xn = dx > 0 ? (3*xb + xa)/4 : (3*xa + xb)/4;
+            yn = dy > 0 ? (3*yb + ya)/4 : (3*ya + yb)/4;
+            // xn = dx > 0 ? (9*xb + 7*xa)/16 : (9*xa + 7*xb)/16;
+            // yn = dy > 0 ? (9*yb + 7*ya)/16 : (9*ya + 7*yb)/16;
+          } else {
+            xn = (xa + xb) / 2; yn = (ya + yb) / 2;
+          }
+        }
+        if (countb)
+          ++*countb;
+        if (x == xn && y == yn) {
+          if (debug)
+            cout << "break2\n";
+          break;
+        }
+        dxa = xn - x; dya = yn - y;
+        x = xn; y = yn;
+        bis = true;
+        ibis = i;
+      }
+      (void) bis;
+      if (debug)
+        cout << "AA " << scientific << setprecision(4)
+             << xa-x << " " << xb-x << " "
+             << ya-y << " " << yb-y << "\n";
+      if (debug)
+        cout << i << " "
+             << bis << " " << cond1 << " " << cond2 << " "
+             << scientific << setprecision(2) << f << " " << g << " "
+             << dx << " " << dy << " " << dxa << " " << dya << " "
+             << xb-xa << " " << yb-ya << "\n";
     }
   }
 

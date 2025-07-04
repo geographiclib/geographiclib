@@ -355,9 +355,13 @@ int main(int argc, const char* const argv[]) {
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           s12 = Utility::val<real>(ss12);
-          if (linecalc)
-            lp->Position(s12, bet2, omg2, alp2);
-          else {
+          if (linecalc) {
+            int countn = 0, countb = 0;
+            lp->Position(s12, bet2, omg2, alp2, &countn, &countb);
+            // std::cout << countn << " " << countb << "\n";
+            (void) countn;
+            (void) countb;
+          } else {
             DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
             alp1 = DecodeAzimuth(salp1);
             BiaxialCoords(true, f, bet1, omg1, alp1);
