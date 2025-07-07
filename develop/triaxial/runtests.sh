@@ -188,9 +188,5 @@ g is new baseline
 
 make -j10 > /dev/null && head -42748 ../testobl.txt | tail -1 | ./Geod3Test $OBL
 
-newt2d
-k tolmult = 0; cond1 = true;
-l tolmult = 0; cond1 = set;
-
-echo 18 -78 -93.18342775570548294 1.80085989803982115929 | ./Geod3Solve $PHU -p 10
-head -9570 ../testphu.txt | tail -1 | ./Geod3Test $PHU
+newt2d working for general case (not umbilical)
+h is new baseline

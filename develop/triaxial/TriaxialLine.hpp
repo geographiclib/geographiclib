@@ -12,6 +12,8 @@
 
 #include <utility>
 #include <ostream>
+#include <set>
+#include <algorithm>
 #include <GeographicLib/Constants.hpp>
 #include "Angle.hpp"
 #include "Trigfun.hpp"
@@ -308,11 +310,89 @@ namespace GeographicLib {
       void inversedump(std::ostream& os) const;
     };
 
+    class zvals {
+    public:
+      real z, fz, gz;
+      zvals(real z0 = 0, real fz0 = 0, real gz0 = 0)
+        : z(z0), fz(fz0), gz(gz0) {}
+      bool operator<(const zvals& t) const { return z < t.z; }
+      bool operator==(const zvals& t) const { return z == t.z; }
+    };
+
+    class zset {
+    private:
+      std::vector<zvals> _s;
+    public:
+      zset(const zvals& a, const zvals& b)
+        : _s({a, b})
+      {
+        if (a == b)
+          // Allow coincident start and end values
+          _s.resize(1);
+        else if (! (a < b))
+          throw GeographicLib::GeographicErr("bad zset initializer");
+      }
+      int num() const { return _s.size(); }
+      const zvals& val(int i) const { return _s[i]; }
+      const zvals& min() const { return _s[0]; }
+      const zvals& max() const { return _s.back(); }
+      int insert(const zvals& t, int flag = 0) {
+        // Inset t into list.  flag = -/+ 1 indicates new min/max.
+        // Return -1 if t was already present; othersize return index of newly
+        // inserted value.
+        int ind = -1;
+        if (num() == 1) return ind; // Bracket already zero
+        // Check is t is "other" endpoint and collapse bracket to zero
+        if (t == min() && flag > 0) _s.resize(1);
+        if (t == max() && flag < 0) { _s[0] = _s.back(); _s.resize(1); }
+        if (!(min() < t && t < max())) // Not in range
+          return ind;
+        // min() < t < max()
+        auto p = std::lower_bound(_s.begin(), _s.end(), t);
+        bool ins = p->z != t.z;
+        if (p == _s.end()) return ind; // Can't happen
+        if (flag < 0) {
+          _s.erase(_s.begin(), p);
+          if (ins) {
+            _s.insert(_s.begin(), t);
+            ind = 0;
+          }
+        } else if (flag > 0) {
+          if (ins) {
+            _s.erase(p, _s.end());
+            _s.push_back(t);
+            ind = _s.size() - 1;
+          } else
+            _s.erase(p+1, _s.end());
+        } else if (ins) {
+          ind = p - _s.begin();
+          _s.insert(p, t);
+        }
+        // else it's a duplicate and not a new end value
+        return ind;
+      }
+      real bisect() const {
+        // return z in the middle of biggest gap
+        if (num() == 1)
+          return min().z;
+        real maxgap = -1; int maxind = 0;
+        for (int i = 0; i < num() - 1; ++i) {
+          real gap = _s[i+1].z - _s[i].z;
+          if (gap > maxgap) {
+            maxgap = gap;
+            maxind = i;
+          }
+        }
+        return (_s[maxind].z + _s[maxind+1].z) / 2;
+      }
+    };
+
     Triaxial _t;
     fline _f;
     fline::fics _fic;
     gline _g;
     gline::gics _gic;
+
     static void solve2(real f0, real g0,
                        const hfun& fx, const hfun& fy,
                        const hfun& gx, const hfun& gy,
@@ -350,6 +430,11 @@ namespace GeographicLib {
                        real fscale, real gscale,
                        real& x, real& y,
                        int* countn = nullptr, int* countb = nullptr);
+    static void zsetsinsert(zset& xset, zset& yset,
+                            const zvals& xfg, const zvals& yfg,
+                            real f0, real g0);
+    static void zsetsdiag(zset& xset, zset& yset,
+                          real f0, real g0);
     static real clamp(real x, real mult = 1) {
       using std::fmax; using std::fmin;
       real z = mult * Triaxial::BigValue();

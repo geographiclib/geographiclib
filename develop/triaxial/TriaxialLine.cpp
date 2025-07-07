@@ -12,6 +12,7 @@
 #include "TriaxialLine.hpp"
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 namespace GeographicLib {
 
@@ -567,16 +568,20 @@ namespace GeographicLib {
     //   fx and fy are increasing functions
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
-    bool debug = true;
+    bool debug = false;
     const int maxit = 2*150;
     const real tol = numeric_limits<real>::epsilon(),
       ftol = tol * fscale/100,
       gtol = tol * gscale/100,
       xtol = pow(tol, real(0.75)) * xscale,
       ytol = pow(tol, real(0.75)) * yscale,
-      tolmult = 0;
+      tolmult = 1;
     real oldf = Math::infinity(), oldg = oldf, olddx = oldf, olddy = oldf;
-    x = (xa + xb) / 2; y = (ya + yb) / 2;
+    zset xset(zvals(xa, fx(xa), gx(xa)),
+              zvals(xb, fx(xb), gx(xb))),
+      yset(zvals(ya, fy(ya), gy(ya)),
+           zvals(yb, fy(yb), gy(yb)));
+    x = xset.bisect(), y = yset.bisect();
     bool bis = false;
     int ibis = -1, i = 0;
     for (; i < maxit ||
@@ -585,11 +590,9 @@ namespace GeographicLib {
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
       if (countn)
         ++*countn;
-      real f = fx(x) - fy(y) - f0, g = gx(x) + gy(y) - g0;
-      int
-        find = f == 0 ? 0 : 1 - 2*signbit(f),
-        gind = g == 0 ? 0 : 1 - 2*signbit(g),
-        ind = 3 * find + gind;  // ind in [-4, 4]
+      zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
+      zsetsinsert(xset, yset, xv, yv, f0, g0);
+      real f = xv.fz - yv.fz - f0, g = xv.gz + yv.gz - g0;
       if ((fabs(f) <= ftol && fabs(g) <= gtol) || isnan(f) || isnan(g)) {
         if (debug)
           cout << "break0 " << scientific << f << " " << g << "\n";
@@ -648,17 +651,71 @@ namespace GeographicLib {
       //
       // Procedure is similar for fy and gy.
 
-      switch (ind) {
-      case -4: xa = fmax(x, xa); break; // f<0 && g<0
-      case -3: xa = fmax(x, xa); yb = fmin(y, yb); break; // f<0 && g==0
-      case -2: yb = fmin(y, yb); break; // f<0 && g>0
-      case -1: xa = fmax(x, xa); ya = fmax(y, ya); break; // f==0 && g<0
-      case +1: xb = fmin(x, xb); yb = fmin(y, yb); break; // f==0 && g>0
-      case +2: ya = fmax(y, ya); break; // f>0 && g<0
-      case +3: xb = fmin(x, xb); ya = fmax(y, ya); break; // f>0 && g==0
-      case +4: xb = fmin(x, xb); break; // f>0 && g>0
-      default: break; // case 0: f==0 && g==0 already handled
-      }
+      // Rethink using f = fx(x) - fy(y) - f0, g = gx(x) + gy(y) - g0, i.e.,
+      // sums of x-dependent and y-dependent terms.  Let
+
+      // fx:fx0 + (fx1-fx0)*(x-x0)/(x1-x0);
+      // fy:fy0 + (fy1-fy0)*(y-y0)/(y1-y0);
+      // gx:gx0 + (gx1-gx0)*(x-x0)/(x1-x0);
+      // gy:gy0 + (gy1-gy0)*(y-y0)/(y1-y0);
+      // solve([fx-fy-f0, gx+gy-g0],[x,y])
+
+      // Positions of the roots
+      //   [x-x0 = (-(fx0-fy0-f0)*gyp-(gx0+gy0-g0)*fyp)/(fxp*gyp+fyp*gxp),
+      //    y-y0 = ( (fx0-fy0-f0)*gxp-(gx0+gy0-g0)*fxp)/(fxp*gyp+fyp*gxp)];
+      //   [x-x1 = (-(fx1-fy1-f0)*gyp-(gx1+gy1-g0)*fyp)/(fxp*gyp+fyp*gxp),
+      //    y-y1 = ( (fx1-fy1-f0)*gxp-(gx1+gy1-g0)*fxp)/(fxp*gyp+fyp*gxp)];
+      //   [x-x1 = (-(fx1-fy0-f0)*gyp-(gx1+gy0-g0)*fyp)/(fxp*gyp+fyp*gxp),
+      //    y-y0 = ( (fx1-fy0-f0)*gxp-(gx1+gy0-g0)*fxp)/(fxp*gyp+fyp*gxp)];
+      //   [x-x0 = (-(fx0-fy1-f0)*gyp-(gx0+gy1-g0)*fyp)/(fxp*gyp+fyp*gxp),
+      //    y-y1 = ( (fx0-fy1-f0)*gxp-(gx0+gy1-g0)*fxp)/(fxp*gyp+fyp*gxp)];
+
+      // Conditions for root to be in the [x0,x1] x [y0,y1] rectangle:
+      //   x-x0 > 0
+      //   -f00*gyp/fyp-g00 = -f01*gyp/fyp-g01 > 0
+      //   y-y0 > 0
+      //    f00*gxp/fxp-g00 = -f10*gxy/fxy-g10 > 0
+      //   x-x1 < 0
+      //   -f10*gyp/fyp-g10 = -f11*gyp/fyp-g11 < 0
+      //   y-y1 < 0
+      //    f01*gxp/fxp-g01 =  f11*gxp/fxp-g11 < 0
+      //
+      // where
+      //   f00 = fx0-fy0-f0
+      //   f01 = fx0-fy1-f0
+      //   f10 = fx1-fy0-f0
+      //   f11 = fx1+fy1-f0
+      //   g00 = gx0+gy0-g0
+      //   g01 = gx0+gy1-g0
+      //   g10 = gx1+gy0-g0
+      //   g11 = gx1+gy1-g0
+      //   fxp = (fx1-fx0)/(x1-x0)
+      //   fyp = (fy1-fy0)/(y1-y0)
+      //   gxp = (gx1-gx0)/(x1-x0)
+      //   gyp = (gy1-gy0)/(y1-y0)
+
+      // A necessary condition for a root is
+      //   f01 <= 0 <= f10
+      //   g00 <= 0 <= g11
+      //
+      // The condition g00 < g11, f01 < f10 holds for all rectangles.  So can
+      // use condition g00 > 0 or f01 > 0 to exit x loop.
+
+      // Find rectangle with x in [x0, x1], y in [y0, y1].  New test point x =
+      // (x0 + x1)/2, y = (y0+y1)/2.  But note the actual solution may not be
+      // in [x0, x1] x [y0, y1].
+
+      // Maintain a sorted list of x, y values with x in [xa, xb], y in [ya,
+      // yb].
+
+      // zvals structure to hold [z, fz(z), gz(z)] (z = x or y).  zset holds a
+      // set of zvals with operator< operating on z alone.  Additional data
+      // members: za, zb (so we don't bother removing elements from the set)
+
+      // Static function zbisect takes two zsets and returns bisection point of
+      // x-y rectangle contains the solution for piecewise linear
+      // approximation.
+
       real
         fxp = fx.deriv(x), fyp = fy.deriv(y),
         gfxp = gx.gfderiv(x), gfyp =  gy.gfderiv(y),
@@ -666,18 +723,15 @@ namespace GeographicLib {
         dx = -( gfyp * f + g) / (fxp * den),
         dy = -(-gfxp * f + g) / (fyp * den),
         xn = x + dx, yn = y + dy,
-        dxa = 0, dya = 0;
+        dxa = 0, dya = 0,
+        xa = xset.min().z, xb = xset.max().z,
+        ya = yset.min().z, yb = yset.max().z;
       bool cond1 = i < ibis + 10 ||
         ((2*fabs(f) < oldf || 2*fabs(g) < oldg) ||
          (2*fabs(dx) < olddx || 2*fabs(dy) < olddy)),
         cond2 = xn >= xa-xtol*tolmult && xn <= xb+xtol*tolmult &&
         yn >= ya-ytol*tolmult && yn <= yb+ytol*tolmult;
-      if (false && debug)
-        cout << "cond " << cond1 << " " << cond2 << " "
-             << find << " " << gind << " "
-             << i << " " << ibis << " " << (i < ibis + 10) << "\n";
-      if (/* ((i+1) % 20 != 0) && */
-          cond1 && cond2) {
+      if (cond1 && cond2) {
         oldf = fabs(f); oldg = fabs(g); olddx = fabs(dx); olddy = fabs(dy);
         x = xn; y = yn;
         bis = false;
@@ -687,34 +741,7 @@ namespace GeographicLib {
           break;
         }
       } else {
-        if (false && !cond2) {
-          // point out of bounding box
-          real fracx = 0.9, fracy = 0.9;
-          if (xn > xb)
-            fracx = fmin(fracx, (xb -x) / dx);
-          else if (xn < xa)
-            fracx = fmin(fracx, (xa - x) / dx);
-          if (yn > yb)
-            fracy = fmin(fracy, (yb - y) / dy);
-          else if (yn < ya)
-            fracy = fmin(fracy, (ya - y) / dy);
-          // real frac = fmin(fracx, fracy)/2;
-          real
-            xnb = x + fracx * dx,
-            ynb = y + fracy * dy;
-          if (debug)
-            cout << "F " << fracx << " " << fracy << "\n";
-          xn = xnb; yn = ynb;
-        } else {
-          if (true) {
-            xn = dx > 0 ? (3*xb + xa)/4 : (3*xa + xb)/4;
-            yn = dy > 0 ? (3*yb + ya)/4 : (3*ya + yb)/4;
-            // xn = dx > 0 ? (9*xb + 7*xa)/16 : (9*xa + 7*xb)/16;
-            // yn = dy > 0 ? (9*yb + 7*ya)/16 : (9*ya + 7*yb)/16;
-          } else {
-            xn = (xa + xb) / 2; yn = (ya + yb) / 2;
-          }
-        }
+        xn = xset.bisect(); yn = yset.bisect();
         if (countb)
           ++*countb;
         if (x == xn && y == yn) {
@@ -730,15 +757,109 @@ namespace GeographicLib {
       (void) bis;
       if (debug)
         cout << "AA " << scientific << setprecision(4)
-             << xa-x << " " << xb-x << " "
-             << ya-y << " " << yb-y << "\n";
+             << x-xa << " " << xb-x << " "
+             << y-ya << " " << yb-y << "\n";
       if (debug)
-        cout << i << " "
+        cout << "CC " << i << " "
              << bis << " " << cond1 << " " << cond2 << " "
              << scientific << setprecision(2) << f << " " << g << " "
              << dx << " " << dy << " " << dxa << " " << dya << " "
              << xb-xa << " " << yb-ya << "\n";
+      if (debug)
+        cout << "BOX " << i << " " << bis << " "
+             << xset.num() << " " << yset.num() << " "
+             << scientific << setprecision(3)
+             << xset.max().z - xset.min().z << " "
+             << yset.max().z - yset.min().z << "\n";
     }
+  }
+
+  void TriaxialLine::zsetsinsert(zset& xset, zset& yset,
+                                 const zvals& xfg, const zvals& yfg,
+                                 real f0, real g0) {
+    bool debug = false;
+    int xind = xset.insert(xfg), yind = yset.insert(yfg);
+    if (debug) {
+      cout << "BOXA\n";
+      zsetsdiag(xset, yset, f0, g0);
+    }
+    if (xind < 0 && yind < 0) return;
+    zvals xa = xset.min(), xb = xset.max(),
+      ya = yset.min(), yb = yset.max();
+    for (int i = 0; i < xset.num(); ++i) {
+      const zvals& x = xset.val(i);
+      for (int j = 0; j < yset.num(); ++j) {
+        if (i == xind || j == yind) {
+          const zvals& y = yset.val(j);
+          real f = x.fz - y.fz - f0, g = x.gz + y.gz - g0;
+          // Update bounds as follows
+          //
+          // y=-x            y=x
+          // g=0             f=0
+          //   \    ind=-2   /
+          //    \    f<0    /
+          //     \   g>0   /
+          //      \  yb   /
+          //       \  D  /
+          // ind=-4 \   / ind=4
+          //   f<0   \ /   f>0
+          //   g<0    X    g>0
+          //   xa    / \   xb
+          //    A   /   \   C
+          //       /  B  \.
+          //      /  f>0  \.
+          //     /   g<0   \.
+          //    /    ya     \.
+          //   /    ind=2    \.
+          if (false) {
+            if (f <= 0) {
+              if (g <= 0 && xa < x) xa = x;
+              if (g >= 0 && y < yb) yb = y;
+            }
+            if (f >= 0) {
+              if (g <= 0 && ya < y) ya = y;
+              if (g >= 0 && x < xb) xb = x;
+            }
+          } else {
+            if (f < 0) {
+              if (g < 0 && xa < x) xa = x;
+              if (g > 0 && y < yb) yb = y;
+            }
+            if (f > 0) {
+              if (g < 0 && ya < y) ya = y;
+              if (g > 0 && x < xb) xb = x;
+            }
+          }
+        }
+      }
+    }
+    xset.insert(xa, -1);
+    xset.insert(xb, +1);
+    yset.insert(ya, -1);
+    yset.insert(yb, +1);
+    if (debug) {
+      cout << "BOXB\n";
+      zsetsdiag(xset, yset, f0, g0);
+    }
+  }
+
+  void TriaxialLine::zsetsdiag(zset& xset, zset& yset,
+                                      real f0, real g0) {
+    ostringstream fs, gs;
+    for (int j = yset.num() - 1; j >= 0; --j) {
+      const zvals& y = yset.val(j);
+      fs << "BOXF ";
+      gs << "BOXG ";
+      for (int i = 0; i < xset.num(); ++i) {
+        const zvals& x = xset.val(i);
+        real f = x.fz - y.fz - f0, g = x.gz + y.gz - g0;
+        fs << (f == 0 ? '.' : f < 0 ? '-' : '+');
+        gs << (g == 0 ? '.' : g < 0 ? '-' : '+');
+      }
+      fs << "\n";
+      gs << "\n";
+    }
+    cout << fs.str() << gs.str();
   }
 
   void TriaxialLine::Hybrid(Angle betomg2,
