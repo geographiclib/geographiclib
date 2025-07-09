@@ -190,3 +190,19 @@ make -j10 > /dev/null && head -42748 ../testobl.txt | tail -1 | ./Geod3Test $OBL
 
 newt2d working for general case (not umbilical)
 h is new baseline
+
+head -5960 ../testset.txt | tail -1 | ./Geod3Test $SET
+Caught exception: Convergence failure TriaxialLine::newt2d
+Fixed with tolmult = 1
+OR 2*Dx, 2*Dy??
+Why aren't Dx, Dy limits accurate?
+
+umbilic newt2d problem
+ echo 90 180 -90 3.38397633491294262944 | ./Geod3Solve $SET
+Fixed with 2*pi2
+
+i newt2d for umbilics 2*pi2 tolmult = 1
+j nestednewt for umbilics; 2*Dx 2*Dy tolmult = 0
+l nestednewt for umbilics; 2*Dx 2*Dy tolmult = 1
+m nestednewt for umbilics; 1*Dx 1*Dy tolmult = 1 (back to h)
+n really back to h (using f < 0 instead of f<= 0 in zsetsinsert)

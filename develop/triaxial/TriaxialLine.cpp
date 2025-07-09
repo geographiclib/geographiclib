@@ -324,10 +324,11 @@ namespace GeographicLib {
     else {                      //  2d Newton's method
       real y0 = (fxs * g0 - gxs * f0) / den,
         Dy = (qf * gxs + qg * fxs) / fabs(den),
-        yp = y0 + Dy, ym = y0 - Dy;
+        yp = y0 + Dy, ym = y0 - Dy,
+        mm = 0;
       newt2d(f0, g0, fx, fy, gx, gy,
-             xm, xp, fx.HalfPeriod(),
-             ym, yp, fy.HalfPeriod(),
+             xm-mm*Dx, xp+mm*Dx, fx.HalfPeriod(),
+             ym-mm*Dy, yp+mm*Dy, fy.HalfPeriod(),
              (fx.HalfPeriod() * fxs + fy.HalfPeriod() * fys) / 2,
              (gx.HalfPeriod() * gxs + gy.HalfPeriod() * gys) / 2,
              x, y, countn, countb);
@@ -359,7 +360,7 @@ namespace GeographicLib {
     //
     // fx, fy, gx, gy are increasing functions defined in [-1, 1]*pi2
     // Assume fx(0) = fy(0) = gx(0) = gy(0) = 0
-    bool gsolve = false;
+    bool gsolve = false, nestednewt = true;
     real pi2 = Triaxial::BigValue(),
       sbet = gx.Max(), somg = gy.Max(), stot = sbet + somg,
       dbet = fx.Max(), domg = fy.Max(), del  = dbet - domg;
@@ -391,6 +392,12 @@ namespace GeographicLib {
         u = 1*d0/3; v = -2*d0/3;
       }
       if (debug) cout << "UV2 " << u << " " << v << "\n";
+    } else if (!nestednewt) {
+      newt2d(d0, s0, fx, fy, gx, gy,
+             -2*pi2, 2*pi2, pi2,
+             -2*pi2, 2*pi2, pi2,
+             pi2, pi2, u, v, countn, countb);
+      if (debug) cout << "UV2D " << u << " " << v << "\n";
     } else if ((1 - 2 * signbit(d0)) * s0 < sbet - somg) {
       // Use u as independent variable if
       //   d0 < 0 ? (s0 > -sbet + somg) :
@@ -778,9 +785,14 @@ namespace GeographicLib {
                                  const zvals& xfg, const zvals& yfg,
                                  real f0, real g0) {
     bool debug = false;
+    if (debug)
+      cout << "BOX0 " << xfg.z << " " << yfg.z << "\n";
     int xind = xset.insert(xfg), yind = yset.insert(yfg);
     if (debug) {
-      cout << "BOXA\n";
+      cout << "BOXA " << xset.num() << " " << yset.num() << " "
+           << xind << " " << yind << " "
+           << xset.min().z << " " << xset.max().z << " "
+           << yset.min().z << " " << yset.max().z << "\n";
       zsetsdiag(xset, yset, f0, g0);
     }
     if (xind < 0 && yind < 0) return;
@@ -838,7 +850,11 @@ namespace GeographicLib {
     yset.insert(ya, -1);
     yset.insert(yb, +1);
     if (debug) {
-      cout << "BOXB\n";
+      cout << "BOXB " << xset.num() << " " << yset.num() << " "
+           << xset.min().z << " " << xset.max().z << " "
+           << yset.min().z << " " << yset.max().z << " "
+           << xa.z << " " << xb.z << " "
+           << ya.z << " " << yb.z << "\n";
       zsetsdiag(xset, yset, f0, g0);
     }
   }

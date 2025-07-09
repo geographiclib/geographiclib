@@ -96,6 +96,7 @@ void errreport(const Triaxial& t,
   typedef Angle ang;
   bool debug = false, invp = true, invdirp = true,
     dirp = true, optp = false;
+  //  invp = false;
   int num = 0;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
