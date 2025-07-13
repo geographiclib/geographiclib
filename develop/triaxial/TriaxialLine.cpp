@@ -304,16 +304,17 @@ namespace GeographicLib {
     // gx(x) = gxs*x +/- gxm,
     // gy(y) = gys*y +/- gym;
     bool nestednewt = false;
-    real fxm = fx.Max(), fym = fy.Max(), gxm = gx.Max(), gym = gy.Max(),
+    real fxm = fx.MaxPlus(), fym = fy.MaxPlus(),
+      gxm = gx.MaxPlus(), gym = gy.MaxPlus(),
       fxs = fx.Slope(), fys = fy.Slope(), gxs = gx.Slope(), gys = gy.Slope(),
       // solve
       //   x = ( fys*g0 + gys*f0 ) / den +/- Dx
       //   y = ( fxs*g0 - gxs*f0 ) / den +/- Dy
       // where
-      den = fxs * gys + fys * gxs,
+      den = fxs * gys + fys * gxs, // den > 0
       qf = fxm + fym, qg = gxm + gym,
-      Dx = (qf * gys + qg * fys) / fabs(den);
-    // Dy = (qf * gxs + qg * fxs) / fabs(den);
+      Dx = (qf * gys + qg * fys) / den;
+    // Dy = (qf * gxs + qg * fxs) / den;
     real x0 = (fys * g0 + gys * f0) / den, // Initial guess
       xp = x0 + Dx, xm = x0 - Dx;
     if (nestednewt)
@@ -323,9 +324,69 @@ namespace GeographicLib {
              x, y, countn, countb);
     else {                      //  2d Newton's method
       real y0 = (fxs * g0 - gxs * f0) / den,
-        Dy = (qf * gxs + qg * fxs) / fabs(den),
+        Dy = (qf * gxs + qg * fxs) / den,
         yp = y0 + Dy, ym = y0 - Dy,
         mm = 0;
+      if (1) {
+        real DxA = (-qf * gys + qg * fys) / den,
+          DyA = (-qf * gxs + qg * fxs) / den;
+        real
+          fA = fx(x0 - Dx) - fy(y0 - DyA) - f0,
+          gA = gx(x0 - Dx) + gy(y0 - DyA) - g0,
+          fB = fx(x0 - DxA) - fy(y0 - Dy) - f0,
+          gB = gx(x0 - DxA) + gy(y0 - Dy) - g0,
+          fC = fx(x0 + Dx) - fy(y0 + DyA) - f0,
+          gC = gx(x0 + Dx) + gy(y0 + DyA) - g0,
+          fD = fx(x0 + DxA) - fy(y0 + Dy) - f0,
+          gD = gx(x0 + DxA) + gy(y0 + Dy) - g0;
+        if (!( fabs(DxA) <= Dx && fabs(DyA) <= Dy ))
+          throw GeographicLib::GeographicErr("Bad Dx/Dy");
+        if (!( fA <= 0 && gA <= 0 )) {
+          cout << scientific << "midA " << fA << " " << gA << "\n";
+          cout << "DA " <<  Dx << " " << DxA << " " << Dy << " " << DyA << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints A TriaxialLine::newt2d");
+        }
+        if (!( fB >= 0 && gB <= 0 )) {
+          cout << scientific << "midB " << fB << " " << gB << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints B TriaxialLine::newt2d");
+        }
+        if (!( fC >= 0 && gC >= 0 )) {
+          cout << scientific << "midC " << fC << " " << gC << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints C TriaxialLine::newt2d");
+        }
+        //      cout << scientific << "midD " << fD << " " << gD << "\n";
+        if (!( fD <= 0 && gD >= 0 )) {
+          cout << scientific << "midD " << fD << " " << gD << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints B TriaxialLine::newt2d");
+        }
+
+        if (0) {
+
+          real x = x0, y = yp+mm*Dy;
+          cout << "XY " << x << " " << y << "\n";
+          cout << "FX " << fxs*x - fxm << " " << fx(x) << " "
+               << fxs*x + fxm << " "
+               << fxs*x - fxm - fx(x) << " " << fxs*x + fxm - fx(x) << "\n";
+          cout << "FY " << fys*y - fym << " " << fy(y) << " "
+               << fys*y + fym << " "
+               << fys*y - fym - fy(y) << " " << fys*y + fym - fy(y) << "\n";
+          cout << "GX " << gxs*x - gxm << " " << gx(x) << " "
+               << gxs*x + gxm << " "
+               << gxs*x - gxm - gx(x) << " " << gxs*x + gxm - gx(x) << "\n";
+          cout << "GY " << gys*y - gym << " " << gy(y) << " "
+               << gys*y + gym << " "
+               << gys*y - gym - gy(y) << " " << gys*y + gym - gy(y) << "\n";
+          cout << "FG " << f0 << " " << g0 << " "
+               << fx(x) - fy(y) - f0 << " "
+               << gx(x) + gy(y) - g0 << "\n";
+          cout << "DY " << Dy << " "
+               << (fxm + fym) / fys << " " << (gxm + gym) / gys << "\n";
+        }
+      }
       newt2d(f0, g0, fx, fy, gx, gy,
              xm-mm*Dx, xp+mm*Dx, fx.HalfPeriod(),
              ym-mm*Dy, yp+mm*Dy, fy.HalfPeriod(),
@@ -575,20 +636,82 @@ namespace GeographicLib {
     //   fx and fy are increasing functions
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
-    bool debug = false;
-    const int maxit = 2*150;
+    const bool debug = false, check = true;
+    const int maxit = 100;
     const real tol = numeric_limits<real>::epsilon(),
       ftol = tol * fscale/100,
       gtol = tol * gscale/100,
       xtol = pow(tol, real(0.75)) * xscale,
       ytol = pow(tol, real(0.75)) * yscale,
-      tolmult = 1;
+      tolmult = 0;
     real oldf = Math::infinity(), oldg = oldf, olddx = oldf, olddy = oldf;
     zset xset(zvals(xa, fx(xa), gx(xa)),
               zvals(xb, fx(xb), gx(xb))),
       yset(zvals(ya, fy(ya), gy(ya)),
            zvals(yb, fy(yb), gy(yb)));
     x = xset.bisect(), y = yset.bisect();
+    if (check) {
+      // A necessary condition for a root is
+      //   f01 <= 0 <= f10
+      //   g00 <= 0 <= g11
+      real
+        f01 = xset.min().fz - yset.max().fz - f0,
+        f10 = xset.max().fz - yset.min().fz - f0,
+        g00 = xset.min().gz + yset.min().gz - g0,
+        g11 = xset.max().gz + yset.max().gz - g0;
+      // Allow equality on the initial points
+      if (!( f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11 ))
+        throw GeographicLib::GeographicErr
+          ("Bad initial points TriaxialLine::newt2d");
+      zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
+      if (0) {
+        real
+          fA = xset.min().fz - yv.fz - f0, gA = xset.min().gz + yv.gz - g0,
+          fC = xset.max().fz - yv.fz - f0, gC = xset.max().gz + yv.gz - g0,
+          fB = xv.fz - yset.min().fz - f0, gB = xv.gz + yset.min().gz - g0,
+          fD = xv.fz - yset.max().fz - f0, gD = xv.gz + yset.max().gz - g0;
+        // y=-x            y=x
+        // g=0             f=0
+        //   \    ind=-2   /
+        //    \    f<0    /
+        //     \   g>0   /
+        //      \  yb   /
+        //       \  D  /
+        // ind=-4 \   / ind=4
+        //   f<0   \ /   f>0
+        //   g<0    X    g>0
+        //   xa    / \   xb
+        //    A   /   \   C
+        //       /  B  \.
+        //      /  f>0  \.
+        //     /   g<0   \.
+        //    /    ya     \.
+        //   /    ind=2    \.
+        // Allow equality on the initial midpoints points
+        if (!( fA <= 0 && gA <= 0 )) {
+          cout << scientific << "midA " << fA << " " << gA << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints A TriaxialLine::newt2d");
+        }
+        if (!( fB >= 0 && gB <= 0 )) {
+          cout << scientific << "midB " << fB << " " << gB << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints B TriaxialLine::newt2d");
+        }
+        if (!( fC >= 0 && gC >= 0 )) {
+          cout << scientific << "midC " << fC << " " << gC << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints C TriaxialLine::newt2d");
+        }
+        //      cout << scientific << "midD " << fD << " " << gD << "\n";
+        if (!( fD <= 0 && gD >= 0 )) {
+          cout << "XY " << xv.z << " " << yset.max().z << "\n";
+          cout << scientific << "midD " << fD << " " << gD << "\n";
+          throw GeographicLib::GeographicErr
+            ("Bad initial midpoints B TriaxialLine::newt2d");
+        }
+      }
+    }
     bool bis = false;
     int ibis = -1, i = 0;
     for (; i < maxit ||
@@ -598,6 +721,7 @@ namespace GeographicLib {
       if (countn)
         ++*countn;
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
+      // zsetsinsert updates xv and yv to enforce monotonicity of f and g
       zsetsinsert(xset, yset, xv, yv, f0, g0);
       real f = xv.fz - yv.fz - f0, g = xv.gz + yv.gz - g0;
       if ((fabs(f) <= ftol && fabs(g) <= gtol) || isnan(f) || isnan(g)) {
@@ -733,6 +857,11 @@ namespace GeographicLib {
         dxa = 0, dya = 0,
         xa = xset.min().z, xb = xset.max().z,
         ya = yset.min().z, yb = yset.max().z;
+      if (check) {
+        if (!( fxp > 0 && fyp > 0 && gfxp >= 0 && gfyp >= 0 && den > 0 ))
+          throw GeographicLib::GeographicErr
+            ("Bad derivatives TriaxialLine::newt2d");
+      }
       bool cond1 = i < ibis + 10 ||
         ((2*fabs(f) < oldf || 2*fabs(g) < oldg) ||
          (2*fabs(dx) < olddx || 2*fabs(dy) < olddy)),
@@ -781,8 +910,115 @@ namespace GeographicLib {
     }
   }
 
+  int TriaxialLine::zset::insert(zvals& t, int flag) {
+    // Inset t into list.  flag = -/+ 1 indicates new min/max.
+    // Return -1 if t was already present; othersize return index of newly
+    // inserted value.
+    const bool fix = true;
+    int ind = -1;
+    if (fix) {
+      zvals s = t;
+      ind = fixinsert(t, flag);
+      if (false && !isnan(s.z) &&
+          !(s.fz == t.fz && s.gz == t.gz)) {
+        std::cout << "NONMONOTONIC: " << std::scientific
+                  << t.fz - s.fz << " " << t.gz - s.gz << "\n";
+        throw
+          GeographicLib::GeographicErr("Nonmonotonic values zset::insert");
+      }
+      return ind;
+    }
+    if (num() == 1) return ind; // Bracket already zero
+    // Check is t is "other" endpoint and collapse bracket to zero
+    if (t == min() && flag > 0) _s.resize(1);
+    if (t == max() && flag < 0) { _s[0] = _s.back(); _s.resize(1); }
+    if (!(min() < t && t < max())) // Not in range
+      return ind;
+    // min() < t < max()
+    auto p = std::lower_bound(_s.begin(), _s.end(), t);
+    bool ins = p->z != t.z;
+    if (p == _s.end()) return ind; // Can't happen
+    if (flag < 0) {
+      _s.erase(_s.begin(), p);
+      if (ins) {
+        _s.insert(_s.begin(), t);
+        ind = 0;
+      }
+    } else if (flag > 0) {
+      if (ins) {
+        _s.erase(p, _s.end());
+        _s.push_back(t);
+        ind = _s.size() - 1;
+      } else
+        _s.erase(p+1, _s.end());
+    } else if (ins) {
+      ind = p - _s.begin();
+      _s.insert(p, t);
+    }
+    // else it's a duplicate and not a new end value
+    return ind;
+  }
+
+  int TriaxialLine::zset::fixinsert(zvals& t, int flag) {
+    // Inset t into list.  flag = -/+ 1 indicates new min/max.
+    // Return -1 if t was already present; othersize return index of newly
+    // inserted value.
+    // Value of t.fz and t.gz is adjusted to ensuire monotonicity:
+    // if a.z == b.z then a.fz == b.gz && a.fz == b.gz
+    // if a.z < b.z then a.fz <= b.gz && a.fz <= b.gz
+    using std::isnan;
+    int ind = -1;
+    if (isnan(t.z)) return ind;
+    if (t < min()) {
+      t.fz = fmin(t.fz, min().fz);
+      t.gz = fmin(t.gz, min().gz);
+    } else if (t == min()) {
+      // Check if t is "other" endpoint and collapse bracket to zero
+      if (flag > 0) _s.resize(1);
+      t = min();
+    } else if (t == max()) {
+      // Check if t is "other" endpoint and collapse bracket to zero
+      if (flag < 0) { _s[0] = _s.back(); _s.resize(1); }
+      t = max();
+    } else if (max() < t) {
+      t.fz = fmax(t.fz, max().fz);
+      t.gz = fmax(t.gz, max().gz);
+    }
+    if (!(min() < t && t < max())) // Not in range
+      return ind;
+    // Now min() < t < max()
+    auto p = std::lower_bound(_s.begin(), _s.end(), t);
+    if (p == _s.end()) return ind; // Can't happen
+    // Fix components of t
+    if (*p == t)                   // z components match
+      t = *p;                      // set fz and gz values
+    else {
+      t.fz = Math::clamp(t.fz, (p-1)->fz, p->fz);
+      t.gz = Math::clamp(t.gz, (p-1)->gz, p->gz);
+    }
+    if (flag < 0) {
+      _s.erase(_s.begin(), p);
+      if (!(*p == t)) {
+        _s.insert(_s.begin(), t);
+        ind = 0;
+      }
+    } else if (flag > 0) {
+      if (!(*p == t)) {
+        _s.erase(p, _s.end());
+        _s.push_back(t);
+        ind = _s.size() - 1;
+      } else
+        _s.erase(p+1, _s.end());
+    } else if (!(*p == t)) {
+      ind = p - _s.begin();
+      _s.insert(p, t);
+    }
+    // else it's a duplicate and not a new end value
+    return ind;
+  }
+
   void TriaxialLine::zsetsinsert(zset& xset, zset& yset,
-                                 const zvals& xfg, const zvals& yfg,
+                                 zvals& xfg, zvals& yfg,
                                  real f0, real g0) {
     bool debug = false;
     if (debug)
@@ -861,6 +1097,7 @@ namespace GeographicLib {
 
   void TriaxialLine::zsetsdiag(zset& xset, zset& yset,
                                       real f0, real g0) {
+    return;
     ostringstream fs, gs;
     for (int j = yset.num() - 1; j >= 0; --j) {
       const zvals& y = yset.val(j);

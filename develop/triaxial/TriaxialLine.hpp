@@ -177,12 +177,11 @@ namespace GeographicLib {
       real HalfPeriod() const {
         return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
       }
-      real Slope() const {
-        using std::sqrt;
-        return _umb ? 1 :  _fun.Slope();
-      }
-      real Max() const {
-        return _max;
+      real Slope() const { return _umb ? 1 :  _fun.Slope(); }
+      real Max() const { return _max; }
+      real MaxPlus() const {
+        using std::fmax;
+        return fmax(_max, HalfPeriod() * Slope() / 1000);
       }
       void inversedump(std::ostream& os, const std::string& name) const;
     };
@@ -329,48 +328,15 @@ namespace GeographicLib {
         if (a == b)
           // Allow coincident start and end values
           _s.resize(1);
-        else if (! (a < b))
+        else if (!(a < b && a.fz <= b.fz && a.gz <= b.gz))
           throw GeographicLib::GeographicErr("bad zset initializer");
       }
       int num() const { return _s.size(); }
       const zvals& val(int i) const { return _s[i]; }
       const zvals& min() const { return _s[0]; }
       const zvals& max() const { return _s.back(); }
-      int insert(const zvals& t, int flag = 0) {
-        // Inset t into list.  flag = -/+ 1 indicates new min/max.
-        // Return -1 if t was already present; othersize return index of newly
-        // inserted value.
-        int ind = -1;
-        if (num() == 1) return ind; // Bracket already zero
-        // Check is t is "other" endpoint and collapse bracket to zero
-        if (t == min() && flag > 0) _s.resize(1);
-        if (t == max() && flag < 0) { _s[0] = _s.back(); _s.resize(1); }
-        if (!(min() < t && t < max())) // Not in range
-          return ind;
-        // min() < t < max()
-        auto p = std::lower_bound(_s.begin(), _s.end(), t);
-        bool ins = p->z != t.z;
-        if (p == _s.end()) return ind; // Can't happen
-        if (flag < 0) {
-          _s.erase(_s.begin(), p);
-          if (ins) {
-            _s.insert(_s.begin(), t);
-            ind = 0;
-          }
-        } else if (flag > 0) {
-          if (ins) {
-            _s.erase(p, _s.end());
-            _s.push_back(t);
-            ind = _s.size() - 1;
-          } else
-            _s.erase(p+1, _s.end());
-        } else if (ins) {
-          ind = p - _s.begin();
-          _s.insert(p, t);
-        }
-        // else it's a duplicate and not a new end value
-        return ind;
-      }
+      int insert(zvals& t, int flag = 0);
+      int fixinsert(zvals& t, int flag = 0);
       real bisect() const {
         // return z in the middle of biggest gap
         if (num() == 1)
@@ -431,7 +397,7 @@ namespace GeographicLib {
                        real& x, real& y,
                        int* countn = nullptr, int* countb = nullptr);
     static void zsetsinsert(zset& xset, zset& yset,
-                            const zvals& xfg, const zvals& yfg,
+                            zvals& xfg, zvals& yfg,
                             real f0, real g0);
     static void zsetsdiag(zset& xset, zset& yset,
                           real f0, real g0);
