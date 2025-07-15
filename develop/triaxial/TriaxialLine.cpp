@@ -75,41 +75,16 @@ namespace GeographicLib {
                               int* countn, int* countb) const {
     // Compute points at distance s12
     // cout << "XX " << _fic.delta << " " << _gic.sig1 << "\n";
-    bool gsolve = true;
     real sig2 = _gic.sig1 + s12/_t._b;
     Angle &phi2a = bet2a, &tht2a = omg2a;
     if (_f.gammax() > 0) {
       real u2, v2;
-      if (_f.kxp2() == 0 && !gsolve) {
-        if (0)
-          cout << "A " << _f.gammax() << " " << ftht().HalfPeriod() << " "
-               << fpsi().HalfPeriod() << "\n";
-        // Treat via biaxial machinery...
-        // gtht()(x) == 0, so the g equation becomes gpsi()(v2) = sig2
-        v2 = gpsi().inv(sig2);
-        // ftht()(x) = x/sqrt(gamma); ftht().inv(x) = sqrt(gammax)*x, but keep
-        // it general
-        u2 = ftht().inv(fpsi()(v2) - _fic.delta);
-        if (false && _t.debug())
-          cout << "XX " << v2/Math::degree() << " " << u2/Math::degree() << " "
-               << _fic.delta/Math::degree() << "\n";
-      } else {
-        // The general triaxial machinery.  This is used for non-meridional
-        // geodesics on biaxial ellipsoids.
-        if (gsolve)
-          solve2g(-_fic.delta, sig2, ftht(), fpsi(), gtht(), gpsi(), u2, v2,
-                  countn, countb);
-        else {
-          if (fpsi().NCoeffs() <= ftht().NCoeffs())
-            solve2(-_fic.delta, sig2, ftht(), fpsi(), gtht(), gpsi(), u2, v2,
-                   countn, countb);
-          else
-            solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), v2, u2,
-                   countn, countb);
-        }
-      }
-      tht2a = ang::radians(ftht().rev(u2));
-      ang psi2 = ang::radians(fpsi().rev(v2));
+      // The general triaxial machinery.  This is used for non-meridional
+      // geodesics on biaxial ellipsoids.
+      solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
+             countn, countb);
+      tht2a = ang::radians(ftht().rev(v2));
+      ang psi2 = ang::radians(fpsi().rev(u2));
       // Already normalized
       phi2a = ang(_f.gm().nup * psi2.s(),
                   _fic.phi0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
@@ -237,55 +212,6 @@ namespace GeographicLib {
                             const hfun& gx, const hfun& gy,
                             real& x, real& y,
                             int* countn, int* countb) {
-    // Return x and y, s.t.
-    //   fx(x) - fy(y) = f0
-    //   gx(x) + gy(y) = g0
-    //
-    // We use x as the control variable and assume that fy.inv() is available
-    // Given a guess for x, compute y = fy.inv(fx(x)-f0) and solve the 1d
-    // problem:
-    //
-    //   gx(x) + gy(fy.inv(fx(x)-f0)) - g0 = 0
-    //
-    // fx(x) = fxs*x +/- fxm,
-    // fy(y) = fys*y +/- fym,
-    // gx(x) = gxs*x +/- gxm,
-    // gy(y) = gys*y +/- gym;
-    real fxm = fx.Max(), fym = fy.Max(), gxm = gx.Max(), gym = gy.Max(),
-      fxs = fx.Slope(), fys = fy.Slope(), gxs = gx.Slope(), gys = gy.Slope(),
-      // solve
-      //   x = (  fys*g0 + gys*f0 ) / den +/- Dx
-      //   y = (- gxs*f0 + fxs*g0 ) / den +/- Dy
-      // where
-      den = fxs * gys + fys * gxs,
-      qf = fxm + fym, qg = gxm + gym,
-      Dx = (qf * gys + qg * fys) / fabs(den);
-    // Dy = (qf * gxs + qg * fxs) / fabs(den);
-    real x0 = (fys * g0 + gys * f0) / den, // Initial guess
-      xp = x0 + Dx, xm = x0 - Dx;
-    newt2(f0, g0, fx, fy, gx, gy, x0, xm, xp,
-          fx.HalfPeriod(), fx.HalfPeriod() * fxs,
-          x, y, countn, countb);
-    if (0)
-      cout << "FEQ " << fx(x) << " " << fy(y) << " " << f0 << " "
-           << fx(x) - fy(y) - f0 << "\n"
-           << "GEQ " << gx(x) << " " << gy(y) << " " << g0 << " "
-           << gx(x) + gy(y) - g0 << "\n";
-    if (0) {
-      cout << "FF "
-           << fx.HalfPeriod() << " " << fx.Slope() << " " << fx.Max() << " "
-           << fy.HalfPeriod() << " " << fy.Slope() << " " << fy.Max() << "\n";
-      cout << "GG "
-           << gx.HalfPeriod() << " " << gx.Slope() << " " << gx.Max() << " "
-           << gy.HalfPeriod() << " " << gy.Slope() << " " << gy.Max() << "\n";
-    }
-  }
-
-  void TriaxialLine::solve2g(real f0, real g0,
-                             const hfun& fx, const hfun& fy,
-                             const hfun& gx, const hfun& gy,
-                             real& x, real& y,
-                             int* countn, int* countb) {
     // In the biaxial limit gtht()(x) == 0 and gtht.inv is ill-defined, so x
     // should the tht and y should be psi
 
@@ -303,7 +229,6 @@ namespace GeographicLib {
     // fy(y) = fys*y +/- fym,
     // gx(x) = gxs*x +/- gxm,
     // gy(y) = gys*y +/- gym;
-    bool nestednewt = false;
     real fxm = fx.MaxPlus(), fym = fy.MaxPlus(),
       gxm = gx.MaxPlus(), gym = gy.MaxPlus(),
       fxs = fx.Slope(), fys = fy.Slope(), gxs = gx.Slope(), gys = gy.Slope(),
@@ -313,87 +238,56 @@ namespace GeographicLib {
       // where
       den = fxs * gys + fys * gxs, // den > 0
       qf = fxm + fym, qg = gxm + gym,
-      Dx = (qf * gys + qg * fys) / den;
-    // Dy = (qf * gxs + qg * fxs) / den;
-    real x0 = (fys * g0 + gys * f0) / den, // Initial guess
-      xp = x0 + Dx, xm = x0 - Dx;
-    if (nestednewt)
-      // nested Newton's method
-      newt2g(f0, g0, fx, fy, gx, gy, x0, xm, xp,
-             fx.HalfPeriod(), fx.HalfPeriod() * fxs,
-             x, y, countn, countb);
-    else {                      //  2d Newton's method
-      real y0 = (fxs * g0 - gxs * f0) / den,
-        Dy = (qf * gxs + qg * fxs) / den,
-        yp = y0 + Dy, ym = y0 - Dy,
-        mm = 0;
-      if (1) {
-        real DxA = (-qf * gys + qg * fys) / den,
-          DyA = (-qf * gxs + qg * fxs) / den;
-        real
-          fA = fx(x0 - Dx) - fy(y0 - DyA) - f0,
-          gA = gx(x0 - Dx) + gy(y0 - DyA) - g0,
-          fB = fx(x0 - DxA) - fy(y0 - Dy) - f0,
-          gB = gx(x0 - DxA) + gy(y0 - Dy) - g0,
-          fC = fx(x0 + Dx) - fy(y0 + DyA) - f0,
-          gC = gx(x0 + Dx) + gy(y0 + DyA) - g0,
-          fD = fx(x0 + DxA) - fy(y0 + Dy) - f0,
-          gD = gx(x0 + DxA) + gy(y0 + Dy) - g0;
-        if (!( fabs(DxA) <= Dx && fabs(DyA) <= Dy ))
-          throw GeographicLib::GeographicErr("Bad Dx/Dy");
-        if (!( fA <= 0 && gA <= 0 )) {
-          cout << scientific << "midA " << fA << " " << gA << "\n";
-          cout << "DA " <<  Dx << " " << DxA << " " << Dy << " " << DyA << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints A TriaxialLine::newt2d");
-        }
-        if (!( fB >= 0 && gB <= 0 )) {
-          cout << scientific << "midB " << fB << " " << gB << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints B TriaxialLine::newt2d");
-        }
-        if (!( fC >= 0 && gC >= 0 )) {
-          cout << scientific << "midC " << fC << " " << gC << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints C TriaxialLine::newt2d");
-        }
-        //      cout << scientific << "midD " << fD << " " << gD << "\n";
-        if (!( fD <= 0 && gD >= 0 )) {
-          cout << scientific << "midD " << fD << " " << gD << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints B TriaxialLine::newt2d");
-        }
-
-        if (0) {
-
-          real x = x0, y = yp+mm*Dy;
-          cout << "XY " << x << " " << y << "\n";
-          cout << "FX " << fxs*x - fxm << " " << fx(x) << " "
-               << fxs*x + fxm << " "
-               << fxs*x - fxm - fx(x) << " " << fxs*x + fxm - fx(x) << "\n";
-          cout << "FY " << fys*y - fym << " " << fy(y) << " "
-               << fys*y + fym << " "
-               << fys*y - fym - fy(y) << " " << fys*y + fym - fy(y) << "\n";
-          cout << "GX " << gxs*x - gxm << " " << gx(x) << " "
-               << gxs*x + gxm << " "
-               << gxs*x - gxm - gx(x) << " " << gxs*x + gxm - gx(x) << "\n";
-          cout << "GY " << gys*y - gym << " " << gy(y) << " "
-               << gys*y + gym << " "
-               << gys*y - gym - gy(y) << " " << gys*y + gym - gy(y) << "\n";
-          cout << "FG " << f0 << " " << g0 << " "
-               << fx(x) - fy(y) - f0 << " "
-               << gx(x) + gy(y) - g0 << "\n";
-          cout << "DY " << Dy << " "
-               << (fxm + fym) / fys << " " << (gxm + gym) / gys << "\n";
-        }
+      Dx = (qf * gys + qg * fys) / den,
+      Dy = (qf * gxs + qg * fxs) / den,
+      x0 = (fys * g0 + gys * f0) / den, // Initial guess
+      y0 = (fxs * g0 - gxs * f0) / den,
+      xp = x0 + Dx, xm = x0 - Dx,
+      yp = y0 + Dy, ym = y0 - Dy,
+      mm = 0;
+    if (1) {
+      real DxA = (-qf * gys + qg * fys) / den,
+        DyA = (-qf * gxs + qg * fxs) / den;
+      real
+        fA = fx(x0 - Dx) - fy(y0 - DyA) - f0,
+        gA = gx(x0 - Dx) + gy(y0 - DyA) - g0,
+        fB = fx(x0 - DxA) - fy(y0 - Dy) - f0,
+        gB = gx(x0 - DxA) + gy(y0 - Dy) - g0,
+        fC = fx(x0 + Dx) - fy(y0 + DyA) - f0,
+        gC = gx(x0 + Dx) + gy(y0 + DyA) - g0,
+        fD = fx(x0 + DxA) - fy(y0 + Dy) - f0,
+        gD = gx(x0 + DxA) + gy(y0 + Dy) - g0;
+      if (!( fabs(DxA) <= Dx && fabs(DyA) <= Dy ))
+        throw GeographicLib::GeographicErr("Bad Dx/Dy");
+      if (!( fA <= 0 && gA <= 0 )) {
+        cout << scientific << "midA " << fA << " " << gA << "\n";
+        cout << "DA " <<  Dx << " " << DxA << " " << Dy << " " << DyA << "\n";
+        throw GeographicLib::GeographicErr
+          ("Bad initial midpoints A TriaxialLine::newt2");
       }
-      newt2d(f0, g0, fx, fy, gx, gy,
-             xm-mm*Dx, xp+mm*Dx, fx.HalfPeriod(),
-             ym-mm*Dy, yp+mm*Dy, fy.HalfPeriod(),
-             (fx.HalfPeriod() * fxs + fy.HalfPeriod() * fys) / 2,
-             (gx.HalfPeriod() * gxs + gy.HalfPeriod() * gys) / 2,
-             x, y, countn, countb);
-    }
+      if (!( fB >= 0 && gB <= 0 )) {
+        cout << scientific << "midB " << fB << " " << gB << "\n";
+        throw GeographicLib::GeographicErr
+          ("Bad initial midpoints B TriaxialLine::newt2");
+      }
+      if (!( fC >= 0 && gC >= 0 )) {
+        cout << scientific << "midC " << fC << " " << gC << "\n";
+        throw GeographicLib::GeographicErr
+          ("Bad initial midpoints C TriaxialLine::newt2");
+      }
+      //      cout << scientific << "midD " << fD << " " << gD << "\n";
+      if (!( fD <= 0 && gD >= 0 )) {
+        cout << scientific << "midD " << fD << " " << gD << "\n";
+        throw GeographicLib::GeographicErr
+          ("Bad initial midpoints B TriaxialLine::newt2");
+      }
+      }
+    newt2(f0, g0, fx, fy, gx, gy,
+          xm-mm*Dx, xp+mm*Dx, fx.HalfPeriod(),
+          ym-mm*Dy, yp+mm*Dy, fy.HalfPeriod(),
+          (fx.HalfPeriod() * fxs + fy.HalfPeriod() * fys) / 2,
+          (gx.HalfPeriod() * gxs + gy.HalfPeriod() * gys) / 2,
+          x, y, countn, countb);
     if (0)
       cout << "FEQ " << fx(x) << " " << fy(y) << " " << f0 << " "
            << fx(x) - fy(y) - f0 << "\n"
@@ -421,7 +315,6 @@ namespace GeographicLib {
     //
     // fx, fy, gx, gy are increasing functions defined in [-1, 1]*pi2
     // Assume fx(0) = fy(0) = gx(0) = gy(0) = 0
-    bool gsolve = false, nestednewt = false;
     real pi2 = Triaxial::BigValue(),
       sbet = gx.Max(), somg = gy.Max(), stot = sbet + somg,
       dbet = fx.Max(), domg = fy.Max(), del  = dbet - domg;
@@ -453,183 +346,24 @@ namespace GeographicLib {
         u = 1*d0/3; v = -2*d0/3;
       }
       if (debug) cout << "UV2 " << u << " " << v << "\n";
-    } else if (!nestednewt) {
-      real mm = 2;
-      newt2d(d0, s0, fx, fy, gx, gy,
-             -mm * pi2, mm * pi2, pi2,
-             -mm * pi2, mm * pi2, pi2,
-             pi2, pi2, u, v, countn, countb);
-      if (debug) cout << "UV2D " << u << " " << v << "\n";
-    } else if ((1 - 2 * signbit(d0)) * s0 < sbet - somg) {
-      // Use u as independent variable if
-      //   d0 < 0 ? (s0 > -sbet + somg) :
-      //            (s0 <  sbet - somg)
-      // or
-      //   sign(d0) * s0 < sbet - somg
-      if (gsolve)
-        newt2g(d0, s0, fx, fy, gx, gy, 0, -pi2, pi2, pi2, pi2,
-               u, v, countn, countb);
-      else
-        newt2(d0, s0, fx, fy, gx, gy, 0, -pi2, pi2, pi2, pi2,
-              u, v, countn, countb);
-      if (debug) cout << "UV3 " << u << " " << v << "\n";
     } else {
-      // Otherwise, use v is the independent variable
-      if (gsolve)
-        newt2g(-d0, s0, fy, fx, gy, gx, 0, -pi2, pi2, pi2, pi2,
-               v, u, countn, countb);
-      else
-        newt2(-d0, s0, fy, fx, gy, gx, 0, -pi2, pi2, pi2, pi2,
-              v, u, countn, countb);
-      if (debug) cout << "UV4 " << u << " " << v << "\n";
+      real mm = 2;
+      newt2(d0, s0, fx, fy, gx, gy,
+            -mm * pi2, mm * pi2, pi2,
+            -mm * pi2, mm * pi2, pi2,
+            pi2, pi2, u, v, countn, countb);
+      if (debug) cout << "UV2D " << u << " " << v << "\n";
     }
   }
 
   void TriaxialLine::newt2(real f0, real g0,
                            const hfun& fx, const hfun& fy,
                            const hfun& gx, const hfun& gy,
-                           real x0, real xa, real xb,
-                           real xscale, real zscale,
+                           real xa, real xb, real xscale,
+                           real ya, real yb, real yscale,
+                           real fscale, real gscale,
                            real& x, real& y,
                            int* countn, int* countb) {
-    // Find [x,y] s.t.
-    //   fx(x) - fy(y) - f0 = 0
-    //   gx(x) + gy(y) - g0 = 0
-    // Assume fy.inv is known, then
-    //   y = fy.inv(fx(x) - f0)
-    // and we consider the 1d problem
-    //   gx(x) + gy( fy.inv(fx(x) - f0) ) - g0 = 0
-    // d/dx of the LHS is
-    //   fx'(x) * ( gx'(x)/fx'(x) + gy'(y)/fy'(y) )
-    //   = fx'(x) * (gfx'(x) + gfy'(y))
-    // where gfx'(y) = gx'(x)/fx'(x)
-    //       gfy'(y) = gy'(y)/fy'(y)
-    //    cout << "BBX0\n";
-    if (0) {
-      auto fun = [&fx, &fy, &gx, &gy, f0]
-        (real x) -> pair<real, real>
-        { real y = fy.inv(fx(x) - f0);
-          return pair<real, real>(gx(x) + gy(y),
-                                  fx.deriv(x) *
-                                  (gx.gfderiv(x) +
-                                   gy.gfderiv(y))); };
-      int num = 100;
-      real dx = (xb - xa) / num;
-      for (int i = 0; i <= num; ++i) {
-        real x1 = xa + i * dx;
-        auto p = fun(x1);
-        cout << "NEWT " << x1 << " " << p.first-g0 << " " << p.second << "\n";
-      }
-    }
-    x = Trigfun::root(
-                      [&fx, &fy, &gx, &gy, f0]
-                      (real x) -> pair<real, real>
-                      { real y = fy.inv(fx(x) - f0);
-                        return pair<real, real>(gx(x) + gy(y),
-                                                fx.deriv(x) *
-                                                (gx.gfderiv(x) +
-                                                 gy.gfderiv(y))); },
-                      g0, x0, xa, xb, xscale, zscale, 1,
-                      countn, countb, 0, Trigfun::NEWT2);
-    y = fy.inv(fx(x) - f0);
-    // Do one round of 2d Newton
-    // Trial solution z0 = [x0, y0]'
-    // let t0 = [fx(x0) - fy(y0) - f0, gx(x0) + gy(y0) - g0]'
-    // Updated solution is
-    // z1 = z0 - M . t0
-    // M = 1/(gfx'(x) + gfy'(y) *
-    //   [ gfy'(y)/fx'(x), 1/fx'(x)]
-    //   [-gfx'(x)/fy'(y), 1/fy'(y)]
-    int nfix = 1;
-    for (int i = 0; i < nfix; ++i) {
-      real tf = fx(x) - fy(y) - f0, tg = gx(x) + gy(y) - g0,
-        fxp = fx.deriv(x), fyp = fy.deriv(y),
-        gfxp = gx.gfderiv(x), gfyp =  gy.gfderiv(y),
-        den = gfxp + gfyp;
-      x -= ( gfyp * tf + tg) / (fxp * den);
-      y -= (-gfxp * tf + tg) / (fyp * den);
-      if (countn)
-        ++*countn;
-    }
-  }
-
-  void TriaxialLine::newt2g(real f0, real g0,
-                            const hfun& fx, const hfun& fy,
-                            const hfun& gx, const hfun& gy,
-                            real x0, real xa, real xb,
-                            real xscale, real zscale,
-                            real& x, real& y,
-                            int* countn, int* countb) {
-    // We use x as the control variable and assume that gy.inv() is available
-    // Given a guess for x, compute y = gy.inv(g0 - gx(x)) and solve the 1d
-    // problem:
-    //
-    //   fx(x) - fy(gy.inv(g0 - gx(x))) - f0 = 0
-
-    // Find [x,y] s.t.
-    //   fx(x) - fy(y) - f0 = 0
-    //   gx(x) + gy(y) - g0 = 0
-    // Assume gy.inv is known, then
-    //   y = gy.inv(g0 - gx(x))
-    // and we consider the 1d problem
-    //   fx(x) - fy( gy.inv(g0 - gx(x)) ) - g0 = 0
-    // d/dx of the LHS is
-    //   fx'(x) + fy'(y) / gy'(y) * gx'(x)
-    //    = fx'(x) * (1 + fy'(y)/gy'(y) * gx'(x)/fx'(x))
-    //    = fx'(x) * (1 + gfx'(x) / gfy'(y))
-    // where gfx'(y) = gx'(x)/fx'(x)
-    //       gfy'(y) = gy'(y)/fy'(y)
-    //    cout << "BBX0\n";
-
-    // In the biaxial limit, x = theta, fx(x) = x, gx(x) = 0.
-    // y is found on first guess
-    // d/dx = const, x is found on first iteration
-
-    x = Trigfun::root(
-                      [&fx, &fy, &gx, &gy, g0, &countn, &countb]
-                      (real x) -> pair<real, real>
-                      { real y = gy.inv(g0 - gx(x), countn, countb);
-                        return pair<real, real>(fx(x) - fy(y),
-                                                fx.deriv(x) *
-                                                (gx.gfderiv(x) / gy.gfderiv(y)
-                                                 + 1)); },
-                      f0, x0, xa, xb, xscale, zscale, 1,
-                      countn, countb, 0, Trigfun::NEWT2G);
-    y = gy.inv(g0 - gx(x));
-    // Do one round of 2d Newton
-    // Trial solution z0 = [x0, y0]'
-    // let t0 = [fx(x0) - fy(y0) - f0, gx(x0) + gy(y0) - g0]'
-    // Updated solution is
-    // z1 = z0 - M . t0
-    // M = 1/(gfx'(x) + gfy'(y) *
-    //   [ gfy'(y)/fx'(x), 1/fx'(x)]
-    //   [-gfx'(x)/fy'(y), 1/fy'(y)]
-    int nfix = 1;
-    for (int i = 0; i < nfix; ++i) {
-      real tf = fx(x) - fy(y) - f0, tg = gx(x) + gy(y) - g0,
-        fxp = fx.deriv(x), fyp = fy.deriv(y),
-        gfxp = gx.gfderiv(x), gfyp =  gy.gfderiv(y),
-        den = gfxp + gfyp;
-      x -= ( gfyp * tf + tg) / (fxp * den);
-      y -= (-gfxp * tf + tg) / (fyp * den);
-      if (countn)
-        ++*countn;
-      /*
-      cout << i << " "
-           << scientific << setprecision(2) << tf << " " << tg << " "
-           << fixed << setprecision(6) << x << " " << y << "\n";
-      */
-    }
-  }
-
-  void TriaxialLine::newt2d(real f0, real g0,
-                            const hfun& fx, const hfun& fy,
-                            const hfun& gx, const hfun& gy,
-                            real xa, real xb, real xscale,
-                            real ya, real yb, real yscale,
-                            real fscale, real gscale,
-                            real& x, real& y,
-                            int* countn, int* countb) {
     // solve
     //   f = fx(x) - fy(y) - f0 = 0
     //   g = gx(x) + gy(y) - g0 = 0
@@ -674,7 +408,7 @@ namespace GeographicLib {
       // Allow equality on the initial points
       if (!( f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11 ))
         throw GeographicLib::GeographicErr
-          ("Bad initial points TriaxialLine::newt2d");
+          ("Bad initial points TriaxialLine::newt2");
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
       if (0) {
         real
@@ -703,24 +437,24 @@ namespace GeographicLib {
         if (!( fA <= 0 && gA <= 0 )) {
           cout << scientific << "midA " << fA << " " << gA << "\n";
           throw GeographicLib::GeographicErr
-            ("Bad initial midpoints A TriaxialLine::newt2d");
+            ("Bad initial midpoints A TriaxialLine::newt2");
         }
         if (!( fB >= 0 && gB <= 0 )) {
           cout << scientific << "midB " << fB << " " << gB << "\n";
           throw GeographicLib::GeographicErr
-            ("Bad initial midpoints B TriaxialLine::newt2d");
+            ("Bad initial midpoints B TriaxialLine::newt2");
         }
         if (!( fC >= 0 && gC >= 0 )) {
           cout << scientific << "midC " << fC << " " << gC << "\n";
           throw GeographicLib::GeographicErr
-            ("Bad initial midpoints C TriaxialLine::newt2d");
+            ("Bad initial midpoints C TriaxialLine::newt2");
         }
         //      cout << scientific << "midD " << fD << " " << gD << "\n";
         if (!( fD <= 0 && gD >= 0 )) {
           cout << "XY " << xv.z << " " << yset.max().z << "\n";
           cout << scientific << "midD " << fD << " " << gD << "\n";
           throw GeographicLib::GeographicErr
-            ("Bad initial midpoints B TriaxialLine::newt2d");
+            ("Bad initial midpoints B TriaxialLine::newt2");
         }
       }
     }
@@ -728,7 +462,7 @@ namespace GeographicLib {
     int ibis = -1, i = 0;
     for (; i < maxit ||
            (throw GeographicLib::GeographicErr
-            ("Convergence failure TriaxialLine::newt2d"), false)
+            ("Convergence failure TriaxialLine::newt2"), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
       ++cntn;
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
@@ -874,7 +608,7 @@ namespace GeographicLib {
                << fxp << " " << fyp << " "
                << gfxp << " " << gfyp << "\n";
           throw GeographicLib::GeographicErr
-            ("Bad derivatives TriaxialLine::newt2d");
+            ("Bad derivatives TriaxialLine::newt2");
         }
       }
       bool cond1 = i < ibis + 10 ||
@@ -933,55 +667,6 @@ namespace GeographicLib {
   }
 
   int TriaxialLine::zset::insert(zvals& t, int flag) {
-    // Inset t into list.  flag = -/+ 1 indicates new min/max.
-    // Return -1 if t was already present; othersize return index of newly
-    // inserted value.
-    const bool fix = true;
-    int ind = -1;
-    if (fix) {
-      zvals s = t;
-      ind = fixinsert(t, flag);
-      if (false && !isnan(s.z) &&
-          !(s.fz == t.fz && s.gz == t.gz)) {
-        std::cout << "NONMONOTONIC: " << std::scientific
-                  << t.fz - s.fz << " " << t.gz - s.gz << "\n";
-        throw
-          GeographicLib::GeographicErr("Nonmonotonic values zset::insert");
-      }
-      return ind;
-    }
-    if (num() == 1) return ind; // Bracket already zero
-    // Check is t is "other" endpoint and collapse bracket to zero
-    if (t == min() && flag > 0) _s.resize(1);
-    if (t == max() && flag < 0) { _s[0] = _s.back(); _s.resize(1); }
-    if (!(min() < t && t < max())) // Not in range
-      return ind;
-    // min() < t < max()
-    auto p = std::lower_bound(_s.begin(), _s.end(), t);
-    bool ins = p->z != t.z;
-    if (p == _s.end()) return ind; // Can't happen
-    if (flag < 0) {
-      _s.erase(_s.begin(), p);
-      if (ins) {
-        _s.insert(_s.begin(), t);
-        ind = 0;
-      }
-    } else if (flag > 0) {
-      if (ins) {
-        _s.erase(p, _s.end());
-        _s.push_back(t);
-        ind = _s.size() - 1;
-      } else
-        _s.erase(p+1, _s.end());
-    } else if (ins) {
-      ind = p - _s.begin();
-      _s.insert(p, t);
-    }
-    // else it's a duplicate and not a new end value
-    return ind;
-  }
-
-  int TriaxialLine::zset::fixinsert(zvals& t, int flag) {
     // Inset t into list.  flag = -/+ 1 indicates new min/max.
     // Return -1 if t was already present; othersize return index of newly
     // inserted value.
@@ -1085,7 +770,8 @@ namespace GeographicLib {
           //   /    ind=2    \.
           if (false) {
             // Problem with
-            // echo -11 165 0.865544228453134485 1.70392636779413409327 | ./Geod3Solve $HU
+            //   echo -11 165 0.865544228453134485 1.70392636779413409327 |
+            //     ./Geod3Solve $HU
             // Pattern is
             // BOXF ---+
             // BOXF ---+
@@ -1865,13 +1551,13 @@ namespace GeographicLib {
         if (_tx) {
           _ell = EllipticFunction(_kap / (_kap + _mu), 0,
                                   _mu / (_kap + _mu), 1);
-          _fun =TrigfunExt(
-                           [kap = _kap, kapp = _kapp,
-                            eps = _eps, mu = _mu, ell = _ell]
-                           (real u) -> real
-                           { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
-                             return gup(cn, dn, kap, kapp, eps, mu); },
-                           _ell.K());
+          _fun = TrigfunExt(
+                            [kap = _kap, kapp = _kapp,
+                             eps = _eps, mu = _mu, ell = _ell]
+                            (real u) -> real
+                            { real sn, cn, dn; (void) ell.am(u, sn, cn, dn);
+                              return gup(cn, dn, kap, kapp, eps, mu); },
+                            _ell.K());
         } else
           _fun = TrigfunExt(
                             [kap = _kap, kapp = _kapp, eps = _eps, mu = _mu]

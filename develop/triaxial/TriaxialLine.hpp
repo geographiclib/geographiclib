@@ -336,7 +336,6 @@ namespace GeographicLib {
       const zvals& min() const { return _s[0]; }
       const zvals& max() const { return _s.back(); }
       int insert(zvals& t, int flag = 0);
-      int fixinsert(zvals& t, int flag = 0);
       real bisect() const {
         // return z in the middle of biggest gap
         if (num() == 1)
@@ -364,11 +363,6 @@ namespace GeographicLib {
                        const hfun& gx, const hfun& gy,
                        real& x, real& y,
                        int* countn = nullptr, int* countb = nullptr);
-    static void solve2g(real f0, real g0,
-                        const hfun& fx, const hfun& fy,
-                        const hfun& gx, const hfun& gy,
-                        real& x, real& y,
-                        int* countn = nullptr, int* countb = nullptr);
     static void solve2u(real f0, real g0,
                         const hfun& fx, const hfun& fy,
                         const hfun& gx, const hfun& gy,
@@ -377,25 +371,11 @@ namespace GeographicLib {
     static void newt2(real f0, real g0,
                       const hfun& fx, const hfun& fy,
                       const hfun& gx, const hfun& gy,
-                      real x0, real xa, real xb,
-                      real xscale, real zscale,
+                      real xa, real xb, real xscale,
+                      real ya, real yb, real yscale,
+                      real fscale, real gscale,
                       real& x, real& y,
                       int* countn = nullptr, int* countb = nullptr);
-    static void newt2g(real f0, real g0,
-                       const hfun& fx, const hfun& fy,
-                       const hfun& gx, const hfun& gy,
-                       real x0, real xa, real xb,
-                       real xscale, real zscale,
-                       real& x, real& y,
-                       int* countn = nullptr, int* countb = nullptr);
-    static void newt2d(real f0, real g0,
-                       const hfun& fx, const hfun& fy,
-                       const hfun& gx, const hfun& gy,
-                       real xa, real xb, real xscale,
-                       real ya, real yb, real yscale,
-                       real fscale, real gscale,
-                       real& x, real& y,
-                       int* countn = nullptr, int* countb = nullptr);
     static void zsetsinsert(zset& xset, zset& yset,
                             zvals& xfg, zvals& yfg,
                             real f0, real g0);

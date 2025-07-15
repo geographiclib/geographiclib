@@ -135,8 +135,6 @@ namespace GeographicLib {
     enum ind {
       NONE = 0,
       INV1,
-      NEWT2,
-      NEWT2G,
       ARCPOS0,
       FFUNROOT,
       GFUNROOT,

@@ -340,7 +340,7 @@ namespace GeographicLib {
                            int* countn, int* countb,
                            real tol, ind indicator) {
     // Solve v = f(x) - z = 0
-    bool debug = false && indicator == Trigfun::NEWT2;
+    bool debug = false;
     if (x0 == xa && x0 == xb)
       return x0;
     if (tol == 0)
