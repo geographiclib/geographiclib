@@ -194,3 +194,15 @@ h is new baseline
 improvements in newt2d (enforce montonicity of f and g)
 i is new baseline
 umbilical still needs testing
+
+umbilical all bisection
+head -3314 ../testset.txt | tail -1
+70 0 180 0 0 180 0.46138515584816834054 0.42147199387998978727 0.7978133840499095064 0.68720816474403102059
+echo 70 0 180 0.46138515584816834054 | ./Geod3Solve $SET
+
+convergence failure
+head -385 ../testprox.txt | tail -1
+echo 63 -173 -61.97921997838416712 -4.64409746197940890408 | ./Geod3Solve $PROX
+
+umblilical now working OK with newt2d
+j is new baseline

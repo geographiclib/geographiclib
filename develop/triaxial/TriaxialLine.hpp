@@ -399,8 +399,10 @@ namespace GeographicLib {
     static void zsetsinsert(zset& xset, zset& yset,
                             zvals& xfg, zvals& yfg,
                             real f0, real g0);
-    static void zsetsdiag(zset& xset, zset& yset,
+    static void zsetsdiag(const zset& xset, const zset& yset,
                           real f0, real g0);
+    static std::pair<real, real> zsetsbisect(const zset& xset, const zset& yset,
+                                             real f0, real g0);
     static real clamp(real x, real mult = 1) {
       using std::fmax; using std::fmin;
       real z = mult * Triaxial::BigValue();

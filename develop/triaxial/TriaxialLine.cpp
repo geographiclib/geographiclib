@@ -421,7 +421,7 @@ namespace GeographicLib {
     //
     // fx, fy, gx, gy are increasing functions defined in [-1, 1]*pi2
     // Assume fx(0) = fy(0) = gx(0) = gy(0) = 0
-    bool gsolve = false, nestednewt = true;
+    bool gsolve = false, nestednewt = false;
     real pi2 = Triaxial::BigValue(),
       sbet = gx.Max(), somg = gy.Max(), stot = sbet + somg,
       dbet = fx.Max(), domg = fy.Max(), del  = dbet - domg;
@@ -454,9 +454,10 @@ namespace GeographicLib {
       }
       if (debug) cout << "UV2 " << u << " " << v << "\n";
     } else if (!nestednewt) {
+      real mm = 2;
       newt2d(d0, s0, fx, fy, gx, gy,
-             -2*pi2, 2*pi2, pi2,
-             -2*pi2, 2*pi2, pi2,
+             -mm * pi2, mm * pi2, pi2,
+             -mm * pi2, mm * pi2, pi2,
              pi2, pi2, u, v, countn, countb);
       if (debug) cout << "UV2D " << u << " " << v << "\n";
     } else if ((1 - 2 * signbit(d0)) * s0 < sbet - somg) {
@@ -637,19 +638,30 @@ namespace GeographicLib {
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
     const bool debug = false, check = true;
-    const int maxit = 100;
+    const int maxit = 150;
     const real tol = numeric_limits<real>::epsilon(),
-      ftol = tol * fscale/100,
-      gtol = tol * gscale/100,
+      // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
+      // too much bisection.  Example:
+      //   echo 63 -173 -61.97921997838416712 -4.64409746197940890408 |
+      //     ./Geod3Solve $PROX
+      ftol = tol * fscale/10,
+      gtol = tol * gscale/10,
       xtol = pow(tol, real(0.75)) * xscale,
       ytol = pow(tol, real(0.75)) * yscale,
-      tolmult = 0;
+      // If tolmult == 0, umbilical case
+      //   echo 70 0 180 0.46138515584816834054 | ./Geod3Solve $SET
+      // take countn/countb = 55/54 iterations to converge.  With tolmult == 1,
+      // it needs 5/3 iterations.
+      tolmult = 1;
+    int cntn = 0, cntb = 0;
     real oldf = Math::infinity(), oldg = oldf, olddx = oldf, olddy = oldf;
     zset xset(zvals(xa, fx(xa), gx(xa)),
               zvals(xb, fx(xb), gx(xb))),
       yset(zvals(ya, fy(ya), gy(ya)),
            zvals(yb, fy(yb), gy(yb)));
-    x = xset.bisect(), y = yset.bisect();
+    // x = xset.bisect(), y = yset.bisect();
+    auto p = zsetsbisect(xset, yset, f0, g0);
+    x = p.first; y = p.second;
     if (check) {
       // A necessary condition for a root is
       //   f01 <= 0 <= f10
@@ -718,8 +730,7 @@ namespace GeographicLib {
            (throw GeographicLib::GeographicErr
             ("Convergence failure TriaxialLine::newt2d"), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
-      if (countn)
-        ++*countn;
+      ++cntn;
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
       // zsetsinsert updates xv and yv to enforce monotonicity of f and g
       zsetsinsert(xset, yset, xv, yv, f0, g0);
@@ -858,9 +869,13 @@ namespace GeographicLib {
         xa = xset.min().z, xb = xset.max().z,
         ya = yset.min().z, yb = yset.max().z;
       if (check) {
-        if (!( fxp > 0 && fyp > 0 && gfxp >= 0 && gfyp >= 0 && den > 0 ))
+        if (!( fxp > 0 && fyp > 0 && gfxp >= 0 && gfyp >= 0 && den > 0 )) {
+          cout << "DERIVS " << x << " " << y << " "
+               << fxp << " " << fyp << " "
+               << gfxp << " " << gfyp << "\n";
           throw GeographicLib::GeographicErr
             ("Bad derivatives TriaxialLine::newt2d");
+        }
       }
       bool cond1 = i < ibis + 10 ||
         ((2*fabs(f) < oldf || 2*fabs(g) < oldg) ||
@@ -877,9 +892,10 @@ namespace GeographicLib {
           break;
         }
       } else {
-        xn = xset.bisect(); yn = yset.bisect();
-        if (countb)
-          ++*countb;
+        // xn = xset.bisect(); yn = yset.bisect();
+        p = zsetsbisect(xset, yset, f0, g0);
+        xn = p.first; yn = p.second;
+        ++cntb;
         if (x == xn && y == yn) {
           if (debug)
             cout << "break2\n";
@@ -907,7 +923,13 @@ namespace GeographicLib {
              << scientific << setprecision(3)
              << xset.max().z - xset.min().z << " "
              << yset.max().z - yset.min().z << "\n";
+      // cout << "BOX " << xset.num() << " " << yset.num() << "\n";
     }
+    if (countn)
+      *countn += cntn;
+    if (countb)
+      *countb += cntb;
+    // cout << "CNT " << cntn << " " << cntb << "\n";
   }
 
   int TriaxialLine::zset::insert(zvals& t, int flag) {
@@ -1028,7 +1050,9 @@ namespace GeographicLib {
       cout << "BOXA " << xset.num() << " " << yset.num() << " "
            << xind << " " << yind << " "
            << xset.min().z << " " << xset.max().z << " "
-           << yset.min().z << " " << yset.max().z << "\n";
+           << yset.min().z << " " << yset.max().z << " "
+           << xset.max().z - xset.min().z << " "
+           << yset.max().z - yset.min().z << "\n";
       zsetsdiag(xset, yset, f0, g0);
     }
     if (xind < 0 && yind < 0) return;
@@ -1060,6 +1084,27 @@ namespace GeographicLib {
           //    /    ya     \.
           //   /    ind=2    \.
           if (false) {
+            // Problem with
+            // echo -11 165 0.865544228453134485 1.70392636779413409327 | ./Geod3Solve $HU
+            // Pattern is
+            // BOXF ---+
+            // BOXF ---+
+            // BOXF ++++
+
+            // BOXG ..++
+            // BOXG --..
+            // BOXG --..
+
+            // Allowing equality sets
+            // xa/yb xa/yb ../yb ../yb
+            // xa/.. xa/.. xa/yb xb/ya
+            // ../ya ../ya xb/ya xb/ya
+
+            // Disallowing equality sets
+            //             ../yb ../yb
+            // xa/.. xa/..
+            // ../ya ../ya
+
             if (f <= 0) {
               if (g <= 0 && xa < x) xa = x;
               if (g >= 0 && y < yb) yb = y;
@@ -1093,11 +1138,22 @@ namespace GeographicLib {
            << ya.z << " " << yb.z << "\n";
       zsetsdiag(xset, yset, f0, g0);
     }
+    real
+      f01 = xset.min().fz - yset.max().fz - f0,
+      f10 = xset.max().fz - yset.min().fz - f0,
+      g00 = xset.min().gz + yset.min().gz - g0,
+      g11 = xset.max().gz + yset.max().gz - g0;
+    // Allow equality on the initial points
+    if (false && !( f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11 )) {
+      cout << f01 << " " << f10 << " "
+           << g00 << " " << g11 << "\n";
+      throw GeographicLib::GeographicErr
+        ("Bad corner point TriaxialLine::zsetsinsert");
+    }
   }
 
-  void TriaxialLine::zsetsdiag(zset& xset, zset& yset,
-                                      real f0, real g0) {
-    return;
+  void TriaxialLine::zsetsdiag(const zset& xset, const zset& yset,
+                               real f0, real g0) {
     ostringstream fs, gs;
     for (int j = yset.num() - 1; j >= 0; --j) {
       const zvals& y = yset.val(j);
@@ -1113,6 +1169,45 @@ namespace GeographicLib {
       gs << "\n";
     }
     cout << fs.str() << gs.str();
+  }
+
+  pair<Math::real, Math::real>
+  TriaxialLine::zsetsbisect(const zset& xset, const zset& yset,
+                            real f0, real g0) {
+    if (true)
+      return pair<real, real>(xset.bisect(), yset.bisect());
+    else {
+      // A necessary condition for a root is
+      //   f01 <= 0 <= f10
+      //   g00 <= 0 <= g11
+      int cnt = 0;
+      real xgap = -1, ygap = -1, x = Math::NaN(), y = Math::NaN();
+      for (int i = 0; i < max(1, xset.num() - 1); ++i) {
+        int i1 = min(i + 1, xset.num() - 1);
+        real xgap1 = xset.val(i1).z - xset.val(i).z,
+          xmean = (xset.val(i1).z + xset.val(i).z) / 2;
+        for (int j = 0; j < max(1, yset.num() - 1); ++j) {
+          int j1 = min(j + 1, yset.num() - 1);
+          real ygap1 = yset.val(j1).z - yset.val(j).z,
+            ymean = (yset.val(j1).z + yset.val(j).z) / 2;
+          real
+            f01 = xset.val(i).fz - yset.val(j1).fz - f0,
+            f10 = xset.val(i1).fz - yset.val(j).fz - f0,
+            g00 = xset.val(i).gz + yset.val(j).gz - g0,
+            g11 = xset.val(i1).gz + yset.val(j1).gz - g0;
+          if (f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11) {
+            ++cnt;
+            if (xgap1 > xgap) { xgap = xgap1; x = xmean; }
+            if (ygap1 > ygap) { ygap = ygap1; y = ymean; }
+          }
+        }
+      }
+      if (cnt == 0)
+        throw GeographicLib::GeographicErr
+          ("No legal box TriaxialLine::zsetsbisect");
+      // cout << "FOO " << cnt << "\n";
+      return pair<real, real>(x, y);
+    }
   }
 
   void TriaxialLine::Hybrid(Angle betomg2,
