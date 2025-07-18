@@ -209,3 +209,8 @@ j is new baseline
 
 meridional now using newt2d (renamed newt2)
 k is new baseline
+
+To fix errors in testwgs84, restore oblpro logic removed between commits
+
+  2025-05-08 3ae2c97add02569df6fd64b7372c06dd75930af3
+  2025-05-09 3df35384b9f3a416cd31b34b9186be1c2ec10639
