@@ -206,3 +206,6 @@ echo 63 -173 -61.97921997838416712 -4.64409746197940890408 | ./Geod3Solve $PROX
 
 umblilical now working OK with newt2d
 j is new baseline
+
+meridional now using newt2d (renamed newt2)
+k is new baseline

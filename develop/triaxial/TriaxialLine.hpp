@@ -70,28 +70,28 @@ namespace GeographicLib {
       // The g functions
       // _mu > 0
       static real gthtp(real c, real kap, real kapp, real eps, real mu);
-      static real gfthtp(real c, real kap, real mu);
+      // static real gfthtp(real c, real kap, real mu);
       static real gup(real cn, real dn, real kap, real kapp,
                       real eps, real mu);
-      static real gfup(real cn, real kap, real mu);
+      // static real gfup(real cn, real kap, real mu);
       // _mu == 0
       static real g0p(real c, real kap, real kapp, real eps);
-      static real gf0up(real u, real kap, real kapp);
+      // static real gf0up(real u, real kap, real kapp);
       static real g0vp(real cn, real kap, real kapp, real eps);
       // _mu < 0
       static real gpsip(real s, real c, real kap, real kapp,
                         real eps, real mu);
-      static real gfpsip(real s, real c, real kap, real mu);
+      // static real gfpsip(real s, real c, real kap, real mu);
       static real gvp(real cn, real dn, real kap, real kapp,
                       real eps, real mu);
-      static real gfvp(real dn, real kap, real mu);
+      // static real gfvp(real dn, real kap, real mu);
       // biaxial variants for kap = 0, kapp = 1, mu >= 0
       static real gthtbiax(real tht, real eps, real mu);
-      static real gfthtbiax(real tht, real mu);
+      // static real gfthtbiax(real tht, real mu);
       // biaxial variants for kap = 1, kapp = 0, mu <= 0
       static real gpsibiax(real s, real c, real eps, real mu);
-      static real gfpsibiax(real s, real c, real mu);
       // NOT USED
+      // static real gfpsibiax(real s, real c, real mu);
       // static real gvbiax(real cn, real dn, real eps, real mu);
       // static real gfvbiax(real dn, real mu);
 
@@ -147,7 +147,7 @@ namespace GeographicLib {
       // THIS ISN"T USED
       Angle operator()(const Angle& ang) const;
       real deriv(real u) const;
-      real gfderiv(real u) const;
+      // real gfderiv(real u) const;
       real df(real u) const { return _fun(u); }
       real dfp(real u) const { return _fun.deriv(u); }
 
@@ -177,11 +177,12 @@ namespace GeographicLib {
       real HalfPeriod() const {
         return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
       }
-      real Slope() const { return _umb ? 1 :  _fun.Slope(); }
+      real Slope() const { return _umb ? 1 :
+          !_distp && _meridl ? 0 : _fun.Slope(); }
       real Max() const { return _max; }
       real MaxPlus() const {
         using std::fmax;
-        return fmax(_max, HalfPeriod() * Slope() / 1000);
+        return fmax(_max, HalfPeriod() * (Slope() == 0 ? 1 : Slope()) / 1000);
       }
       void inversedump(std::ostream& os, const std::string& name) const;
     };

@@ -98,17 +98,32 @@ namespace GeographicLib {
       real u2, v2;
       ang psi2;
       if (_f.kxp2() == 0) {
-        // gtht()(x) == 0, so the g equation becomes gpsi()(v2) = sig2
-        v2 = gpsi().inv(sig2n.first);
-        phi2a = ang::radians(v2);
+        bool newt2d = true;
+        if (newt2d) {
+          // meridr
+          //         ftht = tht
+          // 	gtht = 0
+          // meridr
+          // 	fpsi = 0
+          // 	gpsi = int(sqrt(1-eps*cos(psi)^2), psi)
+          solve2(_fic.delta, sig2n.first,
+                 fpsi(), ftht(), gpsi(), gtht(), u2, v2,
+                 countn, countb);
+        } else {
+          // gtht()(x) == 0, so the g equation becomes gpsi()(u2) = sig2
+          u2 = gpsi().inv(sig2n.first);
+          // ftht().inv(x) is just x, but keep it general
+          // u2 = ftht().inv(fpsi()(v2) - _fic.delta);
+          v2 =  -_fic.delta;
+        }
+        // cout << "UV " << u2 << " " << v2 << "\n";
+        phi2a = ang::radians(u2);
         psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;
         // cout << "ZZ " << sig2 << " " << sig2n.first << " " << sig2n.second << " " << Ny << "\n";
         phi2a = phi2a.reflect(signbit(_fic.phi0.c() * Ny),
                               signbit(_fic.phi0.c())).rebase(_fic.phi0);
-        // ftht().inv(x) is just x, but keep it general
-        // u2 = ftht().inv(fpsi()(v2) - _fic.delta);
         tht2a = ang::radians(- _fic.delta) + ang::cardinal(2 * sig2n.second);
         // cout << "YY " << sig2 << " "
         // << sig2n.first << " " << sig2n.second << "\n";
@@ -245,6 +260,8 @@ namespace GeographicLib {
       xp = x0 + Dx, xm = x0 - Dx,
       yp = y0 + Dy, ym = y0 - Dy,
       mm = 0;
+    // cout << "S " << fxs << " " << fys << " " << gxs << " " << gys << "\n";
+    // cout << "M " << fxm << " " << fym << " " << gxm << " " << gym << "\n";
     if (1) {
       real DxA = (-qf * gys + qg * fys) / den,
         DyA = (-qf * gxs + qg * fxs) / den;
@@ -594,19 +611,22 @@ namespace GeographicLib {
 
       real
         fxp = fx.deriv(x), fyp = fy.deriv(y),
-        gfxp = gx.gfderiv(x), gfyp =  gy.gfderiv(y),
-        den = gfxp + gfyp,
-        dx = -( gfyp * f + g) / (fxp * den),
-        dy = -(-gfxp * f + g) / (fyp * den),
+        //        gxp = gx.gfderiv(x) * fxp, gyp =  gy.gfderiv(y) * fyp;
+        //      if (isnan(gxp)) gxp = gx.deriv(x);
+        //      if (isnan(gyp)) gyp = gy.deriv(y);
+        gxp = gx.deriv(x), gyp = gy.deriv(y),
+        den = fxp * gyp + fyp * gxp,
+        dx = -( gyp * f + fyp * g) / den,
+        dy = -(-gxp * f + fxp * g) / den,
         xn = x + dx, yn = y + dy,
         dxa = 0, dya = 0,
         xa = xset.min().z, xb = xset.max().z,
         ya = yset.min().z, yb = yset.max().z;
       if (check) {
-        if (!( fxp > 0 && fyp > 0 && gfxp >= 0 && gfyp >= 0 && den > 0 )) {
+        if (!( fxp >= 0 && fyp >= 0 && gxp >= 0 && gyp >= 0 && den > 0 )) {
           cout << "DERIVS " << x << " " << y << " "
                << fxp << " " << fyp << " "
-               << gfxp << " " << gfyp << "\n";
+               << gxp << " " << gyp << " " << den << "\n";
           throw GeographicLib::GeographicErr
             ("Bad derivatives TriaxialLine::newt2");
         }
@@ -1672,6 +1692,7 @@ namespace GeographicLib {
     }
   }
 
+  /*
   Math::real TriaxialLine::hfun::gfderiv(real u) const {
     // return g'(u)/f'(u)
     real sn = 0, cn = 0, dn = 0;
@@ -1697,7 +1718,7 @@ namespace GeographicLib {
         return Math::NaN();
     }
   }
-
+  */
   void TriaxialLine::hfun::ComputeInverse() {
     if (!_distp) {
       if (!_invp) {
@@ -1855,11 +1876,12 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(c);
     return c2 * sqrt((1 - eps * c2) / ((kapp + c2) * (c2 + mu)) );
   }
+#if 0
   Math::real TriaxialLine::hfun::gfthtp(real c, real kap, real /* mu */) {
     real c2 = kap * Math::sq(c);
     return c2;
   }
-
+#endif
   // _mu > 0 && _tx
   Math::real TriaxialLine::hfun::fup(real cn, real kap, real kapp,
                                      real eps, real mu) {
@@ -1873,11 +1895,12 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(cn);
     return c2 * sqrt( (1 - eps * c2) / ((kapp + c2) * (kap + mu)) );
   }
+#if 0
   Math::real TriaxialLine::hfun::gfup(real cn, real kap, real /* mu */) {
     real c2 = kap * Math::sq(cn);
     return c2;
   }
-
+#endif
   // _mu == 0 && !_tx
   Math::real TriaxialLine::hfun::dfp(real c,
                                      real kap, real kapp, real eps) {
@@ -1906,6 +1929,7 @@ namespace GeographicLib {
     return sqrt( kap * (1 - eps * c2) ) * cn;
   }
 
+#if 0
   // _mu == 0 (_tx ignored)
   Math::real TriaxialLine::hfun::gf0up(real u, real kap, real kapp) {
     // Subst tan(phi) = sinh(u) /sqrt(kapp) in
@@ -1914,6 +1938,7 @@ namespace GeographicLib {
     // functions.
     return sqrt(kap * kapp) / ( kapp + Math::sq(sinh(u)) );
   }
+#endif
 
   // _mu < 0 && !_tx
   Math::real TriaxialLine::hfun::fpsip(real s, real c, real kap, real kapp,
@@ -1927,10 +1952,12 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return sqrt(c2 * (1 - eps * c2) / (kapp + c2)) ;
   }
+#if 0
   Math::real TriaxialLine::hfun::gfpsip(real s, real c, real kap, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return c2;
   }
+#endif
 
   // _mu < 0 && _tx
   Math::real TriaxialLine::hfun::fvp(real dn, real kap, real kapp,
@@ -1945,10 +1972,12 @@ namespace GeographicLib {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
     return dn2 * sqrt( kap * (1 - eps * c2) / (kapp + c2) );
   }
+#if 0
   Math::real TriaxialLine::hfun::gfvp(real dn, real kap, real /* mu */) {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
     return c2;
   }
+#endif
 
   // biaxial variants for kap = 0, kapp = 1, mu > 0
   Math::real TriaxialLine::hfun::fthtbiax(real /* tht */, real /* eps */,
@@ -1961,9 +1990,11 @@ namespace GeographicLib {
                                           real /* mu */) {
     return 0;
   }
+#if 0
   Math::real TriaxialLine::hfun::gfthtbiax(real /* tht */, real /* mu */) {
     return 0;
   }
+#endif
 
   // biaxial variants for kap = 1, kapp = 0, mu <= 0, !_tx
   Math::real TriaxialLine::hfun::dfpsibiax(real s, real c, real eps, real mu) {
@@ -1979,6 +2010,8 @@ namespace GeographicLib {
     // return gpsip(s, c, 1, 0, eps, mu) but with the factor c2 canceled
     return sqrt(1 - eps * c2);
   }
+
+#if 0
   Math::real TriaxialLine::hfun::gfpsibiax(real s, real c, real mu) {
     // cos(phi)^2 = cos(psi)^2 - mu *sin(psi)^2
     // f' = sqrt(1-eps*cos(phi)^2)/cos(phi)^2
@@ -1988,7 +2021,6 @@ namespace GeographicLib {
     return gfpsip(s, c, 1, mu) / sqrt(-mu);
   }
 
-#if 0
   // biaxial variants for kap = 1, kapp = 0, mu <= 0, _tx
   Math::real TriaxialLine::hfun::dfvbiax(real dn, real eps, real mu) {
     real c2 = Math::sq(dn);
@@ -2027,14 +2059,14 @@ namespace GeographicLib {
         u0 = inv0(f),
         u1 = inv1(f),
         u2 = inv2(f),
-        gf1 = gfderiv(u),
+        //        gf1 = gfderiv(u),
         phi = rev(u),
         ux = fwd(phi);
       if (_distp)
         os << u << " " << f << " "
            << u0 << " " << u1 << " " << u2 << " "
            << u0-u << " " << u1-u << " " << u2-u << " "
-           << f1 << " " << df << " " << df-f1 << " " << gf1 << ";\n";
+           << f1 << " " << df << " " << df-f1 << ";\n";
       else
         os << u << " " << f << " "
            << u0 << " " << u1 << " " << u2 << " "
