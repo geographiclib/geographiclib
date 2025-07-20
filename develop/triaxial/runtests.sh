@@ -210,12 +210,15 @@ j is new baseline
 meridional now using newt2d (renamed newt2)
 k is new baseline
 
+biaxial special fix
+This is accurate but sometimes newt2 takes many iterations to converge.
+
 To fix errors in testwgs84, restore oblpro logic removed between commits
 
   2025-05-08 3ae2c97add02569df6fd64b7372c06dd75930af3
   2025-05-09 3df35384b9f3a416cd31b34b9186be1c2ec10639
 
- biaxp error
+l is new baseline
 
 head -268827 ../testwgs84.txt | tail -1 | ./Geod3Test $WGS84 --biaxp
 Caught exception: Convergence failure TriaxialLine::newt2
@@ -226,13 +229,3 @@ ERROR: Convergence failure TriaxialLine::newt2
 Also line 278135 of ../testwgs84.txt
 
 Temporary fix to increase maxit.
-
-But results are still worse than old --oblpro implementation
-
-E.g. line 289701 of testwgs84.txt
-89.999999746015 0 96.18056040795750837 -89.991781298799 83.821199926422 179.998239662945017567 3.13618483800212516426 0.00014344387288707237 -0.99999848013531579897 -0.99999998977577711641
-
-Old --oblpro
-4 7 7 7 8 7 7 7 8
-New --biaxp
-4 17477 121836307 7 144951046 17236 120148183 7 8

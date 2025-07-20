@@ -79,10 +79,14 @@ namespace GeographicLib {
     Angle &phi2a = bet2a, &tht2a = omg2a;
     if (_f.gammax() > 0) {
       real u2, v2;
-      // The general triaxial machinery.  This is used for non-meridional
-      // geodesics on biaxial ellipsoids.
-      solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
-             countn, countb);
+      if (false && biaxspecial(_t, _g.gammax())) {
+        u2 = gpsi().inv(sig2);
+        v2 = ftht().inv(fpsi()(u2) - _fic.delta);
+      } else
+        // The general triaxial machinery.  This is used for non-meridional
+        // geodesics on biaxial ellipsoids.
+        solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
+               countn, countb);
       tht2a = ang::radians(ftht().rev(v2));
       ang psi2 = ang::radians(fpsi().rev(u2));
       // Already normalized
@@ -1334,11 +1338,10 @@ namespace GeographicLib {
       // assume fbet().fwd(x) = x in this case
       v0 = f.fpsi().fwd(psi1.radians());
       u0 = f.ftht().fwd(tht1.radians());
-      // Only used for biaxial cases when fwd rev is the identity
-      // v0a = psi1;
-      // u0a = Ex < 0 ? -omg1 : omg1;
-      delta = f.fpsi()(v0) - f.ftht()(u0);
-      // deltaa = f.fbet()(v0a) - f.fomg()(u0a);
+      delta = (biaxspecial(t, f.gammax()) ?
+               atan2(phi1.s() * fabs(alp1.s()), phi0.c() * alp1.c())
+               - sqrt(f.gammax()) * f.fpsi().df(v0)
+               : f.fpsi()(v0)) - f.ftht()(u0);
     } else if (f.gammax() == 0) {
       if (f.kxp2() == 0) {
         // meridonal geodesic on biaxial ellipsoid
@@ -1469,8 +1472,8 @@ namespace GeographicLib {
     , _umb(!t._biaxial && _mu == 0)
     , _meridr(_kap == 0 && _mu == 0)
     , _meridl(_kapp == 0 && _mu == 0)
-    , _biaxr(t.biaxp() && _kap  == 0 && _mu > 0 &&  _mu < t._ellipthresh)
-    , _biaxl(t.biaxp() && _kapp == 0 && _mu < 0 && -_mu < t._ellipthresh)
+    , _biaxr(biaxspecial(t, _mu) && _kap  == 0)
+    , _biaxl(biaxspecial(t, _mu) && _kapp == 0)
     , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)

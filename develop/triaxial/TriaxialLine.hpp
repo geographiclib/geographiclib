@@ -92,6 +92,23 @@ namespace GeographicLib {
       static real modang(real x, real m) {
         return Angle::radians(x).modang(m).radians();
       }
+      static real modang(real x, real m, real& deriv) {
+        using std::fabs;
+        Angle xa = Angle::radians(x), ya = xa.modang(m);
+        // y = modang(x, m)
+        // tan(y) = m * tan(x)
+        // dy/dx = m * sec(x)^2 / (1 + m^2 * tan(x)^2)
+        //       = m / (cos(x)^2 + m^2 * sin(x)^2)
+        //       = m * csc(x)^2 / (m^2 + cot(x)^2)
+        //       = m * cos(y)^2/cos(x)^2
+        //       = sin(y)^2 / (m * sin(x)^2)
+        //       -> m for x -> 0
+        //       -> 1/m for x -> +/- pi/2
+        deriv = fabs(2*xa.s() > 1) ? // just need to avoid s() close to zero
+          Math::sq(ya.s()/xa.s()) / m :
+          Math::sq(ya.c()/xa.c()) * m;
+        return ya.radians();
+      }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
 
@@ -419,12 +436,11 @@ namespace GeographicLib {
       using std::cosh; using std::sinh; using std::hypot;
       return mult == 1 ? cosh(u) : hypot(sinh(u), mult) / mult;
     }
-    //  public:
+
     const hfun& fbet() const { return _f.fbet(); }
     const hfun& fomg() const { return _f.fomg(); }
     const hfun& fpsi() const { return _f.fpsi(); }
     const hfun& ftht() const { return _f.ftht(); }
-    //  private:
     const hfun& gbet() const { return _g.gbet(); }
     const hfun& gomg() const { return _g.gomg(); }
     const hfun& gpsi() const { return _g.gpsi(); }
@@ -464,6 +480,11 @@ namespace GeographicLib {
         }
       }
       return  std::pair<real, real>(x.radians0(), m + 2*x.n());
+    }
+    static bool biaxspecial(const Triaxial& t, real gamma) {
+      using std::fabs;
+      return t._biaxp && (t._k2 == 0 || t._kp2 == 0) &&
+        gamma != 0 && fabs(gamma) < t._ellipthresh;
     }
     // Private constructor to assemble the pieces of the class on exiting
     // Triaxial::Inverse.
