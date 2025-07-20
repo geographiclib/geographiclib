@@ -47,7 +47,7 @@ namespace GeographicLib {
       Trigfun _dfinv;
       int _countn, _countb;
       real _max;
-      bool _umb, _meridr, _meridl, _invp;
+      bool _umb, _meridr, _meridl, _biaxr, _biaxl, _invp;
       // The f functions
       // mu > 0
       static real fthtp(real c, real kap, real kapp, real eps, real mu);
@@ -87,6 +87,11 @@ namespace GeographicLib {
       // NOT USED
       // static real gvbiax(real cn, real dn, real eps, real mu);
 
+      // Return atan(m * tan(x)) keeping result continuous.  Only defined for
+      // !signbit(m).
+      static real modang(real x, real m) {
+        return Angle::radians(x).modang(m).radians();
+      }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
 
@@ -137,7 +142,7 @@ namespace GeographicLib {
            const Triaxial& t);
       real operator()(real u) const;
       // THIS ISN"T USED
-      Angle operator()(const Angle& ang) const;
+      // Angle operator()(const Angle& ang) const;
       real deriv(real u) const;
       real df(real u) const { return _fun(u); }
       real dfp(real u) const { return _fun.deriv(u); }
@@ -145,8 +150,8 @@ namespace GeographicLib {
       real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
         return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
       }
-      Angle inv(const Angle& z,
-                int* countn = nullptr, int* countb = nullptr) const;
+      // Angle inv(const Angle& z,
+      //           int* countn = nullptr, int* countb = nullptr) const;
       void ComputeInverse();
       real fwd(real zeta) const {
         return _umb ? lam(zeta, _sqrtkapp) :
@@ -168,8 +173,13 @@ namespace GeographicLib {
       real HalfPeriod() const {
         return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);
       }
-      real Slope() const { return _umb ? 1 :
-          !_distp && _meridl ? 0 : _fun.Slope(); }
+      real Slope() const {
+        using std::sqrt;
+        return _umb ? 1 :
+          !_distp && _meridl ? 0 :
+          !_distp && _biaxl ? 1 - sqrt(-_mu) * _fun.Slope() :
+          _fun.Slope();
+      }
       real Max() const { return _max; }
       real MaxPlus() const {
         using std::fmax;

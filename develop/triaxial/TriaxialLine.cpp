@@ -99,7 +99,7 @@ namespace GeographicLib {
       ang psi2;
       if (_f.kxp2() == 0) {
         // meridr
-        //         ftht = tht
+        //  ftht = tht
         // 	gtht = 0
         // meridr
         // 	fpsi = 0
@@ -380,7 +380,7 @@ namespace GeographicLib {
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
     const bool debug = false, check = true;
-    const int maxit = 150;
+    const int maxit = 300*40;
     const real tol = numeric_limits<real>::epsilon(),
       // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
       // too much bisection.  Example:
@@ -619,7 +619,7 @@ namespace GeographicLib {
             ("Bad derivatives TriaxialLine::newt2");
         }
       }
-      bool cond1 = i < ibis + 10 ||
+      bool cond1 = i < ibis + 2 ||
         ((2*fabs(f) < oldf || 2*fabs(g) < oldg) ||
          (2*fabs(dx) < olddx || 2*fabs(dy) < olddy)),
         cond2 = xn >= xa-xtol*tolmult && xn <= xb+xtol*tolmult &&
@@ -705,26 +705,26 @@ namespace GeographicLib {
     auto p = std::lower_bound(_s.begin(), _s.end(), t);
     if (p == _s.end()) return ind; // Can't happen
     // Fix components of t
-    if (*p == t)                   // z components match
-      t = *p;                      // set fz and gz values
-    else {
+    bool ins = !(*p == t);
+    if (ins) {
       t.fz = Math::clamp(t.fz, (p-1)->fz, p->fz);
       t.gz = Math::clamp(t.gz, (p-1)->gz, p->gz);
-    }
+    } else                      // z components match
+      t = *p;                   // set fz and gz values
     if (flag < 0) {
       _s.erase(_s.begin(), p);
-      if (!(*p == t)) {
+      if (ins) {
         _s.insert(_s.begin(), t);
         ind = 0;
       }
     } else if (flag > 0) {
-      if (!(*p == t)) {
+      if (ins) {
         _s.erase(p, _s.end());
         _s.push_back(t);
         ind = _s.size() - 1;
       } else
         _s.erase(p+1, _s.end());
-    } else if (!(*p == t)) {
+    } else if (ins) {
       ind = p - _s.begin();
       _s.insert(p, t);
     }
@@ -736,14 +736,15 @@ namespace GeographicLib {
                                  zvals& xfg, zvals& yfg,
                                  real f0, real g0) {
     bool debug = false;
+    real x0 = 0, y0 = 0;
     if (debug)
       cout << "BOX0 " << xfg.z << " " << yfg.z << "\n";
     int xind = xset.insert(xfg), yind = yset.insert(yfg);
     if (debug) {
       cout << "BOXA " << xset.num() << " " << yset.num() << " "
            << xind << " " << yind << " "
-           << xset.min().z << " " << xset.max().z << " "
-           << yset.min().z << " " << yset.max().z << " "
+           << xset.min().z - x0 << " " << xset.max().z - x0 << " "
+           << yset.min().z - y0 << " " << yset.max().z - y0 << " "
            << xset.max().z - xset.min().z << " "
            << yset.max().z - yset.min().z << "\n";
       zsetsdiag(xset, yset, f0, g0);
@@ -776,7 +777,7 @@ namespace GeographicLib {
           //     /   g<0   \.
           //    /    ya     \.
           //   /    ind=2    \.
-          if (false) {
+          if (true) {
             // Problem with
             //   echo -11 165 0.865544228453134485 1.70392636779413409327 |
             //     ./Geod3Solve $HU
@@ -820,16 +821,29 @@ namespace GeographicLib {
         }
       }
     }
+    zvals t;
+    t = xa;
     xset.insert(xa, -1);
+    if (!(t.z == xa.z && t.fz == xa.fz && t.gz == xa.gz ))
+      cout << "ERR XA\n";
+    t = xb;
     xset.insert(xb, +1);
+    if (!(t.z == xb.z && t.fz == xb.fz && t.gz == xb.gz ))
+      cout << "ERR XB\n";
+    t = ya;
     yset.insert(ya, -1);
+    if (!(t.z == ya.z && t.fz == ya.fz && t.gz == ya.gz ))
+      cout << "ERR YA\n";
+    t = yb;
     yset.insert(yb, +1);
+    if (!(t.z == yb.z && t.fz == yb.fz && t.gz == yb.gz ))
+      cout << "ERR YB\n";
     if (debug) {
       cout << "BOXB " << xset.num() << " " << yset.num() << " "
-           << xset.min().z << " " << xset.max().z << " "
-           << yset.min().z << " " << yset.max().z << " "
-           << xa.z << " " << xb.z << " "
-           << ya.z << " " << yb.z << "\n";
+           << xset.min().z - x0 << " " << xset.max().z - x0 << " "
+           << yset.min().z - y0 << " " << yset.max().z - y0 << " "
+           << xa.z - x0 << " " << xb.z - x0 << " "
+           << ya.z - y0 << " " << yb.z - y0 << "\n";
       zsetsdiag(xset, yset, f0, g0);
     }
     real
@@ -848,7 +862,16 @@ namespace GeographicLib {
 
   void TriaxialLine::zsetsdiag(const zset& xset, const zset& yset,
                                real f0, real g0) {
+    real x0 = 0, y0 = 0;
     ostringstream fs, gs;
+    if (0) {
+      for (int i = 0; i < xset.num(); ++i) {
+        cout << "x " << i << " " << xset.val(i).z - x0 << "\n";
+      }
+      for (int i = 0; i < yset.num(); ++i) {
+        cout << "y " << i << " " << yset.val(i).z - y0 << "\n";
+      }
+    }
     for (int j = yset.num() - 1; j >= 0; --j) {
       const zvals& y = yset.val(j);
       fs << "BOXF ";
@@ -1446,11 +1469,13 @@ namespace GeographicLib {
     , _umb(!t._biaxial && _mu == 0)
     , _meridr(_kap == 0 && _mu == 0)
     , _meridl(_kapp == 0 && _mu == 0)
+    , _biaxr(t.biaxp() && _kap  == 0 && _mu > 0 &&  _mu < t._ellipthresh)
+    , _biaxl(t.biaxp() && _kapp == 0 && _mu < 0 && -_mu < t._ellipthresh)
     , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
     if (!_distp) {
-      if (_meridr) {
+      if (_meridr || _biaxr) {
         // biaxial rotating coordinate
         // _kapp == 1, mu < 0 not allowed
         _tx = false;
@@ -1461,7 +1486,7 @@ namespace GeographicLib {
                           // This is a trivial case f' = 1
                           { return fthtbiax(tht, eps, mu); },
                           Math::pi()/2, false);
-      } else if (_meridl) {
+      } else if (_meridl || _biaxl) {
         // biaxial librating coordinate
         // _kap == 1, mu > 0 not allowed
         // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
@@ -1534,7 +1559,7 @@ namespace GeographicLib {
         _tx = false;
       }
     } else {                    // _distp
-      if (_meridr) {
+      if (_meridr || _biaxr) {
         // biaxial symmetry coordinate
         // _kapp == 1, mu < 0 not allowed
         _tx = false;
@@ -1544,7 +1569,7 @@ namespace GeographicLib {
                           // degenerate f' = 0
                           { return gthtbiax(tht, eps, mu); },
                           Math::pi()/2, false);
-      } else if (_meridl) {
+      } else if (_meridl || _biaxl) {
         // biaxial non-symmetry coordinate
         // _kap == 1, mu > 0 not allowed
         // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
@@ -1612,15 +1637,18 @@ namespace GeographicLib {
       }
     }
     // N.B. _max < 0 for _umb && eps < 0
-    _max = !_distp ?
-      ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) : _fun.Max() ) :
-      ( _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-        (_meridl ? _fun(Math::pi()/2) : _fun.Max()) );
+    _max = _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
+      !_distp ? ( _biaxl ? Math::pi()/2 + sqrt(-_mu) * _fun.Max() :
+                  _fun.Max() ) :
+      _meridl ? _fun(Math::pi()/2) : _fun.Max();
   }
 
   Math::real TriaxialLine::hfun::operator()(real u) const {
     if (!_distp) {
-      if (_meridl)
+      if (_biaxl)
+        // This is sqrt(-mu) * f(u)
+        return modang(u, sqrt(-_mu)) - sqrt(-_mu) * _fun(u);
+      else if (_meridl)
         return 0;
       else if (_umb) {
         // This is sqrt(kap * kapp) * f(u)
@@ -1637,6 +1665,7 @@ namespace GeographicLib {
     }
   }
 
+#if 0
   // THIS ISN"T USED ?
   // Should implement an Angle equivalant of _ell.F(phi)
   Angle TriaxialLine::hfun::operator()(const Angle& ang) const {
@@ -1649,10 +1678,28 @@ namespace GeographicLib {
     } else
       return ang::radians(_fun(u));
   }
+#endif
 
   Math::real TriaxialLine::hfun::deriv(real u) const {
     if (!_distp) {
-      if (_meridl)
+      if (_biaxl)
+        // This is sqrt(-mu) * f'(u)
+        /*
+          if (_tx) {
+          // DLMF (22.6.1): sn^2 + cn^2 =  k^2*sn^2 + dn^2 = 1
+          // dn^2 = cn^2 + k'^2*sn^2 = cn^2 - mu*sn^2
+          // k'^2 = -mu
+          real sn, cn, dn;
+          (void) _ell.am(u, sn, cn, dn);
+          return sqrt(-_mu) / Math::sq(dn) - _fun.deriv(u);
+          } else
+        */
+        // f0(x) = atan(sqrt(-mu) * tanx(u))
+        // f0'(x) = sqrt(-mu) / (cos(u)^2 - mu * sin(u)^2)
+        // **HERE**
+        return sqrt(-_mu) / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
+          - sqrt(-_mu) * _fun.deriv(u);
+      else if (_meridl)
         return 0;
       else if (_umb) {
         // This is sqrt(kap * kapp) * f'(u)
@@ -1683,7 +1730,27 @@ namespace GeographicLib {
   void TriaxialLine::hfun::ComputeInverse() {
     if (!_distp) {
       if (!_invp) {
-        if (_umb) {
+        if (_biaxl) {
+          if (_mu == 0) return; // _fun == 0 and there's no analytic inverse
+          // now _mu < 0
+          _countn = _countb = 0;
+          // Include scale = 1 in TrigfunExt constructor because _dfinv gets
+          // added to u.
+          // Ars are fun, odd, sym, halfp, nmax, tol, scale
+          // **HERE**
+          _dfinv = Trigfun(
+                           [this]
+                           (real z, real u1) -> real
+                           {
+                             real u0 = modang(z/Slope(), 1/sqrt(-_mu));
+                             return root(z, u0 + u1, &_countn, &_countb,
+                                         sqrt(numeric_limits<real>::epsilon()))
+                               - u0;
+                           },
+                           true, false, Slope() * HalfPeriod(),
+                           int(ceil(real(1.5) * NCoeffs())),
+                           sqrt(numeric_limits<real>::epsilon()), HalfPeriod());
+        } else if (_umb) {
           _countn = _countb = 0;
           // Include scale = 1 in TrigfunExt constructor because _dfinv gets
           // added to z.
@@ -1704,7 +1771,7 @@ namespace GeographicLib {
       }
       _invp = true;
     } else {
-      if (!(_invp || _umb)) {
+      if (!(_invp || _biaxr || _umb)) {
         // If _umb, the inverse isn't periodic
         _fun.ComputeInverse();
         /*
@@ -1725,7 +1792,31 @@ namespace GeographicLib {
                                       real tol) const {
     if (!_distp) {
       if (!isfinite(z)) return z; // Deals with +/-inf and nan
-      if (_umb) {
+      if (_biaxl) {
+        // z = 1/sqrt(-mu)
+        // here f(u) = atan(sqrt(-mu)*tan(u))/sqrt(-mu)-Deltaf(u)
+        // let fx(u) = sqrt(-mu) * f(u); fun(u) = sqrt(-mu)*Deltaf(u)
+        // z = fx(u) = modang(u, sqrt(-mu)) - fun(u)
+        // fun(u) is monotonically increasing/decreasing quasilinear function
+        // period pi.  Combined function is quasilinear
+        // z = s * u +/- m; period = pi
+        // Inverting:
+        // u = z/s +/- m/s; period s*pi
+        // u = fxinv(z) = modang(z/x, 1/sqrt(-mu)) + funinv(z)
+        // funinv(z) periodic function of z period (1-s)*pi
+        real d = Max(),
+          ua = (z - d) / Slope(),
+          ub = (z + d) / Slope();
+        u0 = fmin(ub, fmax(ua, u0));
+        return Trigfun::root(
+                             [this]
+                             (real u) -> pair<real, real>
+                             { return pair<real, real>((*this)(u), deriv(u)); },
+                             z,
+                             u0, ua, ub,
+                             HalfPeriod(), HalfPeriod()/Slope(), 1,
+                             countn, countb, tol, Trigfun::FFUNROOT);
+      } else if (_umb) {
         real d = fabs(Max())
           + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
           ua = z - d,
@@ -1769,7 +1860,9 @@ namespace GeographicLib {
       if (!_invp) return Math::NaN();
       // For the inverse in the umbilical case, just use gd(z, _sqrtkapp) and
       // not F(gd(z, _sqrt(kapp)))
-      return _umb ? z + _dfinv(gd(z, _sqrtkapp)) : _fun.inv0(z);
+      return _umb ? z + _dfinv(gd(z, _sqrtkapp)) :
+        _biaxl ? modang(z/Slope(), 1/sqrt(-_mu)) + (_mu == 0 ? 0 : _dfinv(z)) :
+        _fun.inv0(z);
     } else {
       return _invp ? _fun.inv0(z) :
         (_umb ?
@@ -1802,29 +1895,33 @@ namespace GeographicLib {
   // Accurate inverse by direct Newton (not using _finv)
   Math::real TriaxialLine::hfun::inv1(real z, int* countn, int* countb) const {
     if (!_distp)
-      return _umb ? root(z, z, countn, countb) : _fun.inv1(z, countn, countb);
-    else
+      return _umb ? root(z, z, countn, countb) :
+        _biaxl ? root(z, modang(z/Slope(), 1/sqrt(-_mu)), countn, countb) :
+        _fun.inv1(z, countn, countb);
+    else {
+      if (_biaxr) return Math::NaN();
       return _umb ? root(z, inv0(z), countn, countb) :
         _fun.inv1(z, countn, countb);
+    }
   }
 
   // Accurate inverse correcting result from _finv
   Math::real TriaxialLine::hfun::inv2(real z, int* countn, int* countb) const {
     if (!_invp) return Math::NaN();
     if (!_distp)
-      return _umb ? root(z, inv0(z), countn, countb) :
+      return _umb || _biaxl ? root(z, inv0(z), countn, countb) :
         _fun.inv2(z, countn, countb);
     else
       return _umb ? root(z, inv0(z), countn, countb) :
         _fun.inv1(z, countn, countb);
   }
-
+  /*
   Angle TriaxialLine::hfun::inv(const Angle& z, int* countn, int* countb)
     const {
     if (!_distp) return ang::NaN();
     return ang::radians(inv(z.radians(), countn, countb));
   }
-
+  */
   // _mu > 0 && !_tx
   Math::real TriaxialLine::hfun::fthtp(real c, real kap, real kapp,
                                        real eps, real mu) {

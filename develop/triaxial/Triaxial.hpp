@@ -55,6 +55,7 @@ namespace GeographicLib {
     real _e2, _k2, _kp2, _k, _kp;
     bool _oblate, _prolate, _biaxial;
     bool _umbalt,               // how coordinates wrap with umbilical lines
+      _biaxp,                   // special treatment for biaxial non-meridional
       _debug,                   // print out diagnostics
       _hybridalt;               // favor hybrid solution in terms of omg
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
@@ -92,6 +93,8 @@ namespace GeographicLib {
     const vec3& axes() const { return _axes; }
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) { if (_k2 > 0 && _kp2 > 0) _umbalt = numbalt; }
+    bool biaxp() const { return _biaxp; }
+    void biaxp(bool biaxp) { _biaxp = biaxp; }
     bool debug() const { return _debug; }
     void debug(bool debug) { _debug = debug; }
     bool hybridalt() const { return _hybridalt; }

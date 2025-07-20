@@ -111,13 +111,13 @@ int usage(int retval, bool /*brief*/) { return retval; }
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
-    using std::signbit; using std::isnan;
+    using std::signbit; using std::isnan; using std::fabs;
     typedef Angle ang;
     Utility::set_digits();
     bool inverse = false,
       dms = false, full = false, unroll = false,
       longfirst = false,
-      debug = false, linecalc = false;
+      debug = false, linecalc = false, biaxp = false;
     real
       a = 6378172, b = 6378102, c = 6356752,
       // NaN is a marker to skip biaxial transformation
@@ -218,6 +218,8 @@ int main(int argc, const char* const argv[]) {
         full = true;
       else if (arg == "--debug")
         debug = true;
+      else if (arg == "--biaxp")
+        biaxp = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -292,12 +294,13 @@ int main(int argc, const char* const argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     t.debug(debug);
+    t.biaxp(biaxp);
     if (linecalc) {
       BiaxialCoords(true, f, bet1, omg1, alp1);
     }
     std::unique_ptr<TriaxialLine> lp = linecalc ?
       std::make_unique<TriaxialLine>(t, bet1, omg1, alp1) : nullptr;
-    using std::round; using std::log10; using std::fabs; using std::ceil;
+    using std::round; using std::log10; using std::ceil;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
