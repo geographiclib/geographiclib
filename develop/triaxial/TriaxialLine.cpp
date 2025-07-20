@@ -1336,12 +1336,12 @@ namespace GeographicLib {
       // modang(psi1, sqrt(-mu)) = atan2(bet1.s() * fabs(alp1.s()),
       //                                 bet0.c() * alp1.c());
       // assume fbet().fwd(x) = x in this case
-      v0 = f.fpsi().fwd(psi1.radians());
-      u0 = f.ftht().fwd(tht1.radians());
+      u0 = f.fpsi().fwd(psi1.radians());
+      v0 = f.ftht().fwd(tht1.radians());
       delta = (biaxspecial(t, f.gammax()) ?
                atan2(phi1.s() * fabs(alp1.s()), phi0.c() * alp1.c())
-               - sqrt(f.gammax()) * f.fpsi().df(v0)
-               : f.fpsi()(v0)) - f.ftht()(u0);
+               - sqrt(f.gammax()) * f.fpsi().df(u0)
+               : f.fpsi()(u0)) - f.ftht()(v0);
     } else if (f.gammax() == 0) {
       if (f.kxp2() == 0) {
         // meridonal geodesic on biaxial ellipsoid
@@ -1367,8 +1367,8 @@ namespace GeographicLib {
           // phi0 = phi1 + ang::cardinal(signbit(alp1.c()) ? -1 : 1);
           tht0 += (alp1.nearest(2U)-alp1).flipsign(phi1.s() * Ex);
         }
-        v0 = f.fpsi().fwd((phi1-phi0).radians());
-        u0 = 0;
+        u0 = f.fpsi().fwd((phi1-phi0).radians());
+        v0 = 0;
         delta = -f.ftht()(tht0.radians());
        if (0)
           cout << "AA " << real(tht1) << " " << real(tht0) << " "
@@ -1415,9 +1415,9 @@ namespace GeographicLib {
 
   TriaxialLine::gline::gics::gics(const gline& g, const fline::fics& fic) {
     if (g.gammax() > 0) {
-      sig1 = g.gpsi()(fic.v0) + g.gtht()(fic.u0);
+      sig1 = g.gpsi()(fic.u0) + g.gtht()(fic.v0);
     } else if (g.gammax() == 0) {
-      sig1 = g.kxp2() == 0 ? fic.Nx * g.gpsi()(fic.v0) :
+      sig1 = g.kxp2() == 0 ? fic.Nx * g.gpsi()(fic.u0) :
         fic.Nx * g.gpsi()(lamang(fic.phi1 - fic.phi0, g.kxp())) +
         g.gtht()(lamang(fic.tht1 - fic.tht0, g.kx()));
     } else {
