@@ -95,7 +95,7 @@ void errreport(const Triaxial& t,
   typedef Math::real real;
   typedef Angle ang;
   bool debug = false, invp = true, invdirp = true,
-    dirp = true, optp = false;
+    dirp = true;
   // invp = false;
   int num = 0;
 #if GEOGRAPHICLIB_PRECISION > 3
@@ -149,10 +149,6 @@ void errreport(const Triaxial& t,
     t.elliptocart2(bet2x, omg2x, alp2x, r2, v2);
     TriaxialLine l1(t, bet1x, omg1x, alp1x);
     TriaxialLine l2(t, bet2x, omg2x, alp2x);
-    if (optp) {
-      l1.Optimize();
-      l2.Optimize();
-    }
     l2.Position(-s12, bet1a, omg1a, alp1a);
     t.elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
     errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
@@ -258,12 +254,6 @@ void angletest() {
   }
 }
 
-void dfinvtest() {
-  Triaxial t(sqrt(real(2)), 1, sqrt(1/real(2)));
-  TriaxialLine l(t, Angle(90), Angle(0), Angle(45));
-  l.Optimize();
-}
-
 void hybridtest(const Triaxial& t, Math::real bet1, Math::real omg1,
                 Math::real betomg2, bool betp) {
   typedef Math::real real;
@@ -300,10 +290,6 @@ int main(int argc, const char* const argv[]) {
     typedef Math::real real;
     Utility::set_digits();
     if (0) {
-      dfinvtest();
-      return 0;
-    }
-    if (0) {
       angletest();
       return 0;
     }
@@ -312,8 +298,7 @@ int main(int argc, const char* const argv[]) {
     int div = 1;
     {
       bool hybridp = false, odep = false, reportp = false,
-        odetest = false, extended = false, dense = false, normp = false,
-        biaxp = false;
+        odetest = false, extended = false, dense = false, normp = false;
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
       for (int m = 1; m < argc; ++m) {
         string arg(argv[m]);
@@ -369,8 +354,6 @@ int main(int argc, const char* const argv[]) {
           dense = true;
         else if (arg == "--normp")
           normp = true;
-        else if (arg == "--biaxp")
-          biaxp = true;
         else
           return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
       }
@@ -387,7 +370,6 @@ int main(int argc, const char* const argv[]) {
       Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);
-      t.biaxp(biaxp);
       if (hybridp) {
         real bet1, omg1, betomg2;
         bool betp;

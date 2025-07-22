@@ -44,10 +44,9 @@ namespace GeographicLib {
       EllipticFunction _ell;
       TrigfunExt _fun;
       // real _tol;
-      Trigfun _dfinv;
       int _countn, _countb;
       real _max;
-      bool _umb, _meridr, _meridl, _biaxr, _biaxl, _invp;
+      bool _umb, _meridr, _meridl, _biaxr, _biaxl;
       // The f functions
       // mu > 0
       static real fthtp(real c, real kap, real kapp, real eps, real mu);
@@ -94,14 +93,6 @@ namespace GeographicLib {
       }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
-
-      // Approximate inverse using _finv
-      real inv0(real z) const;
-      // Accurate (to tol) inverse by direct Newton (not using _finv)
-      real inv1(real z, int* countn = nullptr, int* countb = nullptr) const;
-      // Accurate inverse correcting result from _finv
-      real inv2(real z, int* countn = nullptr, int* countb = nullptr) const;
-
     public:
       // Summary of f and g functions
       // _meridr = kap == 0 && mu == 0 (biaxial meridian rotating coordinate)
@@ -127,7 +118,7 @@ namespace GeographicLib {
       //   leading order behavior is seperated out
       //   N.B. inverse of f is discontinuous for mu == 0
       //   functions which need special treatment
-      //     operator(), deriv, inv, ComputeInverse, Slope, Max
+      //     operator(), deriv, inv, Slope, Max
       // _umb
       //   leading order behavior is seperated out
       // otherwise everything is handled by generic routines
@@ -147,12 +138,9 @@ namespace GeographicLib {
       real df(real u) const { return _fun(u); }
       real dfp(real u) const { return _fun.deriv(u); }
 
-      real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
-        return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
-      }
-      // Angle inv(const Angle& z,
-      //           int* countn = nullptr, int* countb = nullptr) const;
-      void ComputeInverse();
+      // Accurate (to tol) inverse by direct Newton (not using _finv)
+      real inv(real z, int* countn = nullptr, int* countb = nullptr) const;
+
       real fwd(real zeta) const {
         return _umb ? lam(zeta, _sqrtkapp) :
           (_tx ? _ell.F(zeta) : zeta);
@@ -162,9 +150,6 @@ namespace GeographicLib {
           (_tx ? _ell.am(w) : w);
       }
       int NCoeffs() const { return _fun.NCoeffs(); }
-      int NCoeffsInv() const {
-        return _umb ? _dfinv.NCoeffs() : _fun.NCoeffsInv();
-      }
       std::pair<int, int> InvCounts() const {
         return _umb ? std::pair<int, int>(_countn, _countb) :
           _fun.InvCounts();
@@ -194,7 +179,6 @@ namespace GeographicLib {
       Triaxial::gamblk _gm;
       real _deltashift;
       hfun _fpsi, _ftht;
-      bool _invp;
     public:
       class fics {
         // bundle of data setting the initial conditions for a geodesic
@@ -267,7 +251,6 @@ namespace GeographicLib {
       disttx ArcPos0(const fics& fic, Angle tau12,
                      Angle& bet2a, Angle& omg2a, Angle& alp2a,
                      bool betp = true) const;
-      void ComputeInverse();
       void inversedump(std::ostream& os) const;
     };
 
@@ -276,7 +259,6 @@ namespace GeographicLib {
       Triaxial _t;
       Triaxial::gamblk _gm;
       hfun _gpsi, _gtht;
-      bool _invp;
     public:
       real s0;
       class gics {
@@ -307,7 +289,6 @@ namespace GeographicLib {
       const Triaxial& t() const { return _t; }
       const Triaxial::gamblk& gm() const { return _gm; }
       real dist(gics ic, fline::disttx d) const;
-      void ComputeInverse();
       void inversedump(std::ostream& os) const;
     };
 
@@ -499,7 +480,6 @@ namespace GeographicLib {
     void Offset(real s13, bool reverse = false);
     void pos1(Angle& bet1, Angle& omg1, Angle& alp1) const;
     void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
-    void Optimize();
 
     real fbetm() const { return gamma() != 0 ?
         fbet().HalfPeriod() * fbet().Slope() :

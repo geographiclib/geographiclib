@@ -117,7 +117,7 @@ int main(int argc, const char* const argv[]) {
     bool inverse = false,
       dms = false, full = false, unroll = false,
       longfirst = false,
-      debug = false, linecalc = false, biaxp = false;
+      debug = false, linecalc = false;
     real
       a = 6378172, b = 6378102, c = 6356752,
       // NaN is a marker to skip biaxial transformation
@@ -218,8 +218,6 @@ int main(int argc, const char* const argv[]) {
         full = true;
       else if (arg == "--debug")
         debug = true;
-      else if (arg == "--biaxp")
-        biaxp = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -294,7 +292,6 @@ int main(int argc, const char* const argv[]) {
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
     t.debug(debug);
-    t.biaxp(biaxp);
     if (linecalc) {
       BiaxialCoords(true, f, bet1, omg1, alp1);
     }

@@ -29,7 +29,6 @@ int main() {
   cin >> b >> e2 >> k2 >> kp2 >> bet >> omg >> alp;
   Triaxial t(b, e2, k2, kp2);
   TriaxialLine l(t, bet, omg, alp);
-  l.Optimize();
   cout << setprecision(8);
   l.inversedump(cout);
 }

@@ -29,10 +29,7 @@ namespace GeographicLib {
 
   TriaxialLine::TriaxialLine(const Triaxial& t)
     : _f(t, Triaxial::gamblk(t, (t._umbalt && t._kp2 > 0) || t._k2 == 0))
-  {
-    // Not worth it...
-    // _f.ComputeInverse();
-  }
+  {}
 
   TriaxialLine::TriaxialLine(const Triaxial& t,
                              Angle bet1, Angle omg1, Angle alp1)
@@ -950,11 +947,6 @@ namespace GeographicLib {
     _gic = gline::gics(_g, _fic);
   }
 
-  void TriaxialLine::Optimize() {
-    _f.ComputeInverse();
-    _g.ComputeInverse();
-  }
-
   TriaxialLine::fline::disttx
   TriaxialLine::fline::Hybrid(const fics& fic, Angle betomg2,
                               Angle& bet2a, Angle& omg2a, Angle& alp2a,
@@ -1033,20 +1025,11 @@ namespace GeographicLib {
     , _ftht(false, _gm.kxp2 , _gm.kx2,
             -(_gm.transpolar ? -1 : 1) * _t._e2,
             +(_gm.transpolar ? -1 : 1) * _gm.gamma, t)
-    , _invp(false)
   {
     // Only needed for umbilical lines
     _deltashift = _gm.gamma == 0 ?
       (_t.k2() > 0 && _t.kp2() > 0 ? 2 * (_fpsi.Max() - _ftht.Max()) : 0) :
       Math::NaN();
-  }
-
-  void TriaxialLine::fline::ComputeInverse() {
-    if (!_invp) {
-      _fpsi.ComputeInverse();
-      _ftht.ComputeInverse();
-      _invp = true;
-    }
   }
 
   TriaxialLine::gline::gline(const Triaxial& t, bool neg)
@@ -1063,17 +1046,8 @@ namespace GeographicLib {
     , _gtht(true, _gm.kxp2 , _gm.kx2,
             -(_gm.transpolar ? -1 : 1) * _t._e2,
             +(_gm.transpolar ? -1 : 1) * _gm.gamma, t)
-    , _invp(false)
     , s0(_gm.gammax == 0 ? _gpsi.Max() + _gtht.Max() : 0)
   {}
-
-  void TriaxialLine::gline::ComputeInverse() {
-    if (!_invp) {
-      _gpsi.ComputeInverse();
-      _gtht.ComputeInverse();
-      _invp = true;
-    }
-  }
 
   Math::real TriaxialLine::fline::Hybrid0(const fics& fic,
                                           Angle bet2, Angle omg2,
@@ -1475,7 +1449,6 @@ namespace GeographicLib {
     , _meridl(_kapp == 0 && _mu == 0)
     , _biaxr(biaxspecial(t, _mu) && _kap  == 0)
     , _biaxl(biaxspecial(t, _mu) && _kapp == 0)
-    , _invp(false)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
     if (!_distp) {
@@ -1731,66 +1704,6 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialLine::hfun::ComputeInverse() {
-    if (!_distp) {
-      if (!_invp) {
-        if (_biaxl) {
-          if (_mu == 0) return; // _fun == 0 and there's no analytic inverse
-          // now _mu < 0
-          _countn = _countb = 0;
-          // Include scale = 1 in TrigfunExt constructor because _dfinv gets
-          // added to u.
-          // Ars are fun, odd, sym, halfp, nmax, tol, scale
-          // **HERE**
-          _dfinv = Trigfun(
-                           [this]
-                           (real z, real u1) -> real
-                           {
-                             real u0 = modang(z/Slope(), 1/_sqrtmu);
-                             return root(z, u0 + u1, &_countn, &_countb,
-                                         sqrt(numeric_limits<real>::epsilon()))
-                               - u0;
-                           },
-                           true, false, Slope() * HalfPeriod(),
-                           int(ceil(real(1.5) * NCoeffs())),
-                           sqrt(numeric_limits<real>::epsilon()), HalfPeriod());
-        } else if (_umb) {
-          _countn = _countb = 0;
-          // Include scale = 1 in TrigfunExt constructor because _dfinv gets
-          // added to z.
-          _dfinv = Trigfun(
-                           [this]
-                           (real phi, real u1) -> real
-                           {
-                             real z = lam(phi, _sqrtkapp);
-                             return root(z, z + u1, &_countn, &_countb,
-                                         sqrt(numeric_limits<real>::epsilon()))
-                               - z;
-                           },
-                           true, true, Math::pi(),
-                           int(ceil(real(1.5) * NCoeffs())),
-                           sqrt(numeric_limits<real>::epsilon()), 1);
-        } else
-          _fun.ComputeInverse();
-      }
-      _invp = true;
-    } else {
-      if (!(_invp || _biaxr || _umb)) {
-        // If _umb, the inverse isn't periodic
-        _fun.ComputeInverse();
-        /*
-          real u = 1, z = _fun(u);
-          cout << "HERE " << u << " " << z << " " << _fun.inv0(z) << "\n";
-          for (int i = -100; i <= 100; ++i) {
-          real u = real(i)/10;
-          cout << "DD " << u << " " << _fun(u) << "\n";
-          }
-        */
-        _invp = true;
-      }
-    }
-  }
-
   Math::real TriaxialLine::hfun::root(real z, real u0,
                                       int* countn, int* countb,
                                       real tol) const {
@@ -1858,18 +1771,15 @@ namespace GeographicLib {
     }
   }
 
-  // Approximate inverse using _dfinv _fun.inv0
-  Math::real TriaxialLine::hfun::inv0(real z) const {
-    if (!_distp) {
-      if (!_invp) return Math::NaN();
-      // For the inverse in the umbilical case, just use gd(z, _sqrtkapp) and
-      // not F(gd(z, _sqrt(kapp)))
-      return _umb ? z + _dfinv(gd(z, _sqrtkapp)) :
-        _biaxl ? modang(z/Slope(), 1/_sqrtmu) + (_mu == 0 ? 0 : _dfinv(z)) :
-        _fun.inv0(z);
-    } else {
-      return _invp ? _fun.inv0(z) :
-        (_umb ?
+  // Accurate inverse by direct Newton (not using _finv)
+  Math::real TriaxialLine::hfun::inv(real z, int* countn, int* countb) const {
+    if (!_distp)
+      return _umb ? root(z, z, countn, countb) :
+        _biaxl ? root(z, modang(z/Slope(), 1/_sqrtmu), countn, countb) :
+        _fun.inv1(z, countn, countb);
+    else {                      // distp
+      if (_biaxr) return Math::NaN();
+      else if (_umb) {
          // In limit _eps -> 0
          //   g(u) = atan(_sqrtkap/_sqrtkapp * tanh(u))
          // at u = 0, dg/du = _sqrtkap/_sqrtkapp
@@ -1890,42 +1800,15 @@ namespace GeographicLib {
          // Values at +/- inf and slope at origin match.
          //
          // Solve z = g(u) gives u = u0:
-         atanh(_sqrtkapp/_sqrtkap * tan(atan(_sqrtkap/_sqrtkapp) / _max * z)) /
-         (sqrt(1 - _eps*_kap) * atan(_sqrtkap/_sqrtkapp) / _max)
-         : Math::NaN());
+        real u0 = atanh(_sqrtkapp/_sqrtkap *
+                          tan(atan(_sqrtkap/_sqrtkapp) / _max * z)) /
+          (sqrt(1 - _eps*_kap) * atan(_sqrtkap/_sqrtkapp) / _max);
+        return root(z, u0, countn, countb);
+      } else
+        return _fun.inv1(z, countn, countb);
     }
   }
 
-  // Accurate inverse by direct Newton (not using _finv)
-  Math::real TriaxialLine::hfun::inv1(real z, int* countn, int* countb) const {
-    if (!_distp)
-      return _umb ? root(z, z, countn, countb) :
-        _biaxl ? root(z, modang(z/Slope(), 1/_sqrtmu), countn, countb) :
-        _fun.inv1(z, countn, countb);
-    else {
-      if (_biaxr) return Math::NaN();
-      return _umb ? root(z, inv0(z), countn, countb) :
-        _fun.inv1(z, countn, countb);
-    }
-  }
-
-  // Accurate inverse correcting result from _finv
-  Math::real TriaxialLine::hfun::inv2(real z, int* countn, int* countb) const {
-    if (!_invp) return Math::NaN();
-    if (!_distp)
-      return _umb || _biaxl ? root(z, inv0(z), countn, countb) :
-        _fun.inv2(z, countn, countb);
-    else
-      return _umb ? root(z, inv0(z), countn, countb) :
-        _fun.inv1(z, countn, countb);
-  }
-  /*
-  Angle TriaxialLine::hfun::inv(const Angle& z, int* countn, int* countb)
-    const {
-    if (!_distp) return ang::NaN();
-    return ang::radians(inv(z.radians(), countn, countb));
-  }
-  */
   // _mu > 0 && !_tx
   Math::real TriaxialLine::hfun::fthtp(real c, real kap, real kapp,
                                        real eps, real mu) {
@@ -2057,31 +1940,29 @@ namespace GeographicLib {
     real ds = 1/real(100);
     int num = int(round(fmin(3*HalfPeriod(), real(30)) * ndiv));
     if (_distp)
-      os << "% u g(u) inv0(g) inv1(g) inv2(g) "
-         << "u0-u u1-u u2-u  g'(u) delg delg-g' g'/f'\n";
+      os << "% u g(u) inv1(g) "
+         << "u1-u g'(u) delg delg-g' g'/f'\n";
     else
-      os << "% u f(u) inv0(f) inv1(f) inv2(f) "
-         << "u0-u u1-u u2-u  f'(u) delf delf-f' phi fwd(phi) fwd(phi)-u\n";
+      os << "% u f(u) inv1(f) "
+         << "u1-u f'(u) delf delf-f' phi fwd(phi) fwd(phi)-u\n";
     os << name << " = [\n";
     for (int i = -num; i <= num; ++i) {
       real u = i/real(ndiv),
         f = (*this)(u),
         f1 = deriv(u),
         df = ((*this)(u + ds/2) - (*this)(u - ds/2)) / ds,
-        u0 = inv0(f),
-        u1 = inv1(f),
-        u2 = inv2(f),
+        u1 = inv(f),
         phi = rev(u),
         ux = fwd(phi);
       if (_distp)
         os << u << " " << f << " "
-           << u0 << " " << u1 << " " << u2 << " "
-           << u0-u << " " << u1-u << " " << u2-u << " "
+           << u1 << " "
+           << u1-u << " "
            << f1 << " " << df << " " << df-f1 << ";\n";
       else
         os << u << " " << f << " "
-           << u0 << " " << u1 << " " << u2 << " "
-           << u0-u << " " << u1-u << " " << u2-u << " "
+           << u1 << " "
+           << u1-u << " "
            << f1 << " " << df << " " << df-f1 << " "
            << phi << " " << ux << " " << ux-u << ";\n";
     }
