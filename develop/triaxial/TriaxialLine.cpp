@@ -1860,7 +1860,7 @@ namespace GeographicLib {
 
   // Approximate inverse using _dfinv _fun.inv0
   Math::real TriaxialLine::hfun::inv0(real z) const {
-    if (_distp) {
+    if (!_distp) {
       if (!_invp) return Math::NaN();
       // For the inverse in the umbilical case, just use gd(z, _sqrtkapp) and
       // not F(gd(z, _sqrt(kapp)))
