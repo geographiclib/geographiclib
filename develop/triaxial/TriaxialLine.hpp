@@ -19,6 +19,8 @@
 #include "Trigfun.hpp"
 #include "Triaxial.hpp"
 
+#define biaxstraight false
+
 namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT TriaxialLine {
@@ -39,7 +41,7 @@ namespace GeographicLib {
       // v = possible change of vars for psi
       // w = a generic version of u or v
     private:
-      real _kap, _kapp, _eps, _mu, _sqrtkap, _sqrtkapp;
+      real _kap, _kapp, _eps, _mu, _sqrtmu, _sqrtkap, _sqrtkapp;
       bool _distp, _tx;
       EllipticFunction _ell;
       TrigfunExt _fun;
@@ -94,20 +96,13 @@ namespace GeographicLib {
       }
       static real modang(real x, real m, real& deriv) {
         using std::fabs;
-        Angle xa = Angle::radians(x), ya = xa.modang(m);
+        Angle xa = Angle::radians(x);
         // y = modang(x, m)
         // tan(y) = m * tan(x)
         // dy/dx = m * sec(x)^2 / (1 + m^2 * tan(x)^2)
-        //       = m / (cos(x)^2 + m^2 * sin(x)^2)
-        //       = m * csc(x)^2 / (m^2 + cot(x)^2)
-        //       = m * cos(y)^2/cos(x)^2
-        //       = sin(y)^2 / (m * sin(x)^2)
-        //       -> m for x -> 0
-        //       -> 1/m for x -> +/- pi/2
-        deriv = fabs(2*xa.s() > 1) ? // just need to avoid s() close to zero
-          Math::sq(ya.s()/xa.s()) / m :
-          Math::sq(ya.c()/xa.c()) * m;
-        return ya.radians();
+        //       = m / (m^2 * sin(x)^2 + cos(x)^2)
+        deriv = m / (Math::sq(m * xa.s()) + Math::sq(xa.c()));
+        return xa.modang(m).radians();
       }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
@@ -172,10 +167,12 @@ namespace GeographicLib {
       void ComputeInverse();
       real fwd(real zeta) const {
         return _umb ? lam(zeta, _sqrtkapp) :
+          _biaxl ? (biaxstraight ? modang(zeta, _sqrtmu) : zeta) :
           (_tx ? _ell.F(zeta) : zeta);
       }
       real rev(real w) const {
         return _umb ? gd(w, _sqrtkapp) :
+          _biaxl ? (biaxstraight ? modang(w, 1/_sqrtmu) : w) :
           (_tx ? _ell.am(w) : w);
       }
       int NCoeffs() const { return _fun.NCoeffs(); }
