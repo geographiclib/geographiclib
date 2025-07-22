@@ -19,8 +19,6 @@
 #include "Trigfun.hpp"
 #include "Triaxial.hpp"
 
-#define biaxstraight false
-
 namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT TriaxialLine {
@@ -94,16 +92,6 @@ namespace GeographicLib {
       static real modang(real x, real m) {
         return Angle::radians(x).modang(m).radians();
       }
-      static real modang(real x, real m, real& deriv) {
-        using std::fabs;
-        Angle xa = Angle::radians(x);
-        // y = modang(x, m)
-        // tan(y) = m * tan(x)
-        // dy/dx = m * sec(x)^2 / (1 + m^2 * tan(x)^2)
-        //       = m / (m^2 * sin(x)^2 + cos(x)^2)
-        deriv = m / (Math::sq(m * xa.s()) + Math::sq(xa.c()));
-        return xa.modang(m).radians();
-      }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
 
@@ -167,12 +155,10 @@ namespace GeographicLib {
       void ComputeInverse();
       real fwd(real zeta) const {
         return _umb ? lam(zeta, _sqrtkapp) :
-          _biaxl ? (biaxstraight ? modang(zeta, _sqrtmu) : zeta) :
           (_tx ? _ell.F(zeta) : zeta);
       }
       real rev(real w) const {
         return _umb ? gd(w, _sqrtkapp) :
-          _biaxl ? (biaxstraight ? modang(w, 1/_sqrtmu) : w) :
           (_tx ? _ell.am(w) : w);
       }
       int NCoeffs() const { return _fun.NCoeffs(); }

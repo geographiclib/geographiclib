@@ -79,39 +79,14 @@ namespace GeographicLib {
     Angle &phi2a = bet2a, &tht2a = omg2a;
     if (_f.gammax() > 0) {
       real u2, v2;
-      int cntn = 0, cntb = 0;
       if (false && biaxspecial(_t, _g.gammax())) {
-        u2 = gpsi().inv(sig2, &cntn, &cntb);
-        v2 = ftht().inv(fpsi()(u2) - _fic.delta, &cntn, &cntb);
-        // cout << "AAA " << setprecision(18) << fpsi()(u2) << " " << _fic.delta << "\n";
+        u2 = gpsi().inv(sig2, countn, countb);
+        v2 = ftht().inv(fpsi()(u2) - _fic.delta, countn, countb);
       } else
         // The general triaxial machinery.  This is used for non-meridional
         // geodesics on biaxial ellipsoids.
         solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
-               &cntn, &cntb);
-      // cout << "UV " << setprecision(18) << u2 << " " << v2 << "\n";
-      // cout << "UVA " << fpsi().rev(u2) << " " << ftht().rev(v2) << "\n";
-
-      // UV -4.712389824185469145e+00 -1.570796326731482395e+00 false
-      // UV -4.71238982418547003 -1.570796327151045
-
-      // UV -4.71238982418546914 -1.5707963267314824
-      // echo -89.993567560423 117.298046979488 179.133662302873373517 -3.13621687126017932492 | ./Geod3Solve $WGS84 --biaxp
-      if (0) {
-        //        real u = -4.712389824185469145, v = -1.5707963267314824;
-        real u = u2, v = v2;
-        real
-          f = fpsi()(u) - ftht()(v) - _fic.delta,
-          g = gpsi()(u) - gtht()(v) - sig2;
-        cout << "FF " << fpsi()(u) << " " << ftht()(v) << " " <<  _fic.delta << "\n";
-        cout << "GG " << gpsi()(u) << " " << gtht()(v) << " " <<  sig2 << "\n";
-        cout << "FP " << fpsi().deriv(u) << " " << ftht().deriv(v) << "\n";
-        cout << "GP " << gpsi().deriv(u) << " " << gtht().deriv(v) << "\n";
-        cout << "FG " << f << " " << g << "\n";
-      }
-      // cout << "CNTS " << cntn << " " << cntb << "\n";
-      if (countn) *countn += cntn;
-      if (countb) *countb += cntb;
+               countn, countb);
       tht2a = ang::radians(ftht().rev(v2));
       ang psi2 = ang::radians(fpsi().rev(u2));
       // Already normalized
@@ -130,7 +105,7 @@ namespace GeographicLib {
         // meridr
         //  ftht = tht
         // 	gtht = 0
-        // meridl
+        // meridr
         // 	fpsi = 0
         // 	gpsi = int(sqrt(1-eps*cos(psi)^2), psi)
         solve2(_fic.delta, sig2n.first,
@@ -424,8 +399,6 @@ namespace GeographicLib {
       // take countn/countb = 55/54 iterations to converge.  With tolmult == 1,
       // it needs 5/3 iterations.
       tolmult = 1;
-    if (debug)
-      cout << "TOL " << ftol << " " << gtol << " " << xtol << " " << ytol << "\n";
     int cntn = 0, cntb = 0;
     real oldf = Math::infinity(), oldg = oldf, olddx = oldf, olddy = oldf;
     zset xset(zvals(xa, fx(xa), gx(xa)),
@@ -505,14 +478,6 @@ namespace GeographicLib {
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
       ++cntn;
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
-      if (debug && i == 2) {
-        real dx = 0.001;
-        cout << setprecision(10);
-        cout << "DFX " << fx.deriv(x) << " " << (fx(x+dx/2) - fx(x-dx/2))/dx << "\n";
-        cout << "DFY " << fy.deriv(y) << " " << (fy(y+dx/2) - fy(y-dx/2))/dx << "\n";
-        cout << "DGX " << gx.deriv(x) << " " << (gx(x+dx/2) - gx(x-dx/2))/dx << "\n";
-        cout << "DGY " << gy.deriv(y) << " " << (gy(y+dx/2) - gy(y-dx/2))/dx << "\n";
-      }
       // zsetsinsert updates xv and yv to enforce monotonicity of f and g
       zsetsinsert(xset, yset, xv, yv, f0, g0);
       real f = xv.fz - yv.fz - f0, g = xv.gz + yv.gz - g0;
@@ -667,7 +632,7 @@ namespace GeographicLib {
         oldf = fabs(f); oldg = fabs(g); olddx = fabs(dx); olddy = fabs(dy);
         x = xn; y = yn;
         bis = false;
-        if (!(fabs(dx) > xtol || fabs(dy) > ytol) /* && i > ibis + 1 */) {
+        if (!(fabs(dx) > xtol || fabs(dy) > ytol) /* && i > ibis + 2 */) {
           if (debug)
             cout << "break1 " << scientific << dx << " " << dy << "\n";
           break;
@@ -1375,8 +1340,7 @@ namespace GeographicLib {
       v0 = f.ftht().fwd(tht1.radians());
       delta = (biaxspecial(t, f.gammax()) ?
                atan2(phi1.s() * fabs(alp1.s()), phi0.c() * alp1.c())
-               - sqrt(f.gammax()) *
-               f.fpsi().df(psi1.radians())
+               - sqrt(f.gammax()) * f.fpsi().df(u0)
                : f.fpsi()(u0)) - f.ftht()(v0);
     } else if (f.gammax() == 0) {
       if (f.kxp2() == 0) {
@@ -1678,19 +1642,16 @@ namespace GeographicLib {
     }
     // N.B. _max < 0 for _umb && eps < 0
     _max = _umb ? _fun(_tx ? _ell.K() : Math::pi()/2) :
-      !_distp ? ( _biaxl ? (biaxstraight ? 0 : Math::pi()/2) + _sqrtmu * _fun.Max() :
+      !_distp ? ( _biaxl ? Math::pi()/2 + _sqrtmu * _fun.Max() :
                   _fun.Max() ) :
-      _meridl ? _fun(Math::pi()/2) :
-      _biaxl ? (biaxstraight ?  Math::pi()/2 + _fun.Max() : _fun.Max()) :
-      _fun.Max();
+      _meridl ? _fun(Math::pi()/2) : _fun.Max();
   }
 
   Math::real TriaxialLine::hfun::operator()(real u) const {
     if (!_distp) {
       if (_biaxl)
         // This is sqrt(-mu) * f(u)
-        return biaxstraight ? u - _sqrtmu * _fun(modang(u, 1/_sqrtmu)) :
-          modang(u, _sqrtmu) - _sqrtmu * _fun(u);
+        return modang(u, _sqrtmu) - _sqrtmu * _fun(u);
       else if (_meridl)
         return 0;
       else if (_umb) {
@@ -1703,9 +1664,7 @@ namespace GeographicLib {
       if (_umb) {
         real phi = gd(u, _sqrtkapp);
         return _fun(_tx ? _ell.F(phi) : phi);
-      } else if (_biaxl)
-        return _fun(biaxstraight ? modang(u, 1/_sqrtmu) : u);
-      else
+      } else
         return _fun(u);
     }
   }
@@ -1742,18 +1701,7 @@ namespace GeographicLib {
         // f0(x) = atan(sqrt(-mu) * tanx(u))
         // f0'(x) = sqrt(-mu) / (cos(u)^2 - mu * sin(u)^2)
         // **HERE**
-        // biax-straight
-        // Let w = modang(u, m), m = _sqrtmu
-        // u = modang(w, 1/m)
-        // f(w) = w - m * _fun(modang(w, 1/m))
-        // f'(w) = 1 - m * _fun'(mo
-
-        //       = 1 - fun'(modang(w,1/m)) * m^2 / (sin(w)^2 + m^2 * cos(w)^2)
-        return biaxstraight ?
-          // + sign because _sqrtmu^2 = -_mu
-          1 + _fun.deriv(modang(u, 1/_sqrtmu)) *
-          _mu / (Math::sq(sin(u)) + Math::sq(_sqrtmu * cos(u))) :
-          _sqrtmu / ( Math::sq(_sqrtmu * sin(u)) + Math::sq(cos(u)))
+        return _sqrtmu / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
           - _sqrtmu * _fun.deriv(u);
       else if (_meridl)
         return 0;
@@ -1778,12 +1726,7 @@ namespace GeographicLib {
         // See comments in ffun::deriv
         return _fun.deriv(_tx ? _ell.F(phi) : phi) /
           ( _tx ? sqrt(t) : t / (_sqrtkapp * cosh(u)) );
-      } else if (_biaxl)
-        return biaxstraight ?
-          _fun.deriv(modang(u, 1/_sqrtmu)) *
-          _sqrtmu / (Math::sq(sin(u)) + Math::sq(_sqrtmu * cos(u))) :
-          _fun.deriv(u);
-      else
+      } else
         return _fun.deriv(u);
     }
   }
@@ -1957,14 +1900,11 @@ namespace GeographicLib {
   Math::real TriaxialLine::hfun::inv1(real z, int* countn, int* countb) const {
     if (!_distp)
       return _umb ? root(z, z, countn, countb) :
-        _biaxl ? root(z, biaxstraight ? z/Slope() : modang(z/Slope(), 1/_sqrtmu),
-                      countn, countb) :
+        _biaxl ? root(z, modang(z/Slope(), 1/_sqrtmu), countn, countb) :
         _fun.inv1(z, countn, countb);
     else {
       if (_biaxr) return Math::NaN();
       return _umb ? root(z, inv0(z), countn, countb) :
-        _biaxl ? (biaxstraight ? modang(_fun.inv(z, countn, countb), _sqrtmu) :
-                  _fun.inv1(z, countn, countb)) :
         _fun.inv1(z, countn, countb);
     }
   }
