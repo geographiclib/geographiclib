@@ -14,6 +14,10 @@
 #include <iomanip>
 #include <sstream>
 
+#if GEOGRAPHICLIB_PRECISION >= 5
+#define nextafter nexttoward
+#endif
+
 namespace GeographicLib {
 
   using namespace std;
@@ -381,7 +385,7 @@ namespace GeographicLib {
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
     const bool debug = false, check = true;
-    const int maxit = 300*40;
+    const int maxit = 100;
     const real tol = numeric_limits<real>::epsilon(),
       // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
       // too much bisection.  Example:
@@ -467,17 +471,59 @@ namespace GeographicLib {
         }
       }
     }
-    bool bis = false;
+    // oned is a flag detected degeneracy to a 1d system.  Only the case gy(y)
+    // = const is treated.  Then g = gx(x) + gy(y) - g0 = 0 converges as a 1d
+    // Newton system which fises the value of x.  Once x is found (detected by
+    // xset.min().z and xset.max().z being consecutive numbers) fx(x) is fixed
+    // and f = fx(x) - fy(y) - f0 = 0 is solved for y.
+    bool bis = false, oned = false;
     int ibis = -1, i = 0;
+    real x1d = Math::NaN(), fx1d = x1d;
+    real xref = real(-4.71238982418546928l),
+      yref = real(-1.57079632679489514l);
     for (; i < maxit ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure TriaxialLine::newt2"), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
       ++cntn;
+      (void) xref;
+      if (                      // false &&
+          !oned && nextafter(xset.min().z, xset.max().z) == xset.max().z &&
+          yset.min().gz == yset.max().gz) {
+        oned = true;
+        real ga = xset.min().gz + yset.min().gz - g0,
+          gb = xset.max().gz + yset.max().gz - g0;
+        if (false) {
+          real pb = ga == gb ? real(0.5) : -ga / (gb - ga);
+          x1d = xset.min().z + pb * (xset.max().z -  xset.min().z);
+          pb = x1d == xset.max().z ? 1 : 0;
+          fx1d = xset.min().fz + pb * (xset.max().fz - xset.min().fz);
+        } else {
+          x1d = gb < -ga ? xset.max().z : xset.min().z;
+          fx1d = gb < -ga ? xset.max().fz : xset.min().fz;
+        }
+        x = x1d;
+      }
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
       // zsetsinsert updates xv and yv to enforce monotonicity of f and g
       zsetsinsert(xset, yset, xv, yv, f0, g0);
-      real f = xv.fz - yv.fz - f0, g = xv.gz + yv.gz - g0;
+      real f = (oned ? fx1d : xv.fz) - yv.fz - f0, g = xv.gz + yv.gz - g0;
+      if (false && xset.max().z - xset.min().z < 1e-10) {
+        real f1 = xset.min().fz - yv.fz - f0,
+          f2 = xset.max().fz - yv.fz - f0,
+          f1a = fx(xset.min().z) - fy(yv.z) - f0,
+          f2a = fx(xset.max().z) - fy(yv.z) - f0;
+        if (i == 2000) {
+          real ya = fx.inv(xset.min().fz - f0),
+            yb = fx.inv(xset.max().fz - f0);
+          cout << "YY " << ya - yref << " " << yb - yref << "\n";
+        }
+        cout << setprecision(5) << i << " "
+             << xset.max().z - xset.min().z << " "
+             << yset.min().z - yref << " " << y - yref << " "
+             << yset.max().z - yref << " "
+             << f1 << " " << f2 << " " << f1a << " " << f2a << "\n";
+      }
       if ((fabs(f) <= ftol && fabs(g) <= gtol) || isnan(f) || isnan(g)) {
         if (debug)
           cout << "break0 " << scientific << f << " " << g << "\n";
@@ -601,16 +647,43 @@ namespace GeographicLib {
       // x-y rectangle contains the solution for piecewise linear
       // approximation.
 
+      // BUILD5: XY -4.71238982418546928 -1.57079632679489514
+      // BUILD : XY -4.71238982418546914 -1.5707963267314824
+      // BUILD:  XY -4.71238982418546914 -1.570796327151045
+      //         XY -4.71238982418547003 -1.57079632694126348
+      // BUILD5: XY -4.71238982418546928 -1.57079632679489514
+
+      // Let
+      //
+      //   g(x) = gx(x) - g0 (gy(y) = 0)
+      //   g(xa) = ga, g(xb) = gb
+      //
+      // Then, a linear fit for g(x) gives g(x0) = 0 at
+      //
+      //   x0 = pa * xa + pb * xb
+      //
+      // where pa = gb/(gb - ga), pb = -ga/(gb - ga)
+       //
+      // Let fx(xa) = fa, fy(xb) = fb, then a linear fit for fx(x) gives
+      //
+      //   f(x0) = pa * fa + pb * fb
       real
         fxp = fx.deriv(x), fyp = fy.deriv(y),
         gxp = gx.deriv(x), gyp = gy.deriv(y),
         den = fxp * gyp + fyp * gxp,
-        dx = -( gyp * f + fyp * g) / den,
-        dy = -(-gxp * f + fxp * g) / den,
+        dx = oned ? 0 : -( gyp * f + fyp * g) / den,
+        dy = oned ? f / fyp : -(-gxp * f + fxp * g) / den,
         xn = x + dx, yn = y + dy,
         dxa = 0, dya = 0,
         xa = xset.min().z, xb = xset.max().z,
         ya = yset.min().z, yb = yset.max().z;
+      if (debug) {
+        bool bb = gyp == 0 && nextafter(xset.min().z, xset.max().z) == xset.max().z;
+        cout << "DERIV " << i << " " << fxp << " " << fyp << " " << gxp << " " << gyp << " " << bb << "\n";
+        cout << "DY " << i << " " << -gxp * f << " " << fxp * g << "\n";
+        cout << "FG " << i << " " << f << " " << g << "\n";
+        cout << "DXY " << i << " " << oned << " " << dx << " " << dy << "\n";
+      }
       if (check) {
         if (!( fxp >= 0 && fyp >= 0 && gxp >= 0 && gyp >= 0 && den > 0 )) {
           cout << "DERIVS " << x << " " << y << " "
@@ -666,13 +739,20 @@ namespace GeographicLib {
              << scientific << setprecision(3)
              << xset.max().z - xset.min().z << " "
              << yset.max().z - yset.min().z << "\n";
+      if (debug) {
+        real x0 = (xset.max().z + xset.min().z)/2;
+        cout << "QQ " << i << " " << xset.max().z -x0 << " " << xset.min().z - x0 << " " << x - x0 << " " << g << " " << x << " " << y << " " << nextafter(xset.min().z, xset.max().z) - xset.max().z << "\n";
+      }
       // cout << "BOX " << xset.num() << " " << yset.num() << "\n";
     }
     if (countn)
       *countn += cntn;
     if (countb)
       *countb += cntb;
-    // cout << "CNT " << cntn << " " << cntb << "\n";
+    if (debug) {
+      cout << "CNT " << cntn << " " << cntb << "\n";
+      cout << "XY " << setprecision(18) << x << " " << y << "\n";
+    }
   }
 
   int TriaxialLine::zset::insert(zvals& t, int flag) {
