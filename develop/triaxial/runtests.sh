@@ -220,12 +220,6 @@ To fix errors in testwgs84, restore oblpro logic removed between commits
 
 l is new baseline
 
-head -268827 ../testwgs84.txt | tail -1 | ./Geod3Test $WGS84 --biaxp
-Caught exception: Convergence failure TriaxialLine::newt2
+Fix convergence issues with newt2 & testwgs84.
 
-echo -89.993567560423 117.298046979488 179.133662302873373517 -3.13621687126017932492 | ./Geod3Solve $WGS84 --biaxp
-ERROR: Convergence failure TriaxialLine::newt2
-
-Also line 278135 of ../testwgs84.txt
-
-Temporary fix to increase maxit.
+m is new baseline

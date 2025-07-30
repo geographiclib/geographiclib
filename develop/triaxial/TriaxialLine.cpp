@@ -262,14 +262,14 @@ namespace GeographicLib {
       real DxA = (-qf * gys + qg * fys) / den,
         DyA = (-qf * gxs + qg * fxs) / den;
       real
-        fA = fx(x0 - Dx) - fy(y0 - DyA) - f0,
-        gA = gx(x0 - Dx) + gy(y0 - DyA) - g0,
-        fB = fx(x0 - DxA) - fy(y0 - Dy) - f0,
-        gB = gx(x0 - DxA) + gy(y0 - Dy) - g0,
-        fC = fx(x0 + Dx) - fy(y0 + DyA) - f0,
-        gC = gx(x0 + Dx) + gy(y0 + DyA) - g0,
-        fD = fx(x0 + DxA) - fy(y0 + Dy) - f0,
-        gD = gx(x0 + DxA) + gy(y0 + Dy) - g0;
+        fA = (fx(x0 - Dx) - fy(y0 - DyA)) - f0,
+        gA = (gx(x0 - Dx) + gy(y0 - DyA)) - g0,
+        fB = (fx(x0 - DxA) - fy(y0 - Dy)) - f0,
+        gB = (gx(x0 - DxA) + gy(y0 - Dy)) - g0,
+        fC = (fx(x0 + Dx) - fy(y0 + DyA)) - f0,
+        gC = (gx(x0 + Dx) + gy(y0 + DyA)) - g0,
+        fD = (fx(x0 + DxA) - fy(y0 + Dy)) - f0,
+        gD = (gx(x0 + DxA) + gy(y0 + Dy)) - g0;
       if (!( fabs(DxA) <= Dx && fabs(DyA) <= Dy ))
         throw GeographicLib::GeographicErr("Bad Dx/Dy");
       if (!( fA <= 0 && gA <= 0 )) {
@@ -303,9 +303,9 @@ namespace GeographicLib {
           x, y, countn, countb);
     if (0)
       cout << "FEQ " << fx(x) << " " << fy(y) << " " << f0 << " "
-           << fx(x) - fy(y) - f0 << "\n"
+           << (fx(x) - fy(y)) - f0 << "\n"
            << "GEQ " << gx(x) << " " << gy(y) << " " << g0 << " "
-           << gx(x) + gy(y) - g0 << "\n";
+           << (gx(x) + gy(y)) - g0 << "\n";
     if (0) {
       cout << "FF "
            << fx.HalfPeriod() << " " << fx.Slope() << " " << fx.Max() << " "
@@ -414,10 +414,10 @@ namespace GeographicLib {
       //   f01 <= 0 <= f10
       //   g00 <= 0 <= g11
       real
-        f01 = xset.min().fz - yset.max().fz - f0,
-        f10 = xset.max().fz - yset.min().fz - f0,
-        g00 = xset.min().gz + yset.min().gz - g0,
-        g11 = xset.max().gz + yset.max().gz - g0;
+        f01 = (xset.min().fz - yset.max().fz) - f0,
+        f10 = (xset.max().fz - yset.min().fz) - f0,
+        g00 = (xset.min().gz + yset.min().gz) - g0,
+        g11 = (xset.max().gz + yset.max().gz) - g0;
       // Allow equality on the initial points
       if (!( f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11 ))
         throw GeographicLib::GeographicErr
@@ -425,10 +425,10 @@ namespace GeographicLib {
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
       if (0) {
         real
-          fA = xset.min().fz - yv.fz - f0, gA = xset.min().gz + yv.gz - g0,
-          fC = xset.max().fz - yv.fz - f0, gC = xset.max().gz + yv.gz - g0,
-          fB = xv.fz - yset.min().fz - f0, gB = xv.gz + yset.min().gz - g0,
-          fD = xv.fz - yset.max().fz - f0, gD = xv.gz + yset.max().gz - g0;
+          fA = (xset.min().fz - yv.fz) - f0, gA = (xset.min().gz + yv.gz) - g0,
+          fC = (xset.max().fz - yv.fz) - f0, gC = (xset.max().gz + yv.gz) - g0,
+          fB = (xv.fz - yset.min().fz) - f0, gB = (xv.gz + yset.min().gz) - g0,
+          fD = (xv.fz - yset.max().fz) - f0, gD = (xv.gz + yset.max().gz) - g0;
         // y=-x            y=x
         // g=0             f=0
         //   \    ind=-2   /
@@ -471,59 +471,40 @@ namespace GeographicLib {
         }
       }
     }
-    // oned is a flag detected degeneracy to a 1d system.  Only the case gy(y)
+    // degen is a flag detected degeneracy to a 1d system.  Only the case gy(y)
     // = const is treated.  Then g = gx(x) + gy(y) - g0 = 0 converges as a 1d
-    // Newton system which fises the value of x.  Once x is found (detected by
-    // xset.min().z and xset.max().z being consecutive numbers) fx(x) is fixed
-    // and f = fx(x) - fy(y) - f0 = 0 is solved for y.
-    bool bis = false, oned = false;
+    // Newton system which fixes the value of x.  Once x is found (detected by
+    // xset.min().z and xset.max().z being consecutive numbers), g0 is adjusted
+    // to that the g equation is satisfied exactly.  This allows f = fx(x) -
+    // fy(y) - f0 = 0 to be solved reliably for y.
+    bool bis = false, degen = false;
     int ibis = -1, i = 0;
-    real x1d = Math::NaN(), fx1d = x1d;
-    real xref = real(-4.71238982418546928l),
-      yref = real(-1.57079632679489514l);
     for (; i < maxit ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure TriaxialLine::newt2"), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
       ++cntn;
-      (void) xref;
-      if (                      // false &&
-          !oned && nextafter(xset.min().z, xset.max().z) == xset.max().z &&
+      if (!degen && nextafter(xset.min().z, xset.max().z) == xset.max().z &&
           yset.min().gz == yset.max().gz) {
-        oned = true;
-        real ga = xset.min().gz + yset.min().gz - g0,
-          gb = xset.max().gz + yset.max().gz - g0;
-        if (false) {
-          real pb = ga == gb ? real(0.5) : -ga / (gb - ga);
-          x1d = xset.min().z + pb * (xset.max().z -  xset.min().z);
-          pb = x1d == xset.max().z ? 1 : 0;
-          fx1d = xset.min().fz + pb * (xset.max().fz - xset.min().fz);
+        degen = true;
+        real ga = (xset.min().gz + yset.min().gz) - g0,
+          gb = (xset.max().gz + yset.max().gz) - g0;
+        x = gb < -ga ? xset.max().z : xset.min().z;
+        // Adjust g0 so that g = 0 and dx = 0
+        if (gb < -ga) {
+          g0 = xset.max().gz + yset.max().gz;
+          zvals xx = xset.max();
+          xset.insert(xx, -1);
         } else {
-          x1d = gb < -ga ? xset.max().z : xset.min().z;
-          fx1d = gb < -ga ? xset.max().fz : xset.min().fz;
+          g0 = xset.min().gz + yset.min().gz;
+          zvals xx = xset.min();
+          xset.insert(xx, +1);
         }
-        x = x1d;
       }
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
       // zsetsinsert updates xv and yv to enforce monotonicity of f and g
       zsetsinsert(xset, yset, xv, yv, f0, g0);
-      real f = (oned ? fx1d : xv.fz) - yv.fz - f0, g = xv.gz + yv.gz - g0;
-      if (false && xset.max().z - xset.min().z < 1e-10) {
-        real f1 = xset.min().fz - yv.fz - f0,
-          f2 = xset.max().fz - yv.fz - f0,
-          f1a = fx(xset.min().z) - fy(yv.z) - f0,
-          f2a = fx(xset.max().z) - fy(yv.z) - f0;
-        if (i == 2000) {
-          real ya = fx.inv(xset.min().fz - f0),
-            yb = fx.inv(xset.max().fz - f0);
-          cout << "YY " << ya - yref << " " << yb - yref << "\n";
-        }
-        cout << setprecision(5) << i << " "
-             << xset.max().z - xset.min().z << " "
-             << yset.min().z - yref << " " << y - yref << " "
-             << yset.max().z - yref << " "
-             << f1 << " " << f2 << " " << f1a << " " << f2a << "\n";
-      }
+      real f = (xv.fz - yv.fz) - f0, g = (xv.gz + yv.gz) - g0;
       if ((fabs(f) <= ftol && fabs(g) <= gtol) || isnan(f) || isnan(g)) {
         if (debug)
           cout << "break0 " << scientific << f << " " << g << "\n";
@@ -671,8 +652,8 @@ namespace GeographicLib {
         fxp = fx.deriv(x), fyp = fy.deriv(y),
         gxp = gx.deriv(x), gyp = gy.deriv(y),
         den = fxp * gyp + fyp * gxp,
-        dx = oned ? 0 : -( gyp * f + fyp * g) / den,
-        dy = oned ? f / fyp : -(-gxp * f + fxp * g) / den,
+        dx = -( gyp * f + fyp * g) / den, // if degen, dx = 0
+        dy = -(-gxp * f + fxp * g) / den, // if degen dy = f / fyp
         xn = x + dx, yn = y + dy,
         dxa = 0, dya = 0,
         xa = xset.min().z, xb = xset.max().z,
@@ -682,7 +663,7 @@ namespace GeographicLib {
         cout << "DERIV " << i << " " << fxp << " " << fyp << " " << gxp << " " << gyp << " " << bb << "\n";
         cout << "DY " << i << " " << -gxp * f << " " << fxp * g << "\n";
         cout << "FG " << i << " " << f << " " << g << "\n";
-        cout << "DXY " << i << " " << oned << " " << dx << " " << dy << "\n";
+        cout << "DXY " << i << " " << degen << " " << dx << " " << dy << "\n";
       }
       if (check) {
         if (!( fxp >= 0 && fyp >= 0 && gxp >= 0 && gyp >= 0 && den > 0 )) {
@@ -759,15 +740,20 @@ namespace GeographicLib {
     // Inset t into list.  flag = -/+ 1 indicates new min/max.
     // Return -1 if t was already present; othersize return index of newly
     // inserted value.
-    // Value of t.fz and t.gz is adjusted to ensuire monotonicity:
-    // if a.z == b.z then a.fz == b.gz && a.fz == b.gz
-    // if a.z < b.z then a.fz <= b.gz && a.fz <= b.gz
+    // If mono, value of t.fz and t.gz is adjusted to ensuire monotonicity:
+    //   if a.z == b.z then a.fz == b.gz && a.fz == b.gz
+    //   if a.z < b.z then a.fz <= b.gz && a.fz <= b.gz
     using std::isnan;
+    // Need this flag to be set otherwise conditions for setting the bounds on
+    // the allowed results are not met and newt2 fails to converge.
+    const bool mono = true;     // In C++17 use if constexpr (mono)
     int ind = -1;
     if (isnan(t.z)) return ind;
     if (t < min()) {
-      t.fz = fmin(t.fz, min().fz);
-      t.gz = fmin(t.gz, min().gz);
+      if (mono) {
+        t.fz = fmin(t.fz, min().fz);
+        t.gz = fmin(t.gz, min().gz);
+      }
     } else if (t == min()) {
       // Check if t is "other" endpoint and collapse bracket to zero
       if (flag > 0) _s.resize(1);
@@ -777,8 +763,10 @@ namespace GeographicLib {
       if (flag < 0) { _s[0] = _s.back(); _s.resize(1); }
       t = max();
     } else if (max() < t) {
-      t.fz = fmax(t.fz, max().fz);
-      t.gz = fmax(t.gz, max().gz);
+      if (mono) {
+        t.fz = fmax(t.fz, max().fz);
+        t.gz = fmax(t.gz, max().gz);
+      }
     }
     if (!(min() < t && t < max())) // Not in range
       return ind;
@@ -787,11 +775,13 @@ namespace GeographicLib {
     if (p == _s.end()) return ind; // Can't happen
     // Fix components of t
     bool ins = !(*p == t);
-    if (ins) {
-      t.fz = Math::clamp(t.fz, (p-1)->fz, p->fz);
-      t.gz = Math::clamp(t.gz, (p-1)->gz, p->gz);
-    } else                      // z components match
-      t = *p;                   // set fz and gz values
+    if (mono) {
+      if (ins) {
+        t.fz = Math::clamp(t.fz, (p-1)->fz, p->fz);
+        t.gz = Math::clamp(t.gz, (p-1)->gz, p->gz);
+      } else                      // z components match
+        t = *p;                   // set fz and gz values
+    }
     if (flag < 0) {
       _s.erase(_s.begin(), p);
       if (ins) {
@@ -838,7 +828,7 @@ namespace GeographicLib {
       for (int j = 0; j < yset.num(); ++j) {
         if (i == xind || j == yind) {
           const zvals& y = yset.val(j);
-          real f = x.fz - y.fz - f0, g = x.gz + y.gz - g0;
+          real f = (x.fz - y.fz) - f0, g = (x.gz + y.gz) - g0;
           // Update bounds as follows
           //
           // y=-x            y=x
@@ -928,10 +918,10 @@ namespace GeographicLib {
       zsetsdiag(xset, yset, f0, g0);
     }
     real
-      f01 = xset.min().fz - yset.max().fz - f0,
-      f10 = xset.max().fz - yset.min().fz - f0,
-      g00 = xset.min().gz + yset.min().gz - g0,
-      g11 = xset.max().gz + yset.max().gz - g0;
+      f01 = (xset.min().fz - yset.max().fz) - f0,
+      f10 = (xset.max().fz - yset.min().fz) - f0,
+      g00 = (xset.min().gz + yset.min().gz) - g0,
+      g11 = (xset.max().gz + yset.max().gz) - g0;
     // Allow equality on the initial points
     if (false && !( f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11 )) {
       cout << f01 << " " << f10 << " "
@@ -959,7 +949,7 @@ namespace GeographicLib {
       gs << "BOXG ";
       for (int i = 0; i < xset.num(); ++i) {
         const zvals& x = xset.val(i);
-        real f = x.fz - y.fz - f0, g = x.gz + y.gz - g0;
+        real f = (x.fz - y.fz) - f0, g = (x.gz + y.gz) - g0;
         fs << (f == 0 ? '.' : f < 0 ? '-' : '+');
         gs << (g == 0 ? '.' : g < 0 ? '-' : '+');
       }
@@ -989,10 +979,10 @@ namespace GeographicLib {
           real ygap1 = yset.val(j1).z - yset.val(j).z,
             ymean = (yset.val(j1).z + yset.val(j).z) / 2;
           real
-            f01 = xset.val(i).fz - yset.val(j1).fz - f0,
-            f10 = xset.val(i1).fz - yset.val(j).fz - f0,
-            g00 = xset.val(i).gz + yset.val(j).gz - g0,
-            g11 = xset.val(i1).gz + yset.val(j1).gz - g0;
+            f01 = (xset.val(i ).fz - yset.val(j1).fz) - f0,
+            f10 = (xset.val(i1).fz - yset.val(j ).fz) - f0,
+            g00 = (xset.val(i ).gz + yset.val(j ).gz) - g0,
+            g11 = (xset.val(i1).gz + yset.val(j1).gz) - g0;
           if (f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11) {
             ++cnt;
             if (xgap1 > xgap) { xgap = xgap1; x = xmean; }

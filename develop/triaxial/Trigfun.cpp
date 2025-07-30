@@ -480,7 +480,7 @@ namespace GeographicLib {
     // this.
     //
     // See J. L. Aurentz and L. N. Trefethen, "Chopping a Chebyshev series",
-    // https://dx.doi.org/10.1145/2998442 (2017) and
+    // https://doi.org/10.1145/2998442 (2017) and
     // https://arxiv.org/abs/1512.01803 (2015).
     //
     // Input:
