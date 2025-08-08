@@ -156,7 +156,7 @@ void errreport(const Triaxial& t,
     t.elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
     errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
     real ds = real(10)/max(1,num);
-    for (int i = 0; i < num; ++i) {
+    for (int i = 1; i < num; ++i) {
       // Extra num - 1 calls
       l1.Position(i*ds, bet2a, omg2a, alp2a);
       l2.Position(-i*ds, bet1a, omg1a, alp1a);
@@ -192,10 +192,12 @@ void errODE(TriaxialODE& t,
   Triaxial::vec3 r1a, v1a, r2a, v2a;
   real m12a = 0, M12a = 0, M21a = 0;
   if (1) {
-    t.Reset(r1, v1);
+    t.Reset(r1, v1); t.NSteps(0); t.IntSteps(0);
     t.Position(s12, r2a, v2a, m12a, M12a, M21a);
-    t.Reset(r2, v2);
+    // int n1 = t.NSteps(), i1 = t.IntSteps();
+    t.Reset(r2, v2); t.NSteps(0); t.IntSteps(0);
     t.Position(-s12, r1a, v1a);
+    // int n2 = t.NSteps(), i2 = t.IntSteps();
     real errr1 = vecdiff(r1, r1a), errv1 = vecdiff(v1, v1a),
       errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a),
       errm12 = fabs(m12a - m12),
@@ -207,6 +209,7 @@ void errODE(TriaxialODE& t,
       cout << " " << ceil(errm12/eps) << " "
            << ceil(errM12/eps) << " "  << ceil(errM21/eps);
     cout << endl;
+    //    cout << "STEPS " << n1 << " " << n2 << " " << i1 << " " << i2 << "\n";
   } else {
     int num = 10;
     vector<real> s12v(num);

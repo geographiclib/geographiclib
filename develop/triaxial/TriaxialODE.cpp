@@ -43,12 +43,13 @@ namespace GeographicLib {
     , _normp(normp)
     , _dir(0)
     , _nsteps(0)
-    , _totsteps(0)
+    , _intsteps(0)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-      // last arg in interp
+      // eps_abs, eps_rel, factor_x, factor_dxdt, max_dt, control_interpolation
     , _dstep6(_eps, real(0), real(1), real(1), real(0), true)
     , _dstep10(_eps, real(0), real(1), real(1), real(0), true)
 #endif
+      // eps_abs, eps_rel, factor_x = 1, factor_dxdt = 1, max_dt = 0
     , _step6(_eps, real(0))
     , _step10(_eps, real(0))
   {
@@ -77,11 +78,13 @@ namespace GeographicLib {
     , _normp(normp)
     , _dir(0)
     , _nsteps(0)
+    , _intsteps(0)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-      // last arg in interp
+      // eps_abs, eps_rel, factor_x, factor_dxdt, max_dt, control_interpolation
     , _dstep6(_eps, real(0), real(1), real(1), real(0), true)
     , _dstep10(_eps, real(0), real(1), real(1), real(0), true)
 #endif
+      // eps_abs, eps_rel, factor_x = 1, factor_dxdt = 1, max_dt = 0
     , _step6(_eps, real(0))
     , _step10(_eps, real(0))
   {
@@ -107,6 +110,7 @@ namespace GeographicLib {
             Math::sq(y[3+1]) +
             Math::sq(y[3+2]) / _axes2n[2]) / u2;
     yp = vec6{y[3+0], y[3+1], y[3+2], f * up[0], f * up[1], f * up[2]};
+    ++_intsteps;
   }
 
   void TriaxialODE::Accel6N(const vec6& y, vec6& yp) const {
@@ -128,6 +132,7 @@ namespace GeographicLib {
           Math::sq(yp[1]) +
           Math::sq(yp[2]) / _axes2n[2]) / u2;
     yp[3+0] *= f; yp[3+1] *= f; yp[3+2] *= f;
+    ++_intsteps;
   }
 
   void TriaxialODE::Norm10(vec10& y) const {
@@ -147,6 +152,7 @@ namespace GeographicLib {
       y[3+0], y[3+1], y[3+2],
       f * up[0], f * up[1], f * up[2],
       y[7], -K * y[6], y[9], -K * y[8] };
+    ++_intsteps;
   }
 
   void TriaxialODE::Accel10N(const vec10& y, vec10& yp) const {
@@ -171,6 +177,7 @@ namespace GeographicLib {
     yp[3+0] *= f; yp[3+1] *= f; yp[3+2] *= f;
     yp[6+0] = y[6+1]; yp[6+1] = -K * y[6+0];
     yp[8+0] = y[8+1]; yp[8+1] = -K * y[8+0];
+    ++_intsteps;
   }
 
   pair<Math::real, Math::real>
@@ -217,6 +224,7 @@ namespace GeographicLib {
       if (_dense) {
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
         if (_extended) {
+          // x0, t0, dt0
           _dstep10.initialize(_y10, _s, 1/real(4));
           (void) _dstep10.do_step(fun10);
         } else {
@@ -389,7 +397,7 @@ namespace GeographicLib {
       _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
   }
 
-  void TriaxialODE::Reset() { _dir = 0; _totsteps += _nsteps; _nsteps = 0; }
+  void TriaxialODE::Reset() { _dir = 0; }
 
   void TriaxialODE::Reset(vec3 r1, vec3 v1) {
     _r1 = r1;
@@ -403,7 +411,6 @@ namespace GeographicLib {
     _bet1 = bet1; _omg1 = omg1; _alp1 = alp1;
     _t.elliptocart2(_bet1, _omg1, _alp1, _r1, _v1);
     Reset();
-    _totsteps = 0;
   }
 
   pair<Math::real, Math::real> TriaxialODE::CurrentDistance() const {

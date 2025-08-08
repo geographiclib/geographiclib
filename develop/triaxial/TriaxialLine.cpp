@@ -384,8 +384,8 @@ namespace GeographicLib {
     //   fx and fy are increasing functions
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
-    const bool debug = false, check = true;
-    const int maxit = 100;
+    const bool debug = false, check = false;
+    const int maxit = 200;
     const real tol = numeric_limits<real>::epsilon(),
       // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
       // too much bisection.  Example:

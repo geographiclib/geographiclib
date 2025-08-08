@@ -83,7 +83,7 @@ namespace GeographicLib {
     Angle _bet1, _omg1, _alp1;
     bool _extended, _dense, _normp;
     int _dir;
-    long _nsteps, _totsteps;
+    mutable long _nsteps, _intsteps;
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     dstep6 _dstep6;
     dstep10 _dstep10;
@@ -144,7 +144,9 @@ namespace GeographicLib {
     void Reset(vec3 r1, vec3 v1);
     void Reset(Angle bet1, Angle omg1, Angle alp1);
     long NSteps() const { return _nsteps; }
-    long TotalSteps() const { return _totsteps; }
+    void NSteps(long nsteps) const { _nsteps = nsteps; }
+    long IntSteps() const { return _intsteps; }
+    void IntSteps(long intsteps) const { _intsteps = intsteps; }
     std::pair<Math::real, Math::real> CurrentDistance() const;
     bool Extended() const { return _extended; }
     void Position1(vec3& r1, vec3& v1) const { r1 = _r1; v1 = _v1; }

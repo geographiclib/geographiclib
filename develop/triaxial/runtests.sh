@@ -223,3 +223,17 @@ l is new baseline
 Fix convergence issues with newt2 & testwgs84.
 
 m is new baseline
+
+mean ncoeffs
+r thresh = 9/8 13.1 261 XX
+s thresh = 7/8 13.2 261 XX
+p thresh = 1/4 17.9 261
+n thresh = 1/8 19.7 261
+o thresh = 1/16 22.0 261
+q thresh = -1/8 150.0 131073 XX
+
+BUILD3 problem
+echo -58 180 180 0.53733302127064567217 | ./Geod3Solve $OBL
+-90.00000000 -0.00000000 -180.00000000
+
+azi should be 0
