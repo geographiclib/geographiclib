@@ -114,6 +114,11 @@ namespace GeographicLib {
                countn, countb);
         // cout << "UV " << u2 << " " << v2 << "\n";
         phi2a = ang::radians(u2);
+        // u2 in in [-pi/2, pi/2].  With long doubles cos(pi/2) < 0 which leads
+        // to a switch in sheets in ellipsoidal coordinates.  Fix by setting
+        // cos(phi2a) = +0.
+        if (signbit(phi2a.c())) // Not triggered with doubles and quads
+          phi2a = ang(copysign(real(1), phi2a.s()), real(0), 0, true);
         psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;
@@ -121,8 +126,6 @@ namespace GeographicLib {
         phi2a = phi2a.reflect(signbit(_fic.phi0.c() * Ny),
                               signbit(_fic.phi0.c())).rebase(_fic.phi0);
         tht2a = ang::radians(- _fic.delta) + ang::cardinal(2 * sig2n.second);
-        // cout << "YY " << sig2 << " "
-        // << sig2n.first << " " << sig2n.second << "\n";
         alp2a = ang(_fic.Ex * real(0), _fic.Nx * parity, 0, true);
         /*
         ang psi2 = ang::radians(fpsi().rev(v2));
@@ -385,7 +388,7 @@ namespace GeographicLib {
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
     const bool debug = false, check = false;
-    const int maxit = 200;
+    const int maxit = 300;
     const real tol = numeric_limits<real>::epsilon(),
       // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
       // too much bisection.  Example:

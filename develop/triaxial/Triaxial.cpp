@@ -906,7 +906,7 @@ namespace GeographicLib {
     // require fa and fb to have opposite signs
 
     ang xm;                  // The return value
-    int cntn = 0, cntb = 0, maxcnt = 100;
+    int cntn = 0, cntb = 0, maxcnt = 200;
     bool trip = false;
     bool debug = false;
     // 25 iterations with line 498534 of testset.txt
