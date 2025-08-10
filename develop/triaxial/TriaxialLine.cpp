@@ -116,9 +116,10 @@ namespace GeographicLib {
         phi2a = ang::radians(u2);
         // u2 in in [-pi/2, pi/2].  With long doubles cos(pi/2) < 0 which leads
         // to a switch in sheets in ellipsoidal coordinates.  Fix by setting
-        // cos(phi2a) = +0.
+        // cos(phi2a) = +eps
         if (signbit(phi2a.c())) // Not triggered with doubles and quads
-          phi2a = ang(copysign(real(1), phi2a.s()), real(0), 0, true);
+          phi2a = ang(copysign(real(1), phi2a.s()),
+                      numeric_limits<real>::epsilon()/2048, 0, true);
         psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;

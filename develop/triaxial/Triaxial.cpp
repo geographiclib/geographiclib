@@ -214,13 +214,15 @@ namespace GeographicLib {
     } else {
       vec3 N, E;
       if (tx == 0) {
-        // At an oblate pole tx -> cos(bet)
-        N = vec3{-omg.c() * bet.s(), -omg.s() * bet.s(), 0};
-        E = vec3{-omg.s()          ,  omg.c()          , 0};
+        // At an oblate pole tx -> |cos(bet)|
+        real scb = signbit(bet.c()) ? -1 : 1;
+        N = vec3{-omg.c() * bet.s() * scb, -omg.s() * bet.s(), 0};
+        E = vec3{-omg.s()                ,  omg.c() * scb    , 0};
       } else if (tz == 0) {
-        // At a prolate pole tz -> sin(omg)
-        N = vec3{0, -bet.s()          , bet.c()          };
-        E = vec3{0,  bet.c() * omg.c(), bet.s() * omg.c()};
+        // At a prolate pole tz -> |sin(omg)|
+        real sso = signbit(omg.s()) ? -1 : 1;
+        N = vec3{0, -bet.s() * sso    , bet.c()                };
+        E = vec3{0,  bet.c() * omg.c(), bet.s() * omg.c() * sso};
       } else {
         // The general case
         N = vec3{ -_a * _k2 * bet.c() * bet.s() * omg.c() / tx,
