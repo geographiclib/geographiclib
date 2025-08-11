@@ -320,6 +320,7 @@ namespace GeographicLib {
       const zvals& max() const { return _s.back(); }
       int insert(zvals& t, int flag = 0);
       real bisect() const {
+        // return (min().z + max().z) / 2;
         // return z in the middle of biggest gap
         if (num() == 1)
           return min().z;

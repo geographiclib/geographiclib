@@ -88,6 +88,9 @@ namespace GeographicLib {
         // geodesics on biaxial ellipsoids.
         solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
                countn, countb);
+      // cout << "UV " << setprecision(22) << u2 << " " << v2 << "\n";
+      // cout << "FG " << fpsi()(u2) - ftht()(v2) - _fic.delta << " "
+      //      << gpsi()(u2) + gtht()(v2) - sig2 << "\n";
       tht2a = ang::radians(ftht().rev(v2));
       ang psi2 = ang::radians(fpsi().rev(u2));
       // Already normalized
@@ -178,34 +181,6 @@ namespace GeographicLib {
     }
     alp2a = alp2a.rebase(_fic.alp0);
     omg2a += ang::cardinal(1);
-    if (0) {
-      // Angle::rebase debug
-      ang
-        p1 = ang(+0.0, -1, 0, true),
-        p2 = ang(-0.0, -1, 1, true),
-        m1 = ang(-0.0, -1, 0, true),
-        m2 = ang(+0.0, -1, -1, true);
-      cout << "DD " << real(p1) << " " << real(p2) << " "
-           << real(m1) << " " << real(m2) << "\n";
-      cout << "PP "
-           << real(p1.rebase(p1)) << " "
-           << real(p2.rebase(p1)) << " " // bad
-           << real(m1.rebase(p1)) << " " // bad
-           << real(m2.rebase(p1)) << " "
-           << real(p1.rebase(p2)) << " "
-           << real(p2.rebase(p2)) << " "
-           << real(m1.rebase(p2)) << " "
-           << real(m2.rebase(p2)) << "\n";
-      cout << "MM "
-           << real(p1.rebase(m1)) << " "
-           << real(p2.rebase(m1)) << " "
-           << real(m1.rebase(m1)) << " "
-           << real(m2.rebase(m1)) << " "
-           << real(p1.rebase(m2)) << " "
-           << real(p2.rebase(m2)) << " " // bad
-           << real(m1.rebase(m2)) << " " // bad
-           << real(m2.rebase(m2)) << "\n";
-    }
   }
 
   void TriaxialLine::Position(real s12, real& bet2, real& omg2, real& alp2,
@@ -648,7 +623,7 @@ namespace GeographicLib {
       //   x0 = pa * xa + pb * xb
       //
       // where pa = gb/(gb - ga), pb = -ga/(gb - ga)
-       //
+      //
       // Let fx(xa) = fa, fy(xb) = fb, then a linear fit for fx(x) gives
       //
       //   f(x0) = pa * fa + pb * fb
@@ -678,9 +653,10 @@ namespace GeographicLib {
             ("Bad derivatives TriaxialLine::newt2");
         }
       }
-      bool cond1 = i < ibis + 2 ||
-        ((2*fabs(f) < oldf || 2*fabs(g) < oldg) ||
-         (2*fabs(dx) < olddx || 2*fabs(dy) < olddy)),
+      bool cond1 = den > 0 &&
+        (i < ibis + 2 ||
+         ((2*fabs(f) < oldf || 2*fabs(g) < oldg) ||
+          (2*fabs(dx) < olddx || 2*fabs(dy) < olddy))),
         cond2 = xn >= xa-xtol*tolmult && xn <= xb+xtol*tolmult &&
         yn >= ya-ytol*tolmult && yn <= yb+ytol*tolmult;
       if (cond1 && cond2) {
@@ -699,7 +675,7 @@ namespace GeographicLib {
         ++cntb;
         if (x == xn && y == yn) {
           if (debug)
-            cout << "break2\n";
+            cout << "break2 " << f << " " << g << "\n";
           break;
         }
         dxa = xn - x; dya = yn - y;
@@ -812,8 +788,6 @@ namespace GeographicLib {
                                  real f0, real g0) {
     bool debug = false;
     real x0 = 0, y0 = 0;
-    if (debug)
-      cout << "BOX0 " << xfg.z << " " << yfg.z << "\n";
     int xind = xset.insert(xfg), yind = yset.insert(yfg);
     if (debug) {
       cout << "BOXA " << xset.num() << " " << yset.num() << " "
@@ -825,8 +799,10 @@ namespace GeographicLib {
       zsetsdiag(xset, yset, f0, g0);
     }
     if (xind < 0 && yind < 0) return;
-    zvals xa = xset.min(), xb = xset.max(),
-      ya = yset.min(), yb = yset.max();
+    zvals xa[2] = {xset.min(), xset.min()},
+      xb[2] = {xset.max(), xset.max()},
+      ya[2] = {yset.min(), yset.min()},
+      yb[2] = {yset.max(), yset.max()};
     for (int i = 0; i < xset.num(); ++i) {
       const zvals& x = xset.val(i);
       for (int j = 0; j < yset.num(); ++j) {
@@ -852,87 +828,86 @@ namespace GeographicLib {
           //     /   g<0   \.
           //    /    ya     \.
           //   /    ind=2    \.
-          if (true) {
-            // Problem with
-            //   echo -11 165 0.865544228453134485 1.70392636779413409327 |
-            //     ./Geod3Solve $HU
-            // Pattern is
-            // BOXF ---+
-            // BOXF ---+
-            // BOXF ++++
 
-            // BOXG ..++
-            // BOXG --..
-            // BOXG --..
-
-            // Allowing equality sets
-            // xa/yb xa/yb ../yb ../yb
-            // xa/.. xa/.. xa/yb xb/ya
-            // ../ya ../ya xb/ya xb/ya
-
-            // Disallowing equality sets
-            //             ../yb ../yb
-            // xa/.. xa/..
-            // ../ya ../ya
-
-            if (f <= 0) {
-              if (g <= 0 && xa < x) xa = x;
-              if (g >= 0 && y < yb) yb = y;
+          // If the pattern is
+          //
+          // BOXF --+
+          // BOXF -++
+          // BOXF -++
+          //
+          // BOXG ..+
+          // BOXG ..+
+          // BOXG ---
+          //
+          // The, allowing equality (tight bounds) collapses the set to 1x1
+          // (the middle element).  This is clearly wrong since now we can't
+          // get f = 0.  We detect this by checking the values of f and g at
+          // the corners:
+          //
+          // f <= 0 at NW corner f >= 0 at SE corner
+          // g <= 0 at SW corner g >= 0 at NE corner
+          //
+          // If theses requirements fail, use bounds updated with just the
+          // center point i == xind && j == yind.
+          if (f <= 0) {
+            if (g <= 0 && xa[0] < x) xa[0] = x;
+            if (g >= 0 && y < yb[0]) yb[0] = y;
+            if (i == xind && j == yind) {
+              if (g <= 0 && xa[1] < x) xa[1] = x;
+              if (g >= 0 && y < yb[1]) yb[1] = y;
             }
-            if (f >= 0) {
-              if (g <= 0 && ya < y) ya = y;
-              if (g >= 0 && x < xb) xb = x;
-            }
-          } else {
-            if (f < 0) {
-              if (g < 0 && xa < x) xa = x;
-              if (g > 0 && y < yb) yb = y;
-            }
-            if (f > 0) {
-              if (g < 0 && ya < y) ya = y;
-              if (g > 0 && x < xb) xb = x;
+          }
+          if (f >= 0) {
+            if (g <= 0 && ya[0] < y) ya[0] = y;
+            if (g >= 0 && x < xb[0]) xb[0] = x;
+            if (i == xind && j == yind) {
+              if (g <= 0 && ya[1] < y) ya[1] = y;
+              if (g >= 0 && x < xb[1]) xb[1] = x;
             }
           }
         }
       }
     }
+    int k = 0;
+    for (; k < 2; ++k) {
+      // Check signs at corners
+      if ((xa[k].fz - yb[k].fz) - f0 <= 0 &&
+          (xb[k].fz - ya[k].fz) - f0 >= 0 &&
+          (xa[k].gz + ya[k].gz) - g0 <= 0 &&
+          (xb[k].gz + yb[k].gz) - g0 >= 0)
+        // corner constraints met
+        break;
+    }
+    int kk = min(k, 1);
+    if (debug) cout << "BOXK " << k << " " << xind << " " << yind << "\n";
     zvals t;
-    t = xa;
-    xset.insert(xa, -1);
-    if (!(t.z == xa.z && t.fz == xa.fz && t.gz == xa.gz ))
+    t = xa[kk];
+    xset.insert(xa[kk], -1);
+    if (!(t.z == xa[kk].z && t.fz == xa[kk].fz && t.gz == xa[kk].gz ))
       cout << "ERR XA\n";
-    t = xb;
-    xset.insert(xb, +1);
-    if (!(t.z == xb.z && t.fz == xb.fz && t.gz == xb.gz ))
+    t = xb[kk];
+    xset.insert(xb[kk], +1);
+    if (!(t.z == xb[kk].z && t.fz == xb[kk].fz && t.gz == xb[kk].gz ))
       cout << "ERR XB\n";
-    t = ya;
-    yset.insert(ya, -1);
-    if (!(t.z == ya.z && t.fz == ya.fz && t.gz == ya.gz ))
+    t = ya[kk];
+    yset.insert(ya[kk], -1);
+    if (!(t.z == ya[kk].z && t.fz == ya[kk].fz && t.gz == ya[kk].gz ))
       cout << "ERR YA\n";
-    t = yb;
-    yset.insert(yb, +1);
-    if (!(t.z == yb.z && t.fz == yb.fz && t.gz == yb.gz ))
+    t = yb[kk];
+    yset.insert(yb[kk], +1);
+    if (!(t.z == yb[kk].z && t.fz == yb[kk].fz && t.gz == yb[kk].gz ))
       cout << "ERR YB\n";
     if (debug) {
       cout << "BOXB " << xset.num() << " " << yset.num() << " "
            << xset.min().z - x0 << " " << xset.max().z - x0 << " "
            << yset.min().z - y0 << " " << yset.max().z - y0 << " "
-           << xa.z - x0 << " " << xb.z - x0 << " "
-           << ya.z - y0 << " " << yb.z - y0 << "\n";
+           << xa[kk].z - x0 << " " << xb[kk].z - x0 << " "
+           << ya[kk].z - y0 << " " << yb[kk].z - y0 << "\n";
       zsetsdiag(xset, yset, f0, g0);
     }
-    real
-      f01 = (xset.min().fz - yset.max().fz) - f0,
-      f10 = (xset.max().fz - yset.min().fz) - f0,
-      g00 = (xset.min().gz + yset.min().gz) - g0,
-      g11 = (xset.max().gz + yset.max().gz) - g0;
-    // Allow equality on the initial points
-    if (false && !( f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11 )) {
-      cout << f01 << " " << f10 << " "
-           << g00 << " " << g11 << "\n";
+    if (k == 2)
       throw GeographicLib::GeographicErr
-        ("Bad corner point TriaxialLine::zsetsinsert");
-    }
+        ("Bad corner points TriaxialLine::zsetsinsert");
   }
 
   void TriaxialLine::zsetsdiag(const zset& xset, const zset& yset,
