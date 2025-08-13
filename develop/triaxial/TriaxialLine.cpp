@@ -122,7 +122,7 @@ namespace GeographicLib {
         // cos(phi2a) = +eps
         if (signbit(phi2a.c())) // Not triggered with doubles and quads
           phi2a = ang(copysign(real(1), phi2a.s()),
-                      numeric_limits<real>::epsilon()/2048, 0, true);
+                      numeric_limits<real>::epsilon()/(1<<11), 0, true);
         psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;
@@ -386,7 +386,7 @@ namespace GeographicLib {
       yset(zvals(ya, fy(ya), gy(ya)),
            zvals(yb, fy(yb), gy(yb)));
     // x = xset.bisect(), y = yset.bisect();
-    auto p = zsetsbisect(xset, yset, f0, g0);
+    auto p = zsetsbisect(xset, yset, f0, g0, false);
     x = p.first; y = p.second;
     if (check) {
       // A necessary condition for a root is
@@ -665,12 +665,13 @@ namespace GeographicLib {
         bis = false;
         if (!(fabs(dx) > xtol || fabs(dy) > ytol) /* && i > ibis + 2 */) {
           if (debug)
-            cout << "break1 " << scientific << dx << " " << dy << "\n";
+            cout << "break1 " << scientific << dx << " " << dy << " "
+                 << f << " " << g << "\n";
           break;
         }
       } else {
         // xn = xset.bisect(); yn = yset.bisect();
-        p = zsetsbisect(xset, yset, f0, g0);
+        p = zsetsbisect(xset, yset, f0, g0, false);
         xn = p.first; yn = p.second;
         ++cntb;
         if (x == xn && y == yn) {
@@ -710,6 +711,7 @@ namespace GeographicLib {
       *countn += cntn;
     if (countb)
       *countb += cntb;
+    // cout << "CNT " << cntn << " " << cntb << "\n";
     if (debug) {
       cout << "CNT " << cntn << " " << cntb << "\n";
       cout << "XY " << setprecision(18) << x << " " << y << "\n";
@@ -786,7 +788,7 @@ namespace GeographicLib {
   void TriaxialLine::zsetsinsert(zset& xset, zset& yset,
                                  zvals& xfg, zvals& yfg,
                                  real f0, real g0) {
-    bool debug = false;
+    const bool debug = false;
     real x0 = 0, y0 = 0;
     int xind = xset.insert(xfg), yind = yset.insert(yfg);
     if (debug) {
@@ -940,10 +942,32 @@ namespace GeographicLib {
 
   pair<Math::real, Math::real>
   TriaxialLine::zsetsbisect(const zset& xset, const zset& yset,
-                            real f0, real g0) {
+                            real f0, real g0, bool secant) {
     if (true)
       return pair<real, real>(xset.bisect(), yset.bisect());
-    else {
+    else if (secant && xset.num() <= 2 && yset.num() <= 2) {
+      // Use secant solution
+      real
+        dx = xset.max().z - xset.min().z,
+        dy = yset.max().z - yset.min().z,
+        fx1 = (xset.max().fz - xset.min().fz) / (dx == 0 ? 1 : dx),
+        fy1 = (yset.max().fz - yset.min().fz) / (dy == 0 ? 1 : dy),
+        gx1 = (xset.max().gz - xset.min().gz) / (dx == 0 ? 1 : dx),
+        gy1 = (yset.max().gz - yset.min().gz) / (dy == 0 ? 1 : dy),
+        den = fx1*gy1 + fy1*gx1,
+        f00 = (xset.min().fz + yset.min().fz) - f0,
+        g00 = (xset.min().gz + yset.min().gz) - g0,
+        x = -gy1*f00 - fy1*g00,
+        y =  gx1*f00 - fx1*g00;
+      if (den <= 0) den = 1;
+      x /= den;
+      y /= den;
+      if (x <= 0 || x >= 1) x = 1/real(2);
+      if (y <= 0 || y >= 1) y = 1/real(2);
+      x = xset.min().z + x * dx;
+      y = yset.min().z + y * dy;
+      return pair<real, real>(x, y);
+    } else {
       // A necessary condition for a root is
       //   f01 <= 0 <= f10
       //   g00 <= 0 <= g11

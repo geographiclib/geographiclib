@@ -573,7 +573,7 @@ namespace GeographicLib {
           lf.ArcPos0(fic, (omg2-omg1).base(), bet2a, omg2a, alp2, false) :
           lf.Hybrid(fic, bet2, bet2a, omg2a, alp2);
         if (_debug) cout << "AAA " << real(alp2) << " " << real(bet2a) << "\n";
-        if (_biaxial && _prolate && signbit(bet2a.c()))
+        if (_prolate && signbit(bet2a.c()))
           alp2.reflect(true,true);
         if (_debug) msg = "A.c.4 other meridional";
         backside = signbit(bet2a.c());

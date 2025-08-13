@@ -95,9 +95,12 @@ void errreport(const Triaxial& t,
   typedef Math::real real;
   typedef Angle ang;
   bool debug = false, invp = true, invdirp = true,
-    dirp = true;
+    dirp = true, swapp = false;
   // invp = false;
+  // dirp = false;
+  // swapp = true;
   int num = 0;
+  if (swapp) swap(omg1, omg2);
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else
