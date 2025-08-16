@@ -32,6 +32,7 @@ namespace GeographicLib {
     , _biaxp(true)
     , _debug(false)
     , _hybridalt(true)
+    , _swapomg(false)
     , _ellipthresh(1/real(8))
   {
     real s = (_a - _c) * (_a + _c);
@@ -65,6 +66,7 @@ namespace GeographicLib {
     , _biaxp(true)
     , _debug(false)
     , _hybridalt(true)
+    , _swapomg(false)
     , _ellipthresh(1/real(8))
   {
     real ksum = _k2 + _kp2;
@@ -268,10 +270,6 @@ namespace GeographicLib {
     //       else put bet in [-90, 90], omg in [-180, 180]
     bool flip1 = AngNorm(bet1, omg1, _prolate),
       flip2 = AngNorm(bet2, omg2, _prolate);
-    // oblate, set these to bet[12].c() == 0
-    // prolate, set these to omg[12].s() == 0
-    bool umb1 = (_prolate || bet1.c() == 0) && (_oblate || omg1.s() == 0),
-      umb2 = (_prolate || bet2.c() == 0) && (_oblate || omg2.s() == 0);
     bool swap12;
     {
       // For prolate, swap based on omg, switch 1 & 2 because poles are at
@@ -292,7 +290,6 @@ namespace GeographicLib {
     if (swap12) {
       swap(bet1, bet2);
       swap(omg1, omg2);
-      swap(umb1, umb2);
     }
     if (_oblate) {
       // Rotate, subtracting omg1 from omg[12], so omg1 = 0
@@ -305,6 +302,12 @@ namespace GeographicLib {
       bet2 = bet2.base();
       bet1 = ang::cardinal(-1);
     }
+
+    bool swapomg = _swapomg &&
+      // Don't want the swap to make a new umbilical point
+      !(bet1.c() == 0 && omg2.s() == 0) &&
+      fabs(omg2.s()) < fabs(omg1.s());
+    if (swapomg) swap(omg1, omg2);
     // Now |bet1| >= |bet2|
     bool flipz = bet1.s() > 0;
     if (flipz) {                // Not needed for prolate, bet1 already -90
@@ -333,9 +336,8 @@ namespace GeographicLib {
     // Point 1 is already done with flipy.  (Maybe skip for oblate?)
     if (flipomg) omg2.reflect(true);
 
-    // Reset umb[12] w/o treating prolate/oblate specially.
-    umb1 = bet1.c() == 0 && omg1.s() == 0;
-    umb2 = bet2.c() == 0 && omg2.s() == 0;
+    bool umb1 = bet1.c() == 0 && omg1.s() == 0,
+      umb2 = bet2.c() == 0 && omg2.s() == 0;
 
     // Now bet1 <= 0, bet1 <= bet2 <= -bet1, 0 <= omg1 <= 90
     //
@@ -775,13 +777,14 @@ namespace GeographicLib {
     s12 = lg.dist(gic, d);
 
     if (_debug)
-      cout << "FLIPS " << flip1 << flip2 << flipz << flipy << flipx << flipomg
-           << "\n";
+      cout << "FLIPS " << flip1 << flip2 << swap12 << swapomg << flipz << flipy << flipx << flipomg
+           << lf.transpolar() << "\n";
     if (_debug)
       cout << "A "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
-    // Undo switches in reverse order flipz, swap12, flip1
+    // Undo switches in reverse order flipomg flipx flipy flipz swapomg swap12
+    // flip2 flip1
     if (flipomg) {
       omg2.reflect(true);
       alp2.reflect(true, true);
@@ -831,6 +834,30 @@ namespace GeographicLib {
       cout << "E "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
+    if (0)
+      cout << "DD " << swapomg << " " << lf.transpolar() << " "
+           << signbit(omg1.s()) << " " << signbit(omg2.s()) << " "
+           << signbit(omg1.c()) << " " << signbit(omg2.c()) << " "
+           << signbit(bet1.s()) << " " << signbit(bet2.s()) << " "
+           << signbit(bet1.c()) << " " << signbit(bet2.c()) << " "
+           << backside << "\n";
+    if (swapomg) {
+      swap(omg1, omg2);
+      ang
+        t = ang(copysign(sqrt(fmax(real(0),
+                                   _kp2*Math::sq(omg1.s()) + lf.gamma())),
+                         lf.transpolar() ? -alp2.s() : -alp1.s()),
+                copysign(sqrt(fmax(real(0),
+                                   _k2*Math::sq(bet1.c()) - lf.gamma())),
+                         alp1.c()));
+      alp2 = ang(copysign(sqrt(fmax(real(0),
+                                    _kp2*Math::sq(omg2.s()) + lf.gamma())),
+                          lf.transpolar() ? -alp1.s() : -alp2.s()),
+                 copysign(sqrt(fmax(real(0),
+                                    _k2*Math::sq(bet2.c()) - lf.gamma())),
+                          alp2.c()));
+      alp1 = t;
+    }
     if (swap12) {
       swap(bet1, bet2);
       swap(omg1, omg2);

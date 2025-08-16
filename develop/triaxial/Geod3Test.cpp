@@ -97,6 +97,7 @@ void errreport(const Triaxial& t,
   bool debug = false, invp = true, invdirp = true,
     dirp = true, swapp = false;
   // invp = false;
+  // invdirp = false;
   // dirp = false;
   // swapp = true;
   int num = 0;
@@ -304,7 +305,8 @@ int main(int argc, const char* const argv[]) {
     int div = 1;
     {
       bool hybridp = false, odep = false, reportp = false,
-        odetest = false, extended = false, dense = false, normp = false;
+        odetest = false, extended = false, dense = false, normp = false,
+        swapomg = false;
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
       for (int m = 1; m < argc; ++m) {
         string arg(argv[m]);
@@ -341,6 +343,8 @@ int main(int argc, const char* const argv[]) {
           reportp = true;
         else if (arg == "--odetest")
           odetest = true;
+        else if (arg == "--swapomg")
+          swapomg = true;
         else if (arg == "-x")
           extended = true;
         else if (arg == "--eps") {
@@ -374,6 +378,7 @@ int main(int argc, const char* const argv[]) {
       // testhu.txt   -e 1 7577279780/1130005142289 1942065235 6378137
       // equiv to     -t 6378172/6378102 1 6356752/6378102
       Triaxial t = e2 < 0 ? Triaxial(a, b, c) : Triaxial(b, e2, k2, kp2);
+      t.swapomg(swapomg);
       // Triaxial t(1, 1, 1/real(2));
       // Triaxial t(2, 1, 1);
       if (hybridp) {

@@ -57,7 +57,8 @@ namespace GeographicLib {
     bool _umbalt,               // how coordinates wrap with umbilical lines
       _biaxp,                   // special treatment for biaxial non-meridional
       _debug,                   // print out diagnostics
-      _hybridalt;               // favor hybrid solution in terms of omg
+      _hybridalt,               // favor hybrid solution in terms of omg
+      _swapomg;                 // allow swapping of omega{1,2}
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
     mutable std::shared_ptr<TriaxialLine> _umbline;
@@ -99,6 +100,8 @@ namespace GeographicLib {
     void debug(bool debug) { _debug = debug; }
     bool hybridalt() const { return _hybridalt; }
     void hybridalt(bool hybridalt) { _hybridalt = hybridalt; }
+    bool swapomg() const { return _swapomg; }
+    void swapomg(bool swapomg) { _swapomg = swapomg; }
     real ellipthresh() const { return _ellipthresh; }
     void ellipthresh(real ellipthresh) { _ellipthresh = ellipthresh; }
     static bool AngNorm(Angle& bet, Angle& omg, Angle& alp,

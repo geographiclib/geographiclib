@@ -1175,15 +1175,11 @@ namespace GeographicLib {
       phi2a = ang(nup() * psi2.s(),
                   fic.phi0.c() * hypot(psi2.c(), nu() * psi2.s()),
                   0, true).rebase(fic.phi0);
-      if (!transpolar() && kxp2() == 0 && !psip && gammax() == 0)
-        alp2a = ang(fic.Ex * fabs(sin(u2x)), fic.phi0.c() * cos(u2x));
-      else {
-        real s = fic.Ex * hypot(kx() * nu(), kxp() * tht2a.c()),
-          c = fic.phi0.c() * kx() * nup() * psi2.c();
-        if (s == 0 && c == 0)
-          (transpolar() ? s : c) = 1;
-        alp2a = ang(s, c);
-      }
+      real s = fic.Ex * hypot(kx() * nu(), kxp() * tht2a.c()),
+        c = fic.phi0.c() * kx() * nup() * psi2.c();
+      if (s == 0 && c == 0)
+        (transpolar() ? s : c) = 1;
+      alp2a = ang(s, c);
       ret.phiw2 = v2;
       ret.thtw2 = u2;
     } else if (gammax() == 0) {
