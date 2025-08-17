@@ -1,3 +1,5 @@
+// Generate test data for triaxial ellipsoid from WGS84 test data.
+
 #include <iostream>
 #include <iomanip>
 #include <string>
@@ -11,7 +13,8 @@ using namespace std;
 
 string nicestr(Math::real x, int prec, bool azi = false) {
   typedef Math::real real;
-  static const real eps = pow(real(10), -20);
+  // Extra real case because pow(float, int) returns a double
+  static const real eps = real(pow(real(10), -20));
   Math::real y = round(x);
   if (fabs(x - y) <= eps)
     x = azi && y == -180 ? 180 : y + real(0);
@@ -36,7 +39,9 @@ Math::real redlat(Math::real lat, Math::real n) {
 }
 
 Math::real rnd(Math::real ang) {
-  return round(1000000000000 * ang) / 1000000000000;
+  typedef Math::real real;
+  // Real casts because 1000000000000 isn't exactly representable as a float.
+  return round(real(1000000000000) * ang) / real(1000000000000);
 }
 
 int main() {
@@ -45,34 +50,6 @@ int main() {
     Utility::set_digits();
     real a = Constants::WGS84_a(),
       f = Constants::WGS84_f();
-    {
-      Geodesic gs(a, f, false);
-      Geodesic ge(a, f, true);
-      AuxLatitude aux(a, f);
-      int n = 100000;
-      real q;
-      gs.Inverse(0, 0, 90, 0, q);
-      q /= 90;
-      cout << fixed;
-      for (int i = 0; i <= 90 * n; ++i) {
-        real phi = real(i)/n;
-        real s12s, s12e;
-        gs.Inverse(0, 0, phi, 0, s12s);
-        ge.Inverse(0, 0, phi, 0, s12e);
-        real mus = aux.Convert(AuxLatitude::GEOGRAPHIC,
-                               AuxLatitude::RECTIFYING,
-                               phi, false) * q,
-          mue = aux.Convert(AuxLatitude::GEOGRAPHIC,
-                            AuxLatitude::RECTIFYING,
-                            phi, true) * q;
-        int l = int(floor(s12e));
-        cout << setprecision(5) << phi << " "
-             << l << " " << setprecision(12)
-             << s12e-l << " " << s12s-l << " "
-             << mue-l << " " << mus-l << "\n";
-      }
-      return 0;
-    }
     // f = 1/298.257223563
     a = 1;
     f = 124 / ( sqrt(real(340804677)) + 18523 );
@@ -95,7 +72,7 @@ int main() {
            << nicestr(azi1, prec, true) << " "
            << nicestr(bet2, prec) << " " << nicestr(lon2, prec) << " "
            << nicestr(azi2, prec, true) << " "
-           << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " " 
+           << nicestr(s12, prec+2) << " " << nicestr(m12, prec+2) << " "
            << nicestr(M12, prec+2) << " " << nicestr(M21, prec+2) << "\n";
     }
   }

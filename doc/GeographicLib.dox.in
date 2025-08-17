@@ -4713,7 +4713,7 @@ geodesics</a>).
    \f$\alpha_1\f$ may be chosen.
  - If the points are neighboring umbilical points, the shortest path
    lies on the ellipse \f$Y = 0\f$.
- - If only one point is an umbilicial point, the azimuth at the
+ - If only one point is an umbilical point, the azimuth at the
    non-umbilical point is found using the generalization of Clairaut's
    equation (given above) with \f$\gamma = 0\f$.
  - Treat the cases where the geodesic might follow a line of constant

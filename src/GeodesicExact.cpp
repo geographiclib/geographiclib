@@ -555,10 +555,7 @@ namespace GeographicLib {
       // 0.  Test case was
       //
       //    echo 20.001 0 20.001 0 | GeodSolve -i
-      //
-      // In fact, we will have sig12 > pi/2 for meridional geodesic which is
-      // not a shortest path.
-      if (sig12 < 1 || m12x >= 0) {
+      if (sig12 < tol2_ || m12x >= 0) {
         // Need at least 2, to handle 90 0 90 180
         if (sig12 < 3 * tiny_ ||
             // Prevent negative s12 or m12 for short lines

@@ -413,11 +413,6 @@ configure_file (
   include/GeographicLib/Config.h
   @ONLY)
 
-if (MPREAL_FIXED_PRECISION LESS 0)
-  message (ERROR
-    "MPREAL_FIXED_PRECISION must be a non-negative integer")
-endif ()
-
 # The documentation depends on doxygen.
 if (BUILD_DOCUMENTATION)
   set (DOXYGEN_SKIP_DOT ON)

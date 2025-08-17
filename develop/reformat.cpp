@@ -342,7 +342,7 @@ int main(int argc, char* argv[]) {
             N = 12; N1 = 12;
           } else if (model == "wmmhr2025") {
             N = 133; N1 = 133;
-          } else { 
+          } else {
             std::string mm;
             if (!(is >> mm >> mm >> N >> N1))
               throw std::runtime_error("Short read on header");

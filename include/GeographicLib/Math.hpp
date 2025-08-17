@@ -528,7 +528,7 @@ namespace GeographicLib {
      * @return \e x if it lies in [<i>a</i>, <i>b</i>]; otherise return the
      *   nearest boundary value.
      *
-     * Requires \e a &lt; \e b.  Unlike std::clamp, \e x can be a NaN (and
+     * Requires \e a &le; \e b.  Unlike std::clamp, \e x can be a NaN (and
      * this is then returned).
      **********************************************************************/
     template<typename T> static T clamp(T x, T a, T b);
