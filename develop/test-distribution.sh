@@ -36,7 +36,7 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.6
+VERSION=2.5.1
 SUFFIX=-alpha
 DISTVERSION=$VERSION$SUFFIX
 BRANCH=devel

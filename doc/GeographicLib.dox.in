@@ -7757,11 +7757,17 @@ git repository for GeographicLib</a>.
      splits as necessary).
    - Improve documentation for Intersect class + tool to treat case of
      equally close intersectons.
+   - Add Math::clamp.
 \endif
 
- - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
+ - <a href="https://geographiclib.sourceforge.io/C++/2.5.1">Version 2.5.1</a>
    (released 2025-mm-dd)
-   - Add Math::clamp.
+   - Fix bug in geodesic inverse problem with very prolate ellipsoids.
+     For \e f \lt &minus;2, a meridional path was incorrectly returned
+     in some cases for two points on the same meridian.  This affected
+     both the series and exact solutions.  (Or course, the series
+     solution is inaccurate for ellipsoids this eccentric.)
+   - Minor tweak to Math::atan2d to improve accuracy.
    - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
      fixed precision.
    - Document that cmake option `-D BINDIR=OFF` removes `tools` from the
