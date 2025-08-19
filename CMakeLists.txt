@@ -9,7 +9,7 @@ set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
 endif ()
-set (PROJECT_VERSION_SUFFIX "-alpha")
+set (PROJECT_VERSION_SUFFIX "")
 set (PROJECT_FULLVERSION ${PROJECT_VERSION}${PROJECT_VERSION_SUFFIX})
 
 if (DEFINED CPACK_PACKAGE_VERSION_COUNT)
@@ -50,7 +50,7 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 26)
-set (LIBVERSION_BUILD 26.1.1)
+set (LIBVERSION_BUILD 26.1.2)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -535,7 +535,9 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer)/"
   "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
   "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
-  "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
+  "${PROJECT_SOURCE_DIR}/autogen\\\\.sh\$"
+  "${PROJECT_SOURCE_DIR}/include/mpreal\\\\.h\$"
+  "${PROJECT_SOURCE_DIR}/maxima/auxvals40\\\\.mac\$"
   "${PROJECT_SOURCE_DIR}/(makefile-admin|HOWTO-RELEASE.txt)\$")
 set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 

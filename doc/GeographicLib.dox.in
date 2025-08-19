@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2025-mm-dd
+\date 2025-08-20
 
 \section abstract Abstract
 
@@ -7469,10 +7469,14 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires:
    - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-     (version 3.6.9, dated 2022-01-18, or later; version 3.6.9 also
-     requires the fixes given in pull requests #15),
+     (version 3.7.1 or later),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
      or later, Visual Studio 12 2013 or later).
+   .
+   Setting <code>GEOGRAPHICLIB_PRECISION</code> to a value larger than 5
+   uses mpfr::mpreal in "fixed precision" mode.  This requires pull
+   request https://github.com/advanpix/mpreal/pull/28 and you must call
+   Utility::set_digits with the same value.
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
    to respect these.
  - The indicated precision is used for <b>all</b> floating point
@@ -7761,9 +7765,9 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.5.1">Version 2.5.1</a>
-   (released 2025-mm-dd)
+   (released 2025-08-20)
    - Fix bug in geodesic inverse problem with very prolate ellipsoids.
-     For \e f \lt &minus;2, a meridional path was incorrectly returned
+     For \e f &lt; &minus;2, a meridional path was incorrectly returned
      in some cases for two points on the same meridian.  This affected
      both the series and exact solutions.  (Or course, the series
      solution is inaccurate for ellipsoids this eccentric.)
@@ -7772,7 +7776,7 @@ git repository for GeographicLib</a>.
      fixed precision.
    - Document that cmake option `-D BINDIR=OFF` removes `tools` from the
      default `all` target for `make`.
-   - WARNING: C++17 compliant compiler will be required for the next
+   - <b>WARNING:</b> C++17 compliant compiler will be required for the next
      release.  Support for builds with Visual Studio 14 (2015) will then
      stop.
 

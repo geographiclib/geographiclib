@@ -110,16 +110,18 @@ Update NEWS
 Set date in NEWS and GeographicLib.dox.in
 Commit to git
 run develop/test-distribution.sh
+  check library so versions cmake vs configure
+  compare files.[xy]
 run windows build
 copy windows installers to data-distrib/distrib-C++
 fix permissions on installers
 remove alpha/rc versions of installers
-switch C++/doc link to latest version
 In build directory:
   make clean
   make -j10 all
   make stage-{doc,dist}
   make deploy-{doc,dist}
+switch C++/doc link to latest version
 checkin and tag release branch & push
 tag main branch
 
@@ -128,14 +130,15 @@ update binaries for cgi applications
   ssh -t karney,geographiclib@shell.sourceforge.net create
   update VERSION in compile.sh and compile
 
+TEMP=/scratch/geographiclib-dist
+VERSION=2.5.1
+
 Local install
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 
 set default downloads for distrib-C++ on sourceforge
 
 post changes on sourceforge news + email to geographiclib-announce@lists.sourceforge.net
-
-VERSION=2.5
 
 Brew...
 

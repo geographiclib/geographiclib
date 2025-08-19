@@ -21,7 +21,7 @@ dist-hook:
 		$(distdir)/doc/GeographicLib.dox \
 		$(distdir)/include/GeographicLib/Config.h
 	find $(distdir)/maxima -type f -name '*.lsp' | xargs rm -rf
-	find $(distdir)/wrapper -mindepth 2 -type d | xargs rm -rf
+	find $(distdir)/wrapper -mindepth 3 -type d | xargs rm -rf
 	find $(distdir)/wrapper -type f -name '*.o' -o -name '*.mex*' | \
 		xargs rm -f
 	find $(distdir) \
