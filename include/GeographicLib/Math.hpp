@@ -519,6 +519,21 @@ namespace GeographicLib {
     template<typename T> static T hypot3(T x, T y, T z);
 
     /**
+     * Implement work-alike to C++17 clamp function
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @param[in] a
+     * @param[in] b
+     * @return \e x if it lies in [<i>a</i>, <i>b</i>]; otherise return the
+     *   nearest boundary value.
+     *
+     * Requires \e a &le; \e b.  Unlike std::clamp, \e x can be a NaN (and
+     * this is then returned).
+     **********************************************************************/
+    template<typename T> static T clamp(T x, T a, T b);
+
+    /**
      * The NaN (not a number)
      *
      * @tparam T the type of the returned value.

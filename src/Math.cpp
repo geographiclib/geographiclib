@@ -194,9 +194,7 @@ namespace GeographicLib {
     sincosd(x, s, c);
     // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1950.pdf
     T r = s / c;  // special values from F.10.1.14
-    // With C++17 this becomes clamp(s / c, -overflow, overflow);
-    // Use max/min here (instead of fmax/fmin) to preserve NaN
-    return min(max(r, -overflow), overflow);
+    return clamp(r, -overflow, overflow);
   }
 
   template<typename T> T Math::atan2d(T y, T x) {
@@ -280,6 +278,11 @@ namespace GeographicLib {
 #endif
   }
 
+  template<typename T> T Math::clamp(T x, T a, T b) {
+    // Use max/min here (instead of fmax/fmin) to preserve NaN
+    return min(max(x, a), b);
+  }
+
   template<typename T> T Math::NaN() {
 #if defined(_MSC_VER)
     return numeric_limits<T>::has_quiet_NaN ?
@@ -322,6 +325,7 @@ namespace GeographicLib {
   template T    GEOGRAPHICLIB_EXPORT Math::taupf        <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::tauf         <T>(T, T);         \
   template T    GEOGRAPHICLIB_EXPORT Math::hypot3       <T>(T, T, T);      \
+  template T    GEOGRAPHICLIB_EXPORT Math::clamp        <T>(T, T, T);      \
   template T    GEOGRAPHICLIB_EXPORT Math::NaN          <T>();             \
   template T    GEOGRAPHICLIB_EXPORT Math::infinity     <T>();
 

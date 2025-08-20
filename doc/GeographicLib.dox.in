@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2025-08-20
+\date 2025-mm-dd
 
 \section abstract Abstract
 
@@ -7763,6 +7763,9 @@ git repository for GeographicLib</a>.
      equally close intersectons.
    - Add Math::clamp.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.5.1">Version 2.6</a>
+   (released 2025-mm-dd)
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.5.1">Version 2.5.1</a>
    (released 2025-08-20)

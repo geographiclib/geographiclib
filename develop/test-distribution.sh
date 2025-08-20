@@ -36,10 +36,10 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.5.1
-SUFFIX=
+VERSION=2.6
+SUFFIX=-alpha
 DISTVERSION=$VERSION$SUFFIX
-BRANCH=main
+BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 if test `hostname` = petrel; then
     DEVELSOURCE=$HOME/geographiclib
@@ -96,7 +96,7 @@ rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
 
 # for ver in 10 11 12 14 15 16; do
-for ver in 14 15 16 17; do
+for ver in 15 16 17; do
     for arch in win32 x64; do
         pkg=vc$ver-$arch
         gen="Visual Studio $ver"
@@ -104,7 +104,7 @@ for ver in 14 15 16 17; do
         # N.B. update CPACK_NSIS_INSTALL_ROOT in CMakeLists.txt and
         # update documentation examples if VS version for binary
         # installer changes.
-        test "$ver" = 14 && installer=y
+        test "$ver" = 15 && installer=y
         (
             echo "#! /bin/sh -exv"
             echo echo ========== cmake $pkg ==========
