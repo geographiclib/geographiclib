@@ -11,6 +11,7 @@
 #include <limits>
 #include <string>
 #include <GeographicLib/Math.hpp>
+#include <GeographicLib/Utility.hpp>
 #include <GeographicLib/Geodesic.hpp>
 #include <GeographicLib/Intersect.hpp>
 
@@ -76,6 +77,7 @@ int checkcoincident1() {
 }
 
 int main() {
+  Utility::set_digits();
   int n = 0;
   n += checkcoincident1();
   if (n) {

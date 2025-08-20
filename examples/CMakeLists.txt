@@ -100,7 +100,7 @@ else ()
   set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
-find_package (GeographicLib 2.5 REQUIRED)
+find_package (GeographicLib 2.5.1 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
 
 set (CMAKE_CXX_STANDARD 14)
@@ -110,12 +110,12 @@ option (USE_BOOST_FOR_EXAMPLES
   "Look for Boost library when compiling examples" ON)
 
 if (USE_BOOST_FOR_EXAMPLES)
-  # quad precision numbers appeared in Boost 1.54.  Various
-  # workarounds stopped being needed with Boost 1.64.
-  find_package (Boost 1.64 COMPONENTS serialization)
+  # The earliest Boost version to include
+  # https://github.com/boostorg/multiprecision/pull/389
+  find_package (Boost 1.79 CONFIG COMPONENTS serialization)
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.64)
+    find_package (Boost 1.79 CONFIG)
   endif ()
 endif ()
 

@@ -184,6 +184,7 @@ static int Planimeter29() {
 }
 
 int main() {
+  Utility::set_digits();
   int n = 0, i;
 
   i = Planimeter15(); n += i;

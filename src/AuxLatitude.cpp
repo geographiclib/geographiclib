@@ -1312,7 +1312,7 @@ namespace GeographicLib {
           d *= _n;
         }
       }
-      // assert (o == ptrs[AUXNUMBER * auxout + auxin + 1])
+      // assert(o == ptrs[AUXNUMBER * auxout + auxin + 1]);
     }
   }
 

@@ -36,7 +36,7 @@ elseif (MSVC AND NOT (
   # Reject if there's a mismatch in MSVC compiler versions.
   set (REASON "MSVC_TOOLSET_VERSION = @MSVC_TOOLSET_VERSION@")
   set (PACKAGE_VERSION_UNSUITABLE TRUE)
-elseif (GEOGRAPHICLIB_PRECISION MATCHES "^[1-5]\$" AND NOT (
+elseif (GEOGRAPHICLIB_PRECISION MATCHES "^[1-9][0-9]*\$" AND NOT (
       GEOGRAPHICLIB_PRECISION EQUAL @GEOGRAPHICLIB_PRECISION@ ))
   # Reject if the user asks for an incompatible precsision.
   set (REASON "GEOGRAPHICLIB_PRECISION = @GEOGRAPHICLIB_PRECISION@")

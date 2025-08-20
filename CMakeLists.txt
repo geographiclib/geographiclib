@@ -4,7 +4,7 @@ project (GeographicLib)
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
 set (PROJECT_VERSION_MINOR 5)
-set (PROJECT_VERSION_PATCH 0)
+set (PROJECT_VERSION_PATCH 1)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
@@ -50,7 +50,7 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 26)
-set (LIBVERSION_BUILD 26.1.1)
+set (LIBVERSION_BUILD 26.1.2)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -194,7 +194,8 @@ endif ()
 
 # Installation directories.  An empty string or "OFF" disables
 # installation of that component.  These are all relative to
-# CMAKE_INSTALL_PREFIX.
+# CMAKE_INSTALL_PREFIX.  BINDIR=OFF has the side effect of removing the
+# building of tools from the default "all" make target.
 
 # Installation is to ${INCDIR}/GeographicLib
 set (INCDIR "include" CACHE STRING "Where to install header files")
@@ -279,6 +280,9 @@ if (MSVC)
   # Turn on parallel builds for Visual Studio
   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++latest /MP")
 else ()
+  # Don't treat creation of NaNs as exceptions.
+  # N.B., flags -fno-rounding-math -fno-signaling-nans included by default
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-trapping-math -fno-math-errno")
   set (FLOAT_CONVERSION_FLAG "-Wfloat-conversion")
   check_cxx_compiler_flag (${FLOAT_CONVERSION_FLAG} FLOAT_CONVERSION)
   if (NOT FLOAT_CONVERSION)
@@ -286,16 +290,6 @@ else ()
   endif ()
   set (CMAKE_CXX_FLAGS
     "${CMAKE_CXX_FLAGS} -Wall -Wextra ${FLOAT_CONVERSION_FLAG}")
-endif ()
-if (CONVERT_WARNINGS_TO_ERRORS)
-  if (MSVC)
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
-    set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
-    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /WX")
-    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /WX")
-  else ()
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
-  endif ()
 endif ()
 
 # Tell Intel compiler to do arithmetic accurately.  This is needed to
@@ -309,6 +303,17 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
   else ()
     set (CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} -fp-model precise -diag-disable=11074,11076")
+  endif ()
+endif ()
+
+if (CONVERT_WARNINGS_TO_ERRORS)
+  if (MSVC)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /WX")
+    set (CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS} /WX")
+    set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /WX")
+    set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /WX")
+  else ()
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror")
   endif ()
 endif ()
 
@@ -327,7 +332,9 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
   if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    find_package (Boost 1.70 CONFIG)
+    # The earliest Boost version to include
+    # https://github.com/boostorg/multiprecision/pull/389
+    find_package (Boost 1.79 CONFIG)
     if (Boost_FOUND)
       set (HIGHPREC_LIBRARIES quadmath)
     endif ()
@@ -336,7 +343,7 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
     message (WARNING "Cannot support quad precision, switching to double")
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
-elseif (GEOGRAPHICLIB_PRECISION EQUAL 5)
+elseif (GEOGRAPHICLIB_PRECISION GREATER_EQUAL 5)
   # Install MPFR C++ version 3.6.9 (2022-01-18) or later from
   # https://github.com/advanpix/mpreal and install mpreal.h in the
   # include directory.  NOTE: MPFR C++ is covered by the GPL; be sure
@@ -528,7 +535,9 @@ set (CPACK_SOURCE_IGNORE_FILES
   "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer)/"
   "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
   "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
-  "${PROJECT_SOURCE_DIR}/(autogen|biblio)\\\\.sh\$"
+  "${PROJECT_SOURCE_DIR}/autogen\\\\.sh\$"
+  "${PROJECT_SOURCE_DIR}/include/mpreal\\\\.h\$"
+  "${PROJECT_SOURCE_DIR}/maxima/auxvals40\\\\.mac\$"
   "${PROJECT_SOURCE_DIR}/(makefile-admin|HOWTO-RELEASE.txt)\$")
 set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 

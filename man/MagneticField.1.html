@@ -215,7 +215,7 @@ emm2017, the Enhanced Magnetic Model 2017, which approximates
 
 <p>These models approximate the magnetic field due to the earth&#39;s core and (in the case of emm20xx) its crust. They neglect magnetic fields due to the ionosphere, the magnetosphere, nearby magnetized materials, electrical machinery, etc.</p>
 
-<p>By default, the <code>wmm2020</code> magnetic model is used. This may changed by setting the environment variable <code>GEOGRAPHICLIB_MAGNETIC_NAME</code> or with the <b>-n</b> option.</p>
+<p>By default, the <code>wmm2025</code> magnetic model is used. This may changed by setting the environment variable <code>GEOGRAPHICLIB_MAGNETIC_NAME</code> or with the <b>-n</b> option.</p>
 
 <p>The magnetic models will be loaded from a directory specified at compile time. This may changed by setting the environment variables <code>GEOGRAPHICLIB_MAGNETIC_PATH</code> or <code>GEOGRAPHICLIB_DATA</code>, or with the <b>-d</b> option. The <b>-h</b> option prints the default magnetic path and name. Use the <b>-v</b> option to ascertain the full path name of the data file.</p>
 
@@ -228,7 +228,7 @@ emm2017, the Enhanced Magnetic Model 2017, which approximates
 <dt id="GEOGRAPHICLIB_MAGNETIC_NAME"><b>GEOGRAPHICLIB_MAGNETIC_NAME</b></dt>
 <dd>
 
-<p>Override the compile-time default magnetic name of <code>wmm2020</code>. The <b>-h</b> option reports the value of <b>GEOGRAPHICLIB_MAGNETIC_NAME</b>, if defined, otherwise it reports the compile-time value. If the <b>-n</b> <i>name</i> option is used, then <i>name</i> takes precedence.</p>
+<p>Override the compile-time default magnetic name of <code>wmm2025</code>. The <b>-h</b> option reports the value of <b>GEOGRAPHICLIB_MAGNETIC_NAME</b>, if defined, otherwise it reports the compile-time value. If the <b>-n</b> <i>name</i> option is used, then <i>name</i> takes precedence.</p>
 
 </dd>
 <dt id="GEOGRAPHICLIB_MAGNETIC_PATH"><b>GEOGRAPHICLIB_MAGNETIC_PATH</b></dt>
@@ -251,11 +251,11 @@ emm2017, the Enhanced Magnetic Model 2017, which approximates
 
 <h1 id="EXAMPLES">EXAMPLES</h1>
 
-<p>The magnetic field from WMM2020 in Timbuktu on 2020-12-25</p>
+<p>The magnetic field from WMM2025 in Timbuktu on 2025-01-01</p>
 
-<pre><code>echo 2020-12-25 16:46:33N 3:00:34W 300 | MagneticField -r
-=&gt; -1.47 11.98 33994.9 33983.7 -871.7 7214.7 34752.1
-   0.13 -0.02 21.9 23.9 77.9 -8.4 19.7</code></pre>
+<pre><code>echo 2025-01-01 16:46:33N 3:00:34W 300 | MagneticField -r
+=&gt; -1.04 12.00 34015.6 34010.0 -618.0 7232.0 34775.9
+   0.11 0.01 4.2 5.4 63.7 5.4 5.3</code></pre>
 
 <p>The first two numbers returned are the declination and inclination of the field. The second line gives the annual change.</p>
 

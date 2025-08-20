@@ -575,6 +575,20 @@ add_test (NAME GeodSolve99 COMMAND GeodSolve
 set_tests_properties (GeodSolve99 PROPERTIES PASS_REGULAR_EXPRESSION
   "90\\.00000028 90\\.00000028 19987083\\.007")
 
+# Check fix for meridional failure for a strongly prolate ellipsoid.
+# This was caused by assuming that sig12 < 1 guarantees the meridional
+# geodesic is shortest (even though m12 < 0).  Counter example is tested
+# here.  Bug is not present for f >= -2, b < 3*a.  For f = -2.1 the
+# inverse calculation for 30.61 0 30.61 180 exhibits the bug.
+add_test (NAME GeodSolve100 COMMAND GeodSolve
+  -i -e 1e6 -3 -p 1 --input-string "30 0 30 180")
+set_tests_properties (GeodSolve100 PROPERTIES PASS_REGULAR_EXPRESSION
+  "2[12]\\..* 15[78]\\..* 1074...\\.")
+add_test (NAME GeodSolve101 COMMAND GeodSolve
+  -i -E -e 1e6 -3 -p 1 --input-string "30 0 30 180")
+set_tests_properties (GeodSolve101 PROPERTIES PASS_REGULAR_EXPRESSION
+  "22\\.368806 157\\.631194 1074081\\.6")
+
 # Check fix for pole-encircling bug found 2011-03-16
 add_test (NAME Planimeter0 COMMAND Planimeter
   --input-string "89 0;89 90;89 180;89 270")

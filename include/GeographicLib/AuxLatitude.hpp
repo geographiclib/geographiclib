@@ -30,7 +30,7 @@
  * to enable truncation errors to be measured easily.
  **********************************************************************/
 #  define GEOGRAPHICLIB_AUXLATITUDE_ORDER \
-  (GEOGRAPHICLIB_PRECISION == 2 || GEOGRAPHICLIB_PRECISION == 5 ? 6 : \
+  (GEOGRAPHICLIB_PRECISION == 2 || GEOGRAPHICLIB_PRECISION >= 5 ? 6 : \
    (GEOGRAPHICLIB_PRECISION == 1 ? 4 : 8))
 #endif
 

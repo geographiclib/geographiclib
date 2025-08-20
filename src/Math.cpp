@@ -14,32 +14,35 @@ namespace GeographicLib {
   using namespace std;
 
   void Math::dummy() {
-    static_assert(GEOGRAPHICLIB_PRECISION >= 1 && GEOGRAPHICLIB_PRECISION <= 5,
-                  "Bad value of precision");
+    static_assert(GEOGRAPHICLIB_PRECISION >= 1, "Bad value of precision");
   }
 
   int Math::digits() {
-#if GEOGRAPHICLIB_PRECISION != 5
-    return numeric_limits<real>::digits;
-#else
+#if GEOGRAPHICLIB_PRECISION == 5
     return numeric_limits<real>::digits();
+#else
+    return numeric_limits<real>::digits;
 #endif
   }
 
   int Math::set_digits(int ndigits) {
-#if GEOGRAPHICLIB_PRECISION != 5
-    (void)ndigits;
-#else
+#if GEOGRAPHICLIB_PRECISION >= 5
+#  if GEOGRAPHICLIB_PRECISION > 5
+    // This sets ndigits = GEOGRAPHICLIB_PRECISION
+    ndigits = numeric_limits<real>::digits;
+#  endif
     mpfr::mpreal::set_default_prec(ndigits >= 2 ? ndigits : 2);
+#else
+    (void) ndigits;
 #endif
     return digits();
   }
 
   int Math::digits10() {
-#if GEOGRAPHICLIB_PRECISION != 5
-    return numeric_limits<real>::digits10;
-#else
+#if GEOGRAPHICLIB_PRECISION == 5
     return numeric_limits<real>::digits10();
+#else
+    return numeric_limits<real>::digits10;
 #endif
   }
 
@@ -199,13 +202,16 @@ namespace GeographicLib {
   template<typename T> T Math::atan2d(T y, T x) {
     // In order to minimize round-off errors, this function rearranges the
     // arguments so that result of atan2 is in the range [-pi/4, pi/4] before
-    // converting it to degrees and mapping the result to the correct
-    // quadrant.
+    // converting it to degrees and mapping the result to the correct quadrant.
+    // With mpreal we could use T(mpfr::atan2u(y, x, td)); but we're not ready
+    // for this yet.
     int q = 0;
     if (fabs(y) > fabs(x)) { swap(x, y); q = 2; }
     if (signbit(x)) { x = -x; ++q; }
     // here x >= 0 and x >= abs(y), so angle is in [-pi/4, pi/4]
-    T ang = atan2(y, x) / degree<T>();
+    // Replace atan2(y, x) / degree<T>() by this to ensure that special values
+    // (45, 90, etc.) are returned.
+    T ang = (atan2(y, x) / pi<T>()) * T(hd);
     switch (q) {
     case 1: ang = copysign(T(hd), y) - ang; break;
     case 2: ang =            qd      - ang; break;

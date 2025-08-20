@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 20yy-mm-dd
+\date 2025-08-20
 
 \section abstract Abstract
 
@@ -21,7 +21,7 @@ GeographicLib is a small C++ library for
 - geodesic and rhumb line calculations;
 - conversions between geographic, UTM, UPS, MGRS, geocentric, and local
   cartesian coordinates;
-- gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2020)
+- gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2025)
   calculations.
 
 The emphasis is on returning accurate results with errors close to
@@ -322,6 +322,9 @@ Here are the steps to compile and install GeographicLib:
     - `PKGDIR` package config
     - `DOCDIR` documentation
     - `EXAMPLEDIR` examples
+    Setting `BINDIR=OFF` has the side effect of removing `tools` from
+    the default `all` target for `make`.  (The tools can still be built
+    with `make tools`.)
   - <code>GEOGRAPHICLIB_DATA</code> (default:
     /usr/local/share/GeographicLib for non-Windows systems,
     C:/ProgramData/GeographicLib for Windows systems) specifies the default
@@ -2683,6 +2686,14 @@ The supported models are
    <a href="https://ngdc.noaa.gov/geomag/WMM/DoDWMM.shtml"> World
    Magnetic Model 2020</a>, which approximates the main magnetic field
    for the period 2020--2025.
+ - <b>wmm2025</b>, the
+   <a href="https://www.ncei.noaa.gov/products/world-magnetic-model"> World
+   Magnetic Model 2025</a>, which approximates the main magnetic field
+   for the period 2025--2030.
+ - <b>wmmhr2025</b>, the
+   <a href="https://www.ncei.noaa.gov/products/world-magnetic-model-high-resolution">
+   World Magnetic Model High Resolution 2025</a>, a high resolution version of
+   wmm2025.
  - <b>igrf11</b>, the
    <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (11th generation)</a>, which approximates
@@ -2695,6 +2706,10 @@ The supported models are
    <a href="https://ngdc.noaa.gov/IAGA/vmod/igrf.html">International
    Geomagnetic Reference Field (13th generation)</a>, which approximates
    the main magnetic field for the period 1900--2025.
+ - <b>igrf14</b>, the
+   <a href="https://www.ncei.noaa.gov/products/international-geomagnetic-reference-field">
+   International Geomagnetic Reference Field (14th generation)</a>,
+   which approximates the main magnetic field for the period 1900--2030.
  - <b>emm2010</b>, the
    <a href="https://ngdc.noaa.gov/geomag/EMM/index.html"> Enhanced
    Magnetic Model 2010</a>, which approximates the main and crustal
@@ -2785,6 +2800,34 @@ https://sourceforge.net/projects/geographiclib/files/magnetic-distrib
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2020.zip">
  link</a> (2)</center>
 <tr>
+ <td>wmm2025
+ <td><center>12</center>
+ <td><center>2025--2030</center>
+ <td><center>3</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2025.tar.bz2">
+ link</a> (2)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2025.exe">
+ link</a> (1759)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmm2025.zip">
+ link</a> (2)</center>
+<tr>
+ <td>wmmhr2025
+ <td><center>133</center>
+ <td><center>2025--2030</center>
+ <td><center>281</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmmhr2025.tar.bz2">
+ link</a> (37)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmmhr2025.exe">
+ link</a> (1792)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/wmmhr2025.zip">
+ link</a> (46)</center>
+<tr>
  <td>igrf11
  <td><center>13</center>
  <td><center>1900--2015</center>
@@ -2826,6 +2869,20 @@ https://sourceforge.net/projects/geographiclib/files/magnetic-distrib
  <td><center>
  <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf13.zip">
  link</a> (8)</center>
+<tr>
+ <td>igrf14
+ <td><center>13</center>
+ <td><center>1900--2030</center>
+ <td><center>29</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf14.tar.bz2">
+ link</a> (8)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf14.exe">
+ link</a> (1764)</center>
+ <td><center>
+ <a href="https://sourceforge.net/projects/geographiclib/files/magnetic-distrib/igrf14.zip">
+ link</a> (9)</center>
 <tr>
  <td>emm2010
  <td><center>739</center>
@@ -2899,7 +2956,7 @@ Otherwise download \e either the tar.bz2 file \e or the zip file (they
 have the same contents).  To unpack these, run, for example
 \verbatim
    mkdir -p /usr/local/share/GeographicLib
-   tar xofjC wmm2020.tar.bz2 /usr/local/share/GeographicLib
+   tar xofjC wmm2025.tar.bz2 /usr/local/share/GeographicLib
    tar xofjC emm2010.tar.bz2 /usr/local/share/GeographicLib
    etc.
 \endverbatim
@@ -4656,7 +4713,7 @@ geodesics</a>).
    \f$\alpha_1\f$ may be chosen.
  - If the points are neighboring umbilical points, the shortest path
    lies on the ellipse \f$Y = 0\f$.
- - If only one point is an umbilicial point, the azimuth at the
+ - If only one point is an umbilical point, the azimuth at the
    non-umbilical point is found using the generalization of Clairaut's
    equation (given above) with \f$\gamma = 0\f$.
  - Treat the cases where the geodesic might follow a line of constant
@@ -7412,10 +7469,14 @@ Here's what you should know:
    arbitrary precision via mpfr::mpreal; this requires:
    - <a href="https://www.mpfr.org"> MPFR</a>, version 3.0 or later,
    - <a href="http://www.holoborodko.com/pavel/mpfr"> MPFR C++</a>
-     (version 3.6.9, dated 2022-01-18, or later; version 3.6.9 also
-     requires the fixes given in pull requests #15),
+     (version 3.7.1 or later),
    - a compiler which supports the explicit cast operator (e.g., g++ 4.5
      or later, Visual Studio 12 2013 or later).
+   .
+   Setting <code>GEOGRAPHICLIB_PRECISION</code> to a value larger than 5
+   uses mpfr::mpreal in "fixed precision" mode.  This requires pull
+   request https://github.com/advanpix/mpreal/pull/28 and you must call
+   Utility::set_digits with the same value.
  - MPFR, MPFR C++, and Boost all come with their own licenses.  Be sure
    to respect these.
  - The indicated precision is used for <b>all</b> floating point
@@ -7700,9 +7761,26 @@ git repository for GeographicLib</a>.
      splits as necessary).
    - Improve documentation for Intersect class + tool to treat case of
      equally close intersectons.
+   - Add Math::clamp.
 \endif
 
- - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.5</a>
+ - <a href="https://geographiclib.sourceforge.io/C++/2.5.1">Version 2.5.1</a>
+   (released 2025-08-20)
+   - Fix bug in geodesic inverse problem with very prolate ellipsoids.
+     For \e f &lt; &minus;2, a meridional path was incorrectly returned
+     in some cases for two points on the same meridian.  This affected
+     both the series and exact solutions.  (Or course, the series
+     solution is inaccurate for ellipsoids this eccentric.)
+   - Minor tweak to Math::atan2d to improve accuracy.
+   - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
+     fixed precision.
+   - Document that cmake option `-D BINDIR=OFF` removes `tools` from the
+     default `all` target for `make`.
+   - <b>WARNING:</b> C++17 compliant compiler will be required for the next
+     release.  Support for builds with Visual Studio 14 (2015) will then
+     stop.
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.5">Version 2.5</a>
    (released 2024-12-28)
    - New magnetic models provided
      - World Magnetic Model 2025, wmm2025; this covers the period
@@ -7718,8 +7796,9 @@ git repository for GeographicLib</a>.
        for the period 1900--2030.
    - Update CMake's cmake_minimum_required to 3.17.0 (to facilitate
      integration with Qt projects).
-   - For GEOGRAPHICLIB_PRECISION > 2, readarray treats doubles as
-     approximations to exact decimal constants.
+   - With GEOGRAPHICLIB_PRECISION > 2, Utility::readarray interprets
+     doubles in external file as approximations to an exact decimal
+     number.  See the documentaion of this routine for details.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.4</a>
    (released 2024-07-14)
