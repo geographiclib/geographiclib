@@ -265,13 +265,16 @@ include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
 # We require C++17
-set (CMAKE_CXX_STANDARD 17)
-set (CMAKE_CXX_STANDARD_REQUIRED ON)
-if (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  set (CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
-else ()
-  set (CMAKE_CXX_EXTENSIONS OFF) # Otherwise stick with the standard
+if (false)
+  set (CMAKE_CXX_STANDARD 17)
+  set (CMAKE_CXX_STANDARD_REQUIRED ON)
+  if (GEOGRAPHICLIB_PRECISION EQUAL 4)
+    set (CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
+  else ()
+    set (CMAKE_CXX_EXTENSIONS OFF) # Otherwise stick with the standard
+  endif ()
 endif ()
+set (REQUIRED_COMPILER_FEATURES "cxx_std_17")
 
 # Make the compiler more picky.
 include (CheckCXXCompilerFlag)

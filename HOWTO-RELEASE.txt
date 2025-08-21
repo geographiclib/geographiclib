@@ -145,23 +145,30 @@ Brew...
   brew update + brew upgrade
   cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
   git checkout master; git pull
-  edit g/geographiclib.rb
-  changing url (use github release tag) and shasum -a 256
+  # seems like brew does and automatic update (within 3-4 hours)
+  # tagged and pushed 16:47;  brew update commits at 19:29 and 20:15
+  == SKIP ==
+    edit g/geographiclib.rb
+    changing url (use github release tag) and shasum -a 256
 
-  export HOMEBREW_NO_INSTALL_FROM_API=1
+    export HOMEBREW_NO_INSTALL_FROM_API=1
+    brew uninstall geographiclib
+    brew install --build-from-source geographiclib
+    brew reinstall --build-from-source geographiclib
+    brew test geographiclib
+    brew audit --strict geographiclib
+    brew style geographiclib
+
+    git checkout -b geographiclib/$VERSION
+    git add g/geographiclib.rb
+    git commit -m "geographiclib $VERSION"
+    git push --set-upstream cffk geographiclib/$VERSION
+
+    trigger a PR
+  == ENDSKIP ==
   brew uninstall geographiclib
-  brew install --build-from-source geographiclib
-  brew reinstall --build-from-source geographiclib
-  brew test geographiclib
-  brew audit --strict geographiclib
-  brew style geographiclib
-
-  git checkout -b geographiclib/$VERSION
-  git add g/geographiclib.rb
-  git commit -m "geographiclib $VERSION"
-  git push --set-upstream cffk geographiclib/$VERSION
-
-  trigger a PR
+  brew install geographiclib
+  GeodSolve --version
 
 conda-forge...
 
@@ -177,11 +184,11 @@ conda-forge...
 
   in top level directory...
   conda build recipe --variant-config-file $CONDA_PREFIX/conda_build_config.yaml
-  Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.tar.bz2
+  Package in ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.conda
 
   conda deactivate
   conda remove -y -n geog-test --all
-  conda create -y -n geog-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.tar.bz2
+  conda create -y -n geog-test ~/miniconda3/envs/build/conda-bld/linux-64/geographiclib-cpp-$VERSION-*.conda
   conda activate geog-test
   type GeoConvert
   GeoConvert --version
@@ -193,11 +200,13 @@ conda-forge...
   conda install -y -c conda-forge conda-smithy
   conda smithy rerender
   commit changes with git commit -m "MNT: Re-rendered with conda-build...
+    commit message given by rerender command
   git push --set-upstream cffk v$VERSION
   conda deactivate
 
 vcpkg...
   git pull
+  MAYBE ./bootstrap-vcpkg.sh
   git checkout -b geographiclib/$VERSION
   update ports/geographiclib
     vcpkg.json -- version
