@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    MagneticField --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.5.1/MagneticField.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.5.2/MagneticField.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"

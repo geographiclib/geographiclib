@@ -4,12 +4,20 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.5.1
+The current version of the library is 2.5.2
 
-Changes between 2.5.1 (released 2025-08-20) and 2.5.1 versions:
+Changes between 2.5.2 (released 2025-08-22) and 2.5.1 versions:
+
+   * Fix potential buffer overflow in DMS.  Upgrading from earlier
+     versions is strongly recommended.  If upgrading is not possible,
+     avoid processing untrusted or malformed inputs and run programs
+     linked to the library with restricted privileges.  Thanks to
+     Rosario Matteo Grammatico for finding this vulnerability.
+
+Changes between 2.5.1 (released 2025-08-20) and 2.5 versions:
 
    * Fix bug in geodesic inverse problem with very prolate
-     ellipsoids. For f < −2, a meridional path was incorrectly
+     ellipsoids. For f < -2, a meridional path was incorrectly
      returned in some cases for two points on the same meridian. This
      affected both the series and exact solutions. (Or course, the
      series solution is inaccurate for ellipsoids this eccentric.)
