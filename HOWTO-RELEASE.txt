@@ -131,7 +131,7 @@ update binaries for cgi applications
   update VERSION in compile.sh and compile
 
 TEMP=/scratch/geographiclib-dist
-VERSION=2.5.1
+VERSION=2.5.2
 
 Local install
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
