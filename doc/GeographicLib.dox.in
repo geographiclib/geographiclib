@@ -7761,11 +7761,19 @@ git repository for GeographicLib</a>.
      splits as necessary).
    - Improve documentation for Intersect class + tool to treat case of
      equally close intersectons.
-   - Add Math::clamp.
 \endif
 
- - <a href="https://geographiclib.sourceforge.io/C++/2.5.1">Version 2.6</a>
+ - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
    (released 2025-mm-dd)
+   - Add Math::clamp.
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.5.2">Version 2.5.2</a>
+   (released 2025-08-22)
+   - Fix potential buffer overflow in DMS.  Upgrading from earlier
+     versions is <b>strongly</b> recommended.  If upgrading is not
+     possible, avoid processing untrusted or malformed inputs and run
+     programs linked to the library with restricted privileges.  Thanks
+     to Rosario Matteo Grammatico for finding this vulnerability.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.5.1">Version 2.5.1</a>
    (released 2025-08-20)

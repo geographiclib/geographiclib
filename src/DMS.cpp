@@ -190,6 +190,7 @@ namespace GeographicLib {
   }
 
   Math::real DMS::InternalDecode(const string& dmsa, flag& ind) {
+    const int maxcomponents = 3;
     string errormsg;
     do {                       // Executed once (provides the ability to break)
       int sign = 1;
@@ -232,8 +233,8 @@ namespace GeographicLib {
         errormsg = "Empty or incomplete DMS string " + dmsa;
         break;
       }
-      real ipieces[] = {0, 0, 0};
-      real fpieces[] = {0, 0, 0};
+      real ipieces[maxcomponents] = {0, 0, 0};
+      real fpieces[maxcomponents] = {0, 0, 0};
       unsigned npiece = 0;
       real icurrent = 0;
       real fcurrent = 0;
@@ -259,7 +260,7 @@ namespace GeographicLib {
           pointseen = true;
           digcount = 1;
         } else if ((k = Utility::lookup(dmsindicators_, x)) >= 0) {
-          if (k >= 3) {
+          if (k >= maxcomponents) {
             if (p == end) {
               errormsg = "Illegal for : to appear at the end of " +
                 dmsa.substr(beg, end - beg);
@@ -292,6 +293,11 @@ namespace GeographicLib {
           fpieces[k] = icurrent + fcurrent;
           if (p < end) {
             npiece = k + 1;
+            if (npiece >= maxcomponents) {
+              errormsg = "More than 3 DMS components in "
+                + dmsa.substr(beg, end - beg);
+              break;
+            }
             icurrent = fcurrent = 0;
             ncurrent = digcount = intcount = 0;
           }
@@ -308,7 +314,7 @@ namespace GeographicLib {
       if (!errormsg.empty())
         break;
       if (Utility::lookup(dmsindicators_, dmsa[p - 1]) < 0) {
-        if (npiece >= 3) {
+        if (npiece >= maxcomponents) {
           errormsg = "Extra text following seconds in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
