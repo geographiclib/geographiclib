@@ -104,9 +104,9 @@ namespace GeographicLib {
   template<typename T> void Math::sincosd(T x, T& sinx, T& cosx) {
     // In order to minimize round-off errors, this function exactly reduces
     // the argument to the range [-45, 45] before converting it to radians.
-    T d, r; int q = 0;
-    d = remquo(x, T(qd), &q);   // now abs(r) <= 45
-    r = d * degree<T>();
+    int q = 0;
+    T d = remquo(x, T(qd), &q),   // now abs(r) <= 45
+      r = d * degree<T>();
     // g++ -O turns these two function calls into a call to sincos
     T s = sin(r), c = cos(r);
     if (2 * fabs(d) == qd) {
@@ -154,7 +154,19 @@ namespace GeographicLib {
     // http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1950.pdf
     // mpreal needs T(0) here
     cosx += T(0);                            // special values from F.10.1.12
-    if (sinx == 0) sinx = copysign(sinx, x+t); // special values from F.10.1.13
+    // Should we copy the sign from x or x+t?  Given that t is small, there's
+    // only a distinction if x+t == +/- 0.  Here are the cases
+    //     x   t   x-sign  (x+t)-sign
+    //    <0  >0    -0       +0      different
+    //    >0  <0    +0       +0
+    //    -0  -0    -0       -0
+    //    -0  +0    -0       +0      different
+    //    +0  -0    +0       +0
+    //    +0  +0    +0       +0
+    // On balance, taking the sign from x is better, particularly for the case
+    // x = -0, t = +0.  This choice also avoids the bias towards +0 that x+t
+    // gives.
+    if (sinx == 0) sinx = copysign(sinx, x); // special values from F.10.1.13
   }
 
   template<typename T> T Math::sind(T x) {
