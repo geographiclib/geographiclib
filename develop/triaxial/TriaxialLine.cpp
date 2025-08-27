@@ -80,7 +80,7 @@ namespace GeographicLib {
     Angle &phi2a = bet2a, &tht2a = omg2a;
     if (_f.gammax() > 0) {
       real u2, v2;
-      if (false && biaxspecial(_t, _g.gammax())) {
+      if constexpr (false && biaxspecial(_t, _g.gammax())) {
         u2 = gpsi().inv(sig2, countn, countb);
         v2 = ftht().inv(fpsi()(u2) - _fic.delta, countn, countb);
       } else
@@ -732,7 +732,7 @@ namespace GeographicLib {
     int ind = -1;
     if (isnan(t.z)) return ind;
     if (t < min()) {
-      if (mono) {
+      if constexpr (mono) {
         t.fz = fmin(t.fz, min().fz);
         t.gz = fmin(t.gz, min().gz);
       }
@@ -745,7 +745,7 @@ namespace GeographicLib {
       if (flag < 0) { _s[0] = _s.back(); _s.resize(1); }
       t = max();
     } else if (max() < t) {
-      if (mono) {
+      if constexpr (mono) {
         t.fz = fmax(t.fz, max().fz);
         t.gz = fmax(t.gz, max().gz);
       }
@@ -757,7 +757,7 @@ namespace GeographicLib {
     if (p == _s.end()) return ind; // Can't happen
     // Fix components of t
     bool ins = !(*p == t);
-    if (mono) {
+    if constexpr (mono) {
       if (ins) {
         t.fz = Math::clamp(t.fz, (p-1)->fz, p->fz);
         t.gz = Math::clamp(t.gz, (p-1)->gz, p->gz);
@@ -943,7 +943,7 @@ namespace GeographicLib {
   pair<Math::real, Math::real>
   TriaxialLine::zsetsbisect(const zset& xset, const zset& yset,
                             real f0, real g0, bool secant) {
-    if (true)
+    if constexpr (true)
       return pair<real, real>(xset.bisect(), yset.bisect());
     else if (secant && xset.num() <= 2 && yset.num() <= 2) {
       // Use secant solution

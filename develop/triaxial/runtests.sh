@@ -275,32 +275,21 @@ Large CNT=147 head -1848 ../testset.txt | tail -1 | ./Geod3Test $SET
 
 switch omg[12] in inverse calc
 
-min err
-testhu 1.770982 80.000000
-testobl 1.377362 12.000000
-testoblx 1.456968 32.000000
-testphu 1.948038 64.000000
-testpro 2.398412 20.000000
-testprox 2.305460 56.000000
-testseta 1.298058 26.000000
-testset 1.513088 32.000000
-testspha 1.084028 16.000000
-testsphb 1.386994 32.000000
-testsphc 1.387696 44.000000
-testsphd 1.084808 12.000000
-testwgs84 2.046410 20.000000
+Redo baseline (minor differences)
+                  direct          inverse         invdirect
+testhu.outm      5.86    666     2.68     84     5.65    233
+testobl.outm     3.31     27     1.38     12     3.23     24
+testoblx.outm    4.81    292     2.25     36     4.85    123
+testphu.outm     5.93    658     3.98   2084     7.01   2098
+testpro.outm     4.72     41     2.40     20     4.56     42
+testprox.outm    7.21    318     4.07    288     7.78   1157
+testseta.outm    4.45    123     2.39     82     5.03   1284
+testset.outm     5.11    130     2.82     88     5.95   2955
+testspha.outm    3.09     25     1.08     16     3.13     25
+testsphb.outm    4.50    137     2.52     90     5.16   1498
+testsphc.outm    4.57    134     2.63     88     5.37   1451
+testsphd.outm    2.76     18     1.08     12     2.84     22
+testwgs84.outm   4.50     32     2.05     20     4.30     31
 
-max err
-testhu 3.577746 84.000000
-testobl 1.377362 12.000000
-testoblx 3.017930 38.000000
-testphu 6.050610 2908.000000
-testpro 2.398488 20.000000
-testprox 5.886854 288.000000
-testseta 3.313014 82.000000
-testset 3.975852 88.000000
-testspha 1.084028 16.000000
-testsphb 3.494170 90.000000
-testsphc 3.722672 140.000000
-testsphd 1.084838 12.000000
-testwgs84 2.046410 20.000000
+swapomg treatment reduces max inverse error for phu and prox
+but max invdirect error becomes unacceptable (= 387838 for prox)

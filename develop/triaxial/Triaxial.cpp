@@ -760,7 +760,7 @@ namespace GeographicLib {
       //   calp2^2 = (aa + gammax) / (aa + bb)
       // and use betp = calp2^2 > 1/2
       bool betp = true;
-      if (_hybridalt && omg1.s() <= fabs(omg2.s()))
+      if (_hybridalt && (swapomg || omg1.s() <= fabs(omg2.s())))
         betp = (lf.transpolar() ?
                 2 * (aa + lf.gammax()) > (aa + bb) :
                 2 * (bb + lf.gammax()) < (aa + bb));
@@ -834,29 +834,43 @@ namespace GeographicLib {
       cout << "E "
            << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
            << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
-    if (0)
-      cout << "DD " << swapomg << " " << lf.transpolar() << " "
-           << signbit(omg1.s()) << " " << signbit(omg2.s()) << " "
-           << signbit(omg1.c()) << " " << signbit(omg2.c()) << " "
-           << signbit(bet1.s()) << " " << signbit(bet2.s()) << " "
-           << signbit(bet1.c()) << " " << signbit(bet2.c()) << " "
-           << backside << "\n";
     if (swapomg) {
       swap(omg1, omg2);
-      ang
-        t = ang(copysign(sqrt(fmax(real(0),
-                                   _kp2*Math::sq(omg1.s()) + lf.gamma())),
-                         lf.transpolar() ? -alp2.s() : -alp1.s()),
-                copysign(sqrt(fmax(real(0),
-                                   _k2*Math::sq(bet1.c()) - lf.gamma())),
-                         alp1.c()));
-      alp2 = ang(copysign(sqrt(fmax(real(0),
-                                    _kp2*Math::sq(omg2.s()) + lf.gamma())),
-                          lf.transpolar() ? -alp1.s() : -alp2.s()),
-                 copysign(sqrt(fmax(real(0),
-                                    _k2*Math::sq(bet2.c()) - lf.gamma())),
-                          alp2.c()));
-      alp1 = t;
+      if (lf.transpolar()) {
+        real
+          calp1 = copysign(hypot(_k/_kp*bet1.c(), lf.nu()), alp1.c()),
+          calp2 = copysign(hypot(_k/_kp*bet2.c(), lf.nu()), alp2.c()),
+          salp1 = (lf.nu() < lf.nup() ?
+                   (omg1.s() - lf.nu()) * (omg1.s() + lf.nu()) :
+                   (lf.nup() - omg1.c()) * (lf.nup() + omg1.c())),
+          salp2 = (lf.nu() < lf.nup() ?
+                   (omg2.s() - lf.nu()) * (omg2.s() + lf.nu()) :
+                   (lf.nup() - omg2.c()) * (lf.nup() + omg2.c()));
+        salp1 = -copysign(signbit(salp1) ? 0 : sqrt(salp1), alp2.s());
+        salp2 = -copysign(signbit(salp2) ? 0 : sqrt(salp2), alp1.s());
+        alp1 = ang(salp1, calp1);
+        alp2 = ang(salp2, calp2);
+      } else {
+        real
+          salp1 = -copysign(hypot(_kp/_k*omg1.s(), lf.nu()), alp1.s()),
+          salp2 = -copysign(hypot(_kp/_k*omg2.s(), lf.nu()), alp2.s()),
+          calp1 = (lf.nu() < lf.nup() ?
+                   (bet1.c() - lf.nu()) * (bet1.c() + lf.nu()) :
+                   (lf.nup() - bet1.s()) * (lf.nup() + bet1.s())),
+          calp2 = (lf.nu() < lf.nup() ?
+                   (bet2.c() - lf.nu()) * (bet2.c() + lf.nu()) :
+                   (lf.nup() - bet2.s()) * (lf.nup() + bet2.s()));
+        calp1 = copysign(signbit(calp1) ? 0 : sqrt(calp1), alp1.c());
+        calp2 = copysign(signbit(calp2) ? 0 : sqrt(calp2), alp2.c());
+        alp1 = ang(salp1, calp1);
+        alp2 = ang(salp2, calp2);
+      }
+      if (_debug)
+        cout << "E " << lf.transpolar() << " " << lf.nu() << " " << lf.nup() << " "
+             <<  (omg2.s() - lf.nu()) * (omg2.s() + lf.nu()) << " "
+             << (lf.nup() - omg2.c()) * (lf.nup() + omg2.c()) << " "
+             << real(bet1) << " " << real(omg1) << " " << real(alp1) << " "
+             << real(bet2) << " " << real(omg2) << " " << real(alp2) << "\n";
     }
     if (swap12) {
       swap(bet1, bet2);
@@ -885,7 +899,7 @@ namespace GeographicLib {
 
     fic = TL::fline::fics(lf, bet10, omg10, alp1);
     gic = TL::gline::gics(lg, fic);
-    gic.s13 = 0 + fmax(real(0), s12);
+    gic.s13 = signbit(s12) ? 0 : s12;
 
     if (_debug)
       cout << countn << " " << countb << " "
