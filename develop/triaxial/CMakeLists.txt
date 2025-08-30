@@ -115,9 +115,6 @@ target_link_libraries (TriRand trilib)
 add_executable (Geod3Test Geod3Test.cpp)
 target_link_libraries (Geod3Test trilib)
 
-add_executable (Geod2Test Geod2Test.cpp)
-target_link_libraries (Geod2Test trilib)
-
 add_executable (InvDump InvDump.cpp)
 target_link_libraries (InvDump trilib)
 

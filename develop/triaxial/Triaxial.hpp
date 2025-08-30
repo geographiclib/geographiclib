@@ -51,7 +51,7 @@ namespace GeographicLib {
                           Math::real fa, Math::real fb,
                           int* countn = nullptr, int* countb = nullptr);
     real _a, _b, _c;            // semi-axes
-    vec3 _axes;
+    vec3 _axes, _axes2, _linecc2;
     real _e2, _k2, _kp2, _k, _kp;
     bool _oblate, _prolate, _biaxial;
     bool _umbalt,               // how coordinates wrap with umbilical lines
@@ -67,6 +67,32 @@ namespace GeographicLib {
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
       return bigval;
     }
+    template<int n>
+    void cart2togeneric(vec3 r, Angle& phi, Angle& lam) const;
+    template<int n>
+    void generictocart2(Angle phi, Angle lam, vec3& r) const;
+    real cubic(vec3 r2) const;
+    template<int n>
+    class funp {
+    private:
+      // Evaluate
+      //   f(p) = sum( (r[0]/(p + l[0]))^n, k = 0..2) - 1
+      // and it derivative.
+      const real _d;
+      const vec3 _r, _l;
+    public:
+      funp(const vec3& r, const vec3& l)
+        : _d(std::numeric_limits<real>::epsilon()/2)
+        , _r(r)
+        , _l(l)
+      {
+        static_assert(n >= 1 && n <= 2, "Bad power in funp");
+      }
+      std::pair<real, real> operator()(real p) const;
+    };
+    template<int n>
+    static Math::real cartsolve(const funp<n>& f, real p0, real pscale);
+    void cart2toellipint(vec3 r, Angle& bet, Angle& omg, vec3 axes) const;
   public:
     Triaxial();
     Triaxial(real a, real b, real c);
@@ -140,15 +166,21 @@ namespace GeographicLib {
     void elliptocart2(Angle bet, Angle omg, vec3& r) const;
     void elliptocart2(Angle bet, Angle omg, Angle alp,
                       vec3& r, vec3& v) const;
-    real EuclideanInverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
-                          Angle& alp1, Angle& alp2) const;
-    real EuclideanInverse(vec3 r1, vec3 r2,
-                          vec3& v1, vec3& v2) const;
-    std::pair<real, real> EuclideanDiff(Angle bet1, Angle omg1, Angle alp1,
-                                        Angle bet2, Angle omg2, Angle alp2)
-      const;
-    static std::pair<real, real> EuclideanDiff(vec3 r1, vec3 v1,
-                                               vec3 r2, vec3 v2);
+    void carttoellip(vec3 r, Angle& bet, Angle& omg, real& H) const;
+    void elliptocart(Angle bet, Angle omg, real H, vec3& r) const;
+
+    void cart2togeod(vec3 r, Angle& phi, Angle& lam) const;
+    void geodtocart2(Angle phi, Angle lam, vec3& r) const;
+    void cart2toparam(vec3 r, Angle& phip, Angle& lamp) const;
+    void paramtocart2(Angle phip, Angle lamp, vec3& r) const;
+    void cart2togeocen(vec3 r, Angle& phipp, Angle& lampp) const;
+    void geocentocart2(Angle phipp, Angle lampp, vec3& r) const;
+
+    void cart2tocart(vec3 r2, real h, vec3& r) const;
+    void carttocart2(vec3 r, vec3& r2, real& h) const;
+    void carttogeod(vec3 r, Angle& phi, Angle& lam, real& h) const;
+    void geodtocart(Angle phi, Angle lam, real h, vec3& r) const;
+
     class gamblk {
     public:
       bool transpolar;
