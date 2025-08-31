@@ -106,6 +106,9 @@ target_link_libraries (TriaxialTest trilib)
 add_executable (Geod3Solve Geod3Solve.cpp)
 target_link_libraries (Geod3Solve trilib)
 
+add_executable (Cart3Convert Cart3Convert.cpp)
+target_link_libraries (Cart3Convert trilib)
+
 add_executable (Geod3ODE Geod3ODE.cpp)
 target_link_libraries (Geod3ODE trilib)
 
