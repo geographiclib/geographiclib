@@ -258,7 +258,7 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    using std::round; using std::log10;
+    using std::round, std::log10;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).

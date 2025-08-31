@@ -368,13 +368,13 @@ namespace GeographicLib {
     static std::pair<real, real> zsetsbisect(const zset& xset, const zset& yset,
                                              real f0, real g0, bool secant);
     static real clamp(real x, real mult = 1) {
-      using std::fmax; using std::fmin;
+      using std::fmax, std::fmin;
       real z = mult * Triaxial::BigValue();
       return Math::clamp(x, -z, z);
     }
     static real lamang0(Angle x, real mult = 1) {
       // lam(x) when x is an ang -- no clamping
-      using std::asinh; using std::fabs;
+      using std::asinh, std::fabs;
       return asinh(mult * x.t());
     }
     static real lamang(Angle x, real mult = 1) {
@@ -383,14 +383,14 @@ namespace GeographicLib {
       return clamp(lamang0(x, mult));
     }
     static real lam(real x, real mult = 1) {
-      using std::tan; using std::asinh; using std::fabs; using std::copysign;
+      using std::tan, std::asinh, std::fabs, std::copysign;
       // A consistent large value for x near pi/2.  Also deals with the issue
       // that tan(pi/2) may be negative, e.g., for long doubles.
       return fabs(x) >= Math::pi()/2 ? copysign(Triaxial::BigValue(), x) :
         asinh(mult * tan(x));
     }
     static real gd(real x, real mult = 1) {
-      using std::atan; using std::sinh;
+      using std::atan, std::sinh;
       return atan(sinh(x) / mult);
     }
     static ang anglam(real u, real mult = 1) {
@@ -398,7 +398,7 @@ namespace GeographicLib {
       return Angle(sinh(u), mult, 0);
     }
     static real mcosh(real u, real mult = 1) {
-      using std::cosh; using std::sinh; using std::hypot;
+      using std::cosh, std::sinh, std::hypot;
       return mult == 1 ? cosh(u) : hypot(sinh(u), mult) / mult;
     }
 
@@ -415,7 +415,7 @@ namespace GeographicLib {
     //    [-y/2, y/2) if alt = false (default)
     //    (-y/2, y/2] if alt = true
     static std::pair<real, real> remx(real x, real y, bool alt = false) {
-      using std::remainder; using std::rint;
+      using std::remainder, std::rint;
       real z = remainder(x, y);
       if (alt) {
         if (z == -y/2) z = y/2;

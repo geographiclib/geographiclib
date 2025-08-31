@@ -14,7 +14,7 @@ using namespace std;
 void LineTest() {
   typedef Math::real real;
   typedef Angle ang;
-  using std::pow; using std::sqrt;
+  using std::pow, std::sqrt;
   int imax = Math::digits10();
   for (int i = 1; i < imax; ++i) {
     real kp2 = pow(real(10), -i);

@@ -109,8 +109,8 @@ namespace GeographicLib {
     , _c(c)
     , _n(num)
   {
-    using std::isfinite; using std::isnan; using std::isinf;
-    using std::hypot; using std::copysign; using std::rint;
+    using std::isfinite, std::isnan, std::isinf, std::hypot,
+      std::copysign, std::rint;
     _n = rint(_n);
     if (!normp) {
       real h = hypot(_s, _c);
@@ -160,7 +160,7 @@ namespace GeographicLib {
   }
 
   inline Angle Angle::radians(Math::real rad) {
-    using std::sin; using std::cos; using std::atan2; using std::rint;
+    using std::sin, std::cos, std::atan2, std::rint;
     real sn = sin(rad), cs = cos(rad);
     return Angle(sn, cs, rint( (rad - atan2(sn, cs)) / (2 * Math::pi()) ),
                  true);
@@ -192,7 +192,7 @@ namespace GeographicLib {
   }
 
   inline Math::real Angle::ncardinal() const {
-    using std::signbit; using std::fabs;
+    using std::signbit, std::fabs;
     int iq = (signbit(_s) ? -1 : 1) * (signbit(_c) ?
                                        ( -_c >= fabs(_s) ? 2 : 1 ) :
                                        (  _c >= fabs(_s) ? 0 : 1 ));
@@ -280,7 +280,7 @@ namespace GeographicLib {
     }
 
   inline Angle& Angle::setn0(Math::real n) {
-    using std::rint; using std::signbit;
+    using std::rint, std::signbit;
     _n = rint(n) + (_s == 0 && signbit(_s) && _c < 0 ? 1 : 0);
     return *this;
   }
@@ -320,7 +320,7 @@ namespace GeographicLib {
   }
 
   inline Angle Angle::cardinal(real q) {
-    using std::isfinite; using std::rint; using std::remainder;
+    using std::isfinite, std::rint, std::remainder;
     if (!isfinite(q)) return Angle::NaN();
     q = rint(q);
     int iq = int(remainder(q, real(4)));
@@ -341,7 +341,7 @@ namespace GeographicLib {
   }
 
   inline Angle Angle::nearest(unsigned ind) const {
-    using std::fabs; using std::copysign;
+    using std::fabs, std::copysign;
     real s, c;
     if (ind == 0U) {
       if (fabs(_c) >= fabs(_s)) {

@@ -82,7 +82,7 @@ std::string AzimuthString(ang alp, int prec, bool dms, char dmssep) {
 }
 
 void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg) {
-  using std::isnan; using std::signbit;
+  using std::isnan, std::signbit;
   if (isnan(f)) return;
   // fwd: biaxial -> triaxial
   // !fwd: triaxial -> biaxial
@@ -98,7 +98,7 @@ void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg) {
 }
 
 void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg, ang& alp) {
-  using std::isnan; using std::signbit;
+  using std::isnan, std::signbit;
   if (isnan(f)) return;
   // fwd: biaxial -> triaxial
   // !fwd: triaxial -> biaxial
@@ -111,7 +111,7 @@ int usage(int retval, bool /*brief*/) { return retval; }
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
-    using std::signbit; using std::isnan; using std::fabs;
+    using std::signbit, std::isnan, std::fabs;
     typedef Angle ang;
     Utility::set_digits();
     bool inverse = false,
@@ -300,7 +300,7 @@ int main(int argc, const char* const argv[]) {
     }
     std::unique_ptr<TriaxialLine> lp = linecalc ?
       std::make_unique<TriaxialLine>(t, bet1, omg1, alp1) : nullptr;
-    using std::round; using std::log10; using std::ceil;
+    using std::round, std::log10, std::ceil;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
