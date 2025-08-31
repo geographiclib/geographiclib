@@ -46,9 +46,9 @@ namespace GeographicLib {
     // = bet2a and return omg2a - omg2b
     real HybridA(Angle bet1, Angle omg1, Angle alp1,
                  Angle bet2a, Angle omg2b, bool betp) const;
-    static Angle findroot(const std::function<Math::real(const Angle&)>& f,
+    static Angle findroot(const std::function<real(const Angle&)>& f,
                           Angle xa,  Angle xb,
-                          Math::real fa, Math::real fb,
+                          real fa, real fb,
                           int* countn = nullptr, int* countb = nullptr);
     real _a, _b, _c;            // semi-axes
     vec3 _axes, _axes2, _linecc2;
@@ -90,8 +90,9 @@ namespace GeographicLib {
       }
       std::pair<real, real> operator()(real p) const;
     };
-    template<int n>
-    static Math::real cartsolve(const funp<n>& f, real p0, real pscale);
+    static
+    real cartsolve(const std::function<std::pair<real, real>(real)>& f,
+                   real p0, real pscale);
     void cart2toellipint(vec3 r, Angle& bet, Angle& omg, vec3 axes) const;
   public:
     Triaxial();

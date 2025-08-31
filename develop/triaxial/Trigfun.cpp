@@ -96,7 +96,7 @@ namespace GeographicLib {
 
   Trigfun Trigfun::initbysamples(const vector<real>& F,
                                  bool odd, bool sym, bool centerp,
-                                 Math::real halfp) {
+                                 real halfp) {
     if (!(isfinite(halfp) && halfp > 0))
       throw GeographicErr("Trigfun::initbysamples halfp not positive");
     typedef kissfft<real> fft_t;
@@ -449,15 +449,15 @@ namespace GeographicLib {
   }
 
   Math::real Trigfun::inversep(real z,
-                              const function<Math::real(Math::real)>& fp,
-                              real dx0,
-                              int* countn, int* countb, real tol) const {
+                               const function<real(real)>& fp,
+                               real dx0,
+                               int* countn, int* countb, real tol) const {
     real hr = Math::pi() * _coeff[0], nslope = _h / hr;
     return root(z, fp, z * nslope + dx0, countn, countb, tol, INVERSEP) -
       nslope * z;
   }
 
-  Trigfun Trigfun::invert(const function<Math::real(Math::real)>& fp,
+  Trigfun Trigfun::invert(const function<real(real)>& fp,
                           int* countn, int* countb,
                           int nmax, real tol, real scale) const {
     if (!(_odd && !_sym && isfinite(_coeff[0]) && _coeff[0] != 0))

@@ -293,7 +293,7 @@ int main(int argc, const char* const argv[]) {
             throw GeographicErr("Incomplete input: " + s);
           DecodeLatLon(sbet, somg, bet, omg, longfirst);
           if (mode != ELLIPSOIDAL && (bet.n() != 0 || signbit(bet.c())))
-            throw GeographicErr("Latitude outside range [-90,90]" + s);
+            throw GeographicErr("Latitude outside range [-90,90]: " + s);
           if (threed) {
             if (!(str >> sh))
               throw GeographicErr("Incomplete input: " + s);

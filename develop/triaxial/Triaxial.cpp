@@ -23,7 +23,7 @@ namespace GeographicLib {
     : Triaxial(1, 0, 1, 0)
   {}
 
-  Triaxial::Triaxial(Math::real a, Math::real b, Math::real c)
+  Triaxial::Triaxial(real a, real b, real c)
     : _a(a)
     , _b(b)
     , _c(c)
@@ -58,8 +58,7 @@ namespace GeographicLib {
     _biaxial = _oblate || _prolate;
   }
 
-  Triaxial::Triaxial(Math::real b, Math::real e2,
-                     Math::real k2, Math::real kp2)
+  Triaxial::Triaxial(real b, real e2, real k2, real kp2)
     : _b(b)
     , _e2(e2)
     , _k2(k2)
@@ -265,8 +264,8 @@ namespace GeographicLib {
     return pair<real, real>(fv + fcorr, fp);
   }
 
-  template<int n>
-  Math::real Triaxial::cartsolve(const funp<n>& f, real p0, real pscale) {
+  Math::real Triaxial::cartsolve(const function<pair<real, real>(real)>& f,
+                                 real p0, real pscale) {
     // Solve
     //   f(p) = 0
     // Initial guess is p0; pscale is a scale factor for p; scale factor for f
@@ -352,7 +351,7 @@ namespace GeographicLib {
       if (!( fabs(fx.first) > tol2 ))
         break;                  // test abs(fv) here
       q = fmax(qmin, q - fx.first/fx.second);
-      q = cartsolve<>(f, q, Math::sq(_b));
+      q = cartsolve(f, q, Math::sq(_b));
     } while (false);
     vec3 axes = {sqrt(_linecc2[0] + q), sqrt(_linecc2[1] + q), sqrt(q)};
     cart2toellipint(r, bet, omg, axes);
@@ -445,7 +444,7 @@ namespace GeographicLib {
     real p = fmax(fmax(fabs(s[2]), hypot(s[1], s[2]) - _linecc2[1]),
                   Math::hypot3(s[0], s[1], s[2]) - _linecc2[0]);
     const funp<2> f(s, _linecc2);
-    p = cartsolve<>(f, p, Math::sq(_b));
+    p = cartsolve(f, p, Math::sq(_b));
     r2 = r;
     for (int k = 0; k < 3; ++k)
       r2[k] *= _axes2[k] / (p + _linecc2[k]);
@@ -1163,9 +1162,9 @@ namespace GeographicLib {
 
   // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference
   // in lontitude on bet2 and the target longitude.
-  Angle Triaxial::findroot(const function<Math::real(const Angle&)>& f,
+  Angle Triaxial::findroot(const function<real(const Angle&)>& f,
                            Angle xa,  Angle xb,
-                           Math::real fa, Math::real fb,
+                           real fa, real fb,
                            int* countn, int* countb) {
     // Implement root finding method of Chandrupatla (1997)
     // https://doi.org/10.1016/s0965-9978(96)00051-8

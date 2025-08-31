@@ -135,19 +135,19 @@ namespace GeographicLib {
     }
   }
 
-  inline Angle::Angle(Math::real deg) {
+  inline Angle::Angle(real deg) {
     using std::rint;
     Math::sincosd(deg, _s, _c);
     _n = rint( (deg - Math::atan2d(_s, _c)) / Math::td );
   }
 
-  inline Angle::operator Math::real() const {
+  inline Angle::operator real() const {
     real d = degrees0();
     // Preserve sign of +/-0
     return _n == 0 ? d : d + Math::td * _n;
   }
 
-  inline Angle Angle::degrees(Math::real deg) {
+  inline Angle Angle::degrees(real deg) {
     return Angle(deg);
   }
 
@@ -159,7 +159,7 @@ namespace GeographicLib {
     return Math::atan2d(_s, _c);
   }
 
-  inline Angle Angle::radians(Math::real rad) {
+  inline Angle Angle::radians(real rad) {
     using std::sin, std::cos, std::atan2, std::rint;
     real sn = sin(rad), cs = cos(rad);
     return Angle(sn, cs, rint( (rad - atan2(sn, cs)) / (2 * Math::pi()) ),
@@ -177,7 +177,7 @@ namespace GeographicLib {
     return atan2(_s, _c);
   }
 
-  inline Angle Angle::lam(Math::real psi) {
+  inline Angle Angle::lam(real psi) {
     using std::sinh;
     return Angle(sinh(psi), 1, 0);
   }
@@ -268,7 +268,7 @@ namespace GeographicLib {
     return *this;
   }
 
-  inline Angle& Angle::setn(Math::real n) {
+  inline Angle& Angle::setn(real n) {
     using std::rint;
     _n = rint(n);
     return *this;
@@ -279,7 +279,7 @@ namespace GeographicLib {
       return (_n - (_s == 0 && signbit(_s) && _c < 0 ? 1 : 0)) + 0;
     }
 
-  inline Angle& Angle::setn0(Math::real n) {
+  inline Angle& Angle::setn0(real n) {
     using std::rint, std::signbit;
     _n = rint(n) + (_s == 0 && signbit(_s) && _c < 0 ? 1 : 0);
     return *this;

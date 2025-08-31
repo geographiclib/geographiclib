@@ -113,18 +113,14 @@ namespace GeographicLib {
     TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1,
                 bool extended = false, bool dense = false, bool normp = false,
                 real eps = 0);
-    std::pair<Math::real, Math::real> Position(real s12, vec3& r2, vec3& v2);
-    std::pair<Math::real, Math::real> Position(real s12, vec3& r2, vec3& v2,
-                                               real& m12,
-                                               real& M12, real& M21);
-    std::pair<Math::real, Math::real> Position(real s12,
-                                               Angle& bet2, Angle& omg2,
-                                               Angle& alp2);
-    std::pair<Math::real, Math::real> Position(real s12,
-                                               Angle& bet2, Angle& omg2,
-                                               Angle& alp2,
-                                               real& m12,
-                                               real& M12, real& M21);
+    std::pair<real, real> Position(real s12, vec3& r2, vec3& v2);
+    std::pair<real, real> Position(real s12, vec3& r2, vec3& v2,
+                                   real& m12, real& M12, real& M21);
+    std::pair<real, real> Position(real s12,
+                                   Angle& bet2, Angle& omg2, Angle& alp2);
+    std::pair<real, real> Position(real s12,
+                                   Angle& bet2, Angle& omg2, Angle& alp2,
+                                   real& m12, real& M12, real& M21);
 
     void Position(const std::vector<real>& s12,
                   std::vector<vec3>& r2, std::vector<vec3>& v2);
@@ -147,7 +143,7 @@ namespace GeographicLib {
     void NSteps(long nsteps) const { _nsteps = nsteps; }
     long IntSteps() const { return _intsteps; }
     void IntSteps(long intsteps) const { _intsteps = intsteps; }
-    std::pair<Math::real, Math::real> CurrentDistance() const;
+    std::pair<real, real> CurrentDistance() const;
     bool Extended() const { return _extended; }
     void Position1(vec3& r1, vec3& v1) const { r1 = _r1; v1 = _v1; }
     void Position1(Angle& bet1, Angle& omg1, Angle& alp1) const {

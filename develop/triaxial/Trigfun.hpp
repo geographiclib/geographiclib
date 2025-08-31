@@ -90,7 +90,7 @@ namespace GeographicLib {
     // f(x) = sum(c[k] * cos(2*(k+1/2) * y), k, 0, n - 1)
     // F(x) = (q/pi) * sum(c[k]/(k+1/2) * sin(2*(k+1/2) * y), k, 0, n - 1)
 
-    Trigfun(const std::vector<Math::real>& c, bool odd, bool sym, real h)
+    Trigfun(const std::vector<real>& c, bool odd, bool sym, real h)
       : _m(int(c.size()))
       , _n(sym ? _m : _m - 1)
       , _odd(odd)
@@ -175,7 +175,7 @@ namespace GeographicLib {
                      real tol = 0, ind indicator = NONE);
     // Given z, return dx = finv(z) - nslope * z
     // dx0 is an estimate of dx (NaN means no information)
-    real inversep(real z, const std::function<Math::real(Math::real)>& fp,
+    real inversep(real z, const std::function<real(real)>& fp,
                   real dx0 = Math::NaN(),
                   int* countn = nullptr, int* countb = nullptr,
                   real tol = 0) const;
