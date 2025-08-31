@@ -91,8 +91,7 @@ namespace GeographicLib {
       //
       // Require x >= -1.  Best to call with alt, s.t. x >= 0; this results in
       // a call to atan, instead of asin, or to asinh, instead of atanh.
-      using std::sqrt; using std::fabs; using std::atan; using std::asin;
-      using std::asinh; using std::atanh;
+      using std::sqrt, std::fabs, std::atan, std::asin, std::asinh, std::atanh;
       real z = sqrt(fabs(x));
       return x == 0 ? 1 :
         (alt ?

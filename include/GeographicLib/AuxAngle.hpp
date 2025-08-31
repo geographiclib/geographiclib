@@ -207,7 +207,7 @@ namespace GeographicLib {
   }
 
   inline AuxAngle AuxAngle::radians(real r) {
-    using std::sin; using std::cos;
+    using std::sin, std::cos;
     return AuxAngle(sin(r), cos(r));
   }
 

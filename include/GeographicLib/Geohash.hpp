@@ -159,7 +159,7 @@ namespace GeographicLib {
      * decimal precision is in the range [&minus;2, 12].
      **********************************************************************/
     static int DecimalPrecision(int len) {
-      using std::floor; using std::log;
+      using std::floor, std::log;
       return -int(floor(log(LatitudeResolution(len))/log(Math::real(10))));
     }
 

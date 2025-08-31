@@ -28,7 +28,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::extended lat0, GeographicLib::Math::extended lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
-  using std::cos; using std::sin; using std::sqrt; using std::hypot;
+  using std::cos, std::sin, std::sqrt, std::hypot;
   typedef Math::real real;
   real
     phi = real(lat0) * Math::degree(),
@@ -158,7 +158,7 @@ int main(int argc, char* argv[]) {
     const Geodesic geod(a, f);
     Math::extended lat0l, lon0l, x0l, y0l, gam0l, k0l;
     while (std::cin >> lat0l >> lon0l >> x0l >> y0l >> gam0l >> k0l) {
-      using std::abs; using std::sin; using std::hypot;
+      using std::abs, std::sin, std::hypot;
       real
         lat0 = real(lat0l),
         lon0 = real(lon0l),
