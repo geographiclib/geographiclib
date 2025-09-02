@@ -25,7 +25,7 @@
 namespace GeographicLib {
   class TriaxialLine;
 
-  class GEOGRAPHICLIB_EXPORT Triaxial {
+  class /*GEOGRAPHICLIB_EXPORT*/ Triaxial {
   public:
     typedef std::array<Math::real, 3> vec3;
   private:

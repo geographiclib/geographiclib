@@ -14,10 +14,6 @@
 #include <iomanip>
 #include <sstream>
 
-#if GEOGRAPHICLIB_PRECISION >= 5
-#define nextafter nexttoward
-#endif
-
 namespace GeographicLib {
 
   using namespace std;
@@ -108,10 +104,10 @@ namespace GeographicLib {
       if (_f.kxp2() == 0) {
         // meridr
         //  ftht = tht
-        // 	gtht = 0
+        //  gtht = 0
         // meridr
-        // 	fpsi = 0
-        // 	gpsi = int(sqrt(1-eps*cos(psi)^2), psi)
+        //  fpsi = 0
+        //  gpsi = int(sqrt(1-eps*cos(psi)^2), psi)
         solve2(_fic.delta, sig2n.first,
                fpsi(), ftht(), gpsi(), gtht(), u2, v2,
                countn, countb);
@@ -634,9 +630,9 @@ namespace GeographicLib {
         dx = -( gyp * f + fyp * g) / den, // if degen, dx = 0
         dy = -(-gxp * f + fxp * g) / den, // if degen dy = f / fyp
         xn = x + dx, yn = y + dy,
-        dxa = 0, dya = 0,
-        xa = xset.min().z, xb = xset.max().z,
-        ya = yset.min().z, yb = yset.max().z;
+        dxa = 0, dya = 0;
+      xa = xset.min().z; xb = xset.max().z;
+      ya = yset.min().z; yb = yset.max().z;
       if (debug) {
         bool bb = gyp == 0 && nextafter(xset.min().z, xset.max().z) == xset.max().z;
         cout << "DERIV " << i << " " << fxp << " " << fyp << " " << gxp << " " << gyp << " " << bb << "\n";
@@ -774,11 +770,11 @@ namespace GeographicLib {
       if (ins) {
         _s.erase(p, _s.end());
         _s.push_back(t);
-        ind = _s.size() - 1;
+        ind = int(_s.size()) - 1;
       } else
         _s.erase(p+1, _s.end());
     } else if (ins) {
-      ind = p - _s.begin();
+      ind = int(p - _s.begin());
       _s.insert(p, t);
     }
     // else it's a duplicate and not a new end value
@@ -1028,8 +1024,6 @@ namespace GeographicLib {
     bool psip = !transpolar() ? betp : !betp;
     if (!betp) betomg2 -= ang::cardinal(1);
     ang tau12;
-    if (false && _t.debug())
-      cout << "HHQ " << transpolar() << " " << psip << " " << gammax() << "\n";
     if (psip) {
       ang phi2 = betomg2;
       if (gammax() > 0) {
@@ -1068,19 +1062,10 @@ namespace GeographicLib {
         if (signbit(tht12.s()))
           tht12 = ang(0, copysign(real(1), tht12.c()), 0, true);
         tau12 = tht12;
-        if (false && _t.debug())
-          cout << "BBB " << real(tht2) << " " << real(tht2b) << " "
-               << real(tht12) << " " << real(fic.tht1) <<  "\n";
       } else
         tau12 = ang::NaN();
     }
-    if (false && _t.debug())
-      cout << "HERE " << transpolar() << " " << psip << " " << betp << " "
-         << real(tau12.base()) << "\n";
     disttx ret = ArcPos0(fic, tau12.base(), bet2a, omg2a, alp2a, betp);
-    if (false && _t.debug())
-      cout << "HH0X " << real(fic.psi1) << " "
-           << real(tau12.base()) << " " << real(omg2a) << "\n";
     return ret;
   }
 
@@ -1127,9 +1112,6 @@ namespace GeographicLib {
                                           bool betp) const {
     ang bet2a, omg2a, alp2a;
     (void) Hybrid(fic, betp ? bet2 : omg2, bet2a, omg2a, alp2a, betp);
-    if (false && _t.debug())
-      cout << "HH1X " << real(bet2) << " " << real(omg2) << " "
-           << real(bet2a) << " " << real(omg2a) << "\n";
     bool angnorm = true || betp;
     if (angnorm)
       (void) Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
@@ -1164,12 +1146,6 @@ namespace GeographicLib {
         u2x = ftht()(u2) + fic.delta;
         v2 = fpsi().inv(u2x);
         psi2 = ang::radians(fpsi().rev(v2));
-        if (false && _t.debug())
-          cout << "FOO "
-               << real(fic.tht1) << " " << real(tau12) << " "
-               << real(tht2a) << " "
-               << u2 << " " << u2x << " " << v2 << " "
-               << real(psi2) << "\n";
       }
       // Already normalized
       phi2a = ang(nup() * psi2.s(),
@@ -1191,9 +1167,6 @@ namespace GeographicLib {
         pair<real, real> phi2n =
           // remx(fic.Nx * (phi2a - fic.phi0).radians(), Math::pi());
           remx((phi2a - fic.phi0).flipsign(fic.Nx));
-        if (false && t().debug())
-          cout << "PHI2 " << real((phi2a - fic.phi0).flipsign(fic.Nx)) << " "
-               << phi2n.first << " " << phi2n.second << "\n";
         u2 = fpsi().fwd(phi2n.first);
         int parity = fmod(phi2n.second, real(2)) != 0 ? -1 : 1;
         if (kxp() == 0) {
@@ -1208,20 +1181,6 @@ namespace GeographicLib {
                                       signbit(fic.alp1.c()) ? 1 : 0)))
             .rebase(fic.alp0);
           */
-          if (false && t().debug()) {
-            cout << "ALP " << real(fic.alp1.nearest(2U)) << " "
-                 << parity << " " << real(alp2a) << "\n";
-            cout << "FIC "
-                 << real(fic.phi0) << " " << real(fic.phi1) << " "
-                 << real(fic.tht0) << " " << real(fic.tht1) << " "
-                 << real(fic.alp0) << " " << real(fic.alp1) << " "
-                 << fic.Nx << " " << fic.Ex << " "
-                 << fic.u0 << " " << fic.v0 << " "
-                 << fic.delta/Math::pi() << "\n";
-            cout << "WWW " << fic.Ex << " " << parity << " "
-                 << real(fic.alp0) << " "
-                 << real(alp2a)<< "\n";
-          }
         } else {
           real deltax = clamp(fic.delta + phi2n.second * _deltashift, 2);
           v2 = ftht().inv(fpsi()(u2) - deltax);
@@ -1282,27 +1241,9 @@ namespace GeographicLib {
             v2 = atan(tpsi2);
             phi2a = (ang(tpsi2, 1) + fic.phi1.nearest(2U))
               .flipsign(parity*fic.Nx).rebase(fic.phi0);
-            if (false && t().debug())
-              cout << "PSI2 " << real(fic.phi1) << " " << real(tau12) << " " << npi << " " << c << " " << real(phi2a) << " " << parity << "\n";
             alp2a = ang::cardinal(fic.Nx * parity == 1 ? 0 : 2);
           } else {
             u2 = v2 == 0 ? 0 : copysign(Math::pi()/2, tht2n.first);
-            if (false && t().debug()) {
-              cout << "FIC "
-                   << real(fic.phi0) << " " << real(fic.phi1) << " "
-                   << real(fic.tht0) << " " << real(fic.tht1) << " "
-                   << real(fic.alp0) << " " << real(fic.alp1) << " "
-                   << real(fic.alp1.nearest(2U)) << " "
-                   << fic.Nx << " " << fic.Ex << " "
-                   << fic.u0 << " " << fic.v0 << " "
-                   << fic.delta/Math::pi() << "\n";
-              cout << "YY " << real(tau12) << "\n";
-              cout << "XX " << real(tht2a) << " "
-                   << tht2n.first/Math::degree() << " "
-                   << tht2n.second << " "
-                   << v2/Math::degree() << " "
-                   << parity<< " " << u2/Math::degree() << "\n";
-            }
             phi2a = ang::cardinal(fabs(v2) == 0
                                   ? 0 : copysign(real(1), v2 * fic.Nx))
               .rebase(fic.phi0);
@@ -1311,13 +1252,6 @@ namespace GeographicLib {
               ang::cardinal(parity == 1 ? 0 : 2) +
               ang::radians(v2).flipsign(parity * phi2a.s());
           }
-          if (false && t().debug())
-            cout << "HERE " << real(phi2a) << " "
-                 << real((tht2a - fic.tht0).flipsign(fic.Ex)) << " "
-                 << real(fic.tht0) << " "
-                 << real(fic.tht1) << " " << real(tau12) << " "
-                 << fic.Ex << " "
-                 << v2/Math::degree() << " " << u2/Math::degree() << "\n";
         } else {
           real deltax = clamp(fic.delta + tht2n.second * _deltashift, 2);
           u2 = fpsi().inv(ftht()(v2) + deltax);
@@ -1344,10 +1278,6 @@ namespace GeographicLib {
     }
     omg2a += ang::cardinal(1);
     alp2a = alp2a.rebase(fic.alp0);
-    if (false && t().debug())
-      cout << "ARCPOS0 " << psip << " "
-           << real(bet2a) << " " << real(omg2a) << " "
-           << real(alp2a) << "\n";
     return ret;
   }
 
@@ -1450,10 +1380,10 @@ namespace GeographicLib {
   }
 
   void TriaxialLine::fline::fics::setquadrant(const fline& f, unsigned q) {
-    ang bet1, omg1, alp1;
-    pos1(f.transpolar(), bet1, omg1, alp1);
+    ang bet1, omg1, alp1x;  // TODO: Fix so fics uses tau1
+    pos1(f.transpolar(), bet1, omg1, alp1x);
     alp1.setquadrant(q);
-    *this = fics(f, bet1, omg1, alp1);
+    *this = fics(f, bet1, omg1, alp1x);
   }
 
   TriaxialLine::gline::gics::gics(const gline& g, const fline::fics& fic) {
@@ -1470,14 +1400,6 @@ namespace GeographicLib {
 
   Math::real TriaxialLine::gline::dist(gics ic, fline::disttx d) const {
     real sig2 = gpsi()(d.phiw2) + gtht()(d.thtw2) + d.ind2 * 2*s0;
-    if (false && t().debug()) {
-      cout << "FOO " << gtht()(0) << " " << gtht()(Math::pi()/2) << "\n";
-      cout << "DDX " << d.phiw2/Math::degree() << " "
-           << d.thtw2/Math::degree() << " "
-           << gpsi()(d.phiw2) << " " << gtht()(d.thtw2) << " "
-           << d.ind2 * 2*s0 << " " << ic.sig1 << "\n"
-           << d.ind2 << " " << s0 << "\n";
-    }
     return (sig2 - ic.sig1) * t()._b;
   }
 
@@ -1596,7 +1518,13 @@ namespace GeographicLib {
                             2 * _ell.K(), true, 1);
         } else
           _fun = TrigfunExt(
-                            [kap = _kap, kapp = _kapp, eps = _eps]
+                            [
+#if defined(_MSC_VER)
+                             // Visual Studio requires the capture of this.
+                             // I can't see why -- probably a bug?
+                             this,
+#endif
+                             kap = _kap, kapp = _kapp, eps = _eps]
                             (real tht) -> real
                             { return dfp(cos(tht), kap, kapp, eps); },
                             Math::pi(), true, 1);

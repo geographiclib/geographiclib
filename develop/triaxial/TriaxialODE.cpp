@@ -7,6 +7,8 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
+#if HAVE_BOOST
+
 #include "TriaxialODE.hpp"
 #include <iostream>
 #include <iomanip>
@@ -427,3 +429,5 @@ namespace GeographicLib {
   }
 
 } // namespace GeographicLib
+
+#endif

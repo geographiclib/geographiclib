@@ -260,9 +260,9 @@ int main(int argc, const char* const argv[]) {
     std::string s, eol, sbet, somg, salp, sh, sx, sy, sz, svx, svy, svz, strc;
     std::istringstream str;
     int retval = 0;
-    vec3 r, v;
+    vec3 r = {0,0,0}, v = {0,0,0};
     ang bet, omg, alp;
-    real h;
+    real h = 0;
     while (std::getline(*input, s)) {
       try {
         eol = "\n";

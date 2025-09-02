@@ -42,7 +42,7 @@ namespace GeographicLib {
    * XX include example-Trigfun.cpp
    **********************************************************************/
 
-  class GEOGRAPHICLIB_EXPORT Trigfun {
+  class /*GEOGRAPHICLIB_EXPORT*/ Trigfun {
   private:
     typedef Math::real real;
     int _m,                     // Number of coefficients in series
@@ -213,7 +213,7 @@ namespace GeographicLib {
    * This builds on the Trigfun class.
    **********************************************************************/
 
-  class GEOGRAPHICLIB_EXPORT TrigfunExt {
+  class /*GEOGRAPHICLIB_EXPORT*/ TrigfunExt {
   private:
     typedef Math::real real;
     std::function<real(real)> _fp;

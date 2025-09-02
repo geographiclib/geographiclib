@@ -10,7 +10,7 @@ using namespace std;
 void BasicTest() {
   typedef Math::real real;
   int n = 8;
-  real pi = Math::pi<real>();
+  real pi = Math::pi();
   vector<real> f1(n+1);       // n+1 samples
   for (int i = 0; i <= n; ++i)
     f1[i] = sqrt(real(i)+1);

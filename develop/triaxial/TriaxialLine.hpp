@@ -21,7 +21,7 @@
 
 namespace GeographicLib {
 
-  class GEOGRAPHICLIB_EXPORT TriaxialLine {
+  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialLine {
   private:
     friend class Triaxial;
     typedef Math::real real;
@@ -314,7 +314,7 @@ namespace GeographicLib {
         else if (!(a < b && a.fz <= b.fz && a.gz <= b.gz))
           throw GeographicLib::GeographicErr("bad zset initializer");
       }
-      int num() const { return _s.size(); }
+      int num() const { return int(_s.size()); }
       const zvals& val(int i) const { return _s[i]; }
       const zvals& min() const { return _s[0]; }
       const zvals& max() const { return _s.back(); }

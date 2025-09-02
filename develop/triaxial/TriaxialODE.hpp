@@ -7,7 +7,7 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_TRIAXIALODE_HPP)
+#if HAVE_BOOST && !defined(GEOGRAPHICLIB_TRIAXIALODE_HPP)
 #define GEOGRAPHICLIB_TRIAXIALODE_HPP 1
 
 #include <vector>

@@ -667,7 +667,8 @@ namespace GeographicLib {
     // geodesics; use the cached value for this.
     TL::fline lf = _umbline->_f;
     TL::fline::fics fic;
-    TL::fline::disttx d;
+    TL::fline::disttx d{Math::NaN(), Math::NaN(), 0};
+
     real aa = _k2 * Math::sq(bet2.c()), bb = _kp2 * Math::sq(omg2.s());
 
     if (_debug)

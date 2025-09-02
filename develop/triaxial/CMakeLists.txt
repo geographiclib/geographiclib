@@ -17,7 +17,11 @@ project (triaxial)
 
 # -DGeographicLib_DIR=~/geographiclib/BUILD-mpfr -DGEOGRAPHICLIB_PRECISION=5
 find_package (GeographicLib 2.6 CONFIG REQUIRED)
-find_package (Boost 1.70 CONFIG REQUIRED)
+find_package (Boost 1.70 CONFIG)
+if (Boost_FOUND)
+  add_definitions (-DHAVE_BOOST=1)
+  include_directories ("${Boost_INCLUDE_DIRS}")
+endif ()
 
 if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   # Set a default build type for single-configuration cmake generators
@@ -30,19 +34,11 @@ if (NOT MSVC)
 endif ()
 
 set (CONVERT_WARNINGS_TO_ERRORS ON)
-# We require C++17
-set (CMAKE_CXX_STANDARD 17)
-set (CMAKE_CXX_STANDARD_REQUIRED ON)
+set (REQUIRED_COMPILER_FEATURES "cxx_std_17")
 
 # For kissfft.hh
-if (APPLE)
-  # clang needs Boost include directories too
-  set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
-    "${GeographicLib_INCLUDE_DIRS}/../src" "${Boost_INCLUDE_DIRS}")
-else ()
-  set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
-    "${GeographicLib_INCLUDE_DIRS}/../src")
-endif ()
+set (CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES
+  "${GeographicLib_INCLUDE_DIRS}/../src")
 
 # Make the compiler more picky.
 include (CheckCXXCompilerFlag)
@@ -74,8 +70,6 @@ if (CONVERT_WARNINGS_TO_ERRORS)
   endif ()
 endif ()
 
-set (BUILD_SHARED_LIBS ON)
-
 set (SOURCES
   Trigfun.cpp
   Triaxial.cpp
@@ -90,18 +84,19 @@ set (HEADERS
   Angle.hpp
   TriaxialODE.hpp)
 
+if (MSVC)
+  set (BUILD_SHARED_LIBS OFF)
+else ()
+  set (BUILD_SHARED_LIBS ON)
+endif ()
+
 add_library (trilib ${SOURCES} ${HEADERS})
 target_link_libraries (trilib ${GeographicLib_LIBRARIES}
   ${GeographicLib_HIGHPREC_LIBRARIES} ${BOOST_LIBRARIES})
-
-add_executable (randgeod randgeod.cpp)
-target_link_libraries (randgeod trilib)
+target_compile_features (trilib PUBLIC ${REQUIRED_COMPILER_FEATURES})
 
 add_executable (TrigfunTest TrigfunTest.cpp)
 target_link_libraries (TrigfunTest trilib)
-
-add_executable (TriaxialTest TriaxialTest.cpp)
-target_link_libraries (TriaxialTest trilib)
 
 add_executable (Geod3Solve Geod3Solve.cpp)
 target_link_libraries (Geod3Solve trilib)
@@ -109,20 +104,10 @@ target_link_libraries (Geod3Solve trilib)
 add_executable (Cart3Convert Cart3Convert.cpp)
 target_link_libraries (Cart3Convert trilib)
 
-add_executable (Geod3ODE Geod3ODE.cpp)
-target_link_libraries (Geod3ODE trilib)
-
-add_executable (TriRand TriRand.cpp)
-target_link_libraries (TriRand trilib)
-
 add_executable (Geod3Test Geod3Test.cpp)
 target_link_libraries (Geod3Test trilib)
 
-add_executable (InvDump InvDump.cpp)
-target_link_libraries (InvDump trilib)
-
-if (GEOGRAPHICLIB_PRECISION LESS 5)
-  add_executable (odetest odetest.cpp)
-  target_link_libraries (odetest
-    ${BOOST_LIBRARIES} ${GeographicLib_HIGHPREC_LIBRARIES})
+if (Boost_FOUND)
+  add_executable (Geod3ODE Geod3ODE.cpp)
+  target_link_libraries (Geod3ODE trilib)
 endif ()

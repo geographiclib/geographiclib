@@ -29,7 +29,7 @@ namespace GeographicLib {
    * Example of use:
    * xx include example-Angle.cpp
    **********************************************************************/
-  class GEOGRAPHICLIB_EXPORT Angle {
+  class /*GEOGRAPHICLIB_EXPORT*/ Angle {
   private:
     typedef Math::real real;
     real _s, _c, _n;

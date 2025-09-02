@@ -23,7 +23,7 @@ namespace GeographicLib {
                    bool centerp, real halfp, int n, int nmax, real tol,
                    real scale) {
     if (n == 0) {
-      int n = 16;
+      n = 16;
       Trigfun t(f, odd, sym, false, halfp, n);
       while (n <= nmax) {
         int K = chop(t._coeff, tol, scale)
@@ -350,7 +350,6 @@ namespace GeographicLib {
       x = x0, oldx = Math::infinity(), oldv = oldx, olddx = oldx;
     int k = 0, maxit = 2*150, b = 0;
     real p = Math::pi()/2 * 0;
-    real xa0 = xa, x00 = x0, xb0 = xb;
     if (debug) {
       /*
       xa = xa-1e-10;
@@ -379,29 +378,6 @@ namespace GeographicLib {
       // TODO: This inverse problem uses lots of iterations
       //   20 60 -90 180 127.4974 24.6254 2.4377
       // Need to figure out why.  (Probably fixed by now.)
-      if (false && k == maxit/2) {
-        debug = true;
-        cout << "SCALE " << xscale << " " << zscale << "\n";
-        pair<real, real> vala = ffp(xa0);
-        pair<real, real> val0 = ffp(x00);
-        pair<real, real> valb = ffp(xb0);
-        cout << scientific;
-        cout << "DAT " << s << " " << x00-xa0 << " " << xb0-x00 << " "
-             << z << "\n";
-        cout << "DAT "
-             << xa0 << " " << vala.first - z << " " << vala.second << "\n";
-        cout << "DAT "
-             << x00 << " " << val0.first - z << " " << val0.second << "\n";
-        cout << "DAT "
-             << xb0 << " " << valb.first - z << " " << valb.second << "\n";
-        int nsamp = -1;
-        for (int i = 0; i <= nsamp; ++i) {
-          real xx = xa0 + i * (xb0-xa0) / nsamp;
-          pair<real, real> val = ffp(xx);
-          cout << "PLOT " << xx << " " << val.first - z << " "
-               << val.second << "\n";
-        }
-      }
       ++k;
       pair<real, real> val = ffp(x);
       real v = val.first - z,
@@ -562,7 +538,7 @@ namespace GeographicLib {
     // then we know we are going to chop the vector, but the precise chopping
     // point CUTOFF still remains to be determined in Step 3.
 
-    int j2, plateauPoint = n;
+    int j2 = 0, plateauPoint = n;
     real logtol = log(tol);
     for (j = 2; j <= n; ++j) {  // j is a MATLAB index (starts at 1)
       j2 = int(round(1.25*j + 5));

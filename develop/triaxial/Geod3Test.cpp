@@ -58,14 +58,16 @@ void report(const Triaxial& t, int bet1, int omg1, int bet2, int omg2,
   ang alp1, alp2;
   TriaxialLine l =
     t.Inverse(bet1x, omg1x, bet2x, omg2x, alp1, alp2, s12);
-  Triaxial::vec3 r2, v2;
   real m12 = 0, M12 = 1, M21 = 1;
   if (odep) {
+#if HAVE_BOOST
+    Triaxial::vec3 r2, v2;
     // ang bet1a, omg1a;
     // l.pos1(bet1a, omg1a, alp1);
     TriaxialODE direct(t, ang(bet1), ang(omg1), alp1);
     direct.Position(s12, r2, v2, m12, M12, M21);
     // t.cart2toellip(bet2x, omg2x, v2, alp2);
+#endif
   }
   cout << bet1 << " " << omg1 << " "
        << nicestr(real(alp1), prec, true) << " "
@@ -174,6 +176,7 @@ void errreport(const Triaxial& t,
        << ceil(errr1/eps) << " " << ceil(errv1/eps) << endl;
 }
 
+#if HAVE_BOOST
 void errODE(TriaxialODE& t,
             Math::real bet1, Math::real omg1, Math::real alp1,
             Math::real bet2, Math::real omg2, Math::real alp2,
@@ -236,6 +239,7 @@ void errODE(TriaxialODE& t,
     cout << endl;
   }
 }
+#endif
 
 void angletest() {
   typedef Math::real real;
@@ -244,10 +248,6 @@ void angletest() {
   ang o2 = ang::cardinal(-2);
   cout << o1.s() << " " << o2.s() << " "
        << real(o1) << " " << real(o2) << "\n";
-  ang a1(-180);
-  ang a2(-180);
-  ang a3 = a2 - a1;
-  cout << real(a1) << " " << real(a2) << " " << real(a3) << "\n";
   for (int i = -360; i <= 720; i += 30) {
     ang a1(i);
     for (int j = -360; j <= 720; j += 30) {
@@ -387,6 +387,7 @@ int main(int argc, const char* const argv[]) {
         while (cin >> bet1 >> omg1 >> betomg2 >> betp)
           hybridtest(t, bet1, omg1, betomg2, betp);
       } else {
+#if HAVE_BOOST
         real bet1, omg1, bet2, omg2;
         real alp1, alp2, s12, m12, M12, M21;
         TriaxialODE l(t, extended, dense, normp, eps);
@@ -400,6 +401,15 @@ int main(int argc, const char* const argv[]) {
             errreport(t, bet1, omg1, alp1, bet2, omg2, alp2, s12,
                       m12, M12, M21);
         }
+#else
+        (void) odep;
+        (void) reportp;
+        (void) odetest;
+        (void) extended;
+        (void) dense;
+        (void) normp;
+        (void) eps;
+#endif
       }
       return 0;
     }
