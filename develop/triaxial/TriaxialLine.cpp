@@ -1382,7 +1382,7 @@ namespace GeographicLib {
   void TriaxialLine::fline::fics::setquadrant(const fline& f, unsigned q) {
     ang bet1, omg1, alp1x;  // TODO: Fix so fics uses tau1
     pos1(f.transpolar(), bet1, omg1, alp1x);
-    alp1.setquadrant(q);
+    alp1x.setquadrant(q);
     *this = fics(f, bet1, omg1, alp1x);
   }
 
