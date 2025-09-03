@@ -120,15 +120,14 @@ int main(int argc, const char* const argv[]) {
       debug = false, linecalc = false, swapomg = false;
     real
       a = 6378172, b = 6378102, c = 6356752,
-      // NaN is a marker to skip biaxial transformation
-      f = Math::NaN();
+      // Markers to determine how the ellipsoid is specified
+      e2 = -1, f = Math::NaN(), k2 = 0, kp2 = 0;
     ang bet1, omg1, alp1, bet2, omg2, alp2;
     real s12;
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
-    Triaxial t(a, b, c);
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
       if (arg == "-i") {
@@ -145,14 +144,12 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -t: " << e.what() << "\n";
           return 1;
         }
-        t = Triaxial(a, b, c);
-        f = Math::NaN();
+        f = Math::NaN(); e2 = -1;
         m += 3;
       } else if (arg == "-e") {
         // Cayley ellipsoid sqrt([2,1,1/2]) is
         // -e 1 3/2 1/3 2/3
         if (m + 4 >= argc) return usage(1, true);
-        real e2, k2, kp2;
         try {
           b = Utility::val<real>(std::string(argv[m + 1]));
           e2 = Utility::fract<real>(std::string(argv[m + 2]));
@@ -163,32 +160,27 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
           return 1;
         }
-        t = Triaxial(b, e2, k2, kp2);
-        a = t.a(); c = t.c();
-        f = Math::NaN();
+        a = -1; f = Math::NaN();
         m += 4;
       } else if (arg == "-e2") {
         if (m + 2 >= argc) return usage(1, true);
-        real A;
         try {
-          A = Utility::val<real>(std::string(argv[m + 1]));
+          b = Utility::val<real>(std::string(argv[m + 1]));
           f = Utility::fract<real>(std::string(argv[m + 2]));
         }
         // f > 0, k2 = 1, kp2 = 0
-        // a = b = A; c = A * (1 - f)
+        // a = b; c = b * (1 - f)
         // e2 = factor(subst([a = A, b = A, c = A*(1-f)],(a^2 - c^2)/b^2))
         //    = f * (2 - f)
         // f < 0, k2 = 0, kp2 = 1
-        // a = A * (1 - f); b = c = A
+        // a = A * (1 - f); c = b
         // e2 = factor(subst([a = A*(1-f), b = A, c = A],(a^2 - c^2)/b^2))
         //    = -f * (2 - f)
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -e2: " << e.what() << "\n";
           return 1;
         }
-        t = Triaxial(A, fabs(f) * (2 - f),
-                     signbit(f) ? 0 : 1, signbit(f) ? 1 : 0);
-        a = t.a(); b = A; c = t.c();
+        a = e2 = -1;
         m += 2;
       } else if (arg == "-L") {
         linecalc = true;
@@ -255,6 +247,11 @@ int main(int argc, const char* const argv[]) {
       } else
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
+
+    Triaxial t = e2 >= 0 ? Triaxial(b, e2, k2, kp2) :
+      !isnan(f) ? Triaxial(b, fabs(f) * (2 - f),
+                           signbit(f) ? 0 : 1, signbit(f) ? 1 : 0) :
+      Triaxial(a, b, c);
 
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";

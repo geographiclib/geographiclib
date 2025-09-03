@@ -59,10 +59,11 @@
 
 namespace GeographicLib {
 
-  class GEOGRAPHICLIB_EXPORT TriaxialODE {
+  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialODE {
+  public:
+    typedef Triaxial::vec3 vec3;
   private:
     typedef Math::real real;
-    typedef Triaxial::vec3 vec3;
     typedef std::array<real, 6> vec6;
     typedef std::array<real, 10> vec10;
     typedef Angle ang;

@@ -34,7 +34,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
-#include "Triaxial.hpp"
+#include "TriaxialCartesian.hpp"
 
 typedef GeographicLib::Math::real real;
 typedef GeographicLib::Angle ang;
@@ -103,12 +103,12 @@ int main(int argc, const char* const argv[]) {
     bool threed = false, direction = false, reverse = false, dms = false,
       longfirst = false;
     real
-      a = 6378172, b = 6378102, c = 6356752;
+      a = 6378172, b = 6378102, c = 6356752, e2 = -1,
+      k2 = 0, kp2 = 0;
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
-    Triaxial t(a, b, c);
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
       if (arg == "-E")
@@ -136,13 +136,12 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -t: " << e.what() << "\n";
           return 1;
         }
-        t = Triaxial(a, b, c);
+        e2 = -1;
         m += 3;
       } else if (arg == "-e") {
         // Cayley ellipsoid sqrt([2,1,1/2]) is
         // -e 1 3/2 1/3 2/3
         if (m + 4 >= argc) return usage(1, true);
-        real e2, k2, kp2;
         try {
           b = Utility::val<real>(std::string(argv[m + 1]));
           e2 = Utility::fract<real>(std::string(argv[m + 2]));
@@ -153,8 +152,7 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
           return 1;
         }
-        t = Triaxial(b, e2, k2, kp2);
-        a = t.a(); c = t.c();
+        a = -1;
         m += 4;
       } else if (arg == "-d") {
         dms = true;
@@ -199,6 +197,10 @@ int main(int argc, const char* const argv[]) {
       } else
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
+
+    using std::round, std::log10, std::ceil, std::signbit;
+    TriaxialCartesian tc(e2 >= 0 ? Triaxial(b, e2, k2, kp2) :
+                         Triaxial(a, b, c));
 
     if (direction && mode != ELLIPSOIDAL) {
       std::cerr << "Can only specify -D with ellipsoidal conversions\n";
@@ -252,7 +254,6 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    using std::round, std::log10, std::ceil, std::signbit;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
@@ -311,45 +312,45 @@ int main(int argc, const char* const argv[]) {
         case ELLIPSOIDAL:
           if (reverse) {
             if (threed)
-              t.carttoellip(r, bet, omg, h);
+              tc.carttoellip(r, bet, omg, h);
             else if (direction)
-              t.cart2toellip(r, v, bet, omg, alp);
+              tc.cart2toellip(r, v, bet, omg, alp);
             else
-              t.cart2toellip(r, bet, omg);
+              tc.cart2toellip(r, bet, omg);
           } else {
             if (threed)
-              t.elliptocart(bet, omg, h, r);
+              tc.elliptocart(bet, omg, h, r);
             else if (direction)
-              t.elliptocart2(bet, omg, alp, r, v);
+              tc.elliptocart2(bet, omg, alp, r, v);
             else
-              t.elliptocart2(bet, omg, r);
+              tc.elliptocart2(bet, omg, r);
           }
           break;
         case GEODETIC:
           if (reverse) {
             if (threed)
-              t.carttogeod(r, bet, omg, h);
+              tc.carttogeod(r, bet, omg, h);
             else
-              t.cart2togeod(r, bet, omg);
+              tc.cart2togeod(r, bet, omg);
           } else {
             if (threed)
-              t.geodtocart(bet, omg, h, r);
+              tc.geodtocart(bet, omg, h, r);
             else
-              t.geodtocart2(bet, omg, r);
+              tc.geodtocart2(bet, omg, r);
           }
           break;
         case PARAMETRIC:
           if (reverse)
-            t.cart2toparam(r, bet, omg);
+            tc.cart2toparam(r, bet, omg);
           else
-            t.paramtocart2(bet, omg, r);
+            tc.paramtocart2(bet, omg, r);
           break;
         case GEOCENTRIC:
         default:
           if (reverse)
-            t.cart2togeocen(r, bet, omg);
+            tc.cart2togeocen(r, bet, omg);
           else
-            t.geocentocart2(bet, omg, r);
+            tc.geocentocart2(bet, omg, r);
           break;
         }
         // WRITE

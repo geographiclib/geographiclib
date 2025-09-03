@@ -74,6 +74,7 @@ set (SOURCES
   Trigfun.cpp
   Triaxial.cpp
   TriaxialLine.cpp
+  TriaxialCartesian.cpp
   Angle.cpp
   TriaxialODE.cpp)
 
@@ -81,6 +82,7 @@ set (HEADERS
   Trigfun.hpp
   Triaxial.hpp
   TriaxialLine.hpp
+  TriaxialCartesian.hpp
   Angle.hpp
   TriaxialODE.hpp)
 

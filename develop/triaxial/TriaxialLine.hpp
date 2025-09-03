@@ -15,6 +15,7 @@
 #include <set>
 #include <algorithm>
 #include <GeographicLib/Constants.hpp>
+#include <GeographicLib/EllipticFunction.hpp>
 #include "Angle.hpp"
 #include "Trigfun.hpp"
 #include "Triaxial.hpp"
