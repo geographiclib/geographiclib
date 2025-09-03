@@ -283,7 +283,7 @@ namespace GeographicLib {
   }
 
   template<typename T> T Math::hypot3(T x, T y, T z) {
-#if __cplusplus < 201703L || GEOGRAPHICLIB_PRECISION == 4
+#if GEOGRAPHICLIB_PRECISION == 4
     return sqrt(x*x + y*y + z*z);
 #else
     return hypot(x, y, z);

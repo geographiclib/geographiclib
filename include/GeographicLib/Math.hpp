@@ -139,30 +139,12 @@ namespace GeographicLib {
      * break most of the tests.  Also the normal definition of degree is baked
      * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
      **********************************************************************/
-#if __cplusplus >= 201703L
     static inline constexpr int qd = 90;      ///< degrees per quarter turn
     static inline constexpr int dm = 60;      ///< minutes per degree
     static inline constexpr int ms = 60;      ///< seconds per minute
     static inline constexpr int hd = 2 * qd;  ///< degrees per half turn
     static inline constexpr int td = 2 * hd;  ///< degrees per turn
     static inline constexpr int ds = dm * ms; ///< seconds per degree
-#elif GEOGRAPHICLIB_PRECISION < 4
-    static constexpr int qd = 90;      ///< degrees per quarter turn
-    static constexpr int dm = 60;      ///< minutes per degree
-    static constexpr int ms = 60;      ///< seconds per minute
-    static constexpr int hd = 2 * qd;  ///< degrees per half turn
-    static constexpr int td = 2 * hd;  ///< degrees per turn
-    static constexpr int ds = dm * ms; ///< seconds per degree
-#else
-    enum dms {
-      qd = 90,                  ///< degrees per quarter turn
-      dm = 60,                  ///< minutes per degree
-      ms = 60,                  ///< seconds per minute
-      hd = 2 * qd,              ///< degrees per half turn
-      td = 2 * hd,              ///< degrees per turn
-      ds = dm * ms              ///< seconds per degree
-    };
-#endif
 
     /**
      * @return the number of bits of precision in a real number.
@@ -235,7 +217,23 @@ namespace GeographicLib {
      * @param[in,out] y on output set to <i>y</i>/hypot(<i>x</i>, <i>y</i>).
      **********************************************************************/
     template<typename T> static void norm(T& x, T& y) {
+#if defined(_MSC_VER) && _MSC_VER < 1940 && defined(_M_IX86)
+      // hypot for Visual Studio (A=win32) fails monotonicity, e.g., with
+      //   x  = 0.6102683302836215
+      //   y1 = 0.7906090004346522
+      //   y2 = y1 + 1e-16
+      // the test
+      //   hypot(x, y2) >= hypot(x, y1)
+      // fails.  Reported 2021-03-14:
+      //   https://developercommunity.visualstudio.com/t/1369259
+      // See also:
+      //   https://bugs.python.org/issue43088
+      // Bug still present in my version of vc17 (2022) updated on 2025-09-01.
+      // Let's hope it's fixed in vc18.
+      using std::sqrt; T h = sqrt(x * x + y * y);
+#else
       using std::hypot; T h = hypot(x, y);
+#endif
       x /= h; y /= h;
     }
 
