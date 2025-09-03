@@ -284,7 +284,7 @@ namespace GeographicLib {
 
   template<typename T> T Math::hypot3(T x, T y, T z) {
 #if GEOGRAPHICLIB_PRECISION == 4
-    return sqrt(x*x + y*y + z*z);
+    return hypot(hypot(x, y), z);
 #else
     return hypot(x, y, z);
 #endif
@@ -296,27 +296,17 @@ namespace GeographicLib {
   }
 
   template<typename T> T Math::NaN() {
-#if defined(_MSC_VER)
-    return numeric_limits<T>::has_quiet_NaN ?
-      numeric_limits<T>::quiet_NaN() :
-      (numeric_limits<T>::max)();
-#else
-    return numeric_limits<T>::has_quiet_NaN ?
-      numeric_limits<T>::quiet_NaN() :
-      numeric_limits<T>::max();
-#endif
+    if constexpr (numeric_limits<T>::has_quiet_NaN)
+      return numeric_limits<T>::quiet_NaN();
+    else
+      return (numeric_limits<T>::max)();
   }
 
   template<typename T> T Math::infinity() {
-#if defined(_MSC_VER)
-    return numeric_limits<T>::has_infinity ?
-        numeric_limits<T>::infinity() :
-        (numeric_limits<T>::max)();
-#else
-    return numeric_limits<T>::has_infinity ?
-      numeric_limits<T>::infinity() :
-      numeric_limits<T>::max();
-#endif
+    if constexpr (numeric_limits<T>::has_infinity)
+      return numeric_limits<T>::infinity();
+    else
+      return (numeric_limits<T>::max)();
     }
 
   /// \cond SKIP

@@ -217,7 +217,7 @@ namespace GeographicLib {
      * @param[in,out] y on output set to <i>y</i>/hypot(<i>x</i>, <i>y</i>).
      **********************************************************************/
     template<typename T> static void norm(T& x, T& y) {
-#if defined(_MSC_VER) && _MSC_VER < 1940 && defined(_M_IX86)
+#if defined(_MSC_VER) && _MSC_VER < 1950 && defined(_M_IX86)
       // hypot for Visual Studio (A=win32) fails monotonicity, e.g., with
       //   x  = 0.6102683302836215
       //   y1 = 0.7906090004346522

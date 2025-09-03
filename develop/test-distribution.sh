@@ -193,7 +193,6 @@ cut -f3- -d/ $TEMP/files.x | sort > ../files.new
     done
 )
 rm -rf GeographicLib-$VERSION
-rm -f java/.gitignore
 for ((i=0; i<7; ++i)); do
     find * -type d -empty | xargs -r rmdir
 done
