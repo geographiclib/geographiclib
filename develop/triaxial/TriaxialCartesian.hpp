@@ -23,8 +23,8 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     typedef Angle ang;
+    static const int maxit_ = 20;
     const Triaxial _t;
-    const real _b;
     const vec3 _axes, _axes2, _linecc2;
 
     template<int n>
@@ -53,8 +53,13 @@ namespace GeographicLib {
     static
     real cartsolve(const std::function<std::pair<real, real>(real)>& f,
                    real p0, real pscale);
+    real a() const { return t().a(); }
+    real b() const { return t().b(); }
+    real c() const { return t().c(); }
   public:
     TriaxialCartesian(const Triaxial& t);
+    TriaxialCartesian(real a, real b, real c);
+    TriaxialCartesian(real b, real e2, real k2, real kp2);
     const Triaxial& t() const { return _t; }
     void cart2toellip(vec3 r, Angle& bet, Angle& omg) const {
       _t.cart2toellip(r, bet, omg);

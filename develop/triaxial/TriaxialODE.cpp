@@ -9,11 +9,9 @@
 
 #if HAVE_BOOST
 
-#include "TriaxialODE.hpp"
 #include <iostream>
 #include <iomanip>
-#include <limits>
-#include <functional>
+#include "TriaxialODE.hpp"
 
 namespace GeographicLib {
 

@@ -7,12 +7,11 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include "Trigfun.hpp"
 // For to_string
 #include <string>
 #include <iostream>
 #include <iomanip>
-
+#include "Trigfun.hpp"
 #include "kissfft.hh"
 
 namespace GeographicLib {

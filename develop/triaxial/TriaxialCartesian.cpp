@@ -15,11 +15,18 @@ namespace GeographicLib {
 
   TriaxialCartesian::TriaxialCartesian(const Triaxial& t)
     : _t(t)
-    , _b(_t.b())
     , _axes{_t.a(), _t.b(), _t.c()}
     , _axes2{Math::sq(_t.a()), Math::sq(_t.b()), Math::sq(_t.c())}
     , _linecc2{(_t.a() - _t.c()) * (_t.a() + _t.c()),
                (_t.b() - _t.c()) * (_t.b() + _t.c()), 0}
+  {}
+
+  TriaxialCartesian::TriaxialCartesian(real a, real b, real c)
+    : TriaxialCartesian(Triaxial(a, b, c))
+  {}
+
+  TriaxialCartesian::TriaxialCartesian(real b, real e2, real k2, real kp2)
+    : TriaxialCartesian(Triaxial(b, e2, k2, kp2))
   {}
 
   template<int n>
@@ -49,9 +56,14 @@ namespace GeographicLib {
       tol = Math::sq(cbrt(eps)), tol2 = Math::sq(tol),
       ptol = pscale * sqrt(eps);
     real p = p0;
-    int i = 50;
     real od = -1;
-    while (i > 0) {
+    for (int i = 0;
+         i < maxit_ ||
+           (throw GeographicLib::GeographicErr
+            ("Convergence failure TriaxialCartesian::cartsolve"), false)
+           || GEOGRAPHICLIB_PANIC
+           ("Convergence failure TriaxialCartesian::cartsolve");
+         ++i) {
       pair<real, real> fx = f(p);
       real fv = fx.first, fp = fx.second;
       // We're done if f(p) <= 0 on initial guess; this can happens when z = 0.
@@ -126,20 +138,20 @@ namespace GeographicLib {
       if (!( fabs(fx.first) > tol2 ))
         break;                  // test abs(fv) here
       q = fmax(qmin, q - fx.first/fx.second);
-      q = cartsolve(f, q, Math::sq(_b));
+      q = cartsolve(f, q, Math::sq(b()));
     } while (false);
     vec3 axes = {sqrt(_linecc2[0] + q), sqrt(_linecc2[1] + q), sqrt(q)};
     _t.cart2toellipint(r, bet, omg, axes);
-    H = axes[2] - _t.c();
+    H = axes[2] - c();
   }
 
   void TriaxialCartesian::elliptocart(Angle bet, Angle omg, real H, vec3& r)
     const {
     vec3 ax;
-    real shift = H * (2*_t.c() + H);
+    real shift = H * (2*c() + H);
     for (int k = 0; k < 2; ++k)
       ax[k] = sqrt(_axes2[k] + shift);
-    ax[2] = _t.c() + H;
+    ax[2] = c() + H;
     real tx = hypot(_t.k() * bet.c(), _t.kp()),
       tz = hypot(_t.k(), _t.kp() * omg.s());
     r = { ax[0] * omg.c() * tx,
@@ -220,14 +232,14 @@ namespace GeographicLib {
   }
 
   void TriaxialCartesian::carttocart2(vec3 r, vec3& r2, real& h) const {
-    const real eps = numeric_limits<real>::epsilon(), ztol = _b * eps/8;
+    const real eps = numeric_limits<real>::epsilon(), ztol = b() * eps/8;
     for (int k = 0; k < 3; ++k)
       if (fabs(r[k]) <= ztol) r[k] = copysign(real(0), r[k]);
     vec3 s = {r[0] * _axes[0], r[1] * _axes[1], r[2] * _axes[2]};
     real p = fmax(fmax(fabs(s[2]), hypot(s[1], s[2]) - _linecc2[1]),
                   Math::hypot3(s[0], s[1], s[2]) - _linecc2[0]);
     const funp<2> f(s, _linecc2);
-    p = cartsolve(f, p, Math::sq(_b));
+    p = cartsolve(f, p, Math::sq(b()));
     r2 = r;
     for (int k = 0; k < 3; ++k)
       r2[k] *= _axes2[k] / (p + _linecc2[k]);

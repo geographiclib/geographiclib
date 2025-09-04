@@ -21,7 +21,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
-#include "Triaxial.hpp"
+#include "TriaxialGeodesic.hpp"
 #include "TriaxialLine.hpp"
 
 // #include "GeodSolve.usage"
@@ -248,10 +248,10 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
-    Triaxial t = e2 >= 0 ? Triaxial(b, e2, k2, kp2) :
-      !isnan(f) ? Triaxial(b, fabs(f) * (2 - f),
-                           signbit(f) ? 0 : 1, signbit(f) ? 1 : 0) :
-      Triaxial(a, b, c);
+    TriaxialGeodesic t = e2 >= 0 ? TriaxialGeodesic(b, e2, k2, kp2) :
+      !isnan(f) ? TriaxialGeodesic(b, fabs(f) * (2 - f),
+                                   signbit(f) ? 0 : 1, signbit(f) ? 1 : 0) :
+      TriaxialGeodesic(a, b, c);
 
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";

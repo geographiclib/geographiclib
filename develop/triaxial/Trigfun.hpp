@@ -14,8 +14,6 @@
 
 #include <functional>
 #include <utility>
-#include <vector>
-#include <iostream>
 
 namespace GeographicLib {
 
@@ -213,7 +211,7 @@ namespace GeographicLib {
    * This builds on the Trigfun class.
    **********************************************************************/
 
-  class /*GEOGRAPHICLIB_EXPORT*/ TrigfunExt {
+  class GEOGRAPHICLIB_EXPORT TrigfunExt {
   private:
     typedef Math::real real;
     std::function<real(real)> _fp;

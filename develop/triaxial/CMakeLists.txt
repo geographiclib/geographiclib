@@ -73,6 +73,7 @@ endif ()
 set (SOURCES
   Trigfun.cpp
   Triaxial.cpp
+  TriaxialGeodesic.cpp
   TriaxialLine.cpp
   TriaxialCartesian.cpp
   Angle.cpp
@@ -81,6 +82,7 @@ set (SOURCES
 set (HEADERS
   Trigfun.hpp
   Triaxial.hpp
+  TriaxialGeodesic.cpp
   TriaxialLine.hpp
   TriaxialCartesian.hpp
   Angle.hpp

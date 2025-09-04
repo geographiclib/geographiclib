@@ -9,10 +9,9 @@
 
 // Set _oblpro = false, _merid = true
 
-#include "TriaxialLine.hpp"
 #include <iostream>
 #include <iomanip>
-#include <sstream>
+#include "TriaxialLine.hpp"
 
 namespace GeographicLib {
 
@@ -20,34 +19,35 @@ namespace GeographicLib {
 
   TriaxialLine::TriaxialLine(fline f, fline::fics fic,
                              gline g, gline::gics gic)
-    : _t(f.t())
+    : _tg(f.tg())
     , _f(f)
     , _fic(fic)
     , _g(g)
     , _gic(gic)
   {}
 
-  TriaxialLine::TriaxialLine(const Triaxial& t)
-    : _f(t, Triaxial::gamblk(t, (t._umbalt && t._kp2 > 0) || t._k2 == 0))
+  TriaxialLine::TriaxialLine(const TriaxialGeodesic& tg)
+    : _f(tg, TriaxialGeodesic::gamblk(tg, (tg._umbalt &&
+                                           tg.kp2() > 0) || tg.k2() == 0))
   {}
 
-  TriaxialLine::TriaxialLine(const Triaxial& t,
+  TriaxialLine::TriaxialLine(const TriaxialGeodesic& tg,
                              Angle bet1, Angle omg1, Angle alp1)
-    : _t(t)
+    : _tg(tg)
   {
     bet1.round();
     omg1.round();
     alp1.round();
-    Triaxial::gamblk gam = t.gamma(bet1, omg1, alp1);
-    _f = fline(t, gam);
+    TriaxialGeodesic::gamblk gam = _tg.gamma(bet1, omg1, alp1);
+    _f = fline(tg, gam);
     _fic = fline::fics(_f, bet1, omg1, alp1);
-    _g = gline(t, gam);
+    _g = gline(tg, gam);
     _gic = gline::gics(_g, _fic);
   }
 
-  TriaxialLine::TriaxialLine(const Triaxial& t, real bet1, real omg1,
+  TriaxialLine::TriaxialLine(const TriaxialGeodesic& tg, real bet1, real omg1,
                              real alp1)
-    : TriaxialLine(t, ang(bet1), ang(omg1), ang(alp1))
+    : TriaxialLine(tg, ang(bet1), ang(omg1), ang(alp1))
   {}
 
   void TriaxialLine::pos1(Angle& bet1, Angle& omg1, Angle& alp1) const {
@@ -72,11 +72,11 @@ namespace GeographicLib {
                               int* countn, int* countb) const {
     // Compute points at distance s12
     // cout << "XX " << _fic.delta << " " << _gic.sig1 << "\n";
-    real sig2 = _gic.sig1 + s12/_t._b;
+    real sig2 = _gic.sig1 + s12/_tg.b();
     Angle &phi2a = bet2a, &tht2a = omg2a;
     if (_f.gammax() > 0) {
       real u2, v2;
-      if constexpr (false && biaxspecial(_t, _g.gammax())) {
+      if constexpr (false && biaxspecial(_tg, _g.gammax())) {
         u2 = gpsi().inv(sig2, countn, countb);
         v2 = ftht().inv(fpsi()(u2) - _fic.delta, countn, countb);
       } else
@@ -95,7 +95,7 @@ namespace GeographicLib {
                   0, true).rebase(_fic.phi0);
       alp2a = ang(_fic.Ex * hypot(_f.kx() * _f.gm().nu, _f.kxp() * tht2a.c()),
                   _fic.phi0.c() * _f.kx() * _f.gm().nup * psi2.c());
-      if (_t.debug())
+      if (_tg.debug())
         cout << real(tht2a) << " " << real(psi2) << " ";
     } else if (_f.gammax() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
@@ -152,7 +152,7 @@ namespace GeographicLib {
         psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         tht2a = anglam(v2, _f.kx());
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
-        // if t._kp2 == 0 then meridional oblate
+        // if_tg.t().kp2 == 0 then meridional oblate
         int Ny = _fic.Nx * parity;
         tht2a += ang::cardinal(2 * sig2n.second);
         tht2a = tht2a + _fic.tht0;
@@ -162,7 +162,7 @@ namespace GeographicLib {
         alp2a = ang(_fic.Ex * _f.kxp() / mcosh(v2, _f.kx()),
                     _f.kx() * Ny / mcosh(u2, _f.kxp()));
       }
-      if (_t.debug())
+      if (_tg.debug())
         cout << real(tht2a) << " " << real(psi2) << " ";
     } else {
       // gamma = NaN
@@ -303,7 +303,7 @@ namespace GeographicLib {
     //
     // fx, fy, gx, gy are increasing functions defined in [-1, 1]*pi2
     // Assume fx(0) = fy(0) = gx(0) = gy(0) = 0
-    real pi2 = Triaxial::BigValue(),
+    real pi2 = TriaxialGeodesic::BigValue(),
       sbet = gx.Max(), somg = gy.Max(), stot = sbet + somg,
       dbet = fx.Max(), domg = fy.Max(), del  = dbet - domg;
     bool debug = false;
@@ -398,53 +398,6 @@ namespace GeographicLib {
         throw GeographicLib::GeographicErr
           ("Bad initial points TriaxialLine::newt2");
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
-      if (0) {
-        real
-          fA = (xset.min().fz - yv.fz) - f0, gA = (xset.min().gz + yv.gz) - g0,
-          fC = (xset.max().fz - yv.fz) - f0, gC = (xset.max().gz + yv.gz) - g0,
-          fB = (xv.fz - yset.min().fz) - f0, gB = (xv.gz + yset.min().gz) - g0,
-          fD = (xv.fz - yset.max().fz) - f0, gD = (xv.gz + yset.max().gz) - g0;
-        // y=-x            y=x
-        // g=0             f=0
-        //   \    ind=-2   /
-        //    \    f<0    /
-        //     \   g>0   /
-        //      \  yb   /
-        //       \  D  /
-        // ind=-4 \   / ind=4
-        //   f<0   \ /   f>0
-        //   g<0    X    g>0
-        //   xa    / \   xb
-        //    A   /   \   C
-        //       /  B  \.
-        //      /  f>0  \.
-        //     /   g<0   \.
-        //    /    ya     \.
-        //   /    ind=2    \.
-        // Allow equality on the initial midpoints points
-        if (!( fA <= 0 && gA <= 0 )) {
-          cout << scientific << "midA " << fA << " " << gA << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints A TriaxialLine::newt2");
-        }
-        if (!( fB >= 0 && gB <= 0 )) {
-          cout << scientific << "midB " << fB << " " << gB << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints B TriaxialLine::newt2");
-        }
-        if (!( fC >= 0 && gC >= 0 )) {
-          cout << scientific << "midC " << fC << " " << gC << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints C TriaxialLine::newt2");
-        }
-        //      cout << scientific << "midD " << fD << " " << gD << "\n";
-        if (!( fD <= 0 && gD >= 0 )) {
-          cout << "XY " << xv.z << " " << yset.max().z << "\n";
-          cout << scientific << "midD " << fD << " " << gD << "\n";
-          throw GeographicLib::GeographicErr
-            ("Bad initial midpoints B TriaxialLine::newt2");
-        }
-      }
     }
     // degen is a flag detected degeneracy to a 1d system.  Only the case gy(y)
     // = const is treated.  Then g = gx(x) + gy(y) - g0 = 0 converges as a 1d
@@ -485,144 +438,6 @@ namespace GeographicLib {
           cout << "break0 " << scientific << f << " " << g << "\n";
         break;
       }
-      // Update bounds as follows
-      //
-      // y=-x            y=x
-      // g=0             f=0
-      //   \    ind=-2   /
-      //    \    f<0    /
-      //     \   g>0   /
-      //      \  yb   /
-      //       \  D  /
-      // ind=-4 \   / ind=4
-      //   f<0   \ /   f>0
-      //   g<0    X    g>0
-      //   xa    / \   xb
-      //    A   /   \   C
-      //       /  B  \.
-      //      /  f>0  \.
-      //     /   g<0   \.
-      //    /    ya     \.
-      //   /    ind=2    \.
-      //
-      // Secant method: data at points A, B, C, D allow piecewise lineear
-      // approximations to fx, fy, gx, gy.
-      //
-      // Sort x(A), x(B), x(C), x(D).  We need to approximate fx, gx in the
-      // interval [x(A), x(C)].  x(B) and X(D) can be arbitrarily ordered
-      // relative to [x(A), x(C)] to give:
-      //
-      // x(A), x(C)
-      // x(A), x(B), x(C)
-      // x(A), x(D), x(C)
-      // x(A), x(B), x(D), x(C)
-      // x(A), x(D), x(B), x(C)
-      //
-      // Thus piecewise linear approximations to fx and gx consist of nx = 1,
-      // 2, or 3 pieces.
-      //
-      // Similarly the approximations to fy and gy consist of ny = 1, 2, or 3
-      // pieces.
-      //
-      // Find secant solution to
-      //
-      //  fx(x) - fy(y) - f0 = 0
-      //  gx(x) + gy(y) - g0 = 0
-      //
-      // by solving the nx x ny systems of linear equations and accepting the
-      // solution were [x, y] are in the corresponing intervals.
-
-      // given x in [x(A), x(C)], test x(B), x(D) to find the tightest bracket
-      // x in [x(P), x(Q)].  Linearly interpolate fx using fx(x(P)), fx(x(Q))
-      // and similarly for gx.
-      //
-      // Procedure is similar for fy and gy.
-
-      // Rethink using f = fx(x) - fy(y) - f0, g = gx(x) + gy(y) - g0, i.e.,
-      // sums of x-dependent and y-dependent terms.  Let
-
-      // fx:fx0 + (fx1-fx0)*(x-x0)/(x1-x0);
-      // fy:fy0 + (fy1-fy0)*(y-y0)/(y1-y0);
-      // gx:gx0 + (gx1-gx0)*(x-x0)/(x1-x0);
-      // gy:gy0 + (gy1-gy0)*(y-y0)/(y1-y0);
-      // solve([fx-fy-f0, gx+gy-g0],[x,y])
-
-      // Positions of the roots
-      //   [x-x0 = (-(fx0-fy0-f0)*gyp-(gx0+gy0-g0)*fyp)/(fxp*gyp+fyp*gxp),
-      //    y-y0 = ( (fx0-fy0-f0)*gxp-(gx0+gy0-g0)*fxp)/(fxp*gyp+fyp*gxp)];
-      //   [x-x1 = (-(fx1-fy1-f0)*gyp-(gx1+gy1-g0)*fyp)/(fxp*gyp+fyp*gxp),
-      //    y-y1 = ( (fx1-fy1-f0)*gxp-(gx1+gy1-g0)*fxp)/(fxp*gyp+fyp*gxp)];
-      //   [x-x1 = (-(fx1-fy0-f0)*gyp-(gx1+gy0-g0)*fyp)/(fxp*gyp+fyp*gxp),
-      //    y-y0 = ( (fx1-fy0-f0)*gxp-(gx1+gy0-g0)*fxp)/(fxp*gyp+fyp*gxp)];
-      //   [x-x0 = (-(fx0-fy1-f0)*gyp-(gx0+gy1-g0)*fyp)/(fxp*gyp+fyp*gxp),
-      //    y-y1 = ( (fx0-fy1-f0)*gxp-(gx0+gy1-g0)*fxp)/(fxp*gyp+fyp*gxp)];
-
-      // Conditions for root to be in the [x0,x1] x [y0,y1] rectangle:
-      //   x-x0 > 0
-      //   -f00*gyp/fyp-g00 = -f01*gyp/fyp-g01 > 0
-      //   y-y0 > 0
-      //    f00*gxp/fxp-g00 = -f10*gxy/fxy-g10 > 0
-      //   x-x1 < 0
-      //   -f10*gyp/fyp-g10 = -f11*gyp/fyp-g11 < 0
-      //   y-y1 < 0
-      //    f01*gxp/fxp-g01 =  f11*gxp/fxp-g11 < 0
-      //
-      // where
-      //   f00 = fx0-fy0-f0
-      //   f01 = fx0-fy1-f0
-      //   f10 = fx1-fy0-f0
-      //   f11 = fx1+fy1-f0
-      //   g00 = gx0+gy0-g0
-      //   g01 = gx0+gy1-g0
-      //   g10 = gx1+gy0-g0
-      //   g11 = gx1+gy1-g0
-      //   fxp = (fx1-fx0)/(x1-x0)
-      //   fyp = (fy1-fy0)/(y1-y0)
-      //   gxp = (gx1-gx0)/(x1-x0)
-      //   gyp = (gy1-gy0)/(y1-y0)
-
-      // A necessary condition for a root is
-      //   f01 <= 0 <= f10
-      //   g00 <= 0 <= g11
-      //
-      // The condition g00 < g11, f01 < f10 holds for all rectangles.  So can
-      // use condition g00 > 0 or f01 > 0 to exit x loop.
-
-      // Find rectangle with x in [x0, x1], y in [y0, y1].  New test point x =
-      // (x0 + x1)/2, y = (y0+y1)/2.  But note the actual solution may not be
-      // in [x0, x1] x [y0, y1].
-
-      // Maintain a sorted list of x, y values with x in [xa, xb], y in [ya,
-      // yb].
-
-      // zvals structure to hold [z, fz(z), gz(z)] (z = x or y).  zset holds a
-      // set of zvals with operator< operating on z alone.  Additional data
-      // members: za, zb (so we don't bother removing elements from the set)
-
-      // Static function zbisect takes two zsets and returns bisection point of
-      // x-y rectangle contains the solution for piecewise linear
-      // approximation.
-
-      // BUILD5: XY -4.71238982418546928 -1.57079632679489514
-      // BUILD : XY -4.71238982418546914 -1.5707963267314824
-      // BUILD:  XY -4.71238982418546914 -1.570796327151045
-      //         XY -4.71238982418547003 -1.57079632694126348
-      // BUILD5: XY -4.71238982418546928 -1.57079632679489514
-
-      // Let
-      //
-      //   g(x) = gx(x) - g0 (gy(y) = 0)
-      //   g(xa) = ga, g(xb) = gb
-      //
-      // Then, a linear fit for g(x) gives g(x0) = 0 at
-      //
-      //   x0 = pa * xa + pb * xb
-      //
-      // where pa = gb/(gb - ga), pb = -ga/(gb - ga)
-      //
-      // Let fx(xa) = fa, fy(xb) = fb, then a linear fit for fx(x) gives
-      //
-      //   f(x0) = pa * fa + pb * fb
       real
         fxp = fx.deriv(x), fyp = fy.deriv(y),
         gxp = gx.deriv(x), gyp = gy.deriv(y),
@@ -1069,41 +884,43 @@ namespace GeographicLib {
     return ret;
   }
 
-  TriaxialLine::fline::fline(const Triaxial& t, bool neg)
-    : _t(t)
-    , _gm(t, neg)
+  TriaxialLine::fline::fline(const TriaxialGeodesic& tg, bool neg)
+    : _tg(tg)
+    , _gm(tg, neg)
   {}
 
-  TriaxialLine::fline::fline(const Triaxial& t, Triaxial::gamblk gam)
-    : _t(t)
+  TriaxialLine::fline::fline(const TriaxialGeodesic& tg,
+                             TriaxialGeodesic::gamblk gam)
+    : _tg(tg)
     , _gm(gam)
     , _fpsi(false, _gm.kx2 , _gm.kxp2,
-            +(_gm.transpolar ? -1 : 1) * _t._e2,
-            -(_gm.transpolar ? -1 : 1) * _gm.gamma, t)
+            +(_gm.transpolar ? -1 : 1) * _tg.e2(),
+            -(_gm.transpolar ? -1 : 1) * _gm.gamma, _tg)
     , _ftht(false, _gm.kxp2 , _gm.kx2,
-            -(_gm.transpolar ? -1 : 1) * _t._e2,
-            +(_gm.transpolar ? -1 : 1) * _gm.gamma, t)
+            -(_gm.transpolar ? -1 : 1) * _tg.e2(),
+            +(_gm.transpolar ? -1 : 1) * _gm.gamma, _tg)
   {
     // Only needed for umbilical lines
     _deltashift = _gm.gamma == 0 ?
-      (_t.k2() > 0 && _t.kp2() > 0 ? 2 * (_fpsi.Max() - _ftht.Max()) : 0) :
+      (_tg.k2() > 0 && _tg.kp2() > 0 ? 2 * (_fpsi.Max() - _ftht.Max()) : 0) :
       Math::NaN();
   }
 
-  TriaxialLine::gline::gline(const Triaxial& t, bool neg)
-    : _t(t)
-    , _gm(t, neg)
+  TriaxialLine::gline::gline(const TriaxialGeodesic& tg, bool neg)
+    : _tg(tg)
+    , _gm(tg, neg)
   {}
 
-  TriaxialLine::gline::gline(const Triaxial& t, const Triaxial::gamblk& gm)
-    : _t(t)
+  TriaxialLine::gline::gline(const TriaxialGeodesic& tg,
+                             const TriaxialGeodesic::gamblk& gm)
+    : _tg(tg)
     , _gm(gm)
     , _gpsi(true, _gm.kx2 , _gm.kxp2,
-            +(_gm.transpolar ? -1 : 1) * _t._e2,
-            -(_gm.transpolar ? -1 : 1) * _gm.gamma, t)
+            +(_gm.transpolar ? -1 : 1) * _tg.e2(),
+            -(_gm.transpolar ? -1 : 1) * _gm.gamma, _tg)
     , _gtht(true, _gm.kxp2 , _gm.kx2,
-            -(_gm.transpolar ? -1 : 1) * _t._e2,
-            +(_gm.transpolar ? -1 : 1) * _gm.gamma, t)
+            -(_gm.transpolar ? -1 : 1) * _tg.e2(),
+            +(_gm.transpolar ? -1 : 1) * _gm.gamma, _tg)
     , s0(_gm.gammax == 0 ? _gpsi.Max() + _gtht.Max() : 0)
   {}
 
@@ -1213,7 +1030,7 @@ namespace GeographicLib {
             real npi = (tau12.ncardinal() + fic.phi1.nearest(2U).ncardinal())
               * Math::pi()/2;
             // Don't worry about the case where we start at a pole -- this is
-            // already handled in Triaxial::Inverse.
+            // already handled in TriaxialGeodesic::Inverse.
             //
             // Solve F(tpsi2) = tpsi2 - Deltaf(n*pi + atan(tpsi2))
             //                = (tan(psi1) - Deltaf(psi1)) = c
@@ -1227,7 +1044,7 @@ namespace GeographicLib {
             //    -> a1x = 90.0023
             //   omg1 = -91 -> omg2 = 178.9293750483-90 = 88.9293750483
             real c = fic.Nx * (fic.phi1.t() - fpsi().df(fic.phi1.radians())),
-              l = exp(Triaxial::BigValue()),
+              l = exp(TriaxialGeodesic::BigValue()),
               tpsi2 = Trigfun::root([this, npi] (real tpsi) -> pair<real, real>
                                     {
                                       real psi = atan(tpsi);
@@ -1294,7 +1111,7 @@ namespace GeographicLib {
       alp1.reflect(false, false, true);
     }
     const real eps = numeric_limits<real>::epsilon();
-    const Triaxial& t = f.t();
+    const TriaxialGeodesic& tg = f.tg();
     if (!f.transpolar() && phi1.s() == 0 && fabs(alp1.c()) <= Math::sq(eps))
       alp1 = ang(alp1.s(), - Math::sq(eps), alp1.n(), true);
     Ex = signbit(alp1.s()) ? -1 : 1;
@@ -1311,7 +1128,7 @@ namespace GeographicLib {
       // assume fbet().fwd(x) = x in this case
       u0 = f.fpsi().fwd(psi1.radians());
       v0 = f.ftht().fwd(tht1.radians());
-      delta = (biaxspecial(t, f.gammax()) ?
+      delta = (biaxspecial(tg, f.gammax()) ?
                atan2(phi1.s() * fabs(alp1.s()), phi0.c() * alp1.c())
                - sqrt(f.gammax()) * f.fpsi().df(u0)
                : f.fpsi()(u0)) - f.ftht()(v0);
@@ -1358,8 +1175,8 @@ namespace GeographicLib {
         } else {
           phi0 = phi1.nearest(2U);
           tht0 = tht1.nearest(2U);
-          delta = Nx * f.fpsi()(lamang(phi1 - phi0, t._kp)) -
-            f.ftht()(lamang(tht1 - tht0, t._k));
+          delta = Nx * f.fpsi()(lamang(phi1 - phi0, tg.kp())) -
+            f.ftht()(lamang(tht1 - tht0, tg.k()));
         }
       }
     } else {
@@ -1400,13 +1217,13 @@ namespace GeographicLib {
 
   Math::real TriaxialLine::gline::dist(gics ic, fline::disttx d) const {
     real sig2 = gpsi()(d.phiw2) + gtht()(d.thtw2) + d.ind2 * 2*s0;
-    return (sig2 - ic.sig1) * t()._b;
+    return (sig2 - ic.sig1) * tg().b();
   }
 
   void TriaxialLine::inversedump(ostream& os) const {
     os << "[b, e2, k2, kp2, gam] = deal("
-       << _t.b() << ", " << _t.e2() << ", "
-       << _t.k2() << ", " << _t.kp2() << ", "
+       << _tg.b() << ", " << _tg.e2() << ", "
+       << _tg.k2() << ", " << _tg.kp2() << ", "
        << gamma() << ");\n";
     os << "tx = ["
        << fpsi().txp() << ", " << gpsi().txp() << ", "
@@ -1426,7 +1243,7 @@ namespace GeographicLib {
   }
 
   TriaxialLine::hfun::hfun(bool distp, real kap, real kapp, real eps, real mu,
-                           const Triaxial& t)
+                           const TriaxialGeodesic& tg)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
@@ -1435,11 +1252,11 @@ namespace GeographicLib {
     , _sqrtkap(sqrt(_kap))
     , _sqrtkapp(sqrt(_kapp))
     , _distp(distp)
-    , _umb(!t._biaxial && _mu == 0)
+    , _umb(!tg.biaxial() && _mu == 0)
     , _meridr(_kap == 0 && _mu == 0)
     , _meridl(_kapp == 0 && _mu == 0)
-    , _biaxr(biaxspecial(t, _mu) && _kap  == 0)
-    , _biaxl(biaxspecial(t, _mu) && _kapp == 0)
+    , _biaxr(biaxspecial(tg, _mu) && _kap  == 0)
+    , _biaxl(biaxspecial(tg, _mu) && _kapp == 0)
   {
     // mu in [-kap, kapp], eps in (-inf, 1/kap)
     if (!_distp) {
@@ -1457,7 +1274,7 @@ namespace GeographicLib {
       } else if (_meridl || _biaxl) {
         // biaxial librating coordinate
         // _kap == 1, mu > 0 not allowed
-        // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
+        // DON'T USE tx: _tx = _mu < 0 &&  -_mu < tg._ellipthresh;
         _tx = false;
         // f explicitly multiplied by sqrt(-mu) in operator()() for _biaxl
         // For _meridl operator() ignores this
@@ -1467,7 +1284,7 @@ namespace GeographicLib {
                           { return dfpsibiax(sin(psi), cos(psi), eps, mu); },
                           Math::pi()/2, false);
       } else if (_mu > 0) {
-        _tx = _mu / (_kap + _mu) < t._ellipthresh;
+        _tx = _mu / (_kap + _mu) < tg._ellipthresh;
         if (_tx) {
           _ell = EllipticFunction(_kap / (_kap + _mu), 0,
                                   _mu / (_kap + _mu), 1);
@@ -1485,7 +1302,7 @@ namespace GeographicLib {
                             { return fthtp(cos(tht), kap, kapp, eps, mu); },
                             Math::pi()/2, false);
       } else if (_mu < 0) {
-        _tx = -_mu / _kap < t._ellipthresh;
+        _tx = -_mu / _kap < tg._ellipthresh;
         if (_tx) {
           _ell = EllipticFunction((_kap + _mu) / _kap, 0, -_mu / _kap, 1);
           _fun = TrigfunExt(
@@ -1503,7 +1320,7 @@ namespace GeographicLib {
                                            kap, kapp, eps, mu); },
                             Math::pi()/2, false);
       } else if (_umb) {
-        _tx = _kapp < t._ellipthresh;
+        _tx = _kapp < tg._ellipthresh;
         // f multiplied by sqrt(kap*kapp)
         // Include scale = 1 in TrigfunExt constructor because this function
         // gets added to u.
@@ -1546,7 +1363,7 @@ namespace GeographicLib {
       } else if (_meridl || _biaxl) {
         // biaxial non-symmetry coordinate
         // _kap == 1, mu > 0 not allowed
-        // DON'T USE tx: _tx = _mu < 0 &&  -_mu < t._ellipthresh;
+        // DON'T USE tx: _tx = _mu < 0 &&  -_mu < tg._ellipthresh;
         _tx = false;
         _fun = TrigfunExt(
                           [eps = _eps, mu = _mu]
@@ -1554,7 +1371,7 @@ namespace GeographicLib {
                           { return gpsibiax(sin(psi), cos(psi), eps, mu); },
                           Math::pi()/2, false);
       } else if (_mu > 0) {
-        _tx = _mu / (_kap + _mu) < t._ellipthresh;
+        _tx = _mu / (_kap + _mu) < tg._ellipthresh;
         if (_tx) {
           _ell = EllipticFunction(_kap / (_kap + _mu), 0,
                                   _mu / (_kap + _mu), 1);
@@ -1572,7 +1389,7 @@ namespace GeographicLib {
                             { return gthtp(cos(tht), kap, kapp, eps, mu); },
                             Math::pi()/2);
       } else if (_mu < 0) {
-        _tx = -_mu / _kap < t._ellipthresh;
+        _tx = -_mu / _kap < tg._ellipthresh;
         if (_tx) {
           _ell = EllipticFunction((_kap + _mu) / _kap, 0, -_mu / _kap, 1);
           _fun = TrigfunExt(
@@ -1590,7 +1407,7 @@ namespace GeographicLib {
                                            kap, kapp, eps, mu); },
                             Math::pi()/2);
       } else if (_umb) {
-        _tx = _kapp < t._ellipthresh;
+        _tx = _kapp < tg._ellipthresh;
         if (_tx) {
           _ell = EllipticFunction(_kap, 0, _kapp, 1);
           _fun = TrigfunExt(
@@ -1753,8 +1570,8 @@ namespace GeographicLib {
         return Math::NaN();       // Deals with +/-inf and nan
       // Now we're dealing with _umb.
       if (fabs(z) >= Max())
-        return copysign(Triaxial::BigValue(), z);
-      real ua = -Triaxial::BigValue(), ub = -ua;
+        return copysign(TriaxialGeodesic::BigValue(), z);
+      real ua = -TriaxialGeodesic::BigValue(), ub = -ua;
       u0 = fmin(ub, fmax(ua, u0));
       // Solve z = _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
       return Trigfun::root(
