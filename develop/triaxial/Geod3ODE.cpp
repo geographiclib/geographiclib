@@ -20,6 +20,12 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
+
+#if defined(_MSC_VER)
+// Squelch warning triggered by boost:
+//   4127: conditional expression is constant
+#  pragma warning (disable: 4127)
+#endif
 #include "TriaxialGeodesicODE.hpp"
 
 // #include "GeodSolve.usage"

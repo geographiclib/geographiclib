@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include <iomanip>
+// Needed by zsetsdiag
+#include <sstream>
 #include "TriaxialGeodesicLine.hpp"
 
 namespace GeographicLib {

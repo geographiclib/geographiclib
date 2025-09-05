@@ -11,6 +11,14 @@
 
 #include <iostream>
 #include <iomanip>
+
+#if defined(_MSC_VER)
+// Squelch warning triggered by boost:
+//   4127: conditional expression is constant
+//   4244: conversion from '_Ty' to 'double'
+//   4267: conversion from 'size_t' to 'unsigned short'
+#  pragma warning (disable: 4127 4244 4267)
+#endif
 #include "TriaxialGeodesicODE.hpp"
 
 namespace GeographicLib {
@@ -269,11 +277,11 @@ namespace GeographicLib {
         Reset();
         return Position(s12, r2, v2, m12, M12, M21);
       } else if (s12 > _s) {
-        _nsteps += _extended ?
-          integrate_adaptive(_step10, fun10, _y10, _s, s12,
-                             fmax(s12 - _s, 1/real(4))) :
-          integrate_adaptive(_step6, fun6, _y6, _s, s12,
-                             fmax(s12 - _s, 1/real(4)));
+        _nsteps += long(_extended ?
+			integrate_adaptive(_step10, fun10, _y10, _s, s12,
+					   fmax(s12 - _s, 1/real(4))) :
+			integrate_adaptive(_step6, fun6, _y6, _s, s12,
+					   fmax(s12 - _s, 1/real(4))));
         _s = s12;
       }
     }

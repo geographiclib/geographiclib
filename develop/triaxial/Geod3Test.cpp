@@ -11,6 +11,12 @@
 #include "Angle.hpp"
 #include "TriaxialGeodesic.hpp"
 #include "TriaxialGeodesicLine.hpp"
+
+#if defined(_MSC_VER)
+// Squelch warning triggered by boost:
+//   4127: conditional expression is constant
+#  pragma warning (disable: 4127)
+#endif
 #include "TriaxialGeodesicODE.hpp"
 
 using namespace GeographicLib;
