@@ -13,14 +13,14 @@
 #include <functional>
 #include <memory>
 #include "Triaxial.hpp"
-// #include "TriaxialLine.hpp"
 
 namespace GeographicLib {
-  class TriaxialLine;
+  class TriaxialGeodesicLine;
 
   class /*GEOGRAPHICLIB_EXPORT*/ TriaxialGeodesic {
   private:
-    friend class TriaxialLine;  // For access to BigValue, _ellipthresh, _biaxp
+    // For access to BigValue, _ellipthresh, _biaxp
+    friend class TriaxialGeodesicLine;
     typedef Math::real real;
     typedef Angle ang;
     Triaxial _t;
@@ -40,7 +40,7 @@ namespace GeographicLib {
       _swapomg;                 // allow swapping of omega{1,2}
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
-    mutable std::shared_ptr<TriaxialLine> _umbline;
+    mutable std::shared_ptr<TriaxialGeodesicLine> _umbline;
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
@@ -98,15 +98,15 @@ namespace GeographicLib {
     TriaxialGeodesic(real a, real b, real c);
     TriaxialGeodesic(real b, real e2, real k2, real kp2);
     const Triaxial& t() const { return _t; }
-    TriaxialLine Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
+    TriaxialGeodesicLine Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
                          Angle& alp1, Angle& alp2, real& s12) const;
-    TriaxialLine Inverse(real bet1, real omg1, real bet2, real omg2,
+    TriaxialGeodesicLine Inverse(real bet1, real omg1, real bet2, real omg2,
                          real& alp1, real& alp2, real& s12) const;
-    TriaxialLine Line(Angle bet1, Angle omg1, Angle alp1) const;
-    TriaxialLine Line(real bet1, real omg1, real alp1) const;
-    TriaxialLine Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
+    TriaxialGeodesicLine Line(Angle bet1, Angle omg1, Angle alp1) const;
+    TriaxialGeodesicLine Line(real bet1, real omg1, real alp1) const;
+    TriaxialGeodesicLine Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
                         Angle& bet2, Angle& omg2, Angle& alp2) const;
-    TriaxialLine Direct(real bet1, real omg1, real alp1, real s12,
+    TriaxialGeodesicLine Direct(real bet1, real omg1, real alp1, real s12,
                         real& bet2, real& omg2, real& alp2) const;
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) {

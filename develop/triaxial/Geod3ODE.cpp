@@ -20,9 +20,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
-#include "Triaxial.hpp"
-#include "TriaxialLine.hpp"
-#include "TriaxialODE.hpp"
+#include "TriaxialGeodesicODE.hpp"
 
 // #include "GeodSolve.usage"
 
@@ -268,9 +266,9 @@ int main(int argc, const char* const argv[]) {
     int retval = 0;
     buffered = buffered && linecalc;
     errors = errors && !buffered;
-    TriaxialODE l = linecalc ?
-      TriaxialODE(t, bet1, omg1, alp1, extended, dense, normp, eps) :
-      TriaxialODE(t, extended, dense, normp, eps);
+    TriaxialGeodesicODE l = linecalc ?
+      TriaxialGeodesicODE(t, bet1, omg1, alp1, extended, dense, normp, eps) :
+      TriaxialGeodesicODE(t, extended, dense, normp, eps);
 
     while (std::getline(*input, s)) {
       try {

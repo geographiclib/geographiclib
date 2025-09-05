@@ -10,9 +10,8 @@
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
 #include "TriaxialGeodesic.hpp"
-#include "TriaxialLine.hpp"
-#include "Angle.hpp"
-#include "TriaxialODE.hpp"
+#include "TriaxialGeodesicLine.hpp"
+#include "TriaxialGeodesicODE.hpp"
 
 using namespace GeographicLib;
 using namespace std;
@@ -56,7 +55,7 @@ void report(const TriaxialGeodesic& tg, int bet1, int omg1, int bet2, int omg2,
   ang bet1x(bet1), omg1x(omg1), bet2x(bet2), omg2x(omg2);
   real s12;
   ang alp1, alp2;
-  TriaxialLine l =
+  TriaxialGeodesicLine l =
     tg.Inverse(bet1x, omg1x, bet2x, omg2x, alp1, alp2, s12);
   real m12 = 0, M12 = 1, M21 = 1;
   if (odep) {
@@ -64,7 +63,7 @@ void report(const TriaxialGeodesic& tg, int bet1, int omg1, int bet2, int omg2,
     Triaxial::vec3 r2, v2;
     // ang bet1a, omg1a;
     // l.pos1(bet1a, omg1a, alp1);
-    TriaxialODE direct(tg.t(), ang(bet1), ang(omg1), alp1);
+    TriaxialGeodesicODE direct(tg.t(), ang(bet1), ang(omg1), alp1);
     direct.Position(s12, r2, v2, m12, M12, M21);
     // t.cart2toellip(bet2x, omg2x, v2, alp2);
 #endif
@@ -119,7 +118,7 @@ void errreport(const TriaxialGeodesic& tg,
   ang bet1a, omg1a, bet2a, omg2a;
   if (invp) {
     real s12a;
-    TriaxialLine l0 =
+    TriaxialGeodesicLine l0 =
       tg.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
     errs = fabs(s12 - s12a);
     // direct checks for inverse calculation using alp1a, alp2a, s12a
@@ -131,8 +130,8 @@ void errreport(const TriaxialGeodesic& tg,
       print3(r2); print3(v2);
     }
     if (invdirp) {
-      TriaxialLine l1i(tg, bet1x, omg1x, alp1a);
-      TriaxialLine l2i(tg, bet2x, omg2x, alp2a);
+      TriaxialGeodesicLine l1i(tg, bet1x, omg1x, alp1a);
+      TriaxialGeodesicLine l2i(tg, bet2x, omg2x, alp2a);
       l2i.Position(-s12a, bet1a, omg1a, alp1a);
       tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
       errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
@@ -153,8 +152,8 @@ void errreport(const TriaxialGeodesic& tg,
     // direct checks for test sets using alp1x, alp2x, s12
     tg.t().elliptocart2(bet1x, omg1x, alp1x, r1, v1);
     tg.t().elliptocart2(bet2x, omg2x, alp2x, r2, v2);
-    TriaxialLine l1(tg, bet1x, omg1x, alp1x);
-    TriaxialLine l2(tg, bet2x, omg2x, alp2x);
+    TriaxialGeodesicLine l1(tg, bet1x, omg1x, alp1x);
+    TriaxialGeodesicLine l2(tg, bet2x, omg2x, alp2x);
     l2.Position(-s12, bet1a, omg1a, alp1a);
     tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
     errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
@@ -177,7 +176,7 @@ void errreport(const TriaxialGeodesic& tg,
 }
 
 #if HAVE_BOOST
-void errODE(TriaxialODE& l,
+void errODE(TriaxialGeodesicODE& l,
             Math::real bet1, Math::real omg1, Math::real alp1,
             Math::real bet2, Math::real omg2, Math::real alp2,
             Math::real s12,
@@ -273,7 +272,7 @@ void hybridtest(const TriaxialGeodesic& tg, Math::real bet1, Math::real omg1,
   cout << setprecision(6) << fixed;
   for (unsigned q = 0u; q < 4u; ++q) {
     alpu.setquadrant(q);
-    TriaxialLine l(tg, bet1a, omg1a, alpu);
+    TriaxialGeodesicLine l(tg, bet1a, omg1a, alpu);
     l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
     Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
     cout << real(alpu.base()) << " " << real(bet2a.base()) << " "
@@ -283,7 +282,7 @@ void hybridtest(const TriaxialGeodesic& tg, Math::real bet1, Math::real omg1,
   int m = 1;
   for (int a = -180*m; a <= 180*m; ++a) {
     ang alp1a = ang(real(a)/m);
-    TriaxialLine l(tg, bet1a, omg1a, alp1a);
+    TriaxialGeodesicLine l(tg, bet1a, omg1a, alp1a);
     l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
     Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
     cout << real(a)/m << " " << real(bet2a.base()) << " "
@@ -391,7 +390,7 @@ int main(int argc, const char* const argv[]) {
 #if HAVE_BOOST
         real bet1, omg1, bet2, omg2;
         real alp1, alp2, s12, m12, M12, M21;
-        TriaxialODE l(tg.t(), extended, dense, normp, eps);
+        TriaxialGeodesicODE l(tg.t(), extended, dense, normp, eps);
         while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
                >> m12 >> M12 >> M21) {
           if (odetest)

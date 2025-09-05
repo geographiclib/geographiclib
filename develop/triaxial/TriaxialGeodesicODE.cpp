@@ -11,21 +11,24 @@
 
 #include <iostream>
 #include <iomanip>
-#include "TriaxialODE.hpp"
+#include "TriaxialGeodesicODE.hpp"
 
 namespace GeographicLib {
 
   using namespace std;
 
-  TriaxialODE::TriaxialODE(const Triaxial& t,
-                           bool extended, bool dense, bool normp, real eps)
-    : TriaxialODE(t, vec3{t.a(), 0, 0}, vec3{0, 0, 1},
+  TriaxialGeodesicODE::TriaxialGeodesicODE(const Triaxial& t,
+                                           bool extended, bool dense,
+                                           bool normp, real eps)
+    : TriaxialGeodesicODE(t, vec3{t.a(), 0, 0}, vec3{0, 0, 1},
                   extended, dense, normp, eps)
   {}
 
-  TriaxialODE::TriaxialODE(const Triaxial& t,
-                           Triaxial::vec3 r1, Triaxial::vec3 v1,
-                           bool extended, bool dense, bool normp, real eps)
+  TriaxialGeodesicODE::TriaxialGeodesicODE(const Triaxial& t,
+                                           Triaxial::vec3 r1,
+                                           Triaxial::vec3 v1,
+                                           bool extended, bool dense,
+                                           bool normp, real eps)
     : _t(t)
     , _b(t.b())
     , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(),
@@ -57,9 +60,11 @@ namespace GeographicLib {
     _t.cart2toellip(_r1, _v1, _bet1, _omg1, _alp1);
   }
 
-  TriaxialODE::TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1,
-                           Angle alp1,
-                           bool extended, bool dense, bool normp, real eps)
+  TriaxialGeodesicODE::TriaxialGeodesicODE(const Triaxial& t,
+                                           Angle bet1, Angle omg1,
+                                           Angle alp1,
+                                           bool extended, bool dense,
+                                           bool normp, real eps)
     : _t(t)
     , _b(t.b())
     , _eps(eps <= 0 ? pow(numeric_limits<real>::epsilon(),
@@ -91,7 +96,7 @@ namespace GeographicLib {
     _t.elliptocart2(_bet1, _omg1, _alp1, _r1, _v1);
   }
 
-  void TriaxialODE::Norm6(vec6& y) const {
+  void TriaxialGeodesicODE::Norm6(vec6& y) const {
     real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
     y[0] /= ra; y[1] /= ra; y[2] /= ra;
     vec3 up = {y[0] / _axes2n[0], y[1], y[2] / _axes2n[2]};
@@ -103,7 +108,7 @@ namespace GeographicLib {
     y[3+0] /= f; y[3+1] /= f; y[3+2] /= f;
   }
 
-  void TriaxialODE::Accel6(const vec6& y, vec6& yp) const {
+  void TriaxialGeodesicODE::Accel6(const vec6& y, vec6& yp) const {
     vec3 up = {y[0] / _axes2n[0], y[1], y[2] / _axes2n[2]};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
       f = -(Math::sq(y[3+0]) / _axes2n[0] +
@@ -113,7 +118,7 @@ namespace GeographicLib {
     ++_intsteps;
   }
 
-  void TriaxialODE::Accel6N(const vec6& y, vec6& yp) const {
+  void TriaxialGeodesicODE::Accel6N(const vec6& y, vec6& yp) const {
     real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
     // merge correction to r with computation of U and put U in yp[3,4,5]
     yp[3+0] = y[0] / (ra * _axes2n[0]);
@@ -135,13 +140,13 @@ namespace GeographicLib {
     ++_intsteps;
   }
 
-  void TriaxialODE::Norm10(vec10& y) const {
+  void TriaxialGeodesicODE::Norm10(vec10& y) const {
     vec6 y6{y[0], y[1], y[2], y[3+0], y[3+1], y[3+2]};
     Norm6(y6);
     for (int i = 0; i < 6; ++i) y[i] = y6[i];
   }
 
-  void TriaxialODE::Accel10(const vec10& y, vec10& yp) const {
+  void TriaxialGeodesicODE::Accel10(const vec10& y, vec10& yp) const {
     vec3 up = {y[0] / _axes2n[0], y[1], y[2] / _axes2n[2]};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
       f = -(Math::sq(y[3+0]) / _axes2n[0] +
@@ -155,7 +160,7 @@ namespace GeographicLib {
     ++_intsteps;
   }
 
-  void TriaxialODE::Accel10N(const vec10& y, vec10& yp) const {
+  void TriaxialGeodesicODE::Accel10N(const vec10& y, vec10& yp) const {
     real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
     // merge correction to r with computation of U and put U in yp[3,4,5]
     yp[3+0] = y[0] / (ra * _axes2n[0]);
@@ -181,13 +186,13 @@ namespace GeographicLib {
   }
 
   pair<Math::real, Math::real>
-  TriaxialODE::Position(real s12, vec3& r2, vec3& v2) {
+  TriaxialGeodesicODE::Position(real s12, vec3& r2, vec3& v2) {
     real m12, M12, M21;
     return Position(s12, r2, v2, m12, M12, M21);
   }
 
   pair<Math::real, Math::real>
-  TriaxialODE::Position(real s12, vec3& r2, vec3& v2,
+  TriaxialGeodesicODE::Position(real s12, vec3& r2, vec3& v2,
                         real& m12, real& M12, real& M21) {
     static const auto
       fun6 = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
@@ -296,7 +301,8 @@ namespace GeographicLib {
   }
 
   pair<Math::real, Math::real>
-  TriaxialODE::Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2) {
+  TriaxialGeodesicODE::Position(real s12,
+                                Angle& bet2, Angle& omg2, Angle& alp2) {
     vec3 r2, v2;
     auto err = Position(s12, r2, v2);
     _t.cart2toellip(r2, v2, bet2, omg2, alp2);
@@ -304,16 +310,16 @@ namespace GeographicLib {
   }
 
   pair<Math::real, Math::real>
-  TriaxialODE::TriaxialODE::Position(real s12,
-                                     Angle& bet2, Angle& omg2, Angle& alp2,
-                                     real& m12, real& M12, real& M21) {
+  TriaxialGeodesicODE::Position(real s12,
+                                Angle& bet2, Angle& omg2, Angle& alp2,
+                                real& m12, real& M12, real& M21) {
     vec3 r2, v2;
     auto err = Position(s12, r2, v2, m12, M12, M21);
     _t.cart2toellip(r2, v2, bet2, omg2, alp2);
     return err;
   }
 
-  vector<size_t> TriaxialODE::sort_indices(const vector<real>& v) {
+  vector<size_t> TriaxialGeodesicODE::sort_indices(const vector<real>& v) {
     // Return a vector of indices into v in "sorted" order:
     //   nans and infs in any order
     //   zeros in any order
@@ -348,16 +354,16 @@ namespace GeographicLib {
     return idx;
   }
 
-  void TriaxialODE::Position(const vector<real>& s12,
-                             vector<vec3>& r2, vector<vec3>& v2) {
+  void TriaxialGeodesicODE::Position(const vector<real>& s12,
+                                     vector<vec3>& r2, vector<vec3>& v2) {
     vector<real> m12, M12, M21;
     Position(s12, r2, v2, m12, M12, M21);
   }
 
-  void TriaxialODE::Position(const vector<real>& s12,
-                             vector<vec3>& r2, vector<vec3>& v2,
-                             vector<real>& m12,
-                             vector<real>& M12, vector<real>& M21) {
+  void TriaxialGeodesicODE::Position(const vector<real>& s12,
+                                     vector<vec3>& r2, vector<vec3>& v2,
+                                     vector<real>& m12,
+                                     vector<real>& M12, vector<real>& M21) {
     size_t n = s12.size();
     r2.resize(n); v2.resize(n);
     if (_extended) {
@@ -373,9 +379,9 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialODE::Position(const vector<real>& s12,
-                             vector<Angle>& bet2, vector<Angle>& omg2,
-                             vector<Angle>& alp2) {
+  void TriaxialGeodesicODE::Position(const vector<real>& s12,
+                                     vector<Angle>& bet2, vector<Angle>& omg2,
+                                     vector<Angle>& alp2) {
     vector<vec3> r2, v2;
     Position(s12, r2, v2);
     size_t n = s12.size();
@@ -384,11 +390,11 @@ namespace GeographicLib {
       _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
   }
 
-  void TriaxialODE::Position(const vector<real>& s12,
-                             vector<Angle>& bet2, vector<Angle>& omg2,
-                             vector<Angle>& alp2,
-                             vector<real>& m12,
-                             vector<real>& M12, vector<real>& M21) {
+  void TriaxialGeodesicODE::Position(const vector<real>& s12,
+                                     vector<Angle>& bet2, vector<Angle>& omg2,
+                                     vector<Angle>& alp2,
+                                     vector<real>& m12,
+                                     vector<real>& M12, vector<real>& M21) {
     vector<vec3> r2, v2;
     Position(s12, r2, v2, m12, M12, M21);
     size_t n = s12.size();
@@ -397,9 +403,9 @@ namespace GeographicLib {
       _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
   }
 
-  void TriaxialODE::Reset() { _dir = 0; }
+  void TriaxialGeodesicODE::Reset() { _dir = 0; }
 
-  void TriaxialODE::Reset(vec3 r1, vec3 v1) {
+  void TriaxialGeodesicODE::Reset(vec3 r1, vec3 v1) {
     _r1 = r1;
     _v1 = v1;
     _t.Norm(_r1, _v1);
@@ -407,13 +413,13 @@ namespace GeographicLib {
     Reset();
   }
 
-  void TriaxialODE::Reset(Angle bet1, Angle omg1, Angle alp1) {
+  void TriaxialGeodesicODE::Reset(Angle bet1, Angle omg1, Angle alp1) {
     _bet1 = bet1; _omg1 = omg1; _alp1 = alp1;
     _t.elliptocart2(_bet1, _omg1, _alp1, _r1, _v1);
     Reset();
   }
 
-  pair<Math::real, Math::real> TriaxialODE::CurrentDistance() const {
+  pair<Math::real, Math::real> TriaxialGeodesicODE::CurrentDistance() const {
     if (_dir == 0)
       return pair<real, real>(0, 0);
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT

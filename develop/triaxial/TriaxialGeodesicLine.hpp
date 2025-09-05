@@ -1,5 +1,5 @@
 /**
- * \file TriaxialLine.hpp
+ * \file TriaxialGeodesicLine.hpp
  * \brief Header for GeographicLib::TriaxialLin class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
@@ -7,8 +7,8 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_TRIAXIALLINE_HPP)
-#define GEOGRAPHICLIB_TRIAXIALLINE_HPP 1
+#if !defined(GEOGRAPHICLIB_TRIAXIALGEODESICLINE_HPP)
+#define GEOGRAPHICLIB_TRIAXIALGEODESICLINE_HPP 1
 
 #include <utility>
 #include <vector>
@@ -20,7 +20,7 @@
 
 namespace GeographicLib {
 
-  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialLine {
+  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialGeodesicLine {
   private:
     friend class TriaxialGeodesic; // For access to fline, gline, etc.
     typedef Math::real real;
@@ -368,7 +368,7 @@ namespace GeographicLib {
                           real f0, real g0);
     static std::pair<real, real> zsetsbisect(const zset& xset, const zset& yset,
                                              real f0, real g0, bool secant);
-    static real clamp(real x, real mult = 1) {
+    static real bigclamp(real x, real mult = 1) {
       using std::fmax, std::fmin;
       real z = mult * TriaxialGeodesic::BigValue();
       return Math::clamp(x, -z, z);
@@ -381,7 +381,7 @@ namespace GeographicLib {
     static real lamang(Angle x, real mult = 1) {
       // lam(x) when x is an ang -- with clamping
       // A consistent large value for x near pi/2.
-      return clamp(lamang0(x, mult));
+      return bigclamp(lamang0(x, mult));
     }
     static real lam(real x, real mult = 1) {
       using std::tan, std::asinh, std::fabs, std::copysign;
@@ -454,14 +454,14 @@ namespace GeographicLib {
     }
     // Private constructor to assemble the pieces of the class on exiting
     // Triaxial::Inverse.
-    TriaxialLine(fline f, fline::fics fic, gline g, gline::gics gic);
+    TriaxialGeodesicLine(fline f, fline::fics fic, gline g, gline::gics gic);
     // Private constructor to provide the umbilical fline object.
-    TriaxialLine(const TriaxialGeodesic& tg);
+    TriaxialGeodesicLine(const TriaxialGeodesic& tg);
   public:
-    // TriaxialLine(const TriaxialGeodesic& tg) : _t(t), _f(_t), _g(_t) {}
-    TriaxialLine(const TriaxialGeodesic& tg,
-                 Angle bet1, Angle omg1, Angle alp1);
-    TriaxialLine(const TriaxialGeodesic& tg, real bet1, real omg1, real alp1);
+    TriaxialGeodesicLine(const TriaxialGeodesic& tg,
+                         Angle bet1, Angle omg1, Angle alp1);
+    TriaxialGeodesicLine(const TriaxialGeodesic& tg,
+                         real bet1, real omg1, real alp1);
     void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
                   int* countn = nullptr, int* countb = nullptr) const;
     void Position(real s12, real& bet2, real& omg2, real& alp2,
@@ -507,4 +507,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif  // GEOGRAPHICLIB_TRIAXIALLINE_HPP
+#endif  // GEOGRAPHICLIB_TRIAXIALGEODESICLINE_HPP

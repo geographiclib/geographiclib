@@ -1,5 +1,5 @@
 /**
- * \file TriaxialODE.hpp
+ * \file TriaxialGeodesicODE.hpp
  * \brief Header for GeographicLib::Triaxial class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
@@ -7,8 +7,8 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if HAVE_BOOST && !defined(GEOGRAPHICLIB_TRIAXIALODE_HPP)
-#define GEOGRAPHICLIB_TRIAXIALODE_HPP 1
+#if HAVE_BOOST && !defined(GEOGRAPHICLIB_TRIAXIALGEODESICODE_HPP)
+#define GEOGRAPHICLIB_TRIAXIALGEODESICODE_HPP 1
 
 #include <vector>
 #include <array>
@@ -59,7 +59,7 @@
 
 namespace GeographicLib {
 
-  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialODE {
+  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialGeodesicODE {
   public:
     typedef Triaxial::vec3 vec3;
   private:
@@ -105,15 +105,15 @@ namespace GeographicLib {
     static std::vector<size_t> sort_indices(const std::vector<real>& v);
 
   public:
-    TriaxialODE(const Triaxial& t,
-                bool extended = false, bool dense = false, bool normp = false,
-                real eps = 0);
-    TriaxialODE(const Triaxial& t, vec3 r1, vec3 v1,
-                bool extended = false, bool dense = false, bool normp = false,
-                real eps = 0);
-    TriaxialODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1,
-                bool extended = false, bool dense = false, bool normp = false,
-                real eps = 0);
+    TriaxialGeodesicODE(const Triaxial& t,
+                        bool extended = false, bool dense = false,
+                        bool normp = false, real eps = 0);
+    TriaxialGeodesicODE(const Triaxial& t, vec3 r1, vec3 v1,
+                        bool extended = false, bool dense = false,
+                        bool normp = false, real eps = 0);
+    TriaxialGeodesicODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1,
+                        bool extended = false, bool dense = false,
+                        bool normp = false, real eps = 0);
     std::pair<real, real> Position(real s12, vec3& r2, vec3& v2);
     std::pair<real, real> Position(real s12, vec3& r2, vec3& v2,
                                    real& m12, real& M12, real& M21);
@@ -155,4 +155,4 @@ namespace GeographicLib {
 
 } // namespace GeographicLib
 
-#endif  // GEOGRAPHICLIB_TRIAXIALODE_HPP
+#endif  // GEOGRAPHICLIB_TRIAXIALGEODESICODE_HPP

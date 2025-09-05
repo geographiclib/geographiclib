@@ -22,7 +22,7 @@
 #include <GeographicLib/Utility.hpp>
 #include "Angle.hpp"
 #include "TriaxialGeodesic.hpp"
-#include "TriaxialLine.hpp"
+#include "TriaxialGeodesicLine.hpp"
 
 // #include "GeodSolve.usage"
 
@@ -295,8 +295,8 @@ int main(int argc, const char* const argv[]) {
     if (linecalc) {
       BiaxialCoords(true, f, bet1, omg1, alp1);
     }
-    std::unique_ptr<TriaxialLine> lp = linecalc ?
-      std::make_unique<TriaxialLine>(t, bet1, omg1, alp1) : nullptr;
+    std::unique_ptr<TriaxialGeodesicLine> lp = linecalc ?
+      std::make_unique<TriaxialGeodesicLine>(t, bet1, omg1, alp1) : nullptr;
     using std::round, std::log10, std::ceil;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
@@ -326,7 +326,8 @@ int main(int argc, const char* const argv[]) {
           DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
           BiaxialCoords(true, f, bet1, omg1);
           BiaxialCoords(true, f, bet2, omg2);
-          TriaxialLine l = t.Inverse(bet1, omg1, bet2, omg2, alp1, alp2, s12);
+          TriaxialGeodesicLine l = t.Inverse(bet1, omg1, bet2, omg2,
+                                             alp1, alp2, s12);
           if (unroll && full) {
             l.Position(s12, bet2, omg2, alp2);
           }

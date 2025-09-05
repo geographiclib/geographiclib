@@ -10,7 +10,7 @@
 #include <iostream>
 #include <iomanip>
 #include "TriaxialGeodesic.hpp"
-#include "TriaxialLine.hpp"
+#include "TriaxialGeodesicLine.hpp"
 
 namespace GeographicLib {
 
@@ -34,10 +34,10 @@ namespace GeographicLib {
     : TriaxialGeodesic(Triaxial(b, e2, k2, kp2))
   {}
 
-  TriaxialLine TriaxialGeodesic::Inverse(Angle bet1, Angle omg1,
-                                 Angle bet2, Angle omg2,
-                                 Angle& alp1, Angle& alp2, real& s12) const {
-    typedef TriaxialLine TL;
+  TriaxialGeodesicLine
+  TriaxialGeodesic::Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
+                            Angle& alp1, Angle& alp2, real& s12) const {
+    typedef TriaxialGeodesicLine TL;
     string msg;
     bet1.round();
     omg1.round();
@@ -46,7 +46,7 @@ namespace GeographicLib {
 
     if (!_umbline)
       // Initialize _umbline
-      _umbline = make_shared<TriaxialLine>(TriaxialLine(*this));
+      _umbline = make_shared<TriaxialGeodesicLine>(TriaxialGeodesicLine(*this));
 
     // In triaxial + oblate cases, [bet, omg] are initially put into [-90,90] x
     // [-180,180].  For prolate case, maybe we instead put [bet, omg] into
@@ -709,8 +709,8 @@ namespace GeographicLib {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     // a1 -= ang(1e-8);
     gamblk gam = gamma(b1, o1, a1);
-    TriaxialLine::fline l(this->t(), gam);
-    TriaxialLine::fline::fics ic(l, b1, o1, a1);
+    TriaxialGeodesicLine::fline l(this->t(), gam);
+    TriaxialGeodesicLine::fline::fics ic(l, b1, o1, a1);
     real dang = l.Hybrid0(ic, bet2a, omg2b, betp);
     if (_debug)
       cout << "HA " << signbit(gam.gamma) << " " << gam.gamma << " "
@@ -935,40 +935,41 @@ namespace GeographicLib {
     return gamblk(*this, bet, omg, alp);
   }
 
-  TriaxialLine TriaxialGeodesic::Line(Angle bet1, Angle omg1, Angle alp1)
-    const {
-    return TriaxialLine(*this, bet1, omg1, alp1);
+  TriaxialGeodesicLine
+  TriaxialGeodesic::Line(Angle bet1, Angle omg1, Angle alp1) const {
+    return TriaxialGeodesicLine(*this, bet1, omg1, alp1);
   }
 
-  TriaxialLine TriaxialGeodesic::Direct(Angle bet1, Angle omg1,
-                                        Angle alp1, real s12,
-                                        Angle& bet2, Angle& omg2, Angle& alp2)
+  TriaxialGeodesicLine
+  TriaxialGeodesic::Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
+                           Angle& bet2, Angle& omg2, Angle& alp2)
     const {
-    TriaxialLine l(*this, bet1, omg1, alp1);
+    TriaxialGeodesicLine l(*this, bet1, omg1, alp1);
     l.Position(s12, bet2, omg2, alp2);
     return l;
   }
 
-  TriaxialLine TriaxialGeodesic::Inverse(real bet1, real omg1,
-                                 real bet2, real omg2,
-                                 real& alp1, real& alp2, real& s12) const {
+  TriaxialGeodesicLine
+  TriaxialGeodesic::Inverse(real bet1, real omg1, real bet2, real omg2,
+                            real& alp1, real& alp2, real& s12) const {
     ang alp1a, alp2a;
-    TriaxialLine l = Inverse(ang(bet1), ang(omg1), ang(bet2), ang(omg2),
+    TriaxialGeodesicLine l = Inverse(ang(bet1), ang(omg1), ang(bet2), ang(omg2),
                              alp1a, alp2a, s12);
     alp1 = real(alp1a); alp2 = real(alp2a);
     return l;
   }
 
-  TriaxialLine TriaxialGeodesic::Line(real bet1, real omg1, real alp1) const {
+  TriaxialGeodesicLine
+  TriaxialGeodesic::Line(real bet1, real omg1, real alp1) const {
     return Line(ang(bet1), ang(omg1), ang(alp1));
   }
 
-  TriaxialLine TriaxialGeodesic::Direct(real bet1, real omg1,
-                                        real alp1, real s12,
-                                        real& bet2, real& omg2, real& alp2)
+  TriaxialGeodesicLine
+  TriaxialGeodesic::Direct(real bet1, real omg1, real alp1, real s12,
+                           real& bet2, real& omg2, real& alp2)
     const {
     ang bet2a, omg2a, alp2a;
-    TriaxialLine l = Direct(ang(bet1), ang(omg1), ang(alp1), s12,
+    TriaxialGeodesicLine l = Direct(ang(bet1), ang(omg1), ang(alp1), s12,
                             bet2a, omg2a, alp2a);
     bet2 = real(bet2a); omg2 = real(omg2a); alp2 = real(alp2a);
     return l;

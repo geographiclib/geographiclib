@@ -74,19 +74,19 @@ set (SOURCES
   Trigfun.cpp
   Triaxial.cpp
   TriaxialGeodesic.cpp
-  TriaxialLine.cpp
+  TriaxialGeodesicLine.cpp
   TriaxialCartesian.cpp
   Angle.cpp
-  TriaxialODE.cpp)
+  TriaxialGeodesicODE.cpp)
 
 set (HEADERS
   Trigfun.hpp
   Triaxial.hpp
   TriaxialGeodesic.cpp
-  TriaxialLine.hpp
+  TriaxialGeodesicLine.hpp
   TriaxialCartesian.hpp
   Angle.hpp
-  TriaxialODE.hpp)
+  TriaxialGeodesicODE.hpp)
 
 if (MSVC)
   set (BUILD_SHARED_LIBS OFF)
