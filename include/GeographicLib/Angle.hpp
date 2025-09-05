@@ -13,6 +13,7 @@
 #if !defined(GEOGRAPHICLIB_ANGLE_HPP)
 #define GEOGRAPHICLIB_ANGLE_HPP 1
 
+/// \cond SKIP
 #include <GeographicLib/Math.hpp>
 
 namespace GeographicLib {
@@ -29,7 +30,7 @@ namespace GeographicLib {
    * Example of use:
    * xx include example-Angle.cpp
    **********************************************************************/
-  class /*GEOGRAPHICLIB_EXPORT*/ Angle {
+  class GEOGRAPHICLIB_EXPORT Angle {
   private:
     typedef Math::real real;
     real _s, _c, _n;
@@ -358,5 +359,6 @@ namespace GeographicLib {
   }
 
 } // namespace GeographicLib
+/// \endcond
 
 #endif  // GEOGRAPHICLIB_ANGLE_HPP

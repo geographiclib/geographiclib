@@ -46,6 +46,12 @@ set (SOURCES
   TransverseMercatorExact.cpp
   UTMUPS.cpp
   Utility.cpp
+  Angle.cpp
+  Triaxial.cpp
+  TriaxialGeodesic.cpp
+  Trigfun.cpp
+  TriaxialGeodesicLine.cpp
+  TriaxialCartesian.cpp
   )
 
 set (HEADERS
@@ -93,6 +99,12 @@ set (HEADERS
   ../include/GeographicLib/TransverseMercatorExact.hpp
   ../include/GeographicLib/UTMUPS.hpp
   ../include/GeographicLib/Utility.hpp
+  ../include/GeographicLib/Angle.hpp
+  ../include/GeographicLib/Triaxial.hpp
+  ../include/GeographicLib/TriaxialGeodesic.hpp
+  ../include/GeographicLib/Trigfun.hpp
+  ../include/GeographicLib/TriaxialGeodesicLine.hpp
+  ../include/GeographicLib/TriaxialCartesian.hpp
   )
 
 # Define the library and specify whether it is shared or not.

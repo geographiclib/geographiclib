@@ -13,7 +13,7 @@
 #include <iomanip>
 // Needed by zsetsdiag
 #include <sstream>
-#include "TriaxialGeodesicLine.hpp"
+#include <GeographicLib/TriaxialGeodesicLine.hpp>
 
 namespace GeographicLib {
 

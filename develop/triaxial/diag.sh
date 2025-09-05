@@ -6,6 +6,6 @@ while true; do
     INVERR=`cat $FILE | cut -f1 -d' ' | mean | cut -f4,12 -d' '`
     INVDIRERR=`cat $FILE | cut -f2-5 -d' ' | mean | cut -f4,12 -d' '`
     printf "%-14s %6.2f %6.0f   %6.2f %6.0f   %6.2f %6.0f\n" \
-	   $FILE $DIRERR $INVERR $INVDIRERR
+           $FILE $DIRERR $INVERR $INVDIRERR
     shift
 done

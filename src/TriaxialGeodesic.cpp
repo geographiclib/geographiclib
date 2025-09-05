@@ -9,8 +9,8 @@
 
 #include <iostream>
 #include <iomanip>
-#include "TriaxialGeodesic.hpp"
-#include "TriaxialGeodesicLine.hpp"
+#include <GeographicLib/TriaxialGeodesic.hpp>
+#include <GeographicLib/TriaxialGeodesicLine.hpp>
 
 namespace GeographicLib {
 
@@ -754,7 +754,7 @@ namespace GeographicLib {
     // echo 80 -90 -80 90 | ./Geod3Solve -e 1 0 1 2 -i
     //
     //  Offset for debugging output
-    real x0 = -88.965874767468835986, x0r = -88.966;
+    real x0 = real(-88.965874767468835986), x0r = real(-88.966);
     // return ang(x0);
     if (debug) {
       for (int i = -1000; i <= 1000; ++i) {

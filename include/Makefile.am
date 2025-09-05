@@ -50,6 +50,12 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 	GeographicLib/TransverseMercatorExact.hpp \
 	GeographicLib/UTMUPS.hpp \
 	GeographicLib/Utility.hpp \
+	GeographicLib/Angle.hpp \
+	GeographicLib/Triaxial.hpp \
+	GeographicLib/TriaxialGeodesic.hpp \
+	GeographicLib/Trigfun.hpp \
+	GeographicLib/TriaxialGeodesicLine.hpp \
+	GeographicLib/TriaxialCartesian.hpp \
 	GeographicLib/Config.h
 
 geographiclib_data=$(datadir)/GeographicLib

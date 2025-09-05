@@ -13,10 +13,10 @@
 #include <iostream>
 #include <array>
 #include <GeographicLib/Constants.hpp>
-#include "Angle.hpp"
+#include <GeographicLib/Angle.hpp>
 
 namespace GeographicLib {
-  class /*GEOGRAPHICLIB_EXPORT*/ Triaxial {
+  class GEOGRAPHICLIB_EXPORT Triaxial {
   public:
     typedef std::array<Math::real, 3> vec3;
   private:

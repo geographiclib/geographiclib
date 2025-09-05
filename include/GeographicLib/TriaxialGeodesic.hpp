@@ -12,12 +12,18 @@
 
 #include <functional>
 #include <memory>
-#include "Triaxial.hpp"
+#include <GeographicLib/Triaxial.hpp>
+
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs vector
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
+#endif
 
 namespace GeographicLib {
   class TriaxialGeodesicLine;
 
-  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialGeodesic {
+  class GEOGRAPHICLIB_EXPORT TriaxialGeodesic {
   private:
     // For access to BigValue, _ellipthresh, _biaxp
     friend class TriaxialGeodesicLine;
@@ -125,5 +131,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_TRIAXIALGEODESIC_HPP

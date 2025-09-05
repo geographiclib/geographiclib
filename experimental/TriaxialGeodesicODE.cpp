@@ -278,10 +278,10 @@ namespace GeographicLib {
         return Position(s12, r2, v2, m12, M12, M21);
       } else if (s12 > _s) {
         _nsteps += long(_extended ?
-			integrate_adaptive(_step10, fun10, _y10, _s, s12,
-					   fmax(s12 - _s, 1/real(4))) :
-			integrate_adaptive(_step6, fun6, _y6, _s, s12,
-					   fmax(s12 - _s, 1/real(4))));
+                        integrate_adaptive(_step10, fun10, _y10, _s, s12,
+                                           fmax(s12 - _s, 1/real(4))) :
+                        integrate_adaptive(_step6, fun6, _y6, _s, s12,
+                                           fmax(s12 - _s, 1/real(4))));
         _s = s12;
       }
     }

@@ -48,6 +48,12 @@ set (HEADERS
   TransverseMercatorExact.hpp
   UTMUPS.hpp
   Utility.hpp
+  Angle.hpp
+  Triaxial.hpp
+  TriaxialGeodesic.hpp
+  Trigfun.hpp
+  TriaxialGeodesicLine.hpp
+  TriaxialCartesian.hpp
   )
 if (INCDIR)
   install (FILES ${HEADERS} DESTINATION ${INCDIR}/GeographicLib)

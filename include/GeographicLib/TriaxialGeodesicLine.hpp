@@ -14,13 +14,19 @@
 #include <vector>
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
-#include "Angle.hpp"
-#include "Trigfun.hpp"
-#include "TriaxialGeodesic.hpp"
+#include <GeographicLib/Angle.hpp>
+#include <GeographicLib/Trigfun.hpp>
+#include <GeographicLib/TriaxialGeodesic.hpp>
+
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs vector
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
+#endif
 
 namespace GeographicLib {
 
-  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialGeodesicLine {
+  class GEOGRAPHICLIB_EXPORT TriaxialGeodesicLine {
   private:
     friend class TriaxialGeodesic; // For access to fline, gline, etc.
     typedef Math::real real;
@@ -506,5 +512,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_TRIAXIALGEODESICLINE_HPP

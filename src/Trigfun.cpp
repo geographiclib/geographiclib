@@ -7,11 +7,12 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
+/// \cond SKIP
 // For to_string
 #include <string>
 #include <iostream>
 #include <iomanip>
-#include "Trigfun.hpp"
+#include <GeographicLib/Trigfun.hpp>
 #include "kissfft.hh"
 
 namespace GeographicLib {
@@ -611,3 +612,4 @@ namespace GeographicLib {
     {}
 
 } // namespace GeographicLib
+/// \endcond

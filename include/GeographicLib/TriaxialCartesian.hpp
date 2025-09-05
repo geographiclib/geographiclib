@@ -13,11 +13,11 @@
 #include <array>
 #include <utility>
 #include <functional>
-#include "Triaxial.hpp"
+#include <GeographicLib/Triaxial.hpp>
 
 namespace GeographicLib {
 
-  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialCartesian {
+  class GEOGRAPHICLIB_EXPORT TriaxialCartesian {
   public:
     typedef Triaxial::vec3 vec3;
   private:

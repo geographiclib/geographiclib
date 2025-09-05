@@ -7,7 +7,7 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include "Triaxial.hpp"
+#include <GeographicLib/Triaxial.hpp>
 
 namespace GeographicLib {
 

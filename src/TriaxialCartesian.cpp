@@ -7,7 +7,7 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include "TriaxialCartesian.hpp"
+#include <GeographicLib/TriaxialCartesian.hpp>
 
 namespace GeographicLib {
 

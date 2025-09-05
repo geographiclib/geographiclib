@@ -51,6 +51,12 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	TransverseMercatorExact.cpp \
 	UTMUPS.cpp \
 	Utility.cpp \
+	Angle.cpp \
+	Triaxial.cpp \
+	TriaxialGeodesic.cpp \
+	Trigfun.cpp \
+	TriaxialGeodesicLine.cpp \
+	TriaxialCartesian.cpp \
 	kissfft.hh \
 	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
@@ -98,6 +104,12 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
 	../include/GeographicLib/UTMUPS.hpp \
 	../include/GeographicLib/Utility.hpp \
+	../include/GeographicLib/Angle.hpp \
+	../include/GeographicLib/Triaxial.hpp \
+	../include/GeographicLib/TriaxialGeodesic.hpp \
+	../include/GeographicLib/Trigfun.hpp \
+	../include/GeographicLib/TriaxialGeodesicLine.hpp \
+	../include/GeographicLib/TriaxialCartesian.hpp \
 	../include/GeographicLib/Config.h
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h
