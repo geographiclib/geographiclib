@@ -224,4 +224,11 @@ namespace GeographicLib {
     // normvec(v); v is already normalized
   }
 
+  const Triaxial& Triaxial::Earth() {
+    static const Triaxial earth(Constants::Triaxial_Earth_a(),
+                                Constants::Triaxial_Earth_b(),
+                                Constants::Triaxial_Earth_c());
+    return earth;
+  }
+
 } // namespace GeographicLib

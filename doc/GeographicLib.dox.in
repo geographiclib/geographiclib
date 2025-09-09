@@ -875,6 +875,13 @@ The utilities are
    and RhumbLine.  See \ref RhumbSolve.cpp.
  - <a href="IntersectTool.1.html"> <b>IntersectTool</b></a>: find
    intersections between two geodesics.  See \ref IntersectTool.cpp.
+ - <a href="Geod3Solve.1.html">
+   <b>Geod3Solve</b></a>: perform geodesic calculations on a triaxial
+   ellipsoid using TriaxialGeodesic and TriaxialGeodesicLine.  See \ref
+   Geod3Solve.cpp.
+ - <a href="Cart3Convert.1.html">
+   <b>Cart3Convert</b></a>: convert between geocentric and various
+   triaxila coordinates systems.  See \ref Cart3Convert.cpp.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the

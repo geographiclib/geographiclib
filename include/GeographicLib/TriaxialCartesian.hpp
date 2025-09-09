@@ -53,7 +53,7 @@ namespace GeographicLib {
     static
     real cartsolve(const std::function<std::pair<real, real>(real)>& f,
                    real p0, real pscale);
-    real a() const { return t().a(); }
+    // real a() const { return t().a(); } // not needed
     real b() const { return t().b(); }
     real c() const { return t().c(); }
   public:

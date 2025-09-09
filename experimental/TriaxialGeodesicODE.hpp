@@ -7,7 +7,7 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if HAVE_BOOST && !defined(GEOGRAPHICLIB_TRIAXIALGEODESICODE_HPP)
+#if !defined(GEOGRAPHICLIB_TRIAXIALGEODESICODE_HPP)
 #define GEOGRAPHICLIB_TRIAXIALGEODESICODE_HPP 1
 
 #include <vector>
@@ -42,8 +42,8 @@
 // Removed my temporary fix to
 //    numeric/odeint/stepper/controlled_runge_kutta.hpp
 
-#include "Angle.hpp"
-#include "Triaxial.hpp"
+#include <GeographicLib/Angle.hpp>
+#include <GeographicLib/Triaxial.hpp>
 
 #if __clang__
 // Ignore clang warnings for boost headers
@@ -58,8 +58,9 @@
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 
 namespace GeographicLib {
+namespace experimental {
 
-  class /*GEOGRAPHICLIB_EXPORT*/ TriaxialGeodesicODE {
+  class TriaxialGeodesicODE {
   public:
     typedef Triaxial::vec3 vec3;
   private:
@@ -153,6 +154,7 @@ namespace GeographicLib {
     const Triaxial& t() const { return _t; }
   };
 
+} // namespace experimental
 } // namespace GeographicLib
 
 #endif  // GEOGRAPHICLIB_TRIAXIALGEODESICODE_HPP

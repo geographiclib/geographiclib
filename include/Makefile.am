@@ -56,6 +56,7 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 	GeographicLib/Trigfun.hpp \
 	GeographicLib/TriaxialGeodesicLine.hpp \
 	GeographicLib/TriaxialCartesian.hpp \
+	GeographicLib/TriaxialConformal.hpp \
 	GeographicLib/Config.h
 
 geographiclib_data=$(datadir)/GeographicLib

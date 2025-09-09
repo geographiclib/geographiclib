@@ -57,6 +57,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	Trigfun.cpp \
 	TriaxialGeodesicLine.cpp \
 	TriaxialCartesian.cpp \
+	TriaxialConformal.cpp \
 	kissfft.hh \
 	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
@@ -110,6 +111,7 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	../include/GeographicLib/Trigfun.hpp \
 	../include/GeographicLib/TriaxialGeodesicLine.hpp \
 	../include/GeographicLib/TriaxialCartesian.hpp \
+	../include/GeographicLib/TriaxialConformal.hpp \
 	../include/GeographicLib/Config.h
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h

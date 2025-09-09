@@ -1,12 +1,12 @@
 /**
- * \file GeodSolve3.cpp
+ * \file Geod3Solve.cpp
  * \brief Command line utility for computing geodesics on a triaxial ellipsoid
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
- * See the <a href="GeodSolve.1.html">man page</a> for usage information.
+ * See the <a href="Geod3Solve.1.html">man page</a> for usage information.
  **********************************************************************/
 
 #include <iostream>
@@ -14,72 +14,17 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include <vector>
-#include <limits>
-#include <memory>
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
-#include "Angle.hpp"
-#include "TriaxialGeodesic.hpp"
-#include "TriaxialGeodesicLine.hpp"
+#include <GeographicLib/Angle.hpp>
+#include <GeographicLib/TriaxialGeodesic.hpp>
+#include <GeographicLib/TriaxialGeodesicLine.hpp>
 
-// #include "GeodSolve.usage"
+#include "Geod3Solve.usage"
 
 typedef GeographicLib::Math::real real;
 typedef GeographicLib::Angle ang;
-
-void DecodeLatLon(const std::string& stra, const std::string& strb,
-                  ang& lat, ang& lon,
-                  bool longfirst) {
-  using namespace GeographicLib;
-  real a, b;
-  DMS::flag ia, ib;
-  a = DMS::Decode(stra, ia);
-  b = DMS::Decode(strb, ib);
-  if (ia == DMS::NONE && ib == DMS::NONE) {
-    // Default to lat, long unless longfirst
-    ia = longfirst ? DMS::LONGITUDE : DMS::LATITUDE;
-    ib = longfirst ? DMS::LATITUDE : DMS::LONGITUDE;
-  } else if (ia == DMS::NONE)
-    ia = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ib);
-  else if (ib == DMS::NONE)
-    ib = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ia);
-  if (ia == ib)
-    throw GeographicErr("Both " + stra + " and "
-                        + strb + " interpreted as "
-                        + (ia == DMS::LATITUDE ? "latitudes" : "longitudes"));
-  lat = ang(ia == DMS::LATITUDE ? a : b);
-  lon = ang(ia == DMS::LATITUDE ? b : a);
-}
-
-ang DecodeAzimuth(const std::string& azistr) {
-  using namespace GeographicLib;
-  DMS::flag ind;
-  real azi = DMS::Decode(azistr, ind);
-  if (ind == DMS::LATITUDE)
-    throw GeographicErr("Azimuth " + azistr
-                        + " has a latitude hemisphere, N/S");
-  return ang(azi);
-}
-
-std::string BetOmgString(ang bet, ang omg, int prec, bool dms, char dmssep,
-                         bool longfirst) {
-  using namespace GeographicLib;
-  std::string
-    betstr = dms ? DMS::Encode(real(bet), prec + 5, DMS::LATITUDE, dmssep) :
-    DMS::Encode(real(bet), prec + 5, DMS::NUMBER),
-    omgstr = dms ? DMS::Encode(real(omg), prec + 5, DMS::LONGITUDE, dmssep) :
-    DMS::Encode(real(omg), prec + 5, DMS::NUMBER);
-  return
-    (longfirst ? omgstr : betstr) + " " + (longfirst ? betstr : omgstr);
-}
-
-std::string AzimuthString(ang alp, int prec, bool dms, char dmssep) {
-  using namespace GeographicLib;
-  return dms ? DMS::Encode(real(alp), prec + 5, DMS::AZIMUTH, dmssep) :
-    DMS::Encode(real(alp), prec + 5, DMS::NUMBER);
-}
 
 void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg) {
   using std::isnan, std::signbit;
@@ -106,8 +51,6 @@ void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg, ang& alp) {
   if (signbit(f)) alp.reflect(false, false, true);
 }
 
-int usage(int retval, bool /*brief*/) { return retval; }
-
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
@@ -119,7 +62,9 @@ int main(int argc, const char* const argv[]) {
       longfirst = false,
       debug = false, linecalc = false, swapomg = false;
     real
-      a = 6378172, b = 6378102, c = 6356752,
+      a = Constants::Triaxial_Earth_a(),
+      b = Constants::Triaxial_Earth_b(),
+      c = Constants::Triaxial_Earth_c(),
       // Markers to determine how the ellipsoid is specified
       e2 = -1, f = Math::NaN(), k2 = 0, kp2 = 0;
     ang bet1, omg1, alp1, bet2, omg2, alp2;
@@ -187,9 +132,9 @@ int main(int argc, const char* const argv[]) {
         inverse = false;
         if (m + 3 >= argc) return usage(1, true);
         try {
-          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                       bet1, omg1, longfirst);
-          alp1 = DecodeAzimuth(std::string(argv[m + 3]));
+          ang::DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                            bet1, omg1, longfirst);
+          alp1 = ang::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
@@ -297,11 +242,12 @@ int main(int argc, const char* const argv[]) {
     }
     std::unique_ptr<TriaxialGeodesicLine> lp = linecalc ?
       std::make_unique<TriaxialGeodesicLine>(t, bet1, omg1, alp1) : nullptr;
-    using std::round, std::log10, std::ceil;
-    int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
+    using std::round, std::log10, std::ceil;
+    int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
+      angprec = prec + 5;
     std::string s, eol, sbet1, somg1, salp1, sbet2, somg2, salp2, ss12, strc;
     std::istringstream str;
     int retval = 0;
@@ -319,11 +265,11 @@ int main(int argc, const char* const argv[]) {
 
         if (inverse) {
           if (!(str >> sbet1 >> somg1 >> sbet2 >> somg2))
-            throw GeographicErr("Incomplete inputz: " + s);
+            throw GeographicErr("Incomplete input: " + s);
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
-          DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
-          DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
+          ang::DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+          ang::DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
           BiaxialCoords(true, f, bet1, omg1);
           BiaxialCoords(true, f, bet2, omg2);
           TriaxialGeodesicLine l = t.Inverse(bet1, omg1, bet2, omg2,
@@ -334,21 +280,23 @@ int main(int argc, const char* const argv[]) {
           BiaxialCoords(false, f, bet1, omg1, alp1);
           BiaxialCoords(false, f, bet2, omg2, alp2);
           if (full)
-            *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
-                    << " " << AzimuthString(alp1, prec, dms, dmssep)
+            *output << ang::LatLonString(bet1, omg1,
+                                         angprec, dms, dmssep, longfirst)
+                    << " " << ang::AzimuthString(alp1, angprec, dms, dmssep)
                     << " "
-                    << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
-                    << " " << AzimuthString(alp2, prec, dms, dmssep)
+                    << ang::LatLonString(bet2, omg2,
+                                         angprec, dms, dmssep, longfirst)
+                    << " " << ang::AzimuthString(alp2, angprec, dms, dmssep)
                     << " "
-                    << Utility::str(s12, prec + disprec) << eol;
+                    << Utility::str(s12, disprec) << eol;
           else
-            *output << AzimuthString(alp1, prec, dms, dmssep) << " "
-                    << AzimuthString(alp2, prec, dms, dmssep) << " "
-                    << Utility::str(s12, prec + disprec) << eol;
+            *output << ang::AzimuthString(alp1, angprec, dms, dmssep) << " "
+                    << ang::AzimuthString(alp2, angprec, dms, dmssep) << " "
+                    << Utility::str(s12, disprec) << eol;
         } else {
           if (linecalc) {
             if (!(str >> ss12))
-              throw GeographicErr("Incomplete inputx: " + s);
+              throw GeographicErr("Incomplete input: " + s);
           } else {
             if (!(str >> sbet1 >> somg1 >> salp1 >> ss12))
               throw GeographicErr("Incomplete input: " + s);
@@ -363,8 +311,8 @@ int main(int argc, const char* const argv[]) {
             (void) countn;
             (void) countb;
           } else {
-            DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
-            alp1 = DecodeAzimuth(salp1);
+            ang::DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+            alp1 = ang::DecodeAzimuth(salp1);
             BiaxialCoords(true, f, bet1, omg1, alp1);
             t.Direct(bet1, omg1, alp1, s12, bet2, omg2, alp2);
           }
@@ -377,17 +325,20 @@ int main(int argc, const char* const argv[]) {
           BiaxialCoords(false, f, bet1, omg1, alp1);
           BiaxialCoords(false, f, bet2, omg2, alp2);
           if (full)
-            *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
-                    << " " << AzimuthString(alp1, prec, dms, dmssep)
+            *output << ang::LatLonString(bet1, omg1,
+                                         angprec, dms, dmssep, longfirst)
+                    << " " << ang::AzimuthString(alp1, angprec, dms, dmssep)
                     << " "
-                    << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
-                    << " " << AzimuthString(alp2, prec, dms, dmssep)
+                    << ang::LatLonString(bet2, omg2,
+                                         angprec, dms, dmssep, longfirst)
+                    << " " << ang::AzimuthString(alp2, angprec, dms, dmssep)
                     << " "
-                    << Utility::str(s12, prec + disprec) << eol;
+                    << Utility::str(s12, disprec) << eol;
           else
-            *output << BetOmgString(bet2, omg2, prec, dms,
-                                    dmssep, longfirst) << " "
-                    << AzimuthString(alp2, prec, dms, dmssep) << eol;
+            *output << ang::LatLonString(bet2, omg2,
+                                         angprec, dms, dmssep, longfirst)
+                    << " "
+                    << ang::AzimuthString(alp2, angprec, dms, dmssep) << eol;
         }
       }
       catch (const std::exception& e) {

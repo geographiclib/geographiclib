@@ -284,6 +284,9 @@ namespace GeographicLib {
 
   template<typename T> T Math::hypot3(T x, T y, T z) {
 #if GEOGRAPHICLIB_PRECISION == 4
+    // Boost implementation is given by
+    //   https://github.com/boostorg/math/pull/1318
+    // might make its way into 1.90 or later
     return hypot(hypot(x, y), z);
 #else
     return hypot(x, y, z);

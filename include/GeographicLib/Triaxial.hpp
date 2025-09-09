@@ -90,6 +90,12 @@ namespace GeographicLib {
     void elliptocart2(Angle bet, Angle omg, vec3& r) const;
     void elliptocart2(Angle bet, Angle omg, Angle alp,
                       vec3& r, vec3& v) const;
+    /**
+     * A global instantiation of TriaxialGeodesic with the parameters for the
+     * Earth.
+     **********************************************************************/
+    static const Triaxial& Earth();
+
   };
 
 } // namespace GeographicLib

@@ -52,6 +52,7 @@ set (SOURCES
   Trigfun.cpp
   TriaxialGeodesicLine.cpp
   TriaxialCartesian.cpp
+  TriaxialConformal.cpp
   )
 
 set (HEADERS
@@ -105,6 +106,7 @@ set (HEADERS
   ../include/GeographicLib/Trigfun.hpp
   ../include/GeographicLib/TriaxialGeodesicLine.hpp
   ../include/GeographicLib/TriaxialCartesian.hpp
+  ../include/GeographicLib/TriaxialConformal.hpp
   )
 
 # Define the library and specify whether it is shared or not.

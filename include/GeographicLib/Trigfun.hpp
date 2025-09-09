@@ -143,6 +143,7 @@ namespace GeographicLib {
       FFUNROOT,
       GFUNROOT,
       INVERSEP,
+      PIINV,
       OTHER,
     };
 

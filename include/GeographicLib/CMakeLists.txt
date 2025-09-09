@@ -54,6 +54,7 @@ set (HEADERS
   Trigfun.hpp
   TriaxialGeodesicLine.hpp
   TriaxialCartesian.hpp
+  TriaxialConformal.hpp
   )
 if (INCDIR)
   install (FILES ${HEADERS} DESTINATION ${INCDIR}/GeographicLib)

@@ -193,6 +193,39 @@ namespace GeographicLib {
     { return T(994) / 1000; }
     ///@}
 
+    /** \name Triaxial ellipsoid parameters
+     **********************************************************************/
+    ///@{
+    /**
+     * @tparam T the type of the returned value.
+     * @return the major semiaxis of a triaxial approximation to the Earth, \e
+     *   a, in m.
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_a()
+    { return WGS84_a<T>() + 70/real(2); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the median semiaxis of a triaxial approximation to the Earth, \e
+     *   b, in m.
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_b()
+    { return WGS84_a<T>() - 70/real(2); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the minor semiaxis of a triaxial approximation to the Earth, \e
+     *   c, in m.
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_c()
+    { using std::round; return round(WGS84_a<T>() * (1 - WGS84_f())); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the longitude, with respect to Greenwich, of the major semiaxis
+     *   of of a triaxial approximation to the Earth, \e lon0, in degrees.
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_lon0()
+    { return T(1493) / 100; }
+    ///@}
+
     /** \name SI units
      **********************************************************************/
     ///@{

@@ -1,0 +1,220 @@
+=head1 NAME
+
+Cart3Convert -- convert geocentric coordinates for a triaxial ellipsoid
+
+=head1 SYNOPSIS
+
+B<Cart3Convert> [ B<-E> | B<-G> | B<-P> | B<-C> ]
+[ B<-r> ] [ B<-3> | B<-D> ]
+[ B<-t> I<a> I<b> I<c> | B<-e> I<b> I<e2> I<k2> I<kp2> ]
+[ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ]
+[ B<--comment-delimiter> I<commentdelim> ]
+[ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--line-separator> I<linesep> ]
+[ B<--output-file> I<outfile> ]
+
+=head1 DESCRIPTION
+
+Convert coordinates for a triaxial ellipsoid to geocentric coordinates.
+Geocentric coordinates have the origin at the center of the earth, with
+the I<x>, I<y>, and I<z> axes aligned with the major, median, and minor
+semi-axes, I<a>, I<b>, and I<c>.  By default, the conversion is to
+geocentric coordinates.  Specifying B<-r> causes the reverse conversion
+to be performed.
+
+Four latitude/longitude coordinate systems are supported
+
+=over
+
+=item 1.
+
+Ellipsoidal coordinates, I<beta> and I<omega>, signified by B<-E>n (the
+default)
+
+=item 2.
+
+Geodetic coordinates, I<phi> and I<lambda>, signified by B<-G>.
+
+=item 3.
+
+Parametric coordinates, I<phi'> and I<lambda'>, signified by B<-P>.
+
+=item 4.
+
+Geocentric coordinates, I<phi"> and I<lambda">, signified by B<-C>.
+
+=back
+
+In general, only ellipsoidal coordinates are orthogonal.  For these
+coorindates, a heading is given by the azimuth I<alpha> measured
+clockwise from a line of constant I<omega>.
+
+Points away from the surface of the ellipsoid can be described by the
+orthogonal height I<h> above from the ellipsoid and the position is
+given by I<phi>, I<lambda> (giving the closest point on the ellipsoid),
+and I<h>.  Alternatively, the confocal ellipsoid of minor radius I<c> +
+I<H> point can be found and the position of the point is then given by
+I<beta>, I<omega> for the confocal ellipsoid and I<H>.
+
+By default, coordinates are provided on standard input as a set of lines
+containing (blank separated) I<latitude> and I<longitude> (decimal
+degrees or degrees, minutes and seconds).  The interpretion of the
+coordinates is governed by the B<-E>, B<-G>, B<-P>, and B<-C> flags.
+For each set of coordinates, the corresponding cartesian coordinates
+I<x>, I<y>, I<z> (meters) are printed on standard output.  If I<-r> is
+provided, the reserve operation is undertaken reading I<x>, I<y>, I<z>
+(which asre assumed to denote a point on the ellipsoid) on standard
+input and printing the I<latitude> and I<longitude>.
+
+If the B<-3> flag is given (only applicable with B<-E> or B<-G>) then
+and arbitrary point is specified either with I<beta>, I<omega>, I<H> or with
+I<phi>, I<lambda>, I<h>.
+
+If the B<-D> float is given (only appliable with B<-E> and this cannot
+be combined with B<-3>, the heading (direction) is included in the
+computation converting I<beta> I<omega> I<alpha> to I<x>, I<y>, I<z>
+I<vx>, I<vy>, I<vz> where [I<vx>, I<vy>, I<vz>] is a unit vector lying
+in the surface of the ellipsoid.
+
+=head1 OPTIONS
+
+=over
+
+=item B<-E> I<latitude> and I<longitude> interpreted as ellipsoidal
+coordinates I<beta> and I<omega>.  This is the default.
+
+=item B<-G> I<latitude> and I<longitude> interpreted as geodetic
+coordinates I<phi> and I<lambda>.
+
+=item B<-P> I<latitude> and I<longitude> interpreted as geodetic
+coordinates I<phi'> and I<lambda'>.
+
+=item B<-C> I<latitude> and I<longitude> interpreted as geodetic
+coordinates I<phi"> and I<lambda">.
+
+=item B<-r>
+
+perform the reverse projection from I<x>, I<y>, I<z> to I<latitude>,
+I<longitude>.  Unless B<-3> is given, it is assumed that the point lies
+on the surface of the ellipsoid.
+
+=item B<-3>
+
+include the height I<h> or I<H> in the calculation.  This is only
+allowed with B<-E> (height = I<H>) or B<-G> (height = I<h>).
+
+=item B<-D>
+
+include the direction I<alpha> in the calculation.  This is only allowed
+with B<-E>.  With the B<-r> option, it is assumed that the vector
+[I<vx>, I<vy>, I<vz>] is tangent to the surface of the ellipsoid.
+
+=item B<-t> I<a> I<b> I<c>
+
+specify the ellipsoid via its major semiaxis I<a>, median semiaxis
+I<b>, and minor semixis I<c>.  By default, we have I<a> = 6378172m,
+I<b> = 6378102m, I<c> = 6356752m, an approximate triaxial model of the
+earth.  (With this model I<omg> = 0deg, corresponds to I<lon> =
+-14.93deg.
+
+=item B<-e> I<b> I<e2> I<k2> I<kp2>
+
+specify the ellipsoid via the median semiaxis, I<b> and the parameters
+I<e2> = (I<a>^2 - I<c>^2)/I<b>^2, I<k2> = (I<b>^2 - I<c>^2)/(I<a>^2 -
+I<c>^2), and I<kp2> = (I<a>^2 - I<b>^2)/(I<a>^2 - I<c>^2).  Simple
+fractions are allowed for I<e2>, I<k2>, and I<kp2>.  Internally, the
+supplied values of I<k2> and I<kp2> are normalized so that I<k2> +
+I<kp2> = 1.
+
+=item B<-d>
+
+output angles as degrees, minutes, seconds instead of decimal degrees.
+
+=item B<-:>
+
+like B<-d>, except use : as a separator instead of the d, ', and "
+delimiters.
+
+=item B<-w>
+
+toggle the longitude first flag (it starts off); if the flag is on, then
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
+
+=item B<-p> I<prec>
+
+set the output precision to I<prec> (default 6).  I<prec> is the number
+of digits after the decimal point for geocentric and local cartesion
+coordinates and for the height (in meters).  For latitudes and
+longitudes (in degrees), the number of digits after the decimal point is
+I<prec> + 5.
+
+=item B<--comment-delimiter> I<commentdelim>
+
+set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing and subsequently appended to the output line (separated by a
+space).
+
+=item B<--version>
+
+print version and exit.
+
+=item B<-h>
+
+print usage and exit.
+
+=item B<--help>
+
+print full documentation and exit.
+
+=item B<--input-file> I<infile>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string> I<instring>
+
+read input from the string I<instring> instead of from standard input.
+All occurrences of the line separator character (default is a semicolon)
+in I<instring> are converted to newlines before the reading begins.
+
+=item B<--line-separator> I<linesep>
+
+set the line separator character to I<linesep>.  By default this is a
+semicolon.
+
+=item B<--output-file> I<outfile>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
+
+=back
+
+=head1 EXAMPLES
+
+   echo 33.3 44.4 6000 | CartConvert
+   => 3816209.60 3737108.55 3485109.57
+   echo 33.3 44.4 6000 | CartConvert -l 33 44 20
+   => 37288.97 33374.29 5783.64
+   echo 30000 30000 0 | CartConvert -r
+   => 6.483 45 -6335709.73
+
+=head1 ERRORS
+
+An illegal line of input will print an error message to standard output
+beginning with C<ERROR:> and causes B<Cart3Convert> to return an exit
+code of 1.  However, an error does not cause B<Cart3Convert> to
+terminate; following lines will be converted.
+
+=head1 AUTHOR
+
+B<Cart3Convert> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<Cart3Convert> was added to GeographicLib,
+L<https://geographiclib.sourceforge.io>, in version 2.6.

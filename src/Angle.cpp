@@ -15,8 +15,8 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-/// \cond SKIP
 #include <GeographicLib/Angle.hpp>
+#include <GeographicLib/DMS.hpp>
 #include <iostream>
 
 namespace GeographicLib {
@@ -34,5 +34,51 @@ namespace GeographicLib {
     return copysign(y, x);
   }
 
+  void Angle::DecodeLatLon(const string& stra, const string& strb,
+                           Angle& lat, Angle& lon, bool longfirst) {
+    real a, b;
+    DMS::flag ia, ib;
+    a = DMS::Decode(stra, ia);
+    b = DMS::Decode(strb, ib);
+    if (ia == DMS::NONE && ib == DMS::NONE) {
+      // Default to lat, long unless longfirst
+      ia = longfirst ? DMS::LONGITUDE : DMS::LATITUDE;
+      ib = longfirst ? DMS::LATITUDE : DMS::LONGITUDE;
+    } else if (ia == DMS::NONE)
+      ia = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ib);
+    else if (ib == DMS::NONE)
+      ib = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ia);
+    if (ia == ib)
+      throw GeographicErr("Both " + stra + " and "
+                          + strb + " interpreted as "
+                          + (ia == DMS::LATITUDE ? "latitudes" : "longitudes"));
+    lat = Angle(ia == DMS::LATITUDE ? a : b);
+    lon = Angle(ia == DMS::LATITUDE ? b : a);
+  }
+
+  Angle Angle::DecodeAzimuth(const string& azistr) {
+    DMS::flag ind;
+    real azi = DMS::Decode(azistr, ind);
+    if (ind == DMS::LATITUDE)
+      throw GeographicErr("Azimuth " + azistr
+                          + " has a latitude hemisphere, N/S");
+    return Angle(azi);
+  }
+
+  string Angle::LatLonString(Angle lat, Angle lon,
+                             int prec, bool dms, char dmssep, bool longfirst) {
+    string
+      latstr = dms ? DMS::Encode(real(lat), prec, DMS::LATITUDE, dmssep) :
+      DMS::Encode(real(lat), prec, DMS::NUMBER),
+      lonstr = dms ? DMS::Encode(real(lon), prec, DMS::LONGITUDE, dmssep) :
+      DMS::Encode(real(lon), prec, DMS::NUMBER);
+    return
+      (longfirst ? lonstr : latstr) + " " + (longfirst ? latstr : lonstr);
+  }
+
+  std::string Angle::AzimuthString(Angle azi, int prec, bool dms, char dmssep) {
+    return dms ? DMS::Encode(real(azi), prec, DMS::AZIMUTH, dmssep) :
+      DMS::Encode(real(azi), prec, DMS::NUMBER);
+  }
+
 } // namespace GeographicLib
-/// \endcond

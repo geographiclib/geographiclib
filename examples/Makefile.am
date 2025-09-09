@@ -53,6 +53,7 @@ EXAMPLE_FILES = \
 	example-TransverseMercatorExact.cpp \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
+	example-TriaxialConformal.cpp \
 	GeoidToGTX.cpp \
 	make-egmcof.cpp
 

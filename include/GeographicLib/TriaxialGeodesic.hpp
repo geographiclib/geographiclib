@@ -88,9 +88,9 @@ namespace GeographicLib {
     };
     gamblk gamma(Angle bet, Angle omg, Angle alp)
       const;
-    real a() const { return t().a(); }
+    // real a() const { return t().a(); } // not needed
     real b() const { return t().b(); }
-    real c() const { return t().c(); }
+    // real c() const { return t().c(); } // not needed
     real e2() const { return t().e2(); }
     real k2() const { return t().k2(); }
     real kp2() const { return t().kp2(); }
@@ -105,15 +105,15 @@ namespace GeographicLib {
     TriaxialGeodesic(real b, real e2, real k2, real kp2);
     const Triaxial& t() const { return _t; }
     TriaxialGeodesicLine Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
-                         Angle& alp1, Angle& alp2, real& s12) const;
+                                 Angle& alp1, Angle& alp2, real& s12) const;
     TriaxialGeodesicLine Inverse(real bet1, real omg1, real bet2, real omg2,
-                         real& alp1, real& alp2, real& s12) const;
+                                 real& alp1, real& alp2, real& s12) const;
     TriaxialGeodesicLine Line(Angle bet1, Angle omg1, Angle alp1) const;
     TriaxialGeodesicLine Line(real bet1, real omg1, real alp1) const;
     TriaxialGeodesicLine Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
-                        Angle& bet2, Angle& omg2, Angle& alp2) const;
+                                Angle& bet2, Angle& omg2, Angle& alp2) const;
     TriaxialGeodesicLine Direct(real bet1, real omg1, real alp1, real s12,
-                        real& bet2, real& omg2, real& alp2) const;
+                                real& bet2, real& omg2, real& alp2) const;
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) {
       if (_t.k2() > 0 && _t.kp2() > 0) _umbalt = numbalt;
@@ -135,5 +135,9 @@ namespace GeographicLib {
 #if defined(_MSC_VER)
 #  pragma warning (pop)
 #endif
+
+// Include this because all the TriaxialGeodesic methods return a
+// TriaxialGeodesicLine.
+#include <GeographicLib/TriaxialGeodesicLine.hpp>
 
 #endif  // GEOGRAPHICLIB_TRIAXIALGEODESIC_HPP

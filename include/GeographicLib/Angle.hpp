@@ -13,7 +13,7 @@
 #if !defined(GEOGRAPHICLIB_ANGLE_HPP)
 #define GEOGRAPHICLIB_ANGLE_HPP 1
 
-/// \cond SKIP
+#include <string>
 #include <GeographicLib/Math.hpp>
 
 namespace GeographicLib {
@@ -36,9 +36,21 @@ namespace GeographicLib {
     real _s, _c, _n;
     static real rnd(real x);
   public:
+    /**
+     * @return the sine of the angle.
+     **********************************************************************/
     real s() const { return _s; }
+    /**
+     * @return the cosine of the angle.
+     **********************************************************************/
     real c() const { return _c; }
+    /**
+     * @return the tangent of the angle.
+     **********************************************************************/
     real t() const { return _s/_c; }
+    /**
+     * @return the number of turns.
+     **********************************************************************/
     real n() const {
       return _n + 0;            // Convert -0 to +0
     }
@@ -52,16 +64,15 @@ namespace GeographicLib {
     /**
      * The general constructor.
      *
-     * @param[in] y the \e y coordinate.
-     * @param[in] x the \e x coordinate.
+     * @param[in] s the sine component.
+     * @param[in] c the cosine component.
+     * @param[in] num the number of turns (default 0).
+     * @param[in] normp are \e s and \e c normalized (default false).
      *
-     * \note the \e y coordinate is specified \e first.
-     * \warning either \e x or \e y can be infinite, but not both.
+     * \warning either \e s or \e c can be infinite, but not both.
      *
-     * The point (\e x, \e y) is scaled so that it lies reasonably close to the
-     * unit circle.
-     *
-     * normp means "already normalized"
+     * The point (\e s, \e c) is scaled to lie on the unit circle, unless \e
+     * normp is true.
      **********************************************************************/
     Angle(real s, real c, real num = 0, bool normp = false);
     explicit Angle(real deg);
@@ -103,6 +114,15 @@ namespace GeographicLib {
     Angle flipsign(real mult) const;
     // Scale the sine component by m
     Angle modang(real m) const;
+    static void DecodeLatLon(const std::string& stra, const std::string& strb,
+                             Angle& lat, Angle& lon,
+                             bool longfirst = false);
+    static Angle DecodeAzimuth(const std::string& azistr);
+    static std::string LatLonString(Angle lat, Angle lon,
+                                    int prec, bool dms, char dmssep,
+                                    bool longfirst = false);
+    static std::string AzimuthString(Angle azi,
+                                     int prec, bool dms, char dmssep);
   };
 
   inline Angle::Angle(real s, real c, real num, bool normp)
@@ -114,6 +134,7 @@ namespace GeographicLib {
       std::copysign, std::rint;
     _n = rint(_n);
     if (!normp) {
+      // Cannot just use Math::norm because of all the special cases
       real h = hypot(_s, _c);
       if (h == 0) {
         // If y is +/-0 and x = -0, +/-π is returned.
@@ -338,7 +359,7 @@ namespace GeographicLib {
       s =  q != 0 ? z : q; c =  1;
       break;
     }
-    return Angle(s, c, rint((q - iq) / 4));
+    return Angle(s, c, rint((q - iq) / 4), true);
   }
 
   inline Angle Angle::nearest(unsigned ind) const {
@@ -359,6 +380,5 @@ namespace GeographicLib {
   }
 
 } // namespace GeographicLib
-/// \endcond
 
 #endif  // GEOGRAPHICLIB_ANGLE_HPP

@@ -6,17 +6,22 @@ add_definitions (${PROJECT_DEFINITIONS})
 add_custom_target (experimental)
 
 set (EXPTOOLS JacobiConformal)
+find_package (Boost 1.79 CONFIG)
+if (Boost_FOUND)
+  set (EXPTOOLS ${EXPTOOLS} Geod3ODE)
+  include_directories ("${Boost_INCLUDE_DIRS}")
+endif ()
 
 foreach (EXPTOOL ${EXPTOOLS})
-
   set (EXPSOURCE ${EXPTOOL}.cpp)
   if (EXPTOOL STREQUAL "JacobiConformal")
     set (EXPSOURCE ${EXPSOURCE} JacobiConformal.hpp)
+  elseif (EXPTOOL STREQUAL "Geod3ODE")
+    set (EXPSOURCE ${EXPSOURCE} TriaxialGeodesicODE.cpp TriaxialGeodesicODE.hpp)
   endif ()
   add_executable (${EXPTOOL} EXCLUDE_FROM_ALL ${EXPSOURCE})
   add_dependencies (experimental ${EXPTOOL})
   target_link_libraries (${EXPTOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
-
 endforeach ()
 
 if (MSVC OR CMAKE_CONFIGURATION_TYPES)

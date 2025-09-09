@@ -1,40 +1,32 @@
-// Counterpart of CartConvert
-
-// Usual flags
-//   -r (x, y, z to ellipsoidal to geographic)
-//   -e (supplement with -t)
-//   -w longfirt
-//   -p prec
-//   -h help
-//   -d dms
-//   -: colon
-//   --help
-//   --version
-//   --comment-delimiter
-//   + other I/O related flags
-
-// New flags
-//   -E ellipsoidal coords (default)
-//   -G geodetic
-//   -P parametric
-//   -C geocentric
-//   -3 include height (only for -E and -G)
-//   -D include direction (only for -E without -3)
-
-// Can't specify -3 and -D together
-// Height for -G has its usual definition
-// Height for -E is the increase in the minor semiaxis for the confocal
-// ellipsoid (H = u - c).
+/**
+ * \file Geod3ODE.cpp
+ * \brief Command line utility for computing geodesics on a triaxial ellipsoid
+ *
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
+ * under the MIT/X11 License.  For more information, see
+ * https://geographiclib.sourceforge.io/
+ *
+ * See the <a href="GeodSolve.1.html">man page</a> for usage information.
+ **********************************************************************/
 
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <GeographicLib/Math.hpp>
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
-#include "Angle.hpp"
-#include "TriaxialCartesian.hpp"
+#include <GeographicLib/Angle.hpp>
+
+#if defined(_MSC_VER)
+// Squelch warning triggered by boost:
+//   4127: conditional expression is constant
+#  pragma warning (disable: 4127)
+#endif
+#include "TriaxialGeodesicODE.hpp"
+
+// #include "GeodSolve.usage"
 
 typedef GeographicLib::Math::real real;
 typedef GeographicLib::Angle ang;
@@ -63,14 +55,14 @@ void DecodeLatLon(const std::string& stra, const std::string& strb,
   lon = ang(ia == DMS::LATITUDE ? b : a);
 }
 
-ang DecodeAzimuth(const std::string& azistr) {
+ang DecodeAzimuth(const std::string& alpstr) {
   using namespace GeographicLib;
   DMS::flag ind;
-  real azi = DMS::Decode(azistr, ind);
+  real alp = DMS::Decode(alpstr, ind);
   if (ind == DMS::LATITUDE)
-    throw GeographicErr("Azimuth " + azistr
+    throw GeographicErr("Azimuth " + alpstr
                         + " has a latitude hemisphere, N/S");
-  return ang(azi);
+  return ang(alp);
 }
 
 std::string BetOmgString(ang bet, ang omg, int prec, bool dms, char dmssep,
@@ -91,41 +83,36 @@ std::string AzimuthString(ang alp, int prec, bool dms, char dmssep) {
     DMS::Encode(real(alp), prec + 5, DMS::NUMBER);
 }
 
+std::string ErrorString(real err, int prec) {
+  std::ostringstream s;
+  s << std::scientific << std::setprecision(prec) << err;
+  return s.str();
+}
+
 int usage(int retval, bool /*brief*/) { return retval; }
 
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
+    using namespace GeographicLib::experimental;
+    typedef GeographicLib::Angle ang;
     Utility::set_digits();
-    typedef Triaxial::vec3 vec3;
-    enum { GEODETIC, PARAMETRIC, GEOCENTRIC, ELLIPSOIDAL };
-    int mode = ELLIPSOIDAL;
-    bool threed = false, direction = false, reverse = false, dms = false,
-      longfirst = false;
+    bool dms = false, longfirst = false,
+      linecalc = false, extended = false, dense = false, normp = false,
+      buffered = false, full = false, errors = false;
     real
-      a = 6378172, b = 6378102, c = 6356752, e2 = -1,
-      k2 = 0, kp2 = 0;
+      a = 6378172, b = 6378102, c = 6356752, eps = 0;
+    ang bet1 = ang(0), omg1 = ang(0), alp1 = ang(0), bet2, omg2, alp2;
+    real s12, m12, M12, M21;
+    std::vector<real> s12v;
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
+    Triaxial t(a, b, c);
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
-      if (arg == "-E")
-        mode = ELLIPSOIDAL;
-      else if (arg == "-G")
-        mode = GEODETIC;
-      else if (arg == "-P")
-        mode = PARAMETRIC;
-      else if (arg == "-C")
-        mode = GEOCENTRIC;
-      else if (arg == "-3")
-        threed = true;
-      else if (arg == "-D")
-        direction = true;
-      else if (arg == "-r")
-        reverse = true;
-      else if (arg == "-t") {
+      if (arg == "-t") {
         if (m + 3 >= argc) return usage(1, true);
         try {
           a = Utility::val<real>(std::string(argv[m + 1]));
@@ -136,12 +123,13 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -t: " << e.what() << "\n";
           return 1;
         }
-        e2 = -1;
+        t = Triaxial(a, b, c);
         m += 3;
       } else if (arg == "-e") {
         // Cayley ellipsoid sqrt([2,1,1/2]) is
         // -e 1 3/2 1/3 2/3
         if (m + 4 >= argc) return usage(1, true);
+        real e2, k2, kp2;
         try {
           b = Utility::val<real>(std::string(argv[m + 1]));
           e2 = Utility::fract<real>(std::string(argv[m + 2]));
@@ -152,9 +140,47 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
           return 1;
         }
-        a = -1;
+        t = Triaxial(b, e2, k2, kp2);
+        a = t.a(); c = t.c();
         m += 4;
-      } else if (arg == "-d") {
+      } else if (arg == "-x")
+        extended = true;
+      else if (arg == "-L") {
+        linecalc = true;
+        if (m + 3 >= argc) return usage(1, true);
+        try {
+          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
+                       bet1, omg1, longfirst);
+          alp1 = DecodeAzimuth(std::string(argv[m + 3]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
+          return 1;
+        }
+        m += 3;
+      } else if (arg == "--eps") {
+        if (m + 1 >= argc) return usage(1, true);
+        try {
+          using std::pow;
+          eps = pow(std::numeric_limits<real>::epsilon(),
+                    Utility::fract<real>(std::string(argv[m + 1])));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding argument of --eps: " << e.what() << "\n";
+          return 1;
+        }
+        m += 1;
+      } else if (arg == "--dense")
+        dense = true;
+      else if (arg == "--normp")
+        normp = true;
+      else if (arg == "--errors")
+        errors = true;
+      else if (arg == "-b")
+        buffered = true;
+      else if (arg == "-f")
+        full = true;
+      else if (arg == "-d") {
         dms = true;
         dmssep = '\0';
       } else if (arg == "-:") {
@@ -198,25 +224,6 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
-    using std::round, std::log10, std::ceil, std::signbit;
-    TriaxialCartesian tc(e2 >= 0 ? Triaxial(b, e2, k2, kp2) :
-                         Triaxial(a, b, c));
-
-    if (direction && mode != ELLIPSOIDAL) {
-      std::cerr << "Can only specify -D with ellipsoidal conversions\n";
-      return 1;
-    }
-    if (threed && !(mode == ELLIPSOIDAL || mode == GEODETIC)) {
-      std::cerr
-        << "Can only specify -3 with ellipsoidal or geodetic conversions\n";
-      return 1;
-    }
-    if (direction && threed) {
-      std::cerr
-        << "Cannot specify both -3 and -D\n";
-      return 1;
-    }
-
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
       return 1;
@@ -254,16 +261,20 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
+    using std::round, std::log10;
     int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    std::string s, eol, sbet, somg, salp, sh, sx, sy, sz, svx, svy, svz, strc;
+    std::string s, eol, sbet1, somg1, salp1, sbet2, somg2, salp2, ss12, strc;
     std::istringstream str;
     int retval = 0;
-    vec3 r = {0,0,0}, v = {0,0,0};
-    ang bet, omg, alp;
-    real h = 0;
+    buffered = buffered && linecalc;
+    errors = errors && !buffered;
+    TriaxialGeodesicODE l = linecalc ?
+      TriaxialGeodesicODE(t, bet1, omg1, alp1, extended, dense, normp, eps) :
+      TriaxialGeodesicODE(t, extended, dense, normp, eps);
+
     while (std::getline(*input, s)) {
       try {
         eol = "\n";
@@ -274,108 +285,67 @@ int main(int argc, const char* const argv[]) {
             s = s.substr(0, m);
           }
         }
-        // READ
         str.clear(); str.str(s);
-        if (reverse) {
-          if (!(str >> sx >> sy >> sz))
-            throw GeographicErr("Incomplete input: " + s);
-          r[0] = Utility::val<real>(sx);
-          r[1] = Utility::val<real>(sy);
-          r[2] = Utility::val<real>(sz);
-          if (direction) {
-            if (!(str >> svx >> svy >> svz))
-              throw GeographicErr("Incomplete input: " + s);
-            v[0] = Utility::val<real>(svx);
-            v[1] = Utility::val<real>(svy);
-            v[2] = Utility::val<real>(svz);
-          }
-        } else {
-          if (!(str >> sbet >> somg))
-            throw GeographicErr("Incomplete input: " + s);
-          DecodeLatLon(sbet, somg, bet, omg, longfirst);
-          if (mode != ELLIPSOIDAL && (bet.n() != 0 || signbit(bet.c())))
-            throw GeographicErr("Latitude outside range [-90,90]: " + s);
-          if (threed) {
-            if (!(str >> sh))
-              throw GeographicErr("Incomplete input: " + s);
-            h = Utility::val<real>(sh);
-          } else if (direction) {
-            if (!(str >> salp))
-              throw GeographicErr("Incomplete input: " + s);
-            alp = DecodeAzimuth(salp);
-          }
-        }
+        if (!(linecalc ? (str >> ss12) :
+              (str >> sbet1 >> somg1 >> salp1 >> ss12)))
+          throw GeographicErr("Incomplete input: " + s);
         if (str >> strc)
-          throw GeographicErr("Extraneous input: " + strc);
-        // PROCESS
-        switch (mode) {
-        case ELLIPSOIDAL:
-          if (reverse) {
-            if (threed)
-              tc.carttoellip(r, bet, omg, h);
-            else if (direction)
-              tc.cart2toellip(r, v, bet, omg, alp);
-            else
-              tc.cart2toellip(r, bet, omg);
-          } else {
-            if (threed)
-              tc.elliptocart(bet, omg, h, r);
-            else if (direction)
-              tc.elliptocart2(bet, omg, alp, r, v);
-            else
-              tc.elliptocart2(bet, omg, r);
-          }
-          break;
-        case GEODETIC:
-          if (reverse) {
-            if (threed)
-              tc.carttogeod(r, bet, omg, h);
-            else
-              tc.cart2togeod(r, bet, omg);
-          } else {
-            if (threed)
-              tc.geodtocart(bet, omg, h, r);
-            else
-              tc.geodtocart2(bet, omg, r);
-          }
-          break;
-        case PARAMETRIC:
-          if (reverse)
-            tc.cart2toparam(r, bet, omg);
-          else
-            tc.paramtocart2(bet, omg, r);
-          break;
-        case GEOCENTRIC:
-        default:
-          if (reverse)
-            tc.cart2togeocen(r, bet, omg);
-          else
-            tc.geocentocart2(bet, omg, r);
-          break;
-        }
-        // WRITE
-        if (reverse) {
-          *output << BetOmgString(bet, omg, prec, dms, dmssep, longfirst);
-          if (threed)
-            *output << " " << Utility::str(h, prec + disprec);
-          else if (direction)
-            *output << " " << AzimuthString(alp, prec, dms, dmssep);
+          throw GeographicErr("Extraneious input: " + s);
+        s12 = Utility::val<real>(ss12);
+        if (linecalc) {
+          if (buffered) s12v.push_back(s12);
         } else {
-          *output << Utility::str(r[0], prec + disprec) << " "
-                  << Utility::str(r[1], prec + disprec) << " "
-                  << Utility::str(r[2], prec + disprec);
-          if (direction)
-          *output << " "
-                  << Utility::str(v[0], prec + disprec) << " "
-                  << Utility::str(v[1], prec + disprec) << " "
-                  << Utility::str(v[2], prec + disprec);
+          DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+          alp1 = DecodeAzimuth(salp1);
+          l.Reset(bet1, omg1, alp1);
         }
-        *output << eol;
+        if (!buffered) {
+          auto errs = l.Position(s12, bet2, omg2, alp2, m12, M12, M21);
+          if (full)
+            *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
+                    << " " << AzimuthString(alp1, prec, dms, dmssep) << " ";
+          *output << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
+                  << " " << AzimuthString(alp2, prec, dms, dmssep);
+          if (full)
+            *output << " " << Utility::str(s12, prec + disprec);
+          if (extended)
+            *output << " " << Utility::str(m12, prec + disprec)
+                    << " " << Utility::str(M12, prec+7)
+                    << " " << Utility::str(M21, prec+7);
+          if (errors)
+            *output << " " << ErrorString(errs.first, 2)
+                    << " " << ErrorString(errs.second, 2);
+          *output << eol;
+        }
       }
       catch (const std::exception& e) {
-        // Write error message cout so output lines match input lines
-        *output << "ERROR: " << e.what() << "\n";
+        if (buffered)
+          s12v.push_back(Math::NaN());
+        else
+          // Write error message cout so output lines match input lines
+          *output << "ERROR: " << e.what() << " " << s << "\n";
         retval = 1;
+      }
+    }
+
+    if (buffered) {
+      std::vector<Angle> bet2v, omg2v, alp2v;
+      std::vector<real> m12v, M12v, M21v;
+      l.Position(s12v, bet2v, omg2v, alp2v, m12v, M12v, M21v);
+      for (size_t i = 0; i < s12v.size(); ++i) {
+          if (full)
+            *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
+                    << " " << AzimuthString(alp1, prec, dms, dmssep) << " ";
+          *output << BetOmgString(bet2v[i], omg2v[i], prec, dms, dmssep,
+                                  longfirst)
+                  << " " << AzimuthString(alp2v[i], prec, dms, dmssep);
+          if (full)
+            *output << " " << Utility::str(s12v[i], prec + disprec);
+          if (extended)
+            *output << " " << Utility::str(m12v[i], prec + disprec)
+                    << " " << Utility::str(M12v[i], prec+7)
+                    << " " << Utility::str(M21v[i], prec+7);
+          *output << eol;
       }
     }
     return retval;

@@ -7,8 +7,6 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if HAVE_BOOST
-
 #include <iostream>
 #include <iomanip>
 
@@ -22,6 +20,7 @@
 #include "TriaxialGeodesicODE.hpp"
 
 namespace GeographicLib {
+namespace experimental {
 
   using namespace std;
 
@@ -440,6 +439,5 @@ namespace GeographicLib {
       return pair<real, real>(_dir * _s, _dir * _s);
   }
 
+} // namespace experimental
 } // namespace GeographicLib
-
-#endif

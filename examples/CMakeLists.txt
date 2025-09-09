@@ -71,6 +71,7 @@ set (EXAMPLES0
   example-TransverseMercatorExact.cpp
   example-UTMUPS.cpp
   example-Utility.cpp
+  example-TriaxialConformal.cpp
   )
 set (EXAMPLES1
   GeoidToGTX.cpp make-egmcof.cpp)

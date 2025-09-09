@@ -396,8 +396,10 @@ echo Verify library versions of cmake and autoconf builds are the same and other
 libversion=`find $TEMP/instc/lib -type f \
 -name 'libGeographicLib.so.*.*' -printf "%f" |
 sed 's/libGeographicLib\.so\.//'`
-test -f $TEMP/instb/lib/libGeographicLib.so.$libversion ||
-echo autoconf/cmake library so mismatch
+if test -f $TEMP/instb/lib/libGeographicLib.so.$libversion; then :; else
+    echo autoconf/cmake library version numbers MISMATCH
+    exit 1
+fi
 
 CONFIG_FILE=$TEMP/gitr/geographiclib/configure
 CONFIG_MAJOR=`grep ^GEOGRAPHICLIB_VERSION_MAJOR= $CONFIG_FILE | cut -f2 -d=`
@@ -407,8 +409,14 @@ CONFIG_VERSIONA=`grep ^PACKAGE_VERSION= $CONFIG_FILE | cut -f2 -d= |
 cut -f2 -d\'`
 CONFIG_VERSION=$CONFIG_MAJOR.$CONFIG_MINOR
 test "$CONFIG_PATCH" = 0 || CONFIG_VERSION=$CONFIG_VERSION.$CONFIG_PATCH
-test "$CONFIG_VERSION"  = "$VERSION" || echo autoconf version number mismatch
-test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
+if test "$CONFIG_VERSION"  = "$VERSION"; then :; else
+    echo autoconf version number MISMATCH
+    exit 1
+fi
+if test "$CONFIG_VERSIONA" = "$VERSION"; then :; else
+    echo autoconf version string MISMATCH
+    exit 1
+fi
 
 cd $TEMP/relx/GeographicLib-$VERSION
 (
