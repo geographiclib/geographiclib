@@ -194,6 +194,18 @@ namespace GeographicLib {
     ///@}
 
     /** \name Triaxial ellipsoid parameters
+     *
+     * These parameters are close to the values given by Milan Bursa, Vladimira
+     * Fialova, "Parameters of the Earth's tri-axial level ellipsoid", Studia
+     * Geophysica et Geodaetica 37(1), 1-13 (1993).
+     * - longitude of major axis = -14.93 +/- 0.05
+     * - a = 6378171.36 +/- 0.30
+     * - a/(a-c) = 297.7738 +/- 0.0003
+     * - a/(a-b) = 91449 +/- 60
+     * .
+     * which gives: a = 6378171.36, b = 6378101.61, c = 6356751.84.  Here take
+     * the semiaxes to be whole numbers of meters, with (a + b)/2 = WGS84_a(),
+     * a - b = 70 m, c = round(WGS84_a() * (1 - WGS84_f())).
      **********************************************************************/
     ///@{
     /**

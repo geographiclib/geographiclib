@@ -50,7 +50,7 @@ namespace GeographicLib {
   private:
     typedef Math::real real;
     Triaxial _t;
-    EllipticFunction _ex, _ey, _exalt, _eyalt;
+    EllipticFunction _ex, _ey;
     real a() const { return _t.a(); }
     real b() const { return _t.b(); }
     real c() const { return _t.c(); }
@@ -105,7 +105,6 @@ namespace GeographicLib {
      * @return the quadrant length in the \e x direction (in meters).
      **********************************************************************/
     Math::real x() const;
-    Math::real x2() const;
     /**
      * The \e x projection.
      *
@@ -113,7 +112,6 @@ namespace GeographicLib {
      * @return the easting (in meters).
      **********************************************************************/
     Math::real x(Angle omg) const;
-    Math::real x2(Angle omg) const;
     /**
      * The \e x projection.
      *
@@ -144,7 +142,6 @@ namespace GeographicLib {
      * @return the quadrant length in the \e y direction (in meters).
      **********************************************************************/
     Math::real y() const;
-    Math::real y2() const;
     /**
      * The \e y projection.
      *
@@ -152,7 +149,6 @@ namespace GeographicLib {
      * @return the northing (in meters).
      **********************************************************************/
     Math::real y(Angle bet) const;
-    Math::real y2(Angle bet) const;
     /**
      * The \e y projection.
      *
