@@ -52,12 +52,12 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	UTMUPS.cpp \
 	Utility.cpp \
 	Angle.cpp \
-	Triaxial.cpp \
-	TriaxialGeodesic.cpp \
 	Trigfun.cpp \
-	TriaxialGeodesicLine.cpp \
-	TriaxialCartesian.cpp \
-	TriaxialConformal.cpp \
+	Ellipsoid3.cpp \
+	Geodesic3.cpp \
+	GeodesicLine3.cpp \
+	Cartesian3.cpp \
+	Conformal3.cpp \
 	kissfft.hh \
 	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
@@ -106,12 +106,12 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	../include/GeographicLib/UTMUPS.hpp \
 	../include/GeographicLib/Utility.hpp \
 	../include/GeographicLib/Angle.hpp \
-	../include/GeographicLib/Triaxial.hpp \
-	../include/GeographicLib/TriaxialGeodesic.hpp \
 	../include/GeographicLib/Trigfun.hpp \
-	../include/GeographicLib/TriaxialGeodesicLine.hpp \
-	../include/GeographicLib/TriaxialCartesian.hpp \
-	../include/GeographicLib/TriaxialConformal.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Geodesic3.hpp \
+	../include/GeographicLib/Triaxial/GeodesicLine3.hpp \
+	../include/GeographicLib/Triaxial/Cartesian3.hpp \
+	../include/GeographicLib/Triaxial/Conformal3.hpp \
 	../include/GeographicLib/Config.h
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h

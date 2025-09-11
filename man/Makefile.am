@@ -15,7 +15,9 @@ USAGE = \
 	MagneticField.usage \
 	Planimeter.usage \
 	RhumbSolve.usage \
-	TransverseMercatorProj.usage
+	TransverseMercatorProj.usage \
+	Geod3Solve.usage \
+	Cart3Convert.usage
 
 MANPAGES = \
 	CartConvert.1 \
@@ -29,7 +31,9 @@ MANPAGES = \
 	MagneticField.1 \
 	Planimeter.1 \
 	RhumbSolve.1 \
-	TransverseMercatorProj.1
+	TransverseMercatorProj.1 \
+	Geod3Solve.1 \
+	Cart3Convert.1
 
 HTMLMAN = \
 	CartConvert.1.html \
@@ -43,7 +47,9 @@ HTMLMAN = \
 	MagneticField.1.html \
 	Planimeter.1.html \
 	RhumbSolve.1.html \
-	TransverseMercatorProj.1.html
+	TransverseMercatorProj.1.html \
+	Geod3Solve.1.html \
+	Cart3Convert.1.html
 
 SYSMANPAGES = geographiclib-get-geoids.8 \
 	geographiclib-get-gravity.8 \

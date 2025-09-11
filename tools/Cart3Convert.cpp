@@ -45,17 +45,18 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/Angle.hpp>
-#include <GeographicLib/TriaxialCartesian.hpp>
+#include <GeographicLib/Triaxial/Cartesian3.hpp>
 
 #include "Cart3Convert.usage"
 
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
+    using namespace Triaxial;
     typedef Math::real real;
     typedef Angle ang;
     Utility::set_digits();
-    typedef Triaxial::vec3 vec3;
+    typedef Ellipsoid3::vec3 vec3;
     enum { GEODETIC, PARAMETRIC, GEOCENTRIC, ELLIPSOIDAL };
     int mode = ELLIPSOIDAL;
     bool threed = false, direction = false, reverse = false, dms = false,
@@ -158,8 +159,8 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
-    TriaxialCartesian tc(e2 >= 0 ? Triaxial(b, e2, k2, kp2) :
-                         Triaxial(a, b, c));
+    Cartesian3 tc(e2 >= 0 ? Ellipsoid3(b, e2, k2, kp2) :
+                         Ellipsoid3(a, b, c));
 
     if (direction && mode != ELLIPSOIDAL) {
       std::cerr << "Can only specify -D with ellipsoidal conversions\n";

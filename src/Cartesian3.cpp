@@ -1,19 +1,20 @@
 /**
- * \file TriaxialCartesian.cpp
- * \brief Implementation for GeographicLib::TriaxialCartesian class
+ * \file Cartesian3.cpp
+ * \brief Implementation for GeographicLib::Triaxial::Cartesian3 class
  *
  * Copyright (c) Charles Karney (2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include <GeographicLib/TriaxialCartesian.hpp>
+#include <GeographicLib/Triaxial/Cartesian3.hpp>
 
 namespace GeographicLib {
+  namespace Triaxial {
 
   using namespace std;
 
-  TriaxialCartesian::TriaxialCartesian(const Triaxial& t)
+  Cartesian3::Cartesian3(const Ellipsoid3& t)
     : _t(t)
     , _axes{_t.a(), _t.b(), _t.c()}
     , _axes2{Math::sq(_t.a()), Math::sq(_t.b()), Math::sq(_t.c())}
@@ -21,16 +22,16 @@ namespace GeographicLib {
                (_t.b() - _t.c()) * (_t.b() + _t.c()), 0}
   {}
 
-  TriaxialCartesian::TriaxialCartesian(real a, real b, real c)
-    : TriaxialCartesian(Triaxial(a, b, c))
+  Cartesian3::Cartesian3(real a, real b, real c)
+    : Cartesian3(Ellipsoid3(a, b, c))
   {}
 
-  TriaxialCartesian::TriaxialCartesian(real b, real e2, real k2, real kp2)
-    : TriaxialCartesian(Triaxial(b, e2, k2, kp2))
+  Cartesian3::Cartesian3(real b, real e2, real k2, real kp2)
+    : Cartesian3(Ellipsoid3(b, e2, k2, kp2))
   {}
 
   template<int n>
-  pair<Math::real, Math::real> TriaxialCartesian::funp<n>::operator()(real p)
+  pair<Math::real, Math::real> Cartesian3::funp<n>::operator()(real p)
     const {
     real fp = 0, fv = -1, fcorr = 0;
     for (int k = 0; k < 3; ++k) {
@@ -45,8 +46,8 @@ namespace GeographicLib {
   }
 
   Math::real
-  TriaxialCartesian::cartsolve(const function<pair<real, real>(real)>& f,
-                               real p0, real pscale) {
+  Cartesian3::cartsolve(const function<pair<real, real>(real)>& f,
+                        real p0, real pscale) {
     // Solve
     //   f(p) = 0
     // Initial guess is p0; pscale is a scale factor for p; scale factor for f
@@ -60,9 +61,9 @@ namespace GeographicLib {
     for (int i = 0;
          i < maxit_ ||
            (throw GeographicLib::GeographicErr
-            ("Convergence failure TriaxialCartesian::cartsolve"), false)
+            ("Convergence failure Cartesian3::cartsolve"), false)
            || GEOGRAPHICLIB_PANIC
-           ("Convergence failure TriaxialCartesian::cartsolve");
+           ("Convergence failure Cartesian3::cartsolve");
          ++i) {
       pair<real, real> fx = f(p);
       real fv = fx.first, fp = fx.second;
@@ -84,7 +85,7 @@ namespace GeographicLib {
     return p;
   }
 
-  Math::real TriaxialCartesian::cubic(vec3 r2) const {
+  Math::real Cartesian3::cubic(vec3 r2) const {
     // Solve sum(r2[i]/(z + lineq2[i]), i,0,2) - 1 = 0 with lineq2[2] = 0.
     // This has three real roots with just one satisifying q >= 0.
     // Express as a cubic equation z^3 + a*z^2 + b*z + c = 0.
@@ -119,8 +120,7 @@ namespace GeographicLib {
     return recip ? 1/t : t;
   }
 
-  void TriaxialCartesian::carttoellip(vec3 r, Angle& bet, Angle& omg, real& H)
-    const {
+  void Cartesian3::carttoellip(vec3 r, Angle& bet, Angle& omg, real& H) const {
     // tol2 = eps^(4/3)
     real tol2 = Math::sq(Math::sq(cbrt(numeric_limits<real>::epsilon())));
     vec3 r2 = {Math::sq(r[0]), Math::sq(r[1]), Math::sq(r[2])};
@@ -145,8 +145,7 @@ namespace GeographicLib {
     H = axes[2] - c();
   }
 
-  void TriaxialCartesian::elliptocart(Angle bet, Angle omg, real H, vec3& r)
-    const {
+  void Cartesian3::elliptocart(Angle bet, Angle omg, real H, vec3& r) const {
     vec3 ax;
     real shift = H * (2*c() + H);
     for (int k = 0; k < 2; ++k)
@@ -160,8 +159,7 @@ namespace GeographicLib {
   }
 
   template<int n>
-  void TriaxialCartesian::cart2togeneric(vec3 r, Angle& phi, Angle& lam)
-    const {
+  void Cartesian3::cart2togeneric(vec3 r, Angle& phi, Angle& lam) const {
     static_assert(n >= 0 && n <= 2, "Bad coordinate conversion");
     if constexpr (n == 2) {
       r[0] /= _axes2[0];
@@ -177,8 +175,7 @@ namespace GeographicLib {
   }
 
   template<int n>
-  void TriaxialCartesian::generictocart2(Angle phi, Angle lam, vec3& r)
-    const {
+  void Cartesian3::generictocart2(Angle phi, Angle lam, vec3& r) const {
     static_assert(n >= 0 && n <= 2, "Bad coordinate conversion");
     r = {phi.c() * lam.c(),
       phi.c() * lam.s(),
@@ -198,32 +195,28 @@ namespace GeographicLib {
     } // else n == 1, d = 1 and r is already on the surface of the ellipsoid
   }
 
-  void TriaxialCartesian::cart2togeod(vec3 r, Angle& phi, Angle& lam) const {
+  void Cartesian3::cart2togeod(vec3 r, Angle& phi, Angle& lam) const {
     cart2togeneric<2>(r, phi, lam);
   }
-  void TriaxialCartesian::geodtocart2(Angle phi, Angle lam, vec3& r) const {
+  void Cartesian3::geodtocart2(Angle phi, Angle lam, vec3& r) const {
     generictocart2<2>(phi, lam, r);
   }
 
-  void TriaxialCartesian::cart2toparam(vec3 r, Angle& phip, Angle& lamp)
-    const {
+  void Cartesian3::cart2toparam(vec3 r, Angle& phip, Angle& lamp) const {
     cart2togeneric<1>(r, phip, lamp);
   }
-  void TriaxialCartesian::paramtocart2(Angle phip, Angle lamp, vec3& r)
-    const {
+  void Cartesian3::paramtocart2(Angle phip, Angle lamp, vec3& r) const {
     generictocart2<1>(phip, lamp, r);
   }
 
-  void TriaxialCartesian::cart2togeocen(vec3 r, Angle& phipp, Angle& lampp)
-    const {
+  void Cartesian3::cart2togeocen(vec3 r, Angle& phipp, Angle& lampp) const {
     cart2togeneric<0>(r, phipp, lampp);
   }
-  void TriaxialCartesian::geocentocart2(Angle phipp, Angle lampp, vec3& r)
-    const {
+  void Cartesian3::geocentocart2(Angle phipp, Angle lampp, vec3& r) const {
     generictocart2<0>(phipp, lampp, r);
   }
 
-  void TriaxialCartesian::cart2tocart(vec3 r2, real h, vec3& r) const {
+  void Cartesian3::cart2tocart(vec3 r2, real h, vec3& r) const {
     vec3 rn = {r2[0] / _axes2[0], r2[1] / _axes2[1], r2[2] / _axes2[2]};
     real d = h / Math::hypot3(rn[0], rn[1], rn[2]);
     r = r2;
@@ -231,7 +224,7 @@ namespace GeographicLib {
       r[k] += rn[k] * d;
   }
 
-  void TriaxialCartesian::carttocart2(vec3 r, vec3& r2, real& h) const {
+  void Cartesian3::carttocart2(vec3 r, vec3& r2, real& h) const {
     const real eps = numeric_limits<real>::epsilon(), ztol = b() * eps/8;
     for (int k = 0; k < 3; ++k)
       if (fabs(r[k]) <= ztol) r[k] = copysign(real(0), r[k]);
@@ -257,18 +250,17 @@ namespace GeographicLib {
                                        r2[2] / _axes2[2]);
   }
 
-  void TriaxialCartesian::carttogeod(vec3 r, Angle& phi, Angle& lam, real& h)
-    const {
+  void Cartesian3::carttogeod(vec3 r, Angle& phi, Angle& lam, real& h) const {
     vec3 r2;
     carttocart2(r, r2, h);
     cart2togeod(r2, phi, lam);
   }
 
-  void TriaxialCartesian::geodtocart(Angle phi, Angle lam, real h, vec3& r)
-    const {
+  void Cartesian3::geodtocart(Angle phi, Angle lam, real h, vec3& r) const {
     vec3 r2;
     geodtocart2(phi, lam, r2);
     cart2tocart(r2, h, r);
   }
 
+  } // namespace Triaxial
 } // namespace GeographicLib

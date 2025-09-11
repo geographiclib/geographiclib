@@ -1,21 +1,22 @@
 /**
- * \file TriaxialConformal.cpp
- * \brief Implementation for GeographicLib::TriaxialConformal class
+ * \file Conformal3.cpp
+ * \brief Implementation for GeographicLib::Triaxial::Conformal3 class
  *
- * Copyright (c) Charles Karney (2014-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2014-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <iostream>
-#include <GeographicLib/TriaxialConformal.hpp>
+#include <GeographicLib/Triaxial/Conformal3.hpp>
 #include <GeographicLib/Trigfun.hpp>
 
 namespace GeographicLib {
+  namespace Triaxial {
 
   using namespace std;
 
-  TriaxialConformal::TriaxialConformal(const Triaxial& t)
+  Conformal3::Conformal3(const Ellipsoid3& t)
     : _t(t)
     , _ex(kp2() * (1 - e2() * k2 ()),   - e2() * kp2(),
           k2 () * (1 + e2() * kp2()), 1 + e2() * kp2())
@@ -29,19 +30,19 @@ namespace GeographicLib {
   // * modulus of Pi then becomes imaginary
   // * Use DLMF 19.7.5 to express as sum of Pi term and F term
 
-  TriaxialConformal::TriaxialConformal(real a, real b, real c)
-    : TriaxialConformal(Triaxial(a, b, c))
+  Conformal3::Conformal3(real a, real b, real c)
+    : Conformal3(Ellipsoid3(a, b, c))
   {}
-  TriaxialConformal::TriaxialConformal(real b, real e2, real k2, real kp2)
-    : TriaxialConformal(Triaxial(b, e2, k2, kp2))
+  Conformal3::Conformal3(real b, real e2, real k2, real kp2)
+    : Conformal3(Ellipsoid3(b, e2, k2, kp2))
   {}
 
-  Math::real TriaxialConformal::Pi(const EllipticFunction& ell, Angle phi) {
+  Math::real Conformal3::Pi(const EllipticFunction& ell, Angle phi) {
     real p = ell.Pi(phi.s(), phi.c(), ell.Delta(phi.s(), phi.c()));
     if (phi.n() != 0) p += 4 * ell.Pi() * phi.n();
     return p;
   }
-  Angle TriaxialConformal::Piinv(const EllipticFunction& ell, real x) {
+  Angle Conformal3::Piinv(const EllipticFunction& ell, real x) {
     real y = remainder(x, 2 * ell.Pi()),
       n = 2 * round((x - y) / (2 * ell.Pi()));
     // Now x = n * Pi() + y where y in [-Pi(), Pi()].  Pi() is the quarter
@@ -85,42 +86,42 @@ namespace GeographicLib {
     }
   }
 
-  Math::real TriaxialConformal::x() const {
+  Math::real Conformal3::x() const {
     return Math::sq(a()) / b() * _ex.Pi();
   }
-  Math::real TriaxialConformal::x(Angle omg) const {
+  Math::real Conformal3::x(Angle omg) const {
     omg = omegashift(omg, +1);
     return Math::sq(a()) / b() * Pi(_ex, omg.modang(b() / a()));
   }
-  Angle TriaxialConformal::omega(real x) const {
+  Angle Conformal3::omega(real x) const {
     Angle omg = Piinv(_ex, (x * b()) / Math::sq(a())).modang(a() / b());
     return omegashift(omg, -1);
   }
 
-  Math::real TriaxialConformal::y() const {
+  Math::real Conformal3::y() const {
     return Math::sq(c()) / b() * _ey.Pi();
   }
-  Math::real TriaxialConformal::y(Angle bet) const {
+  Math::real Conformal3::y(Angle bet) const {
     return  Math::sq(c()) / b() * Pi(_ey, bet.modang(b() / c()));
   }
-  Angle TriaxialConformal::beta(real y) const {
+  Angle Conformal3::beta(real y) const {
     return Piinv(_ey, (y * b()) / Math::sq(c())).modang(c() / b());
   }
 
-  void TriaxialConformal::Forward(Angle bet, Angle omg, real& xa, real& ya)
-    const {
+  void Conformal3::Forward(Angle bet, Angle omg, real& xa, real& ya) const {
     xa = x(omg); ya = y(bet);
   }
-  void TriaxialConformal::Reverse(real x, real y, Angle& bet, Angle& omg)
-    const {
+  void Conformal3::Reverse(real x, real y, Angle& bet, Angle& omg) const {
     bet = beta(y); omg = omega(x);
   }
-  void TriaxialConformal::Forward(Angle bet, Angle omg, real& x, real& y,
-                                  real& m) const {
+  void Conformal3::Forward(Angle bet, Angle omg, real& x, real& y,
+                           real& m) const {
     Forward(bet, omg, x, y); m = scale(bet, omg);
   }
-  void TriaxialConformal::Reverse(real x, real y, Angle& bet, Angle& omg,
-                                  real& m) const {
+  void Conformal3::Reverse(real x, real y, Angle& bet, Angle& omg,
+                           real& m) const {
     Reverse(x, y, bet, omg); m = scale(bet, omg);
   }
+
+  } // namespace Triaxial
 } // namespace GeographicLib

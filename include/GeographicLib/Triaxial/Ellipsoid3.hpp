@@ -1,14 +1,14 @@
 /**
- * \file Triaxial.hpp
- * \brief Header for GeographicLib::Triaxial class
+ * \file Ellipsoid3.hpp
+ * \brief Header for GeographicLib::Triaxial::Ellipsoid3 class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_TRIAXIAL_HPP)
-#define GEOGRAPHICLIB_TRIAXIAL_HPP 1
+#if !defined(GEOGRAPHICLIB_ELLIPSOID3_HPP)
+#define GEOGRAPHICLIB_ELLIPSOID3_HPP 1
 
 #include <iostream>
 #include <array>
@@ -16,16 +16,18 @@
 #include <GeographicLib/Angle.hpp>
 
 namespace GeographicLib {
-  class GEOGRAPHICLIB_EXPORT Triaxial {
+  namespace Triaxial {
+  class GEOGRAPHICLIB_EXPORT Ellipsoid3 {
   public:
     typedef std::array<Math::real, 3> vec3;
   private:
-    friend class TriaxialCartesian;  // For access to cart2toellipint
-    friend class TriaxialGeodesic;   // For Flip
+    friend class Cartesian3;  // For access to cart2toellipint normvec
+    friend class Geodesic3;   // For Flip
     typedef Math::real real;
     typedef Angle ang;
     static void normvec(vec3& r) {
       real h = Math::hypot3(r[0], r[1], r[2]);
+      // No checking for h = 0.  Result will be NaNs
       r[0] /= h; r[1] /= h; r[2] /= h;
     }
     static void Flip(Angle& bet, Angle& omg, Angle& alp) {
@@ -38,9 +40,9 @@ namespace GeographicLib {
     bool _oblate, _prolate, _biaxial;
     void cart2toellipint(vec3 r, Angle& bet, Angle& omg, vec3 axes) const;
   public:
-    Triaxial();
-    Triaxial(real a, real b, real c);
-    Triaxial(real b, real e2, real k2, real kp2);
+    Ellipsoid3();
+    Ellipsoid3(real a, real b, real c);
+    Ellipsoid3(real b, real e2, real k2, real kp2);
     void Norm(vec3& r) const;
     void Norm(vec3& r, vec3& v) const;
     real a() const { return _a; }
@@ -91,13 +93,14 @@ namespace GeographicLib {
     void elliptocart2(Angle bet, Angle omg, Angle alp,
                       vec3& r, vec3& v) const;
     /**
-     * A global instantiation of TriaxialGeodesic with the parameters for the
+     * A global instantiation of Ellipsoid3 with the parameters for the
      * Earth.
      **********************************************************************/
-    static const Triaxial& Earth();
+    static const Ellipsoid3& Earth();
 
   };
 
+  } // namespace Triaxial
 } // namespace GeographicLib
 
 #endif  // GEOGRAPHICLIB_TRIAXIAL_HPP

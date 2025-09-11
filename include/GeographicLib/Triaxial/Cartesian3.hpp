@@ -1,30 +1,31 @@
 /**
- * \file TriaxialCartesian.hpp
- * \brief Header for GeographicLib::TriaxialCartesian class
+ * \file Cartesian3.hpp
+ * \brief Header for GeographicLib::Triaxial::Cartesian3 class
  *
  * Copyright (c) Charles Karney (2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_TRIAXIALCARTESIAN_HPP)
-#define GEOGRAPHICLIB_TRIAXIALCARTESIAN_HPP 1
+#if !defined(GEOGRAPHICLIB_CARTESIAN3_HPP)
+#define GEOGRAPHICLIB_CARTESIAN3_HPP 1
 
 #include <array>
 #include <utility>
 #include <functional>
-#include <GeographicLib/Triaxial.hpp>
+#include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
 namespace GeographicLib {
+  namespace Triaxial {
 
-  class GEOGRAPHICLIB_EXPORT TriaxialCartesian {
+  class GEOGRAPHICLIB_EXPORT Cartesian3 {
   public:
-    typedef Triaxial::vec3 vec3;
+    typedef Ellipsoid3::vec3 vec3;
   private:
     typedef Math::real real;
     typedef Angle ang;
     static const int maxit_ = 20;
-    const Triaxial _t;
+    const Ellipsoid3 _t;
     const vec3 _axes, _axes2, _linecc2;
 
     template<int n>
@@ -57,10 +58,10 @@ namespace GeographicLib {
     real b() const { return t().b(); }
     real c() const { return t().c(); }
   public:
-    TriaxialCartesian(const Triaxial& t);
-    TriaxialCartesian(real a, real b, real c);
-    TriaxialCartesian(real b, real e2, real k2, real kp2);
-    const Triaxial& t() const { return _t; }
+    Cartesian3(const Ellipsoid3& t);
+    Cartesian3(real a, real b, real c);
+    Cartesian3(real b, real e2, real k2, real kp2);
+    const Ellipsoid3& t() const { return _t; }
     void cart2toellip(vec3 r, Angle& bet, Angle& omg) const {
       _t.cart2toellip(r, bet, omg);
     }
@@ -96,6 +97,7 @@ namespace GeographicLib {
     void geodtocart(Angle phi, Angle lam, real h, vec3& r) const;
   };
 
+  } // namespace Triaxial
 } // namespace GeographicLib
 
-#endif  // GEOGRAPHICLIB_TRIAXIALCARTESIAN_HPP
+#endif  // GEOGRAPHICLIB_CARTESIAN3_HPP

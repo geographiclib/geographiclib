@@ -18,8 +18,7 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/Angle.hpp>
-#include <GeographicLib/TriaxialGeodesic.hpp>
-#include <GeographicLib/TriaxialGeodesicLine.hpp>
+#include <GeographicLib/Triaxial/Geodesic3.hpp>
 
 #include "Geod3Solve.usage"
 
@@ -54,6 +53,7 @@ void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg, ang& alp) {
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
+    using namespace Triaxial;
     using std::signbit, std::isnan, std::fabs;
     typedef Angle ang;
     Utility::set_digits();
@@ -193,10 +193,10 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
-    TriaxialGeodesic t = e2 >= 0 ? TriaxialGeodesic(b, e2, k2, kp2) :
-      !isnan(f) ? TriaxialGeodesic(b, fabs(f) * (2 - f),
+    Geodesic3 t = e2 >= 0 ? Geodesic3(b, e2, k2, kp2) :
+      !isnan(f) ? Geodesic3(b, fabs(f) * (2 - f),
                                    signbit(f) ? 0 : 1, signbit(f) ? 1 : 0) :
-      TriaxialGeodesic(a, b, c);
+      Geodesic3(a, b, c);
 
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
@@ -240,8 +240,8 @@ int main(int argc, const char* const argv[]) {
     if (linecalc) {
       BiaxialCoords(true, f, bet1, omg1, alp1);
     }
-    std::unique_ptr<TriaxialGeodesicLine> lp = linecalc ?
-      std::make_unique<TriaxialGeodesicLine>(t, bet1, omg1, alp1) : nullptr;
+    std::unique_ptr<GeodesicLine3> lp = linecalc ?
+      std::make_unique<GeodesicLine3>(t, bet1, omg1, alp1) : nullptr;
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
@@ -272,7 +272,7 @@ int main(int argc, const char* const argv[]) {
           ang::DecodeLatLon(sbet2, somg2, bet2, omg2, longfirst);
           BiaxialCoords(true, f, bet1, omg1);
           BiaxialCoords(true, f, bet2, omg2);
-          TriaxialGeodesicLine l = t.Inverse(bet1, omg1, bet2, omg2,
+          GeodesicLine3 l = t.Inverse(bet1, omg1, bet2, omg2,
                                              alp1, alp2, s12);
           if (unroll && full) {
             l.Position(s12, bet2, omg2, alp2);
@@ -317,7 +317,7 @@ int main(int argc, const char* const argv[]) {
             t.Direct(bet1, omg1, alp1, s12, bet2, omg2, alp2);
           }
           if (!unroll) {
-            Triaxial::AngNorm(bet2, omg2, alp2, !isnan(f) && signbit(f));
+            Ellipsoid3::AngNorm(bet2, omg2, alp2, !isnan(f) && signbit(f));
             bet2 = bet2.base();
             omg2 = omg2.base();
             alp2 = alp2.base();

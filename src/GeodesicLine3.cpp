@@ -1,6 +1,6 @@
 /**
- * \file TriaxialGeodesicLine.cpp
- * \brief Implementation for GeographicLib::TriaxialGeodesicLine class
+ * \file GeodesicLine3.cpp
+ * \brief Implementation for GeographicLib::Triaxial::GeodesicLine3 class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -13,13 +13,14 @@
 #include <iomanip>
 // Needed by zsetsdiag
 #include <sstream>
-#include <GeographicLib/TriaxialGeodesicLine.hpp>
+#include <GeographicLib/Triaxial/GeodesicLine3.hpp>
 
 namespace GeographicLib {
+  namespace Triaxial {
 
   using namespace std;
 
-  TriaxialGeodesicLine::TriaxialGeodesicLine(fline f, fline::fics fic,
+  GeodesicLine3::GeodesicLine3(fline f, fline::fics fic,
                                              gline g, gline::gics gic)
     : _tg(f.tg())
     , _f(f)
@@ -28,40 +29,40 @@ namespace GeographicLib {
     , _gic(gic)
   {}
 
-  TriaxialGeodesicLine::TriaxialGeodesicLine(const TriaxialGeodesic& tg)
-    : _f(tg, TriaxialGeodesic::gamblk(tg, (tg._umbalt &&
+  GeodesicLine3::GeodesicLine3(const Geodesic3& tg)
+    : _f(tg, Geodesic3::gamblk(tg, (tg._umbalt &&
                                            tg.kp2() > 0) || tg.k2() == 0))
   {}
 
-  TriaxialGeodesicLine::TriaxialGeodesicLine(const TriaxialGeodesic& tg,
+  GeodesicLine3::GeodesicLine3(const Geodesic3& tg,
                                              Angle bet1, Angle omg1, Angle alp1)
     : _tg(tg)
   {
     bet1.round();
     omg1.round();
     alp1.round();
-    TriaxialGeodesic::gamblk gam = _tg.gamma(bet1, omg1, alp1);
+    Geodesic3::gamblk gam = _tg.gamma(bet1, omg1, alp1);
     _f = fline(tg, gam);
     _fic = fline::fics(_f, bet1, omg1, alp1);
     _g = gline(tg, gam);
     _gic = gline::gics(_g, _fic);
   }
 
-  TriaxialGeodesicLine::TriaxialGeodesicLine(const TriaxialGeodesic& tg,
+  GeodesicLine3::GeodesicLine3(const Geodesic3& tg,
                                              real bet1, real omg1, real alp1)
-    : TriaxialGeodesicLine(tg, ang(bet1), ang(omg1), ang(alp1))
+    : GeodesicLine3(tg, ang(bet1), ang(omg1), ang(alp1))
   {}
 
-  void TriaxialGeodesicLine::pos1(Angle& bet1, Angle& omg1, Angle& alp1) const {
+  void GeodesicLine3::pos1(Angle& bet1, Angle& omg1, Angle& alp1) const {
     _fic.pos1(_f.transpolar(), bet1, omg1, alp1);
   }
 
-  void TriaxialGeodesicLine::pos1(real& bet1, real& omg1, real& alp1,
+  void GeodesicLine3::pos1(real& bet1, real& omg1, real& alp1,
                                   bool unroll) const {
     ang bet1a, omg1a, alp1a;
     pos1(bet1a, omg1a, alp1a);
     if (!unroll) {
-      (void) Triaxial::AngNorm(bet1a, omg1a, alp1a);
+      (void) Ellipsoid3::AngNorm(bet1a, omg1a, alp1a);
       bet1a.setn(); omg1a.setn(); alp1a.setn();
     }
     bet1 = real(bet1a);
@@ -69,7 +70,7 @@ namespace GeographicLib {
     alp1 = real(alp1a);
   }
 
-  void TriaxialGeodesicLine::Position(real s12,
+  void GeodesicLine3::Position(real s12,
                                       Angle& bet2a, Angle& omg2a, Angle& alp2a,
                                       int* countn, int* countb) const {
     // Compute points at distance s12
@@ -181,14 +182,14 @@ namespace GeographicLib {
     omg2a += ang::cardinal(1);
   }
 
-  void TriaxialGeodesicLine::Position(real s12,
+  void GeodesicLine3::Position(real s12,
                                       real& bet2, real& omg2, real& alp2,
                                       bool unroll,
                                       int* countn, int* countb) const {
     ang bet2a, omg2a, alp2a;
     Position(s12, bet2a, omg2a, alp2a, countn, countb);
     if (!unroll) {
-      (void) Triaxial::AngNorm(bet2a, omg2a, alp2a);
+      (void) Ellipsoid3::AngNorm(bet2a, omg2a, alp2a);
       bet2a.setn(); omg2a.setn(); alp2a.setn();
     }
     bet2 = real(bet2a);
@@ -196,7 +197,7 @@ namespace GeographicLib {
     alp2 = real(alp2a);
   }
 
-  void TriaxialGeodesicLine::solve2(real f0, real g0,
+  void GeodesicLine3::solve2(real f0, real g0,
                                     const hfun& fx, const hfun& fy,
                                     const hfun& gx, const hfun& gy,
                                     real& x, real& y,
@@ -254,23 +255,23 @@ namespace GeographicLib {
         cout << scientific << "midA " << fA << " " << gA << "\n";
         cout << "DA " <<  Dx << " " << DxA << " " << Dy << " " << DyA << "\n";
         throw GeographicLib::GeographicErr
-          ("Bad initial midpoints A TriaxialGeodesicLine::newt2");
+          ("Bad initial midpoints A GeodesicLine3::newt2");
       }
       if (!( fB >= 0 && gB <= 0 )) {
         cout << scientific << "midB " << fB << " " << gB << "\n";
         throw GeographicLib::GeographicErr
-          ("Bad initial midpoints B TriaxialGeodesicLine::newt2");
+          ("Bad initial midpoints B GeodesicLine3::newt2");
       }
       if (!( fC >= 0 && gC >= 0 )) {
         cout << scientific << "midC " << fC << " " << gC << "\n";
         throw GeographicLib::GeographicErr
-          ("Bad initial midpoints C TriaxialGeodesicLine::newt2");
+          ("Bad initial midpoints C GeodesicLine3::newt2");
       }
       //      cout << scientific << "midD " << fD << " " << gD << "\n";
       if (!( fD <= 0 && gD >= 0 )) {
         cout << scientific << "midD " << fD << " " << gD << "\n";
         throw GeographicLib::GeographicErr
-          ("Bad initial midpoints B TriaxialGeodesicLine::newt2");
+          ("Bad initial midpoints B GeodesicLine3::newt2");
       }
       }
     newt2(f0, g0, fx, fy, gx, gy,
@@ -294,7 +295,7 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialGeodesicLine::solve2u(real d0, real s0,
+  void GeodesicLine3::solve2u(real d0, real s0,
                                      const hfun& fx, const hfun& fy,
                                      const hfun& gx, const hfun& gy,
                                      real& u, real& v,
@@ -306,7 +307,7 @@ namespace GeographicLib {
     //
     // fx, fy, gx, gy are increasing functions defined in [-1, 1]*pi2
     // Assume fx(0) = fy(0) = gx(0) = gy(0) = 0
-    real pi2 = TriaxialGeodesic::BigValue(),
+    real pi2 = Geodesic3::BigValue(),
       sbet = gx.Max(), somg = gy.Max(), stot = sbet + somg,
       dbet = fx.Max(), domg = fy.Max(), del  = dbet - domg;
     bool debug = false;
@@ -347,7 +348,7 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialGeodesicLine::newt2(real f0, real g0,
+  void GeodesicLine3::newt2(real f0, real g0,
                                    const hfun& fx, const hfun& fy,
                                    const hfun& gx, const hfun& gy,
                                    real xa, real xb, real xscale,
@@ -399,7 +400,7 @@ namespace GeographicLib {
       // Allow equality on the initial points
       if (!( f01 <= 0 && 0 <= f10 && g00 <= 0 && 0 <= g11 ))
         throw GeographicLib::GeographicErr
-          ("Bad initial points TriaxialGeodesicLine::newt2");
+          ("Bad initial points GeodesicLine3::newt2");
       zvals xv(x, fx(x), gx(x)), yv(y, fy(y), gy(y));
     }
     // degen is a flag detected degeneracy to a 1d system.  Only the case gy(y)
@@ -412,7 +413,7 @@ namespace GeographicLib {
     int ibis = -1, i = 0;
     for (; i < maxit ||
            (throw GeographicLib::GeographicErr
-            ("Convergence failure TriaxialGeodesicLine::newt2"), false)
+            ("Convergence failure GeodesicLine3::newt2"), false)
            || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
       ++cntn;
       if (!degen && nextafter(xset.min().z, xset.max().z) == xset.max().z &&
@@ -464,7 +465,7 @@ namespace GeographicLib {
                << fxp << " " << fyp << " "
                << gxp << " " << gyp << " " << den << "\n";
           throw GeographicLib::GeographicErr
-            ("Bad derivatives TriaxialGeodesicLine::newt2");
+            ("Bad derivatives GeodesicLine3::newt2");
         }
       }
       bool cond1 = den > 0 &&
@@ -532,7 +533,7 @@ namespace GeographicLib {
     }
   }
 
-  int TriaxialGeodesicLine::zset::insert(zvals& t, int flag) {
+  int GeodesicLine3::zset::insert(zvals& t, int flag) {
     // Inset t into list.  flag = -/+ 1 indicates new min/max.
     // Return -1 if t was already present; othersize return index of newly
     // inserted value.
@@ -599,7 +600,7 @@ namespace GeographicLib {
     return ind;
   }
 
-  void TriaxialGeodesicLine::zsetsinsert(zset& xset, zset& yset,
+  void GeodesicLine3::zsetsinsert(zset& xset, zset& yset,
                                          zvals& xfg, zvals& yfg,
                                          real f0, real g0) {
     const bool debug = false;
@@ -723,10 +724,10 @@ namespace GeographicLib {
     }
     if (k == 2)
       throw GeographicLib::GeographicErr
-        ("Bad corner points TriaxialGeodesicLine::zsetsinsert");
+        ("Bad corner points GeodesicLine3::zsetsinsert");
   }
 
-  void TriaxialGeodesicLine::zsetsdiag(const zset& xset, const zset& yset,
+  void GeodesicLine3::zsetsdiag(const zset& xset, const zset& yset,
                                        real f0, real g0) {
     real x0 = 0, y0 = 0;
     ostringstream fs, gs;
@@ -755,7 +756,7 @@ namespace GeographicLib {
   }
 
   pair<Math::real, Math::real>
-  TriaxialGeodesicLine::zsetsbisect(const zset& xset, const zset& yset,
+  GeodesicLine3::zsetsbisect(const zset& xset, const zset& yset,
                                     real f0, real g0, bool secant) {
     if constexpr (true)
       return pair<real, real>(xset.bisect(), yset.bisect());
@@ -809,13 +810,13 @@ namespace GeographicLib {
       }
       if (cnt == 0)
         throw GeographicLib::GeographicErr
-          ("No legal box TriaxialGeodesicLine::zsetsbisect");
+          ("No legal box GeodesicLine3::zsetsbisect");
       // cout << "FOO " << cnt << "\n";
       return pair<real, real>(x, y);
     }
   }
 
-  void TriaxialGeodesicLine::Hybrid(Angle betomg2,
+  void GeodesicLine3::Hybrid(Angle betomg2,
                                     Angle& bet2a, Angle& omg2a, Angle& alp2a,
                                     real& s12, bool betp)
     const {
@@ -823,7 +824,7 @@ namespace GeographicLib {
     s12 = _g.dist(_gic, d);
   }
 
-  void TriaxialGeodesicLine::Offset(real s13, bool reverse) {
+  void GeodesicLine3::Offset(real s13, bool reverse) {
     ang bet2, omg2, alp2;
     Position(s13, bet2, omg2, alp2);
     if (reverse) {
@@ -834,8 +835,8 @@ namespace GeographicLib {
     _gic = gline::gics(_g, _fic);
   }
 
-  TriaxialGeodesicLine::fline::disttx
-  TriaxialGeodesicLine::fline::Hybrid(const fics& fic, Angle betomg2,
+  GeodesicLine3::fline::disttx
+  GeodesicLine3::fline::Hybrid(const fics& fic, Angle betomg2,
                                       Angle& bet2a, Angle& omg2a, Angle& alp2a,
                                       bool betp) const {
     // Is the control variable psi or tht?
@@ -887,13 +888,13 @@ namespace GeographicLib {
     return ret;
   }
 
-  TriaxialGeodesicLine::fline::fline(const TriaxialGeodesic& tg, bool neg)
+  GeodesicLine3::fline::fline(const Geodesic3& tg, bool neg)
     : _tg(tg)
     , _gm(tg, neg)
   {}
 
-  TriaxialGeodesicLine::fline::fline(const TriaxialGeodesic& tg,
-                                     TriaxialGeodesic::gamblk gam)
+  GeodesicLine3::fline::fline(const Geodesic3& tg,
+                                     Geodesic3::gamblk gam)
     : _tg(tg)
     , _gm(gam)
     , _fpsi(false, _gm.kx2 , _gm.kxp2,
@@ -909,13 +910,13 @@ namespace GeographicLib {
       Math::NaN();
   }
 
-  TriaxialGeodesicLine::gline::gline(const TriaxialGeodesic& tg, bool neg)
+  GeodesicLine3::gline::gline(const Geodesic3& tg, bool neg)
     : _tg(tg)
     , _gm(tg, neg)
   {}
 
-  TriaxialGeodesicLine::gline::gline(const TriaxialGeodesic& tg,
-                                     const TriaxialGeodesic::gamblk& gm)
+  GeodesicLine3::gline::gline(const Geodesic3& tg,
+                                     const Geodesic3::gamblk& gm)
     : _tg(tg)
     , _gm(gm)
     , _gpsi(true, _gm.kx2 , _gm.kxp2,
@@ -927,14 +928,14 @@ namespace GeographicLib {
     , s0(_gm.gammax == 0 ? _gpsi.Max() + _gtht.Max() : 0)
   {}
 
-  Math::real TriaxialGeodesicLine::fline::Hybrid0(const fics& fic,
+  Math::real GeodesicLine3::fline::Hybrid0(const fics& fic,
                                                   Angle bet2, Angle omg2,
                                                   bool betp) const {
     ang bet2a, omg2a, alp2a;
     (void) Hybrid(fic, betp ? bet2 : omg2, bet2a, omg2a, alp2a, betp);
     bool angnorm = true || betp;
     if (angnorm)
-      (void) Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
+      (void) Ellipsoid3::AngNorm(bet2a, omg2a, alp2a, !betp);
     if (betp) {
       omg2a -= omg2;
       return omg2a.radians0();
@@ -944,8 +945,8 @@ namespace GeographicLib {
     }
   }
 
-  TriaxialGeodesicLine::fline::disttx
-  TriaxialGeodesicLine::fline::ArcPos0(const fics& fic, Angle tau12,
+  GeodesicLine3::fline::disttx
+  GeodesicLine3::fline::ArcPos0(const fics& fic, Angle tau12,
                                        Angle& bet2a, Angle& omg2a, Angle& alp2a,
                                        bool betp) const {
     // XXX fix for biaxial
@@ -1033,7 +1034,7 @@ namespace GeographicLib {
             real npi = (tau12.ncardinal() + fic.phi1.nearest(2U).ncardinal())
               * Math::pi()/2;
             // Don't worry about the case where we start at a pole -- this is
-            // already handled in TriaxialGeodesic::Inverse.
+            // already handled in Geodesic3::Inverse.
             //
             // Solve F(tpsi2) = tpsi2 - Deltaf(n*pi + atan(tpsi2))
             //                = (tan(psi1) - Deltaf(psi1)) = c
@@ -1047,7 +1048,7 @@ namespace GeographicLib {
             //    -> a1x = 90.0023
             //   omg1 = -91 -> omg2 = 178.9293750483-90 = 88.9293750483
             real c = fic.Nx * (fic.phi1.t() - fpsi().df(fic.phi1.radians())),
-              l = exp(TriaxialGeodesic::BigValue()),
+              l = exp(Geodesic3::BigValue()),
               tpsi2 = Trigfun::root([this, npi] (real tpsi) -> pair<real, real>
                                     {
                                       real psi = atan(tpsi);
@@ -1101,7 +1102,7 @@ namespace GeographicLib {
     return ret;
   }
 
-  TriaxialGeodesicLine::fline::fics::fics(const fline& f,
+  GeodesicLine3::fline::fics::fics(const fline& f,
                                           Angle bet10, Angle omg10,
                                           Angle alp10)
     : tht1(omg10 - ang::cardinal(1))
@@ -1114,7 +1115,7 @@ namespace GeographicLib {
       alp1.reflect(false, false, true);
     }
     const real eps = numeric_limits<real>::epsilon();
-    const TriaxialGeodesic& tg = f.tg();
+    const Geodesic3& tg = f.tg();
     if (!f.transpolar() && phi1.s() == 0 && fabs(alp1.c()) <= Math::sq(eps))
       alp1 = ang(alp1.s(), - Math::sq(eps), alp1.n(), true);
     Ex = signbit(alp1.s()) ? -1 : 1;
@@ -1187,7 +1188,7 @@ namespace GeographicLib {
     }
   }
 
-  void TriaxialGeodesicLine::fline::fics::pos1(bool transpolar,
+  void GeodesicLine3::fline::fics::pos1(bool transpolar,
                                                Angle& bet10, Angle& omg10,
                                                Angle& alp10) const {
     bet10 = phi1; omg10 = tht1.flipsign(Ex);
@@ -1199,7 +1200,7 @@ namespace GeographicLib {
     omg10 += ang::cardinal(1);
   }
 
-  void TriaxialGeodesicLine::fline::fics::setquadrant(const fline& f,
+  void GeodesicLine3::fline::fics::setquadrant(const fline& f,
                                                       unsigned q) {
     ang bet1, omg1, alp1x;  // TODO: Fix so fics uses tau1
     pos1(f.transpolar(), bet1, omg1, alp1x);
@@ -1207,7 +1208,7 @@ namespace GeographicLib {
     *this = fics(f, bet1, omg1, alp1x);
   }
 
-  TriaxialGeodesicLine::gline::gics::gics(const gline& g,
+  GeodesicLine3::gline::gics::gics(const gline& g,
                                           const fline::fics& fic) {
     if (g.gammax() > 0) {
       sig1 = g.gpsi()(fic.u0) + g.gtht()(fic.v0);
@@ -1220,12 +1221,12 @@ namespace GeographicLib {
     }
   }
 
-  Math::real TriaxialGeodesicLine::gline::dist(gics ic, fline::disttx d) const {
+  Math::real GeodesicLine3::gline::dist(gics ic, fline::disttx d) const {
     real sig2 = gpsi()(d.phiw2) + gtht()(d.thtw2) + d.ind2 * 2*s0;
     return (sig2 - ic.sig1) * tg().b();
   }
 
-  void TriaxialGeodesicLine::inversedump(ostream& os) const {
+  void GeodesicLine3::inversedump(ostream& os) const {
     os << "[b, e2, k2, kp2, gam] = deal("
        << _tg.b() << ", " << _tg.e2() << ", "
        << _tg.k2() << ", " << _tg.kp2() << ", "
@@ -1237,19 +1238,19 @@ namespace GeographicLib {
     _g.inversedump(os);
   }
 
-  void TriaxialGeodesicLine::fline::inversedump(ostream& os) const {
+  void GeodesicLine3::fline::inversedump(ostream& os) const {
     _fpsi.inversedump(os, "fpsi");
     _ftht.inversedump(os, "ftht");
   }
 
-  void TriaxialGeodesicLine::gline::inversedump(ostream& os) const {
+  void GeodesicLine3::gline::inversedump(ostream& os) const {
     _gpsi.inversedump(os, "gpsi");
     _gtht.inversedump(os, "gtht");
   }
 
-  TriaxialGeodesicLine::hfun::hfun(bool distp,
+  GeodesicLine3::hfun::hfun(bool distp,
                                    real kap, real kapp, real eps, real mu,
-                                   const TriaxialGeodesic& tg)
+                                   const Geodesic3& tg)
     : _kap(kap)
     , _kapp(kapp)
     , _eps(eps)
@@ -1440,7 +1441,7 @@ namespace GeographicLib {
       _meridl ? _fun(Math::pi()/2) : _fun.Max();
   }
 
-  Math::real TriaxialGeodesicLine::hfun::operator()(real u) const {
+  Math::real GeodesicLine3::hfun::operator()(real u) const {
     if (!_distp) {
       if (_biaxl)
         // This is sqrt(-mu) * f(u)
@@ -1462,7 +1463,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real TriaxialGeodesicLine::hfun::deriv(real u) const {
+  Math::real GeodesicLine3::hfun::deriv(real u) const {
     if (!_distp) {
       if (_biaxl)
         // This is sqrt(-mu) * f'(u)
@@ -1509,7 +1510,7 @@ namespace GeographicLib {
     }
   }
 
-  Math::real TriaxialGeodesicLine::hfun::root(real z, real u0,
+  Math::real GeodesicLine3::hfun::root(real z, real u0,
                                               int* countn, int* countb,
                                               real tol) const {
     if (!_distp) {
@@ -1561,8 +1562,8 @@ namespace GeographicLib {
         return Math::NaN();       // Deals with +/-inf and nan
       // Now we're dealing with _umb.
       if (fabs(z) >= Max())
-        return copysign(TriaxialGeodesic::BigValue(), z);
-      real ua = -TriaxialGeodesic::BigValue(), ub = -ua;
+        return copysign(Geodesic3::BigValue(), z);
+      real ua = -Geodesic3::BigValue(), ub = -ua;
       u0 = fmin(ub, fmax(ua, u0));
       // Solve z = _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
       return Trigfun::root(
@@ -1577,7 +1578,7 @@ namespace GeographicLib {
   }
 
   // Accurate inverse by direct Newton (not using _finv)
-  Math::real TriaxialGeodesicLine::hfun::inv(real z, int* countn, int* countb)
+  Math::real GeodesicLine3::hfun::inv(real z, int* countn, int* countb)
     const {
     if (!_distp)
       return _umb ? root(z, z, countn, countb) :
@@ -1616,26 +1617,26 @@ namespace GeographicLib {
   }
 
   // _mu > 0 && !_tx
-  Math::real TriaxialGeodesicLine::hfun::fthtp(real c, real kap, real kapp,
+  Math::real GeodesicLine3::hfun::fthtp(real c, real kap, real kapp,
                                                real eps, real mu) {
     real c2 = kap * Math::sq(c);
     return sqrt((1 - eps * c2) / ((kapp + c2) * (c2 + mu)) );
   }
   // This is non-negative
-  Math::real TriaxialGeodesicLine::hfun::gthtp(real c, real kap, real kapp,
+  Math::real GeodesicLine3::hfun::gthtp(real c, real kap, real kapp,
                                                real eps, real mu) {
     real c2 = kap * Math::sq(c);
     return c2 * sqrt((1 - eps * c2) / ((kapp + c2) * (c2 + mu)) );
   }
 
   // _mu > 0 && _tx
-  Math::real TriaxialGeodesicLine::hfun::fup(real cn, real kap, real kapp,
+  Math::real GeodesicLine3::hfun::fup(real cn, real kap, real kapp,
                                              real eps, real mu) {
     real c2 = kap * Math::sq(cn);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * (kap + mu)) );
   }
   // This is non-negative
-  Math::real TriaxialGeodesicLine::hfun::gup(real cn, real /* dn */,
+  Math::real GeodesicLine3::hfun::gup(real cn, real /* dn */,
                                              real kap, real kapp,
                                              real eps, real mu) {
     real c2 = kap * Math::sq(cn);
@@ -1643,7 +1644,7 @@ namespace GeographicLib {
   }
 
   // _mu == 0 && !_tx
-  Math::real TriaxialGeodesicLine::hfun::dfp(real c,
+  Math::real GeodesicLine3::hfun::dfp(real c,
                                              real kap, real kapp, real eps) {
     // function dfp = dfpf(phi, kappa, epsilon)
     // return derivative of sqrt(kap * kapp) * Delta f
@@ -1651,21 +1652,21 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(c), s = sqrt(kapp + c2);
     return eps*kap * sqrt(kapp) * c / (s * (1 + sqrt(1 - eps*c2)));
   }
-  Math::real TriaxialGeodesicLine::hfun::g0p(real c, real kap, real kapp,
+  Math::real GeodesicLine3::hfun::g0p(real c, real kap, real kapp,
                                              real eps) {
     real c2 = kap * Math::sq(c);
     return sqrt( kap * (1 - eps * c2) / (kapp + c2) ) * c;
   }
 
   // _mu == 0 && _tx
-  Math::real TriaxialGeodesicLine::hfun::dfvp(real cn, real /* dn */,
+  Math::real GeodesicLine3::hfun::dfvp(real cn, real /* dn */,
                                               real kap, real kapp, real eps) {
     // function dfvp = dfvpf(v, kap, eps)
     // return derivative of sqrt(kap * kapp) * Delta f_v
     return eps*kap * sqrt(kapp) * cn /
       (1  + sqrt(1 - eps*kap * Math::sq(cn)));
   }
-  Math::real TriaxialGeodesicLine::hfun::g0vp(real cn,
+  Math::real GeodesicLine3::hfun::g0vp(real cn,
                                               real kap, real /* kapp */,
                                               real eps) {
     real c2 = kap * Math::sq(cn);
@@ -1673,14 +1674,14 @@ namespace GeographicLib {
   }
 
   // _mu < 0 && !_tx
-  Math::real TriaxialGeodesicLine::hfun::fpsip(real s, real c,
+  Math::real GeodesicLine3::hfun::fpsip(real s, real c,
                                                real kap, real kapp,
                                                real eps, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * c2) ) ;
   }
   // This is positive
-  Math::real TriaxialGeodesicLine::hfun::gpsip(real s, real c,
+  Math::real GeodesicLine3::hfun::gpsip(real s, real c,
                                                real kap, real kapp,
                                                real eps, real mu) {
     real c2 = kap * Math::sq(c) - mu * Math::sq(s);
@@ -1688,13 +1689,13 @@ namespace GeographicLib {
   }
 
   // _mu < 0 && _tx
-  Math::real TriaxialGeodesicLine::hfun::fvp(real dn, real kap, real kapp,
+  Math::real GeodesicLine3::hfun::fvp(real dn, real kap, real kapp,
                                              real eps, real /* mu */) {
     real c2 = kap * Math::sq(dn);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * kap) );
   }
   // This is positive
-  Math::real TriaxialGeodesicLine::hfun::gvp(real /* cn */, real dn,
+  Math::real GeodesicLine3::hfun::gvp(real /* cn */, real dn,
                                              real kap, real kapp,
                                              real eps, real /* mu */) {
     real dn2 = Math::sq(dn), c2 = kap * dn2;
@@ -1703,21 +1704,21 @@ namespace GeographicLib {
 
   // biaxial variants for kap = 0, kapp = 1, mu > 0
   Math::real
-  TriaxialGeodesicLine::hfun::fthtbiax(real /* tht */, real /* eps */,
+  GeodesicLine3::hfun::fthtbiax(real /* tht */, real /* eps */,
                                        real /* mu */) {
     // Multiply by f functions by sqrt(abs(mu))
     // return 1 / sqrt(mu);
     return 1;
   }
   Math::real
-  TriaxialGeodesicLine::hfun::gthtbiax(real /* tht */, real /* eps */,
+  GeodesicLine3::hfun::gthtbiax(real /* tht */, real /* eps */,
                                        real /* mu */) {
     return 0;
   }
 
   // biaxial variants for kap = 1, kapp = 0, mu <= 0, !_tx
   Math::real
-  TriaxialGeodesicLine::hfun::dfpsibiax(real s, real c, real eps, real mu) {
+  GeodesicLine3::hfun::dfpsibiax(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
     // f functions are multiplied by sqrt(abs(mu)) but don't include this
     // factor here; instead include it in operator()(). etc.  This was we can
@@ -1726,13 +1727,13 @@ namespace GeographicLib {
     return eps / (1 + sqrt(1 - eps * c2));
   }
   Math::real
-  TriaxialGeodesicLine::hfun::gpsibiax(real s, real c, real eps, real mu) {
+  GeodesicLine3::hfun::gpsibiax(real s, real c, real eps, real mu) {
     real c2 = Math::sq(c) - mu * Math::sq(s);
     // return gpsip(s, c, 1, 0, eps, mu) but with the factor c2 canceled
     return sqrt(1 - eps * c2);
   }
 
-  void TriaxialGeodesicLine::hfun::inversedump(ostream& os, const string& name)
+  void GeodesicLine3::hfun::inversedump(ostream& os, const string& name)
     const {
     os << "% " << name << "\n";
     int ndiv = 20;
@@ -1768,4 +1769,5 @@ namespace GeographicLib {
     os << "];\n";
   }
 
+  } // namespace Triaxial
 } // namespace GeographicLib

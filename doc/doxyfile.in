@@ -942,9 +942,9 @@ WARN_LOGFILE           =
 
 INPUT                  = @PROJECT_SOURCE_DIR@/src \
                          @PROJECT_SOURCE_DIR@/include/GeographicLib \
+                         @PROJECT_SOURCE_DIR@/include/GeographicLib/Triaxial \
                          @PROJECT_SOURCE_DIR@/tools \
                          @PROJECT_BINARY_DIR@/doc/GeographicLib.dox \
-                         @PROJECT_SOURCE_DIR@/experimental/JacobiConformal.hpp \
                          @PROJECT_SOURCE_DIR@/experimental/Geod3ODE.cpp \
                          @PROJECT_SOURCE_DIR@/experimental/TriaxialGeodesicODE.hpp \
                          @PROJECT_SOURCE_DIR@/experimental/TriaxialGeodesicODE.hpp

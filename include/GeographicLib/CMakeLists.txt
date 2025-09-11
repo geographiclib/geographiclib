@@ -49,15 +49,19 @@ set (HEADERS
   UTMUPS.hpp
   Utility.hpp
   Angle.hpp
-  Triaxial.hpp
-  TriaxialGeodesic.hpp
   Trigfun.hpp
-  TriaxialGeodesicLine.hpp
-  TriaxialCartesian.hpp
-  TriaxialConformal.hpp
-  )
+)
+set (TRIAXIALHEADERS
+  Triaxial/Ellipsoid3.hpp
+  Triaxial/Geodesic3.hpp
+  Triaxial/GeodesicLine3.hpp
+  Triaxial/Cartesian3.hpp
+  Triaxial/Conformal3.hpp
+)
 if (INCDIR)
   install (FILES ${HEADERS} DESTINATION ${INCDIR}/GeographicLib)
+  install (FILES ${TRIAXIALHEADERS}
+    DESTINATION ${INCDIR}/GeographicLib/Triaxial)
   install (FILES ${CMAKE_CURRENT_BINARY_DIR}/Config.h
     DESTINATION ${INCDIR}/GeographicLib)
 endif ()

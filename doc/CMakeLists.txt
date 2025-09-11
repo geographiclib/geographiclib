@@ -33,6 +33,7 @@ if (BUILD_DOCUMENTATION)
   configure_file (doxyfile.in doxyfile @ONLY)
   file (GLOB CXXSOURCES
     ../src/[A-Za-z]*.cpp ../include/GeographicLib/[A-Za-z]*.hpp
+     ../include/GeographicLib/Triaxial/[A-Za-z]*.hpp
     ../tools/[A-Za-z]*.cpp ../examples/[A-Za-z]*.cpp
     ../experimental/[A-Za-z]*.[hc]pp)
   file (GLOB EXTRA_FILES ../maxima/[A-Za-z]*.mac

@@ -1,14 +1,14 @@
 /**
- * \file TriaxialGeodesicLine.hpp
- * \brief Header for GeographicLib::TriaxialLin class
+ * \file GeodesicLine3.hpp
+ * \brief Header for GeographicLib::Triaxial::GeodesicLine3 class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_TRIAXIALGEODESICLINE_HPP)
-#define GEOGRAPHICLIB_TRIAXIALGEODESICLINE_HPP 1
+#if !defined(GEOGRAPHICLIB_GEODESICLINE3_HPP)
+#define GEOGRAPHICLIB_GEODESICLINE3_HPP 1
 
 #include <utility>
 #include <vector>
@@ -16,7 +16,7 @@
 #include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/Angle.hpp>
 #include <GeographicLib/Trigfun.hpp>
-#include <GeographicLib/TriaxialGeodesic.hpp>
+#include <GeographicLib/Triaxial/Geodesic3.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
@@ -25,10 +25,11 @@
 #endif
 
 namespace GeographicLib {
+  namespace Triaxial {
 
-  class GEOGRAPHICLIB_EXPORT TriaxialGeodesicLine {
+  class GEOGRAPHICLIB_EXPORT GeodesicLine3 {
   private:
-    friend class TriaxialGeodesic; // For access to fline, gline, etc.
+    friend class Geodesic3; // For access to fline, gline, etc.
     typedef Math::real real;
     typedef Angle ang;
 
@@ -135,7 +136,7 @@ namespace GeographicLib {
       //
       hfun() {}
       hfun(bool distp, real kap, real kapp, real eps, real mu,
-           const TriaxialGeodesic& tg);
+           const Geodesic3& tg);
       real operator()(real u) const;
       // THIS ISN"T USED
       // Angle operator()(const Angle& ang) const;
@@ -180,8 +181,8 @@ namespace GeographicLib {
 
     class fline {
     private:
-      TriaxialGeodesic _tg;
-      TriaxialGeodesic::gamblk _gm;
+      Geodesic3 _tg;
+      Geodesic3::gamblk _gm;
       real _deltashift;
       hfun _fpsi, _ftht;
     public:
@@ -220,8 +221,8 @@ namespace GeographicLib {
         int ind2;
       };
       fline() {}
-      fline(const TriaxialGeodesic& tg, bool neg = false);
-      fline(const TriaxialGeodesic& tg, TriaxialGeodesic::gamblk gm);
+      fline(const Geodesic3& tg, bool neg = false);
+      fline(const Geodesic3& tg, Geodesic3::gamblk gm);
       const hfun& fpsi() const { return _fpsi; }
       const hfun& ftht() const { return _ftht; }
       const hfun& fbet() const {
@@ -230,8 +231,8 @@ namespace GeographicLib {
       const hfun& fomg() const {
         return transpolar() ? fpsi() : ftht();
       }
-      const TriaxialGeodesic& tg() const { return _tg; }
-      const Triaxial& t() const { return _tg.t(); }
+      const Geodesic3& tg() const { return _tg; }
+      const Ellipsoid3& t() const { return _tg.t(); }
       real gamma() const { return _gm.gamma; }
       real gammax() const { return _gm.gammax; }
       real kx2() const { return _gm.kx2; }
@@ -242,7 +243,7 @@ namespace GeographicLib {
       real nup() const { return _gm.nup; }
       real deltashift() const { return _deltashift; }
       bool transpolar() const { return _gm.transpolar; }
-      const TriaxialGeodesic::gamblk& gm() const { return _gm; }
+      const Geodesic3::gamblk& gm() const { return _gm; }
       // Run fline to its first intersection with
       // (for betp) bet2 and return omg2
       // (for !betp) omg2 and return bet2
@@ -262,8 +263,8 @@ namespace GeographicLib {
 
     class gline {
     private:
-      TriaxialGeodesic _tg;
-      TriaxialGeodesic::gamblk _gm;
+      Geodesic3 _tg;
+      Geodesic3::gamblk _gm;
       hfun _gpsi, _gtht;
     public:
       real s0;
@@ -275,8 +276,8 @@ namespace GeographicLib {
         gics(const gline& g, const fline::fics& fic);
       };
       gline() {}
-      gline(const TriaxialGeodesic& tg, bool neg = false);
-      gline(const TriaxialGeodesic& tg, const TriaxialGeodesic::gamblk& gm);
+      gline(const Geodesic3& tg, bool neg = false);
+      gline(const Geodesic3& tg, const Geodesic3::gamblk& gm);
       real gamma() const { return _gm.gamma; }
       real gammax() const { return _gm.gammax; }
       real kx2() const { return _gm.kx2; }
@@ -292,9 +293,9 @@ namespace GeographicLib {
       const hfun& gomg() const {
         return transpolar() ? gpsi() : gtht();
       }
-      const TriaxialGeodesic& tg() const { return _tg; }
-      const Triaxial& t() const { return _tg.t(); }
-      const TriaxialGeodesic::gamblk& gm() const { return _gm; }
+      const Geodesic3& tg() const { return _tg; }
+      const Ellipsoid3& t() const { return _tg.t(); }
+      const Geodesic3::gamblk& gm() const { return _gm; }
       real dist(gics ic, fline::disttx d) const;
       void inversedump(std::ostream& os) const;
     };
@@ -343,7 +344,7 @@ namespace GeographicLib {
       }
     };
 
-    TriaxialGeodesic _tg;
+    Geodesic3 _tg;
     fline _f;
     fline::fics _fic;
     gline _g;
@@ -376,7 +377,7 @@ namespace GeographicLib {
                                              real f0, real g0, bool secant);
     static real bigclamp(real x, real mult = 1) {
       using std::fmax, std::fmin;
-      real z = mult * TriaxialGeodesic::BigValue();
+      real z = mult * Geodesic3::BigValue();
       return Math::clamp(x, -z, z);
     }
     static real lamang0(Angle x, real mult = 1) {
@@ -393,7 +394,7 @@ namespace GeographicLib {
       using std::tan, std::asinh, std::fabs, std::copysign;
       // A consistent large value for x near pi/2.  Also deals with the issue
       // that tan(pi/2) may be negative, e.g., for long doubles.
-      return fabs(x) >= Math::pi()/2 ? copysign(TriaxialGeodesic::BigValue(), x) :
+      return fabs(x) >= Math::pi()/2 ? copysign(Geodesic3::BigValue(), x) :
         asinh(mult * tan(x));
     }
     static real gd(real x, real mult = 1) {
@@ -453,20 +454,20 @@ namespace GeographicLib {
       }
       return  std::pair<real, real>(x.radians0(), m + 2*x.n());
     }
-    static bool biaxspecial(const TriaxialGeodesic& tg, real gamma) {
+    static bool biaxspecial(const Geodesic3& tg, real gamma) {
       using std::fabs;
       return tg._biaxp && (tg.t().k2() == 0 || tg.t().kp2() == 0) &&
         gamma != 0 && fabs(gamma) < tg._ellipthresh;
     }
     // Private constructor to assemble the pieces of the class on exiting
-    // Triaxial::Inverse.
-    TriaxialGeodesicLine(fline f, fline::fics fic, gline g, gline::gics gic);
+    // Geodesic3::Inverse.
+    GeodesicLine3(fline f, fline::fics fic, gline g, gline::gics gic);
     // Private constructor to provide the umbilical fline object.
-    TriaxialGeodesicLine(const TriaxialGeodesic& tg);
+    GeodesicLine3(const Geodesic3& tg);
   public:
-    TriaxialGeodesicLine(const TriaxialGeodesic& tg,
+    GeodesicLine3(const Geodesic3& tg,
                          Angle bet1, Angle omg1, Angle alp1);
-    TriaxialGeodesicLine(const TriaxialGeodesic& tg,
+    GeodesicLine3(const Geodesic3& tg,
                          real bet1, real omg1, real alp1);
     void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
                   int* countn = nullptr, int* countb = nullptr) const;
@@ -511,10 +512,11 @@ namespace GeographicLib {
     void inversedump(std::ostream& os) const;
   };
 
+  } // namespace Triaxial
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
 #  pragma warning (pop)
 #endif
 
-#endif  // GEOGRAPHICLIB_TRIAXIALGEODESICLINE_HPP
+#endif  // GEOGRAPHICLIB_GEODESICLINE3_HPP

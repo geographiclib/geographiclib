@@ -1,28 +1,24 @@
 /**
- * \file TriaxialConformal.hpp
- * \brief Header for GeographicLib::TriaxialConformal class
+ * \file Conformal3.hpp
+ * \brief Header for GeographicLib::Triaxial::Conformal3 class
  *
- * \note This is just sample code.  It is not part of GeographicLib
- * itself.
- *
- * Copyright (c) Charles Karney (2014-2023) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2014-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_TRIAXIALCONFORMAL_HPP)
-#define GEOGRAPHICLIB_TRIAXIALCONFORMAL_HPP 1
+#if !defined(GEOGRAPHICLIB_CONFORMAL3_HPP)
+#define GEOGRAPHICLIB_CONFORMAL3_HPP 1
 
 #include <GeographicLib/Angle.hpp>
-#include <GeographicLib/Triaxial.hpp>
 #include <GeographicLib/EllipticFunction.hpp>
+#include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
 namespace GeographicLib {
+  namespace Triaxial {
+
   /**
    * \brief Jacobi's conformal projection of a triaxial ellipsoid
-   *
-   * <b>NOTE:</b> This is just sample code.  It is not part of GeographicLib
-   * itself.
    *
    * This is a conformal projection of the ellipsoid to a plane in which the
    * grid lines are straight; see Jacobi,
@@ -44,12 +40,12 @@ namespace GeographicLib {
    * For more information on this projection, see \ref jacobi.
    *
    * Example of use:
-   * \include example-TriaxialConformal.cpp
+   * \include example-Conformal3.cpp
    **********************************************************************/
-  class GEOGRAPHICLIB_EXPORT TriaxialConformal {
+  class GEOGRAPHICLIB_EXPORT Conformal3 {
   private:
     typedef Math::real real;
-    Triaxial _t;
+    Ellipsoid3 _t;
     EllipticFunction _ex, _ey;
     real a() const { return _t.a(); }
     real b() const { return _t.b(); }
@@ -78,7 +74,7 @@ namespace GeographicLib {
       return 1/sqrt(k2() * Math::sq(bet.c()) + kp2() * Math::sq(omg.c()));
     }
   public:
-    TriaxialConformal(const Triaxial& t);
+    Conformal3(const Ellipsoid3& t);
     /**
      * Constructor for a trixial ellipsoid with semi-axes.
      *
@@ -89,7 +85,7 @@ namespace GeographicLib {
      * The semi-axes must satisfy \e a &ge; \e b &ge; \e c > 0 and \e a >
      * \e c.
      **********************************************************************/
-    TriaxialConformal(real a, real b, real c);
+    Conformal3(real a, real b, real c);
     /**
      * Alternate constructor for a triaxial ellipsoid.
      *
@@ -100,7 +96,7 @@ namespace GeographicLib {
      *
      * This form can be used to specify a sphere.
      **********************************************************************/
-    TriaxialConformal(real b, real e2, real k2, real kp2);
+    Conformal3(real b, real e2, real k2, real kp2);
     /**
      * @return the quadrant length in the \e x direction (in meters).
      **********************************************************************/
@@ -195,9 +191,10 @@ namespace GeographicLib {
       Reverse(x, y, beta, omga, m);
       bet = real(beta); omg = real(omga);
     }
-    const Triaxial& t() { return _t; }
+    const Ellipsoid3& t() { return _t; }
   };
 
+  } // namespace Triaxial
 } // namespace GeographicLib
 
-#endif  // GEOGRAPHICLIB_TRIAXIALCONFORMAL_HPP
+#endif  // GEOGRAPHICLIB_CONFORMAL3_HPP

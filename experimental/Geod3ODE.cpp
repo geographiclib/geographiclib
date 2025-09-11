@@ -94,14 +94,18 @@ int usage(int retval, bool /*brief*/) { return retval; }
 int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
-    using namespace GeographicLib::experimental;
+    using namespace Triaxial;
+    using namespace experimental;
     typedef GeographicLib::Angle ang;
     Utility::set_digits();
     bool dms = false, longfirst = false,
       linecalc = false, extended = false, dense = false, normp = false,
       buffered = false, full = false, errors = false;
     real
-      a = 6378172, b = 6378102, c = 6356752, eps = 0;
+      a = Constants::Triaxial_Earth_a(),
+      b = Constants::Triaxial_Earth_b(),
+      c = Constants::Triaxial_Earth_c(),
+      e2 = -1, k2 = 0, kp2 = 0, eps = 0;
     ang bet1 = ang(0), omg1 = ang(0), alp1 = ang(0), bet2, omg2, alp2;
     real s12, m12, M12, M21;
     std::vector<real> s12v;
@@ -109,7 +113,6 @@ int main(int argc, const char* const argv[]) {
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
-    Triaxial t(a, b, c);
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
       if (arg == "-t") {
@@ -123,13 +126,12 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -t: " << e.what() << "\n";
           return 1;
         }
-        t = Triaxial(a, b, c);
+        e2 = -1;
         m += 3;
       } else if (arg == "-e") {
         // Cayley ellipsoid sqrt([2,1,1/2]) is
         // -e 1 3/2 1/3 2/3
         if (m + 4 >= argc) return usage(1, true);
-        real e2, k2, kp2;
         try {
           b = Utility::val<real>(std::string(argv[m + 1]));
           e2 = Utility::fract<real>(std::string(argv[m + 2]));
@@ -140,8 +142,7 @@ int main(int argc, const char* const argv[]) {
           std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
           return 1;
         }
-        t = Triaxial(b, e2, k2, kp2);
-        a = t.a(); c = t.c();
+        a = -1;
         m += 4;
       } else if (arg == "-x")
         extended = true;
@@ -224,6 +225,7 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
+    Ellipsoid3 t(e2 >= 0 ? Ellipsoid3(b, e2, k2, kp2) : Ellipsoid3(a, b, c));
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
       return 1;

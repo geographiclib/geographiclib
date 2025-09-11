@@ -1,17 +1,17 @@
-// Example of using the GeographicLib::JacobiConformal class.
+// Example of using the Triaxial::Conformal3 class.
 
 #include <iostream>
 #include <iomanip>
 #include <exception>
 #include <GeographicLib/Utility.hpp>
-#include <GeographicLib/TriaxialConformal.hpp>
+#include <GeographicLib/Triaxial/Conformal3.hpp>
 
 using namespace std;
 using namespace GeographicLib;
 
 int main() {
   try {
-    TriaxialConformal proj(Triaxial::Earth());
+    Triaxial::Conformal3 proj(Triaxial::Ellipsoid3::Earth());
     cout  << fixed << setprecision(1)
           << "Ellipsoid parameters: a = " << proj.t().a()
           << ", b = " << proj.t().b() << ", c = " << proj.t().c() << "\n"

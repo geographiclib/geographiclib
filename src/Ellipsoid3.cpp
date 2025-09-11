@@ -1,23 +1,24 @@
 /**
- * \file Triaxial.cpp
- * \brief Implementation for GeographicLib::Triaxial class
+ * \file Ellipsoid3.cpp
+ * \brief Implementation for GeographicLib::Triaxial::Ellipsoid3 class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include <GeographicLib/Triaxial.hpp>
+#include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
 namespace GeographicLib {
+  namespace Triaxial {
 
   using namespace std;
 
-  Triaxial::Triaxial()
-    : Triaxial(1, 0, 1, 0)
+  Ellipsoid3::Ellipsoid3()
+    : Ellipsoid3(1, 0, 1, 0)
   {}
 
-  Triaxial::Triaxial(real a, real b, real c)
+  Ellipsoid3::Ellipsoid3(real a, real b, real c)
     : _a(a)
     , _b(b)
     , _c(c)
@@ -42,7 +43,7 @@ namespace GeographicLib {
     _biaxial = _oblate || _prolate;
   }
 
-  Triaxial::Triaxial(real b, real e2, real k2, real kp2)
+  Ellipsoid3::Ellipsoid3(real b, real e2, real k2, real kp2)
     : _b(b)
     , _e2(e2)
     , _k2(k2)
@@ -63,13 +64,13 @@ namespace GeographicLib {
     _biaxial = _oblate || _prolate;
   }
 
-  void Triaxial::Norm(vec3& r) const {
+  void Ellipsoid3::Norm(vec3& r) const {
     vec3 rn{r[0] / _a, r[1] / _b, r[2] / _c};
     real ra = Math::hypot3(rn[0], rn[1], rn[2]);
     r = {r[0] / ra, r[1] / ra, r[2] / ra};
   }
 
-  void Triaxial::Norm(vec3& r, vec3& v) const {
+  void Ellipsoid3::Norm(vec3& r, vec3& v) const {
     Norm(r);
     vec3 up = {r[0] / Math::sq(_a), r[1] / Math::sq(_b), r[2] / Math::sq(_c)};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
@@ -79,7 +80,7 @@ namespace GeographicLib {
     normvec(v);
   }
 
-  void Triaxial::cart2toellipint(vec3 r, Angle& bet, Angle& omg, vec3 axes)
+  void Ellipsoid3::cart2toellipint(vec3 r, Angle& bet, Angle& omg, vec3 axes)
     const {
     real a = axes[0], b = axes[1], c = axes[2];
     real xi = r[0]/a, eta = r[1]/b, zeta = r[2]/c,
@@ -108,12 +109,12 @@ namespace GeographicLib {
     omg = ang(so, co, 0, true);
   }
 
-  void Triaxial::cart2toellip(vec3 r, Angle& bet, Angle& omg) const {
+  void Ellipsoid3::cart2toellip(vec3 r, Angle& bet, Angle& omg) const {
     cart2toellipint(r, bet, omg, {_a, _b, _c});
   }
 
-  void Triaxial::cart2toellip(Angle bet, Angle omg,
-                              vec3 v, Angle& alp) const {
+  void Ellipsoid3::cart2toellip(Angle bet, Angle omg,
+                                vec3 v, Angle& alp) const {
     real tz = hypot(_k, _kp * omg.s()), tx = hypot(_k * bet.c(), _kp);
     // At oblate pole tx = 0; at prolate pole, tz = 0
     if (tx == 0 || tz == 0 || !(bet.c() == 0 && omg.s() == 0)) {
@@ -165,24 +166,22 @@ namespace GeographicLib {
     }
   }
 
-  void Triaxial::cart2toellip(vec3 r, vec3 v,
-                              Angle& bet, Angle& omg, Angle& alp)
+  void Ellipsoid3::cart2toellip(vec3 r, vec3 v,
+                                Angle& bet, Angle& omg, Angle& alp)
     const {
     cart2toellip(r, bet, omg);
     cart2toellip(bet, omg, v, alp);
   }
 
-  void Triaxial::elliptocart2(Angle bet, Angle omg,
-                              vec3& r) const {
+  void Ellipsoid3::elliptocart2(Angle bet, Angle omg, vec3& r) const {
     real tx = hypot(_k * bet.c(), _kp), tz = hypot(_k, _kp * omg.s());
     r = { _a * omg.c() * tx,
           _b * bet.c() * omg.s(),
           _c * bet.s() * tz };
   }
 
-  void Triaxial::elliptocart2(Angle bet, Angle omg,
-                              Angle alp,
-                              vec3& r, vec3& v) const {
+  void Ellipsoid3::elliptocart2(Angle bet, Angle omg, Angle alp,
+                                vec3& r, vec3& v) const {
     elliptocart2(bet, omg, r);
     real tx = hypot(_k * bet.c(), _kp), tz = hypot(_k, _kp * omg.s());
     if (bet.c() == 0 && omg.s() == 0 && !(_k == 0 || _kp == 0)) {
@@ -224,11 +223,11 @@ namespace GeographicLib {
     // normvec(v); v is already normalized
   }
 
-  const Triaxial& Triaxial::Earth() {
-    static const Triaxial earth(Constants::Triaxial_Earth_a(),
-                                Constants::Triaxial_Earth_b(),
-                                Constants::Triaxial_Earth_c());
+  const Ellipsoid3& Ellipsoid3::Earth() {
+    static const Ellipsoid3 earth(Constants::Triaxial_Earth_a(),
+                                  Constants::Triaxial_Earth_b(),
+                                  Constants::Triaxial_Earth_c());
     return earth;
   }
-
+  } // namespace Triaxial
 } // namespace GeographicLib

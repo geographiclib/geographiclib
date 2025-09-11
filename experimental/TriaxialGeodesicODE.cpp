@@ -1,6 +1,7 @@
 /**
- * \file Triaxial.cpp
- * \brief Implementation for GeographicLib::Triaxial class
+ * \file TriaxialGeodesicODE.cpp
+ * \brief Implementation for GeographicLib::experiemental::TriaxialGeodesicODE
+ *   class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
@@ -23,17 +24,18 @@ namespace GeographicLib {
 namespace experimental {
 
   using namespace std;
+  using namespace Triaxial;
 
-  TriaxialGeodesicODE::TriaxialGeodesicODE(const Triaxial& t,
+  TriaxialGeodesicODE::TriaxialGeodesicODE(const Ellipsoid3& t,
                                            bool extended, bool dense,
                                            bool normp, real eps)
     : TriaxialGeodesicODE(t, vec3{t.a(), 0, 0}, vec3{0, 0, 1},
                   extended, dense, normp, eps)
   {}
 
-  TriaxialGeodesicODE::TriaxialGeodesicODE(const Triaxial& t,
-                                           Triaxial::vec3 r1,
-                                           Triaxial::vec3 v1,
+  TriaxialGeodesicODE::TriaxialGeodesicODE(const Ellipsoid3& t,
+                                           Ellipsoid3::vec3 r1,
+                                           Ellipsoid3::vec3 v1,
                                            bool extended, bool dense,
                                            bool normp, real eps)
     : _t(t)
@@ -67,7 +69,7 @@ namespace experimental {
     _t.cart2toellip(_r1, _v1, _bet1, _omg1, _alp1);
   }
 
-  TriaxialGeodesicODE::TriaxialGeodesicODE(const Triaxial& t,
+  TriaxialGeodesicODE::TriaxialGeodesicODE(const Ellipsoid3& t,
                                            Angle bet1, Angle omg1,
                                            Angle alp1,
                                            bool extended, bool dense,

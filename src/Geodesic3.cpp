@@ -1,22 +1,22 @@
 /**
- * \file TriaxialGeodesic.cpp
- * \brief Implementation for GeographicLib::TriaxialGeodesic class
+ * \file Geodesic3.cpp
+ * \brief Implementation for GeographicLib::Triaxial::Geodesic3 class
  *
- * Copyright (c) Charles Karney (2025) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <iostream>
 #include <iomanip>
-#include <GeographicLib/TriaxialGeodesic.hpp>
-#include <GeographicLib/TriaxialGeodesicLine.hpp>
+#include <GeographicLib/Triaxial/Geodesic3.hpp>
 
 namespace GeographicLib {
+  namespace Triaxial {
 
   using namespace std;
 
-  TriaxialGeodesic::TriaxialGeodesic(const Triaxial& t)
+  Geodesic3::Geodesic3(const Ellipsoid3& t)
     : _t(t)
     , _umbalt(false)
     , _biaxp(true)
@@ -26,18 +26,18 @@ namespace GeographicLib {
     , _ellipthresh(1/real(8))
   {}
 
-  TriaxialGeodesic::TriaxialGeodesic(real a, real b, real c)
-    : TriaxialGeodesic(Triaxial(a, b, c))
+  Geodesic3::Geodesic3(real a, real b, real c)
+    : Geodesic3(Ellipsoid3(a, b, c))
   {}
 
-  TriaxialGeodesic::TriaxialGeodesic(real b, real e2, real k2, real kp2)
-    : TriaxialGeodesic(Triaxial(b, e2, k2, kp2))
+  Geodesic3::Geodesic3(real b, real e2, real k2, real kp2)
+    : Geodesic3(Ellipsoid3(b, e2, k2, kp2))
   {}
 
-  TriaxialGeodesicLine
-  TriaxialGeodesic::Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
-                            Angle& alp1, Angle& alp2, real& s12) const {
-    typedef TriaxialGeodesicLine TL;
+  GeodesicLine3
+  Geodesic3::Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
+                     Angle& alp1, Angle& alp2, real& s12) const {
+    typedef GeodesicLine3 TL;
     string msg;
     bet1.round();
     omg1.round();
@@ -46,7 +46,7 @@ namespace GeographicLib {
 
     if (!_umbline)
       // Initialize _umbline
-      _umbline = make_shared<TriaxialGeodesicLine>(TriaxialGeodesicLine(*this));
+      _umbline = make_shared<GeodesicLine3>(GeodesicLine3(*this));
 
     // In triaxial + oblate cases, [bet, omg] are initially put into [-90,90] x
     // [-180,180].  For prolate case, maybe we instead put [bet, omg] into
@@ -703,14 +703,14 @@ namespace GeographicLib {
     return TL(std::move(lf), std::move(fic), std::move(lg), std::move(gic));
   }
 
-  Math::real TriaxialGeodesic::HybridA(Angle bet1, Angle omg1, Angle alp1,
-                               Angle bet2a, Angle omg2b,
-                               bool betp) const {
+  Math::real Geodesic3::HybridA(Angle bet1, Angle omg1, Angle alp1,
+                                Angle bet2a, Angle omg2b,
+                                bool betp) const {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     // a1 -= ang(1e-8);
     gamblk gam = gamma(b1, o1, a1);
-    TriaxialGeodesicLine::fline l(this->t(), gam);
-    TriaxialGeodesicLine::fline::fics ic(l, b1, o1, a1);
+    GeodesicLine3::fline l(this->t(), gam);
+    GeodesicLine3::fline::fics ic(l, b1, o1, a1);
     real dang = l.Hybrid0(ic, bet2a, omg2b, betp);
     if (_debug)
       cout << "HA " << signbit(gam.gamma) << " " << gam.gamma << " "
@@ -723,10 +723,10 @@ namespace GeographicLib {
 
   // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference
   // in lontitude on bet2 and the target longitude.
-  Angle TriaxialGeodesic::findroot(const function<real(const Angle&)>& f,
-                           Angle xa,  Angle xb,
-                           real fa, real fb,
-                           int* countn, int* countb) {
+  Angle Geodesic3::findroot(const function<real(const Angle&)>& f,
+                            Angle xa,  Angle xb,
+                            real fa, real fb,
+                            int* countn, int* countb) {
     // Implement root finding method of Chandrupatla (1997)
     // https://doi.org/10.1016/s0965-9978(96)00051-8
     // Here we follow Scherer (2013), Section 6.1.7.3
@@ -783,7 +783,7 @@ namespace GeographicLib {
       else if (fmin(fabs(fa), fabs(fb)) > 2*numeric_limits<real>::epsilon())
         // neither endpoint small enough
         throw GeographicLib::GeographicErr
-          ("Bad inputs TriaxialGeodesic::findroot");
+          ("Bad inputs Geodesic3::findroot");
       else
         // return best endpoint
         return fabs(fa) < fabs(fb) ? xa : xb;
@@ -792,9 +792,9 @@ namespace GeographicLib {
     for (real t = 1/real(2), tp = t, ab = 0, ft = 0, fc = 0;
          cntn < maxcnt ||
            (throw GeographicLib::GeographicErr
-            ("Convergence failure TriaxialGeodesic::findroot"), false)
+            ("Convergence failure Geodesic3::findroot"), false)
            || GEOGRAPHICLIB_PANIC
-           ("Convergence failure TriaxialGeodesic::findroot");) {
+           ("Convergence failure Geodesic3::findroot");) {
       ang xt = 2*t == 1 ?
         ang(xa.s() + xb.s(), xa.c() + xb.c()) :
         (t < tp ? xa - ang::radians(t * ab) :
@@ -870,8 +870,8 @@ namespace GeographicLib {
     return xm;
   }
 
-  TriaxialGeodesic::gamblk::gamblk(const TriaxialGeodesic& tg,
-                           Angle bet, Angle omg, Angle alp) {
+  Geodesic3::gamblk::gamblk(const Geodesic3& tg,
+                            Angle bet, Angle omg, Angle alp) {
     real a = tg.k() * bet.c() * alp.s(), b = tg.kp() * omg.s() * alp.c();
     gamma = (a - b) * (a + b);
     // This direct test case
@@ -918,7 +918,7 @@ namespace GeographicLib {
     nup = gammap / kx;
   }
 
-  TriaxialGeodesic::gamblk::gamblk(const TriaxialGeodesic& tg, bool neg)
+  Geodesic3::gamblk::gamblk(const Geodesic3& tg, bool neg)
     : transpolar(neg)
     , gamma(transpolar ? -real(0) : real(0))
     , nu(0)
@@ -930,49 +930,44 @@ namespace GeographicLib {
     , kxp(transpolar ? tg.k() : tg.kp())
   {}
 
-  TriaxialGeodesic::gamblk
-  TriaxialGeodesic::gamma(Angle bet, Angle omg, Angle alp) const {
+  Geodesic3::gamblk Geodesic3::gamma(Angle bet, Angle omg, Angle alp) const {
     return gamblk(*this, bet, omg, alp);
   }
 
-  TriaxialGeodesicLine
-  TriaxialGeodesic::Line(Angle bet1, Angle omg1, Angle alp1) const {
-    return TriaxialGeodesicLine(*this, bet1, omg1, alp1);
+  GeodesicLine3 Geodesic3::Line(Angle bet1, Angle omg1, Angle alp1) const {
+    return GeodesicLine3(*this, bet1, omg1, alp1);
   }
 
-  TriaxialGeodesicLine
-  TriaxialGeodesic::Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
-                           Angle& bet2, Angle& omg2, Angle& alp2)
+  GeodesicLine3 Geodesic3::Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
+                                  Angle& bet2, Angle& omg2, Angle& alp2)
     const {
-    TriaxialGeodesicLine l(*this, bet1, omg1, alp1);
+    GeodesicLine3 l(*this, bet1, omg1, alp1);
     l.Position(s12, bet2, omg2, alp2);
     return l;
   }
 
-  TriaxialGeodesicLine
-  TriaxialGeodesic::Inverse(real bet1, real omg1, real bet2, real omg2,
-                            real& alp1, real& alp2, real& s12) const {
+  GeodesicLine3 Geodesic3::Inverse(real bet1, real omg1, real bet2, real omg2,
+                                   real& alp1, real& alp2, real& s12) const {
     ang alp1a, alp2a;
-    TriaxialGeodesicLine l = Inverse(ang(bet1), ang(omg1), ang(bet2), ang(omg2),
+    GeodesicLine3 l = Inverse(ang(bet1), ang(omg1), ang(bet2), ang(omg2),
                              alp1a, alp2a, s12);
     alp1 = real(alp1a); alp2 = real(alp2a);
     return l;
   }
 
-  TriaxialGeodesicLine
-  TriaxialGeodesic::Line(real bet1, real omg1, real alp1) const {
+  GeodesicLine3 Geodesic3::Line(real bet1, real omg1, real alp1) const {
     return Line(ang(bet1), ang(omg1), ang(alp1));
   }
 
-  TriaxialGeodesicLine
-  TriaxialGeodesic::Direct(real bet1, real omg1, real alp1, real s12,
-                           real& bet2, real& omg2, real& alp2)
+  GeodesicLine3 Geodesic3::Direct(real bet1, real omg1, real alp1, real s12,
+                                  real& bet2, real& omg2, real& alp2)
     const {
     ang bet2a, omg2a, alp2a;
-    TriaxialGeodesicLine l = Direct(ang(bet1), ang(omg1), ang(alp1), s12,
+    GeodesicLine3 l = Direct(ang(bet1), ang(omg1), ang(alp1), s12,
                             bet2a, omg2a, alp2a);
     bet2 = real(bet2a); omg2 = real(omg2a); alp2 = real(alp2a);
     return l;
   }
 
+  } // namespace Triaxial
 } // namespace GeographicLib

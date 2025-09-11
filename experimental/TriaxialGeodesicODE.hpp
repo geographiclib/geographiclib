@@ -14,6 +14,8 @@
 #include <array>
 #include <utility>
 #include <GeographicLib/Constants.hpp>
+#include <GeographicLib/Angle.hpp>
+#include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
 // Boost's dense output expects numeric_limits<real>::digits to be a constant
 // and not a function.  So we can't use GEOGRAPHICLIB_PRECISION == 5.  High
@@ -42,9 +44,6 @@
 // Removed my temporary fix to
 //    numeric/odeint/stepper/controlled_runge_kutta.hpp
 
-#include <GeographicLib/Angle.hpp>
-#include <GeographicLib/Triaxial.hpp>
-
 #if __clang__
 // Ignore clang warnings for boost headers
 #pragma clang diagnostic ignored "-Wunused-parameter"
@@ -62,7 +61,7 @@ namespace experimental {
 
   class TriaxialGeodesicODE {
   public:
-    typedef Triaxial::vec3 vec3;
+    typedef Triaxial::Ellipsoid3::vec3 vec3;
   private:
     typedef Math::real real;
     typedef std::array<real, 6> vec6;
@@ -78,7 +77,7 @@ namespace experimental {
     boost::numeric::odeint::bulirsch_stoer<vec6, real> step6;
     typedef
     boost::numeric::odeint::bulirsch_stoer<vec10, real> step10;
-    const Triaxial _t;
+    const Triaxial::Ellipsoid3 _t;
     const real _b, _eps;
     const vec3 _axesn, _axes2n;
     vec3  _r1, _v1;
@@ -106,13 +105,13 @@ namespace experimental {
     static std::vector<size_t> sort_indices(const std::vector<real>& v);
 
   public:
-    TriaxialGeodesicODE(const Triaxial& t,
+    TriaxialGeodesicODE(const Triaxial::Ellipsoid3& t,
                         bool extended = false, bool dense = false,
                         bool normp = false, real eps = 0);
-    TriaxialGeodesicODE(const Triaxial& t, vec3 r1, vec3 v1,
+    TriaxialGeodesicODE(const Triaxial::Ellipsoid3& t, vec3 r1, vec3 v1,
                         bool extended = false, bool dense = false,
                         bool normp = false, real eps = 0);
-    TriaxialGeodesicODE(const Triaxial& t, Angle bet1, Angle omg1, Angle alp1,
+    TriaxialGeodesicODE(const Triaxial::Ellipsoid3& t, Angle bet1, Angle omg1, Angle alp1,
                         bool extended = false, bool dense = false,
                         bool normp = false, real eps = 0);
     std::pair<real, real> Position(real s12, vec3& r2, vec3& v2);
@@ -151,7 +150,7 @@ namespace experimental {
     void Position1(Angle& bet1, Angle& omg1, Angle& alp1) const {
       bet1 = _bet1; omg1 = _omg1; alp1 = _alp1;
     }
-    const Triaxial& t() const { return _t; }
+    const Triaxial::Ellipsoid3& t() const { return _t; }
   };
 
 } // namespace experimental

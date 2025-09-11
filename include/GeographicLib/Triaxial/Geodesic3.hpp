@@ -1,18 +1,18 @@
 /**
- * \file TriaxialGeodesic.hpp
- * \brief Header for GeographicLib::TriaxialGeodesic class
+ * \file Geodesic3.hpp
+ * \brief Header for GeographicLib::Triaxial::Geodesic3 class
  *
  * Copyright (c) Charles Karney (2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#if !defined(GEOGRAPHICLIB_TRIAXIALGEODESIC_HPP)
-#define GEOGRAPHICLIB_TRIAXIALGEODESIC_HPP 1
+#if !defined(GEOGRAPHICLIB_GEODESIC3_HPP)
+#define GEOGRAPHICLIB_GEODESIC3_HPP 1
 
 #include <functional>
 #include <memory>
-#include <GeographicLib/Triaxial.hpp>
+#include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
 #if defined(_MSC_VER)
 // Squelch warnings about dll vs vector
@@ -21,15 +21,16 @@
 #endif
 
 namespace GeographicLib {
-  class TriaxialGeodesicLine;
+  namespace Triaxial {
+  class GeodesicLine3;
 
-  class GEOGRAPHICLIB_EXPORT TriaxialGeodesic {
+  class GEOGRAPHICLIB_EXPORT Geodesic3 {
   private:
     // For access to BigValue, _ellipthresh, _biaxp
-    friend class TriaxialGeodesicLine;
+    friend class GeodesicLine3;
     typedef Math::real real;
     typedef Angle ang;
-    Triaxial _t;
+    Ellipsoid3 _t;
 
     // Run geodesic from bet1, omg1, alp1, find its first intersection with bet
     // = bet2a and return omg2a - omg2b
@@ -46,7 +47,7 @@ namespace GeographicLib {
       _swapomg;                 // allow swapping of omega{1,2}
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
-    mutable std::shared_ptr<TriaxialGeodesicLine> _umbline;
+    mutable std::shared_ptr<GeodesicLine3> _umbline;
     static real BigValue() {
       using std::log;
       static real bigval = -3*log(std::numeric_limits<real>::epsilon());
@@ -81,8 +82,8 @@ namespace GeographicLib {
         gammax, kx2, kxp2, kx, kxp;
       // Default values for gamma = +/-0
       gamblk() {}
-      gamblk(const TriaxialGeodesic& tg, bool neg = false);
-      gamblk(const TriaxialGeodesic& tg, Angle bet, Angle omg, Angle alp);
+      gamblk(const Geodesic3& tg, bool neg = false);
+      gamblk(const Geodesic3& tg, Angle bet, Angle omg, Angle alp);
       //       gamblk(real gammax, real nux, real nupx)
       //        : gamma(gammax), nu(nux), nup(nupx) {}
     };
@@ -100,19 +101,19 @@ namespace GeographicLib {
     bool prolate() const { return t().prolate(); }
     bool biaxial() const { return t().biaxial(); }
   public:
-    TriaxialGeodesic(const Triaxial& t = Triaxial{});
-    TriaxialGeodesic(real a, real b, real c);
-    TriaxialGeodesic(real b, real e2, real k2, real kp2);
-    const Triaxial& t() const { return _t; }
-    TriaxialGeodesicLine Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
+    Geodesic3(const Ellipsoid3& t = Ellipsoid3{});
+    Geodesic3(real a, real b, real c);
+    Geodesic3(real b, real e2, real k2, real kp2);
+    const Ellipsoid3& t() const { return _t; }
+    GeodesicLine3 Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
                                  Angle& alp1, Angle& alp2, real& s12) const;
-    TriaxialGeodesicLine Inverse(real bet1, real omg1, real bet2, real omg2,
+    GeodesicLine3 Inverse(real bet1, real omg1, real bet2, real omg2,
                                  real& alp1, real& alp2, real& s12) const;
-    TriaxialGeodesicLine Line(Angle bet1, Angle omg1, Angle alp1) const;
-    TriaxialGeodesicLine Line(real bet1, real omg1, real alp1) const;
-    TriaxialGeodesicLine Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
+    GeodesicLine3 Line(Angle bet1, Angle omg1, Angle alp1) const;
+    GeodesicLine3 Line(real bet1, real omg1, real alp1) const;
+    GeodesicLine3 Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
                                 Angle& bet2, Angle& omg2, Angle& alp2) const;
-    TriaxialGeodesicLine Direct(real bet1, real omg1, real alp1, real s12,
+    GeodesicLine3 Direct(real bet1, real omg1, real alp1, real s12,
                                 real& bet2, real& omg2, real& alp2) const;
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) {
@@ -130,14 +131,14 @@ namespace GeographicLib {
     // void ellipthresh(real ellipthresh) { _ellipthresh = ellipthresh; }
   };
 
+  } // namespace Triaxial
 } // namespace GeographicLib
 
 #if defined(_MSC_VER)
 #  pragma warning (pop)
 #endif
 
-// Include this because all the TriaxialGeodesic methods return a
-// TriaxialGeodesicLine.
-#include <GeographicLib/TriaxialGeodesicLine.hpp>
+// Include this because all the Geodesic3 methods return a GeodesicLine3.
+#include <GeographicLib/Triaxial/GeodesicLine3.hpp>
 
-#endif  // GEOGRAPHICLIB_TRIAXIALGEODESIC_HPP
+#endif  // GEOGRAPHICLIB_GEODESIC3_HPP

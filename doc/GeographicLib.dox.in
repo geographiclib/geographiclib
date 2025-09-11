@@ -877,7 +877,7 @@ The utilities are
    intersections between two geodesics.  See \ref IntersectTool.cpp.
  - <a href="Geod3Solve.1.html">
    <b>Geod3Solve</b></a>: perform geodesic calculations on a triaxial
-   ellipsoid using TriaxialGeodesic and TriaxialGeodesicLine.  See \ref
+   ellipsoid using Triaxial::Geodesic3 and Triaxial::GeodesicLine3.  See \ref
    Geod3Solve.cpp.
  - <a href="Cart3Convert.1.html">
    <b>Cart3Convert</b></a>: convert between geocentric and various
@@ -4810,7 +4810,7 @@ y(\beta) &= b \int \frac
 The scale of the projection is
 \f[
 m(\beta, \omega) = \frac1
-{\sqrt{k^2 \cos^\beta + k'^2 \sin^2\omega}}.
+{\sqrt{k^2 \cos^2\beta + k'^2 \sin^2\omega}}.
 \f]
 I have scaled the Jacobi's projection by a constant factor,
 \f[
@@ -4946,10 +4946,10 @@ the projection reduces to the normal Mercator projection for an oblate
 ellipsoid,
 \f[
 \begin{align}
-x &= b\omega,\\
-y &= b\bigl(\sinh^{-1}\tan\beta'
+x(\omega) &= b\omega,\\
+y(\beta) &= b\bigl(\sinh^{-1}\tan\beta'
 - e \tanh^{-1}(e\sin\beta')\bigr),\\
-m &= \frac1{\cos\beta}.
+m(\beta, \omega) &= \frac1{\cos\beta}.
 \end{align}
 \f]
 
@@ -4970,11 +4970,11 @@ projection reduces to similar expressions with the roles of \f$\beta\f$
 and \f$\omega\f$ switched,
 \f[
 \begin{align}
-x &= b\bigl(\sinh^{-1}\tan\omega'
+x(\omega) &= b\bigl(\sinh^{-1}\tan\omega'
 + e
   \tan^{-1}(e\sin\omega')\bigr),\\
-y &= b\beta,\\
-m &= \frac1{\cos\omega}.
+y(\beta) &= b\beta,\\
+m(\beta, \omega) &= \frac1{\cos\omega}.
 \end{align}
 \f]
 
@@ -4990,9 +4990,9 @@ non-uniform limit depending on the parameter \f$k\f$,
 Using https://dlmf.nist.gov/19.6.E13 the projection can be expressed as
 \f[
 \begin{align}
-x &= bF(\omega - \pi/2, k') + K(k'), \\
-y &= bF(\beta, k), \\
-m &= \frac1{\sqrt{k'^2\cos^2\omega + k^2\cos^2\beta}},
+x(\omega) &= bF(\omega - \pi/2, k'), \\
+y(\beta) &= bF(\beta, k), \\
+m(\beta, \omega) &= \frac1{\sqrt{k'^2\cos^2\omega + k^2\cos^2\beta}},
 \end{align}
 \f]
 where \f$F(\phi,k)\f$ and \f$K(k)\f$ are incomplete and complete
@@ -5020,11 +5020,10 @@ The spherical limit gives the projection found by &Eacute;. Guyou in
 who apparently derived it without realizing that it is just a special
 case of the projection Jacobi had given some 40 years earlier.  Guyou's
 name is usually associated with the particular choice,
-\f$\nu=\frac14\pi\f$, in which case the hemisphere
-\f$\left|\omega\right|\le\frac12\pi\f$ is mapped into a square.
-However, by varying \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be
-mapped into a rectangle with any aspect ratio, \f$K(\cos\nu) :
-K(\sin\nu)\f$.
+\f$\nu=\frac14\pi\f$ or \f$k = k' = 1/\sqrt2\f$, in which case each
+octant of the ellipoid is mapped into a square.  However, by varying
+\f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be mapped into a rectangle
+with any aspect ratio, \f$K(k') : K(k)\f$.
 
 \section jacobi-sphere Conformal mapping of an ellipsoid to a sphere
 
@@ -5043,17 +5042,17 @@ The aspect ratio of this rectangle is
 a^2\,\Pi(-e^2k'^2, \cos\nu) :
 c^2\,\Pi( e^2k^2 , \sin\nu).
 \f]
-Find the value of \f$\mu\f$ such that this ratio equals
+Find the value of \f$k_s\f$ such that this ratio equals
 \f[
-K(\cos\mu) : K(\sin\mu).
+K(k_s') : K(k_s).
 \f]
 Map the rectangle onto the equivalent octant of the sphere using Guyou's
-projection with parameter \f$\nu = \mu\f$.  This reduces to the
+projection with parameter \f$k = k_s\f$.  This reduces to the
 standard construction in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 
-The TriaxialConformal class provides an implementation of
+The Triaxial::Conformal3 class provides an implementation of
 the Jacobi conformal projection is given here.
 
 <center>
