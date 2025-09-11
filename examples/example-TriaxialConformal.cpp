@@ -25,9 +25,11 @@ int main() {
     //    a/(a-c) = 297.7738 +/- 0.0003
     //    a/(a-b) = 91449 +/- 60
     // which gives: a = 6378171.36, b = 6378101.61, c = 6356751.84
-    Math::real a = 6378137+35, b = 6378137-35, c = 6356752;
+    Math::real a = Constants::Triaxial_Earth_a(),
+      b = Constants::Triaxial_Earth_b(),
+      c = Constants::Triaxial_Earth_c();
     TriaxialConformal proj(a, b, c);
-    if (1) {
+    if (0) {
       Triaxial t(2e6, 1e6, 0.5e6);
       t = proj.t();
       TriaxialConformal p2(t);
@@ -52,8 +54,19 @@ int main() {
           << "Ellipsoid parameters: a = "
           << a << ", b = " << b << ", c = " << c << "\n"
           << setprecision(3)
-          << "Quadrants: x = " << proj.x() << ", y = " << proj.y() << "\n";
+          << "Quadrants: x = " << proj.x() << " " << proj.x2() - proj.x()
+          << ", y = " << proj.y() << " " << proj.y2() - proj.y() << "\n";
     cout << "Coordinates angle (deg) x (m) y (m):\n";
+    cout << setprecision(2);
+    for (int i = -90; i <= 90; i += 10) {
+      Math::real omg = i + 90, bet = i,
+        x = proj.x(Angle(omg)), x2 = proj.x2(Angle(omg)),
+        y = proj.y(Angle(bet)), y2 = proj.y2(Angle(bet));
+      cout << i << " "
+           << x << " " << x2 << " " << x2-x << " "
+           << y << " " << y2 << " " << y2-y << "\n";
+    }
+    return 0;
     for (int i = -540; i <= 540; i += 15) {
       Math::real omg = i, bet = i;
       Math::real x = proj.x(Angle(omg)), y = proj.y(Angle(bet));

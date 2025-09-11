@@ -21,8 +21,42 @@ namespace GeographicLib {
           k2 () * (1 + e2() * kp2()), 1 + e2() * kp2())
     , _ey(k2 () * (1 + e2() * kp2()),     e2() * k2 (),
           kp2() * (1 - e2() * k2 ()), 1 - e2() * k2 ())
+    , _exalt(kp2() * (1 - e2() * k2 ()), kp2(),
+             k2 () * (1 + e2() * kp2()), k2 ())
+    , _eyalt(k2 () * (1 + e2() * kp2()), k2 (),
+             kp2() * (1 - e2() * k2 ()), kp2())
   {}
 
+  // Proving the equivalence of this and the Nyrtsov formulations is
+  // straightforward but laborious.  Working from this formulation:
+  // * switch the angle argument of Pi to its complement
+  // * sin(phi)^2 -> cos(phi')^2 = 1 - sin(phi')^2
+  // * modulus of Pi then becomes imaginary
+  // * Use DLMF 19.7.5 to express as sum of Pi term and F term
+
+  // Pi = int( 1/(1-a2*sin(t)^2)/sqrt(1-k2*sin(t)^2), t)
+  // t = pi/2 - tx
+  // Pi = -int( 1/(1-a2*cos(tx)^2)/sqrt(1-k2*cos(tx)^2), tx)
+  //    = -int( 1/(1-a2*(1-sin(tx)^2))/sqrt(1-k2*(1-sin(tx)^2)), tx)
+  //    = -int( 1/((1-a2)+a2*sin(tx)^2)/sqrt((1-k2)+k2*sin(tx)^2), tx)
+  //    = - 1/(1-a2)/sqrt(1-k2) *
+  //       int( 1/(1-a2x*sin(tx)^2)/sqrt(1+k2x*sin(tx)^2), tx)
+  //    where a2x = -a2/(1-a2) k2x = k2/(1-k2)
+  // So Pi(a2, k2) = Pi(t, a2, k) + Pi(tx, a2x, -k2x)/(1-a2)/sqrt(1-k2)
+  // DMLMF 19.7.5
+  //   a2xx = (a2x + k2x)/(1 + k2x)
+  //   k2xx = k2x/(1+k2x);  kp2xx = 1/(1+k2x)
+  // tan(txx)^2 = (1+k2x)*tan(tx)^2
+  // Pi(tx, a2x, -k2x) = sqrt(kp2xx)/a2xx * (k2xx* F(txx,k2xx) + kp2xx*a2x*Pi(txx,a2xx,k2xx))
+  //   [  a2xx = (a2x + k2x)/(1 + k2x),k2xx = k2x/(1+k2x),  kp2xx = 1/(1+k2x),(1+k2x)],a2x = -a2/(1-a2) k2x = k2/(1-k2);
+  //   => a2xx =
+  //     a2xx = (k2-a2)/(1-a2), k2xx = k2, kp2xx = 1 - k2, (1+k2x) = 1/(1-k2)
+  //     [    a2xx = (k2-a2)/(1-a2), k2xx = k2,kp2xx = 1 - k2],
+  //     k2 = kp2y * (1 - e2 * k2y),  a2= - e2 * kp2y;
+  //   a2xx = kp2y
+  //   k2xx = kp2y*(1-e2*k2y)
+  //     tan(t)^2 = (1+e2*kp) * tan(ty)^2
+  // tan2 multiplier = (1+e2*kp2y)/(1-k2),k2 = kp2y * (1 - e2 * k2y) = 1/k2y
   TriaxialConformal::TriaxialConformal(real a, real b, real c)
     : TriaxialConformal(Triaxial(a, b, c))
   {}
@@ -31,9 +65,9 @@ namespace GeographicLib {
   {}
 
   Math::real TriaxialConformal::Pi(const EllipticFunction& ell, Angle phi) {
-    return
-      4 * ell.Pi() * phi.n() + ell.Pi(phi.s(), phi.c(),
-                                      ell.Delta(phi.s(), phi.c()));
+    real p = ell.Pi(phi.s(), phi.c(), ell.Delta(phi.s(), phi.c()));
+    if (phi.n() != 0) p += 4 * ell.Pi() * phi.n();
+    return p;
   }
   Angle TriaxialConformal::Piinv(const EllipticFunction& ell, real x) {
     real y = remainder(x, 2 * ell.Pi()),
@@ -84,11 +118,21 @@ namespace GeographicLib {
   }
   Math::real TriaxialConformal::x(Angle omg) const {
     omg = omegashift(omg, +1);
-    real x = Math::sq(a()) / b() * Pi(_ex, omg.modang(b() / a()));
-    return xshift(x, +1);
+    return Math::sq(a()) / b() * Pi(_ex, omg.modang(b() / a()));
   }
+  Math::real TriaxialConformal::x2() const {
+    return b() * e2() * k2() * _exalt.Pi() +
+      Math::sq(c())/b() * _exalt.K();
+  }
+  Math::real TriaxialConformal::x2(Angle omg) const {
+    Angle phi = omg.modang(1/sqrt(k2()));
+    return b() * e2() * k2() * Pi(_exalt, phi) +
+      Math::sq(c())/b() *
+      (_exalt.F(phi.s(), phi.c(), _exalt.Delta(phi.s(), phi.c())) +
+       (phi.n() != 0 ? 4 * _exalt.K() * phi.n() : 0))  - x2();
+  }
+
   Angle TriaxialConformal::omega(real x) const {
-    x = xshift(x, -1);
     Angle omg = Piinv(_ex, (x * b()) / Math::sq(a())).modang(a() / b());
     return omegashift(omg, -1);
   }
@@ -96,8 +140,20 @@ namespace GeographicLib {
   Math::real TriaxialConformal::y() const {
     return Math::sq(c()) / b() * _ey.Pi();
   }
+  Math::real TriaxialConformal::y2() const {
+    return -b() * e2() * kp2() * _eyalt.Pi() +
+      Math::sq(a())/b() * _eyalt.K();
+  }
   Math::real TriaxialConformal::y(Angle bet) const {
-    return Math::sq(c()) / b() * Pi(_ey, bet.modang(b() / c()));
+    return  Math::sq(c()) / b() * Pi(_ey, bet.modang(b() / c()));
+  }
+  Math::real TriaxialConformal::y2(Angle bet) const {
+    bet += Angle::cardinal(1);
+    Angle phi = bet.modang(1/sqrt(kp2()));
+    return -b() * e2() * kp2() * Pi(_eyalt, phi) +
+      Math::sq(a())/b() *
+      (_eyalt.F(phi.s(), phi.c(), _eyalt.Delta(phi.s(), phi.c())) +
+       4 * _eyalt.K() * phi.n()) - y2();
   }
   Angle TriaxialConformal::beta(real y) const {
     return Piinv(_ey, (y * b()) / Math::sq(c())).modang(c() / b());
