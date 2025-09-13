@@ -57,7 +57,7 @@ int main(int argc, const char* const argv[]) {
     typedef Angle ang;
     Utility::set_digits();
     typedef Ellipsoid3::vec3 vec3;
-    enum { GEODETIC, PARAMETRIC, GEOCENTRIC, ELLIPSOIDAL };
+    enum { GEODETIC, PARAMETRIC, GEOCENTRIC, ELLIPSOIDAL, RANDOM };
     int mode = ELLIPSOIDAL;
     bool threed = false, direction = false, reverse = false, dms = false,
       longfirst = false;
@@ -66,7 +66,7 @@ int main(int argc, const char* const argv[]) {
       b = Constants::Triaxial_Earth_b(),
       c = Constants::Triaxial_Earth_c(),
       e2 = -1, k2 = 0, kp2 = 0;
-    int prec = 3;
+    int prec = 3, nrand = 0;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
@@ -80,7 +80,17 @@ int main(int argc, const char* const argv[]) {
         mode = PARAMETRIC;
       else if (arg == "-C")
         mode = GEOCENTRIC;
-      else if (arg == "-3")
+      else if (arg == "-R") {
+        if (++m == argc) return usage(1, true);
+        try {
+          nrand = Utility::val<int>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Number of randoms " << argv[m] << " is not a number\n";
+          return 1;
+        }
+        mode = RANDOM;
+      } else if (arg == "-3")
         threed = true;
       else if (arg == "-D")
         direction = true;
@@ -159,11 +169,11 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
-    Cartesian3 tc(e2 >= 0 ? Ellipsoid3(b, e2, k2, kp2) :
-                         Ellipsoid3(a, b, c));
+    Cartesian3 tc(e2 >= 0 ? Ellipsoid3(b, e2, k2, kp2) : Ellipsoid3(a, b, c));
 
-    if (direction && mode != ELLIPSOIDAL) {
-      std::cerr << "Can only specify -D with ellipsoidal conversions\n";
+    if (direction && !(mode == ELLIPSOIDAL || mode == RANDOM)) {
+      std::cerr
+        << "Can only specify -D with random or ellipsoidal conversions\n";
       return 1;
     }
     if (threed && !(mode == ELLIPSOIDAL || mode == GEODETIC)) {
@@ -219,7 +229,29 @@ int main(int argc, const char* const argv[]) {
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     using std::round, std::log10, std::ceil, std::signbit;
     int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
-      angprec = prec + 5;
+      angprec = prec + 5, vecprec = prec + 7;
+    if (mode == RANDOM) {
+      unsigned s1 = std::random_device()(), s2 = std::random_device()();
+      std::seed_seq seq{s1, s2};
+      std::mt19937 g(seq);
+      for (int i = 0; i < nrand; ++i) {
+        vec3 r, v;
+        if (direction)
+          tc.cart2rand(g, r, v);
+        else
+          tc.cart2rand(g, r);
+        *output << Utility::str(r[0], disprec) << " "
+                << Utility::str(r[1], disprec) << " "
+                << Utility::str(r[2], disprec);
+        if (direction)
+          *output << " "
+                  << Utility::str(v[0], vecprec) << " "
+                  << Utility::str(v[1], vecprec) << " "
+                  << Utility::str(v[2], vecprec);
+        *output << "\n";
+      }
+      return 0;
+    }
     std::string s, eol, sbet, somg, salp, sh, sx, sy, sz, svx, svy, svz, strc;
     std::istringstream str;
     int retval = 0;
@@ -328,10 +360,10 @@ int main(int argc, const char* const argv[]) {
                   << Utility::str(r[1], disprec) << " "
                   << Utility::str(r[2], disprec);
           if (direction)
-          *output << " "
-                  << Utility::str(v[0], disprec) << " "
-                  << Utility::str(v[1], disprec) << " "
-                  << Utility::str(v[2], disprec);
+            *output << " "
+                    << Utility::str(v[0], vecprec) << " "
+                    << Utility::str(v[1], vecprec) << " "
+                    << Utility::str(v[2], vecprec);
         }
         *output << eol;
       }

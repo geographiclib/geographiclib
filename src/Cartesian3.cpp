@@ -20,6 +20,8 @@ namespace GeographicLib {
     , _axes2{Math::sq(_t.a()), Math::sq(_t.b()), Math::sq(_t.c())}
     , _linecc2{(_t.a() - _t.c()) * (_t.a() + _t.c()),
                (_t.b() - _t.c()) * (_t.b() + _t.c()), 0}
+    , _norm(0, 1)
+    , _uni(0, 1)
   {}
 
   Cartesian3::Cartesian3(real a, real b, real c)

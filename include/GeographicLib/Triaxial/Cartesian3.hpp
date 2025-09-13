@@ -13,6 +13,7 @@
 #include <array>
 #include <utility>
 #include <functional>
+#include <random>
 #include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
 namespace GeographicLib {
@@ -23,10 +24,19 @@ namespace GeographicLib {
     typedef Ellipsoid3::vec3 vec3;
   private:
     typedef Math::real real;
+#if GEOGRAPHICLIB_PRECISION > 3
+    // <random> only supports "standard" floating point types
+    typedef Math::extended random_prec;
+#else
+    typedef Math::real random_prec;
+#endif
     typedef Angle ang;
     static const int maxit_ = 20;
     const Ellipsoid3 _t;
     const vec3 _axes, _axes2, _linecc2;
+    // mutable because using these objects in a non-const operation
+    mutable std::normal_distribution<random_prec> _norm;
+    mutable std::uniform_real_distribution<random_prec> _uni;
 
     template<int n>
     void cart2togeneric(vec3 r, Angle& phi, Angle& lam) const;
@@ -95,7 +105,46 @@ namespace GeographicLib {
     void carttocart2(vec3 r, vec3& r2, real& h) const;
     void carttogeod(vec3 r, Angle& phi, Angle& lam, real& h) const;
     void geodtocart(Angle phi, Angle lam, real h, vec3& r) const;
+
+    template <class G> void cart2rand(G& g, vec3& r) const;
+    template <class G> void cart2rand(G& g, vec3& r, vec3& v) const;
   };
+
+  template<class G> inline void Cartesian3::cart2rand(G& g, vec3& r) const {
+    // This uses the simple rejection technique given by Marples and Williams,
+    // Num. Alg. (2023), Algorithm 1 based on the general method of Williamson,
+    // Phys. Med. Biol. (1987).
+    using std::isfinite;
+    while (true) {
+      while (true) {
+        // guaranteed evaluated left to right
+        r = {real(_norm(g)), real(_norm(g)), real(_norm(g))};
+        Ellipsoid3::normvec(r); // But catch rare cases where |r| = 0
+        if (isfinite(r[0])) break;
+      }
+      r[0] *= _axes[0]; r[1] *= _axes[1]; r[2] *= _axes[2];
+      vec3 up{ r[0] / _axes2[0],  r[1] / _axes2[1],  r[2] / _axes2[2] };
+      real q = c() * Math::hypot3(up[0], up[1], up[2]);
+      if (real(_uni(g)) < q) break;
+    }
+  }
+  template<class G> inline void Cartesian3::cart2rand(G& g, vec3& r, vec3& v)
+  const {
+    using std::isfinite;
+    cart2rand<G>(g, r);
+    while (true) {
+      // guaranteed evaluated left to right
+      v = {real(_norm(g)), real(_norm(g)), real(_norm(g))};
+      vec3 up{ r[0] / _axes2[0],  r[1] / _axes2[1],  r[2] / _axes2[2] };
+      real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]), // |up|^2
+        // (up . v) / |up|^2
+        uv = (v[0] * up[0] + v[1] * up[1] + v[2] * up[2])/u2;
+      // v - up * (up . v) / |up|^2
+      v[0] -= uv * up[0]; v[1] -= uv * up[1]; v[2] -= uv * up[2];
+      Ellipsoid3::normvec(v);   // But catch rare cases where |v| = 0
+      if (isfinite(v[0])) break;
+    }
+  }
 
   } // namespace Triaxial
 } // namespace GeographicLib
