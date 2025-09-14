@@ -36,7 +36,7 @@ namespace GeographicLib {
 
   GeodesicLine3
   Geodesic3::Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
-                     Angle& alp1, Angle& alp2, real& s12) const {
+                     real& s12, Angle& alp1, Angle& alp2) const {
     typedef GeodesicLine3 TL;
     string msg;
     bet1.round();
@@ -947,10 +947,10 @@ namespace GeographicLib {
   }
 
   GeodesicLine3 Geodesic3::Inverse(real bet1, real omg1, real bet2, real omg2,
-                                   real& alp1, real& alp2, real& s12) const {
+                                   real& s12, real& alp1, real& alp2) const {
     ang alp1a, alp2a;
     GeodesicLine3 l = Inverse(ang(bet1), ang(omg1), ang(bet2), ang(omg2),
-                             alp1a, alp2a, s12);
+                              s12, alp1a, alp2a);
     alp1 = real(alp1a); alp2 = real(alp2a);
     return l;
   }

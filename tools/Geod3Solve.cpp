@@ -273,7 +273,7 @@ int main(int argc, const char* const argv[]) {
           BiaxialCoords(true, f, bet1, omg1);
           BiaxialCoords(true, f, bet2, omg2);
           GeodesicLine3 l = t.Inverse(bet1, omg1, bet2, omg2,
-                                             alp1, alp2, s12);
+                                      s12, alp1, alp2);
           if (unroll && full) {
             l.Position(s12, bet2, omg2, alp2);
           }

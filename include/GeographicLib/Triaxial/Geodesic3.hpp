@@ -106,15 +106,15 @@ namespace GeographicLib {
     Geodesic3(real b, real e2, real k2, real kp2);
     const Ellipsoid3& t() const { return _t; }
     GeodesicLine3 Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
-                                 Angle& alp1, Angle& alp2, real& s12) const;
+                          real& s12, Angle& alp1, Angle& alp2) const;
     GeodesicLine3 Inverse(real bet1, real omg1, real bet2, real omg2,
-                                 real& alp1, real& alp2, real& s12) const;
+                          real& s12, real& alp1, real& alp2) const;
     GeodesicLine3 Line(Angle bet1, Angle omg1, Angle alp1) const;
     GeodesicLine3 Line(real bet1, real omg1, real alp1) const;
     GeodesicLine3 Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
-                                Angle& bet2, Angle& omg2, Angle& alp2) const;
+                         Angle& bet2, Angle& omg2, Angle& alp2) const;
     GeodesicLine3 Direct(real bet1, real omg1, real alp1, real s12,
-                                real& bet2, real& omg2, real& alp2) const;
+                         real& bet2, real& omg2, real& alp2) const;
     bool umbalt() const { return _umbalt; }
     void umbalt(bool numbalt) {
       if (_t.k2() > 0 && _t.kp2() > 0) _umbalt = numbalt;
