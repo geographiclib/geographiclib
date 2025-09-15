@@ -22,7 +22,8 @@ bin_PROGRAMS = CartConvert \
 	RhumbSolve \
 	TransverseMercatorProj \
 	Geod3Solve \
-	Cart3Convert
+	Cart3Convert \
+	Conformal3Proj
 
 CartConvert_SOURCES = CartConvert.cpp \
 	../man/CartConvert.usage \
@@ -174,6 +175,15 @@ Cart3Convert_SOURCES = Cart3Convert.cpp \
 	../include/GeographicLib/DMS.hpp \
 	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
 	../include/GeographicLib/Triaxial/Cartesian3.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
+Conformal3Proj_SOURCES = Conformal3Proj.cpp \
+	../man/Conformal3Proj.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Conformal3.hpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/Utility.hpp
 

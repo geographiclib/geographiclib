@@ -17,7 +17,8 @@ USAGE = \
 	RhumbSolve.usage \
 	TransverseMercatorProj.usage \
 	Geod3Solve.usage \
-	Cart3Convert.usage
+	Cart3Convert.usage \
+	Conformal3Proj.usage
 
 MANPAGES = \
 	CartConvert.1 \
@@ -33,7 +34,8 @@ MANPAGES = \
 	RhumbSolve.1 \
 	TransverseMercatorProj.1 \
 	Geod3Solve.1 \
-	Cart3Convert.1
+	Cart3Convert.1 \
+	Conformal3Proj.1
 
 HTMLMAN = \
 	CartConvert.1.html \
@@ -49,7 +51,8 @@ HTMLMAN = \
 	RhumbSolve.1.html \
 	TransverseMercatorProj.1.html \
 	Geod3Solve.1.html \
-	Cart3Convert.1.html
+	Cart3Convert.1.html \
+	Conformal3Proj.1.html
 
 SYSMANPAGES = geographiclib-get-geoids.8 \
 	geographiclib-get-gravity.8 \

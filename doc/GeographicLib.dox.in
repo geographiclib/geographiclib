@@ -881,7 +881,10 @@ The utilities are
    Geod3Solve.cpp.
  - <a href="Cart3Convert.1.html">
    <b>Cart3Convert</b></a>: convert between geocentric and various
-   triaxila coordinates systems.  See \ref Cart3Convert.cpp.
+   triaxial coordinates systems.  See \ref Cart3Convert.cpp.
+ - <a href="Conformal3Proj.1.html">
+   <b>Conformal3Proj</b></a>: conformal projections for a triaxial
+   ellipsoid.  See \ref Conformal3Proj.cpp.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the

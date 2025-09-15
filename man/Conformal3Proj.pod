@@ -1,0 +1,154 @@
+=head1 NAME
+
+Conformal3Proj -- conformal projsections for a triaxial ellipsoid
+
+=head1 SYNOPSIS
+
+B<Conformal3Proj> [ B<-r> ] [ B<-S> | B<-Q> ]
+[ B<-t> I<a> I<b> I<c> | B<-e> I<b> I<e2> I<k2> I<kp2> ]
+[ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ]
+[ B<--comment-delimiter> I<commentdelim> ]
+[ B<--version> | B<-h> | B<--help> ]
+[ B<--input-file> I<infile> | B<--input-string> I<instring> ]
+[ B<--line-separator> I<linesep> ]
+[ B<--output-file> I<outfile> ]
+
+=head1 DESCRIPTION
+
+Project points using the Jacobi conformal projection.  By default, the
+coordinates of points on a triaxial ellipsoid are read from standard
+input as ellipsoidal latitude and longitude and the projected points are
+written to standard output as easting and northing.  The scale of the
+projection is appended to the output.  Specifying B<-r> causes the
+reverse projection to be performed.
+
+If B<-S> is specified, then the points on the triaxial ellipsoid are
+conformally projected onto a sphere via the Jacobi projection.  In this
+case, the meridian convergence and the scale are appended to the output.
+The radius of the conformal sphere is printed to standard error with the
+B<-Q> flag.
+
+=head1 OPTIONS
+
+=over
+
+=item B<-r>
+
+perform the reverse projection.
+
+=item B<-S>
+
+transform to the conformal sphere instead of easting and northin.
+
+=item B<-Q>
+
+print the radius on f the conformal sphere to standard error.
+
+=item B<-t> I<a> I<b> I<c>
+
+specify the ellipsoid via its major semiaxis I<a>, median semiaxis
+I<b>, and minor semixis I<c>.  By default, we have I<a> = 6378172m,
+I<b> = 6378102m, I<c> = 6356752m, an approximate triaxial model of the
+earth.  (With this model I<omg> = 0deg, corresponds to I<lon> =
+-14.93deg.
+
+=item B<-e> I<b> I<e2> I<k2> I<kp2>
+
+specify the ellipsoid via the median semiaxis, I<b> and the parameters
+I<e2> = (I<a>^2 - I<c>^2)/I<b>^2, I<k2> = (I<b>^2 - I<c>^2)/(I<a>^2 -
+I<c>^2), and I<kp2> = (I<a>^2 - I<b>^2)/(I<a>^2 - I<c>^2).  Simple
+fractions are allowed for I<e2>, I<k2>, and I<kp2>.  Internally, the
+supplied values of I<k2> and I<kp2> are normalized so that I<k2> +
+I<kp2> = 1.
+
+=item B<-d>
+
+output angles as degrees, minutes, seconds instead of decimal degrees.
+
+=item B<-:>
+
+like B<-d>, except use : as a separator instead of the d, ', and "
+delimiters.
+
+=item B<-w>
+
+toggle the longitude first flag (it starts off); if the flag is on, then
+on input and output, longitude precedes latitude (except that, on input,
+this can be overridden by a hemisphere designator, I<N>, I<S>, I<E>,
+I<W>).
+
+=item B<-p> I<prec>
+
+set the output precision to I<prec> (default 6).  I<prec> is the number
+of digits after the decimal point for geocentric and local cartesion
+coordinates and for the height (in meters).  For latitudes and
+longitudes (in degrees), the number of digits after the decimal point is
+I<prec> + 5.
+
+=item B<--comment-delimiter> I<commentdelim>
+
+set the comment delimiter to I<commentdelim> (e.g., "#" or "//").  If
+set, the input lines will be scanned for this delimiter and, if found,
+the delimiter and the rest of the line will be removed prior to
+processing and subsequently appended to the output line (separated by a
+space).
+
+=item B<--version>
+
+print version and exit.
+
+=item B<-h>
+
+print usage and exit.
+
+=item B<--help>
+
+print full documentation and exit.
+
+=item B<--input-file> I<infile>
+
+read input from the file I<infile> instead of from standard input; a file
+name of "-" stands for standard input.
+
+=item B<--input-string> I<instring>
+
+read input from the string I<instring> instead of from standard input.
+All occurrences of the line separator character (default is a semicolon)
+in I<instring> are converted to newlines before the reading begins.
+
+=item B<--line-separator> I<linesep>
+
+set the line separator character to I<linesep>.  By default this is a
+semicolon.
+
+=item B<--output-file> I<outfile>
+
+write output to the file I<outfile> instead of to standard output; a
+file name of "-" stands for standard output.
+
+=back
+
+=head1 EXAMPLES
+
+   echo 33.3 44.4 6000 | CartConvert
+   => 3816209.60 3737108.55 3485109.57
+   echo 33.3 44.4 6000 | CartConvert -l 33 44 20
+   => 37288.97 33374.29 5783.64
+   echo 30000 30000 0 | CartConvert -r
+   => 6.483 45 -6335709.73
+
+=head1 ERRORS
+
+An illegal line of input will print an error message to standard output
+beginning with C<ERROR:> and causes B<Conformal3Proj> to return an exit
+code of 1.  However, an error does not cause B<Conformal3Proj> to
+terminate; following lines will be converted.
+
+=head1 AUTHOR
+
+B<Conformal3Proj> was written by Charles Karney.
+
+=head1 HISTORY
+
+B<Conformal3Proj> was added to GeographicLib,
+L<https://geographiclib.sourceforge.io>, in version 2.6.

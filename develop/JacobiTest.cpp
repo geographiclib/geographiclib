@@ -41,7 +41,6 @@ int main() {
     real a = Constants::Triaxial_Earth_a(),
        b = Constants::Triaxial_Earth_b(),
       c = Constants::Triaxial_Earth_c();
-    a = 2e6; b = 1e6; c = 0.5e6;
     Ellipsoid3 t(a, b, c);
     Conformal3 p3(t);
     Geodesic3 g3(t);
@@ -49,10 +48,28 @@ int main() {
     cout  << fixed << setprecision(1)
           << "Ellipsoid parameters: a = " << t.a()
           << ", b = " << t.b() << ", c = " << t.c() << "\n"
-          << setprecision(6)
+          << setprecision(8)
           << "Quadrants: x = " << p3.x0()/t.b()
           << ", y = " << p3.y0()/t.b() << "\n";
-    Angle bet1{80}, omg1{20}, phi1, lam1, gam;
+    cout << "PARAMS\n"
+      << t.b() << " " << t.e2() << " "
+      << t.k2() << " " << t.kp2() << "\n"
+      << p3.s().b() << " " << p3.s().e2() << " "
+      << p3.s().k2() << " " << p3.s().kp2() << "\n"
+      << p3.s0().b() << " " << p3.s0().e2() << " "
+      << p3.s0().k2() << " " << p3.s0().kp2() << "\n";
+    if (0) {
+      if (t.kp2() == 0) {
+        real e = sqrt(t.e2()), sg = sinh(e * atanh(e));
+        cout << "SCALEO " << (t.c()/t.b()) * (hypot(sg, real(1)) + sg) << "\n";
+      } else if (t.k2() == 0) {
+        real e = sqrt(t.e2()), sg = sinh(e * atan(e));
+        cout << "SCALEP " << (t.a()/t.b()) / (hypot(sg, real(1)) + sg) << "\n";
+      } else
+        cout << "SCALEX " << sqrt(p3.s().k2() * p3.s().kp2()/(t.k2() * t.kp2()))
+          * (t.b()/p3.s().b()) << "\n";
+    }
+    Angle bet1{90-real(0)/10000}, omg1{0+real(0)/10000}, phi1, lam1, gam;
     real s12 = 0.1, m;
     p3.ForwardSphere(bet1, omg1, phi1, lam1, gam, m);
     Angle bet1q, omg1q, gamq; real mq;

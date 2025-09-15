@@ -48,8 +48,14 @@ namespace GeographicLib {
     return p;
   }
   Angle Conformal3::Piinv(const EllipticFunction& ell, real x) {
-    real y = remainder(x, 2 * ell.Pi()),
+    real y, n;
+    if (ell.kp2() == 0) {
+      // ell.Pi() == inf
+      y = x; n = 0;
+    } else {
+      y = remainder(x, 2 * ell.Pi());
       n = 2 * round((x - y) / (2 * ell.Pi()));
+    }
     // Now x = n * Pi() + y where y in [-Pi(), Pi()].  Pi() is the quarter
     // period for the elliptic integral which corresponds to pi/2 in angle
     // space.
@@ -95,14 +101,20 @@ namespace GeographicLib {
     return p;
   }
   Angle Conformal3::Finv(const EllipticFunction& ell, real x) {
-    real y = remainder(x, 2 * ell.K()),
+    real y, n;
+    if (ell.kp2() == 0) {
+      // ell.K() == inf
+      y = x; n = 0;
+    } else {
+      y = remainder(x, 2 * ell.K());
       n = 2 * round((x - y) / (2 * ell.K()));
+    }
     // Now x = n * K() + y where y in [-K(), K()].  K() is the quarter
     // period for the elliptic integral which corresponds to pi/2 in angle
     // space.
     if (y == 0)
       return Angle::cardinal( n == 0 ? y : n ); // Preserve the sign of +/-0
-    else if (fabs(y) == ell.K())
+    else if (fabs(y) == ell.K())                // inf == inf is true
       return Angle::cardinal(copysign(real(1), y) + n);
     else {
       // solve F(phi) = y for phi
@@ -154,11 +166,11 @@ namespace GeographicLib {
   }
   void Conformal3::Forward(Angle bet, Angle omg, real& x, real& y,
                            real& m) const {
-    Forward(bet, omg, x, y); m = scale(bet, omg);
+    Forward(bet, omg, x, y); m = 1/invscale(bet, omg);
   }
   void Conformal3::Reverse(real x, real y, Angle& bet, Angle& omg,
                            real& m) const {
-    Reverse(x, y, bet, omg); m = scale(bet, omg);
+    Reverse(x, y, bet, omg); m = 1/invscale(bet, omg);
   }
 
   Ellipsoid3 Conformal3::EquivSphere(real x, real y,
@@ -180,7 +192,7 @@ namespace GeographicLib {
       // Now x >= y, k2 <= 1/2
       real s =  x + y, nx = x/s, ny = y/s;
       if (nx == ny) break;      // k2 = 1/2
-      if (y == 0) { k2 = 0; break; }
+      if (ny == 0) { k2 = 0; break; }
       // Find initial guess assume K(k2) = pi/2, so K(kp2) = nx/ny * pi/2.
       // Invert using approximate k(K) given in
       // https://arxiv.org/abs/2505.17159v4
@@ -241,25 +253,80 @@ namespace GeographicLib {
       swap(k2, kp2);
       swap(ellx, elly);
     }
-    if (0)
-      cout << "CNT " << countn << " " << countb << " "
-           << x/b - ellx.K() << " " << y/b - elly.K() << " "
-           << (x * elly.K() - y * ellx.K())/b << "\n";
-
     return Ellipsoid3(b, 0, k2, kp2);
   }
+  Math::real Conformal3::sphericalscale(real ma, real mb) const {
+    real m;
+    if (ma == 0 || mb == 0) {
+      // Let bet = pi/2 - db, omg = pi - do
+      // bet' = pi/2 - c/b*db, omg' = pi/2 - a/b*do
+      // Pi(pi/2 - d, a2, k2) = Pi(a2, k2) - d/(ap2*kp)
+      // x = x0 - (a^2/b) * (a/b*do) / ((1+e2*kp2)*k*sqrt(1+e2*kp2))
+      //   = x0 - (a^2/b) * (a/b*do) / (a^2/b^2*k*a/b)
+      //   = x0 - b * do / k
+      // y = y0 - (c^2/b) * (c/b*db) / ((1-e2*k2)*kp*sqrt(1-e2*k2))
+      //   = y0 - (c^2/b) * (c/b*db) / (c^2/b^2*kp*c/b)
+      //   = y0 - b * db / kp
+      // for trixial -> plane
+      // mtp = 1/sqrt(k2*db^2 + kp2*do^2)
+      // on equivalent sphere
+      // x = x0 - b * do / k = x0 - bs * dos / ks
+      // y = y0 - b * db / kp = y0 - bs * dbs / kps
+      // implies
+      // dos = b/bs * ks/k * do
+      // dbs = b/bs * kps/kp * db
+      // for plane -> sphere
+      // mps = sqrt(k2s*dbs^2 + kp2s*dos^2)
+      //     = b/bs * sqrt(k2s*kp2s/kp2 * db^2 + kp2s*k2s/k2 * do^2)
+      //     = ks*kps/(k*kp) b/bs * sqrt(k2*db^2 + kp2*do^2)
+      // Product of scales = ks*kps/(k*kp) * b/bs
+
+      // Oblate case see Aux Lat paper Eqs (50) + (51)
+      // sig(1) = sinh(e*atanh(e)) = sg
+      // tan(chi) = tan(phi)*sqrt(1+sg^2) - sg*tan(phi)
+      //          = tan(phi) * (sqrt(1+sg^2) - sg)
+      //          = tan(phi) / (sqrt(1+sg^2) + sg)
+      // cos(chi) = cos(phi) * (sqrt(1+sg^2) + sg)
+      // Triaxial -> plane scale beta = pi/2 - db
+      // mtp = 1/db
+      // beta' = pi/2 - c/b*db = phi, chi = betas
+      // cos(phi) = c/b * db
+      // cos(chi) = c/b * (sqrt(1+sg^2) + sg) * db
+      // mps = cos(chi) = c/b * (sqrt(1+sg^2) + sg) * db
+      // Product of scales = c/b * (sqrt(1+sg^2) + sg)
+
+      // Prolate case, replace sg = sinh(-e*atan(e)); c/b -> a/b
+      // sg = sinh(e*atan(e))
+      // Product of scales = a/b / (sqrt(1+sg^2) + sg)
+      if (kp2() == 0) {
+        // oblate pole
+        real e = sqrt(e2()), sg = sinh(e * atanh(e));
+        m = (c()/b()) * (hypot(sg, real(1)) + sg);
+      } else if (k2() == 0) {
+        // prolate pole
+        real e = sqrt(e2()), sg = sinh(e * atan(e));
+        m = (a()/b()) / (hypot(sg, real(1)) + sg);
+      } else {
+        // trixial umbilical
+        m =  sqrt(_s.k2() * _s.kp2()/(k2() * kp2())) * (b()/_s.b());
+      }
+    }
+    else
+      m = mb/ma;
+    return m;
+  }
+
   void Conformal3::ForwardSphere(Angle bet, Angle omg, Angle& phi, Angle& lam,
                                  Angle& gamma, real& m) const {
     real x, y;
     Forward(bet, omg, x, y, m);
+    real ma = invscale(bet, omg);
     Angle omgs = omegashift(Finv(_exs, x/_s.b()), -1),
       bets = Finv(_eys, y/_s.b()),
       alp = Angle{};
-    m *= sqrt(_s.k2() * Math::sq(bets.c()) + _s.kp2() * Math::sq(omgs.s()));
-    if (0)
-    cout << "QQ " << real(bet) << " " << real(omg) << " "
-         << x << " " << y << " "
-         << real(bets) << " " << real(omgs) << "\n";
+    real mb = sqrt(_s.k2 () * Math::sq(bets.c()) +
+                   _s.kp2() * Math::sq(omgs.s()));
+    m = sphericalscale(ma, mb);
     Ellipsoid3::vec3 r, v;
     _s.elliptocart2(bets, omgs, alp, r, v);
     _s0.cart2toellip(r, v, phi, lam, gamma);
@@ -274,11 +341,12 @@ namespace GeographicLib {
     gamma = -alp;
     real x = _s.b() * F(_exs, omegashift(omgs, +1)),
       y = _s.b() * F(_eys, bets);
-    real ms = sqrt(_s.k2() * Math::sq(bets.c()) +
+    real mb = sqrt(_s.k2() * Math::sq(bets.c()) +
                    _s.kp2() * Math::sq(omgs.s()));
     omg = omega(x);
     bet = beta(y);
-    m = ms * scale(bet, omg);
+    real ma = invscale(bet, omg);
+    m = sphericalscale(ma, mb);
   }
   } // namespace Triaxial
 } // namespace GeographicLib

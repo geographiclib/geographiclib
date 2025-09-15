@@ -101,7 +101,8 @@ MANPAGES = \
 	../man/RhumbSolve.1.html \
 	../man/TransverseMercatorProj.1.html \
 	../man/Geod3Solve.1.html \
-	../man/Cart3Convert.1.html
+	../man/Cart3Convert.1.html \
+	../man/Conformal3Proj.1.html
 
 doc: html/index.html
 

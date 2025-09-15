@@ -72,14 +72,15 @@ namespace GeographicLib {
     //      + (b^2 + (a^2 - b^2) \sin^2\omega)
     // (a^2 - c^2) * (k'^2 * \sin^2\omega + k^2 \cos^2\beta)
     // m = 2/sqrt(a^2 - c^2) * 1/sqrt(k'^2 * \sin^2\omega + k^2 \cos^2\beta)
-    real scale(Angle bet, Angle omg) const {
+    real invscale(Angle bet, Angle omg) const {
       using std::sqrt;
       omg = omegashift(omg, +1);
-      return 1/sqrt(k2() * Math::sq(bet.c()) + kp2() * Math::sq(omg.c()));
+      return sqrt(k2() * Math::sq(bet.c()) + kp2() * Math::sq(omg.c()));
     }
     static Ellipsoid3 EquivSphere(real x, real y,
                                   EllipticFunction& ellx,
                                   EllipticFunction& elly);
+    real sphericalscale(real ma, real mb) const;
   public:
     Conformal3(const Ellipsoid3& t);
     /**
@@ -216,74 +217,10 @@ namespace GeographicLib {
       bet = real(beta); omg = real(omga); gamma = real(gammaa);
     }
     const Ellipsoid3& t() { return _t; }
+    const Ellipsoid3& s() { return _s; }
+    const Ellipsoid3& s0() { return _s0; }
   };
 
   } // namespace Triaxial
 } // namespace GeographicLib
 #endif  // GEOGRAPHICLIB_CONFORMAL3_HPP
-
-#if 0
-function [k2,kp2,b] = ksolve(lx, ly)
-% find b, k2, kp2 s.t.
-% b*K(kp2) = lx
-% b*K(k2)  = ly
-% K(kp2)/K(k2) = lx/ly
-% lx * K(k2) - ly * K(kp2) = 0
-%  diff(lx*K(k) - ly*K(kp), k2);
-%  ((lx*(E(k)-K(k)*kp2)) + ly*(E(kp)-k2*K(kp))) / (2*k2*kp2)
-
-  swap = lx < ly;
-  if swap, [lx, ly] = deal(ly, lx); end
-  % Now lx >= ly, k2 <= 1/2
-  s = lx + ly;
-  nx = lx/s; ny = ly/s;
-  % Get good estimate for lx/ly large and k2 small, the K(k2) = pi/2
-  % K(kp2) = ny/ny * pi/2
-  n = (log(4)-log(pi))/(pi/2-log(4));
-  b = exp(n*pi/2)-4^n;
-  KK = nx/ny * pi/2;
-  k2 = 16/(exp(n*KK) - b)^(2/n);
-  k2 = min(1/2,k2);
-  for i=1:100
-    kp2 = 1-k2;
-    [K, E] = ellipke(k2);
-    [Kp, Ep] = ellipke(kp2);
-    f = nx*K - ny*Kp;
-    fp = ((nx*(E-kp2*K)) + ny*(Ep-k2*Kp)) / (2*k2*kp2);
-    %    [k2, kp2, f]
-    k2n = k2 - f/fp;
-    if (k2n >= 1)
-      k2 = (1 + k2)/2;
-    elseif (k2n <= 0)
-      k2 = k2/2;
-    else
-      dd = k2 - k2n;
-      k2 = k2n;
-      if (abs(f) < 1e-10)
-        i;
-        break
-      end
-    end
-  end
-  kp2 = 1 - k2;
-  [K, E] = ellipke(k2);
-  [Kp, Ep] = ellipke(kp2);
-  b = ly/K;
-  if swap, [k2, kp2] = deal(kp2, k2); end
-end
-
-Need to find k2, s.t.,
-  a*K(kp) - b*K(sqrt(k)) = 0
-
-  For estimate of root use https://arxiv.org/abs/2505.17159v4
-  K(k) = 1/n*log((4/kp)^n+b);
-k(K) = sqrt(1 - 16/(exp(n*K) - b)^(2/n))
-  kp(K) = sqrt(16/(exp(n*K) - b)^(2/n))
-        = 4/(exp(n*K) - b)^(1/n))
-  where
-  n=(log(4)-log(pi))/(pi/2-log(4))
-  b=exp(n*pi/2)-4^n
-  gradef(K(k),(E(k)-(1-k^2)*K(k))/(k*(1-k^2)));
-  diff(a*K(kp) - b*K(k), k2);
-  (-a*(E(kp)-k2*K(kp))-(b*(E(k)-K(k)*kp2)))/(2*k2*kp2)
-#endif

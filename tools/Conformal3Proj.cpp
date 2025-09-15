@@ -1,18 +1,16 @@
 /**
- * \file Cart3Convert.cpp
+ * \file Conformal3Proj.cpp
  * \brief Command line utility for computing geodesics on a triaxial ellipsoid
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
- * See the <a href="Cart3Convert.1.html">man page</a> for usage information.
+ * See the <a href="Conformal3Proj.1.html">man page</a> for usage information.
  **********************************************************************/
 
-// Counterpart of CartConvert
-
 // Usual flags
-//   -r (x, y, z to ellipsoidal to geographic)
+//   -r reverse
 //   -e (supplement with -t)
 //   -w longfirst
 //   -p prec
@@ -25,17 +23,8 @@
 //   + other I/O related flags
 
 // New flags
-//   -E ellipsoidal coords (default)
-//   -G geodetic
-//   -P parametric
-//   -C geocentric
-//   -3 include height (only for -E and -G)
-//   -D include direction (only for -E without -3)
-
-// Can't specify -3 and -D together
-// Height for -G has its usual definition
-// Height for -E is the increase in the minor semiaxis for the confocal
-// ellipsoid (H = u - c).
+//   -S project to sphere
+//   -Q report sphere radius on stderr
 
 #include <iostream>
 #include <iomanip>
@@ -45,9 +34,9 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/Angle.hpp>
-#include <GeographicLib/Triaxial/Cartesian3.hpp>
+#include <GeographicLib/Triaxial/Conformal3.hpp>
 
-#include "Cart3Convert.usage"
+#include "Conformal3Proj.usage"
 
 int main(int argc, const char* const argv[]) {
   try {
@@ -56,46 +45,25 @@ int main(int argc, const char* const argv[]) {
     typedef Math::real real;
     typedef Angle ang;
     Utility::set_digits();
-    typedef Ellipsoid3::vec3 vec3;
-    enum { GEODETIC, PARAMETRIC, GEOCENTRIC, ELLIPSOIDAL, RANDOM };
-    int mode = ELLIPSOIDAL;
-    bool threed = false, direction = false, reverse = false, dms = false,
-      longfirst = false;
+    bool sphere = false, reverse = false, dms = false,
+      longfirst = false, report = false;
     real
       a = Constants::Triaxial_Earth_a(),
       b = Constants::Triaxial_Earth_b(),
       c = Constants::Triaxial_Earth_c(),
       e2 = -1, k2 = 0, kp2 = 0;
-    int prec = 3, nrand = 0;
+    int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
-      if (arg == "-E")
-        mode = ELLIPSOIDAL;
-      else if (arg == "-G")
-        mode = GEODETIC;
-      else if (arg == "-P")
-        mode = PARAMETRIC;
-      else if (arg == "-C")
-        mode = GEOCENTRIC;
-      else if (arg == "-R") {
-        if (++m == argc) return usage(1, true);
-        try {
-          nrand = Utility::val<int>(std::string(argv[m]));
-        }
-        catch (const std::exception&) {
-          std::cerr << "Number of randoms " << argv[m] << " is not a number\n";
-          return 1;
-        }
-        mode = RANDOM;
-      } else if (arg == "-3")
-        threed = true;
-      else if (arg == "-D")
-        direction = true;
-      else if (arg == "-r")
+      if (arg == "-r")
         reverse = true;
+      else if (arg == "-S")
+        sphere = true;
+      else if (arg == "-Q")
+        report = true;
       else if (arg == "-t") {
         if (m + 3 >= argc) return usage(1, true);
         try {
@@ -169,23 +137,7 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
 
-    Cartesian3 tc(e2 >= 0 ? Ellipsoid3(b, e2, k2, kp2) : Ellipsoid3(a, b, c));
-
-    if (direction && !(mode == ELLIPSOIDAL || mode == RANDOM)) {
-      std::cerr
-        << "Can only specify -D with random or ellipsoidal conversions\n";
-      return 1;
-    }
-    if (threed && !(mode == ELLIPSOIDAL || mode == GEODETIC)) {
-      std::cerr
-        << "Can only specify -3 with ellipsoidal or geodetic conversions\n";
-      return 1;
-    }
-    if (direction && threed) {
-      std::cerr
-        << "Cannot specify both -3 and -D\n";
-      return 1;
-    }
+    Conformal3 tc(e2 >= 0 ? Ellipsoid3(b, e2, k2, kp2) : Ellipsoid3(a, b, c));
 
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
@@ -229,35 +181,13 @@ int main(int argc, const char* const argv[]) {
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
     using std::round, std::log10, std::ceil, std::signbit;
     int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
-      angprec = prec + 5, vecprec = prec + 7;
-    if (mode == RANDOM) {
-      unsigned s1 = std::random_device()(), s2 = std::random_device()();
-      std::seed_seq seq{s1, s2};
-      std::mt19937 g(seq);
-      for (int i = 0; i < nrand; ++i) {
-        vec3 r, v;
-        if (direction)
-          tc.cart2rand(g, r, v);
-        else
-          tc.cart2rand(g, r);
-        *output << Utility::str(r[0], disprec) << " "
-                << Utility::str(r[1], disprec) << " "
-                << Utility::str(r[2], disprec);
-        if (direction)
-          *output << " "
-                  << Utility::str(v[0], vecprec) << " "
-                  << Utility::str(v[1], vecprec) << " "
-                  << Utility::str(v[2], vecprec);
-        *output << "\n";
-      }
-      return 0;
-    }
-    std::string s, eol, sbet, somg, salp, sh, sx, sy, sz, svx, svy, svz, strc;
+      angprec = prec + 5, scalprec = prec + 7;
+    if (report)
+      std::cerr << "sphere-radius "
+                << Utility::str(tc.SphereRadius(), disprec) << "\n";
+    std::string s, eol, stra, strb, strc;
     std::istringstream str;
     int retval = 0;
-    vec3 r = {0,0,0}, v = {0,0,0};
-    ang bet, omg, alp;
-    real h = 0;
     while (std::getline(*input, s)) {
       try {
         eol = "\n";
@@ -270,102 +200,42 @@ int main(int argc, const char* const argv[]) {
         }
         // READ
         str.clear(); str.str(s);
-        if (reverse) {
-          if (!(str >> sx >> sy >> sz))
-            throw GeographicErr("Incomplete input: " + s);
-          r[0] = Utility::val<real>(sx);
-          r[1] = Utility::val<real>(sy);
-          r[2] = Utility::val<real>(sz);
-          if (direction) {
-            if (!(str >> svx >> svy >> svz))
-              throw GeographicErr("Incomplete input: " + s);
-            v[0] = Utility::val<real>(svx);
-            v[1] = Utility::val<real>(svy);
-            v[2] = Utility::val<real>(svz);
-          }
-        } else {
-          if (!(str >> sbet >> somg))
-            throw GeographicErr("Incomplete input: " + s);
-          ang::DecodeLatLon(sbet, somg, bet, omg, longfirst);
-          if (mode != ELLIPSOIDAL && (bet.n() != 0 || signbit(bet.c())))
-            throw GeographicErr("Latitude outside range [-90,90]: " + s);
-          if (threed) {
-            if (!(str >> sh))
-              throw GeographicErr("Incomplete input: " + s);
-            h = Utility::val<real>(sh);
-          } else if (direction) {
-            if (!(str >> salp))
-              throw GeographicErr("Incomplete input: " + s);
-            alp = ang::DecodeAzimuth(salp);
-          }
-        }
+        if (!(str >> stra >> strb))
+          throw GeographicErr("Incomplete input: " + s);
         if (str >> strc)
           throw GeographicErr("Extraneous input: " + strc);
-        // PROCESS
-        switch (mode) {
-        case ELLIPSOIDAL:
-          if (reverse) {
-            if (threed)
-              tc.carttoellip(r, bet, omg, h);
-            else if (direction)
-              tc.cart2toellip(r, v, bet, omg, alp);
-            else
-              tc.cart2toellip(r, bet, omg);
-          } else {
-            if (threed)
-              tc.elliptocart(bet, omg, h, r);
-            else if (direction)
-              tc.elliptocart2(bet, omg, alp, r, v);
-            else
-              tc.elliptocart2(bet, omg, r);
-          }
-          break;
-        case GEODETIC:
-          if (reverse) {
-            if (threed)
-              tc.carttogeod(r, bet, omg, h);
-            else
-              tc.cart2togeod(r, bet, omg);
-          } else {
-            if (threed)
-              tc.geodtocart(bet, omg, h, r);
-            else
-              tc.geodtocart2(bet, omg, r);
-          }
-          break;
-        case PARAMETRIC:
-          if (reverse)
-            tc.cart2toparam(r, bet, omg);
-          else
-            tc.paramtocart2(bet, omg, r);
-          break;
-        case GEOCENTRIC:
-        default:
-          if (reverse)
-            tc.cart2togeocen(r, bet, omg);
-          else
-            tc.geocentocart2(bet, omg, r);
-          break;
-        }
-        // WRITE
+        ang gam{}; real k = 1;
         if (reverse) {
+          ang bet, omg;
+          if (sphere) {
+            real lat, lon;
+            DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
+            ang phi{lat}, lam{lon};
+            tc.ReverseSphere(phi, lam, bet, omg, gam, k);
+          } else {
+            real x = Utility::val<real>(stra), y = Utility::val<real>(strb);
+            tc.Reverse(x, y, bet, omg, k);
+          }
           *output << ang::LatLonString(bet, omg,
                                        angprec, dms, dmssep, longfirst);
-          if (threed)
-            *output << " " << Utility::str(h, disprec);
-          else if (direction)
-            *output << " " << ang::AzimuthString(alp, angprec, dms, dmssep);
         } else {
-          *output << Utility::str(r[0], disprec) << " "
-                  << Utility::str(r[1], disprec) << " "
-                  << Utility::str(r[2], disprec);
-          if (direction)
-            *output << " "
-                    << Utility::str(v[0], vecprec) << " "
-                    << Utility::str(v[1], vecprec) << " "
-                    << Utility::str(v[2], vecprec);
+          ang bet, omg;
+          ang::DecodeLatLon(stra, strb, bet, omg, longfirst);
+          if (sphere) {
+            ang phi, lam;
+            tc.ForwardSphere(bet, omg, phi, lam, gam, k);
+            *output << ang::LatLonString(phi, lam,
+                                         angprec, dms, dmssep, longfirst);
+          } else {
+            real x, y;
+            tc.Forward(bet, omg, x, y, k);
+            *output << Utility::str(x, disprec) << " "
+                    << Utility::str(y, disprec);
+          }
         }
-        *output << eol;
+        if (sphere)
+          *output << " " << ang::AzimuthString(gam, angprec, dms, dmssep);
+        *output << " " << Utility::str(k, scalprec) << eol;
       }
       catch (const std::exception& e) {
         // Write error message cout so output lines match input lines
