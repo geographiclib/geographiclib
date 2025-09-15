@@ -3,7 +3,6 @@
 #include <iostream>
 #include <iomanip>
 #include <exception>
-#include <GeographicLib/Utility.hpp>
 #include <GeographicLib/Triaxial/Conformal3.hpp>
 
 using namespace std;
@@ -16,7 +15,7 @@ int main() {
           << "Ellipsoid parameters: a = " << proj.t().a()
           << ", b = " << proj.t().b() << ", c = " << proj.t().c() << "\n"
           << setprecision(3)
-          << "Quadrants: x = " << proj.x() << ", y = " << proj.y() << "\n";
+          << "Quadrants: x = " << proj.x0() << ", y = " << proj.y0() << "\n";
     cout << "Coordinates angle (deg) x (m) y (m):\n";
     cout << setprecision(2);
     for (int i = -180; i <= 180; i += 15) {

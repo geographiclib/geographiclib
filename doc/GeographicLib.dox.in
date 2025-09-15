@@ -4842,8 +4842,8 @@ makes with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
 incomplete elliptic integral of the third kind,
 https://dlmf.nist.gov/19.2.E7.  This allows the projection to be
 numerically computed using EllipticFunction::Pi(real phi) const.  The
-origin of the projection is \f$\beta = 0\f$, \f$\omega = \frac12\pi\f$.
-As a result the projection simply reduces to the Mercator projection in
+origin of the projection is \f$\beta = 0\f$, \f$\omega = \frac12\pi\f$;
+as a result, the projection simply reduces to the Mercator projection in
 both the oblate and prolate limits (see \ref jacobi-limiting).
 
 Nyrtsov, et al.,
@@ -4858,7 +4858,7 @@ also expressed the projection in terms of elliptic integrals.
 However, their expressions don't allow the limits of ellipsoids of
 revolution to be readily recovered.  The relations
 https://dlmf.nist.gov/19.7.E5 can be used to put their results in the
-form given here.
+simpler form given here.
 
 \section jacobi-properties Properties of the projection
 
@@ -4913,10 +4913,9 @@ y_0 &= 4.2465810 \times b.\\
 \f]
 
 The projection may be inverted (to give \f$\omega\f$ in terms of \f$x\f$
-and \f$\beta\f$ in terms of \f$y\f$) by using Newton's method to find
-the root of, for example, \f$x(\omega) - x_0 = 0\f$.  The derivative of
-the elliptic integral is, of course, just given by its defining
-relation.
+and \f$\beta\f$ in terms of \f$y\f$) by using Newton's method to invert
+\f$x(\omega)\f$ and \f$y(\beta)\f$.  The derivative of the elliptic
+integral is, of course, just given by its defining relation.
 
 If rhumb lines are defined as curves with a constant bearing relative
 to the ellipsoid coordinates, then these are straight lines in the
@@ -4949,7 +4948,9 @@ ellipsoid,
 x(\omega) &= b\omega,\\
 y(\beta) &= b\bigl(\sinh^{-1}\tan\beta'
 - e \tanh^{-1}(e\sin\beta')\bigr),\\
-m(\beta, \omega) &= \frac1{\cos\beta}.
+m(\beta, \omega) &= \frac1{\cos\beta}, \\
+x_0 &= \tfrac12\pi b, \\
+y_0 &\rightarrow \infty.
 \end{align}
 \f]
 
@@ -4971,10 +4972,11 @@ and \f$\omega\f$ switched,
 \f[
 \begin{align}
 x(\omega) &= b\bigl(\sinh^{-1}\tan\omega'
-+ e
-  \tan^{-1}(e\sin\omega')\bigr),\\
++ e \tan^{-1}(e\sin\omega')\bigr),\\
 y(\beta) &= b\beta,\\
-m(\beta, \omega) &= \frac1{\cos\omega}.
+m(\beta, \omega) &= \frac1{\cos\omega} \\
+x_0 &\rightarrow \infty, \\
+y_0 &= \tfrac12\pi b.
 \end{align}
 \f]
 
@@ -4992,7 +4994,9 @@ Using https://dlmf.nist.gov/19.6.E13 the projection can be expressed as
 \begin{align}
 x(\omega) &= bF(\omega - \pi/2, k'), \\
 y(\beta) &= bF(\beta, k), \\
-m(\beta, \omega) &= \frac1{\sqrt{k'^2\cos^2\omega + k^2\cos^2\beta}},
+m(\beta, \omega) &= \frac1{\sqrt{k'^2\cos^2\omega + k^2\cos^2\beta}}, \\
+x_0 &= bK(k'), \\
+y_0 &= bK(k),
 \end{align}
 \f]
 where \f$F(\phi,k)\f$ and \f$K(k)\f$ are incomplete and complete
@@ -5008,7 +5012,7 @@ F(\phi, 0) &= \phi, \\
 F(\phi, 1) &= \mathop{\mathrm{gd}}\nolimits^{-1}\phi = \sinh^{-1}\tan\phi.
 \end{align}
 \f]
-The spherical limit gives the projection found by &Eacute;. Guyou in
+This spherical limit gives the projection found by &Eacute;. Guyou in
  - <a href="https://books.google.com/books?id=saBDAQAAIAAJ&pg=PA308">
    Sur un nouveau syst&egrave;me de projection de la sph&egrave;re</a>,
    Comptes Rendus 102(6), 308--310 (1886).
@@ -5047,8 +5051,9 @@ Find the value of \f$k_s\f$ such that this ratio equals
 K(k_s') : K(k_s).
 \f]
 Map the rectangle onto the equivalent octant of the sphere using Guyou's
-projection with parameter \f$k = k_s\f$.  This reduces to the
-standard construction in the limit of an ellipsoid of revolution.
+projection with parameter \f$k = k_s\f$.  This reduces to the standard
+construction in terms of the conformal latitude in the limit of an
+ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 

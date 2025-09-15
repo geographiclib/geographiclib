@@ -45,8 +45,10 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Conformal3 {
   private:
     typedef Math::real real;
-    Ellipsoid3 _t;
-    EllipticFunction _ex, _ey;
+    Ellipsoid3 _t, _s, _s0;
+    EllipticFunction _ex, _ey, _exs, _eys;
+    real _x, _y;
+
     real a() const { return _t.a(); }
     real b() const { return _t.b(); }
     real c() const { return _t.c(); }
@@ -55,6 +57,8 @@ namespace GeographicLib {
     real kp2() const { return _t.kp2(); }
     static real Pi(const EllipticFunction& ell, Angle phi);
     static Angle Piinv(const EllipticFunction& ell, real x);
+    static real F(const EllipticFunction& ell, Angle phi);
+    static Angle Finv(const EllipticFunction& ell, real x);
     static Angle omegashift(Angle omg, int dir) {
       return omg - Angle::cardinal(dir);
     }
@@ -73,6 +77,9 @@ namespace GeographicLib {
       omg = omegashift(omg, +1);
       return 1/sqrt(k2() * Math::sq(bet.c()) + kp2() * Math::sq(omg.c()));
     }
+    static Ellipsoid3 EquivSphere(real x, real y,
+                                  EllipticFunction& ellx,
+                                  EllipticFunction& elly);
   public:
     Conformal3(const Ellipsoid3& t);
     /**
@@ -100,7 +107,7 @@ namespace GeographicLib {
     /**
      * @return the quadrant length in the \e x direction (in meters).
      **********************************************************************/
-    Math::real x() const;
+    Math::real x0() const { return _x; }
     /**
      * The \e x projection.
      *
@@ -137,7 +144,7 @@ namespace GeographicLib {
     /**
      * @return the quadrant length in the \e y direction (in meters).
      **********************************************************************/
-    Math::real y() const;
+    Math::real y0() const { return _y; }
     /**
      * The \e y projection.
      *
@@ -191,10 +198,92 @@ namespace GeographicLib {
       Reverse(x, y, beta, omga, m);
       bet = real(beta); omg = real(omga);
     }
+    real SphereRadius() const { return _s.b(); };
+    void ForwardSphere(Angle bet, Angle omg, Angle& phi, Angle& lam,
+                       Angle& gamma, real& m) const;
+    void ForwardSphere(real bet, real omg, real& phi, real& lam,
+                       real& gamma, real& m) const {
+      Angle phia, lama, gammaa;
+      ForwardSphere(Angle(bet), Angle(omg), phia, lama, gammaa, m);
+      phi = real(phia); lam = real(lama); gamma = real(gammaa);
+    }
+    void ReverseSphere(Angle phi, Angle lam, Angle& bet, Angle& omg,
+                       Angle& gamma, real& m) const;
+    void ReverseSphere(real phi, real lam, real& bet, real& omg,
+                       real& gamma, real& m) const {
+      Angle beta, omga, gammaa;
+      ReverseSphere(Angle(phi), Angle(lam), beta, omga, gammaa, m);
+      bet = real(beta); omg = real(omga); gamma = real(gammaa);
+    }
     const Ellipsoid3& t() { return _t; }
   };
 
   } // namespace Triaxial
 } // namespace GeographicLib
-
 #endif  // GEOGRAPHICLIB_CONFORMAL3_HPP
+
+#if 0
+function [k2,kp2,b] = ksolve(lx, ly)
+% find b, k2, kp2 s.t.
+% b*K(kp2) = lx
+% b*K(k2)  = ly
+% K(kp2)/K(k2) = lx/ly
+% lx * K(k2) - ly * K(kp2) = 0
+%  diff(lx*K(k) - ly*K(kp), k2);
+%  ((lx*(E(k)-K(k)*kp2)) + ly*(E(kp)-k2*K(kp))) / (2*k2*kp2)
+
+  swap = lx < ly;
+  if swap, [lx, ly] = deal(ly, lx); end
+  % Now lx >= ly, k2 <= 1/2
+  s = lx + ly;
+  nx = lx/s; ny = ly/s;
+  % Get good estimate for lx/ly large and k2 small, the K(k2) = pi/2
+  % K(kp2) = ny/ny * pi/2
+  n = (log(4)-log(pi))/(pi/2-log(4));
+  b = exp(n*pi/2)-4^n;
+  KK = nx/ny * pi/2;
+  k2 = 16/(exp(n*KK) - b)^(2/n);
+  k2 = min(1/2,k2);
+  for i=1:100
+    kp2 = 1-k2;
+    [K, E] = ellipke(k2);
+    [Kp, Ep] = ellipke(kp2);
+    f = nx*K - ny*Kp;
+    fp = ((nx*(E-kp2*K)) + ny*(Ep-k2*Kp)) / (2*k2*kp2);
+    %    [k2, kp2, f]
+    k2n = k2 - f/fp;
+    if (k2n >= 1)
+      k2 = (1 + k2)/2;
+    elseif (k2n <= 0)
+      k2 = k2/2;
+    else
+      dd = k2 - k2n;
+      k2 = k2n;
+      if (abs(f) < 1e-10)
+        i;
+        break
+      end
+    end
+  end
+  kp2 = 1 - k2;
+  [K, E] = ellipke(k2);
+  [Kp, Ep] = ellipke(kp2);
+  b = ly/K;
+  if swap, [k2, kp2] = deal(kp2, k2); end
+end
+
+Need to find k2, s.t.,
+  a*K(kp) - b*K(sqrt(k)) = 0
+
+  For estimate of root use https://arxiv.org/abs/2505.17159v4
+  K(k) = 1/n*log((4/kp)^n+b);
+k(K) = sqrt(1 - 16/(exp(n*K) - b)^(2/n))
+  kp(K) = sqrt(16/(exp(n*K) - b)^(2/n))
+        = 4/(exp(n*K) - b)^(1/n))
+  where
+  n=(log(4)-log(pi))/(pi/2-log(4))
+  b=exp(n*pi/2)-4^n
+  gradef(K(k),(E(k)-(1-k^2)*K(k))/(k*(1-k^2)));
+  diff(a*K(kp) - b*K(k), k2);
+  (-a*(E(kp)-k2*K(kp))-(b*(E(k)-K(k)*kp2)))/(2*k2*kp2)
+#endif

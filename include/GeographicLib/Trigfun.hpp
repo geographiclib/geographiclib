@@ -144,6 +144,8 @@ namespace GeographicLib {
       GFUNROOT,
       INVERSEP,
       PIINV,
+      FINV,
+      KINV,
       OTHER,
     };
 
