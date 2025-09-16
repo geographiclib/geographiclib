@@ -23,8 +23,7 @@
 //   + other I/O related flags
 
 // New flags
-//   -S project to sphere
-//   -Q report sphere radius on stderr
+//   -ex -tx
 
 #include <iostream>
 #include <iomanip>
@@ -45,13 +44,14 @@ int main(int argc, const char* const argv[]) {
     typedef Math::real real;
     typedef Angle ang;
     Utility::set_digits();
-    bool sphere = false, reverse = false, dms = false,
-      longfirst = false, report = false;
+    bool reverse = false, dms = false,
+      longfirst = false, altell = false;
     real
       a = Constants::Triaxial_Earth_a(),
       b = Constants::Triaxial_Earth_b(),
       c = Constants::Triaxial_Earth_c(),
-      e2 = -1, k2 = 0, kp2 = 0;
+      e2 = -1, k2 = 0, kp2 = 0,
+      ax = -1, bx = 0, cx = 0, e2x = -1,  k2x = 0, kp2x = 0;
     int prec = 3;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
@@ -60,10 +60,6 @@ int main(int argc, const char* const argv[]) {
       std::string arg(argv[m]);
       if (arg == "-r")
         reverse = true;
-      else if (arg == "-S")
-        sphere = true;
-      else if (arg == "-Q")
-        report = true;
       else if (arg == "-t") {
         if (m + 3 >= argc) return usage(1, true);
         try {
@@ -92,6 +88,35 @@ int main(int argc, const char* const argv[]) {
           return 1;
         }
         a = -1;
+        m += 4;
+      } else if (arg == "-tx") {
+        if (m + 3 >= argc) return usage(1, true);
+        try {
+          ax = Utility::val<real>(std::string(argv[m + 1]));
+          bx = Utility::val<real>(std::string(argv[m + 2]));
+          cx = Utility::val<real>(std::string(argv[m + 3]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -t: " << e.what() << "\n";
+          return 1;
+        }
+        e2x = -1;
+        m += 3;
+      } else if (arg == "-ex") {
+        // Cayley ellipsoid sqrt([2,1,1/2]) is
+        // -e 1 3/2 1/3 2/3
+        if (m + 4 >= argc) return usage(1, true);
+        try {
+          bx = Utility::val<real>(std::string(argv[m + 1]));
+          e2x = Utility::fract<real>(std::string(argv[m + 2]));
+          k2x = Utility::fract<real>(std::string(argv[m + 3]));
+          kp2x = Utility::fract<real>(std::string(argv[m + 4]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+          return 1;
+        }
+        ax = -1;
         m += 4;
       } else if (arg == "-d") {
         dms = true;
@@ -138,6 +163,9 @@ int main(int argc, const char* const argv[]) {
     }
 
     Conformal3 tc(e2 >= 0 ? Ellipsoid3(b, e2, k2, kp2) : Ellipsoid3(a, b, c));
+    altell = e2x >= 0 || ax > 0;
+    Conformal3 tcx(e2x >= 0 ? Ellipsoid3(bx, e2x, k2x, kp2x) :
+                   ax > 0 ? Ellipsoid3(ax, bx, cx) : Ellipsoid3());
 
     if (!ifile.empty() && !istring.empty()) {
       std::cerr << "Cannot specify --input-string and --input-file together\n";
@@ -182,9 +210,10 @@ int main(int argc, const char* const argv[]) {
     using std::round, std::log10, std::ceil, std::signbit;
     int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
       angprec = prec + 5, scalprec = prec + 7;
-    if (report)
-      std::cerr << "sphere-radius "
-                << Utility::str(tc.SphereRadius(), disprec) << "\n";
+    if (altell) {
+      scalprec += int(round(log10(b/bx)));
+      scalprec = std::max(0, scalprec);
+  }
     std::string s, eol, stra, strb, strc;
     std::istringstream str;
     int retval = 0;
@@ -207,11 +236,10 @@ int main(int argc, const char* const argv[]) {
         ang gam{}; real k = 1;
         if (reverse) {
           ang bet, omg;
-          if (sphere) {
-            real lat, lon;
-            DMS::DecodeLatLon(stra, strb, lat, lon, longfirst);
-            ang phi{lat}, lam{lon};
-            tc.ReverseSphere(phi, lam, bet, omg, gam, k);
+          if (altell) {
+            ang betx, omgx;
+            ang::DecodeLatLon(stra, strb, betx, omgx, longfirst);
+            tc.ReverseOther(tcx, betx, omgx, bet, omg, gam, k);
           } else {
             real x = Utility::val<real>(stra), y = Utility::val<real>(strb);
             tc.Reverse(x, y, bet, omg, k);
@@ -221,10 +249,10 @@ int main(int argc, const char* const argv[]) {
         } else {
           ang bet, omg;
           ang::DecodeLatLon(stra, strb, bet, omg, longfirst);
-          if (sphere) {
-            ang phi, lam;
-            tc.ForwardSphere(bet, omg, phi, lam, gam, k);
-            *output << ang::LatLonString(phi, lam,
+          if (altell) {
+            ang betx, omgx;
+            tc.ForwardOther(tcx, bet, omg, betx, omgx, gam, k);
+            *output << ang::LatLonString(betx, omgx,
                                          angprec, dms, dmssep, longfirst);
           } else {
             real x, y;
@@ -233,7 +261,7 @@ int main(int argc, const char* const argv[]) {
                     << Utility::str(y, disprec);
           }
         }
-        if (sphere)
+        if (altell)
           *output << " " << ang::AzimuthString(gam, angprec, dms, dmssep);
         *output << " " << Utility::str(k, scalprec) << eol;
       }

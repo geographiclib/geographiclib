@@ -205,7 +205,10 @@ namespace GeographicLib {
      * .
      * which gives: a = 6378171.36, b = 6378101.61, c = 6356751.84.  Here take
      * the semiaxes to be whole numbers of meters, with (a + b)/2 = WGS84_a(),
-     * a - b = 70 m, c = round(WGS84_a() * (1 - WGS84_f())).
+     * a - b = 70 m, c = round(WGS84_a() * (1 - WGS84_f())).  This gives
+     * - a = 6378172
+     * - b = 6378102
+     * - c = 6356752
      **********************************************************************/
     ///@{
     /**

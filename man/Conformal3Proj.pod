@@ -4,8 +4,9 @@ Conformal3Proj -- conformal projsections for a triaxial ellipsoid
 
 =head1 SYNOPSIS
 
-B<Conformal3Proj> [ B<-r> ] [ B<-S> | B<-Q> ]
+B<Conformal3Proj> [ B<-r> ]
 [ B<-t> I<a> I<b> I<c> | B<-e> I<b> I<e2> I<k2> I<kp2> ]
+[ B<-tx> I<ax> I<bx> I<cx> | B<-ex> I<bx> I<e2x> I<k2x> I<kp2x> ]
 [ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
 [ B<--version> | B<-h> | B<--help> ]
@@ -22,11 +23,10 @@ written to standard output as easting and northing.  The scale of the
 projection is appended to the output.  Specifying B<-r> causes the
 reverse projection to be performed.
 
-If B<-S> is specified, then the points on the triaxial ellipsoid are
-conformally projected onto a sphere via the Jacobi projection.  In this
-case, the meridian convergence and the scale are appended to the output.
-The radius of the conformal sphere is printed to standard error with the
-B<-Q> flag.
+If either B<-tx> or B<-ex> is given, then this describes an target
+ellipsoid onto which the points are conformally mapped via the Jacobi
+projection.  In this case, the meridian convergence and the scale are
+appended to the output.
 
 =head1 OPTIONS
 
@@ -60,6 +60,15 @@ I<c>^2), and I<kp2> = (I<a>^2 - I<b>^2)/(I<a>^2 - I<c>^2).  Simple
 fractions are allowed for I<e2>, I<k2>, and I<kp2>.  Internally, the
 supplied values of I<k2> and I<kp2> are normalized so that I<k2> +
 I<kp2> = 1.
+
+=item B<-tx> I<ax> I<bx> I<cx>
+
+specify the target ellipsoid via its semiaxes.
+
+=item B<-ex> I<bx> I<e2x> I<k2x> I<kp2x>
+
+specify the target ellipsoid via its median semiaxes and shape
+parameters.
 
 =item B<-d>
 

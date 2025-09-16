@@ -78,7 +78,9 @@ I<vx>, I<vy>, I<vz> where [I<vx>, I<vy>, I<vz>] is a unit vector lying
 in the surface of the ellipsoid.
 
 If the B<-R> flag is given, do not read any input; instead output random
-cartesian points lying on the surface of the ellipsoid.
+cartesian points lying on the surface of the ellipsoid.  If the B<-r>
+flag is specified the cartesian points are converted into one of the
+triaxial coordinate systems.
 
 =head1 OPTIONS
 
@@ -118,7 +120,9 @@ with B<-E>.  With the B<-r> option, it is assumed that the vector
 output I<nrand> random points on the surface of the ellipsoid as
 cartesian coordinates.  This B<-D> add also a random cartesian direction
 tangent to the surface of the ellipsoid.  In this mode, nothing is read
-from standard input and the B<-r> option is ignored.
+from standard input.  With the B<-r> option is ignored the random points
+are converted into one of the triaxial coordinate systems (and the
+direction is converted to a heading if B<-D> and B<-E> are given).
 
 =item B<-t> I<a> I<b> I<c>
 

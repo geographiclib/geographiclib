@@ -4857,9 +4857,11 @@ Nyrtsov, et al.,
    <i>Cartography from Pole to Pole</i>
    (Springer, 2014), pp. 235--246.
  .
-also expressed the projection in terms of elliptic integrals.
-However, their expressions don't allow the limits of ellipsoids of
-revolution to be readily recovered.  The relations
+also expressed the projection in terms of elliptic integrals.  However
+the equations are more complex involving elliptic integrals of the first
+and third kind.  More seriously, the origin of their elliptic integrals
+is taken to be the coordinates of the umilical point.  As one of the
+projection equations diverges in the biaxial limit.  The relations
 https://dlmf.nist.gov/19.7.E5 can be used to put their results in the
 simpler form given here.
 
@@ -5044,19 +5046,16 @@ plane onto the sphere.
 
 A similar construction is possible for a triaxial ellipsoid.  Map each
 octant of the ellipsoid onto a rectangle using the Jacobi projection.
-The aspect ratio of this rectangle is
+The size of this rectangle is \f$ x_0 \times y_0 \f$.  Find the values
+of \f$b_s\f$, \$fe^2 = 0\f$, \f$k_s^2\f$ and $k_s'^2 = 1 - k_s^2\f$ for
+a sphere such that
 \f[
-a^2\,\Pi(-e^2k'^2, \cos\nu) :
-c^2\,\Pi( e^2k^2 , \sin\nu).
+x_0 = b_s K(k_s'), \quad y_0 = b_s K(k_s).
 \f]
-Find the value of \f$k_s\f$ such that this ratio equals
-\f[
-K(k_s') : K(k_s).
-\f]
-Map the rectangle onto the equivalent octant of the sphere using Guyou's
-projection with parameter \f$k = k_s\f$.  This reduces to the standard
-construction in terms of the conformal latitude in the limit of an
-ellipsoid of revolution.
+Map the rectangle for the triaxial ellipsoid onto the equivalent octant
+of the sphere using Guyou's projection with parameter \f$k = k_s\f$.
+This reduces to the standard construction in terms of the conformal
+latitude in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 

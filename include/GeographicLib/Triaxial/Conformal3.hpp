@@ -82,6 +82,7 @@ namespace GeographicLib {
                                   EllipticFunction& elly);
     real sphericalscale(real ma, real mb) const;
   public:
+    typedef Ellipsoid3::vec3 vec3;
     Conformal3(const Ellipsoid3& t);
     /**
      * Constructor for a trixial ellipsoid with semi-axes.
@@ -216,6 +217,16 @@ namespace GeographicLib {
       ReverseSphere(Angle(phi), Angle(lam), beta, omga, gammaa, m);
       bet = real(beta); omg = real(omga); gamma = real(gammaa);
     }
+    void ForwardSphere(Angle bet, Angle omg, vec3& r, vec3& v, real& m) const;
+    void ReverseSphere(vec3 r, vec3 v, Angle& bet, Angle& omg,
+                       Angle& gamma, real& m) const;
+    void ForwardOther(const Conformal3& alt, Angle bet, Angle omg,
+                      Angle& betalt, Angle& omgalt, Angle& gamma, real& m)
+      const;
+    void ReverseOther(const Conformal3& alt, Angle betalt, Angle omgalt,
+                      Angle& bet, Angle& omg, Angle& gamma, real& m)
+      const;
+
     const Ellipsoid3& t() { return _t; }
     const Ellipsoid3& s() { return _s; }
     const Ellipsoid3& s0() { return _s0; }
