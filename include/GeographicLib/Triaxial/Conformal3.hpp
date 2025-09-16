@@ -45,7 +45,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Conformal3 {
   private:
     typedef Math::real real;
-    Ellipsoid3 _t, _s, _s0;
+    Ellipsoid3 _t, _s;
     EllipticFunction _ex, _ey, _exs, _eys;
     real _x, _y;
 
@@ -200,36 +200,41 @@ namespace GeographicLib {
       Reverse(x, y, beta, omga, m);
       bet = real(beta); omg = real(omga);
     }
-    real SphereRadius() const { return _s.b(); };
-    void ForwardSphere(Angle bet, Angle omg, Angle& phi, Angle& lam,
-                       Angle& gamma, real& m) const;
-    void ForwardSphere(real bet, real omg, real& phi, real& lam,
-                       real& gamma, real& m) const {
-      Angle phia, lama, gammaa;
-      ForwardSphere(Angle(bet), Angle(omg), phia, lama, gammaa, m);
-      phi = real(phia); lam = real(lama); gamma = real(gammaa);
-    }
-    void ReverseSphere(Angle phi, Angle lam, Angle& bet, Angle& omg,
-                       Angle& gamma, real& m) const;
-    void ReverseSphere(real phi, real lam, real& bet, real& omg,
-                       real& gamma, real& m) const {
-      Angle beta, omga, gammaa;
-      ReverseSphere(Angle(phi), Angle(lam), beta, omga, gammaa, m);
-      bet = real(beta); omg = real(omga); gamma = real(gammaa);
-    }
     void ForwardSphere(Angle bet, Angle omg, vec3& r, vec3& v, real& m) const;
+    void ForwardSphere(real bet, real omg, vec3& r, vec3& v, real& m) const {
+      ForwardSphere(Angle(bet), Angle(omg), r, v, m);
+    }
     void ReverseSphere(vec3 r, vec3 v, Angle& bet, Angle& omg,
-                       Angle& gamma, real& m) const;
+                       Angle& gam, real& m) const;
+    void ReverseSphere(vec3 r, vec3 v, real& bet, real& omg,
+                       real& gam, real& m) const {
+      Angle beta, omga, gama;
+      ReverseSphere(r, v, beta, omga, gama, m);
+      bet = real(beta); omg = real(omga); gam = real(gama);
+    }
     void ForwardOther(const Conformal3& alt, Angle bet, Angle omg,
-                      Angle& betalt, Angle& omgalt, Angle& gamma, real& m)
+                      Angle& betalt, Angle& omgalt, Angle& gam, real& m)
       const;
+    void ForwardOther(const Conformal3& alt, real bet, real omg,
+                      real& betalt, real& omgalt, real& gam, real& m)
+      const {
+      Angle betalta, omgalta, gama;
+      ForwardOther(alt, Angle(bet), Angle(omg), betalta, omgalta, gama, m);
+      betalt = real(betalta); omgalt = real(omgalta); gam = real(gama);
+    }
     void ReverseOther(const Conformal3& alt, Angle betalt, Angle omgalt,
-                      Angle& bet, Angle& omg, Angle& gamma, real& m)
+                      Angle& bet, Angle& omg, Angle& gam, real& m)
       const;
+    void ReverseOther(const Conformal3& alt, real betalt, real omgalt,
+                      real& bet, real& omg, real& gam, real& m)
+      const {
+      Angle beta, omga, gama;
+      ReverseOther(alt, Angle(betalt), Angle(omgalt), beta, omga, gama, m);
+      bet = real(beta); omg = real(omga); gam = real(gama);
+    }
 
     const Ellipsoid3& t() { return _t; }
     const Ellipsoid3& s() { return _s; }
-    const Ellipsoid3& s0() { return _s0; }
   };
 
   } // namespace Triaxial

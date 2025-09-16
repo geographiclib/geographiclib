@@ -44,36 +44,20 @@ int main() {
     Ellipsoid3 t(a, b, c);
     Conformal3 p3(t);
     Geodesic3 g3(t);
-    Geodesic g2(p3.SphereRadius(), 0);
+    Ellipsoid3 talt(a*1.1,b,c*0.9);
+    Conformal3 p3alt(talt);
+    Geodesic3 g3alt(talt);
     cout  << fixed << setprecision(1)
           << "Ellipsoid parameters: a = " << t.a()
           << ", b = " << t.b() << ", c = " << t.c() << "\n"
           << setprecision(8)
           << "Quadrants: x = " << p3.x0()/t.b()
           << ", y = " << p3.y0()/t.b() << "\n";
-    cout << "PARAMS\n"
-      << t.b() << " " << t.e2() << " "
-      << t.k2() << " " << t.kp2() << "\n"
-      << p3.s().b() << " " << p3.s().e2() << " "
-      << p3.s().k2() << " " << p3.s().kp2() << "\n"
-      << p3.s0().b() << " " << p3.s0().e2() << " "
-      << p3.s0().k2() << " " << p3.s0().kp2() << "\n";
-    if (0) {
-      if (t.kp2() == 0) {
-        real e = sqrt(t.e2()), sg = sinh(e * atanh(e));
-        cout << "SCALEO " << (t.c()/t.b()) * (hypot(sg, real(1)) + sg) << "\n";
-      } else if (t.k2() == 0) {
-        real e = sqrt(t.e2()), sg = sinh(e * atan(e));
-        cout << "SCALEP " << (t.a()/t.b()) / (hypot(sg, real(1)) + sg) << "\n";
-      } else
-        cout << "SCALEX " << sqrt(p3.s().k2() * p3.s().kp2()/(t.k2() * t.kp2()))
-          * (t.b()/p3.s().b()) << "\n";
-    }
-    Angle bet1{90-real(0)/10000}, omg1{0+real(0)/10000}, phi1, lam1, gam;
+    Angle bet1{90-20}, omg1{0+30}, phi1, lam1, gam;
     real s12 = 0.1, m;
-    p3.ForwardSphere(bet1, omg1, phi1, lam1, gam, m);
+    p3.ForwardOther(p3alt, bet1, omg1, phi1, lam1, gam, m);
     Angle bet1q, omg1q, gamq; real mq;
-    p3.ReverseSphere(phi1, lam1, bet1q, omg1q, gamq, mq);
+    p3.ReverseOther(p3alt, phi1, lam1, bet1q, omg1q, gamq, mq);
     cout << "CONVSCALE " << real(gam) << " " << m << "\n";
     cout << "CONVSCALEQ " << real(gamq) << " " << mq << " "
          << real(bet1q) << " " << real(omg1q) << "\n";
@@ -86,12 +70,9 @@ int main() {
       real s12x;
       g3.Inverse(bet1, omg1, bet2, omg2, s12x, alp1x, alp2x);
       Angle phi2, lam2, gam2; real m2;
-      p3.ForwardSphere(bet2, omg2, phi2, lam2, gam2, m2);
-      if (0) cout << "CC " << real(bet2) << " " << real(omg2) << " "
-                  << real(phi2) << " " << real(lam2) << "\n";
-      real alp1s, alp2s, s12s;
-      g2.Inverse(real(phi1), real(lam1), real(phi2), real(lam2),
-                 s12s, alp1s, alp2s);
+      p3.ForwardOther(p3alt, bet2, omg2, phi2, lam2, gam2, m2);
+      Angle alp1s, alp2s; real s12s;
+      g3alt.Inverse(phi1, lam1, phi2, lam2, s12s, alp1s, alp2s);
       Angle gamx{alp1s}; gamx -= alp1;
       cout << i << " " << real(gamx.base()) << " " << (s12s/m)/s12 << "\n";
     }

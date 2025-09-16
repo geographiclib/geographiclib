@@ -27,7 +27,6 @@ namespace GeographicLib {
     , _y( Math::sq(c()) / b() * _ey.Pi() )
   {
     _s = EquivSphere(_x, _y, _exs, _eys);
-    _s0 = Ellipsoid3(_s.b(), 0, 1, 0);
   }
   // Proving the equivalence of this and the Nyrtsov formulations is
   // straightforward but laborious.  Working from this formulation:
@@ -338,46 +337,13 @@ namespace GeographicLib {
     m = sphericalscale(ma, mb);
     _s.elliptocart2(bets, omgs, alp, r, v);
   }
-  void Conformal3::ForwardSphere(Angle bet, Angle omg, Angle& phi, Angle& lam,
-                                 Angle& gamma, real& m) const {
-    real x, y;
-    Forward(bet, omg, x, y, m);
-    real ma = invscale(bet, omg);
-    Angle omgs = omegashift(Finv(_exs, x/_s.b()), -1),
-      bets = Finv(_eys, y/_s.b()),
-      alp {};
-    real mb = sqrt(_s.k2 () * Math::sq(bets.c()) +
-                   _s.kp2() * Math::sq(omgs.s()));
-    m = sphericalscale(ma, mb);
-    vec3 r, v;
-    _s.elliptocart2(bets, omgs, alp, r, v);
-    _s0.cart2toellip(r, v, phi, lam, gamma);
-  }
 
   void Conformal3::ReverseSphere(vec3 r, vec3 v, Angle& bet, Angle& omg,
-                                 Angle& gamma, real& m) const {
+                                 Angle& gam, real& m) const {
     Angle bets, omgs, alp;
     _s.cart2toellip(r, v, bets, omgs, alp);
     Ellipsoid3::AngNorm(bets, omgs, alp, _s.k2() == 0);
-    gamma = -alp;
-    real x = _s.b() * F(_exs, omegashift(omgs, +1)),
-      y = _s.b() * F(_eys, bets);
-    real mb = sqrt(_s.k2() * Math::sq(bets.c()) +
-                   _s.kp2() * Math::sq(omgs.s()));
-    omg = omega(x);
-    bet = beta(y);
-    real ma = invscale(bet, omg);
-    m = sphericalscale(ma, mb);
-  }
-  void Conformal3::ReverseSphere(Angle phi, Angle lam, Angle& bet, Angle& omg,
-                                 Angle& gamma, real& m) const {
-    vec3 r, v;
-    Angle alp{};                // alp = 0, due North
-    _s0.elliptocart2(phi, lam, alp, r, v);
-    Angle bets, omgs;
-    _s.cart2toellip(r, v, bets, omgs, alp);
-    Ellipsoid3::AngNorm(bets, omgs, alp, _s.k2() == 0);
-    gamma = -alp;
+    gam = -alp;
     real x = _s.b() * F(_exs, omegashift(omgs, +1)),
       y = _s.b() * F(_eys, bets);
     real mb = sqrt(_s.k2() * Math::sq(bets.c()) +
@@ -390,32 +356,22 @@ namespace GeographicLib {
 
   void Conformal3::ForwardOther(const Conformal3& alt, Angle bet, Angle omg,
                                 Angle& betalt, Angle& omgalt,
-                                Angle& gamma, real& m) const {
-    if (0) {
-      Angle phi, lam, gammaa, gammab;
-      real ma, mb;
-      ForwardSphere(bet, omg, phi, lam, gammaa, ma);
-      alt.ReverseSphere(phi, lam, betalt, omgalt, gammab, mb);
-      gamma = gammaa - gammab;
-      m = (ma/mb) * (alt.SphereRadius()/SphereRadius());
-    } else {
-      vec3 r, v;
-      real ma, mb;
-      ForwardSphere(bet, omg, r, v, ma);
-      real f = alt.SphereRadius()/SphereRadius();
-      r[0] *= f; r[1] *= f; r[2] *= f;
-      alt.ReverseSphere(r, v, betalt, omgalt, gamma, mb);
-      m = (ma/mb) * (alt.SphereRadius()/SphereRadius());
-    }
+                                Angle& gam, real& m) const {
+    vec3 r, v;
+    real ma, mb;
+    ForwardSphere(bet, omg, r, v, ma);
+    real f = alt._s.b()/_s.b();
+    r[0] *= f; r[1] *= f; r[2] *= f;
+    alt.ReverseSphere(r, v, betalt, omgalt, gam, mb);
+    m = (ma/mb) * f;
   }
 
   void Conformal3::ReverseOther(const Conformal3& alt,
                                 Angle betalt, Angle omgalt,
                                 Angle& bet, Angle& omg,
-                                Angle& gamma, real& m) const {
-    alt.ForwardOther(*this, betalt, omgalt, bet, omg, gamma, m);
-    m = 1/m;
-    gamma = -gamma;
+                                Angle& gam, real& m) const {
+    alt.ForwardOther(*this, betalt, omgalt, bet, omg, gam, m);
+    m = 1/m; gam = -gam;
   }
 
   } // namespace Triaxial
