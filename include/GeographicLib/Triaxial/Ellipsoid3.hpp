@@ -30,7 +30,7 @@ namespace GeographicLib {
       // No checking for h = 0.  Result will be NaNs
       r[0] /= h; r[1] /= h; r[2] /= h;
     }
-    static void Flip(Angle& bet, Angle& omg, Angle& alp) {
+    static void Flip(ang& bet, ang& omg, ang& alp) {
       bet.reflect(false, true);
       omg.reflect(true);
       alp.reflect(true, true);
@@ -38,7 +38,7 @@ namespace GeographicLib {
     real _a, _b, _c;            // semi-axes
     real _e2, _k2, _kp2, _k, _kp;
     bool _oblate, _prolate, _biaxial;
-    void cart2toellipint(vec3 r, Angle& bet, Angle& omg, vec3 axes) const;
+    void cart2toellipint(vec3 r, ang& bet, ang& omg, vec3 axes) const;
   public:
     Ellipsoid3();
     Ellipsoid3(real a, real b, real c);

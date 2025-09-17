@@ -23,23 +23,25 @@ namespace GeographicLib {
 
   using namespace std;
 
-  Math::real Angle::rnd(real x) {
+  template<typename T>
+  T AngleT<T>::rnd(T x) {
     // This value of z more-or-less matches the value z = 1/16 in
     // Math::AngRound (where the argument is in degrees).
-    static const real z = 1/real(1024);
-    GEOGRAPHICLIB_VOLATILE real y = fabs(x);
-    GEOGRAPHICLIB_VOLATILE real w = z - y;
+    static const T z = 1/T(1024);
+    GEOGRAPHICLIB_VOLATILE T y = fabs(x);
+    GEOGRAPHICLIB_VOLATILE T w = z - y;
     // The compiler mustn't "simplify" z - (z - y) to y
     y = w > 0 ? z - w : y;
     return copysign(y, x);
   }
 
-  void Angle::DecodeLatLon(const string& stra, const string& strb,
-                           Angle& lat, Angle& lon, bool longfirst) {
-    real a, b;
+  template<typename T>
+  void AngleT<T>::DecodeLatLon(const string& stra, const string& strb,
+                           AngleT<T>& lat, AngleT<T>& lon, bool longfirst) {
+    T a, b;
     DMS::flag ia, ib;
-    a = DMS::Decode(stra, ia);
-    b = DMS::Decode(strb, ib);
+    a = T(DMS::Decode(stra, ia));
+    b = T(DMS::Decode(strb, ib));
     if (ia == DMS::NONE && ib == DMS::NONE) {
       // Default to lat, long unless longfirst
       ia = longfirst ? DMS::LONGITUDE : DMS::LATITUDE;
@@ -52,33 +54,61 @@ namespace GeographicLib {
       throw GeographicErr("Both " + stra + " and "
                           + strb + " interpreted as "
                           + (ia == DMS::LATITUDE ? "latitudes" : "longitudes"));
-    lat = Angle(ia == DMS::LATITUDE ? a : b);
-    lon = Angle(ia == DMS::LATITUDE ? b : a);
+    lat = AngleT<T>(ia == DMS::LATITUDE ? a : b);
+    lon = AngleT<T>(ia == DMS::LATITUDE ? b : a);
   }
 
-  Angle Angle::DecodeAzimuth(const string& azistr) {
+  template<typename T>
+  AngleT<T> AngleT<T>::DecodeAzimuth(const string& azistr) {
     DMS::flag ind;
-    real azi = DMS::Decode(azistr, ind);
+    T azi = T(DMS::Decode(azistr, ind));
     if (ind == DMS::LATITUDE)
       throw GeographicErr("Azimuth " + azistr
                           + " has a latitude hemisphere, N/S");
-    return Angle(azi);
+    return AngleT<T>(azi);
   }
 
-  string Angle::LatLonString(Angle lat, Angle lon,
+  template<typename T>
+  string AngleT<T>::LatLonString(AngleT<T> lat, AngleT<T> lon,
                              int prec, bool dms, char dmssep, bool longfirst) {
     string
-      latstr = dms ? DMS::Encode(real(lat), prec, DMS::LATITUDE, dmssep) :
-      DMS::Encode(real(lat), prec, DMS::NUMBER),
-      lonstr = dms ? DMS::Encode(real(lon), prec, DMS::LONGITUDE, dmssep) :
-      DMS::Encode(real(lon), prec, DMS::NUMBER);
+      latstr = dms ? DMS::Encode(Math::real(T(lat)),
+                                 prec, DMS::LATITUDE, dmssep) :
+      DMS::Encode(Math::real(T(lat)), prec, DMS::NUMBER),
+      lonstr = dms ? DMS::Encode(Math::real(T(lon)),
+                                 prec, DMS::LONGITUDE, dmssep) :
+      DMS::Encode(Math::real(T(lon)), prec, DMS::NUMBER);
     return
       (longfirst ? lonstr : latstr) + " " + (longfirst ? latstr : lonstr);
   }
 
-  std::string Angle::AzimuthString(Angle azi, int prec, bool dms, char dmssep) {
-    return dms ? DMS::Encode(real(azi), prec, DMS::AZIMUTH, dmssep) :
-      DMS::Encode(real(azi), prec, DMS::NUMBER);
+  template<typename T>
+  string AngleT<T>::AzimuthString(AngleT<T> azi, int prec, bool dms, char dmssep) {
+    return dms ? DMS::Encode(Math::real(T(azi)), prec, DMS::AZIMUTH, dmssep) :
+      DMS::Encode(Math::real(T(azi)), prec, DMS::NUMBER);
   }
+
+#define GEOGRAPHICLIB_ANGLE_INSTANTIATE(T)                           \
+  template T         GEOGRAPHICLIB_EXPORT AngleT<T>::rnd(T);         \
+  template void      GEOGRAPHICLIB_EXPORT AngleT<T>::DecodeLatLon    \
+       (const string& , const string&,AngleT<T>&, AngleT<T>&, bool); \
+  template AngleT<T> GEOGRAPHICLIB_EXPORT AngleT<T>::DecodeAzimuth   \
+       (const string&);                                              \
+  template string    GEOGRAPHICLIB_EXPORT AngleT<T>::LatLonString    \
+       (AngleT<T>, AngleT<T>, int, bool, char, bool);                \
+  template string    GEOGRAPHICLIB_EXPORT AngleT<T>::AzimuthString   \
+       (AngleT<T>, int, bool, char);
+
+  // Instantiate with the standard floating type
+  GEOGRAPHICLIB_ANGLE_INSTANTIATE(float)
+  GEOGRAPHICLIB_ANGLE_INSTANTIATE(double)
+#if GEOGRAPHICLIB_HAVE_LONG_DOUBLE
+  // Instantiate if long double is distinct from double
+  GEOGRAPHICLIB_ANGLE_INSTANTIATE(long double)
+#endif
+#if GEOGRAPHICLIB_PRECISION > 3
+  // Instantiate with the high precision type
+  GEOGRAPHICLIB_ANGLE_INSTANTIATE(Math::real)
+#endif
 
 } // namespace GeographicLib

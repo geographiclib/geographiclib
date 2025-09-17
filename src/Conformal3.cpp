@@ -42,7 +42,7 @@ namespace GeographicLib {
     : Conformal3(Ellipsoid3(b, e2, k2, kp2))
   {}
 
-  Math::real Conformal3::Pi(const EllipticFunction& ell, Angle phi) {
+  Math::real Conformal3::Pi(const EllipticFunction& ell, ang phi) {
     if (ell.kp2() == 0 && (signbit(phi.c()) || phi.n() != 0))
       return Math::NaN();
     real p = ell.Pi(phi.s(), phi.c(), ell.Delta(phi.s(), phi.c()));
@@ -62,9 +62,9 @@ namespace GeographicLib {
     // period for the elliptic integral which corresponds to pi/2 in angle
     // space.
     if (y == 0)
-      return Angle::cardinal( n == 0 ? y : n ); // Preserve the sign of +/-0
+      return ang::cardinal( n == 0 ? y : n ); // Preserve the sign of +/-0
     else if (fabs(y) == ell.Pi())
-      return Angle::cardinal(copysign(real(1), y) + n);
+      return ang::cardinal(copysign(real(1), y) + n);
     else {
       // solve Pi(phi) = y for phi
       // Pi'(phi) = 1/(sqrt(1 - ell.k2() * Math::sq(sin(phi)))
@@ -94,10 +94,10 @@ namespace GeographicLib {
                              0, Trigfun::PIINV);
       (void) countn; (void) countb;
       // cout << "CNT " << countn << " " << countb << "\n";
-      return Angle::radians(copysign(z, y)) + Angle::cardinal(n);
+      return ang::radians(copysign(z, y)) + ang::cardinal(n);
     }
   }
-  Math::real Conformal3::F(const EllipticFunction& ell, Angle phi) {
+  Math::real Conformal3::F(const EllipticFunction& ell, ang phi) {
     if (ell.kp2() == 0 && (signbit(phi.c()) || phi.n() != 0))
       return Math::NaN();
     real p = ell.F(phi.s(), phi.c(), ell.Delta(phi.s(), phi.c()));
@@ -117,9 +117,9 @@ namespace GeographicLib {
     // period for the elliptic integral which corresponds to pi/2 in angle
     // space.
     if (y == 0)
-      return Angle::cardinal( n == 0 ? y : n ); // Preserve the sign of +/-0
+      return ang::cardinal( n == 0 ? y : n ); // Preserve the sign of +/-0
     else if (fabs(y) == ell.K())                // inf == inf is true
-      return Angle::cardinal(copysign(real(1), y) + n);
+      return ang::cardinal(copysign(real(1), y) + n);
     else {
       // solve F(phi) = y for phi
       // F'(phi) = 1/sqrt(1 - ell.k2() * Math::sq(sin(phi)))
@@ -142,7 +142,7 @@ namespace GeographicLib {
                              0, Trigfun::FINV);
       (void) countn; (void) countb;
       // cout << "CNT " << countn << " " << countb << "\n";
-      return Angle::radians(copysign(z, y)) + Angle::cardinal(n);
+      return ang::radians(copysign(z, y)) + ang::cardinal(n);
     }
   }
 
@@ -153,7 +153,7 @@ namespace GeographicLib {
     return Math::sq(a()) / b() * Pi(_ex, omg.modang(b() / a()));
   }
   Angle Conformal3::omega(real x) const {
-    Angle omg = Piinv(_ex, (x * b()) / Math::sq(a())).modang(a() / b());
+    ang omg = Piinv(_ex, (x * b()) / Math::sq(a())).modang(a() / b());
     return omegashift(omg, -1);
   }
 
@@ -329,7 +329,7 @@ namespace GeographicLib {
     real x, y;
     Forward(bet, omg, x, y, m);
     real ma = invscale(bet, omg);
-    Angle omgs = omegashift(Finv(_exs, x/_s.b()), -1),
+    ang omgs = omegashift(Finv(_exs, x/_s.b()), -1),
       bets = Finv(_eys, y/_s.b()),
       alp{};                    // alp = 0, due North
     real mb = sqrt(_s.k2 () * Math::sq(bets.c()) +
@@ -340,7 +340,7 @@ namespace GeographicLib {
 
   void Conformal3::ReverseSphere(vec3 r, vec3 v, Angle& bet, Angle& omg,
                                  Angle& gam, real& m) const {
-    Angle bets, omgs, alp;
+    ang bets, omgs, alp;
     _s.cart2toellip(r, v, bets, omgs, alp);
     Ellipsoid3::AngNorm(bets, omgs, alp, _s.k2() == 0);
     gam = -alp;

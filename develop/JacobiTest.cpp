@@ -44,7 +44,7 @@ int main() {
     Ellipsoid3 t(a, b, c);
     Conformal3 p3(t);
     Geodesic3 g3(t);
-    Ellipsoid3 talt(a*1.1,b,c*0.9);
+    Ellipsoid3 talt(11*a/10,b,9*c/10);
     Conformal3 p3alt(talt);
     Geodesic3 g3alt(talt);
     cout  << fixed << setprecision(1)
@@ -54,7 +54,7 @@ int main() {
           << "Quadrants: x = " << p3.x0()/t.b()
           << ", y = " << p3.y0()/t.b() << "\n";
     Angle bet1{90-20}, omg1{0+30}, phi1, lam1, gam;
-    real s12 = 0.1, m;
+    real s12 = 1/real(10), m;
     p3.ForwardOther(p3alt, bet1, omg1, phi1, lam1, gam, m);
     Angle bet1q, omg1q, gamq; real mq;
     p3.ReverseOther(p3alt, phi1, lam1, bet1q, omg1q, gamq, mq);
@@ -77,7 +77,7 @@ int main() {
       cout << i << " " << real(gamx.base()) << " " << (s12s/m)/s12 << "\n";
     }
     return 0;
-  }  
+  }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";
     return 1;

@@ -72,6 +72,7 @@ set (EXAMPLES0
   example-UTMUPS.cpp
   example-Utility.cpp
   example-Conformal3.cpp
+  example-Angle.cpp
   )
 set (EXAMPLES1
   GeoidToGTX.cpp make-egmcof.cpp)

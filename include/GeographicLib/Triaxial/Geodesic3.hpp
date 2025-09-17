@@ -34,10 +34,10 @@ namespace GeographicLib {
 
     // Run geodesic from bet1, omg1, alp1, find its first intersection with bet
     // = bet2a and return omg2a - omg2b
-    real HybridA(Angle bet1, Angle omg1, Angle alp1,
-                 Angle bet2a, Angle omg2b, bool betp) const;
-    static Angle findroot(const std::function<real(const Angle&)>& f,
-                          Angle xa,  Angle xb,
+    real HybridA(ang bet1, ang omg1, ang alp1,
+                 ang bet2a, ang omg2b, bool betp) const;
+    static ang findroot(const std::function<real(const ang&)>& f,
+                          ang xa,  ang xb,
                           real fa, real fb,
                           int* countn = nullptr, int* countb = nullptr);
     bool _umbalt,               // how coordinates wrap with umbilical lines
@@ -83,11 +83,11 @@ namespace GeographicLib {
       // Default values for gamma = +/-0
       gamblk() {}
       gamblk(const Geodesic3& tg, bool neg = false);
-      gamblk(const Geodesic3& tg, Angle bet, Angle omg, Angle alp);
+      gamblk(const Geodesic3& tg, ang bet, ang omg, ang alp);
       //       gamblk(real gammax, real nux, real nupx)
       //        : gamma(gammax), nu(nux), nup(nupx) {}
     };
-    gamblk gamma(Angle bet, Angle omg, Angle alp)
+    gamblk gamma(ang bet, ang omg, ang alp)
       const;
     // real a() const { return t().a(); } // not needed
     real b() const { return t().b(); }

@@ -161,7 +161,7 @@ namespace GeographicLib {
   }
 
   template<int n>
-  void Cartesian3::cart2togeneric(vec3 r, Angle& phi, Angle& lam) const {
+  void Cartesian3::cart2togeneric(vec3 r, ang& phi, ang& lam) const {
     static_assert(n >= 0 && n <= 2, "Bad coordinate conversion");
     if constexpr (n == 2) {
       r[0] /= _axes2[0];
@@ -177,7 +177,7 @@ namespace GeographicLib {
   }
 
   template<int n>
-  void Cartesian3::generictocart2(Angle phi, Angle lam, vec3& r) const {
+  void Cartesian3::generictocart2(ang phi, ang lam, vec3& r) const {
     static_assert(n >= 0 && n <= 2, "Bad coordinate conversion");
     r = {phi.c() * lam.c(),
       phi.c() * lam.s(),

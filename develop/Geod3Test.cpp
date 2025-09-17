@@ -34,7 +34,7 @@ int usage(int retval, bool /*brief*/) {
 
 string nicestr(Math::real x, int prec, bool azi = false) {
   typedef Math::real real;
-  static const real eps = pow(real(10), -20);
+  static const real eps = real(pow(real(10), -20));
   Math::real y = round(x);
   if (fabs(x - y) <= eps)
     x = azi && y == -180 ? 180 : y + real(0);

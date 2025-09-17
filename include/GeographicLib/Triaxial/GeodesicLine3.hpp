@@ -95,7 +95,7 @@ namespace GeographicLib {
       // Return atan(m * tan(x)) keeping result continuous.  Only defined for
       // !signbit(m).
       static real modang(real x, real m) {
-        return Angle::radians(x).modang(m).radians();
+        return ang::radians(x).modang(m).radians();
       }
       real root(real z, real u0, int* countn, int* countb,
                 real tol = std::numeric_limits<real>::epsilon()) const;
@@ -139,7 +139,7 @@ namespace GeographicLib {
            const Geodesic3& tg);
       real operator()(real u) const;
       // THIS ISN"T USED
-      // Angle operator()(const Angle& ang) const;
+      // ang operator()(const ang& ang) const;
       real deriv(real u) const;
       real df(real u) const { return _fun(u); }
       real dfp(real u) const { return _fun.deriv(u); }
@@ -191,7 +191,7 @@ namespace GeographicLib {
       public:
         //        bool transpolar;
         // alp1 is angle measured from line of const rotating coording
-        Angle tht1, phi1, alp1, // rotating, librating starting point
+        ang tht1, phi1, alp1, // rotating, librating starting point
           psi1,                 // phi1 transformed to rotating angle psi
         // Angles about which quantities oscillate
         // circumpolar:
@@ -204,15 +204,15 @@ namespace GeographicLib {
         //   umbalt: alp0 = cardinal(even)
           tht0, phi0, alp0;
         // Angle versions of u0, v0, delta, defer for now
-        // Angle u0a, v0a, deltaa;
+        // ang u0a, v0a, deltaa;
         real u0, v0, delta;     // starting point geodesic
         int Nx, Ex;             // Northgoing / eastgoing relative to tht
         fics() {}
         fics(const fline& f,
-             Angle bet1, Angle omg1, Angle alp1);
+             ang bet1, ang omg1, ang alp1);
         void setquadrant(const fline& f, unsigned q);
         void pos1(bool transpolar,
-                  Angle& bet10, Angle& omg10, Angle& alp10) const;
+                  ang& bet10, ang& omg10, ang& alp10) const;
       };
       class disttx {
         // bundle of data to pass along for distance
@@ -247,16 +247,16 @@ namespace GeographicLib {
       // Run fline to its first intersection with
       // (for betp) bet2 and return omg2
       // (for !betp) omg2 and return bet2
-      real Hybrid0(const fics& fic, Angle bet2, Angle omg2,
+      real Hybrid0(const fics& fic, ang bet2, ang omg2,
                    bool betp = true) const;
       // Run fline to its first intersection with bet and return resulting
       // bet2a, omg2a, alp2a (without angle normalization) and distance
       // calculation object
-      disttx Hybrid(const fics& fic, Angle betomg2,
-                    Angle& bet2a, Angle& omg2a, Angle& alp2a,
+      disttx Hybrid(const fics& fic, ang betomg2,
+                    ang& bet2a, ang& omg2a, ang& alp2a,
                     bool betp = true) const;
-      disttx ArcPos0(const fics& fic, Angle tau12,
-                     Angle& bet2a, Angle& omg2a, Angle& alp2a,
+      disttx ArcPos0(const fics& fic, ang tau12,
+                     ang& bet2a, ang& omg2a, ang& alp2a,
                      bool betp = true) const;
       void inversedump(std::ostream& os) const;
     };
@@ -380,12 +380,12 @@ namespace GeographicLib {
       real z = mult * Geodesic3::BigValue();
       return Math::clamp(x, -z, z);
     }
-    static real lamang0(Angle x, real mult = 1) {
+    static real lamang0(ang x, real mult = 1) {
       // lam(x) when x is an ang -- no clamping
       using std::asinh, std::fabs;
       return asinh(mult * x.t());
     }
-    static real lamang(Angle x, real mult = 1) {
+    static real lamang(ang x, real mult = 1) {
       // lam(x) when x is an ang -- with clamping
       // A consistent large value for x near pi/2.
       return bigclamp(lamang0(x, mult));
@@ -403,7 +403,7 @@ namespace GeographicLib {
     }
     static ang anglam(real u, real mult = 1) {
       using std::sinh;
-      return Angle(sinh(u), mult, 0);
+      return ang(sinh(u), mult, 0);
     }
     static real mcosh(real u, real mult = 1) {
       using std::cosh, std::sinh, std::hypot;
@@ -436,7 +436,7 @@ namespace GeographicLib {
     //    [-pi/2, pi/2) if alt = false (default)
     //    (-pi/2, pi/2] if alt = true
     // equivalent to remx(x.radians(), Math::pi(), alt)
-    static std::pair<real, real> remx(Angle x, bool alt = false) {
+    static std::pair<real, real> remx(ang x, bool alt = false) {
       using std::signbit;
       real m = 0;
       if (signbit(x.c())) {

@@ -703,8 +703,8 @@ namespace GeographicLib {
     return TL(std::move(lf), std::move(fic), std::move(lg), std::move(gic));
   }
 
-  Math::real Geodesic3::HybridA(Angle bet1, Angle omg1, Angle alp1,
-                                Angle bet2a, Angle omg2b,
+  Math::real Geodesic3::HybridA(ang bet1, ang omg1, ang alp1,
+                                ang bet2a, ang omg2b,
                                 bool betp) const {
     ang b1{bet1}, o1{omg1}, a1{alp1};
     // a1 -= ang(1e-8);
@@ -723,8 +723,8 @@ namespace GeographicLib {
 
   // Solve f(alp1) = 0 where alp1 is an azimuth and f(alp1) is the difference
   // in lontitude on bet2 and the target longitude.
-  Angle Geodesic3::findroot(const function<real(const Angle&)>& f,
-                            Angle xa,  Angle xb,
+  Angle Geodesic3::findroot(const function<real(const ang&)>& f,
+                            ang xa,  ang xb,
                             real fa, real fb,
                             int* countn, int* countb) {
     // Implement root finding method of Chandrupatla (1997)
@@ -871,7 +871,7 @@ namespace GeographicLib {
   }
 
   Geodesic3::gamblk::gamblk(const Geodesic3& tg,
-                            Angle bet, Angle omg, Angle alp) {
+                            ang bet, ang omg, ang alp) {
     real a = tg.k() * bet.c() * alp.s(), b = tg.kp() * omg.s() * alp.c();
     gamma = (a - b) * (a + b);
     // This direct test case
@@ -930,7 +930,7 @@ namespace GeographicLib {
     , kxp(transpolar ? tg.k() : tg.kp())
   {}
 
-  Geodesic3::gamblk Geodesic3::gamma(Angle bet, Angle omg, Angle alp) const {
+  Geodesic3::gamblk Geodesic3::gamma(ang bet, ang omg, ang alp) const {
     return gamblk(*this, bet, omg, alp);
   }
 

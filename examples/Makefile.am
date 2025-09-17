@@ -54,6 +54,7 @@ EXAMPLE_FILES = \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
 	example-Conformal3.cpp \
+	example-Angle.cpp \
 	GeoidToGTX.cpp \
 	make-egmcof.cpp
 

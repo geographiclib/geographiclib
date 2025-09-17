@@ -45,6 +45,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Conformal3 {
   private:
     typedef Math::real real;
+    typedef Angle ang;
     Ellipsoid3 _t, _s;
     EllipticFunction _ex, _ey, _exs, _eys;
     real _x, _y;
@@ -55,12 +56,12 @@ namespace GeographicLib {
     real e2() const { return _t.e2(); }
     real k2() const { return _t.k2(); }
     real kp2() const { return _t.kp2(); }
-    static real Pi(const EllipticFunction& ell, Angle phi);
-    static Angle Piinv(const EllipticFunction& ell, real x);
-    static real F(const EllipticFunction& ell, Angle phi);
-    static Angle Finv(const EllipticFunction& ell, real x);
-    static Angle omegashift(Angle omg, int dir) {
-      return omg - Angle::cardinal(dir);
+    static real Pi(const EllipticFunction& ell, ang phi);
+    static ang Piinv(const EllipticFunction& ell, real x);
+    static real F(const EllipticFunction& ell, ang phi);
+    static ang Finv(const EllipticFunction& ell, real x);
+    static ang omegashift(ang omg, int dir) {
+      return omg - ang::cardinal(dir);
     }
     // Jacobi has m = 2/sqrt(lambda2 - lambda3)
     // Setting lambda2 = Cayley's k = -(b^2 \sin^2\beta + c^2 \cos^2\beta)
@@ -72,7 +73,7 @@ namespace GeographicLib {
     //      + (b^2 + (a^2 - b^2) \sin^2\omega)
     // (a^2 - c^2) * (k'^2 * \sin^2\omega + k^2 \cos^2\beta)
     // m = 2/sqrt(a^2 - c^2) * 1/sqrt(k'^2 * \sin^2\omega + k^2 \cos^2\beta)
-    real invscale(Angle bet, Angle omg) const {
+    real invscale(ang bet, ang omg) const {
       using std::sqrt;
       omg = omegashift(omg, +1);
       return sqrt(k2() * Math::sq(bet.c()) + kp2() * Math::sq(omg.c()));
@@ -124,7 +125,7 @@ namespace GeographicLib {
      * @return \e x (in meters).
      **********************************************************************/
     Math::real x(real omg) const {
-      return x(Angle(omg));
+      return x(ang(omg));
     }
     /**
      * The inverse \e x projection.
@@ -140,8 +141,7 @@ namespace GeographicLib {
      * @return the longitude &omega; in degrees.
      **********************************************************************/
     Math::real omegad(real x) const {
-      Angle omg = omega(x);
-      return real(omg);
+      return real(omega(x));
     }
     /**
      * @return the quadrant length in the \e y direction (in meters).
@@ -161,7 +161,7 @@ namespace GeographicLib {
      * @return the northing (in meters).
      **********************************************************************/
     Math::real y(real bet) const {
-      return y(Angle(bet));
+      return y(ang(bet));
     }
     /**
      * The inverse \e y projection.
@@ -177,38 +177,37 @@ namespace GeographicLib {
      * @return the latitude &beta; in degrees.
      **********************************************************************/
     Math::real betad(real y) const {
-      Angle bet = beta(y);
-      return real(bet);
+      return real(beta(y));
     }
     void Forward(Angle bet, Angle omg, real& x, real& y) const;
     void Forward(real bet, real omg, real& x, real& y) const {
-      Forward(Angle(bet), Angle(omg), x, y);
+      Forward(ang(bet), ang(omg), x, y);
     }
     void Forward(Angle bet, Angle omg, real& x, real& y, real& m) const;
     void Forward(real bet, real omg, real& x, real& y, real& m) const {
-      Forward(Angle(bet), Angle(omg), x, y, m);
+      Forward(ang(bet), ang(omg), x, y, m);
     }
     void Reverse(real x, real y, Angle& bet, Angle& omg) const;
     void Reverse(real x, real y, real& bet, real& omg) const {
-      Angle beta, omga;
+      ang beta, omga;
       Reverse(x, y, beta, omga);
       bet = real(beta); omg = real(omga);
     }
     void Reverse(real x, real y, Angle& bet, Angle& omg, real& m) const;
     void Reverse(real x, real y, real& bet, real& omg, real& m) const {
-      Angle beta, omga;
+      ang beta, omga;
       Reverse(x, y, beta, omga, m);
       bet = real(beta); omg = real(omga);
     }
     void ForwardSphere(Angle bet, Angle omg, vec3& r, vec3& v, real& m) const;
     void ForwardSphere(real bet, real omg, vec3& r, vec3& v, real& m) const {
-      ForwardSphere(Angle(bet), Angle(omg), r, v, m);
+      ForwardSphere(ang(bet), ang(omg), r, v, m);
     }
     void ReverseSphere(vec3 r, vec3 v, Angle& bet, Angle& omg,
                        Angle& gam, real& m) const;
     void ReverseSphere(vec3 r, vec3 v, real& bet, real& omg,
                        real& gam, real& m) const {
-      Angle beta, omga, gama;
+      ang beta, omga, gama;
       ReverseSphere(r, v, beta, omga, gama, m);
       bet = real(beta); omg = real(omga); gam = real(gama);
     }
@@ -218,8 +217,8 @@ namespace GeographicLib {
     void ForwardOther(const Conformal3& alt, real bet, real omg,
                       real& betalt, real& omgalt, real& gam, real& m)
       const {
-      Angle betalta, omgalta, gama;
-      ForwardOther(alt, Angle(bet), Angle(omg), betalta, omgalta, gama, m);
+      ang betalta, omgalta, gama;
+      ForwardOther(alt, ang(bet), ang(omg), betalta, omgalta, gama, m);
       betalt = real(betalta); omgalt = real(omgalta); gam = real(gama);
     }
     void ReverseOther(const Conformal3& alt, Angle betalt, Angle omgalt,
@@ -228,8 +227,8 @@ namespace GeographicLib {
     void ReverseOther(const Conformal3& alt, real betalt, real omgalt,
                       real& bet, real& omg, real& gam, real& m)
       const {
-      Angle beta, omga, gama;
-      ReverseOther(alt, Angle(betalt), Angle(omgalt), beta, omga, gama, m);
+      ang beta, omga, gama;
+      ReverseOther(alt, ang(betalt), ang(omgalt), beta, omga, gama, m);
       bet = real(beta); omg = real(omga); gam = real(gama);
     }
 

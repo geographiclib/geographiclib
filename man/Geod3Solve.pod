@@ -67,20 +67,19 @@ that it appears before B<-L>.
 
 =item B<-t> I<a> I<b> I<c>
 
-specify the ellipsoid via its major semiaxis I<a>, median semiaxis
-I<b>, and minor semixis I<c>.  By default, we have I<a> = 6378172m,
-I<b> = 6378102m, I<c> = 6356752m, an approximate triaxial model of the
-earth.  (With this model I<omg> = 0deg, corresponds to I<lon> =
--14.93deg.
+specify the ellipsoid via its major semiaxis I<a>, median semiaxis I<b>,
+and minor semixis I<c>.  By default, we have I<a> = 6378172 m, I<b> =
+6378102 m, I<c> = 6356752 m, an approximate triaxial model of the earth.
+(With this model I<omg> = 0deg, corresponds to I<lon> = -14.93deg.
 
 =item B<-e> I<b> I<e2> I<k2> I<kp2>
 
-specify the ellipsoid via the median semiaxis, I<b> and the parameters
-I<e2> = (I<a>^2 - I<c>^2)/I<b>^2, I<k2> = (I<b>^2 - I<c>^2)/(I<a>^2 -
-I<c>^2), and I<kp2> = (I<a>^2 - I<b>^2)/(I<a>^2 - I<c>^2).  Simple
-fractions are allowed for I<e2>, I<k2>, and I<kp2>.  Internally, the
-supplied values of I<k2> and I<kp2> are normalized so that I<k2> +
-I<kp2> = 1.
+specify the ellipsoid via the median semiaxis, I<b> and the sphape
+parameters I<e2> = (I<a>^2 - I<c>^2)/I<b>^2, I<k2> = (I<b>^2 -
+I<c>^2)/(I<a>^2 - I<c>^2), and I<kp2> = (I<a>^2 - I<b>^2)/(I<a>^2 -
+I<c>^2).  Simple fractions are allowed for I<e2>, I<k2>, and I<kp2>.
+Internally, the supplied values of I<k2> and I<kp2> are normalized so
+that I<k2> + I<kp2> = 1.
 
 =item B<-e2> I<b> I<f>
 

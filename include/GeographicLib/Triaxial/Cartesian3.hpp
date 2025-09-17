@@ -39,9 +39,9 @@ namespace GeographicLib {
     mutable std::uniform_real_distribution<random_prec> _uni;
 
     template<int n>
-    void cart2togeneric(vec3 r, Angle& phi, Angle& lam) const;
+    void cart2togeneric(vec3 r, ang& phi, ang& lam) const;
     template<int n>
-    void generictocart2(Angle phi, Angle lam, vec3& r) const;
+    void generictocart2(ang phi, ang lam, vec3& r) const;
     real cubic(vec3 r2) const;
     template<int n>
     class funp {
