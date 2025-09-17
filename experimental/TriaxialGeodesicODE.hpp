@@ -61,22 +61,20 @@ namespace experimental {
 
   class TriaxialGeodesicODE {
   public:
-    typedef Triaxial::Ellipsoid3::vec3 vec3;
+    using vec3 = Triaxial::Ellipsoid3::vec3;
   private:
-    typedef Math::real real;
-    typedef std::array<real, 6> vec6;
-    typedef std::array<real, 10> vec10;
-    typedef Angle ang;
+    using real = Math::real;
+    using vec6 = std::array<real, 6>;
+    using vec10 = std::array<real, 10>;
+    using ang = Angle;
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-    typedef
-    boost::numeric::odeint::bulirsch_stoer_dense_out<vec6, real> dstep6;
-    typedef
-    boost::numeric::odeint::bulirsch_stoer_dense_out<vec10, real> dstep10;
+    using dstep6 =
+      boost::numeric::odeint::bulirsch_stoer_dense_out<vec6, real>;
+    using dstep10 =
+      boost::numeric::odeint::bulirsch_stoer_dense_out<vec10, real>;
 #endif
-    typedef
-    boost::numeric::odeint::bulirsch_stoer<vec6, real> step6;
-    typedef
-    boost::numeric::odeint::bulirsch_stoer<vec10, real> step10;
+    using step6 = boost::numeric::odeint::bulirsch_stoer<vec6, real>;
+    using step10 = boost::numeric::odeint::bulirsch_stoer<vec10, real>;
     const Triaxial::Ellipsoid3 _t;
     const real _b, _eps;
     const vec3 _axesn, _axes2n;

@@ -37,7 +37,7 @@ namespace GeographicLib {
   GeodesicLine3
   Geodesic3::Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
                      real& s12, Angle& alp1, Angle& alp2) const {
-    typedef GeodesicLine3 TL;
+    using TL = GeodesicLine3;
     string msg;
     bet1.round();
     omg1.round();

@@ -7,7 +7,7 @@
 
 int main(int argc, const char* const argv[]) {
   try {
-    typedef GeographicLib::AuxAngle angle;
+    using angle = GeographicLib::AuxAngle;
     // Print table of parametric latitudes for f = 0.5
     double f = 0.5;
     std::cout << std::fixed << std::setprecision(4);

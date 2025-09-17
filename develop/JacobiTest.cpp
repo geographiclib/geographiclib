@@ -17,7 +17,7 @@ using namespace Triaxial;
 int main() {
   try {
     Utility::set_digits();
-    typedef Math::real real;
+    using real = Math::real;
     if (0) {
       real kp2 = Math::sq(numeric_limits<real>::epsilon());
       EllipticFunction ell(1-kp2, 0, kp2, 1);

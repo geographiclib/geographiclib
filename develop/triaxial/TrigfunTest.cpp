@@ -8,7 +8,7 @@ using namespace GeographicLib;
 using namespace std;
 
 void BasicTest() {
-  typedef Math::real real;
+  using real = Math::real;
   int n = 8;
   real pi = Math::pi();
   vector<real> f1(n+1);       // n+1 samples
@@ -78,7 +78,7 @@ void BasicTest() {
 }
 
 void EllipTest(Math::real k2, Math::real kp2) {
-  typedef Math::real real;
+  using real = Math::real;
   EllipticFunction ell(k2, 0, kp2, 1);
   auto f = [&ell] (real x) -> real {
     return 1/ell.Delta(sin(x), cos(x)); };
@@ -122,7 +122,7 @@ void EllipTest(Math::real k2, Math::real kp2) {
 int main() {
   try {
     Utility::set_digits();
-    typedef Math::real real;
+    using real = Math::real;
     if (1) {
       BasicTest();
     }

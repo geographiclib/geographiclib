@@ -41,8 +41,8 @@ int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     using namespace Triaxial;
-    typedef Math::real real;
-    typedef Angle ang;
+    using real = Math::real;
+    using ang = Angle;
     Utility::set_digits();
     bool reverse = false, dms = false,
       longfirst = false, altell = false;

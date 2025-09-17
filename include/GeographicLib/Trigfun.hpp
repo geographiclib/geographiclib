@@ -48,7 +48,7 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT Trigfun {
   private:
-    typedef Math::real real;
+    using real = Math::real;
     int _m,                     // Number of coefficients in series
       _n;                       // Number of samples in half/quarter period
     bool _odd, _sym;
@@ -222,7 +222,7 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT TrigfunExt {
   private:
-    typedef Math::real real;
+    using real = Math::real;
     std::function<real(real)> _fp;
     bool _sym;
     Trigfun _f;

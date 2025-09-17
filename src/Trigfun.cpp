@@ -99,7 +99,7 @@ namespace GeographicLib {
                                  real halfp) {
     if (!(isfinite(halfp) && halfp > 0))
       throw GeographicErr("Trigfun::initbysamples halfp not positive");
-    typedef kissfft<real> fft_t;
+    using fft_t = kissfft<real>;
     bool debug = false;
     int n = int(F.size()) - (!(odd || sym || centerp) ? 1 : 0),
       M = n * (sym ? 4 : 2);    // The size of the sample array over a period

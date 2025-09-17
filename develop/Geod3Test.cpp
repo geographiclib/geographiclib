@@ -33,7 +33,7 @@ int usage(int retval, bool /*brief*/) {
 }
 
 string nicestr(Math::real x, int prec, bool azi = false) {
-  typedef Math::real real;
+  using real = Math::real;
   static const real eps = real(pow(real(10), -20));
   Math::real y = round(x);
   if (fabs(x - y) <= eps)
@@ -61,8 +61,8 @@ void report(const Geodesic3& tg, int bet1, int omg1, int bet2, int omg2,
 #else
   int prec = 18;
 #endif
-  typedef Math::real real;
-  typedef Angle ang;
+  using real = Math::real;
+  using ang = Angle;
   ang bet1x(bet1), omg1x(omg1), bet2x(bet2), omg2x(omg2);
   real s12;
   ang alp1, alp2;
@@ -104,8 +104,8 @@ void errreport(const Geodesic3& tg,
                Math::real bet2, Math::real omg2, Math::real alp2,
                Math::real s12,
                Math::real /*m12*/, Math::real /*M12*/, Math::real /*M21*/) {
-  typedef Math::real real;
-  typedef Angle ang;
+  using real = Math::real;
+  using ang = Angle;
   bool debug = false, invp = true, invdirp = true,
     dirp = true, swapp = false;
   // invp = false;
@@ -192,8 +192,8 @@ void errODE(Geodesic3ODE& l,
             Math::real bet2, Math::real omg2, Math::real alp2,
             Math::real s12,
             Math::real m12, Math::real M12, Math::real M21) {
-  typedef Math::real real;
-  typedef Angle ang;
+  using real = Math::real;
+  using ang = Angle;
 #if GEOGRAPHICLIB_PRECISION > 3
   static const real eps = real(1e-20);
 #else
@@ -252,8 +252,8 @@ void errODE(Geodesic3ODE& l,
 #endif
 
 void angletest() {
-  typedef Math::real real;
-  typedef Angle ang;
+  using real = Math::real;
+  using ang = Angle;
   ang o1 = ang::cardinal(2);
   ang o2 = ang::cardinal(-2);
   cout << o1.s() << " " << o2.s() << " "
@@ -273,8 +273,8 @@ void angletest() {
 
 void hybridtest(const Geodesic3& tg, Math::real bet1, Math::real omg1,
                 Math::real betomg2, bool betp) {
-  typedef Math::real real;
-  typedef Angle ang;
+  using real = Math::real;
+  using ang = Angle;
   ang bet1a(bet1), omg1a(omg1), betomg2a(betomg2),
     // azimuth of umbilic azimuth
     alpu(tg.t().kp() * omg1a.s(), tg.t().k() * bet1a.c()),
@@ -304,7 +304,7 @@ void hybridtest(const Geodesic3& tg, Math::real bet1, Math::real omg1,
 
 int main(int argc, const char* const argv[]) {
   try {
-    typedef Math::real real;
+    using real = Math::real;
     Utility::set_digits();
     if (0) {
       angletest();

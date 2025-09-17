@@ -28,60 +28,8 @@
 
 // #include "GeodSolve.usage"
 
-typedef GeographicLib::Math::real real;
-typedef GeographicLib::Angle ang;
-
-void DecodeLatLon(const std::string& stra, const std::string& strb,
-                  ang& lat, ang& lon,
-                  bool longfirst) {
-  using namespace GeographicLib;
-  real a, b;
-  DMS::flag ia, ib;
-  a = DMS::Decode(stra, ia);
-  b = DMS::Decode(strb, ib);
-  if (ia == DMS::NONE && ib == DMS::NONE) {
-    // Default to lat, long unless longfirst
-    ia = longfirst ? DMS::LONGITUDE : DMS::LATITUDE;
-    ib = longfirst ? DMS::LATITUDE : DMS::LONGITUDE;
-  } else if (ia == DMS::NONE)
-    ia = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ib);
-  else if (ib == DMS::NONE)
-    ib = DMS::flag(DMS::LATITUDE + DMS::LONGITUDE - ia);
-  if (ia == ib)
-    throw GeographicErr("Both " + stra + " and "
-                        + strb + " interpreted as "
-                        + (ia == DMS::LATITUDE ? "latitudes" : "longitudes"));
-  lat = ang(ia == DMS::LATITUDE ? a : b);
-  lon = ang(ia == DMS::LATITUDE ? b : a);
-}
-
-ang DecodeAzimuth(const std::string& alpstr) {
-  using namespace GeographicLib;
-  DMS::flag ind;
-  real alp = DMS::Decode(alpstr, ind);
-  if (ind == DMS::LATITUDE)
-    throw GeographicErr("Azimuth " + alpstr
-                        + " has a latitude hemisphere, N/S");
-  return ang(alp);
-}
-
-std::string BetOmgString(ang bet, ang omg, int prec, bool dms, char dmssep,
-                         bool longfirst) {
-  using namespace GeographicLib;
-  std::string
-    betstr = dms ? DMS::Encode(real(bet), prec + 5, DMS::LATITUDE, dmssep) :
-    DMS::Encode(real(bet), prec + 5, DMS::NUMBER),
-    omgstr = dms ? DMS::Encode(real(omg), prec + 5, DMS::LONGITUDE, dmssep) :
-    DMS::Encode(real(omg), prec + 5, DMS::NUMBER);
-  return
-    (longfirst ? omgstr : betstr) + " " + (longfirst ? betstr : omgstr);
-}
-
-std::string AzimuthString(ang alp, int prec, bool dms, char dmssep) {
-  using namespace GeographicLib;
-  return dms ? DMS::Encode(real(alp), prec + 5, DMS::AZIMUTH, dmssep) :
-    DMS::Encode(real(alp), prec + 5, DMS::NUMBER);
-}
+using real = GeographicLib::Math::real;
+using ang = GeographicLib::Angle;
 
 std::string ErrorString(real err, int prec) {
   std::ostringstream s;
@@ -96,7 +44,6 @@ int main(int argc, const char* const argv[]) {
     using namespace GeographicLib;
     using namespace Triaxial;
     using namespace experimental;
-    typedef GeographicLib::Angle ang;
     Utility::set_digits();
     bool dms = false, longfirst = false,
       linecalc = false, extended = false, dense = false, normp = false,
@@ -150,9 +97,10 @@ int main(int argc, const char* const argv[]) {
         linecalc = true;
         if (m + 3 >= argc) return usage(1, true);
         try {
-          DecodeLatLon(std::string(argv[m + 1]), std::string(argv[m + 2]),
-                       bet1, omg1, longfirst);
-          alp1 = DecodeAzimuth(std::string(argv[m + 3]));
+          ang::DecodeLatLon(std::string(argv[m + 1]),
+                              std::string(argv[m + 2]),
+                              bet1, omg1, longfirst);
+          alp1 = ang::DecodeAzimuth(std::string(argv[m + 3]));
         }
         catch (const std::exception& e) {
           std::cerr << "Error decoding arguments of -L: " << e.what() << "\n";
@@ -297,17 +245,19 @@ int main(int argc, const char* const argv[]) {
         if (linecalc) {
           if (buffered) s12v.push_back(s12);
         } else {
-          DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
-          alp1 = DecodeAzimuth(salp1);
+          ang::DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
+          alp1 = ang::DecodeAzimuth(salp1);
           l.Reset(bet1, omg1, alp1);
         }
         if (!buffered) {
           auto errs = l.Position(s12, bet2, omg2, alp2, m12, M12, M21);
           if (full)
-            *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
-                    << " " << AzimuthString(alp1, prec, dms, dmssep) << " ";
-          *output << BetOmgString(bet2, omg2, prec, dms, dmssep, longfirst)
-                  << " " << AzimuthString(alp2, prec, dms, dmssep);
+            *output << ang::LatLonString(bet1, omg1, prec, dms, dmssep,
+                                         longfirst) << " "
+                    << ang::AzimuthString(alp1, prec, dms, dmssep) << " ";
+          *output << ang::LatLonString(bet2, omg2, prec, dms, dmssep,
+                                       longfirst) << " "
+                  << ang::AzimuthString(alp2, prec, dms, dmssep);
           if (full)
             *output << " " << Utility::str(s12, prec + disprec);
           if (extended)
@@ -331,16 +281,17 @@ int main(int argc, const char* const argv[]) {
     }
 
     if (buffered) {
-      std::vector<Angle> bet2v, omg2v, alp2v;
+      std::vector<ang> bet2v, omg2v, alp2v;
       std::vector<real> m12v, M12v, M21v;
       l.Position(s12v, bet2v, omg2v, alp2v, m12v, M12v, M21v);
       for (size_t i = 0; i < s12v.size(); ++i) {
           if (full)
-            *output << BetOmgString(bet1, omg1, prec, dms, dmssep, longfirst)
-                    << " " << AzimuthString(alp1, prec, dms, dmssep) << " ";
-          *output << BetOmgString(bet2v[i], omg2v[i], prec, dms, dmssep,
-                                  longfirst)
-                  << " " << AzimuthString(alp2v[i], prec, dms, dmssep);
+            *output << ang::LatLonString(bet1, omg1, prec, dms, dmssep,
+                                         longfirst) << " "
+                    << ang::AzimuthString(alp1, prec, dms, dmssep) << " ";
+          *output << ang::LatLonString(bet2v[i], omg2v[i], prec, dms, dmssep,
+                                  longfirst) << " "
+                  << ang::AzimuthString(alp2v[i], prec, dms, dmssep);
           if (full)
             *output << " " << Utility::str(s12v[i], prec + disprec);
           if (extended)

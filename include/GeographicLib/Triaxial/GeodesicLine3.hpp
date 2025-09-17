@@ -30,8 +30,8 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT GeodesicLine3 {
   private:
     friend class Geodesic3; // For access to fline, gline, etc.
-    typedef Math::real real;
-    typedef Angle ang;
+    using real = Math::real;
+    using ang = Angle;
 
     class hfun {
       // This combines ffun abd gfun in order to minimize the duplication of

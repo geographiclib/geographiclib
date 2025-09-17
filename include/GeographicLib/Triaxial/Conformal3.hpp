@@ -44,8 +44,8 @@ namespace GeographicLib {
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Conformal3 {
   private:
-    typedef Math::real real;
-    typedef Angle ang;
+    using real = Math::real;
+    using ang = Angle;
     Ellipsoid3 _t, _s;
     EllipticFunction _ex, _ey, _exs, _eys;
     real _x, _y;
@@ -83,7 +83,7 @@ namespace GeographicLib {
                                   EllipticFunction& elly);
     real sphericalscale(real ma, real mb) const;
   public:
-    typedef Ellipsoid3::vec3 vec3;
+    using vec3 = Ellipsoid3::vec3;
     Conformal3(const Ellipsoid3& t);
     /**
      * Constructor for a trixial ellipsoid with semi-axes.

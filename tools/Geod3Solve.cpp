@@ -22,8 +22,8 @@
 
 #include "Geod3Solve.usage"
 
-typedef GeographicLib::Math::real real;
-typedef GeographicLib::Angle ang;
+using real = GeographicLib::Math::real;
+using ang = GeographicLib::Angle;
 
 void BiaxialCoords(bool fwd, real f, ang& bet, ang& omg) {
   using std::isnan, std::signbit;
@@ -55,7 +55,6 @@ int main(int argc, const char* const argv[]) {
     using namespace GeographicLib;
     using namespace Triaxial;
     using std::signbit, std::isnan, std::fabs;
-    typedef Angle ang;
     Utility::set_digits();
     bool inverse = false,
       dms = false, full = false, unroll = false,

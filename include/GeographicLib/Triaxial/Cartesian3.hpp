@@ -21,16 +21,16 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT Cartesian3 {
   public:
-    typedef Ellipsoid3::vec3 vec3;
+    using vec3 = Ellipsoid3::vec3;
   private:
-    typedef Math::real real;
+    using real = Math::real;
 #if GEOGRAPHICLIB_PRECISION > 3
     // <random> only supports "standard" floating point types
-    typedef Math::extended random_prec;
+    using random_prec = Math::extended;
 #else
-    typedef Math::real random_prec;
+    using random_prec = Math::real;
 #endif
-    typedef Angle ang;
+    using ang = Angle;
     static const int maxit_ = 20;
     const Ellipsoid3 _t;
     const vec3 _axes, _axes2, _linecc2;

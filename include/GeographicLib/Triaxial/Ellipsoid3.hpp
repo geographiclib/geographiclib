@@ -19,12 +19,12 @@ namespace GeographicLib {
   namespace Triaxial {
   class GEOGRAPHICLIB_EXPORT Ellipsoid3 {
   public:
-    typedef std::array<Math::real, 3> vec3;
+    using vec3 = std::array<Math::real, 3>;
   private:
     friend class Cartesian3;  // For access to cart2toellipint normvec
     friend class Geodesic3;   // For Flip
-    typedef Math::real real;
-    typedef Angle ang;
+    using real = Math::real;
+    using ang = Angle;
     static void normvec(vec3& r) {
       real h = Math::hypot3(r[0], r[1], r[2]);
       // No checking for h = 0.  Result will be NaNs

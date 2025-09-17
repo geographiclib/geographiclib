@@ -53,10 +53,10 @@ int main(int argc, const char* const argv[]) {
   try {
     using namespace GeographicLib;
     using namespace Triaxial;
-    typedef Math::real real;
-    typedef Angle ang;
     Utility::set_digits();
-    typedef Ellipsoid3::vec3 vec3;
+    using real = Math::real;
+    using ang = Angle;
+    using vec3 = Ellipsoid3::vec3;
     enum { GEODETIC, PARAMETRIC, GEOCENTRIC, ELLIPSOIDAL };
     int mode = ELLIPSOIDAL;
     bool threed = false, direction = false, reverse = false, dms = false,

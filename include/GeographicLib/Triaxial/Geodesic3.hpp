@@ -28,8 +28,8 @@ namespace GeographicLib {
   private:
     // For access to BigValue, _ellipthresh, _biaxp
     friend class GeodesicLine3;
-    typedef Math::real real;
-    typedef Angle ang;
+    using real = Math::real;
+    using ang = Angle;
     Ellipsoid3 _t;
 
     // Run geodesic from bet1, omg1, alp1, find its first intersection with bet
