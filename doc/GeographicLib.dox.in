@@ -4860,10 +4860,10 @@ Nyrtsov, et al.,
 also expressed the projection in terms of elliptic integrals.  However
 the equations are more complex involving elliptic integrals of the first
 and third kind.  More seriously, the origin of their elliptic integrals
-is taken to be the coordinates of the umbilical point.  As one of the
-projection equations diverges in the biaxial limit.  The relations
-https://dlmf.nist.gov/19.7.E5 can be used to put their results in the
-simpler form given here.
+is taken to be the coordinates of the umbilical point.  As a result, one
+of the projection equations diverges in the biaxial limit.  The
+relations https://dlmf.nist.gov/19.7.E5 can be used to put their results
+in the simpler form given here.
 
 \section jacobi-properties Properties of the projection
 
@@ -5047,8 +5047,8 @@ plane onto the sphere.
 A similar construction is possible for a triaxial ellipsoid.  Map each
 octant of the ellipsoid onto a rectangle using the Jacobi projection.
 The size of this rectangle is \f$ x_0 \times y_0 \f$.  Find the values
-of \f$b_s\f$, \$fe^2 = 0\f$, \f$k_s^2\f$ and $k_s'^2 = 1 - k_s^2\f$ for
-a sphere such that
+of \f$b_s\f$, \f$e^2 = 0\f$, \f$k_s^2\f$, and \f$k_s'^2 = 1 - k_s^2\f$
+for a sphere such that
 \f[
 x_0 = b_s K(k_s'), \quad y_0 = b_s K(k_s).
 \f]
@@ -5059,8 +5059,10 @@ latitude in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 
-The Triaxial::Conformal3 class provides an implementation of
-the Jacobi conformal projection is given here.
+The Triaxial::Conformal3 class provides an implementation of the Jacobi
+conformal projection is given here.  The
+<a href="Conformal3Proj.1.html">Conformal3Proj</a> utility provides a
+command-line interface to this projections.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.

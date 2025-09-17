@@ -3,7 +3,6 @@
 #include <iostream>
 #include <iomanip>
 #include <exception>
-#include <GeographicLib/Utility.hpp>
 #include <GeographicLib/AuxAngle.hpp>
 
 int main(int argc, const char* const argv[]) {

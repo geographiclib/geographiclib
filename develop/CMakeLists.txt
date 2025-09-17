@@ -34,7 +34,7 @@ endif ()
 set (DEVELPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect
   ClosestApproach M12zero GeodShort NormalTest GeoidHeightTable promote
-  IntersectTest GeodConv JacobiTest)
+  IntersectTest GeodConv JacobiTest Geod3Test)
 
 if (Boost_FOUND AND NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
   # Skip LevelEllipsoid for quad precision because of compiler errors

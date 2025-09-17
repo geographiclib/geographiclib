@@ -2,8 +2,9 @@
 SUF=$1
 shift
 FLAGS=$*
+TESTDIR=$HOME/git/triaxial/src
 while read n l; do
-    ./Geod3Test -e $l $FLAGS < ../test$n.txt > test$n.out$SUF &
+    develop/Geod3Test -e $l $FLAGS < $TESTDIR/test$n.txt > test$n.out$SUF &
     sleep 1
 done <<EOF
 obl  1 3/4 3 0

@@ -8,19 +8,24 @@
 #include <vector>
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
-#include "Angle.hpp"
-#include "TriaxialGeodesic.hpp"
-#include "TriaxialGeodesicLine.hpp"
+#include <GeographicLib/Angle.hpp>
+#include <GeographicLib/Triaxial/Ellipsoid3.hpp>
+#include <GeographicLib/Triaxial/Geodesic3.hpp>
 
+#define HAVE_BOOST 0
+
+#if HAVE_BOOST
 #if defined(_MSC_VER)
 // Squelch warning triggered by boost:
 //   4127: conditional expression is constant
 #  pragma warning (disable: 4127)
 #endif
 #include "TriaxialGeodesicODE.hpp"
+#endif
 
-using namespace GeographicLib;
 using namespace std;
+using namespace GeographicLib;
+using namespace Triaxial;
 
 int usage(int retval, bool /*brief*/) {
   ( retval ? cerr : cout ) << "Bad input\n";
@@ -47,7 +52,7 @@ string nicestr(Math::real x, int prec, bool azi = false) {
   return s;
 }
 
-void report(const TriaxialGeodesic& tg, int bet1, int omg1, int bet2, int omg2,
+void report(const Geodesic3& tg, int bet1, int omg1, int bet2, int omg2,
             bool odep) {
 #if GEOGRAPHICLIB_PRECISION <= 2
   int prec = 12;
@@ -61,15 +66,15 @@ void report(const TriaxialGeodesic& tg, int bet1, int omg1, int bet2, int omg2,
   ang bet1x(bet1), omg1x(omg1), bet2x(bet2), omg2x(omg2);
   real s12;
   ang alp1, alp2;
-  TriaxialGeodesicLine l =
-    tg.Inverse(bet1x, omg1x, bet2x, omg2x, alp1, alp2, s12);
+  GeodesicLine3 l =
+    tg.Inverse(bet1x, omg1x, bet2x, omg2x, s12, alp1, alp2);
   real m12 = 0, M12 = 1, M21 = 1;
   if (odep) {
 #if HAVE_BOOST
-    Triaxial::vec3 r2, v2;
+    Ellipsoid3::vec3 r2, v2;
     // ang bet1a, omg1a;
     // l.pos1(bet1a, omg1a, alp1);
-    TriaxialGeodesicODE direct(tg.t(), ang(bet1), ang(omg1), alp1);
+    Geodesic3ODE direct(tg.t(), ang(bet1), ang(omg1), alp1);
     direct.Position(s12, r2, v2, m12, M12, M21);
     // t.cart2toellip(bet2x, omg2x, v2, alp2);
 #endif
@@ -86,15 +91,15 @@ void report(const TriaxialGeodesic& tg, int bet1, int omg1, int bet2, int omg2,
     cout << endl;
 }
 
-Math::real vecdiff(const Triaxial::vec3& a, const Triaxial::vec3& b) {
+Math::real vecdiff(const Ellipsoid3::vec3& a, const Ellipsoid3::vec3& b) {
   return Math::hypot3(a[0]-b[0], a[1]-b[1], a[2]-b[2]);
 }
 
-void print3(Triaxial::vec3 v) {
+void print3(Ellipsoid3::vec3 v) {
   cout << v[0] << " " << v[1] << " " << v[2] << "\n";
 }
 
-void errreport(const TriaxialGeodesic& tg,
+void errreport(const Geodesic3& tg,
                Math::real bet1, Math::real omg1, Math::real alp1,
                Math::real bet2, Math::real omg2, Math::real alp2,
                Math::real s12,
@@ -119,13 +124,13 @@ void errreport(const TriaxialGeodesic& tg,
     bet2x(bet2), omg2x(omg2), alp2x(alp2), alp1a, alp2a;
   real errs = 0, errr1i = 0, errv1i = 0, errr2i = 0, errv2i = 0,
     errr1 = 0, errv1 = 0, errr2 = 0, errv2 = 0;
-  Triaxial::vec3 r1, v1, r2, v2;
-  Triaxial::vec3 r1a, v1a, r2a, v2a;
+  Ellipsoid3::vec3 r1, v1, r2, v2;
+  Ellipsoid3::vec3 r1a, v1a, r2a, v2a;
   ang bet1a, omg1a, bet2a, omg2a;
   if (invp) {
     real s12a;
-    TriaxialGeodesicLine l0 =
-      tg.Inverse(bet1x, omg1x, bet2x, omg2x, alp1a, alp2a, s12a);
+    GeodesicLine3 l0 =
+      tg.Inverse(bet1x, omg1x, bet2x, omg2x, s12a, alp1a, alp2a);
     errs = fabs(s12 - s12a);
     // direct checks for inverse calculation using alp1a, alp2a, s12a
     tg.t().elliptocart2(bet1x, omg1x, alp1a, r1, v1);
@@ -136,8 +141,8 @@ void errreport(const TriaxialGeodesic& tg,
       print3(r2); print3(v2);
     }
     if (invdirp) {
-      TriaxialGeodesicLine l1i(tg, bet1x, omg1x, alp1a);
-      TriaxialGeodesicLine l2i(tg, bet2x, omg2x, alp2a);
+      GeodesicLine3 l1i(tg, bet1x, omg1x, alp1a);
+      GeodesicLine3 l2i(tg, bet2x, omg2x, alp2a);
       l2i.Position(-s12a, bet1a, omg1a, alp1a);
       tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
       errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
@@ -158,8 +163,8 @@ void errreport(const TriaxialGeodesic& tg,
     // direct checks for test sets using alp1x, alp2x, s12
     tg.t().elliptocart2(bet1x, omg1x, alp1x, r1, v1);
     tg.t().elliptocart2(bet2x, omg2x, alp2x, r2, v2);
-    TriaxialGeodesicLine l1(tg, bet1x, omg1x, alp1x);
-    TriaxialGeodesicLine l2(tg, bet2x, omg2x, alp2x);
+    GeodesicLine3 l1(tg, bet1x, omg1x, alp1x);
+    GeodesicLine3 l2(tg, bet2x, omg2x, alp2x);
     l2.Position(-s12, bet1a, omg1a, alp1a);
     tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
     errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
@@ -182,7 +187,7 @@ void errreport(const TriaxialGeodesic& tg,
 }
 
 #if HAVE_BOOST
-void errODE(TriaxialGeodesicODE& l,
+void errODE(Geodesic3ODE& l,
             Math::real bet1, Math::real omg1, Math::real alp1,
             Math::real bet2, Math::real omg2, Math::real alp2,
             Math::real s12,
@@ -198,10 +203,10 @@ void errODE(TriaxialGeodesicODE& l,
     bet1x(bet1), omg1x(omg1), alp1x(alp1),
     bet2x(bet2), omg2x(omg2), alp2x(alp2);
   s12 *= 1;
-  Triaxial::vec3 r1, v1, r2, v2;
+  Ellipsoid3::vec3 r1, v1, r2, v2;
   l.t().elliptocart2(bet1x, omg1x, alp1x, r1, v1);
   l.t().elliptocart2(bet2x, omg2x, alp2x, r2, v2);
-  Triaxial::vec3 r1a, v1a, r2a, v2a;
+  Ellipsoid3::vec3 r1a, v1a, r2a, v2a;
   real m12a = 0, M12a = 0, M21a = 0;
   if (1) {
     l.Reset(r1, v1); l.NSteps(0); l.IntSteps(0);
@@ -225,7 +230,7 @@ void errODE(TriaxialGeodesicODE& l,
   } else {
     int num = 10;
     vector<real> s12v(num);
-    vector<Triaxial::vec3> rv, vv;
+    vector<Ellipsoid3::vec3> rv, vv;
     for (int i = 1; i <= num; ++i)
       s12v[i-1] = i*s12/num;
     l.Reset(r1, v1);
@@ -266,7 +271,7 @@ void angletest() {
   }
 }
 
-void hybridtest(const TriaxialGeodesic& tg, Math::real bet1, Math::real omg1,
+void hybridtest(const Geodesic3& tg, Math::real bet1, Math::real omg1,
                 Math::real betomg2, bool betp) {
   typedef Math::real real;
   typedef Angle ang;
@@ -278,9 +283,9 @@ void hybridtest(const TriaxialGeodesic& tg, Math::real bet1, Math::real omg1,
   cout << setprecision(6) << fixed;
   for (unsigned q = 0u; q < 4u; ++q) {
     alpu.setquadrant(q);
-    TriaxialGeodesicLine l(tg, bet1a, omg1a, alpu);
+    GeodesicLine3 l(tg, bet1a, omg1a, alpu);
     l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
-    Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
+    Ellipsoid3::AngNorm(bet2a, omg2a, alp2a, !betp);
     cout << real(alpu.base()) << " " << real(bet2a.base()) << " "
          << real(omg2a.base()) << " " << real(alp2a.base()) << " "
          << s12 << "\n";
@@ -288,9 +293,9 @@ void hybridtest(const TriaxialGeodesic& tg, Math::real bet1, Math::real omg1,
   int m = 1;
   for (int a = -180*m; a <= 180*m; ++a) {
     ang alp1a = ang(real(a)/m);
-    TriaxialGeodesicLine l(tg, bet1a, omg1a, alp1a);
+    GeodesicLine3 l(tg, bet1a, omg1a, alp1a);
     l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
-    Triaxial::AngNorm(bet2a, omg2a, alp2a, !betp);
+    Ellipsoid3::AngNorm(bet2a, omg2a, alp2a, !betp);
     cout << real(a)/m << " " << real(bet2a.base()) << " "
          << real(omg2a.base()) << " " << real(alp2a.base()) << " "
           << s12 << "\n";
@@ -382,8 +387,8 @@ int main(int argc, const char* const argv[]) {
       // testsphd.txt -e 1 0   0 3
       // testhu.txt   -e 1 7577279780/1130005142289 1942065235 6378137
       // equiv to     -t 6378172/6378102 1 6356752/6378102
-      TriaxialGeodesic tg = e2 < 0 ? TriaxialGeodesic(a, b, c) :
-        TriaxialGeodesic(b, e2, k2, kp2);
+      Geodesic3 tg = e2 < 0 ? Geodesic3(a, b, c) :
+        Geodesic3(b, e2, k2, kp2);
       tg.swapomg(swapomg);
       // Triaxial tg(1, 1, 1/real(2));
       // Triaxial tg(2, 1, 1);
@@ -393,21 +398,23 @@ int main(int argc, const char* const argv[]) {
         while (cin >> bet1 >> omg1 >> betomg2 >> betp)
           hybridtest(tg, bet1, omg1, betomg2, betp);
       } else {
-#if HAVE_BOOST
         real bet1, omg1, bet2, omg2;
         real alp1, alp2, s12, m12, M12, M21;
-        TriaxialGeodesicODE l(tg.t(), extended, dense, normp, eps);
+#if HAVE_BOOST
+        Geodesic3ODE l(tg.t(), extended, dense, normp, eps);
+#endif
         while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
                >> m12 >> M12 >> M21) {
-          if (odetest)
+          if (odetest) {
+#if HAVE_BOOST
             errODE(l, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
-          else if (reportp)
+#endif
+          } else if (reportp)
             report(tg, int(bet1), int(omg1), int(bet2), int(omg2), odep);
           else
             errreport(tg, bet1, omg1, alp1, bet2, omg2, alp2, s12,
                       m12, M12, M21);
         }
-#else
         (void) odep;
         (void) reportp;
         (void) odetest;
@@ -415,7 +422,6 @@ int main(int argc, const char* const argv[]) {
         (void) dense;
         (void) normp;
         (void) eps;
-#endif
       }
       return 0;
     }
@@ -452,7 +458,7 @@ int main(int argc, const char* const argv[]) {
         return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
     }
     if (1) {
-      TriaxialGeodesic tg(sqrt(real(2)), 1, sqrt(1/real(2)));
+      Geodesic3 tg(sqrt(real(2)), 1, sqrt(1/real(2)));
       for (int bet1 = -90; bet1 <= 90; bet1 += div)
         for (int omg1 = -180+div; omg1 <= 180; omg1 += div)
           for (int bet2 = -90; bet2 <= 90; bet2 += div)
