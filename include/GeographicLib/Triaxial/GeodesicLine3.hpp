@@ -97,8 +97,7 @@ namespace GeographicLib {
       static real modang(real x, real m) {
         return ang::radians(x).modang(m).radians();
       }
-      real root(real z, real u0, int* countn, int* countb,
-                real tol = std::numeric_limits<real>::epsilon()) const;
+      real root(real z, real u0, int* countn, int* countb, real tol = 0) const;
     public:
       // Summary of f and g functions
       // _meridr = kap == 0 && mu == 0 (biaxial meridian rotating coordinate)

@@ -363,13 +363,14 @@ namespace GeographicLib {
     //   fx and fy are increasing functions
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
+    static const real tol = numeric_limits<real>::epsilon();
     const bool debug = false, check = false;
     const int maxit = 300;
-    const real tol = numeric_limits<real>::epsilon(),
       // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
       // too much bisection.  Example:
       //   echo 63 -173 -61.97921997838416712 -4.64409746197940890408 |
       //     ./Geod3Solve $PROX
+    const real
       ftol = tol * fscale/10,
       gtol = tol * gscale/10,
       xtol = pow(tol, real(0.75)) * xscale,
@@ -414,7 +415,8 @@ namespace GeographicLib {
     for (; i < maxit ||
            (throw GeographicLib::GeographicErr
             ("Convergence failure GeodesicLine3::newt2"), false)
-           || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root"); ++i) {
+           || GEOGRAPHICLIB_PANIC("Convergence failure GeodesicLine3::newt2");
+         ++i) {
       ++cntn;
       if (!degen && nextafter(xset.min().z, xset.max().z) == xset.max().z &&
           yset.min().gz == yset.max().gz) {
@@ -1045,7 +1047,8 @@ namespace GeographicLib {
             //   omg1 = -91 -> omg2 = 178.9293750483-90 = 88.9293750483
             real c = fic.Nx * (fic.phi1.t() - fpsi().df(fic.phi1.radians())),
               l = exp(Geodesic3::BigValue()),
-              tpsi2 = Trigfun::root([this, npi] (real tpsi) -> pair<real, real>
+              tpsi2 = Trigfun::root(Trigfun::ARCPOS0,
+                                    [this, npi] (real tpsi) -> pair<real, real>
                                     {
                                       real psi = atan(tpsi);
                                       return pair<real, real>
@@ -1053,8 +1056,7 @@ namespace GeographicLib {
                                          1 - fpsi().dfp(psi) /
                                          (1 + Math::sq(tpsi)));
                                     },
-                                    c, fic.psi1.t(), -l, l, 1, 1, 1,
-                                    nullptr, nullptr, 0, Trigfun::ARCPOS0);
+                                    c, fic.psi1.t(), -l, l);
             v2 = atan(tpsi2);
             phi2a = (ang(tpsi2, 1) + fic.phi1.nearest(2U))
               .flipsign(parity*fic.Nx).rebase(fic.phi0);
@@ -1104,12 +1106,12 @@ namespace GeographicLib {
     , phi1(bet10)
     , alp1(alp10)
   {
+    static const real eps = numeric_limits<real>::epsilon();
     alp0 = alp1.nearest(f.transpolar() ? 2U : 1U);
     if (f.transpolar()) {
       swap(tht1, phi1);
       alp1.reflect(false, false, true);
     }
-    const real eps = numeric_limits<real>::epsilon();
     const Geodesic3& tg = f.tg();
     if (!f.transpolar() && phi1.s() == 0 && fabs(alp1.c()) <= Math::sq(eps))
       alp1 = ang(alp1.s(), - Math::sq(eps), alp1.n(), true);
@@ -1523,28 +1525,28 @@ namespace GeographicLib {
           ua = (z - d) / Slope(),
           ub = (z + d) / Slope();
         u0 = fmin(ub, fmax(ua, u0));
-        return Trigfun::root(
+        return Trigfun::root(Trigfun::FFUNROOT,
                              [this]
                              (real u) -> pair<real, real>
                              { return pair<real, real>((*this)(u), deriv(u)); },
                              z,
                              u0, ua, ub,
                              HalfPeriod(), HalfPeriod()/Slope(), 1,
-                             countn, countb, tol, Trigfun::FFUNROOT);
+                             countn, countb, tol);
       } else if (_umb) {
         real d = fabs(Max())
           + 2 * numeric_limits<real>::epsilon() * fmax(real(1), fabs(z)),
           ua = z - d,
           ub = z + d;
         u0 = fmin(ub, fmax(ua, u0));
-        return Trigfun::root(
+        return Trigfun::root(Trigfun::FFUNROOT,
                              [this]
                              (real u) -> pair<real, real>
                              { return pair<real, real>((*this)(u), deriv(u)); },
                              z,
                              u0, ua, ub,
-                             Math::pi()/2, Math::pi()/2, 1, countn, countb, tol,
-                             Trigfun::FFUNROOT);
+                             Math::pi()/2, Math::pi()/2, 1,
+                             countn, countb, tol);
       } else
         return Math::NaN();
     } else {
@@ -1558,14 +1560,13 @@ namespace GeographicLib {
       real ua = -Geodesic3::BigValue(), ub = -ua;
       u0 = fmin(ub, fmax(ua, u0));
       // Solve z = _fun(_tx ? _ell.F(gd(u)) : gd(u)) for u
-      return Trigfun::root(
+      return Trigfun::root(Trigfun::GFUNROOT,
                            [this]
                            (real u) -> pair<real, real>
                            { return pair<real, real>((*this)(u), deriv(u)); },
                            z,
                            u0, ua, ub,
-                           Math::pi()/2, Math::pi()/2, 1, countn, countb, tol,
-                           Trigfun::GFUNROOT);
+                           Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);
     }
   }
 

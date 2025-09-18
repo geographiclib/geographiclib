@@ -87,11 +87,11 @@ namespace GeographicLib {
                      1 - ell.alpha2() * c*c));
           return pair<real, real>(f, fp);
         };
-      real z = Trigfun::root(Pif, fabs(y), fabs(y) * Math::pi()/(2*ell.Pi()),
+      real z = Trigfun::root(Trigfun::PIINV,
+                             Pif, fabs(y), fabs(y) * Math::pi()/(2*ell.Pi()),
                              0, Math::pi()/2,
                              1,1,1,
-                             &countn, &countb,
-                             0, Trigfun::PIINV);
+                             &countn, &countb);
       (void) countn; (void) countb;
       // cout << "CNT " << countn << " " << countb << "\n";
       return ang::radians(copysign(z, y)) + ang::cardinal(n);
@@ -135,11 +135,11 @@ namespace GeographicLib {
           fp = 1 / sqrt(ell.kp2() + ell.k2() * c*c);
           return pair<real, real>(f, fp);
         };
-      real z = Trigfun::root(Ff, fabs(y), fabs(y) * Math::pi()/(2*ell.K()),
+      real z = Trigfun::root(Trigfun::FINV,
+                             Ff, fabs(y), fabs(y) * Math::pi()/(2*ell.K()),
                              0, Math::pi()/2,
                              1,1,1,
-                             &countn, &countb,
-                             0, Trigfun::FINV);
+                             &countn, &countb);
       (void) countn; (void) countb;
       // cout << "CNT " << countn << " " << countb << "\n";
       return ang::radians(copysign(z, y)) + ang::cardinal(n);
@@ -208,46 +208,27 @@ namespace GeographicLib {
       k2 = 16/pow(exp(N*KK) - B, 2/N);
       // Alternatively using KK = 1/2*log(16/kp) A+S 17.3.26
       k2 = fmin(1/real(2), 16*exp(-2*KK)); // Make sure guess is sane
-      const bool logp = true;
-      if constexpr (logp) {
-        static const real logk2min = 2*log(numeric_limits<real>::epsilon());
-        // Solve for log(k2) to preserve relative accuracy for tiny k2.
-        real logk2 = log(k2);
-        if (logk2 > logk2min) {
-          auto ksolve = [nx, ny]
-            (real logk2) -> pair<real, real>
-            {
-              real k2 = exp(logk2), kp2 = 1 - k2;
-              EllipticFunction elly(k2), ellx(kp2, 0, k2, 1);
-              real f = nx * elly.K() - ny * ellx.K(),
-              fp = (nx * (elly.E() - kp2 * elly.K()) +
-                    ny * (ellx.E() - k2  * ellx.K())) / (2 * k2 * kp2);
-              return pair<real, real>(f, k2*fp);
-            };
-          logk2 = Trigfun::root(ksolve, 0, logk2,
-                                logk2min, -log(real(2)),
-                                1, 1, 1,
-                                &countn, &countb, 0, Trigfun::KINV);
-        }
-        // otherwise accept the asymptotic result
-        k2 = exp(logk2);
-      } else {
+      static const real logk2min = 2*log(numeric_limits<real>::epsilon());
+      // Solve for log(k2) to preserve relative accuracy for tiny k2.
+      real logk2 = log(k2);
+      if (logk2 > logk2min) {
         auto ksolve = [nx, ny]
-          (real k2) -> pair<real, real>
+          (real logk2) -> pair<real, real>
           {
-            real kp2 = 1 - k2;
+            real k2 = exp(logk2), kp2 = 1 - k2;
             EllipticFunction elly(k2), ellx(kp2, 0, k2, 1);
             real f = nx * elly.K() - ny * ellx.K(),
             fp = (nx * (elly.E() - kp2 * elly.K()) +
                   ny * (ellx.E() - k2  * ellx.K())) / (2 * k2 * kp2);
-            return pair<real, real>(f, fp);
+            return pair<real, real>(f, k2*fp);
           };
-        k2 = Trigfun::root(ksolve, 0, k2,
-                           Math::sq(numeric_limits<real>::epsilon()),
-                           1/real(2),
-                           1, 1, 1,
-                           &countn, &countb, 0, Trigfun::KINV);
+        logk2 = Trigfun::root(Trigfun::KINV, ksolve, 0, logk2,
+                              logk2min, -log(real(2)),
+                              1, 1, 1,
+                              &countn, &countb);
       }
+      // otherwise accept the asymptotic result
+      k2 = exp(logk2);
     } while (false);
     // b*K(kp2) = x
     // b*K(k2)  = y

@@ -222,7 +222,7 @@ namespace GeographicLib {
       err = err + fabs(a - b);
     }
     //    cout << "Maxval " << maxval << "\n";
-    return err / (tol *
+    return err / (tolerance(tol) *
                   maxval * (centerp ? _n : _n + 1));
   }
 
@@ -293,18 +293,18 @@ namespace GeographicLib {
   }
 
   // root sig 1
-  Math::real Trigfun::root(real z, const function<real(real)>& fp,
-                           int* countn, int* countb, real tol,
-                           ind indicator) const {
+  Math::real Trigfun::root(ind indicator,
+                           real z, const function<real(real)>& fp,
+                           int* countn, int* countb, real tol) const {
     //    cout << "QQX\n";
-    return root(z, fp, Math::NaN(), countn, countb, tol, indicator);
+    return root(indicator, z, fp, Math::NaN(), countn, countb, tol);
   }
 
   // root sig 2
-  Math::real Trigfun::root(real z, const function<real(real)>& fp,
+  Math::real Trigfun::root(ind indicator,
+                           real z, const function<real(real)>& fp,
                            real x0,
-                           int* countn, int* countb, real tol,
-                           ind indicator) const {
+                           int* countn, int* countb, real tol) const {
     // y = pi/h * x
     // f(x) = c[0] * y + sum(c[k] * sin(k * y), k, 1, n)
     real hr = Math::pi() * _coeff[0], s = _h / hr,
@@ -312,39 +312,40 @@ namespace GeographicLib {
     x0 = isfinite(x0) ? fmin(x00 + dx, fmax(x00 - dx, x0)) : x00;
     //    cout << "QQG " << dx << "\n";
     return dx == 0 ? x0 :
-      root(*(this), z, fp, x0, x00 - dx, x00 + dx, _h, fabs(hr),
-           s > 0 ? 1 : -1, countn, countb, tol, indicator);
+      root(indicator, *(this), z, fp, x0, x00 - dx, x00 + dx, _h, fabs(hr),
+           s > 0 ? 1 : -1, countn, countb, tol);
   }
 
   // root sig 3
-  Math::real Trigfun::root(const function<real(real)>& f,
+  Math::real Trigfun::root(ind indicator, const function<real(real)>& f,
                            real z, const function<real(real)>& fp,
                            real x0, real xa, real xb,
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
-                           real tol, ind indicator) {
+                           real tol) {
     //    cout << "QQH\n";
     real ret =
-    root([&f, &fp] (real x) -> pair<real, real>
-         { return pair<real, real>(f(x), fp(x)); },
-         z, x0, xa, xb, xscale, zscale, s, countn, countb, tol, indicator);
+      root(indicator,
+           [&f, &fp] (real x) -> pair<real, real>
+           { return pair<real, real>(f(x), fp(x)); },
+           z, x0, xa, xb, xscale, zscale, s, countn, countb, tol);
     //    cout << "QQHE" << endl;
     return ret;
   }
 
   // root sig 4
-  Math::real Trigfun::root(const function<pair<real, real>(real)>& ffp,
+  Math::real Trigfun::root(ind indicator,
+                           const function<pair<real, real>(real)>& ffp,
                            real z,
                            real x0, real xa, real xb,
                            real xscale, real zscale, int s,
                            int* countn, int* countb,
-                           real tol, ind indicator) {
+                           real tol) {
     // Solve v = f(x) - z = 0
     bool debug = false;
     if (x0 == xa && x0 == xb)
       return x0;
-    if (tol == 0)
-      tol = numeric_limits<real>::epsilon();
+    tol = tolerance(tol);
     real vtol = tol * zscale/100,
       xtol = pow(tol, real(0.75)) * xscale,
       x = x0, oldx = Math::infinity(), oldv = oldx, olddx = oldx;
@@ -429,7 +430,7 @@ namespace GeographicLib {
                                real dx0,
                                int* countn, int* countb, real tol) const {
     real hr = Math::pi() * _coeff[0], nslope = _h / hr;
-    return root(z, fp, z * nslope + dx0, countn, countb, tol, INVERSEP) -
+    return root(INVERSEP, z, fp, z * nslope + dx0, countn, countb, tol) -
       nslope * z;
   }
 
@@ -504,6 +505,7 @@ namespace GeographicLib {
     // optimal.
 
     // Check magnitude of TOL:
+    tol = tolerance(tol);
     if (tol >= 1) return 1;
 
     // Make sure c has length at least 17:

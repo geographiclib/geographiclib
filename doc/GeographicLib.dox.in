@@ -4763,12 +4763,10 @@ The shortest path found by this method is unique unless:
    shortest geodesic with azimuths \f$\pi - \alpha_1\f$ and
    \f$\pi - \alpha_2\f$.
 
-I have implemented this <a href="../../doc/triaxial.html"> solution to
-the inverse geodesic problem on a triaxial ellipsoid</a> in
-<a href="https://github.com/geographiclib/geographiclib-octave#readme">
-Octave/MATLAB</a>.  However, this is uses the method of Panou and
-Korakitis (2019) to solve the direct problem while searching for the
-inverse solution.
+The direct and inverse geodesic problems on a triaxial ellipsoid are
+solved using the classes Triaxial::Geodesic3 and
+Triaxial::GeodesicLine3.  The <a href="Geod3Solve.1.html">Geod3Solve</a>
+utility provides a command-line interface to these classes.
 
 \section triaxial-conformal Jacobi's conformal projection
 
@@ -4847,10 +4845,17 @@ https://dlmf.nist.gov/19.2.E7.  This allows the projection to be
 numerically computed using EllipticFunction::Pi(real phi) const.  The
 origin of the projection is \f$\beta = 0\f$, \f$\omega = \frac12\pi\f$;
 as a result, the projection simply reduces to the Mercator projection in
-both the oblate and prolate limits (see \ref jacobi-limiting).
+both the oblate and prolate limits (see \ref jacobi-limiting).  The
+transformation involving tangents, that connects \f$\omega'\f$ to
+\f$\omega\f$ and \f$\beta'\f$ to \f$\beta\f$, should be understood to
+preserve the quadrant of the angles though multiple revolutions.  As a
+result, the projection can be "unrolled" arbitrarily far in \f$\omega\f$
+and \f$\beta\f$.  However, in the oblate (resp. prolate) limit, we
+require \f$\beta \in [-\tfrac12\pi,\tfrac12\pi]\f$ (resp. \f$\omega \in
+[0,\pi]\f$).
 
 Nyrtsov, et al.,
- - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
+ - M. V. Nyrtsov, M. E. Fleis, M. M. Borisov, P. J. Stooke,
    <a href="https://doi.org/10.1007/978-3-642-32618-9_17">
    Jacobi conformal projection of the triaxial ellipsoid: new projection
    for mapping of small celestial bodies,</a> in
@@ -4859,7 +4864,7 @@ Nyrtsov, et al.,
  .
 also expressed the projection in terms of elliptic integrals.  However
 the equations are more complex involving elliptic integrals of the first
-and third kind.  More seriously, the origin of their elliptic integrals
+and third kinds.  More seriously, the origin of their elliptic integrals
 is taken to be the coordinates of the umbilical point.  As a result, one
 of the projection equations diverges in the biaxial limit.  The
 relations https://dlmf.nist.gov/19.7.E5 can be used to put their results

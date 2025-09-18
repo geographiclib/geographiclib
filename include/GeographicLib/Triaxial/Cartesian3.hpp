@@ -16,6 +16,12 @@
 #include <random>
 #include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about dll vs random
+#  pragma warning (push)
+#  pragma warning (disable: 4251)
+#endif
+
 namespace GeographicLib {
   namespace Triaxial {
 
@@ -148,5 +154,9 @@ namespace GeographicLib {
 
   } // namespace Triaxial
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_CARTESIAN3_HPP

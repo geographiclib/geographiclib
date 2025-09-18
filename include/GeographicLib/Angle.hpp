@@ -479,7 +479,7 @@ namespace GeographicLib {
       // Cannot just use Math::norm because of all the special cases
       T h = hypot(_s, _c);
       if (h == 0) {
-        // If y is +/-0 and x = -0, +/-π is returned.
+        // If y is +/-0 and x = -0, +/-pi is returned.
         // If y is +/-0 and x = +0, +/-0 is returned.
         // So retain the sign of _s = +/-0
         _c = copysign(T(1), _c);
