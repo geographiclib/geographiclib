@@ -251,7 +251,7 @@ int main(int argc, const char* const argv[]) {
       std::seed_seq seq{s1, s2};
       std::mt19937 g(seq);
       for (int i = 0; i < nrand; ++i) {
-        vec3 r, v;
+        vec3 r, v = {0,0,0};
         if (direction)
           tc.cart2rand(g, r, v);
         else

@@ -47,7 +47,9 @@ namespace GeographicLib {
    * \include example-Angle.cpp
    **********************************************************************/
   template<typename T = Math::real>
-  class GEOGRAPHICLIB_EXPORT AngleT {
+  class AngleT {
+    // No GEOGRAPHICLIB_EXPORT because this is a template class (like
+    // PolygonAreaT).  Not sure why Accumulator needs GEOGRAPHICLIB_EXPORT.
   private:
     T _s, _c, _n;
     static T rnd(T x);

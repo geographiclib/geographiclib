@@ -101,17 +101,19 @@ for ver in 15 16 17; do
         pkg=vc$ver-$arch
         gen="Visual Studio $ver"
         installer=
+        boostdir=
         # N.B. update CPACK_NSIS_INSTALL_ROOT in CMakeLists.txt and
         # update documentation examples if VS version for binary
         # installer changes.
         test "$ver" = 15 && installer=y
+        test "$ver" = 17 && test "$arch" = x64 && boostdir="-D Boost_DIR=c:/local/boost_1_89_0/lib64-msvc-14.3/cmake/Boost-1.89.0"
         (
             echo "#! /bin/sh -exv"
             echo echo ========== cmake $pkg ==========
             echo b=c:/scratch/geog-$pkg
             echo rm -rf \$b //datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION/\*
             echo 'unset GEOGRAPHICLIB_DATA'
-            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= -S . -B \$b
+            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= $boostdir -S . -B \$b
             echo cmake --build \$b --config Debug   --target ALL_BUILD
             echo cmake --build \$b --config Debug   --target testprograms
             echo cmake --build \$b --config Debug   --target RUN_TESTS
@@ -133,7 +135,7 @@ done
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 #! /bin/sh
 (
-    for d in build-*; do
+    for d in build-*[24]; do
         ./$d
     done
 ) >& build.log
