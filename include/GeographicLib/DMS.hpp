@@ -13,6 +13,12 @@
 #include <GeographicLib/Constants.hpp>
 #include <GeographicLib/Utility.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about unrepresentable characters
+#  pragma warning (push)
+#  pragma warning (disable: 4819)
+#endif
+
 namespace GeographicLib {
 
   /**
@@ -383,5 +389,9 @@ namespace GeographicLib {
   };
 
 } // namespace GeographicLib
+
+#if defined(_MSC_VER)
+#  pragma warning (pop)
+#endif
 
 #endif  // GEOGRAPHICLIB_DMS_HPP

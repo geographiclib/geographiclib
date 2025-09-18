@@ -47,8 +47,8 @@ namespace GeographicLib {
     // accommodate.
     //
     // 2. We simplify the calculations by moving January and February to the
-    // previous year. Here we internally number the months March–December,
-    // January, February as 0–9, 10, 11.
+    // previous year. Here we internally number the months March-December,
+    // January, February as 0-9, 10, 11.
     //
     // 3. The pattern of month lengths from March through January is regular
     // with a 5-month period—31, 30, 31, 30, 31, 31, 30, 31, 30, 31, 31. The
