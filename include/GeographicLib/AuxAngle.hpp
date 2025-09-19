@@ -43,6 +43,10 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-AuxAngle.cpp
+   *
+   * \deprecated The functionality offer by this class is also provided by the
+   *   more general class Angle.  It is recommended to use Angle for new
+   *   applications.
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT AuxAngle {
   private:

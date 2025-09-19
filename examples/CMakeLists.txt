@@ -73,6 +73,8 @@ set (EXAMPLES0
   example-Utility.cpp
   example-Conformal3.cpp
   example-Angle.cpp
+  example-Trigfun.cpp
+  example-TrigfunExt.cpp
   )
 set (EXAMPLES1
   GeoidToGTX.cpp make-egmcof.cpp)

@@ -55,6 +55,8 @@ EXAMPLE_FILES = \
 	example-Utility.cpp \
 	example-Conformal3.cpp \
 	example-Angle.cpp \
+	example-Trigfun.cpp \
+	example-TrigfunExt.cpp \
 	GeoidToGTX.cpp \
 	make-egmcof.cpp
 

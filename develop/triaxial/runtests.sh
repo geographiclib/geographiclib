@@ -3,6 +3,7 @@ SUF=$1
 shift
 FLAGS=$*
 TESTDIR=$HOME/git/triaxial/src
+make Geod3Test
 while read n l; do
     develop/Geod3Test -e $l $FLAGS < $TESTDIR/test$n.txt > test$n.out$SUF &
     sleep 1
