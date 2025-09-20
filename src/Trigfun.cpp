@@ -15,53 +15,53 @@
 #include <GeographicLib/Trigfun.hpp>
 #include "kissfft.hh"
 
+#define USE_ANGLE 0
+
 namespace GeographicLib {
 
   using namespace std;
 
-  Trigfun::Trigfun(const function<real(real)>& f, bool odd, bool sym,
-                   bool centerp, real halfp, int n, int nmax, real tol,
-                   real scale) {
-    if (n == 0) {
-      n = 16;
-      Trigfun t(f, odd, sym, false, halfp, n);
-      while (n <= nmax) {
-        int K = chop(t._coeff, tol, scale);
-        if (K < n) {
-          t._m = K;
-          t._n = t._sym ? K : K - 1;
-          t._coeff.resize(K);
-          *this = t;
-          return;
-        }
-        Trigfun tx(f, odd, sym, true, halfp, n);
-        t.refine(tx);
-        n *= 2;
-      }
-      *this = t;
-      return;
-    }
-    int M = n + (!(odd || sym || centerp) ? 1 : 0);
-    real p = halfp / (sym ? 2 : 1), d = p / n,
-      o = centerp ? d/2 : ( odd ? d : 0 );
-    vector<real> F(M);
-    for (int i = 0; i < M; ++i)
-      F[i] = f(o + d * i);
-    *this = initbysamples(F, odd, sym, centerp, halfp);
+  Trigfun::Trigfun(int n, const std::function<real(real)>& f,
+                   bool odd, bool sym, real halfp, bool centerp) {
+    if (n > 0) {
+      int M = n + (!(odd || sym || centerp) ? 1 : 0);
+      real p = halfp / (sym ? 2 : 1), d = p / n,
+        o = centerp ? d/2 : ( odd ? d : 0 );
+      vector<real> F(M);
+      for (int i = 0; i < M; ++i)
+        F[i] = f(o + d * i);
+      *this = initbysamples(F, odd, sym, halfp, centerp);
+    } else
+      *this = Trigfun{vector<real>{1,0}, odd,sym, halfp};
   }
 
   Trigfun::Trigfun(const function<real(real)>& f, bool odd, bool sym,
                    real halfp, int nmax, real tol, real scale) {
-    *this = Trigfun(f, odd, sym, false, halfp, 0, nmax, tol, scale);
+    int n = 16;
+    Trigfun t(n, f, odd, sym, halfp, false);
+    while (n <= nmax) {
+      int K = chop(t._coeff, tol, scale);
+      if (K < n) {
+        t._m = K;
+        t._n = t._sym ? K : K - 1;
+        t._coeff.resize(K);
+        *this = t;
+        return;
+      }
+      Trigfun tx(n, f, odd, sym, halfp, true);
+      t.refine(tx);
+      n *= 2;
+    }
+    *this = t;
   }
 
   Trigfun::Trigfun(const function<real(real, real)>& f, bool odd, bool sym,
                    real halfp, int nmax, real tol, real scale) {
     // Initialize with 2 samples
-    Trigfun t(
+    Trigfun t(2,
               [&f] (real x) -> real
               { return f(x, Math::NaN()); },
-              odd, sym, false, halfp, 2);
+              odd, sym, halfp, false);
     while (t._n <= nmax) {
       int K = chop(t._coeff, tol, scale);
       if (K < t._n) {
@@ -77,7 +77,7 @@ namespace GeographicLib {
       vector<real> F(M);
       for (int i = 0; i < M; ++i)
         F[i] = f(o + d * i, t(o + d * i));
-      t.refine(initbysamples(F, odd, sym, true, halfp));
+      t.refine(initbysamples(F, odd, sym, halfp, true));
       // n *= 2;
     }
     *this = t;
@@ -85,8 +85,7 @@ namespace GeographicLib {
   }
 
   Trigfun Trigfun::initbysamples(const vector<real>& F,
-                                 bool odd, bool sym, bool centerp,
-                                 real halfp) {
+                                 bool odd, bool sym, real halfp, bool centerp) {
     if (!(isfinite(halfp) && halfp > 0))
       throw GeographicErr("Trigfun::initbysamples halfp not positive");
     using fft_t = kissfft<real>;
@@ -160,7 +159,7 @@ namespace GeographicLib {
     //    if (centerp) cout << "SIZE " << F.size() << " " << H.size() << "\n";
     Trigfun t(H, odd, sym, halfp);
     if constexpr (debug_) {
-      real err = t.check(F, centerp);
+      real err = t.check(F, centerp, 0);
       if (err > 100) {
         cout << t._n << " " << err << endl;
         throw GeographicErr("initbysamples error");
@@ -217,6 +216,7 @@ namespace GeographicLib {
     return _max;
   }
 
+#if !USE_ANGLE
   Math::real Trigfun::operator()(real z) const {
     // Evaluate
     // y = sum(c[k] * sin((k+1/2) * pi/q * z), k, 0, n - 1) if  odd && sym
@@ -227,25 +227,85 @@ namespace GeographicLib {
     //     sum(c[k] * cos(k * pi/h * z), k, 1, n) if !odd && !sym
     if (_coeff.empty()) return 0;
     real y = Math::pi()/(_sym ? _q : _h) * z;
-    int k = _m, k0 = !_sym ? 1 : 0;
-    real u0 = 0, u1 = 0,        // accumulators for sum
+    int k = _m,
+      k0 = _odd && !_sym ? 1 : 0; // add secular term at the end
+    real u0 = 0, u1 = 0,          // accumulators for sum
       x = 2 * cos(y);
     for (; k > k0;) {
       real t = x * u0 - u1 + _coeff[--k];
       u1 = u0; u0 = t;
     }
     // sym
-    //   y = u0*f0(zeta) - u1*fm1(zeta)
+    //   v = u0*f0(zeta) - u1*fm1(zeta)
     //   f0 = odd ? sin(y/2) : cos(y/2)
     //   fm1 = odd ? -sin(y/2) : cos(y/2)
-    //   y = odd ? sin(y/2) * (u0 + u1) : cos(y/2) * (u0 - u1)
-    // !sym
-    //   y = u0*f1(zeta) - u1*f0(zeta)
-    //   f1 = odd ? sin(y) : cos(y)
-    //   f0 = odd ? 0 : 1
+    //   v = odd ? sin(y/2) * (u0 + u1) : cos(y/2) * (u0 - u1)
+    // !sym && !odd
+    //   v = u0*f0(zeta) - u1*fm1(zeta)
+    //   f0 = 1
+    //   fm1 = cos(y)
+    //   v = u0 - cos(y) * u1 = u0 - (x/2) * u1
+    // !sym && odd
+    //   v = u0*f1(zeta) - u1*f0(zeta)
+    //   f1 = sin(y)
+    //   f0 = 0
+    //   v = sin(y) * u0 + secular term
     return _sym ? (_odd ? sin(y/2) * (u0 + u1) : cos(y/2) * (u0 - u1)) :
-      _coeff[0] * (_odd ? y : 1) + (_odd ? sin(y) : x/2) * u0 - (_odd ? 0 : u1);
+      !_odd ? u0 - (x/2) * u1 : _coeff[0] * y + sin(y) * u0;
   }
+
+#else
+  // Implementation in terms of Angle
+  Math::real Trigfun::operator()(real z) const {
+    // Evaluate
+    // y = sum(c[k] * sin((k+1/2) * pi/q * z), k, 0, n - 1) if  odd && sym
+    // y = sum(c[k] * cos((k+1/2) * pi/q * z), k, 0, n - 1) if !odd && sym
+    // y = c[0] * pi/h * z +
+    //     sum(c[k] * sin(k * pi/h * z), k, 1, n) if odd && !sym
+    // y = c[0] +
+    //     sum(c[k] * cos(k * pi/h * z), k, 1, n) if !odd && !sym
+    if (_coeff.empty()) return 0;
+    real y = Math::pi()/(_sym ? _q : _h) * z;
+    return (_odd && !_sym ? _coeff[0] * y : 0) + eval(Angle::radians(y/2));
+  }
+
+  Math::real Trigfun::eval(Angle phi) const {
+    // Evaluate
+    // y = sum(c[k] * sin((2*k+1) * phi), k, 0, n - 1) if  odd && sym
+    // y = sum(c[k] * cos((2*k+1) * phi), k, 0, n - 1) if !odd && sym
+    // y = c[0] * 0 +
+    //     sum(c[k] * sin(2*k * phi), k, 1, n) if odd && !sym
+    // y = c[0] +
+    //     sum(c[k] * cos(2*k * phi), k, 1, n) if !odd && !sym
+    // Note that secular term c[0] is ignored for odd && !sym.
+    if (_coeff.empty()) return 0;
+    int k = _m,
+      k0 = _odd && !_sym ? 1 : 0; // secular term excluded
+    real u0 = 0, u1 = 0,          // accumulators for sum
+      x = 2 * (phi.c() - phi.s()) * (phi.c() + phi.s());
+    for (; k > k0;) {
+      real t = x * u0 - u1 + _coeff[--k];
+      u1 = u0; u0 = t;
+    }
+    // sym
+    //   v = u0*f0(zeta) - u1*fm1(zeta)
+    //   f0 = odd ? sin(phi) : cos(phi)
+    //   fm1 = odd ? -sin(phi) : cos(phi)
+    //   v = odd ? sin(phi) * (u0 + u1) : cos(phi) * (u0 - u1)
+    // !sym && !odd
+    //   v = u0*f0(zeta) - u1*fm1(zeta)
+    //   f0 = 1
+    //   fm1 = cos(2*phi)
+    //   v = u0 - cos(2*phi) * u1 = u2 - (x/2) * u1
+    // !sym && odd
+    //   v = u0*f1(zeta) - u1*f0(zeta)
+    //   f1 = sin(2*phi)
+    //   f0 = 0
+    //   v = sin(2*phi) * u0 + no secular term
+    return _sym ? (_odd ? phi.s() * (u0 + u1) : phi.c() * (u0 - u1)) :
+      !_odd ? u0 - (x/2) * u1 : 2 * phi.s() * phi.c() * u0;
+  }
+#endif
 
   Trigfun Trigfun::integral() const {
     if (_odd && !_sym && _coeff[0] != 0)
@@ -549,8 +609,7 @@ namespace GeographicLib {
         // N.B. tol defaults to epsilon() here.  We need to compute the
         // integral accurately.
       , _f(Trigfun(_fp, false, _sym, halfp,
-                   1 << 16, numeric_limits<real>::epsilon(),
-                   scale).integral())
+                   1 << 16, 0, scale).integral())
       , _tol(sqrt(numeric_limits<real>::epsilon()))
       , _nmax(int(ceil(real(1.5) * _f.NCoeffs())))
       , _invp(false)

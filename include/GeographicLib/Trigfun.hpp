@@ -22,7 +22,10 @@
 #endif
 
 namespace GeographicLib {
-
+  namespace Triaxial {
+  class GeodesicLine3;
+  class Conformal3;
+  }
   /**
    * \brief Representing a function by a Fourier series
    *
@@ -60,6 +63,9 @@ namespace GeographicLib {
    * \include example-Trigfun.cpp
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Trigfun {
+    friend class TrigfunExt;    // For access to root sig 2
+    friend class Triaxial::GeodesicLine3;    // For access to root sig 2
+    friend class Triaxial::Conformal3;    // For access to root sig 2
   private:
     using real = Math::real;
     static const bool debug_ = false;
@@ -123,26 +129,137 @@ namespace GeographicLib {
       , _max(-1)
     {}
     void refine(const Trigfun& tb);
-    real check(const std::vector<real>& F, bool centerp,
-               real tol = 0) const;
+    real check(const std::vector<real>& F, bool centerp, real tol) const;
     // Given z, return dx = finv(z) - nslope * z
     // dx0 is an estimate of dx (NaN means no information)
     // the "p" in the function name mean periodic (vs secular)
     real inversep(real z, const std::function<real(real)>& fp,
-                  real dx0 = Math::NaN(),
-                  int* countn = nullptr, int* countb = nullptr,
-                  real tol = 0) const;
-    /**
-     * Constructor for internal use offering the centerp option and allowing n
-     * to be specified.  The public constructor specified centerp = false and n
-     * = 0 (auto adjust the number of points).
-     **********************************************************************/
-    Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
-            bool centerp, real halfp, int n, int nmax = 1 << 16,
-            real tol = 0,
-            real scale = -1);
+                  real dx0, int* countn, int* countb, real tol) const;
     static Trigfun initbysamples(const std::vector<real>& F,
-                                 bool odd, bool sym, bool centerp, real halfp);
+                                 bool odd, bool sym, real halfp, bool centerp);
+    /**
+     * Tags to indicate which routine is invoking root().  Because the root
+     * functions may be called recursively, each invocation is tagged by an
+     * indicator value \e ind.  This is merely an aid to debugging.
+     **********************************************************************/
+    enum ind {
+      NONE = 0,
+      INV1,
+      INV2,
+      ARCPOS0,
+      FFUNROOT,
+      GFUNROOT,
+      INVERSEP,
+      PIINV,
+      FINV,
+      KINV,
+      OTHER,
+    };
+
+    /**
+     * Given \e z, find \e x, such that \e z = \e f(\e x).
+     *
+     * @param[in] indicator a numeric indicator to track this call (can be
+     *   safely set to Trigfun::OTHER).
+     * @param[in] z the value of \e f(\e x).
+     * @param[in] fp the derivative of \e f(\e x).
+     * @param[in] x0 an estimate of the solution, i.e., \e z &asymp; \e f(\e
+     *   x0).  Use Math::NaN() to indicate that no estimate is known.
+     * @param[in] countn if not nullptr, a pointer to an integer that gets
+     *   incremented by the number of iterations.
+     * @param[in] countb if not nullptr, a pointer to an integer that gets
+     *   incremented by the number of bisection steps (which indicates how well
+     *   Newton's method is working).
+     * @param[in] tol the tolerance using in terminating the root finding.  \e
+     *   tol = 0 (the defaulat) mean to use the machine epsilon.
+     * @return the root \e x = \e f <sup>&minus;1</sup>(\e z).
+     *
+     * Newton's method is used to find the root.  At each step the bounds are
+     * adjusted.  If any Newton step gives a result which lies outside the
+     * bounds, a bisection step is taken instead.
+     *
+     * \warning The routine assumes that there's a unique root.  This, in turn,
+     *   requires that \e f include a secular term.
+     **********************************************************************/
+    // root sig 2
+    real root(ind indicator, real z, const std::function<real(real)>& fp,
+              real x0, int* countn, int* countb, real tol) const;
+    /**
+     * A general purpose Newton solver for \e z = \e f(\e x).
+     *
+     * @param[in] indicator a numeric indicator to track this call (can be
+     *   safely set to Trigfun::OTHER).
+     * @param[in] ffp a function returning \e f(\e x) and \e f'(\e x) as a
+     *   pair.
+     * @param[in] z the value of \e f(\e x).
+     * @param[in] x0 an estimate of the solution, i.e., \e z &cong; \e f(\e
+     *   x0).
+     * @param[in] xa a lower estimate of the solution.
+     * @param[in] xb an upper estimate of the solution.
+     * @param[in] xscale a representative scale for \e x.
+     * @param[in] zscale a representative scale for \e z.
+     * @param[in] s &plusmn;1 depending on whether \e f is an increasing or
+     *   decressing function.
+     * @param[in] countn if not nullptr, a pointer to an integer that gets
+     *   incremented by the number of iterations.
+     * @param[in] countb if not nullptr, a pointer to an integer that gets
+     *   incremented by the number of bisection steps (which indicates how well
+     *   Newton's method is working).
+     * @param[in] tol the tolerance using in terminating the root finding.  \e
+     *   tol = 0 (the defaulat) mean to use the machine epsilon.
+     * @return the root \e x = \e f <sup>&minus;1</sup>(\e z).
+     *
+     * This is a static function, so \e f(\e x) need not be a Trigfun.  \e ffp
+     * provides both the function an its derivative in one function call to
+     * accommodate the (common) situation where the two values can be
+     * efficiently computed together.
+     *
+     * Newton's method is used to find the inverse function.  At each step the
+     * bounds are adjusted.  If any Newton step gives a result which lies
+     * outside the bounds, a bisection step is taken instead.
+     *
+     * \warning The rouine assumes that there's a unique root lying in the
+     *   interval [\e xa, \e xb] and that \e x0 lies in the same interval.
+     **********************************************************************/
+    // root sig 4
+    static real root(ind indicator,
+                     const std::function<std::pair<real, real>(real)>& ffp,
+                     real z,
+                     real x0, real xa, real xb,
+                     real xscale = 1, real zscale = 1, int s = 1,
+                     int* countn = nullptr, int* countb = nullptr,
+                     real tol = 0);
+    /**
+     * Produce a Trigfun for the inverse of \e f.
+     *
+     * @param[in] fp the derivative of \e f(\e x).
+     * @param[in] countn if not nullptr, a pointer to an integer that gets
+     *   incremented by the number of iterations need to create the inverse.
+     * @param[in] countb if not nullptr, a pointer to an integer that gets
+     *   incremented by the number of bisection steps (which indicates how well
+     *   Newton's method is working) needed to create the inverse.
+     * @param[in] nmax the maximum number of points in a quarter period
+     *   (default 2^16 = 65536).
+     * @param[in] tol the tolerance using in terminating the root finding.  \e
+     *   tol = 0 (the defaulat) mean to use the machine epsilon.
+     * @param[in] scale; if \e scale is negative (the default), \e tol sets the
+     *   error relative to the largest Fourier coeffient.  Otherwise, the error
+     *   is relative to the maximum of the largest Fourier coefficient and \e
+     *   scale.
+     * @return the Trigfun represention of \e f <sup>&minus;1</sup>(\e z).
+     *
+     * As with the normal constructor this routine successively doubles the
+     * number of sample points, which are computed using Newton's method.  A
+     * good starting guess for Newton's method is provided by the previous
+     * Fourier approximation.  As a result the average number of Newton
+     * iterations per sample point is about 1 or 2.
+     *
+     * \note Computing the inverse is only possible with a Trigfun with a
+     *   secular term.
+     **********************************************************************/
+    Trigfun inverse(const std::function<real(real)>& fp,
+                    int* countn, int* countb,
+                    int nmax, real tol, real scale) const;
   public:
     /**
      * Default constructor specifying with the function \e f(\e x) = 0.
@@ -157,6 +274,22 @@ namespace GeographicLib {
       , _q(_h/2)
       , _max(-1)
     {}
+    /**
+     * Construct a Trigfun with a given number of samples a function.
+     *
+     * @param[in] n the number of samples.
+     * @param[in] f the function.
+     * @param[in] odd is the function odd.
+     * @param[in] sym is the function symmetric about the quarter period
+     *   point (so it contains only odd Fourier components.
+     * @param[in] halfp the half period.
+     * @param[in] centerp whether to sample on a centered grid (default false).
+     *
+     * \warning \e f must be a periodic function.  With \e odd = true and \e
+     *   sym = false, the secular term can be set with setsecular().
+     **********************************************************************/
+    Trigfun(int n, const std::function<real(real)>& f,
+            bool odd, bool sym, real halfp, bool centerp = false);
     /**
      * Construct a Trigfun from a function of one argument.
      *
@@ -239,6 +372,8 @@ namespace GeographicLib {
      * @return the function value.
      **********************************************************************/
     real operator()(real x) const;
+    // For support of Angle
+    // real eval(Angle phi) const;
 
     /**
      * The integral of a Trigfun.
@@ -250,108 +385,9 @@ namespace GeographicLib {
      **********************************************************************/
     Trigfun integral() const;
     /**
-     * Tags to indicate which routine is invoking root().  Because the root
-     * functions may be called recursively, each invocation is tagged by an
-     * indicator value \e ind.  This is merely an aid to debugging.
-     **********************************************************************/
-    enum ind {
-      NONE = 0,
-      INV1,
-      INV2,
-      ARCPOS0,
-      FFUNROOT,
-      GFUNROOT,
-      INVERSEP,
-      PIINV,
-      FINV,
-      KINV,
-      OTHER,
-    };
-
-    /**
-     * Given \e z, find \e x, such that \e z = \e f(\e x).
-     *
-     * @param[in] indicator a numeric indicator to track this call (can be
-     *   safely set to Trigfun::OTHER).
-     * @param[in] z the value of \e f(\e x).
-     * @param[in] fp the derivative of \e f(\e x).
-     * @param[in] x0 an estimate of the solution, i.e., \e z &asymp; \e f(\e
-     *   x0).  Use Math::NaN() to indicate that no estimate is known.
-     * @param[in] countn if not nullptr, a pointer to an integer that gets
-     *   incremented by the number of iterations.
-     * @param[in] countb if not nullptr, a pointer to an integer that gets
-     *   incremented by the number of bisection steps (which indicates how well
-     *   Newton's method is working).
-     * @param[in] tol the tolerance using in terminating the root finding.  \e
-     *   tol = 0 (the defaulat) mean to use the machine epsilon.
-     * @return the root \e x = \e f <sup>&minus;1</sup>(\e z).
-     *
-     * Newton's method is used to find the root.  At each step the bounds are
-     * adjusted.  If any Newton step gives a result which lies outside the
-     * bounds, a bisection step is taken instead.
-     *
-     * \warning The routine assumes that there's a unique root.  This, in turn,
-     *   requires that \e f include a secular term.
-     **********************************************************************/
-    // root sig 2
-    real root(ind indicator, real z, const std::function<real(real)>& fp,
-              real x0,
-              int* countn = nullptr, int* countb = nullptr,
-              real tol = 0) const;
-    /**
-     * A general purpose Newton solver for \e z = \e f(\e x).
-     *
-     * @param[in] indicator a numeric indicator to track this call (can be
-     *   safely set to Trigfun::OTHER).
-     * @param[in] ffp a function returning \e f(\e x) and \e f'(\e x) as a
-     *   pair.
-     * @param[in] z the value of \e f(\e x).
-     * @param[in] x0 an estimate of the solution, i.e., \e z &cong; \e f(\e
-     *   x0).
-     * @param[in] xa a lower estimate of the solution.
-     * @param[in] xb an upper estimate of the solution.
-     * @param[in] xscale a representative scale for \e x.
-     * @param[in] zscale a representative scale for \e z.
-     * @param[in] s &plusmn;1 depending on whether \e f is an increasing or
-     *   decressing function.
-     * @param[in] countn if not nullptr, a pointer to an integer that gets
-     *   incremented by the number of iterations.
-     * @param[in] countb if not nullptr, a pointer to an integer that gets
-     *   incremented by the number of bisection steps (which indicates how well
-     *   Newton's method is working).
-     * @param[in] tol the tolerance using in terminating the root finding.  \e
-     *   tol = 0 (the defaulat) mean to use the machine epsilon.
-     * @return the root \e x = \e f <sup>&minus;1</sup>(\e z).
-     *
-     * This is a static function, so \e f(\e x) need not be a Trigfun.  \e ffp
-     * provides both the function an its derivative in one function call to
-     * accommodate the (common) situation where the two values can be
-     * efficiently computed together.
-     *
-     * Newton's method is used to find the inverse function.  At each step the
-     * bounds are adjusted.  If any Newton step gives a result which lies
-     * outside the bounds, a bisection step is taken instead.
-     *
-     * \warning The rouine assumes that there's a unique root lying in the
-     *   interval [\e xa, \e xb] and that \e x0 lies in the same interval.
-     **********************************************************************/
-    // root sig 4
-    static real root(ind indicator,
-                     const std::function<std::pair<real, real>(real)>& ffp,
-                     real z,
-                     real x0, real xa, real xb,
-                     real xscale = 1, real zscale = 1, int s = 1,
-                     int* countn = nullptr, int* countb = nullptr,
-                     real tol = 0);
-    /**
      * Produce a Trigfun for the inverse of \e f.
      *
      * @param[in] fp the derivative of \e f(\e x).
-     * @param[in] countn if not nullptr, a pointer to an integer that gets
-     *   incremented by the number of iterations need to create the inverse.
-     * @param[in] countb if not nullptr, a pointer to an integer that gets
-     *   incremented by the number of bisection steps (which indicates how well
-     *   Newton's method is working) needed to create the inverse.
      * @param[in] nmax the maximum number of points in a quarter period
      *   (default 2^16 = 65536).
      * @param[in] tol the tolerance using in terminating the root finding.  \e
@@ -372,8 +408,9 @@ namespace GeographicLib {
      *   secular term.
      **********************************************************************/
     Trigfun inverse(const std::function<real(real)>& fp,
-                    int* countn = nullptr, int* countb = nullptr,
-                    int nmax = 1 << 16, real tol = 0, real scale = -1) const;
+                    int nmax = 1 << 16, real tol = 0, real scale = -1) const {
+      return inverse(fp, nullptr, nullptr, nmax, tol, scale);
+    }
 
     /**
      * @return the number terms \e M in the Fourier series.
@@ -413,9 +450,12 @@ namespace GeographicLib {
   };
 
   /**
-   * \brief A function defined by its derivative and its inverse
+   * \brief A function defined by its derivative.
    *
-   * This builds on the Trigfun class.
+   * The main benefit of a Trigfun is not its ability to approximate a
+   * function. but the fact that once a function is in the form of a Fourier
+   * series, computing its indefinite integral is trivial.  This class makes
+   * this benefit explicit by defining a function in terms of its derivative.
    *
    * Example of use:
    * \include example-TrigfunExt.cpp
@@ -443,7 +483,7 @@ namespace GeographicLib {
     void ComputeInverse() {
       if (!_invp && !_sym) {
         _countn = _countb = 0;
-        _finv = _f.inverse(_fp, &_countn, &_countb, _nmax, _tol);
+        _finv = _f.inverse(_fp, &_countn, &_countb, _nmax, _tol, -1);
         _invp = true;
       }
     }
@@ -461,7 +501,7 @@ namespace GeographicLib {
     real inv2(real z, int* countn = nullptr, int* countb = nullptr) const {
       if (!_invp) return Math::NaN();
       return _sym ? Math::NaN() :
-        _f.root(Trigfun::INV2, z, _fp, _finv(z), countn, countb);
+        _f.root(Trigfun::INV2, z, _fp, _finv(z), countn, countb, 0);
     }
     real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
       return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);

@@ -271,9 +271,13 @@ namespace GeographicLib {
       // This used to employ Math::fma; but that's too slow and it seemed not
       // to improve the accuracy noticeably.  This might change when there's
       // direct hardware support for fma.
-      T y = N < 0 ? 0 : *p++;
-      while (--N >= 0) y = y * x + *p++;
-      return y;
+      T z = N < 0 ? 0 : *p++;
+      while (--N >= 0) z = z * x + *p++;
+      // To compute z = p(x) and dz = (p(y)-p(x))/(y-x) at the same time
+      // See Kahan + Fateman Sec 2.3.  If y = x, dz = p'(x)
+      //      T z = N < 0 ? 0 : *p++, dz = 0;
+      //      while (--N >= 0) { dz = dz * y + p; z = z * x + *p++; }
+      return z;
     }
 
     /**

@@ -253,9 +253,9 @@ namespace GeographicLib {
       betay(_aux.Convert(_aux.PHI, _aux.BETA, phiy, _exact).normalized());
     real DpbetaDbeta =
       DAuxLatitude::DClenshaw(false,
-                        betay.radians() - betax.radians(),
-                        betax.y(), betax.x(), betay.y(), betay.x(),
-                        _pP.data(), _lL),
+                              betay.radians() - betax.radians(),
+                              betax.y(), betax.x(), betay.y(), betay.x(),
+                              _pP.data(), _lL),
       tx = chix.tan(), ty = chiy.tan(),
       DbetaDpsi = _exact ?
       _aux.DParametric(phix, phiy) / _aux.DIsometric(phix, phiy) :
