@@ -220,7 +220,7 @@ namespace GeographicLib {
     // nonsense.
     //
     int k = K;
-    // suffices a b denote [1,1], [2,1] elements of matrix/vector
+    // suffixes a b denote [1,1], [2,1] elements of matrix/vector
     real D2 = Delta * Delta,
       czetap = czeta2 * czeta1 - szeta2 * szeta1,
       szetap = szeta2 * czeta1 + czeta2 * szeta1,

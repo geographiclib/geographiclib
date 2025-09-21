@@ -10,7 +10,6 @@
 #if !defined(GEOGRAPHICLIB_CARTESIAN3_HPP)
 #define GEOGRAPHICLIB_CARTESIAN3_HPP 1
 
-#include <array>
 #include <utility>
 #include <functional>
 #include <random>

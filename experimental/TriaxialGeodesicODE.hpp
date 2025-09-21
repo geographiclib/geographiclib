@@ -57,7 +57,13 @@
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 
 namespace GeographicLib {
-namespace experimental {
+  /**
+   * \brief Namespace for experimental components of %GeographicLib
+   *
+   * These routines are distributed as source code with %GeographicLib but are
+   * not incorporated into the library itself.
+   **********************************************************************/
+  namespace experimental {
 
   class TriaxialGeodesicODE {
   public:

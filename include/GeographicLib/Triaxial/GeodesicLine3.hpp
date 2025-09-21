@@ -155,10 +155,6 @@ namespace GeographicLib {
           (_tx ? _ell.am(w) : w);
       }
       int NCoeffs() const { return _fun.NCoeffs(); }
-      std::pair<int, int> InvCounts() const {
-        return _umb ? std::pair<int, int>(_countn, _countb) :
-          _fun.InvCounts();
-      }
       bool txp() const { return _tx; }
       real HalfPeriod() const {
         return _umb ? Math::infinity() : (_tx ? _ell.K() : Math::pi()/2);

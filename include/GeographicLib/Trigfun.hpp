@@ -35,7 +35,7 @@ namespace GeographicLib {
    * - Only odd or even functions are allowed (i.e., only sine of only cosine
    *   terms in the Fourier series).
    * - Can specify that the function has symmetry about the quarter-period
-   *   point so that the Fourier series only includes odd terms.
+   *   point so that the Fourier series only includes odd harmonics.
    * - The integral of a Trigfun is counted as a Trigfun even if it includes a
    *   secular term.
    * - The inverse function of the integral is also a Trigfun (only makes sense
@@ -63,10 +63,10 @@ namespace GeographicLib {
    * \include example-Trigfun.cpp
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Trigfun {
-    friend class TrigfunExt;    // For access to root sig 2
-    friend class Triaxial::GeodesicLine3;    // For access to root sig 2
-    friend class Triaxial::Conformal3;    // For access to root sig 2
   private:
+    friend class TrigfunExt;              // For access to root sig 2
+    friend class Triaxial::GeodesicLine3; // For access to root sig 2
+    friend class Triaxial::Conformal3;    // For access to root sig 2
     using real = Math::real;
     static const bool debug_ = false;
     int _m,                     // Number of coefficients in series
@@ -279,14 +279,27 @@ namespace GeographicLib {
      *
      * @param[in] n the number of samples.
      * @param[in] f the function.
-     * @param[in] odd is the function odd.
+     * @param[in] odd is the function odd?  If it's not odd, then it is even.
      * @param[in] sym is the function symmetric about the quarter period
-     *   point (so it contains only odd Fourier components.
+     *   point (so it contains only odd Fourier harmonics)?
      * @param[in] halfp the half period.
      * @param[in] centerp whether to sample on a centered grid (default false).
      *
-     * \warning \e f must be a periodic function.  With \e odd = true and \e
-     *   sym = false, the secular term can be set with setsecular().
+     * For \e sym = false, \e n is the number of samples in a half period, and
+     * spacing between the samples is \e halfp/\e n.  (If \e centerp = false
+     * and \e oddp = false, the function is, in fact sampled \e n + 1 times.)
+     * The number of points given to the FFT routine is 2\e n.
+     *
+     * For \e sym = true, \e n is the number of samples in a quarter period, and
+     * spacing between the samples is \e halfp/(2\e n).  The number of points
+     * given to the FFT routine is 4\e n.
+     *
+     * \note In order for the FFT method to operate efficiently, \e n should be
+     * the product of a small factors (typically a power of 2).
+     *
+     * \warning \e f must be a periodic function and it must be either even or
+     *   odd.  With \e odd = true and \e sym = false, the secular term can be
+     *   set with setsecular().
      **********************************************************************/
     Trigfun(int n, const std::function<real(real)>& f,
             bool odd, bool sym, real halfp, bool centerp = false);
@@ -294,9 +307,9 @@ namespace GeographicLib {
      * Construct a Trigfun from a function of one argument.
      *
      * @param[in] f the function.
-     * @param[in] odd is the function odd.
+     * @param[in] odd is the function odd?  If it's not odd, then it is even.
      * @param[in] sym is the function symmetric about the quarter period
-     *   point (so it contains only odd Fourier components.
+     *   point (so it contains only odd Fourier harmonics)?
      * @param[in] halfp the half period.
      * @param[in] nmax the maximum number of points in a half/quarter period
      *   (default 2^16 = 65536).
@@ -317,8 +330,9 @@ namespace GeographicLib {
      * series</a> (2017); <a href="https://arxiv.org/abs/1512.01803">
      * preprint</a>.
      *
-     * \warning \e f must be a periodic function.  With \e odd = true and \e
-     *   sym = false, the secular term can be set with setsecular().
+     * \warning \e f must be a periodic function and it must be either even or
+     *   odd.  With \e odd = true and \e sym = false, the secular term can be
+     *   set with setsecular().
      **********************************************************************/
     Trigfun(const std::function<real(real)>& f, bool odd, bool sym,
             real halfp, int nmax = 1 << 16,
@@ -328,9 +342,9 @@ namespace GeographicLib {
      * Construct a Trigfun from a function of two arguments.
      *
      * @param[in] f the function.
-     * @param[in] odd is the function odd.
-     * @param[in] sym is the function symmetric (even) about the quarter period
-     *   point (so it contains only odd Fourier components.
+     * @param[in] odd is the function odd?  If it's not odd, then it is even.
+     * @param[in] sym is the function symmetric about the quarter period
+     *   point (so it contains only odd Fourier harmonics)?
      * @param[in] halfp the half period.
      * @param[in] nmax the maximum number of points in a half/quarter period
      *   (default 2^16 = 65536).
@@ -350,8 +364,9 @@ namespace GeographicLib {
      * of the function values at the new points is found by using the current
      * Fourier representation.
      *
-     * \warning \e f must be a periodic function.  With \e odd = true and \e
-     *   sym = false, the secular term can be set with setsecular().
+     * \warning \e f must be a periodic function and it amust be either even or
+     *   odd.  With \e odd = true and \e sym = false, the secular term can be
+     *   set with setsecular().
      **********************************************************************/
     Trigfun(const std::function<real(real, real)>& f, bool odd, bool sym,
             real halfp, int nmax = 1 << 16,
@@ -369,7 +384,7 @@ namespace GeographicLib {
      * Evaluate the Trigfun.
      *
      * @param[in] x the function argument.
-     * @return the function value.
+     * @return the function value \e f(\e x).
      **********************************************************************/
     real operator()(real x) const;
     // For support of Angle
@@ -404,6 +419,10 @@ namespace GeographicLib {
      * Fourier approximation.  As a result the average number of Newton
      * iterations per sample point is about 1 or 2.
      *
+     * \e scale is used when \e f(\e x) is a correction term added to a larger
+     * contribution; and it would then be the magnitude of the larger
+     * contribution.
+
      * \note Computing the inverse is only possible with a Trigfun with a
      *   secular term.
      **********************************************************************/
@@ -413,7 +432,21 @@ namespace GeographicLib {
     }
 
     /**
-     * @return the number terms \e M in the Fourier series.
+     * @return whether the function is odd or not.  If it's not odd, then it is
+     *   even.
+     **********************************************************************/
+    bool Odd() const { return _odd; }
+    /**
+     * @return whether the function is symmetric about the quarter peroid
+     *   point.  If it is it, then the Fourier series has only odd terms.
+     **********************************************************************/
+    bool Symmetric() const { return _sym; }
+    /**
+     * @return the half period of the function.
+     **********************************************************************/
+    real HalfPeriod() const { return _h; }
+    /**
+     * @return the number of terms in the  Fourier series.
      **********************************************************************/
     int NCoeffs() const { return _m; }
     /**
@@ -425,10 +458,6 @@ namespace GeographicLib {
      *   remaining coefficients (and is thus an overestimate).
      **********************************************************************/
     real Max() const;
-    /**
-     * @return the half period of the function.
-     **********************************************************************/
-    real HalfPeriod() const { return _h; }
     /**
      * @return the (approximate) half range of the function.
      *
@@ -450,36 +479,109 @@ namespace GeographicLib {
   };
 
   /**
-   * \brief A function defined by its derivative.
+   * \brief A function defined by its derivative and its inverse.
    *
-   * The main benefit of a Trigfun is not its ability to approximate a
-   * function. but the fact that once a function is in the form of a Fourier
-   * series, computing its indefinite integral is trivial.  This class makes
-   * this benefit explicit by defining a function in terms of its derivative.
+   * This is an extension of Trigfun which allows a function to be defined by
+   * its derivative.  In this case the derivative must be even, so that its
+   * integral is odd (and taken to be zero at the origin).
+   *
+   * In addition, this class offers a flexible interface to computing the
+   * inverse of the function.  If the inverse is only required at a few points
    *
    * Example of use:
    * \include example-TrigfunExt.cpp
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT TrigfunExt {
   private:
+    friend class Triaxial::GeodesicLine3; // For access internal inv, inv1
     using real = Math::real;
     std::function<real(real)> _fp;
     bool _sym;
-    Trigfun _f;
+    Trigfun _f, _finv;
     real _tol;
     int _nmax;
     bool _invp;
-    Trigfun _finv;
     int _countn, _countb;
+
+    // Approximate inverse using _finv
+    real inv0(real z) const {
+      if (!_invp) return Math::NaN();
+      return _sym ? Math::NaN() : _finv(z);
+    }
+    // Accurate inverse by direct Newton (not using _finv)
+    real inv1(real z, int* countn, int* countb) const {
+      return _sym ? Math::NaN() : _f.root(Trigfun::INV1, z, _fp, Math::NaN(),
+                                          countn, countb, 0);
+    }
+    // Accurate inverse correcting result from _finv
+    real inv2(real z, int* countn, int* countb) const {
+      if (!_invp) return Math::NaN();
+      return _sym ? Math::NaN() :
+        _f.root(Trigfun::INV2, z, _fp, _finv(z), countn, countb, 0);
+    }
+    real inv(real z, int* countn, int* countb) const {
+      return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
+    }
   public:
     TrigfunExt() {}
     /**
      * Constructor specifying the derivative, an even periodic function
+     *
+     * @param[in] fp the derivative function, \e fp(\e x) = \e f'(\e x).
+     * @param[in] halfp the half period.
+     * @param[in] sym is \e fp symmetric about the quarter period point (so it
+     *   contains only odd Fourier harmonics)?
+     * @param[in] scale; this is passed to the Trigfun constructor when finding
+     *   the Fourier series for \e fp.
+     *
+     * \warning \e fp must be an even periodic function.  In addition \e fp
+     *   must be non-negative for the inverse of \e f to be computed (in this
+     *   case, \e f is a monotonically increasing function).  The inverse is
+     *   undefined for \e sym = true.
      **********************************************************************/
     TrigfunExt(const std::function<real(real)>& fp, real halfp,
                bool sym = false, real scale = -1);
+    /**
+     * Evaluate the TrigfunExt.
+     *
+     * @param[in] x the function argument.
+     * @return the function value \e f(\e x).
+     **********************************************************************/
     real operator()(real x) const { return _f(x); }
+    /**
+     * Evaluate the derivative for TrigfunExt.
+     *
+     * @param[in] x the function argument.
+     * @return the value of the derivate \e fp(\e x).  This uses the function
+     *   object passed to the constructor.
+     **********************************************************************/
     real deriv(real x) const { return _fp(x); }
+    /**
+     * Evaluate the inverse of \e f
+     *
+     * @param[in] z the vaule of \e f(\e x)
+     * @return the value of \e x = \e f <sup>&minus;1</sup>(\e z).
+     *
+     * This compute the inverse using Newton's method with the derivate
+     * function \e fp supplied on construction.  Initially, the starting guess
+     * is based on just the secular component of \e f(\e x).  However, if
+     * ComputeInverse() is called, a rough Trigfun approximation to the inverse
+     * is found and this is used as the starting point for Newton's method.
+     **********************************************************************/
+    real inv(real z) const {
+      return _invp ? inv2(z, nullptr, nullptr) : inv1(z, nullptr, nullptr);
+    }
+    /**
+     * Compute a coarse Fourier series approximation of the inverse.
+     *
+     * This is used to provide a better starting guess for Newton's method in
+     * inv().  Because ComputeInverse() is fairly expensive, this only makes
+     * sense if inv() will be called many times.  In order to limit the expense
+     * in computing this approximate inverse, the number of Fourier componensts
+     * in the Trigfun for the inverse is limited to 3/2 of the number of
+     * components for \e f and the tolerance is set to the square root of the
+     * machine epsilon.
+     **********************************************************************/
     void ComputeInverse() {
       if (!_invp && !_sym) {
         _countn = _countb = 0;
@@ -487,36 +589,37 @@ namespace GeographicLib {
         _invp = true;
       }
     }
-    // Approximate inverse using _finv
-    real inv0(real z) const {
-      if (!_invp) return Math::NaN();
-      return _sym ? Math::NaN() : _finv(z);
-    }
-    // Accurate inverse by direct Newton (not using _finv)
-    real inv1(real z, int* countn = nullptr, int* countb = nullptr) const {
-      return _sym ? Math::NaN() : _f.root(Trigfun::INV1, z, _fp, Math::NaN(),
-                                          countn, countb, 0);
-    }
-    // Accurate inverse correcting result from _finv
-    real inv2(real z, int* countn = nullptr, int* countb = nullptr) const {
-      if (!_invp) return Math::NaN();
-      return _sym ? Math::NaN() :
-        _f.root(Trigfun::INV2, z, _fp, _finv(z), countn, countb, 0);
-    }
-    real inv(real z, int* countn = nullptr, int* countb = nullptr) const {
-      return _invp ? inv2(z, countn, countb) : inv1(z, countn, countb);
-    }
+    /**
+     * @return whether the function is symmetric about the quarter peroid
+     *   point.  If it is it, then the Fourier series has only odd harmonics.
+     **********************************************************************/
+    bool Symmetric() const { return _sym; }
+    /**
+     * @return the number of terms in the  Fourier series for \e f.
+     **********************************************************************/
     int NCoeffs() const { return _f.NCoeffs(); }
+    /**
+     * @return the number of terms in the Fourier series for
+     *   \e f<sup>&minus;1</sup>.
+     **********************************************************************/
     int NCoeffsInv() const {
       if (!_invp) return -1;
       return _finv.NCoeffs(); }
-    std::pair<int, int> InvCounts() const {
-      if (!_invp) return std::pair<int, int>(-1, -1);
-      return std::pair<int, int>(_countn, _countb);
-    }
+    /**
+     * @return Max() for the underlying Trigfun.
+     **********************************************************************/
     real Max() const { return _f.Max(); }
+    /**
+     * @return HalfPeriod() for the underlying Trigfun.
+     **********************************************************************/
     real HalfPeriod() const { return _f.HalfPeriod(); }
+    /**
+     * @return HalfRange() for the underlying Trigfun.
+     **********************************************************************/
     real HalfRange() const { return _f.HalfRange(); }
+    /**
+     * @return Slope() for the underlying Trigfun.
+     **********************************************************************/
     real Slope() const { return _f.Slope(); }
   };
 

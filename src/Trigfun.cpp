@@ -608,8 +608,7 @@ namespace GeographicLib {
       , _sym(sym)
         // N.B. tol defaults to epsilon() here.  We need to compute the
         // integral accurately.
-      , _f(Trigfun(_fp, false, _sym, halfp,
-                   1 << 16, 0, scale).integral())
+      , _f(Trigfun(_fp, false, _sym, halfp, 1 << 16, 0, scale).integral())
       , _tol(sqrt(numeric_limits<real>::epsilon()))
       , _nmax(int(ceil(real(1.5) * _f.NCoeffs())))
       , _invp(false)

@@ -16,6 +16,15 @@
 #include <GeographicLib/Angle.hpp>
 
 namespace GeographicLib {
+  /**
+   * \brief Namespace for operations on triaxial ellipsoids
+   *
+   * The algorithms on triaxial ellipsoids are, for the most part, distinct
+   * from those in the rest of %GeographicLib, which deal with biaxial
+   * ellipsoids; it is therefore convenient to put them in a distinct
+   * namespace.  The header files are included via
+   * GeographicLib/Triaxial/Class.hpp.
+   **********************************************************************/
   namespace Triaxial {
   class GEOGRAPHICLIB_EXPORT Ellipsoid3 {
   public:
