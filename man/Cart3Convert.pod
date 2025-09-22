@@ -4,8 +4,9 @@ Cart3Convert -- convert geocentric coordinates for a triaxial ellipsoid
 
 =head1 SYNOPSIS
 
-B<Cart3Convert> [ B<-E> | B<-G> | B<-P> | B<-C> | B<-R> I<nrand> ]
+B<Cart3Convert> [ B<-E> | B<-G> | B<-P> | B<-C> ]
 [ B<-r> ] [ B<-3> | B<-D> ]
+[ B<-R> I<nrand> ] [ B<--seed> I<s> ]
 [ B<-t> I<a> I<b> I<c> | B<-e> I<b> I<e2> I<k2> I<kp2> ]
 [ B<-d> | B<-:> ] [ B<-w> ] [ B<-p> I<prec> ]
 [ B<--comment-delimiter> I<commentdelim> ]
@@ -67,15 +68,14 @@ provided, the reserve operation is undertaken reading I<x>, I<y>, I<z>
 (which asre assumed to denote a point on the ellipsoid) on standard
 input and printing the I<latitude> and I<longitude>.
 
-If the B<-3> flag is given (only applicable with B<-E> or B<-G>) then
-and arbitrary point is specified either with I<beta>, I<omega>, I<H> or with
-I<phi>, I<lambda>, I<h>.
+If the B<-3> flag is given (this cannot be combined with B<-D>, the an
+arbitrary point in three-dimensional space is specified either with
+I<beta>, I<omega>, I<H> or with I<phi>, I<lambda>, I<h>.
 
-If the B<-D> flag is given (only appliable with B<-E> and this cannot
-be combined with B<-3>, the heading (direction) is included in the
-computation converting I<beta> I<omega> I<alpha> to I<x>, I<y>, I<z>
-I<vx>, I<vy>, I<vz> where [I<vx>, I<vy>, I<vz>] is a unit vector lying
-in the surface of the ellipsoid.
+If the B<-D> flag is given (this cannot be combined with B<-3>, the
+heading (direction) is included in the computation converting I<beta>
+I<omega> I<alpha> to I<x>, I<y>, I<z> I<vx>, I<vy>, I<vz> where [I<vx>,
+I<vy>, I<vz>] is a unit vector lying in the surface of the ellipsoid.
 
 If the B<-R> flag is given, do not read any input; instead output random
 cartesian points lying on the surface of the ellipsoid.  If the B<-r>
@@ -86,17 +86,25 @@ triaxial coordinate systems.
 
 =over
 
-=item B<-E> I<latitude> and I<longitude> interpreted as ellipsoidal
-coordinates I<beta> and I<omega>.  This is the default.
+=item B<-E>
 
-=item B<-G> I<latitude> and I<longitude> interpreted as geodetic
-coordinates I<phi> and I<lambda>.
+I<latitude> and I<longitude> is interpreted as ellipsoidal coordinates
+I<beta> and I<omega>.  This is the default.
 
-=item B<-P> I<latitude> and I<longitude> interpreted as geodetic
-coordinates I<phi'> and I<lambda'>.
+=item B<-G>
 
-=item B<-C> I<latitude> and I<longitude> interpreted as geodetic
-coordinates I<phi"> and I<lambda">.
+I<latitude> and I<longitude> is interpreted as geodetic coordinates
+I<phi> and I<lambda>.
+
+=item B<-P>
+
+I<latitude> and I<longitude> is interpreted as parametric coordinates
+I<phi'> and I<lambda'>.
+
+=item B<-C>
+
+I<latitude> and I<longitude> is interpreted as geocentric coordinates
+I<phi"> and I<lambda">.
 
 =item B<-r>
 
@@ -106,23 +114,28 @@ on the surface of the ellipsoid.
 
 =item B<-3>
 
-include the height I<h> or I<H> in the calculation.  This is only
-allowed with B<-E> (height = I<H>) or B<-G> (height = I<h>).
+include the height I<h> or I<H> in the calculation.  This cannot be
+combined with B<-D>.
 
 =item B<-D>
 
-include the direction I<alpha> in the calculation.  This is only allowed
-with B<-E>.  With the B<-r> option, it is assumed that the vector
-[I<vx>, I<vy>, I<vz>] is tangent to the surface of the ellipsoid.
+include the direction I<alpha> in the calculation.  With the B<-r>
+option, it is assumed that the vector [I<vx>, I<vy>, I<vz>] is tangent
+to the surface of the ellipsoid.  This cannot be combined with B<-3>.
 
 =item B<-R> I<nrand>
 
 output I<nrand> random points on the surface of the ellipsoid as
 cartesian coordinates.  This B<-D> add also a random cartesian direction
 tangent to the surface of the ellipsoid.  In this mode, nothing is read
-from standard input.  With the B<-r> option is ignored the random points
-are converted into one of the triaxial coordinate systems (and the
-direction is converted to a heading if B<-D> and B<-E> are given).
+from standard input.  With the B<-r> option the random points are
+converted into one of the triaxial coordinate systems (and the direction
+is converted to a heading if B<-D> is given).
+
+=item B<--seed> I<s>
+
+set the random number seed to I<s> when using B<-R>.  I<s> = 0 (the
+default) causes a random seed to be used.
 
 =item B<-t> I<a> I<b> I<c>
 
@@ -209,12 +222,10 @@ file name of "-" stands for standard output.
 
 =head1 EXAMPLES
 
-   echo 33.3 44.4 6000 | CartConvert
-   => 3816209.60 3737108.55 3485109.57
-   echo 33.3 44.4 6000 | CartConvert -l 33 44 20
-   => 37288.97 33374.29 5783.64
-   echo 30000 30000 0 | CartConvert -r
-   => 6.483 45 -6335709.73
+   echo 1 2 3 | Cart3Convert -t 3 2 1 -3 -p 0 -r
+   => 58.69140 75.11263 2.5860649
+   echo 58.69140 75.11263 2.5860649 | Cart3Convert -t 3 2 1 -3 -p 0
+   => 1.0000001 2.0000003 2.9999999
 
 =head1 ERRORS
 

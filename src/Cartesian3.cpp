@@ -47,9 +47,8 @@ namespace GeographicLib {
     return pair<real, real>(fv + fcorr, fp);
   }
 
-  Math::real
-  Cartesian3::cartsolve(const function<pair<real, real>(real)>& f,
-                        real p0, real pscale) {
+  Math::real Cartesian3::cartsolve(const function<pair<real, real>(real)>& f,
+                                   real p0, real pscale) {
     // Solve
     //   f(p) = 0
     // Initial guess is p0; pscale is a scale factor for p; scale factor for f
@@ -173,7 +172,7 @@ namespace GeographicLib {
       r[2] /= _axes[2];
     } // else n == 0, r is unchanged
     phi = ang(r[2], hypot(r[0], r[1]));
-    lam = ang(r[1], r[0]);
+    lam = ang(r[1], r[0]);      // ang{0, 0} -> 0
   }
 
   template<int n>
@@ -197,25 +196,128 @@ namespace GeographicLib {
     } // else n == 1, d = 1 and r is already on the surface of the ellipsoid
   }
 
-  void Cartesian3::cart2togeod(vec3 r, Angle& phi, Angle& lam) const {
-    cart2togeneric<2>(r, phi, lam);
-  }
-  void Cartesian3::geodtocart2(Angle phi, Angle lam, vec3& r) const {
-    generictocart2<2>(phi, lam, r);
-  }
-
-  void Cartesian3::cart2toparam(vec3 r, Angle& phip, Angle& lamp) const {
-    cart2togeneric<1>(r, phip, lamp);
-  }
-  void Cartesian3::paramtocart2(Angle phip, Angle lamp, vec3& r) const {
-    generictocart2<1>(phip, lamp, r);
+  template<int n>
+  Angle Cartesian3::meridianplane(ang lam) const {
+    if constexpr (n == 2)
+      return lam.modang(_axes2[0]/_axes2[1]);
+    else if constexpr (n == 1)
+      return lam.modang(_axes[0]/_axes[1]);
+    else                        // n == 0
+      return lam;
   }
 
-  void Cartesian3::cart2togeocen(vec3 r, Angle& phipp, Angle& lampp) const {
-    cart2togeneric<0>(r, phipp, lampp);
+  void Cartesian3::cardinaldir(vec3 r, ang merid, vec3& N, vec3& E) const {
+    vec3 up = {r[0] / _axes2[0], r[1] / _axes2[1],
+      r[2] / _axes2[2]};
+    Ellipsoid3::normvec(up);
+    N = { -r[0]*r[2] / _axes2[2], -r[1]*r[2] / _axes2[2],
+      Math::sq(r[0]) / _axes2[0] + Math::sq(r[1]) / _axes2[1]};
+    if (r[0] == 0 && r[1] == 0) {
+      real s = copysign(real(1), -r[2]);
+      N = {s*merid.c(), s*merid.s(), 0};
+    } else
+      Ellipsoid3::normvec(N);
+    // E = N x up
+    E = { N[1]*up[2] - N[2]*up[1], N[2]*up[0] - N[0]*up[2],
+      N[0]*up[1] - N[1]*up[0]};
   }
-  void Cartesian3::geocentocart2(Angle phipp, Angle lampp, vec3& r) const {
-    generictocart2<0>(phipp, lampp, r);
+
+  template<int n>
+  void Cartesian3::cart2togeneric(vec3 r, vec3 v,
+                                  ang& phi, ang& lam, ang& zet) const {
+    cart2togeneric<n>(r, phi, lam);
+    vec3 N, E;
+    cardinaldir(r, meridianplane<n>(lam), N, E);
+    zet = ang(v[0]*E[0] + v[1]*E[1] + v[2]*E[2],
+              v[0]*N[0] + v[1]*N[1] + v[2]*N[2]);
+  }
+
+  template<int n>
+  void Cartesian3::generictocart2(ang phi, ang lam, ang zet,
+                                  vec3& r, vec3&v) const {
+    generictocart2<n>(phi, lam, r);
+    vec3 N, E;
+    cardinaldir(r, meridianplane<n>(lam), N, E);
+    v = {zet.c() * N[0] + zet.s() * E[0],
+      zet.c() * N[1] + zet.s() * E[1],
+      zet.c() * N[2] + zet.s() * E[2]};
+  }
+
+  void Cartesian3::cart2toany(coord coordout, vec3 r,
+                              Angle& lat, Angle& lon) const {
+    switch (coordout) {
+    case GEODETIC:   cart2togeneric<2>(r, lat, lon); break;
+    case PARAMETRIC: cart2togeneric<1>(r, lat, lon); break;
+    case GEOCENTRIC: cart2togeneric<0>(r, lat, lon); break;
+    case ELLIPSOIDAL: _t.cart2toellip(r, lat, lon); break;
+    default: throw GeographicErr("Bad Cartesian3::coord value " +
+                                 to_string(coordout));
+    }
+  }
+
+  void Cartesian3::anytocart2(coord coordin, Angle lat, Angle lon,
+                              vec3& r) const {
+    switch (coordin) {
+    case GEODETIC:   generictocart2<2>(lat, lon, r); break;
+    case PARAMETRIC: generictocart2<1>(lat, lon, r); break;
+    case GEOCENTRIC: generictocart2<0>(lat, lon, r); break;
+    case ELLIPSOIDAL: _t.elliptocart2(lat, lon, r); break;
+    default: throw GeographicErr("Bad Cartesian3::coord value " +
+                                 to_string(coordin));
+    }
+  }
+
+  void Cartesian3::anytoany(coord coordin, Angle lat1, Angle lon1,
+                            coord coordout, Angle& lat2, Angle& lon2) const {
+    vec3 r;
+    anytocart2(coordin, lat1, lon1, r);
+    cart2toany(coordout, r, lat2, lon2);
+  }
+
+  void Cartesian3::cart2toany(coord coordout, vec3 r, vec3 v,
+                              Angle& lat, Angle& lon, Angle& azi) const {
+    switch (coordout) {
+    case GEODETIC:   cart2togeneric<2>(r, v, lat, lon, azi); break;
+    case PARAMETRIC: cart2togeneric<1>(r, v, lat, lon, azi); break;
+    case GEOCENTRIC: cart2togeneric<0>(r, v, lat, lon, azi); break;
+    case ELLIPSOIDAL: _t.cart2toellip(r, v, lat, lon, azi); break;
+    default: throw GeographicErr("Bad Cartesian3::coord value " +
+                                 to_string(coordout));
+    }
+  }
+
+  void Cartesian3::anytocart2(coord coordin, Angle lat, Angle lon, Angle azi,
+                              vec3& r, vec3& v) const {
+    switch (coordin) {
+    case GEODETIC:   generictocart2<2>(lat, lon, azi, r, v); break;
+    case PARAMETRIC: generictocart2<1>(lat, lon, azi, r, v); break;
+    case GEOCENTRIC: generictocart2<0>(lat, lon, azi, r, v); break;
+    case ELLIPSOIDAL: _t.elliptocart2(lat, lon, azi, r, v); break;
+    default: throw GeographicErr("Bad Cartesian3::coord value " +
+                                 to_string(coordin));
+    }
+  }
+
+  void Cartesian3::carttoany(coord coordout, vec3 r,
+                             Angle& lat, Angle& lon, real& h) const {
+    switch (coordout) {
+    case ELLIPSOIDAL: carttoellip(r, lat, lon, h); break;
+    default:
+      vec3 r2;
+      carttocart2(r, r2, h);
+      cart2toany(coordout, r2, lat, lon);
+    }
+  }
+
+  void Cartesian3::anytocart(coord coordin, Angle lat, Angle lon, real h,
+                             vec3& r) const {
+    switch (coordin) {
+    case ELLIPSOIDAL: elliptocart(lat, lon, h, r); break;
+    default:
+      vec3 r2;
+      anytocart2(coordin, lat, lon, r2);
+      cart2tocart(r2, h, r);
+    }
   }
 
   void Cartesian3::cart2tocart(vec3 r2, real h, vec3& r) const {
@@ -250,18 +352,6 @@ namespace GeographicLib {
     h = (p - _axes2[2]) * Math::hypot3(r2[0] / _axes2[0],
                                        r2[1] / _axes2[1],
                                        r2[2] / _axes2[2]);
-  }
-
-  void Cartesian3::carttogeod(vec3 r, Angle& phi, Angle& lam, real& h) const {
-    vec3 r2;
-    carttocart2(r, r2, h);
-    cart2togeod(r2, phi, lam);
-  }
-
-  void Cartesian3::geodtocart(Angle phi, Angle lam, real h, vec3& r) const {
-    vec3 r2;
-    geodtocart2(phi, lam, r2);
-    cart2tocart(r2, h, r);
   }
 
   } // namespace Triaxial

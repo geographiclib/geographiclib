@@ -57,8 +57,9 @@ int main(int argc, const char* const argv[]) {
     using real = Math::real;
     using ang = Angle;
     using vec3 = Ellipsoid3::vec3;
+    using coord = Cartesian3::coord;
     enum { GEODETIC, PARAMETRIC, GEOCENTRIC, ELLIPSOIDAL };
-    int mode = ELLIPSOIDAL;
+    coord mode = coord::ELLIPSOIDAL;
     bool threed = false, direction = false, reverse = false, dms = false,
       longfirst = false, randompts = false;
     real
@@ -74,13 +75,13 @@ int main(int argc, const char* const argv[]) {
     for (int m = 1; m < argc; ++m) {
       std::string arg(argv[m]);
       if (arg == "-E")
-        mode = ELLIPSOIDAL;
+        mode = coord::ELLIPSOIDAL;
       else if (arg == "-G")
-        mode = GEODETIC;
+        mode = coord::GEODETIC;
       else if (arg == "-P")
-        mode = PARAMETRIC;
+        mode = coord::PARAMETRIC;
       else if (arg == "-C")
-        mode = GEOCENTRIC;
+        mode = coord::GEOCENTRIC;
       else if (arg == "-R") {
         if (++m == argc) return usage(1, true);
         try {
@@ -186,27 +187,11 @@ int main(int argc, const char* const argv[]) {
         std::cerr << "Cannot specify -3 for random points\n";
         return 1;
       }
-      if (reverse) {
-        if (direction && !(mode == ELLIPSOIDAL)) {
-          std::cerr << "Can only specify -D with ellipsoidal conversions\n";
-          return 1;
-        }
-      }
       if (!ifile.empty() || !istring.empty()) {
         std::cerr
           << "Cannot specify --input-{string,file} with random points\n";
       }
     } else {
-      if (direction && !(mode == ELLIPSOIDAL)) {
-        std::cerr
-          << "Can only specify -D with ellipsoidal conversions\n";
-        return 1;
-      }
-      if (threed && !(mode == ELLIPSOIDAL || mode == GEODETIC)) {
-        std::cerr
-          << "Can only specify -3 with ellipsoidal or geodetic conversions\n";
-        return 1;
-      }
       if (direction && threed) {
         std::cerr << "Cannot specify both -3 and -D\n";
         return 1;
@@ -282,24 +267,7 @@ int main(int argc, const char* const argv[]) {
                     << Utility::str(v[2], vecprec);
         } else {
           ang bet, omg, alp;
-          switch (mode) {
-          case ELLIPSOIDAL:
-            if (direction)
-              tc.cart2toellip(r, v, bet, omg, alp);
-            else
-              tc.cart2toellip(r, bet, omg);
-            break;
-          case GEODETIC:
-            tc.cart2togeod(r, bet, omg);
-            break;
-          case PARAMETRIC:
-            tc.cart2toparam(r, bet, omg);
-            break;
-          case GEOCENTRIC:
-          default:
-            tc.cart2togeocen(r, bet, omg);
-            break;
-          }
+          tc.cart2toany(mode, r, v, bet, omg, alp);
           *output << ang::LatLonString(bet, omg,
                                        angprec, dms, dmssep, longfirst);
           if (direction)
@@ -344,7 +312,7 @@ int main(int argc, const char* const argv[]) {
           if (!(str >> sbet >> somg))
             throw GeographicErr("Incomplete input: " + s);
           ang::DecodeLatLon(sbet, somg, bet, omg, longfirst);
-          if (mode != ELLIPSOIDAL && (bet.n() != 0 || signbit(bet.c())))
+          if (mode != coord::ELLIPSOIDAL && (bet.n() != 0 || signbit(bet.c())))
             throw GeographicErr("Latitude outside range [-90,90]: " + s);
           if (threed) {
             if (!(str >> sh))
@@ -359,50 +327,20 @@ int main(int argc, const char* const argv[]) {
         if (str >> strc)
           throw GeographicErr("Extraneous input: " + strc);
         // PROCESS
-        switch (mode) {
-        case ELLIPSOIDAL:
-          if (reverse) {
-            if (threed)
-              tc.carttoellip(r, bet, omg, h);
-            else if (direction)
-              tc.cart2toellip(r, v, bet, omg, alp);
-            else
-              tc.cart2toellip(r, bet, omg);
-          } else {
-            if (threed)
-              tc.elliptocart(bet, omg, h, r);
-            else if (direction)
-              tc.elliptocart2(bet, omg, alp, r, v);
-            else
-              tc.elliptocart2(bet, omg, r);
-          }
-          break;
-        case GEODETIC:
-          if (reverse) {
-            if (threed)
-              tc.carttogeod(r, bet, omg, h);
-            else
-              tc.cart2togeod(r, bet, omg);
-          } else {
-            if (threed)
-              tc.geodtocart(bet, omg, h, r);
-            else
-              tc.geodtocart2(bet, omg, r);
-          }
-          break;
-        case PARAMETRIC:
-          if (reverse)
-            tc.cart2toparam(r, bet, omg);
+        if (reverse) {
+          if (threed)
+            tc.carttoany(mode, r, bet, omg, h);
+          else if (direction)
+            tc.cart2toany(mode, r, v, bet, omg, alp);
           else
-            tc.paramtocart2(bet, omg, r);
-          break;
-        case GEOCENTRIC:
-        default:
-          if (reverse)
-            tc.cart2togeocen(r, bet, omg);
+            tc.cart2toany(mode, r, bet, omg);
+        } else {
+          if (threed)
+            tc.anytocart(mode, bet, omg, h, r);
+          else if (direction)
+            tc.anytocart2(mode, bet, omg, alp, r, v);
           else
-            tc.geocentocart2(bet, omg, r);
-          break;
+            tc.anytocart2(mode, bet, omg, r);
         }
         // WRITE
         if (reverse) {

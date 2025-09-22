@@ -47,7 +47,14 @@ namespace GeographicLib {
     void cart2togeneric(vec3 r, ang& phi, ang& lam) const;
     template<int n>
     void generictocart2(ang phi, ang lam, vec3& r) const;
+    template<int n> ang meridianplane(ang lam) const;
+    void cardinaldir(vec3 r, ang merid, vec3& N, vec3& E) const;
+    template<int n>
+    void cart2togeneric(vec3 r, vec3 v, ang& phi, ang& lam, ang& zet) const;
+    template<int n>
+    void generictocart2(ang phi, ang lam, ang zet, vec3& r, vec3&v) const;
     real cubic(vec3 r2) const;
+
     template<int n>
     class funp {
     private:
@@ -66,50 +73,91 @@ namespace GeographicLib {
       }
       std::pair<real, real> operator()(real p) const;
     };
-    static
-    real cartsolve(const std::function<std::pair<real, real>(real)>& f,
-                   real p0, real pscale);
+
+    static real cartsolve(const std::function<std::pair<real, real>(real)>& f,
+                          real p0, real pscale);
+    void carttoellip(vec3 r, Angle& bet, Angle& omg, real& H) const;
+    void elliptocart(Angle bet, Angle omg, real H, vec3& r) const;
+
     // real a() const { return t().a(); } // not needed
     real b() const { return t().b(); }
     real c() const { return t().c(); }
   public:
+    enum coord {
+      /**
+       * Geodetic coordinates, \e phi, \e lam, \e zet \e h;
+       * @hideinitializer
+       **********************************************************************/
+      GEODETIC = 0,
+      /**
+       * Parametric coordinates, \e phi', \e lam', \e zet, \e h;
+       * @hideinitializer
+       **********************************************************************/
+      PARAMETRIC = 1,
+      /**
+       * %Geocentric coordinates, \e phi'', \e lam'', \e zet, \e h;
+       * @hideinitializer
+       **********************************************************************/
+      GEOCENTRIC = 2,
+      /**
+       * Ellipsoidal coordinates, \e beta, \e omg, \e alp, \e H;
+       * @hideinitializer
+       **********************************************************************/
+      ELLIPSOIDAL = 3,
+    };
     Cartesian3(const Ellipsoid3& t);
     Cartesian3(real a, real b, real c);
     Cartesian3(real b, real e2, real k2, real kp2);
     const Ellipsoid3& t() const { return _t; }
-    void cart2toellip(vec3 r, Angle& bet, Angle& omg) const {
-      _t.cart2toellip(r, bet, omg);
+
+    // coord only
+    void cart2toany(coord coordout, vec3 r, Angle& lat, Angle& lon) const;
+    void cart2toany(coord coordout, vec3 r, real& lat, real& lon) const {
+      Angle lata, lona; cart2toany(coordout, r, lata, lona);
+      lat = real(lata); lon = real(lona);
     }
-    void cart2toellip(vec3 r, vec3 v,
-                      Angle& bet, Angle& omg, Angle& alp) const {
-      _t.cart2toellip(r, v, bet, omg, alp);
+    void anytocart2(coord coordin, Angle lat, Angle lon, vec3& r) const;
+    void anytocart2(coord coordin, real lat, real lon, vec3& r) const {
+      anytocart2(coordin, Angle(lat), Angle(lon), r);
     }
-    void cart2toellip(Angle bet, Angle omg,
-                      vec3 v, Angle& alp) const {
-      _t.cart2toellip(bet, omg, v, alp);
+    void anytoany(coord coordin, Angle lat1, Angle lon1,
+                  coord coordout, Angle& lat2, Angle& lon2) const;
+    void anytoany(coord coordin, real lat1, real lon1,
+                  coord coordout, real& lat2, real& lon2) const {
+      Angle lat2a, lon2a;
+      anytoany(coordin, Angle(lat1), Angle(lon1), coordout, lat2a, lon2a);
+      lat2 = real(lat2a); lon2 = real(lon2a);
     }
-    void elliptocart2(Angle bet, Angle omg, vec3& r) const {
-      _t.elliptocart2(bet, omg, r);
+    // include azi
+    void cart2toany(coord coordout, vec3 r, vec3 v,
+                    Angle& lat, Angle& lon, Angle& azi) const;
+    void cart2toany(coord coordout, vec3 r, vec3 v,
+                    real& lat, real& lon, real& azi) const {
+      Angle lata, lona, azia; cart2toany(coordout, r, v, lata, lona, azia);
+      lat = real(lata); lon = real(lona), azi = real(azia);
     }
-    void elliptocart2(Angle bet, Angle omg, Angle alp,
-                      vec3& r, vec3& v) const {
-      _t.elliptocart2(bet, omg, alp, r, v);
+    void anytocart2(coord coordin, Angle lat, Angle lon, Angle azi,
+                    vec3& r, vec3& v) const;
+    void anytocart2(coord coordin, real lat, real lon, real azi,
+                    vec3& r, vec3& v) const {
+      anytocart2(coordin, Angle(lat), Angle(lon), Angle(azi), r, v);
+    }
+    // include height
+    void carttoany(coord coordout, vec3 r,
+                   Angle& lat, Angle& lon, real& h) const;
+    void carttoany(coord coordout, vec3 r,
+                   real& lat, real& lon, real& h) const {
+      Angle lata, lona; carttoany(coordout, r, lata, lona, h);
+      lat = real(lata); lon = real(lona);
+    }
+    void anytocart(coord coordin, Angle lat, Angle lon, real h, vec3& r) const;
+    void anytocart(coord coordin, real lat, real lon, real h, vec3& r) const {
+      anytocart(coordin, Angle(lat), Angle(lon), h, r);
     }
 
-    void carttoellip(vec3 r, Angle& bet, Angle& omg, real& H) const;
-    void elliptocart(Angle bet, Angle omg, real H, vec3& r) const;
-
-    void cart2togeod(vec3 r, Angle& phi, Angle& lam) const;
-    void geodtocart2(Angle phi, Angle lam, vec3& r) const;
-    void cart2toparam(vec3 r, Angle& phip, Angle& lamp) const;
-    void paramtocart2(Angle phip, Angle lamp, vec3& r) const;
-    void cart2togeocen(vec3 r, Angle& phipp, Angle& lampp) const;
-    void geocentocart2(Angle phipp, Angle lampp, vec3& r) const;
-
+    // cart <-> cart2
     void cart2tocart(vec3 r2, real h, vec3& r) const;
     void carttocart2(vec3 r, vec3& r2, real& h) const;
-    void carttogeod(vec3 r, Angle& phi, Angle& lam, real& h) const;
-    void geodtocart(Angle phi, Angle lam, real h, vec3& r) const;
 
     template <class G> void cart2rand(G& g, vec3& r) const;
     template <class G> void cart2rand(G& g, vec3& r, vec3& v) const;
