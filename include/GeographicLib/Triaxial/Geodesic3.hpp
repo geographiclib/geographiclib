@@ -26,8 +26,10 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT Geodesic3 {
   private:
+    /// \cond SKIP
     // For access to BigValue, _ellipthresh, _biaxp
     friend class GeodesicLine3;
+    /// \endcond
     using real = Math::real;
     using ang = Angle;
     Ellipsoid3 _t;

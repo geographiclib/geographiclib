@@ -64,9 +64,11 @@ namespace GeographicLib {
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Trigfun {
   private:
+    /// \cond SKIP
     friend class TrigfunExt;              // For access to root sig 2
     friend class Triaxial::GeodesicLine3; // For access to root sig 2
     friend class Triaxial::Conformal3;    // For access to root sig 2
+    /// \endcond
     using real = Math::real;
     static const bool debug_ = false;
     int _m,                     // Number of coefficients in series
@@ -493,7 +495,9 @@ namespace GeographicLib {
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT TrigfunExt {
   private:
+    /// \cond SKIP
     friend class Triaxial::GeodesicLine3; // For access internal inv, inv1
+    /// \endcond
     using real = Math::real;
     std::function<real(real)> _fp;
     bool _sym;

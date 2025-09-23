@@ -58,17 +58,6 @@
 #  define GEOGRAPHICLIB_EXPORT
 #endif
 
-// Use GEOGRAPHICLIB_DEPRECATED to mark functions, types or variables as
-// deprecated.  Code inspired by Apache Subversion's svn_types.h file (via
-// MPFR).
-#if defined(__GNUC__)
-#  define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated(msg)))
-#elif defined(_MSC_VER)
-#  define GEOGRAPHICLIB_DEPRECATED(msg) __declspec(deprecated(msg))
-#else
-#  define GEOGRAPHICLIB_DEPRECATED(msg)
-#endif
-
 #include <stdexcept>
 #include <string>
 #include <GeographicLib/Math.hpp>

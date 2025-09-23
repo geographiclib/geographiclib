@@ -29,7 +29,9 @@ namespace GeographicLib {
 
   class GEOGRAPHICLIB_EXPORT GeodesicLine3 {
   private:
+    /// \cond SKIP
     friend class Geodesic3; // For access to fline, gline, etc.
+    /// \endcond
     using real = Math::real;
     using ang = Angle;
 

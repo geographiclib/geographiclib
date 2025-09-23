@@ -20,7 +20,7 @@ GeographicLib is a small C++ library for
 
 - geodesic and rhumb line calculations;
 - conversions between geographic, UTM, UPS, MGRS, geocentric, and local
-  cartesian coordinates;
+  Cartesian coordinates;
 - gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2025)
   calculations.
 
@@ -117,7 +117,7 @@ of geographic transformations.  It grew out of a desire to improve on
 the GEOTRANS
 package for transforming between geographic and MGRS coordinates.  At
 present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local
-cartesian projections, gravity and geomagnetic models, and classes for
+Cartesian projections, gravity and geomagnetic models, and classes for
 geodesic calculations.
 
 The goals of GeographicLib are:
@@ -851,7 +851,7 @@ The utilities are
    TransverseMercator.  See \ref TransverseMercatorProj.cpp.
  - <a href="CartConvert.1.html">
    <b>CartConvert</b></a>: convert geodetic coordinates to geocentric or
-   local cartesian using Geocentric and
+   local Cartesian using Geocentric and
    LocalCartesian.  See \ref CartConvert.cpp.
  - <a href="GeodesicProj.1.html">
    <b>GeodesicProj</b></a>: perform projections based on geodesics
@@ -997,7 +997,7 @@ collection of points where the distance function obeys the triangle
 inequality.  The geodesic distance obeys this condition.
 
 Geocentric and LocalCartesian convert between
-geodetic and geocentric or a local cartesian system.  The constructor for
+geodetic and geocentric or a local Cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
 implemented as const member functions.  Geocentric::WGS84 is a
 const static instantiation of Geocentric specific for the WGS84 ellipsoid.
@@ -3774,7 +3774,7 @@ and are linearly related by
 - \f$ u + u' = K(e) ,\quad v + v' = K(ie') \f$
 - \f$ v = \sqrt{1-e^2} u ,\quad u = \sqrt{1+e'^2} v \f$.
 .
-The cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
+The Cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
 \f[
 \begin{align}
   x &= a \cos\beta = a \cos\phi / \sqrt{1 - e^2 \sin^2\phi} \\
@@ -4325,7 +4325,7 @@ k' &= \frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}.
 Here \f$e\f$ quantifies how much the ellipsoid departs from a sphere,
 while \f$k\f$ and \f$k'\f$ describes how close the ellipsoid is to an
 oblate (\f$k = 1\f$) or prolate (\f$k = 0\f$) ellipsoid; note that
-\f$k^2 + k'^2 = 1\f$.  The cartesian coordinates can now be written as
+\f$k^2 + k'^2 = 1\f$.  The Cartesian coordinates can now be written as
 \f[
 \begin{align}
   X &= a \cos\omega \sqrt{k^2\cos^2\beta + k'^2}, \\
@@ -4404,7 +4404,7 @@ sphere is a non-uniform limit, with the position of the umbilic points
 depending on the ratio \f$(a-b)/(b-c)\f$.
 
 Inter-conversions between the three different latitudes and longitudes
-and the cartesian coordinates are simple algebraic exercises.
+and the Cartesian coordinates are simple algebraic exercises.
 
 \section triaxial-jacobi Jacobi's solution
 
