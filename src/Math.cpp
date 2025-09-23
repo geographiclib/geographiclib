@@ -349,8 +349,14 @@ namespace GeographicLib {
 #undef GEOGRAPHICLIB_MATH_INSTANTIATE
 
   // Also we need int versions for Utility::nummatch
-  template int GEOGRAPHICLIB_EXPORT Math::NaN     <int>();
-  template int GEOGRAPHICLIB_EXPORT Math::infinity<int>();
+#define GEOGRAPHICLIB_MATH_INSTANTIATE2(T)             \
+  template T GEOGRAPHICLIB_EXPORT Math::NaN     <T>(); \
+  template T GEOGRAPHICLIB_EXPORT Math::infinity<T>();
+
+  GEOGRAPHICLIB_MATH_INSTANTIATE2(int)
+  GEOGRAPHICLIB_MATH_INSTANTIATE2(unsigned long long)
+
+#undef GEOGRAPHICLIB_MATH_INSTANTIATE2
   /// \endcond
 
 } // namespace GeographicLib

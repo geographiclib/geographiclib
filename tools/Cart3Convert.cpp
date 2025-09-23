@@ -68,7 +68,7 @@ int main(int argc, const char* const argv[]) {
       c = Constants::Triaxial_Earth_c(),
       e2 = -1, k2 = 0, kp2 = 0;
     int prec = 3, nrand = 0;
-    unsigned long seed = 0;
+    unsigned long long seed = 0;
     std::string istring, ifile, ofile, cdelim;
     char lsep = ';', dmssep = char(0);
 
@@ -101,7 +101,7 @@ int main(int argc, const char* const argv[]) {
       else if (arg == "--seed") {
         if (++m == argc) return usage(1, true);
         try {
-          seed = Utility::val<unsigned long>(std::string(argv[m]));
+          seed = Utility::val<unsigned long long>(std::string(argv[m]));
         }
         catch (const std::exception&) {
           std::cerr << "Precision " << argv[m] << " is not a number\n";
@@ -242,8 +242,8 @@ int main(int argc, const char* const argv[]) {
     int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
       angprec = prec + 5, vecprec = prec + 7;
     if (randompts) {
-      //                    C a r t 3 C o n
-      unsigned long s1 = 0x4361727433436f6eUL, s2 = seed;
+      //                         C a r t 3 C o n
+      unsigned long long s1 = 0x4361727433436f6eULL, s2 = seed;
       if (seed == 0) {
         s1 = std::random_device()();
         s2 = std::random_device()();

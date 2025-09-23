@@ -277,7 +277,7 @@ void hybridtest(const Geodesic3& tg, Math::real bet1, Math::real omg1,
   using ang = Angle;
   ang bet1a(bet1), omg1a(omg1), betomg2a(betomg2),
     // azimuth of umbilic azimuth
-    alpu(tg.t().kp() * omg1a.s(), tg.t().k() * bet1a.c()),
+    alpu(sqrt(tg.t().kp2()) * omg1a.s(), sqrt(tg.t().k2()) * bet1a.c()),
     bet2a, omg2a, alp2a;
   real s12;
   cout << setprecision(6) << fixed;

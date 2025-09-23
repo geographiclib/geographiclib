@@ -4371,7 +4371,7 @@ The element of length on the ellipsoid in ellipsoidal coordinates is
 given by
 \f[
 \begin{align}
-\frac{ds^2}{k^2\cos^2\beta + k'^2\sin^2\omega} &=
+\frac{ds^2/b^2}{k^2\cos^2\beta + k'^2\sin^2\omega} &=
 \frac{1 - e^2 k^2 \cos^2\beta}{k'^2 + k^2\cos^2\beta}
  d\beta^2 \\
 &\qquad+
@@ -4379,6 +4379,11 @@ given by
  d\omega^2.
 \end{align}
 \f]
+This form for \f$ds\f$ &mdash; with a single mulitplying factor
+depending on \f$\beta\f$ and \f$\omega\f$ and the coefficient
+multiplying \f$d\beta^2\f$ (resp. \f$d\omega^2\f$) being a function of
+\f$\beta\f$ (resp. \f$\omega\f$) alone &mdash; means that a triaxial
+ellipsoid is a so-called "Liouville surface".
 
 The torus \f$(\omega, \beta) \in [-\pi,\pi] \times [-\pi,\pi]\f$ covers
 the ellipsoid twice.  In order to facilitate passing to the limit of an
@@ -4815,9 +4820,12 @@ m(\beta, \omega) = \frac1
 \f]
 I have scaled the Jacobi's projection by a constant factor,
 \f[
-\frac{\sqrt{a^2-c^2}}2,
+\frac{\sqrt{a^2-c^2}}2 = \frac{eb}2,
 \f]
-so that it reduces to the familiar formulas in the case of an oblate ellipsoid.
+so that it reduces to the familiar formulas in the case of an oblate
+ellipsoid.  This mapping is an immediate consequence of the special
+"Liouville" form of the expression for \f$ds^2\f$ given in the
+\ref triaxial.
 
 \section jacobi-elliptic The projection in terms of elliptic integrals
 
