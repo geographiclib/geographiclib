@@ -59,7 +59,7 @@ int main(int argc, const char* const argv[]) {
     bool inverse = false,
       dms = false, full = false, unroll = false,
       longfirst = false,
-      debug = false, linecalc = false, swapomg = false;
+      linecalc = false;
     real
       a = Constants::Triaxial_Earth_a(),
       b = Constants::Triaxial_Earth_b(),
@@ -152,10 +152,6 @@ int main(int argc, const char* const argv[]) {
         longfirst = !longfirst;
       else if (arg == "-f")
         full = true;
-      else if (arg == "--debug")
-        debug = true;
-      else if (arg == "--swapomg")
-        swapomg = true;
       else if (arg == "-p") {
         if (++m == argc) return usage(1, true);
         try {
@@ -234,8 +230,6 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    t.debug(debug);
-    t.swapomg(swapomg);
     if (linecalc) {
       BiaxialCoords(true, f, bet1, omg1, alp1);
     }
@@ -303,13 +297,9 @@ int main(int argc, const char* const argv[]) {
           if (str >> strc)
             throw GeographicErr("Extraneous input: " + strc);
           s12 = Utility::val<real>(ss12);
-          if (linecalc) {
-            int countn = 0, countb = 0;
-            lp->Position(s12, bet2, omg2, alp2, &countn, &countb);
-            // std::cout << countn << " " << countb << "\n";
-            (void) countn;
-            (void) countb;
-          } else {
+          if (linecalc)
+            lp->Position(s12, bet2, omg2, alp2);
+          else {
             ang::DecodeLatLon(sbet1, somg1, bet1, omg1, longfirst);
             alp1 = ang::DecodeAzimuth(salp1);
             BiaxialCoords(true, f, bet1, omg1, alp1);

@@ -15,7 +15,7 @@
 #include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about dll vs vector
+// Squelch warnings about dll vs shared_ptr
 #  pragma warning (push)
 #  pragma warning (disable: 4251)
 #endif
@@ -32,6 +32,13 @@ namespace GeographicLib {
     /// \endcond
     using real = Math::real;
     using ang = Angle;
+    static constexpr bool debug_ = false; // print out diagnostics
+    // special treatment for biaxial non-meridional
+    static constexpr bool biaxp_ = true;
+    // favor hybrid solution in terms of omg
+    static constexpr bool  hybridalt_ = true;
+    // allow swapping of omega{1,2}
+    static constexpr bool swapomg_ = false;
     Ellipsoid3 _t;
 
     // Run geodesic from bet1, omg1, alp1, find its first intersection with bet
@@ -42,11 +49,7 @@ namespace GeographicLib {
                           ang xa,  ang xb,
                           real fa, real fb,
                           int* countn = nullptr, int* countb = nullptr);
-    bool _umbalt,               // how coordinates wrap with umbilical lines
-      _biaxp,                   // special treatment for biaxial non-meridional
-      _debug,                   // print out diagnostics
-      _hybridalt,               // favor hybrid solution in terms of omg
-      _swapomg;                 // allow swapping of omega{1,2}
+    bool _umbalt;               // how coordinates wrap with umbilical lines
     // If k'^2 < ellipthresh transform phi -> F(phi, k^2)
     real _ellipthresh;
     mutable std::shared_ptr<GeodesicLine3> _umbline;
@@ -121,16 +124,6 @@ namespace GeographicLib {
     void umbalt(bool numbalt) {
       if (_t.k2() > 0 && _t.kp2() > 0) _umbalt = numbalt;
     }
-    bool biaxp() const { return _biaxp; }
-    void biaxp(bool biaxp) { _biaxp = biaxp; }
-    bool debug() const { return _debug; }
-    void debug(bool debug) { _debug = debug; }
-    bool hybridalt() const { return _hybridalt; }
-    void hybridalt(bool hybridalt) { _hybridalt = hybridalt; }
-    bool swapomg() const { return _swapomg; }
-    void swapomg(bool swapomg) { _swapomg = swapomg; }
-    // real ellipthresh() const { return _ellipthresh; }
-    // void ellipthresh(real ellipthresh) { _ellipthresh = ellipthresh; }
   };
 
   } // namespace Triaxial

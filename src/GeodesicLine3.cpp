@@ -7,8 +7,6 @@
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-// Set _oblpro = false, _merid = true
-
 #include <iostream>
 #include <iomanip>
 // Needed by zsetsdiag
@@ -71,12 +69,11 @@ namespace GeographicLib {
   }
 
   void GeodesicLine3::Position(real s12,
-                               Angle& bet2a, Angle& omg2a, Angle& alp2a,
-                               int* countn, int* countb) const {
+                               Angle& bet2a, Angle& omg2a, Angle& alp2a) const {
     // Compute points at distance s12
-    // cout << "XX " << _fic.delta << " " << _gic.sig1 << "\n";
     real sig2 = _gic.sig1 + s12/_tg.b();
     ang &phi2a = bet2a, &tht2a = omg2a;
+    int *countn = nullptr, *countb = nullptr;
     if (_f.gammax() > 0) {
       real u2, v2;
       if constexpr (false && biaxspecial(_tg, _g.gammax())) {
@@ -87,9 +84,6 @@ namespace GeographicLib {
         // geodesics on biaxial ellipsoids.
         solve2(_fic.delta, sig2, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
                countn, countb);
-      // cout << "UV " << setprecision(22) << u2 << " " << v2 << "\n";
-      // cout << "FG " << fpsi()(u2) - ftht()(v2) - _fic.delta << " "
-      //      << gpsi()(u2) + gtht()(v2) - sig2 << "\n";
       tht2a = ang::radians(ftht().rev(v2));
       ang psi2 = ang::radians(fpsi().rev(u2));
       // Already normalized
@@ -98,8 +92,6 @@ namespace GeographicLib {
                   0, true).rebase(_fic.phi0);
       alp2a = ang(_fic.Ex * hypot(_f.kx() * _f.gm().nu, _f.kxp() * tht2a.c()),
                   _fic.phi0.c() * _f.kx() * _f.gm().nup * psi2.c());
-      if (_tg.debug())
-        cout << real(tht2a) << " " << real(psi2) << " ";
     } else if (_f.gammax() == 0) {
       pair<real, real> sig2n = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
       real u2, v2;
@@ -114,7 +106,6 @@ namespace GeographicLib {
         solve2(_fic.delta, sig2n.first,
                fpsi(), ftht(), gpsi(), gtht(), u2, v2,
                countn, countb);
-        // cout << "UV " << u2 << " " << v2 << "\n";
         phi2a = ang::radians(u2);
         // u2 in in [-pi/2, pi/2].  With long doubles cos(pi/2) < 0 which leads
         // to a switch in sheets in ellipsoidal coordinates.  Fix by setting
@@ -125,23 +116,10 @@ namespace GeographicLib {
         psi2 = phi2a + ang::cardinal(2 * sig2n.second);
         int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;
-        // cout << "ZZ " << sig2 << " " << sig2n.first << " " << sig2n.second << " " << Ny << "\n";
         phi2a = phi2a.reflect(signbit(_fic.phi0.c() * Ny),
                               signbit(_fic.phi0.c())).rebase(_fic.phi0);
         tht2a = ang::radians(- _fic.delta) + ang::cardinal(2 * sig2n.second);
         alp2a = ang(_fic.Ex * real(0), _fic.Nx * parity, 0, true);
-        /*
-        ang psi2 = ang::radians(fpsi().rev(v2));
-        // Already normalized
-        phi2a = ang(_f.gm().nup * psi2.s(),
-                    _fic.phi0.c() * hypot(psi2.c(), _f.gm().nu * psi2.s()),
-                    0, true).rebase(_fic.phi0);
-        alp2a = ang(_fic.Ex * hypot(_f.kx() * _f.gm().nu, _f.kxp() * tht2a.c()),
-                    _fic.phi0.c() * _f.kx() * _f.gm().nup * psi2.c())
-          .rebase(_fic.alp0);
-        cerr << "FOO " << sig2 << " " << _g.s0 << "\n";
-        cerr << "FOO " << sig2n.first << " " << sig2n.second << "\n";
-        */
       } else {
         if (sig2n.first - _g.s0 >= -5 * numeric_limits<real>::epsilon()) {
           sig2n.first = -_g.s0;
@@ -165,8 +143,6 @@ namespace GeographicLib {
         alp2a = ang(_fic.Ex * _f.kxp() / mcosh(v2, _f.kx()),
                     _f.kx() * Ny / mcosh(u2, _f.kxp()));
       }
-      if (_tg.debug())
-        cout << real(tht2a) << " " << real(psi2) << " ";
     } else {
       // gamma = NaN
     }
@@ -184,10 +160,9 @@ namespace GeographicLib {
 
   void GeodesicLine3::Position(real s12,
                                real& bet2, real& omg2, real& alp2,
-                               bool unroll,
-                               int* countn, int* countb) const {
+                               bool unroll) const {
     ang bet2a, omg2a, alp2a;
-    Position(s12, bet2a, omg2a, alp2a, countn, countb);
+    Position(s12, bet2a, omg2a, alp2a);
     if (!unroll) {
       (void) Ellipsoid3::AngNorm(bet2a, omg2a, alp2a);
       bet2a.setn(); omg2a.setn(); alp2a.setn();
@@ -202,23 +177,15 @@ namespace GeographicLib {
                              const hfun& gx, const hfun& gy,
                              real& x, real& y,
                              int* countn, int* countb) {
-    // In the biaxial limit gtht()(x) == 0 and gtht.inv is ill-defined, so x
-    // should the tht and y should be psi
-
     // Return x and y, s.t.
     //   fx(x) - fy(y) = f0
     //   gx(x) + gy(y) = g0
-    //
-    // We use x as the control variable and assume that gy.inv() is available
-    // Given a guess for x, compute y = gy.inv(g0 - gx(x)) and solve the 1d
-    // problem:
-    //
-    //   fx(x) - fy(gy.inv(g0 - gx(x))) - f0 = 0
     //
     // fx(x) = fxs*x +/- fxm,
     // fy(y) = fys*y +/- fym,
     // gx(x) = gxs*x +/- gxm,
     // gy(y) = gys*y +/- gym;
+    const bool check = false;
     real fxm = fx.MaxPlus(), fym = fy.MaxPlus(),
       gxm = gx.MaxPlus(), gym = gy.MaxPlus(),
       fxs = fx.Slope(), fys = fy.Slope(), gxs = gx.Slope(), gys = gy.Slope(),
@@ -235,9 +202,7 @@ namespace GeographicLib {
       xp = x0 + Dx, xm = x0 - Dx,
       yp = y0 + Dy, ym = y0 - Dy,
       mm = 0;
-    // cout << "S " << fxs << " " << fys << " " << gxs << " " << gys << "\n";
-    // cout << "M " << fxm << " " << fym << " " << gxm << " " << gym << "\n";
-    if (1) {
+    if constexpr (check) {
       real DxA = (-qf * gys + qg * fys) / den,
         DyA = (-qf * gxs + qg * fxs) / den;
       real
@@ -267,32 +232,18 @@ namespace GeographicLib {
         throw GeographicLib::GeographicErr
           ("Bad initial midpoints C GeodesicLine3::newt2");
       }
-      //      cout << scientific << "midD " << fD << " " << gD << "\n";
       if (!( fD <= 0 && gD >= 0 )) {
         cout << scientific << "midD " << fD << " " << gD << "\n";
         throw GeographicLib::GeographicErr
-          ("Bad initial midpoints B GeodesicLine3::newt2");
+          ("Bad initial midpoints D GeodesicLine3::newt2");
       }
-      }
+    }
     newt2(f0, g0, fx, fy, gx, gy,
           xm-mm*Dx, xp+mm*Dx, fx.HalfPeriod(),
           ym-mm*Dy, yp+mm*Dy, fy.HalfPeriod(),
           (fx.HalfPeriod() * fxs + fy.HalfPeriod() * fys) / 2,
           (gx.HalfPeriod() * gxs + gy.HalfPeriod() * gys) / 2,
           x, y, countn, countb);
-    if (0)
-      cout << "FEQ " << fx(x) << " " << fy(y) << " " << f0 << " "
-           << (fx(x) - fy(y)) - f0 << "\n"
-           << "GEQ " << gx(x) << " " << gy(y) << " " << g0 << " "
-           << (gx(x) + gy(y)) - g0 << "\n";
-    if (0) {
-      cout << "FF "
-           << fx.HalfPeriod() << " " << fx.Slope() << " " << fx.Max() << " "
-           << fy.HalfPeriod() << " " << fy.Slope() << " " << fy.Max() << "\n";
-      cout << "GG "
-           << gx.HalfPeriod() << " " << gx.Slope() << " " << gx.Max() << " "
-           << gy.HalfPeriod() << " " << gy.Slope() << " " << gy.Max() << "\n";
-    }
   }
 
   void GeodesicLine3::solve2u(real d0, real s0,
@@ -310,13 +261,6 @@ namespace GeographicLib {
     real pi2 = Geodesic3::BigValue(),
       sbet = gx.Max(), somg = gy.Max(), stot = sbet + somg,
       dbet = fx.Max(), domg = fy.Max(), del  = dbet - domg;
-    bool debug = false;
-    if (debug)
-      cout << "HEREQ "
-           << pi2 << " " << d0 << " " << s0 << " "
-           << stot << " " << sbet-somg << " "
-           << fabs(s0) - stot << " "
-           << fabs((1 - 2 * signbit(d0)) * s0 - (sbet - somg)) << "\n";
     if (fabs(s0) - stot >= -5 * numeric_limits<real>::epsilon()) {
       // close to umbilic points we have
       // fx(u) = u -/+ dbet
@@ -328,7 +272,6 @@ namespace GeographicLib {
       real t0 = copysign(pi2, s0),
         t1 = (d0 + (1 - 2 * signbit(s0)) * del) / 2;
       u = t0 + t1; v = t0 - t1;
-      if (debug) cout << "UV1 " << u << " " << v << "\n";
     } else if (fabs(d0) > 2*pi2/3 &&
                fabs((1 - 2 * signbit(d0)) * s0 - (sbet - somg)) <=
                7 * numeric_limits<real>::epsilon()) {
@@ -337,14 +280,12 @@ namespace GeographicLib {
       } else {
         u = 1*d0/3; v = -2*d0/3;
       }
-      if (debug) cout << "UV2 " << u << " " << v << "\n";
     } else {
       real mm = 2;
       newt2(d0, s0, fx, fy, gx, gy,
             -mm * pi2, mm * pi2, pi2,
             -mm * pi2, mm * pi2, pi2,
             pi2, pi2, u, v, countn, countb);
-      if (debug) cout << "UV2D " << u << " " << v << "\n";
     }
   }
 
@@ -364,7 +305,7 @@ namespace GeographicLib {
     //   gx and gy are non-decreasing functions
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
     static const real tol = numeric_limits<real>::epsilon();
-    const bool debug = false, check = false;
+    const bool debug = Geodesic3::debug_, check = false;
     const int maxit = 300;
       // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
       // too much bisection.  Example:
@@ -389,7 +330,7 @@ namespace GeographicLib {
     // x = xset.bisect(), y = yset.bisect();
     auto p = zsetsbisect(xset, yset, f0, g0, false);
     x = p.first; y = p.second;
-    if (check) {
+    if constexpr (check) {
       // A necessary condition for a root is
       //   f01 <= 0 <= f10
       //   g00 <= 0 <= g11
@@ -440,7 +381,7 @@ namespace GeographicLib {
       zsetsinsert(xset, yset, xv, yv, f0, g0);
       real f = (xv.fz - yv.fz) - f0, g = (xv.gz + yv.gz) - g0;
       if ((fabs(f) <= ftol && fabs(g) <= gtol) || isnan(f) || isnan(g)) {
-        if (debug)
+        if constexpr (debug)
           cout << "break0 " << scientific << f << " " << g << "\n";
         break;
       }
@@ -454,14 +395,15 @@ namespace GeographicLib {
         dxa = 0, dya = 0;
       xa = xset.min().z; xb = xset.max().z;
       ya = yset.min().z; yb = yset.max().z;
-      if (debug) {
-        bool bb = gyp == 0 && nextafter(xset.min().z, xset.max().z) == xset.max().z;
+      if constexpr (debug) {
+        bool bb = gyp == 0 &&
+          nextafter(xset.min().z, xset.max().z) == xset.max().z;
         cout << "DERIV " << i << " " << fxp << " " << fyp << " " << gxp << " " << gyp << " " << bb << "\n";
         cout << "DY " << i << " " << -gxp * f << " " << fxp * g << "\n";
         cout << "FG " << i << " " << f << " " << g << "\n";
         cout << "DXY " << i << " " << degen << " " << dx << " " << dy << "\n";
       }
-      if (check) {
+      if constexpr (check) {
         if (!( fxp >= 0 && fyp >= 0 && gxp >= 0 && gyp >= 0 && den > 0 )) {
           cout << "DERIVS " << x << " " << y << " "
                << fxp << " " << fyp << " "
@@ -480,8 +422,8 @@ namespace GeographicLib {
         oldf = fabs(f); oldg = fabs(g); olddx = fabs(dx); olddy = fabs(dy);
         x = xn; y = yn;
         bis = false;
-        if (!(fabs(dx) > xtol || fabs(dy) > ytol) /* && i > ibis + 2 */) {
-          if (debug)
+        if (!(fabs(dx) > xtol || fabs(dy) > ytol)) {
+          if constexpr (debug)
             cout << "break1 " << scientific << dx << " " << dy << " "
                  << f << " " << g << "\n";
           break;
@@ -492,7 +434,7 @@ namespace GeographicLib {
         xn = p.first; yn = p.second;
         ++cntb;
         if (x == xn && y == yn) {
-          if (debug)
+          if constexpr (debug)
             cout << "break2 " << f << " " << g << "\n";
           break;
         }
@@ -502,34 +444,28 @@ namespace GeographicLib {
         ibis = i;
       }
       (void) bis;
-      if (debug)
+      if constexpr (debug)
         cout << "AA " << scientific << setprecision(4)
              << x-xa << " " << xb-x << " "
              << y-ya << " " << yb-y << "\n";
-      if (debug)
+      if constexpr (debug)
         cout << "CC " << i << " "
              << bis << " " << cond1 << " " << cond2 << " "
              << scientific << setprecision(2) << f << " " << g << " "
              << dx << " " << dy << " " << dxa << " " << dya << " "
              << xb-xa << " " << yb-ya << "\n";
-      if (debug)
+      if constexpr (debug)
         cout << "BOX " << i << " " << bis << " "
              << xset.num() << " " << yset.num() << " "
              << scientific << setprecision(3)
              << xset.max().z - xset.min().z << " "
              << yset.max().z - yset.min().z << "\n";
-      if (debug) {
-        real x0 = (xset.max().z + xset.min().z)/2;
-        cout << "QQ " << i << " " << xset.max().z -x0 << " " << xset.min().z - x0 << " " << x - x0 << " " << g << " " << x << " " << y << " " << nextafter(xset.min().z, xset.max().z) - xset.max().z << "\n";
-      }
-      // cout << "BOX " << xset.num() << " " << yset.num() << "\n";
     }
     if (countn)
       *countn += cntn;
     if (countb)
       *countb += cntb;
-    // cout << "CNT " << cntn << " " << cntb << "\n";
-    if (debug) {
+    if constexpr (debug) {
       cout << "CNT " << cntn << " " << cntb << "\n";
       cout << "XY " << setprecision(18) << x << " " << y << "\n";
     }
@@ -539,17 +475,17 @@ namespace GeographicLib {
     // Inset t into list.  flag = -/+ 1 indicates new min/max.
     // Return -1 if t was already present; othersize return index of newly
     // inserted value.
-    // If mono, value of t.fz and t.gz is adjusted to ensuire monotonicity:
+    // If monotonic, value of t.fz and t.gz is adjusted to ensuire monotonicity:
     //   if a.z == b.z then a.fz == b.gz && a.fz == b.gz
     //   if a.z < b.z then a.fz <= b.gz && a.fz <= b.gz
     using std::isnan;
     // Need this flag to be set otherwise conditions for setting the bounds on
     // the allowed results are not met and newt2 fails to converge.
-    const bool mono = true;     // In C++17 use if constexpr (mono)
+    const bool monotonic = true;
     int ind = -1;
     if (isnan(t.z)) return ind;
     if (t < min()) {
-      if constexpr (mono) {
+      if constexpr (monotonic) {
         t.fz = fmin(t.fz, min().fz);
         t.gz = fmin(t.gz, min().gz);
       }
@@ -562,7 +498,7 @@ namespace GeographicLib {
       if (flag < 0) { _s[0] = _s.back(); _s.resize(1); }
       t = max();
     } else if (max() < t) {
-      if constexpr (mono) {
+      if constexpr (monotonic) {
         t.fz = fmax(t.fz, max().fz);
         t.gz = fmax(t.gz, max().gz);
       }
@@ -574,7 +510,7 @@ namespace GeographicLib {
     if (p == _s.end()) return ind; // Can't happen
     // Fix components of t
     bool ins = !(*p == t);
-    if constexpr (mono) {
+    if constexpr (monotonic) {
       if (ins) {
         t.fz = Math::clamp(t.fz, (p-1)->fz, p->fz);
         t.gz = Math::clamp(t.gz, (p-1)->gz, p->gz);
@@ -605,10 +541,10 @@ namespace GeographicLib {
   void GeodesicLine3::zsetsinsert(zset& xset, zset& yset,
                                   zvals& xfg, zvals& yfg,
                                   real f0, real g0) {
-    const bool debug = false;
+    const bool debug = Geodesic3::debug_;
     real x0 = 0, y0 = 0;
     int xind = xset.insert(xfg), yind = yset.insert(yfg);
-    if (debug) {
+    if constexpr (debug) {
       cout << "BOXA " << xset.num() << " " << yset.num() << " "
            << xind << " " << yind << " "
            << xset.min().z - x0 << " " << xset.max().z - x0 << " "
@@ -618,6 +554,9 @@ namespace GeographicLib {
       zsetsdiag(xset, yset, f0, g0);
     }
     if (xind < 0 && yind < 0) return;
+    // We update two sets of bounds xa[0], xb[0], etc. use the values at the
+    // newly inserted row and column.  xa[1], xb[1], etc. use just the value at
+    // the center point.
     zvals xa[2] = {xset.min(), xset.min()},
       xb[2] = {xset.max(), xset.max()},
       ya[2] = {yset.min(), yset.min()},
@@ -698,25 +637,13 @@ namespace GeographicLib {
         break;
     }
     int kk = min(k, 1);
-    if (debug) cout << "BOXK " << k << " " << xind << " " << yind << "\n";
-    zvals t;
-    t = xa[kk];
+    if constexpr (debug)
+      cout << "BOXK " << k << " " << xind << " " << yind << "\n";
     xset.insert(xa[kk], -1);
-    if (!(t.z == xa[kk].z && t.fz == xa[kk].fz && t.gz == xa[kk].gz ))
-      cout << "ERR XA\n";
-    t = xb[kk];
     xset.insert(xb[kk], +1);
-    if (!(t.z == xb[kk].z && t.fz == xb[kk].fz && t.gz == xb[kk].gz ))
-      cout << "ERR XB\n";
-    t = ya[kk];
     yset.insert(ya[kk], -1);
-    if (!(t.z == ya[kk].z && t.fz == ya[kk].fz && t.gz == ya[kk].gz ))
-      cout << "ERR YA\n";
-    t = yb[kk];
     yset.insert(yb[kk], +1);
-    if (!(t.z == yb[kk].z && t.fz == yb[kk].fz && t.gz == yb[kk].gz ))
-      cout << "ERR YB\n";
-    if (debug) {
+    if constexpr (debug) {
       cout << "BOXB " << xset.num() << " " << yset.num() << " "
            << xset.min().z - x0 << " " << xset.max().z - x0 << " "
            << yset.min().z - y0 << " " << yset.max().z - y0 << " "
@@ -731,16 +658,7 @@ namespace GeographicLib {
 
   void GeodesicLine3::zsetsdiag(const zset& xset, const zset& yset,
                                 real f0, real g0) {
-    real x0 = 0, y0 = 0;
     ostringstream fs, gs;
-    if (0) {
-      for (int i = 0; i < xset.num(); ++i) {
-        cout << "x " << i << " " << xset.val(i).z - x0 << "\n";
-      }
-      for (int i = 0; i < yset.num(); ++i) {
-        cout << "y " << i << " " << yset.val(i).z - y0 << "\n";
-      }
-    }
     for (int j = yset.num() - 1; j >= 0; --j) {
       const zvals& y = yset.val(j);
       fs << "BOXF ";
@@ -813,7 +731,6 @@ namespace GeographicLib {
       if (cnt == 0)
         throw GeographicLib::GeographicErr
           ("No legal box GeodesicLine3::zsetsbisect");
-      // cout << "FOO " << cnt << "\n";
       return pair<real, real>(x, y);
     }
   }
@@ -823,17 +740,6 @@ namespace GeographicLib {
                              real& s12, bool betp) const {
     fline::disttx d = _f.Hybrid(_fic, betomg2, bet2a, omg2a, alp2a, betp);
     s12 = _g.dist(_gic, d);
-  }
-
-  void GeodesicLine3::Offset(real s13, bool reverse) {
-    ang bet2, omg2, alp2;
-    Position(s13, bet2, omg2, alp2);
-    if (reverse) {
-      alp2.reflect(true, true);
-      // TODO: check if point 2 is an umbilical point
-    }
-    _fic = fline::fics(_f, bet2, omg2, alp2);
-    _gic = gline::gics(_g, _fic);
   }
 
   GeodesicLine3::fline::disttx
@@ -872,7 +778,6 @@ namespace GeographicLib {
     } else {
       ang tht2 = betomg2.flipsign(fic.Ex);
       if (gammax() >= 0) {
-        // cout << "GRR " << real(fic.bet1) << " " << real(betomg2) << "\n";
         // FIX THIS!! betp shouldn't be appearing here.
         // Test case
         // echo -88 21 88 -111 | ./Geod3Solve -i $SET --hybridalt
@@ -994,12 +899,6 @@ namespace GeographicLib {
           tht2a = ang::radians(-fic.Ex * fic.delta) +
             ang::cardinal(2*fic.Ex*phi2n.second);
           alp2a = fic.alp1.nearest(2U) + ang::cardinal(parity < 0 ? 2 : 0);
-          /*
-          alp2a = ang::cardinal(2 * (phi2n.second +
-                                     (fic.phi1.c() == 0 &&
-                                      signbit(fic.alp1.c()) ? 1 : 0)))
-            .rebase(fic.alp0);
-          */
         } else {
           real deltax = bigclamp(fic.delta + phi2n.second * _deltashift, 2);
           v2 = ftht().inv(fpsi()(u2) - deltax);
@@ -1066,7 +965,7 @@ namespace GeographicLib {
             phi2a = ang::cardinal(fabs(v2) == 0
                                   ? 0 : copysign(real(1), v2 * fic.Nx))
               .rebase(fic.phi0);
-            alp2a = fabs(v2) == 0 ? ang::cardinal(2 /* * fic.Ex * parity*/ ) :
+            alp2a = fabs(v2) == 0 ? ang::cardinal(2) :
               fic.alp1.nearest(2U) +
               ang::cardinal(parity == 1 ? 0 : 2) +
               ang::radians(v2).flipsign(parity * phi2a.s());
@@ -1161,11 +1060,6 @@ namespace GeographicLib {
         u0 = f.fpsi().fwd((phi1-phi0).radians());
         v0 = 0;
         delta = -f.ftht()(tht0.radians());
-       if (0)
-          cout << "AA " << real(tht1) << " " << real(tht0) << " "
-               << real(alp1) << " " << signbit(phi1.s()) << " "
-               << real(alp1.flipsign(phi1.s())) << " "
-               << delta/Math::degree() << " " << Ex << " " << Nx << "\n";
       } else {
         // N.B. factor of k*kp omitted
         // phi0, tht0 are the middle of the initial umbilical segment
@@ -1219,28 +1113,6 @@ namespace GeographicLib {
   Math::real GeodesicLine3::gline::dist(gics ic, fline::disttx d) const {
     real sig2 = gpsi()(d.phiw2) + gtht()(d.thtw2) + d.ind2 * 2*s0;
     return (sig2 - ic.sig1) * tg().b();
-  }
-
-  void GeodesicLine3::inversedump(ostream& os) const {
-    os << "[b, e2, k2, kp2, gam] = deal("
-       << _tg.b() << ", " << _tg.e2() << ", "
-       << _tg.k2() << ", " << _tg.kp2() << ", "
-       << gamma() << ");\n";
-    os << "tx = ["
-       << fpsi().txp() << ", " << gpsi().txp() << ", "
-       << ftht().txp() << ", " << gtht().txp() << "];\n" ;
-    _f.inversedump(os);
-    _g.inversedump(os);
-  }
-
-  void GeodesicLine3::fline::inversedump(ostream& os) const {
-    _fpsi.inversedump(os, "fpsi");
-    _ftht.inversedump(os, "ftht");
-  }
-
-  void GeodesicLine3::gline::inversedump(ostream& os) const {
-    _gpsi.inversedump(os, "gpsi");
-    _gtht.inversedump(os, "gtht");
   }
 
   GeodesicLine3::hfun::hfun(bool distp, real kap, real kapp, real eps, real mu,
@@ -1461,19 +1333,6 @@ namespace GeographicLib {
     if (!_distp) {
       if (_biaxl)
         // This is sqrt(-mu) * f'(u)
-        /*
-          if (_tx) {
-          // DLMF (22.6.1): sn^2 + cn^2 =  k^2*sn^2 + dn^2 = 1
-          // dn^2 = cn^2 + k'^2*sn^2 = cn^2 - mu*sn^2
-          // k'^2 = -mu
-          real sn, cn, dn;
-          (void) _ell.am(u, sn, cn, dn);
-          return _sqrtmu / Math::sq(dn) - _fun.deriv(u);
-          } else
-        */
-        // f0(x) = atan(sqrt(-mu) * tanx(u))
-        // f0'(x) = sqrt(-mu) / (cos(u)^2 - mu * sin(u)^2)
-        // **HERE**
         return _sqrtmu / (Math::sq(cos(u)) - _mu * Math::sq(sin(u)))
           - _sqrtmu * _fun.deriv(u);
       else if (_meridl)
@@ -1718,42 +1577,6 @@ namespace GeographicLib {
     real c2 = Math::sq(c) - mu * Math::sq(s);
     // return gpsip(s, c, 1, 0, eps, mu) but with the factor c2 canceled
     return sqrt(1 - eps * c2);
-  }
-
-  void GeodesicLine3::hfun::inversedump(ostream& os, const string& name)
-    const {
-    os << "% " << name << "\n";
-    int ndiv = 20;
-    real ds = 1/real(100);
-    int num = int(round(fmin(3*HalfPeriod(), real(30)) * ndiv));
-    if (_distp)
-      os << "% u g(u) inv1(g) "
-         << "u1-u g'(u) delg delg-g' g'/f'\n";
-    else
-      os << "% u f(u) inv1(f) "
-         << "u1-u f'(u) delf delf-f' phi fwd(phi) fwd(phi)-u\n";
-    os << name << " = [\n";
-    for (int i = -num; i <= num; ++i) {
-      real u = i/real(ndiv),
-        f = (*this)(u),
-        f1 = deriv(u),
-        df = ((*this)(u + ds/2) - (*this)(u - ds/2)) / ds,
-        u1 = inv(f),
-        phi = rev(u),
-        ux = fwd(phi);
-      if (_distp)
-        os << u << " " << f << " "
-           << u1 << " "
-           << u1-u << " "
-           << f1 << " " << df << " " << df-f1 << ";\n";
-      else
-        os << u << " " << f << " "
-           << u1 << " "
-           << u1-u << " "
-           << f1 << " " << df << " " << df-f1 << " "
-           << phi << " " << ux << " " << ux-u << ";\n";
-    }
-    os << "];\n";
   }
 
   } // namespace Triaxial

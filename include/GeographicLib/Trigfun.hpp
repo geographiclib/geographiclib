@@ -70,7 +70,7 @@ namespace GeographicLib {
     friend class Triaxial::Conformal3;    // For access to root sig 2
     /// \endcond
     using real = Math::real;
-    static const bool debug_ = false;
+    static constexpr bool debug_ = false;
     int _m,                     // Number of coefficients in series
       _n;                       // Number of samples in half/quarter period
     bool _odd, _sym;

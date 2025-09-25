@@ -36,7 +36,7 @@ namespace GeographicLib {
     using random_prec = Math::real;
 #endif
     using ang = Angle;
-    static const int maxit_ = 20;
+    static constexpr int maxit_ = 20;
     const Ellipsoid3 _t;
     const vec3 _axes, _axes2, _linecc2;
     // mutable because using these objects in a non-const operation

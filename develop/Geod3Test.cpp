@@ -271,37 +271,6 @@ void angletest() {
   }
 }
 
-void hybridtest(const Geodesic3& tg, Math::real bet1, Math::real omg1,
-                Math::real betomg2, bool betp) {
-  using real = Math::real;
-  using ang = Angle;
-  ang bet1a(bet1), omg1a(omg1), betomg2a(betomg2),
-    // azimuth of umbilic azimuth
-    alpu(sqrt(tg.t().kp2()) * omg1a.s(), sqrt(tg.t().k2()) * bet1a.c()),
-    bet2a, omg2a, alp2a;
-  real s12;
-  cout << setprecision(6) << fixed;
-  for (unsigned q = 0u; q < 4u; ++q) {
-    alpu.setquadrant(q);
-    GeodesicLine3 l(tg, bet1a, omg1a, alpu);
-    l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
-    Ellipsoid3::AngNorm(bet2a, omg2a, alp2a, !betp);
-    cout << real(alpu.base()) << " " << real(bet2a.base()) << " "
-         << real(omg2a.base()) << " " << real(alp2a.base()) << " "
-         << s12 << "\n";
-  }
-  int m = 1;
-  for (int a = -180*m; a <= 180*m; ++a) {
-    ang alp1a = ang(real(a)/m);
-    GeodesicLine3 l(tg, bet1a, omg1a, alp1a);
-    l.Hybrid(betomg2a, bet2a, omg2a, alp2a, s12, betp);
-    Ellipsoid3::AngNorm(bet2a, omg2a, alp2a, !betp);
-    cout << real(a)/m << " " << real(bet2a.base()) << " "
-         << real(omg2a.base()) << " " << real(alp2a.base()) << " "
-          << s12 << "\n";
-  }
-}
-
 int main(int argc, const char* const argv[]) {
   try {
     using real = Math::real;
@@ -314,9 +283,8 @@ int main(int argc, const char* const argv[]) {
     int skew = 10;
     int div = 1;
     {
-      bool hybridp = false, odep = false, reportp = false,
-        odetest = false, extended = false, dense = false, normp = false,
-        swapomg = false;
+      bool odep = false, reportp = false,
+        odetest = false, extended = false, dense = false, normp = false;
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
       for (int m = 1; m < argc; ++m) {
         string arg(argv[m]);
@@ -345,16 +313,12 @@ int main(int argc, const char* const argv[]) {
             return 1;
           }
           m += 4;
-        } else if (arg == "--hybrid")
-          hybridp = true;
-        else if (arg == "--ode")
+        } else if (arg == "--ode")
           odep = true;
         else if (arg == "--report")
           reportp = true;
         else if (arg == "--odetest")
           odetest = true;
-        else if (arg == "--swapomg")
-          swapomg = true;
         else if (arg == "-x")
           extended = true;
         else if (arg == "--eps") {
@@ -389,40 +353,32 @@ int main(int argc, const char* const argv[]) {
       // equiv to     -t 6378172/6378102 1 6356752/6378102
       Geodesic3 tg = e2 < 0 ? Geodesic3(a, b, c) :
         Geodesic3(b, e2, k2, kp2);
-      tg.swapomg(swapomg);
       // Triaxial tg(1, 1, 1/real(2));
       // Triaxial tg(2, 1, 1);
-      if (hybridp) {
-        real bet1, omg1, betomg2;
-        bool betp;
-        while (cin >> bet1 >> omg1 >> betomg2 >> betp)
-          hybridtest(tg, bet1, omg1, betomg2, betp);
-      } else {
-        real bet1, omg1, bet2, omg2;
-        real alp1, alp2, s12, m12, M12, M21;
+      real bet1, omg1, bet2, omg2;
+      real alp1, alp2, s12, m12, M12, M21;
 #if HAVE_BOOST
-        Geodesic3ODE l(tg.t(), extended, dense, normp, eps);
+      Geodesic3ODE l(tg.t(), extended, dense, normp, eps);
 #endif
-        while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
-               >> m12 >> M12 >> M21) {
-          if (odetest) {
+      while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
+             >> m12 >> M12 >> M21) {
+        if (odetest) {
 #if HAVE_BOOST
-            errODE(l, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
+          errODE(l, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
 #endif
-          } else if (reportp)
-            report(tg, int(bet1), int(omg1), int(bet2), int(omg2), odep);
-          else
-            errreport(tg, bet1, omg1, alp1, bet2, omg2, alp2, s12,
-                      m12, M12, M21);
-        }
-        (void) odep;
-        (void) reportp;
-        (void) odetest;
-        (void) extended;
-        (void) dense;
-        (void) normp;
-        (void) eps;
+        } else if (reportp)
+          report(tg, int(bet1), int(omg1), int(bet2), int(omg2), odep);
+        else
+          errreport(tg, bet1, omg1, alp1, bet2, omg2, alp2, s12,
+                    m12, M12, M21);
       }
+      (void) odep;
+      (void) reportp;
+      (void) odetest;
+      (void) extended;
+      (void) dense;
+      (void) normp;
+      (void) eps;
       return 0;
     }
     for (int m = 1; m < argc; ++m) {

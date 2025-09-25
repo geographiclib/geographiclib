@@ -19,7 +19,7 @@
 #include <GeographicLib/Triaxial/Geodesic3.hpp>
 
 #if defined(_MSC_VER)
-// Squelch warnings about dll vs vector
+// Squelch warnings about dll vs fline + fline::fics + gline + gline::gics
 #  pragma warning (push)
 #  pragma warning (disable: 4251)
 #endif
@@ -173,7 +173,6 @@ namespace GeographicLib {
         using std::fmax;
         return fmax(_max, HalfPeriod() * (Slope() == 0 ? 1 : Slope()) / 1000);
       }
-      void inversedump(std::ostream& os, const std::string& name) const;
     };
 
     class fline {
@@ -255,7 +254,6 @@ namespace GeographicLib {
       disttx ArcPos0(const fics& fic, ang tau12,
                      ang& bet2a, ang& omg2a, ang& alp2a,
                      bool betp = true) const;
-      void inversedump(std::ostream& os) const;
     };
 
     class gline {
@@ -294,7 +292,6 @@ namespace GeographicLib {
       const Ellipsoid3& t() const { return _tg.t(); }
       const Geodesic3::gamblk& gm() const { return _gm; }
       real dist(gics ic, fline::disttx d) const;
-      void inversedump(std::ostream& os) const;
     };
 
     class zvals {
@@ -453,7 +450,7 @@ namespace GeographicLib {
     }
     static bool biaxspecial(const Geodesic3& tg, real gamma) {
       using std::fabs;
-      return tg._biaxp && (tg.t().k2() == 0 || tg.t().kp2() == 0) &&
+      return Geodesic3::biaxp_ && (tg.t().k2() == 0 || tg.t().kp2() == 0) &&
         gamma != 0 && fabs(gamma) < tg._ellipthresh;
     }
     // Private constructor to assemble the pieces of the class on exiting
@@ -461,16 +458,6 @@ namespace GeographicLib {
     GeodesicLine3(fline f, fline::fics fic, gline g, gline::gics gic);
     // Private constructor to provide the umbilical fline object.
     GeodesicLine3(const Geodesic3& tg);
-  public:
-    GeodesicLine3(const Geodesic3& tg,
-                         Angle bet1, Angle omg1, Angle alp1);
-    GeodesicLine3(const Geodesic3& tg,
-                         real bet1, real omg1, real alp1);
-    void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
-                  int* countn = nullptr, int* countb = nullptr) const;
-    void Position(real s12, real& bet2, real& omg2, real& alp2,
-                  bool unroll = true,
-                  int* countn = nullptr, int* countb = nullptr) const;
     // Find first crossing of bet = bet2.  NaN returned if
     // no crossing.  Assume bet1 in [-90,0] (or maybe (-90,0]) and bet2 in
     // [bet2, -bet2].   Special cases, bet2 = bet1...
@@ -480,33 +467,16 @@ namespace GeographicLib {
     void Hybrid(Angle betomg2,
                 Angle& bet2a, Angle& omg2a, Angle& alp2a,
                 real& s12, bool betp = true) const;
-    real gamma() const { return _f.gamma(); }
+  public:
+    GeodesicLine3(const Geodesic3& tg, Angle bet1, Angle omg1, Angle alp1);
+    GeodesicLine3(const Geodesic3& tg, real bet1, real omg1, real alp1);
+    void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2) const;
+    void Position(real s12, real& bet2, real& omg2, real& alp2,
+                  bool unroll = true) const;
     real Distance() const { return _gic.s13; }
     void SetDistance(real s13) { _gic.s13 = s13; }
-    void Offset(real s13, bool reverse = false);
     void pos1(Angle& bet1, Angle& omg1, Angle& alp1) const;
     void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
-
-    real fbetm() const { return gamma() != 0 ?
-        fbet().HalfPeriod() * fbet().Slope() :
-        fbet().Max();
-    }
-    real fomgm() const { return gamma() != 0 ?
-        fomg().HalfPeriod() * fomg().Slope() :
-        fomg().Max();
-    }
-
-    real gbetm() const { return gamma() != 0 ?
-        gbet().HalfPeriod() * gbet().Slope() :
-        gbet().Max();
-    }
-    real gomgm() const { return gamma() != 0 ?
-        gomg().HalfPeriod() * gomg().Slope() :
-        gomg().Max();
-    }
-    //    real df() const { return _f.df; }
-    real deltashift() const { return _f.deltashift(); }
-    void inversedump(std::ostream& os) const;
   };
 
   } // namespace Triaxial
