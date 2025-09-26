@@ -148,9 +148,9 @@ The goals of GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with C++11 compliant versions of g++
+and the utilities have been tested with C++17 compliant versions of g++
 under Linux, with Apple LLVM 7.0.2 under Mac OS X, and with MS Visual
-Studio 14 (2015), 15 (2017), and 16 (2019) compiled for 32 bit and 64
+Studio 15 (2017), 16 (2019), and 17 (2022) compiled for 32 bit and 64
 bit on Windows.
 
 The section \ref geodesic documents the method of solving the geodesic
@@ -193,9 +193,9 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
 GeographicLib has been developed under Linux with the g++ compiler,
-under Mac OS X with Xcode, and under Windows with Visual Studio 2015 and
-later.  It should compile on any systems with a C++11 compliant
-compiler.  First download one of
+under Mac OS X with Xcode, and under Windows with Visual Studio.  It
+should compile on any systems with a C++17 compliant compiler.  First
+download one of
 - <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@.tar.gz">
 GeographicLib-@PROJECT_VERSION@.tar.gz</a> tar'ed sources
 - <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@.zip">
@@ -228,7 +228,7 @@ make software maintenance simpler
   directory for compiling the code.  In the description here the
   directories are called BUILD and are located in the top-level of the
   source tree.  You might want to use a suffix to denote the type of
-  build, e.g., BUILD-vc14 for Visual Studio 14 (2015), or BUILD-shared
+  build, e.g., BUILD-vc14 for Visua Sltudio 14 (2015), or BUILD-shared
   for a build which creates a shared library.  The advantages of
   out-of-source builds are:
   - You don't mess up the source tree, so it's easy to "clean up".
@@ -283,10 +283,10 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 14" -A win32 \
+  cmake -G "Visual Studio 17" -A win32 \
     -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" \
     ..
-  cmake -G "Visual Studio 14" -A x64 \
+  cmake -G "Visual Studio 17" -A x64 \
     -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" \
     ..\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX point to system directories.
@@ -412,7 +412,7 @@ Here are the steps to compile and install GeographicLib:
 - CMake can create the build directory for
   you.  This allows you to configure and run the build on Windows with
   \verbatim
-  cmake -G "Visual Studio 14" -A x64 -S . -B BUILD
+  cmake -G "Visual Studio 17" -A x64 -S . -B BUILD
   cmake --build BUILD --config Release --target ALL_BUILD \endverbatim
   or on Linux with \verbatim
   cmake -S . -B BUILD
@@ -451,8 +451,8 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 14 2015 or later
-(2017, 2019, or 2022) (in either release or debug mode).  However, if
+provided; these can only be used by Visual Studio 15 2017 or later
+(2019 or 2022) (in either release or debug mode).  However, if
 you plan to use the library, it may be advisable to build it with the
 compiler you are using for your own code using \ref cmake.
 
@@ -477,7 +477,7 @@ will include
 <code>C:/Program FilesGeographicLib-@PROJECT_VERSION@/bin</code>
 where the utilities are installed.  The headers and library are
 installed in the `include/GeographicLib` and `lib` folders.  The libraries
-were built using using Visual Studio 14 2015 in release and debug modes.
+were built using using Visual Studio 15 2017 in release and debug modes.
 The utilities were linked against the release-mode shared library.
 
 \subsection binaryinstosx MacOSX
@@ -543,7 +543,7 @@ Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
 library included in the package.  For example, the 64-bit binary
 installer is created with \verbatim
-  cmake -G "Visual Studio 14" -A x64 \
+  cmake -G "Visual Studio 17" -A x64 \
     -D BUILD_BOTH_LIBS=ON \
     -D PACKAGE_DEBUG_LIBS=ON \
     ..
@@ -611,14 +611,14 @@ In order to use GeographicLib from C++ code, you will need to
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
-    cmake -G "Visual Studio 14" -A x64 \
+    cmake -G "Visual Studio 17" -A x64 \
       -D CMAKE_PREFIX_PATH="C:/Program Files" \
       -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
     BUILD subdirectory).  Also, on Windows, make sure that the version
-    of Visual Studio (14 in the example above) architecture (x64 in the
+    of Visual Studio (17 in the example above) architecture (x64 in the
     example above) is compatible with that used to build GeographicLib.
     In this example, it's not necessary to specify
     <code>CMAKE_PREFIX_PATH</code>, because <code>C:/Program
@@ -634,7 +634,7 @@ In order to use GeographicLib from C++ code, you will need to
     CMake can create the build directory for
     you.  This allows you to configure and run the build on Windows with
     \verbatim
-    cmake -G "Visual Studio 14" -A x64 \
+    cmake -G "Visual Studio 17" -A x64 \
       -D CMAKE_PREFIX_PATH="C:/Program Files" \
       -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
       -S . -B BUILD
@@ -1081,8 +1081,6 @@ format they can be easily plotted in MATLAB.
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
 compiler.  System dependencies come into
- - Math -- GeographicLib requires support of C++11 mathematical
-   functions.
  - use of long double -- the type is used only for testing.  On systems
    which lack this data type the cmake and autoconf configuration
    methods should detect its absence and omit the code that depends on
@@ -4441,7 +4439,7 @@ and his result was published in J. Crelle in (1839) with a French
 translation (from German) appearing in J. Liouville in (1841).
 
 Here is the solution, exactly as given by Jacobi
-<a href="https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
+<a href="https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA267"> here</a>
 (with minor changes in notation):
 \f[
 \begin{align}
@@ -7550,11 +7548,9 @@ Here's what you should know:
      <code>GEOGRAPHICLIB_PRECISION</code> and
      <code>GeographicLib_HIGHPREC_LIBRARIES</code>, the libraries
      providing the support for high-precision arithmetic;
-   - support for the C++11 mathematical functions and the explicit cast
-     operator is required;
    - quad precision is only available on Linux;
-   - mpfr has been mostly tested on Linux (but it works on Windows with
-     Visual Studio 12 and MacOS too).
+   - MPFR has been mostly tested on Linux (but it works on Windows with
+     Visual Studio and MacOS too).
 
 The following steps needed to be taken
 

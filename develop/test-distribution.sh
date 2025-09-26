@@ -95,7 +95,6 @@ rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 
 unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
 
-# for ver in 10 11 12 14 15 16; do
 for ver in 15 16 17; do
     for arch in win32 x64; do
         pkg=vc$ver-$arch

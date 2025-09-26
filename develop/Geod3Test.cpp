@@ -12,6 +12,11 @@
 #include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 #include <GeographicLib/Triaxial/Geodesic3.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warning 4702: unreachable code
+#  pragma warning (disable: 4702)
+#endif
+
 #define HAVE_BOOST 0
 
 #if HAVE_BOOST

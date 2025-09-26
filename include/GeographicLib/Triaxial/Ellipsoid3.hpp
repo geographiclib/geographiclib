@@ -22,8 +22,9 @@ namespace GeographicLib {
    * The algorithms on triaxial ellipsoids are, for the most part, distinct
    * from those in the rest of %GeographicLib, which deal with biaxial
    * ellipsoids; it is therefore convenient to put them in a distinct
-   * namespace.  The header files are included via
-   * GeographicLib/Triaxial/Class.hpp.
+   * namespace.  In order to minimize the change of name clashes, the classes
+   * in the namespace include "3" in their names.  The header files are
+   * included via GeographicLib/Triaxial/Class.hpp.
    **********************************************************************/
   namespace Triaxial {
   /**
@@ -140,15 +141,18 @@ namespace GeographicLib {
      * @param[in] c the minor semiaxis.
      *
      * The semiaxes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
+     * If \e a = \e c (a sphere), then the oblate limit is taken.
      **********************************************************************/
     Ellipsoid3(real a, real b, real c);
     /**
      * An ellipsoid specified by its median semiaxis and shape.
      *
-     * @param[in] b the median semiaxis.
-     * @param[in] e2 the eccentricity squared \f$e^2\f$.
-     * @param[in] k2 the oblateness parameter squared \f$k^2\f$.
-     * @param[in] kp2 the prolateness parameter squared \f$k'^2\f$.
+     * @param[in] b the middle semi-axis.
+     * @param[in] e2 the eccentricity squared \f$e^2 = (a^2 - c^2)/b^2\f$.
+     * @param[in] k2 the oblateness parameter squared \f$k^2 = (b^2 - c^2) /
+     *  (a^2 - c^2)\f$.
+     * @param[in] kp2 the prolateness parameter squared \f$k'^2= (a^2 - b^2) /
+     *   (a^2 - c^2)\f$.
      *
      * This form of the constructor is important when the eccentricity is small
      * and giving \e e2 allows for more precision.

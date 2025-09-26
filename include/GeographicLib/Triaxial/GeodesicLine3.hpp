@@ -27,6 +27,22 @@
 namespace GeographicLib {
   namespace Triaxial {
 
+  /**
+   * \brief The direct geodesic problem for a triaxial ellipsoid
+   *
+   * This is an implementation of
+   * <a href="https://books.google.com/books?id=RbwGAAAAYAAJ&pg=PA309">
+   * Jacobi's method for finding geodesics on a triaxial ellipsoid</a> (1839).
+
+   * This class performs the quadrature necessary to evaluate to the integrals
+   * for the course and distance equations and it solves the 2 coupled
+   * equations to determine the latitude and longitude of the destination.
+   * This functionality is used by the Geodesic3 class to solve the inverse
+   * geodesic problem.
+   * 
+   * Example of use:
+   * \include example-GeodesicLine3.cpp
+   **********************************************************************/
   class GEOGRAPHICLIB_EXPORT GeodesicLine3 {
   private:
     /// \cond SKIP
@@ -468,14 +484,76 @@ namespace GeographicLib {
                 Angle& bet2a, Angle& omg2a, Angle& alp2a,
                 real& s12, bool betp = true) const;
   public:
+    /**
+     * Constructor for a geodesic line specified at point 1
+     *
+     * @param[in] tg the underlying Geodesic3 object.
+     * @param[in] bet1 the ellipsoidal latitude of point 1.
+     * @param[in] omg1 the ellipsoidal longitude of point 1.
+     * @param[in] alp1 the forward azimuth of the geodesic at point 1.
+     **********************************************************************/
     GeodesicLine3(const Geodesic3& tg, Angle bet1, Angle omg1, Angle alp1);
+    /**
+     * Constructor for a geodesic line specified at point 1 in degrees
+     *
+     * @param[in] tg the underlying Geodesic3 object.
+     * @param[in] bet1 the ellipsoidal latitude of point 1.
+     * @param[in] omg1 the ellipsoidal longitude of point 1 (in degrees).
+     * @param[in] alp1 the forward azimuth of the geodesic at point 1 (in
+     *   degrees).
+     **********************************************************************/
     GeodesicLine3(const Geodesic3& tg, real bet1, real omg1, real alp1);
+    /**
+     * Find point 2 a given distance from point 1
+     *
+     * @param[in] s12 the distance from point 1 to point 2.
+     * @param[out] bet2 the ellipsoidal latitude of point 2.
+     * @param[out] omg2 the ellipsoidal longitude of point 2.
+     * @param[out] alp2 the forward azimuth of the geodesic at point 2.
+     **********************************************************************/
     void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2) const;
+    /**
+     * Find point 2 a given distance from point 1 in degrees
+     *
+     * @param[in] s12 the distance from point 1 to point 2.
+     * @param[out] bet2 the ellipsoidal latitude of point 2 (in degrees).
+     * @param[out] omg2 the ellipsoidal longitude of point 2 (in degrees).
+     * @param[out] alp2 the forward azimuth of the geodesic at point 2 (in
+     *   degrees).
+     * @param[in] unroll if true (the default) "unroll" the coordinates;
+     *   otherwise reduce them to their conventional ranges.
+     **********************************************************************/
     void Position(real s12, real& bet2, real& omg2, real& alp2,
                   bool unroll = true) const;
-    real Distance() const { return _gic.s13; }
+    /**
+     * Define a reference point 3 on the geodesic line
+     *
+     * @param[in] s13 distance from point 1 to point 3.
+     **********************************************************************/
     void SetDistance(real s13) { _gic.s13 = s13; }
+    /**
+     * @return \e s13 the distance from point 1 to reference point 3.
+     **********************************************************************/
+    real Distance() const { return _gic.s13; }
+    /**
+     * Return the coordinates of point 1
+     *
+     * @param[out] bet1 the ellipsoidal latitude of point 1.
+     * @param[out] omg1 the ellipsoidal longitude of point 1.
+     * @param[out] alp1 the forward azimuth of the geodesic at point 1.
+     **********************************************************************/
     void pos1(Angle& bet1, Angle& omg1, Angle& alp1) const;
+    /**
+     * Return the coordinates of point 1 in degrees
+     *
+     * @param[out] bet1 the ellipsoidal latitude of point 1 (in degrees).
+     * @param[out] omg1 the ellipsoidal longitude of point 1 (in degrees).
+     * @param[out] alp1 the forward azimuth of the geodesic at point 1 (in
+     *   degrees).
+     * @param[in] unroll if true (the default), return the coordinates used to
+     *   specify this line; otherwise reduce the coordinates for point 1 to
+     *   their conventional ranges.
+     **********************************************************************/
     void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
   };
 

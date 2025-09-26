@@ -72,6 +72,8 @@ set (EXAMPLES0
   example-UTMUPS.cpp
   example-Utility.cpp
   example-Conformal3.cpp
+  example-Geodesic3.cpp
+  example-GeodesicLine3.cpp
   example-Angle.cpp
   example-Trigfun.cpp
   example-TrigfunExt.cpp

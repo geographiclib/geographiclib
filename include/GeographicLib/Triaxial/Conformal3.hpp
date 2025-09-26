@@ -103,7 +103,12 @@ namespace GeographicLib {
     real sphericalscale(real ma, real mb) const;
   public:
     using vec3 = Ellipsoid3::vec3;
-    Conformal3(const Ellipsoid3& t);
+    /**
+     * Constructor for a triaxial ellipsoid defined by Ellipsoid3 object.
+     *
+     * @param[in] t the Ellipsoid3 object.
+     **********************************************************************/
+    Conformal3(const Ellipsoid3& t = Ellipsoid3{});
     /**
      * Constructor for a trixial ellipsoid with semi-axes.
      *
@@ -111,19 +116,22 @@ namespace GeographicLib {
      * @param[in] b the middle semi-axis.
      * @param[in] c the smallest semi-axis.
      *
-     * The semi-axes must satisfy \e a &ge; \e b &ge; \e c > 0 and \e a >
-     * \e c.
+     * The semi-axes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
+     * If \e a = \e c (a sphere), then the oblate limit is taken.
      **********************************************************************/
     Conformal3(real a, real b, real c);
     /**
      * Alternate constructor for a triaxial ellipsoid.
      *
      * @param[in] b the middle semi-axis.
-     * @param[in] e2 the smallest semi-axis.
-     * @param[in] k2 the relative magnitude of \e a &minus; \e b.
-     * @param[in] kp2 the relative magnitude of \e b &minus; \e c.
+     * @param[in] e2 the eccentricity squared \f$e^2 = (a^2 - c^2)/b^2\f$.
+     * @param[in] k2 the oblateness parameter squared \f$k^2 = (b^2 - c^2) /
+     *  (a^2 - c^2)\f$.
+     * @param[in] kp2 the prolateness parameter squared \f$k'^2= (a^2 - b^2) /
+     *   (a^2 - c^2)\f$.
      *
-     * This form can be used to specify a sphere.
+     * \note The constructor normalizes \e k2 and \e kp2 to ensure then \e k2 +
+     * \e kp2 = 1.
      **********************************************************************/
     Conformal3(real b, real e2, real k2, real kp2);
     /**

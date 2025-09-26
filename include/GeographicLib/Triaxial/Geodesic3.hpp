@@ -2,7 +2,7 @@
  * \file Geodesic3.hpp
  * \brief Header for GeographicLib::Triaxial::Geodesic3 class
  *
- * Copyright (c) Charles Karney (2025) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -24,6 +24,21 @@ namespace GeographicLib {
   namespace Triaxial {
   class GeodesicLine3;
 
+  /**
+   * \brief The solution of the geodesic problem for a triaxial ellipsoid
+   *
+   * This is an implementation of
+   * <a href="https://books.google.com/books?id=RbwGAAAAYAAJ&pg=PA309">
+   * Jacobi's method for finding geodesics on a triaxial ellipsoid</a>
+   * (1839).  This class offers an interface to the solutions to the direct
+   * geodesic problem via the GeodesicLine3 class which contains the meat of
+   * Jacobi's direct solution.  In addition it provides a solution to the
+   * inverse problem which closely parallels the solution for the biaxial
+   * problem given by GeodesicExact.  For more details see \ref triaxial.
+   *
+   * Example of use:
+   * \include example-Geodesic3.cpp
+   **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Geodesic3 {
   private:
     /// \cond SKIP
@@ -106,24 +121,138 @@ namespace GeographicLib {
     bool prolate() const { return t().prolate(); }
     bool biaxial() const { return t().biaxial(); }
   public:
+    /**
+     * Constructor for a triaxial ellipsoid defined by Ellipsoid3 object.
+     *
+     * @param[in] t the Ellipsoid3 object.
+     **********************************************************************/
     Geodesic3(const Ellipsoid3& t = Ellipsoid3{});
+    /**
+     * Constructor for a trixial ellipsoid with semi-axes.
+     *
+     * @param[in] a the largest semi-axis.
+     * @param[in] b the middle semi-axis.
+     * @param[in] c the smallest semi-axis.
+     *
+     * The semi-axes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
+     * If \e a = \e c (a sphere), then the oblate limit is taken.
+     **********************************************************************/
     Geodesic3(real a, real b, real c);
+    /**
+     * Alternate constructor for a triaxial ellipsoid.
+     *
+     * @param[in] b the middle semi-axis.
+     * @param[in] e2 the eccentricity squared \f$e^2 = (a^2 - c^2)/b^2\f$.
+     * @param[in] k2 the oblateness parameter squared \f$k^2 = (b^2 - c^2) /
+     *  (a^2 - c^2)\f$.
+     * @param[in] kp2 the prolateness parameter squared \f$k'^2= (a^2 - b^2) /
+     *   (a^2 - c^2)\f$.
+     *
+     * \note The constructor normalizes \e k2 and \e kp2 to ensure then \e k2 +
+     * \e kp2 = 1.
+     **********************************************************************/
     Geodesic3(real b, real e2, real k2, real kp2);
+    /**
+     * @return the Ellipsoid3 object for this projection.
+     **********************************************************************/
     const Ellipsoid3& t() const { return _t; }
+    /**
+     * Solve the inverse problem
+     *
+     * @param[in] bet1 the ellipsoidal latitude of point 1.
+     * @param[in] omg1 the ellipsoidal longitude of point 1.
+     * @param[in] bet2 the ellipsoidal latitude of point 2.
+     * @param[in] omg2 the ellipsoidal longitude of point 2.
+     * @param[out] s12 the shortest distance between the points.
+     * @param[out] alp1 the forward azimuth of the geodesic at point 1.
+     * @param[out] alp2 the forward azimuth of the geodesic at point 2.
+     * @return a GeodesicLine3 object defining the geodesic.
+     **********************************************************************/
     GeodesicLine3 Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
                           real& s12, Angle& alp1, Angle& alp2) const;
+    /**
+     * Solve the inverse problem in degrees
+     *
+     * @param[in] bet1 the ellipsoidal latitude of point 1 (in degrees).
+     * @param[in] omg1 the ellipsoidal longitude of point 1 (in degrees).
+     * @param[in] bet2 the ellipsoidal latitude of point 2 (in degrees).
+     * @param[in] omg2 the ellipsoidal longitude of point 2 (in degrees).
+     * @param[out] s12 the shortest distance between the points.
+     * @param[out] alp1 the forward azimuth of the geodesic at point 1 (in
+     *   degrees).
+     * @param[out] alp2 the forward azimuth of the geodesic at point 2 (in
+     *   degrees).
+     * @return a GeodesicLine3 object defining the geodesic.
+     **********************************************************************/
     GeodesicLine3 Inverse(real bet1, real omg1, real bet2, real omg2,
                           real& s12, real& alp1, real& alp2) const;
-    GeodesicLine3 Line(Angle bet1, Angle omg1, Angle alp1) const;
-    GeodesicLine3 Line(real bet1, real omg1, real alp1) const;
+    /**
+     * Solve the direct problem
+     *
+     * @param[in] bet1 the ellipsoidal latitude of point 1.
+     * @param[in] omg1 the ellipsoidal longitude of point 1.
+     * @param[in] alp1 the forward azimuth of the geodesic at point 1.
+     * @param[in] s12 the distance from point 1 to point 2.
+     * @param[out] bet2 the ellipsoidal latitude of point 2.
+     * @param[out] omg2 the ellipsoidal longitude of point 2.
+     * @param[out] alp2 the forward azimuth of the geodesic at point 2.
+     * @return a GeodesicLine3 object defining the geodesic.
+     **********************************************************************/
     GeodesicLine3 Direct(Angle bet1, Angle omg1, Angle alp1, real s12,
                          Angle& bet2, Angle& omg2, Angle& alp2) const;
+    /**
+     * Solve the direct problem in degrees
+     *
+     * @param[in] bet1 the ellipsoidal latitude of point 1 (in degrees).
+     * @param[in] omg1 the ellipsoidal longitude of point 1 (in degrees).
+     * @param[in] alp1 the forward azimuth of the geodesic at point 1 (in
+     *   degrees).
+     * @param[in] s12 the distance from point 1 to point 2.
+     * @param[out] bet2 the ellipsoidal latitude of point 2 (in degrees).
+     * @param[out] omg2 the ellipsoidal longitude of point 2 (in degrees).
+     * @param[out] alp2 the forward azimuth of the geodesic at point 2 (in
+     *   degrees).
+     * @return a GeodesicLine3 object defining the geodesic.
+     **********************************************************************/
     GeodesicLine3 Direct(real bet1, real omg1, real alp1, real s12,
                          real& bet2, real& omg2, real& alp2) const;
-    bool umbalt() const { return _umbalt; }
+    /**
+     * A geodesic line defined at a starting point
+     *
+     * @param[in] bet1 the ellipsoidal latitude of point 1.
+     * @param[in] omg1 the ellipsoidal longitude of point 1.
+     * @param[in] alp1 the forward azimuth of the geodesic at point 1.
+     * @return a GeodesicLine3 object defining the geodesic.
+     **********************************************************************/
+    GeodesicLine3 Line(Angle bet1, Angle omg1, Angle alp1) const;
+    /**
+     * A geodesic line defined at a starting point specified in degrees
+     *
+     * @param[in] bet1 the ellipsoidal latitude of point 1 (in degrees).
+     * @param[in] omg1 the ellipsoidal longitude of point 1 (in degrees).
+     * @param[in] alp1 the forward azimuth of the geodesic at point 1 (in
+     *   degrees).
+     * @return a GeodesicLine3 object defining the geodesic.
+     **********************************************************************/
+    GeodesicLine3 Line(real bet1, real omg1, real alp1) const;
+    /**
+     * Specify the behavior of umbilical geodesics
+     *
+     * @param[in] numbalt the new value of the \e umbalt flag.
+     *
+     * If \e umbalt is true (resp. false) then the latitude (resp. longitude)
+     * of an umbilical geodesic is the librating coordinate and the longitude
+     * (resp. latitude) is the rotating coordinate.  This has no effect for
+     * biaxial ellipsoids.  In this case the latitude (resp. longitude) is
+     * always the librating coordinate for oblate (resp. prolate) ellipsoids.
+     **********************************************************************/
     void umbalt(bool numbalt) {
       if (_t.k2() > 0 && _t.kp2() > 0) _umbalt = numbalt;
     }
+    /**
+     * @return the value of the \e umbalt flag; see umbalt(bool)).
+     **********************************************************************/
+    bool umbalt() const { return _umbalt; }
   };
 
   } // namespace Triaxial
