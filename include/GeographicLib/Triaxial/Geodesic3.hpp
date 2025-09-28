@@ -38,6 +38,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-Geodesic3.cpp
+   *
+   * <a href="Geod3Solve.1.html">Geod3Solve</a> is a command-line utility
+   * providing access to the functionality of Geodesic3 and GeodesicLine3.
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Geodesic3 {
   private:
@@ -48,12 +51,14 @@ namespace GeographicLib {
     using real = Math::real;
     using ang = Angle;
     static constexpr bool debug_ = false; // print out diagnostics
+    static constexpr bool throw_ = true; // exception on convergence failure
     // special treatment for biaxial non-meridional
     static constexpr bool biaxp_ = true;
     // favor hybrid solution in terms of omg
     static constexpr bool  hybridalt_ = true;
     // allow swapping of omega{1,2}
     static constexpr bool swapomg_ = false;
+    static constexpr int maxit_ = 200;
     Ellipsoid3 _t;
 
     // Run geodesic from bet1, omg1, alp1, find its first intersection with bet
@@ -133,6 +138,8 @@ namespace GeographicLib {
      * @param[in] a the largest semi-axis.
      * @param[in] b the middle semi-axis.
      * @param[in] c the smallest semi-axis.
+     * @exception GeographicErr if the required ordering is semiaxes is
+     *   violated.
      *
      * The semi-axes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
      * If \e a = \e c (a sphere), then the oblate limit is taken.
@@ -147,6 +154,8 @@ namespace GeographicLib {
      *  (a^2 - c^2)\f$.
      * @param[in] kp2 the prolateness parameter squared \f$k'^2= (a^2 - b^2) /
      *   (a^2 - c^2)\f$.
+     * @exception GeographicErr if the required ordering is semiaxes is
+     *   violated.
      *
      * \note The constructor normalizes \e k2 and \e kp2 to ensure then \e k2 +
      * \e kp2 = 1.

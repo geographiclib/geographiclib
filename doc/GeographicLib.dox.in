@@ -881,10 +881,11 @@ The utilities are
    Geod3Solve.cpp.
  - <a href="Cart3Convert.1.html">
    <b>Cart3Convert</b></a>: convert between geocentric and various
-   triaxial coordinates systems.  See \ref Cart3Convert.cpp.
+   triaxial coordinates systems using Triaxial::Cartesian3.  See \ref
+   Cart3Convert.cpp.
  - <a href="Conformal3Proj.1.html">
    <b>Conformal3Proj</b></a>: conformal projections for a triaxial
-   ellipsoid.  See \ref Conformal3Proj.cpp.
+   ellipsoid using Triaxial::Conformal3.  See \ref Conformal3Proj.cpp.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -4435,12 +4436,15 @@ K&ouml;nigsberg, 28th Dec. '38.
 </blockquote>
 
 On the same day he wrote a similar letter to the editor of Compte Rendus
-and his result was published in J. Crelle in (1839) with a French
-translation (from German) appearing in J. Liouville in (1841).
+and his result was published in
+<a href="https://books.google.com/books?id=RbwGAAAAYAAJ&pg=PA309">
+J. Crelle in (1839)</a> with a French translation (from German)
+appearing in
+<a href="https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA267">
+J. Liouville in (1841)</a>.
 
-Here is the solution, exactly as given by Jacobi
-<a href="https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA267"> here</a>
-(with minor changes in notation):
+Here is the solution, exactly as given by Jacobi (with minor changes in
+notation):
 \f[
 \begin{align}
 \delta &= \int

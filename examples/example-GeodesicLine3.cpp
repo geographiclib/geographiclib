@@ -1,4 +1,4 @@
-// Example of using the Triaxial::Conformal3 class.
+// Example of using the Triaxial::GeodesicLine3 class.
 
 #include <iostream>
 #include <iomanip>

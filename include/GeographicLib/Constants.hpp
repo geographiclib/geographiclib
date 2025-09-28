@@ -44,6 +44,7 @@
 //   191[0-6]  vc15  (2017) First version of VS to include enough C++17 support
 //   192[0-9]  vc16  (2019)
 //   1930-1944 vc17  (2022)
+//             vc18  (2026)
 
 #if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
   GEOGRAPHICLIB_SHARED_LIB

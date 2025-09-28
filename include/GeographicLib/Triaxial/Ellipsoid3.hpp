@@ -44,10 +44,10 @@ namespace GeographicLib {
    * \end{align}
    * \f]
    * note that \f$k^2 + k'^2 = 1\f$.  The spherical limit \f$ e\rightarrow 0
-   * \f$ is nonuniform since the values of $k$ and $k'$ depend on how the limit
-   * is taken.  In this cases, it's convenient to specify the ellipsoid in
-   * terms of these parameters.  The semiaxes are related to these parameters
-   * by
+   * \f$ is nonuniform since the values of \f$k\f$ and \f$k'\f$ depend on how
+   * the limit is taken.  In this cases, it's convenient to specify the
+   * ellipsoid in terms of these parameters.  The semiaxes are related to these
+   * parameters by
    * \f[
    * [a,b,c] = b \bigl[ \sqrt{1 + e^2k'^2}, 1, \sqrt{1 - e^2k^2} \bigr].
    * \f]
@@ -75,11 +75,14 @@ namespace GeographicLib {
    * \end{align}
    * \f]
    * leaves the position and direction unchanged; see AngNorm(),
+   *
+   * Example of use:
+   * \include example-Ellipsoid3.cpp
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Ellipsoid3 {
   public:
     /**
-     * A type to hold three-dimentional positions and velocities in Cartesian
+     * A type to hold three-dimentional positions and directions in Cartesian
      * coordinates.
      **********************************************************************/
     using vec3 = std::array<Math::real, 3>;
@@ -139,6 +142,8 @@ namespace GeographicLib {
      * @param[in] a the major semiaxis.
      * @param[in] b the median semiaxis.
      * @param[in] c the minor semiaxis.
+     * @exception GeographicErr if the required ordering is semiaxes is
+     *   violated.
      *
      * The semiaxes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
      * If \e a = \e c (a sphere), then the oblate limit is taken.
@@ -153,6 +158,8 @@ namespace GeographicLib {
      *  (a^2 - c^2)\f$.
      * @param[in] kp2 the prolateness parameter squared \f$k'^2= (a^2 - b^2) /
      *   (a^2 - c^2)\f$.
+     * @exception GeographicErr if the required ordering is semiaxes is
+     *   violated.
      *
      * This form of the constructor is important when the eccentricity is small
      * and giving \e e2 allows for more precision.

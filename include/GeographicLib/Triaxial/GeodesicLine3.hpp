@@ -39,9 +39,12 @@ namespace GeographicLib {
    * equations to determine the latitude and longitude of the destination.
    * This functionality is used by the Geodesic3 class to solve the inverse
    * geodesic problem.
-   * 
+   *
    * Example of use:
    * \include example-GeodesicLine3.cpp
+   *
+   * <a href="Geod3Solve.1.html">Geod3Solve</a> is a command-line utility
+   * providing access to the functionality of Geodesic3 and GeodesicLine3.
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT GeodesicLine3 {
   private:
@@ -50,6 +53,7 @@ namespace GeographicLib {
     /// \endcond
     using real = Math::real;
     using ang = Angle;
+    static constexpr int maxit_ = 300;
 
     class hfun {
       // This combines ffun abd gfun in order to minimize the duplication of

@@ -700,7 +700,7 @@ namespace GeographicLib {
     // require fa and fb to have opposite signs
 
     ang xm;                  // The return value
-    int cntn = 0, cntb = 0, maxcnt = 200;
+    int cntn = 0, cntb = 0;
     bool trip = false;
     const bool debug = debug_;
     // 25 iterations with line 498534 of testset.txt
@@ -738,11 +738,9 @@ namespace GeographicLib {
     }
     // tp = 1 - t
     for (real t = 1/real(2), tp = t, ab = 0, ft = 0, fc = 0;
-         cntn < maxcnt ||
-           (throw GeographicLib::GeographicErr
-            ("Convergence failure Geodesic3::findroot"), false)
-           || GEOGRAPHICLIB_PANIC
-           ("Convergence failure Geodesic3::findroot");) {
+         cntn < maxit_ ||
+           (throw_ && (throw GeographicLib::GeographicErr
+                       ("Convergence failure Geodesic3::findroot"), false));) {
       ang xt = 2*t == 1 ?
         ang(xa.s() + xb.s(), xa.c() + xb.c()) :
         (t < tp ? xa - ang::radians(t * ab) :

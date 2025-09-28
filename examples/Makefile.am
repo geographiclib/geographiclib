@@ -53,7 +53,9 @@ EXAMPLE_FILES = \
 	example-TransverseMercatorExact.cpp \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
+	example-Cartesian3.cpp \
 	example-Conformal3.cpp \
+	example-Ellipsoid3.cpp \
 	example-Geodesic3.cpp \
 	example-GeodesicLine3.cpp \
 	example-Angle.cpp \

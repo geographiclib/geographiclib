@@ -357,7 +357,7 @@ namespace GeographicLib {
     real vtol = tol * zscale/100,
       xtol = pow(tol, real(0.75)) * xscale,
       x = x0, oldx = Math::infinity(), oldv = oldx, olddx = oldx;
-    int k = 0, maxit = 2*150, b = 0;
+    int k = 0, b = 0;
     real p = Math::pi()/2 * 0;
     if constexpr (debug_) {
       cout << "SCALE " << xscale << " " << zscale << "\n";
@@ -374,11 +374,10 @@ namespace GeographicLib {
       if ((vala.first - z) * (valb.first - z) > 0)
         cout << "DATBAD\n";
     }
-    for (; k < maxit ||
-           (throw GeographicLib::GeographicErr
-            ("Convergence failure Trigfun::root case=" +
-             to_string(indicator)), false)
-           || GEOGRAPHICLIB_PANIC("Convergence failure Trigfun::root");) {
+    for (; k < maxit_ ||
+           (throw_ && (throw GeographicLib::GeographicErr
+                       ("Convergence failure Trigfun::root case=" +
+                        to_string(indicator)), false));) {
       // TODO: This inverse problem uses lots of iterations
       //   20 60 -90 180 127.4974 24.6254 2.4377
       // Need to figure out why.  (Probably fixed by now.)

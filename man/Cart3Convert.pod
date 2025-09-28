@@ -4,7 +4,7 @@ Cart3Convert -- convert geocentric coordinates for a triaxial ellipsoid
 
 =head1 SYNOPSIS
 
-B<Cart3Convert> [ B<-E> | B<-G> | B<-P> | B<-C> ]
+B<Cart3Convert> [ B<-E> | B<-G> | B<-P> | B<-C> | B<-GX> | B<-PX> | B<-CX> ]
 [ B<-r> ] [ B<-3> | B<-D> ]
 [ B<-R> I<nrand> ] [ B<--seed> I<s> ]
 [ B<-t> I<a> I<b> I<c> | B<-e> I<b> I<e2> I<k2> I<kp2> ]
@@ -19,7 +19,7 @@ B<Cart3Convert> [ B<-E> | B<-G> | B<-P> | B<-C> ]
 
 Convert coordinates for a triaxial ellipsoid to geocentric coordinates.
 Geocentric coordinates have the origin at the center of the earth, with
-the I<x>, I<y>, and I<z> axes aligned with the major, median, and minor
+the I<X>, I<Y>, and I<Z> axes aligned with the major, median, and minor
 semi-axes, I<a>, I<b>, and I<c>.  By default, the conversion is to
 geocentric coordinates.  Specifying B<-r> causes the reverse conversion
 to be performed.
@@ -45,6 +45,21 @@ Parametric coordinates, I<phi'> and I<lambda'>, signified by B<-P>.
 
 Geocentric coordinates, I<phi"> and I<lambda">, signified by B<-C>.
 
+=item 5.
+
+Geodetic coordinates, I<phi*> and I<lambda*>, with the north pole lying
+on the I<X> axis, signified by B<-GX>.
+
+=item 6.
+
+Parametric coordinates, I<phi*'> and I<lambda*'>, with the north pole lying
+on the I<X> axis, signified by B<-PX>.
+
+=item 7.
+
+Geocentric coordinates, I<phi*"> and I<lambda*">, with the north pole lying
+on the I<X> axis, signified by B<-CX>.
+
 =back
 
 In general, only ellipsoidal coordinates are orthogonal.  For these
@@ -61,12 +76,13 @@ I<beta>, I<omega> for the confocal ellipsoid and I<H>.
 By default, coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude> and I<longitude> (decimal
 degrees or degrees, minutes and seconds).  The interpretion of the
-coordinates is governed by the B<-E>, B<-G>, B<-P>, and B<-C> flags.
-For each set of coordinates, the corresponding cartesian coordinates
-I<x>, I<y>, I<z> (meters) are printed on standard output.  If I<-r> is
-provided, the reserve operation is undertaken reading I<x>, I<y>, I<z>
-(which asre assumed to denote a point on the ellipsoid) on standard
-input and printing the I<latitude> and I<longitude>.
+coordinates is governed by the B<-E>, B<-G>, B<-P>, B<-C> B<-GX>,
+B<-PX>, and B<-CX> flags.  For each set of coordinates, the
+corresponding cartesian coordinates I<X>, I<Y>, I<Z> (meters) are
+printed on standard output.  If I<-r> is provided, the reserve operation
+is undertaken reading I<X>, I<Y>, I<Z> (which asre assumed to denote a
+point on the ellipsoid) on standard input and printing the I<latitude>
+and I<longitude>.
 
 If the B<-3> flag is given (this cannot be combined with B<-D>, the an
 arbitrary point in three-dimensional space is specified either with
@@ -74,7 +90,7 @@ I<beta>, I<omega>, I<H> or with I<phi>, I<lambda>, I<h>.
 
 If the B<-D> flag is given (this cannot be combined with B<-3>, the
 heading (direction) is included in the computation converting I<beta>
-I<omega> I<alpha> to I<x>, I<y>, I<z> I<vx>, I<vy>, I<vz> where [I<vx>,
+I<omega> I<alpha> to I<X>, I<Y>, I<Z> I<Vx>, I<Vy>, I<Vz> where [I<vx>,
 I<vy>, I<vz>] is a unit vector lying in the surface of the ellipsoid.
 
 If the B<-R> flag is given, do not read any input; instead output random
@@ -91,20 +107,23 @@ triaxial coordinate systems.
 I<latitude> and I<longitude> is interpreted as ellipsoidal coordinates
 I<beta> and I<omega>.  This is the default.
 
-=item B<-G>
+=item B<-G> or B<-GX>
 
 I<latitude> and I<longitude> is interpreted as geodetic coordinates
-I<phi> and I<lambda>.
+I<phi> and I<lambda>.  The B<X> added to the flags means that the north
+pole lies on the I<X> axis.
 
-=item B<-P>
+=item B<-P> or B<-PX>
 
 I<latitude> and I<longitude> is interpreted as parametric coordinates
-I<phi'> and I<lambda'>.
+I<phi'> and I<lambda'>.  The B<X> added to the flags means that the north
+pole lies on the I<X> axis.
 
-=item B<-C>
+=item B<-C> or B<-CX>
 
 I<latitude> and I<longitude> is interpreted as geocentric coordinates
-I<phi"> and I<lambda">.
+I<phi"> and I<lambda">.  The B<X> added to the flags means that the north
+pole lies on the I<X> axis.
 
 =item B<-r>
 

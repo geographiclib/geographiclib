@@ -60,6 +60,9 @@ namespace GeographicLib {
    *
    * Example of use:
    * \include example-Conformal3.cpp
+   *
+   * <a href="Conformal3Proj.1.html">Conformal3Proj</a> is a command-line
+   * utility providing access to the functionality of Conformal3.
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT Conformal3 {
   private:
@@ -115,6 +118,8 @@ namespace GeographicLib {
      * @param[in] a the largest semi-axis.
      * @param[in] b the middle semi-axis.
      * @param[in] c the smallest semi-axis.
+     * @exception GeographicErr if the required ordering is semiaxes is
+     *   violated.
      *
      * The semi-axes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
      * If \e a = \e c (a sphere), then the oblate limit is taken.
@@ -129,6 +134,8 @@ namespace GeographicLib {
      *  (a^2 - c^2)\f$.
      * @param[in] kp2 the prolateness parameter squared \f$k'^2= (a^2 - b^2) /
      *   (a^2 - c^2)\f$.
+     * @exception GeographicErr if the required ordering is semiaxes is
+     *   violated.
      *
      * \note The constructor normalizes \e k2 and \e kp2 to ensure then \e k2 +
      * \e kp2 = 1.

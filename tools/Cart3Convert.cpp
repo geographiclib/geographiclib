@@ -82,6 +82,12 @@ int main(int argc, const char* const argv[]) {
         mode = coord::PARAMETRIC;
       else if (arg == "-C")
         mode = coord::GEOCENTRIC;
+      else if (arg == "-GX")
+        mode = coord::GEODETIC_X;
+      else if (arg == "-PX")
+        mode = coord::PARAMETRIC_X;
+      else if (arg == "-CX")
+        mode = coord::GEOCENTRIC_X;
       else if (arg == "-R") {
         if (++m == argc) return usage(1, true);
         try {
@@ -267,7 +273,7 @@ int main(int argc, const char* const argv[]) {
                     << Utility::str(v[2], vecprec);
         } else {
           ang bet, omg, alp;
-          tc.cart2toany(mode, r, v, bet, omg, alp);
+          tc.cart2toany(r, v, mode, bet, omg, alp);
           *output << ang::LatLonString(bet, omg,
                                        angprec, dms, dmssep, longfirst);
           if (direction)
@@ -329,11 +335,11 @@ int main(int argc, const char* const argv[]) {
         // PROCESS
         if (reverse) {
           if (threed)
-            tc.carttoany(mode, r, bet, omg, h);
+            tc.carttoany(r, mode, bet, omg, h);
           else if (direction)
-            tc.cart2toany(mode, r, v, bet, omg, alp);
+            tc.cart2toany(r, v, mode, bet, omg, alp);
           else
-            tc.cart2toany(mode, r, bet, omg);
+            tc.cart2toany(r, mode, bet, omg);
         } else {
           if (threed)
             tc.anytocart(mode, bet, omg, h, r);

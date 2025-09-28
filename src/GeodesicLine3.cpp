@@ -306,11 +306,10 @@ namespace GeographicLib {
     // The solution is bracketed by x in [xa, xb], y in [ya, yb]
     static const real tol = numeric_limits<real>::epsilon();
     const bool debug = Geodesic3::debug_, check = false;
-    const int maxit = 300;
-      // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
-      // too much bisection.  Example:
-      //   echo 63 -173 -61.97921997838416712 -4.64409746197940890408 |
-      //     ./Geod3Solve $PROX
+    // Relax [fg]tol to /10 instead of /100.  Otherwise solution resorts to
+    // too much bisection.  Example:
+    //   echo 63 -173 -61.97921997838416712 -4.64409746197940890408 |
+    //     ./Geod3Solve $PROX
     const real
       ftol = tol * fscale/10,
       gtol = tol * gscale/10,
@@ -353,10 +352,10 @@ namespace GeographicLib {
     // fy(y) - f0 = 0 to be solved reliably for y.
     bool bis = false, degen = false;
     int ibis = -1, i = 0;
-    for (; i < maxit ||
-           (throw GeographicLib::GeographicErr
-            ("Convergence failure GeodesicLine3::newt2"), false)
-           || GEOGRAPHICLIB_PANIC("Convergence failure GeodesicLine3::newt2");
+    for (; i < maxit_ ||
+           (Geodesic3::throw_ && (throw GeographicLib::GeographicErr
+                                  ("Convergence failure GeodesicLine3::newt2"),
+                                  false));
          ++i) {
       ++cntn;
       if (!degen && nextafter(xset.min().z, xset.max().z) == xset.max().z &&

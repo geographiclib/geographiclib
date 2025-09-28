@@ -71,6 +71,8 @@ namespace GeographicLib {
     /// \endcond
     using real = Math::real;
     static constexpr bool debug_ = false;
+    static constexpr bool throw_ = true; // exception on convergence failure
+    static constexpr int maxit_ = 300;
     int _m,                     // Number of coefficients in series
       _n;                       // Number of samples in half/quarter period
     bool _odd, _sym;
