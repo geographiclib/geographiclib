@@ -201,7 +201,7 @@ done
 echo ==============================================================
 echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD install to $TEMP/instc
 cd $TEMP/relc/GeographicLib-$VERSION
-cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
+cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
 (
     cd BUILD
     make package_source
@@ -322,7 +322,7 @@ echo ==============================================================
 echo CMake build of devel tree in $TEMP/gitb/geographiclib/BUILD
 
 cd $TEMP/gitb/geographiclib
-cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD
+cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD
 (cd BUILD && make -j$NUMCPUS && make -j$NUMCPUS develprograms)
 
 cp $DEVELSOURCE/include/mpreal.h include/
@@ -330,7 +330,7 @@ for p in 1 3 4 5; do
     echo ==============================================================
     echo CMake build of devel tree at precision $p in $TEMP/gitb/geographiclib/BUILD-$p
     mkdir BUILD-$p
-    cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
+    cmake -D USE_BOOST=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
     (
         cd BUILD-$p
         make -j$NUMCPUS all testprograms

@@ -14,10 +14,12 @@
 
 #if defined(_MSC_VER)
 // Squelch warning 4702: unreachable code
-#  pragma warning (disable: 4702)
+// #  pragma warning (disable: 4702)
 #endif
 
-#define HAVE_BOOST 0
+#if !defined(HAVE_BOOST)
+#  define HAVE_BOOST 0
+#endif
 
 #if HAVE_BOOST
 #if defined(_MSC_VER)
@@ -25,12 +27,13 @@
 //   4127: conditional expression is constant
 #  pragma warning (disable: 4127)
 #endif
-#include "TriaxialGeodesicODE.hpp"
+#include "../experimental/TriaxialGeodesicODE.hpp"
 #endif
 
 using namespace std;
 using namespace GeographicLib;
 using namespace Triaxial;
+using experimental::TriaxialGeodesicODE;
 
 int usage(int retval, bool /*brief*/) {
   ( retval ? cerr : cout ) << "Bad input\n";
@@ -79,7 +82,7 @@ void report(const Geodesic3& tg, int bet1, int omg1, int bet2, int omg2,
     Ellipsoid3::vec3 r2, v2;
     // ang bet1a, omg1a;
     // l.pos1(bet1a, omg1a, alp1);
-    Geodesic3ODE direct(tg.t(), ang(bet1), ang(omg1), alp1);
+    TriaxialGeodesicODE direct(tg.t(), ang(bet1), ang(omg1), alp1);
     direct.Position(s12, r2, v2, m12, M12, M21);
     // t.cart2toellip(bet2x, omg2x, v2, alp2);
 #endif
@@ -192,11 +195,12 @@ void errreport(const Geodesic3& tg,
 }
 
 #if HAVE_BOOST
-void errODE(Geodesic3ODE& l,
+void errODE(TriaxialGeodesicODE& l,
             Math::real bet1, Math::real omg1, Math::real alp1,
             Math::real bet2, Math::real omg2, Math::real alp2,
             Math::real s12,
-            Math::real m12, Math::real M12, Math::real M21) {
+            Math::real m12, Math::real M12, Math::real M21,
+            bool steps) {
   using real = Math::real;
   using ang = Angle;
 #if GEOGRAPHICLIB_PRECISION > 3
@@ -214,16 +218,17 @@ void errODE(Geodesic3ODE& l,
   Ellipsoid3::vec3 r1a, v1a, r2a, v2a;
   real m12a = 0, M12a = 0, M21a = 0;
   if (1) {
-    l.Reset(r1, v1); l.NSteps(0); l.IntSteps(0);
+    l.Reset(r1, v1);
     l.Position(s12, r2a, v2a, m12a, M12a, M21a);
-    // int n1 = l.NSteps(), i1 = l.IntSteps();
-    l.Reset(r2, v2); l.NSteps(0); l.IntSteps(0);
+    int n1 = l.NSteps(), i1 = l.IntSteps();
+    l.Reset(r2, v2);
     l.Position(-s12, r1a, v1a);
-    // int n2 = l.NSteps(), i2 = l.IntSteps();
+    int n2 = l.NSteps(), i2 = l.IntSteps();
     real errr1 = vecdiff(r1, r1a), errv1 = vecdiff(v1, v1a),
       errr2 = vecdiff(r2, r2a), errv2 = vecdiff(v2, v2a),
       errm12 = fabs(m12a - m12),
       errM12 = fabs(M12a - M12), errM21 = fabs(M21a - M21);
+    (void) n1; (void) i1; (void) n2; (void) i2;
     cout << fixed << setprecision(0)
          << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "
          << ceil(errr1/eps) << " " << ceil(errv1/eps);
@@ -231,7 +236,8 @@ void errODE(Geodesic3ODE& l,
       cout << " " << ceil(errm12/eps) << " "
            << ceil(errM12/eps) << " "  << ceil(errM21/eps);
     cout << endl;
-    //    cout << "STEPS " << n1 << " " << n2 << " " << i1 << " " << i2 << "\n";
+    if (steps)
+      cout << "STEPS " << n1 << " " << n2 << " " << i1 << " " << i2 << "\n";
   } else {
     int num = 10;
     vector<real> s12v(num);
@@ -280,16 +286,10 @@ int main(int argc, const char* const argv[]) {
   try {
     using real = Math::real;
     Utility::set_digits();
-    if (0) {
-      angletest();
-      return 0;
-    }
-    int num = 1000;
-    int skew = 10;
-    int div = 1;
     {
       bool odep = false, reportp = false,
-        odetest = false, extended = false, dense = false, normp = false;
+        odetest = false, extended = false, dense = false, normp = false,
+        steps = false;
       real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
       for (int m = 1; m < argc; ++m) {
         string arg(argv[m]);
@@ -324,6 +324,8 @@ int main(int argc, const char* const argv[]) {
           reportp = true;
         else if (arg == "--odetest")
           odetest = true;
+        else if (arg == "--steps")
+          steps = true;
         else if (arg == "-x")
           extended = true;
         else if (arg == "--eps") {
@@ -363,13 +365,14 @@ int main(int argc, const char* const argv[]) {
       real bet1, omg1, bet2, omg2;
       real alp1, alp2, s12, m12, M12, M21;
 #if HAVE_BOOST
-      Geodesic3ODE l(tg.t(), extended, dense, normp, eps);
+      TriaxialGeodesicODE l(tg.t(), extended, dense, normp, eps);
 #endif
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
         if (odetest) {
 #if HAVE_BOOST
-          errODE(l, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21);
+          errODE(l, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21,
+                 steps);
 #endif
         } else if (reportp)
           report(tg, int(bet1), int(omg1), int(bet2), int(omg2), odep);
@@ -386,56 +389,6 @@ int main(int argc, const char* const argv[]) {
       (void) eps;
       return 0;
     }
-    for (int m = 1; m < argc; ++m) {
-      string arg(argv[m]);
-      if (arg == "-n") {
-        if (++m == argc) return usage(1, true);
-        try {
-          num = Utility::val<int>(string(argv[m]));
-        }
-        catch (const exception&) {
-          cerr << "num " << argv[m] << " is not a number\n";
-          return 1;
-        }
-      } else if (arg == "-d") {
-        if (++m == argc) return usage(1, true);
-        try {
-          div = Utility::val<int>(string(argv[m]));
-        }
-        catch (const exception&) {
-          cerr << "div " << argv[m] << " is not a number\n";
-          return 1;
-        }
-      } else if (arg == "-k") {
-        if (++m == argc) return usage(1, true);
-        try {
-          skew = Utility::val<int>(string(argv[m]));
-        }
-        catch (const exception&) {
-          cerr << "skew " << argv[m] << " is not a number\n";
-          return 1;
-        }
-      } else
-        return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
-    }
-    if (1) {
-      Geodesic3 tg(sqrt(real(2)), 1, sqrt(1/real(2)));
-      for (int bet1 = -90; bet1 <= 90; bet1 += div)
-        for (int omg1 = -180+div; omg1 <= 180; omg1 += div)
-          for (int bet2 = -90; bet2 <= 90; bet2 += div)
-            for (int omg2 = -180+div; omg2 <= 180; omg2 += div) {
-              /*
-              bool umb1 = fabs(bet1) > 85 && fabs( fabs(omg1) - 90 ) > 87,
-                umb2 = fabs(bet2) > 85 && fabs( fabs(omg2) - 90 ) > 87;
-              if (!(umb1 ^ umb2)) continue;
-              if (rnd(gen) != 0) continue;
-              */
-              if (bet1 == 90 && omg1 == 125 &&
-                  bet2 == 90 && omg2 == -140)
-                report(tg, bet1, omg1, bet2, omg2, false);
-            }
-    }
-    div = div + skew + num;
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";

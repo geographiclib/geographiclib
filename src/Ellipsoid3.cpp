@@ -64,30 +64,30 @@ namespace GeographicLib {
     _biaxial = _oblate || _prolate;
   }
 
-  void Ellipsoid3::Norm(vec3& r) const {
-    vec3 rn{r[0] / _a, r[1] / _b, r[2] / _c};
+  void Ellipsoid3::Norm(vec3& R) const {
+    vec3 rn{R[0] / _a, R[1] / _b, R[2] / _c};
     real ra = Math::hypot3(rn[0], rn[1], rn[2]);
-    r = {r[0] / ra, r[1] / ra, r[2] / ra};
+    R = {R[0] / ra, R[1] / ra, R[2] / ra};
   }
 
-  void Ellipsoid3::Norm(vec3& r, vec3& v) const {
-    Norm(r);
-    vec3 up = {r[0] / Math::sq(_a), r[1] / Math::sq(_b), r[2] / Math::sq(_c)};
+  void Ellipsoid3::Norm(vec3& R, vec3& V) const {
+    Norm(R);
+    vec3 up = {R[0] / Math::sq(_a), R[1] / Math::sq(_b), R[2] / Math::sq(_c)};
     real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]),
-      uv = up[0] * v[0] + up[1] * v[1] + up[2] * v[2],
+      uv = up[0] * V[0] + up[1] * V[1] + up[2] * V[2],
       f = uv/u2;
-    v = {v[0] - f * up[0], v[1] - f * up[1], v[2] - f * up[2]};
-    normvec(v);
+    V = {V[0] - f * up[0], V[1] - f * up[1], V[2] - f * up[2]};
+    normvec(V);
   }
 
-  void Ellipsoid3::cart2toellipint(vec3 r, Angle& bet, Angle& omg, vec3 axes)
+  void Ellipsoid3::cart2toellipint(vec3 R, Angle& bet, Angle& omg, vec3 axes)
     const {
     real a = axes[0], b = axes[1], c = axes[2];
-    real xi = r[0]/a, eta = r[1]/b, zeta = r[2]/c,
+    real xi = R[0]/a, eta = R[1]/b, zeta = R[2]/c,
       g = _k2 * Math::sq(xi)
       + (_k2 - _kp2) * Math::sq(eta)
       - _kp2 * Math::sq(zeta);
-    if (fabs(r[0]) == a * _kp2 && r[1] == 0 && fabs(r[2]) == c * _k2)
+    if (fabs(R[0]) == a * _kp2 && R[1] == 0 && fabs(R[2]) == c * _k2)
       g = 0;
     real h = hypot(g, 2 * _k * _kp * eta),
       so, co, sb, cb;
@@ -109,12 +109,12 @@ namespace GeographicLib {
     omg = ang(so, co, 0, true);
   }
 
-  void Ellipsoid3::cart2toellip(vec3 r, Angle& bet, Angle& omg) const {
-    cart2toellipint(r, bet, omg, {_a, _b, _c});
+  void Ellipsoid3::cart2toellip(vec3 R, Angle& bet, Angle& omg) const {
+    cart2toellipint(R, bet, omg, {_a, _b, _c});
   }
 
   void Ellipsoid3::cart2toellip(Angle bet, Angle omg,
-                                vec3 v, Angle& alp) const {
+                                vec3 V, Angle& alp) const {
     real tz = hypot(_k, _kp * omg.s()), tx = hypot(_k * bet.c(), _kp);
     // At oblate pole tx = 0; at prolate pole, tz = 0
     if (tx == 0 || tz == 0 || !(bet.c() == 0 && omg.s() == 0)) {
@@ -135,15 +135,15 @@ namespace GeographicLib {
                _b * bet.c() * omg.c(),
                _c * _kp2 * bet.s() * omg.c() * omg.s() / tz});
       normvec(N); normvec(E);
-      alp = ang(v[0] * E[0] + v[1] * E[1] + v[2] * E[2],
-                v[0] * N[0] + v[1] * N[1] + v[2] * N[2], 0, true);
+      alp = ang(V[0] * E[0] + V[1] * E[1] + V[2] * E[2],
+                V[0] * N[0] + V[1] * N[1] + V[2] * N[2], 0, true);
     } else {                    // bet.c() == 0 && omg.s() == 0
       // Special treatment at umbilical points
       real w = bet.s() * omg.c(),
         upx = omg.c() * tx/_a, upz = bet.s() * tz/_c;
       Math::norm(upx, upz);
-      // compute direction cosines of v wrt the plane y = 0; angle = 2*alp
-      real s2a = -v[1] * w, c2a = (upz*v[0] - upx*v[2]) * w;
+      // compute direction cosines of V wrt the plane y = 0; angle = 2*alp
+      real s2a = -V[1] * w, c2a = (upz*V[0] - upx*V[2]) * w;
       // Unnecessary: Math::norm(s2a, c2a)
       // We have
       //   2*alp = atan2(s2a, c2a), h2 = hypot(s2a, c2a)
@@ -166,23 +166,23 @@ namespace GeographicLib {
     }
   }
 
-  void Ellipsoid3::cart2toellip(vec3 r, vec3 v,
+  void Ellipsoid3::cart2toellip(vec3 R, vec3 V,
                                 Angle& bet, Angle& omg, Angle& alp)
     const {
-    cart2toellip(r, bet, omg);
-    cart2toellip(bet, omg, v, alp);
+    cart2toellip(R, bet, omg);
+    cart2toellip(bet, omg, V, alp);
   }
 
-  void Ellipsoid3::elliptocart2(Angle bet, Angle omg, vec3& r) const {
+  void Ellipsoid3::elliptocart2(Angle bet, Angle omg, vec3& R) const {
     real tx = hypot(_k * bet.c(), _kp), tz = hypot(_k, _kp * omg.s());
-    r = { _a * omg.c() * tx,
+    R = { _a * omg.c() * tx,
           _b * bet.c() * omg.s(),
           _c * bet.s() * tz };
   }
 
   void Ellipsoid3::elliptocart2(Angle bet, Angle omg, Angle alp,
-                                vec3& r, vec3& v) const {
-    elliptocart2(bet, omg, r);
+                                vec3& R, vec3& V) const {
+    elliptocart2(bet, omg, R);
     real tx = hypot(_k * bet.c(), _kp), tz = hypot(_k, _kp * omg.s());
     if (bet.c() == 0 && omg.s() == 0 && !(_k == 0 || _kp == 0)) {
       // umbilical point (not oblate or prolate)
@@ -190,7 +190,7 @@ namespace GeographicLib {
         ca2 = (alp.c() - alp.s()) * (alp.c() + alp.s());
       // sign on 2nd component is -sign(cos(bet)*sin(omg)).  negative sign
       // gives normal convention of alpha measured clockwise.
-      v = {_a*_k/_b * omg.c() * ca2,
+      V = {_a*_k/_b * omg.c() * ca2,
            -omg.c() * bet.s() * sa2,
            -_c*_kp/_b * bet.s() * ca2};
     } else {
@@ -216,11 +216,11 @@ namespace GeographicLib {
       }
       normvec(N);
       normvec(E);
-      v = {alp.c() * N[0] + alp.s() * E[0],
+      V = {alp.c() * N[0] + alp.s() * E[0],
            alp.c() * N[1] + alp.s() * E[1],
            alp.c() * N[2] + alp.s() * E[2]};
     }
-    // normvec(v); v is already normalized
+    // normvec(V); V is already normalized
   }
 
   const Ellipsoid3& Ellipsoid3::Earth() {

@@ -47,7 +47,7 @@ int main(int argc, const char* const argv[]) {
     Utility::set_digits();
     bool dms = false, longfirst = false,
       linecalc = false, extended = false, dense = false, normp = false,
-      buffered = false, full = false, errors = false;
+      buffered = false, full = false, errors = false, steps = false;
     real
       a = Constants::Triaxial_Earth_a(),
       b = Constants::Triaxial_Earth_b(),
@@ -77,7 +77,7 @@ int main(int argc, const char* const argv[]) {
         m += 3;
       } else if (arg == "-e") {
         // Cayley ellipsoid sqrt([2,1,1/2]) is
-        // -e 1 3/2 1/3 2/3
+        // -e 1 3/2 1 2
         if (m + 4 >= argc) return usage(1, true);
         try {
           b = Utility::val<real>(std::string(argv[m + 1]));
@@ -125,6 +125,8 @@ int main(int argc, const char* const argv[]) {
         normp = true;
       else if (arg == "--errors")
         errors = true;
+      else if (arg == "--steps")
+        steps = true;
       else if (arg == "-b")
         buffered = true;
       else if (arg == "-f")
@@ -264,6 +266,8 @@ int main(int argc, const char* const argv[]) {
             *output << " " << Utility::str(m12, prec + disprec)
                     << " " << Utility::str(M12, prec+7)
                     << " " << Utility::str(M21, prec+7);
+          if (steps)
+            *output << " " << l.NSteps() << " " << l.IntSteps();
           if (errors)
             *output << " " << ErrorString(errs.first, 2)
                     << " " << ErrorString(errs.second, 2);

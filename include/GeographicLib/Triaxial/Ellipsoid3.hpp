@@ -93,10 +93,10 @@ namespace GeographicLib {
     /// \endcond
     using real = Math::real;
     using ang = Angle;
-    static void normvec(vec3& r) {
-      real h = Math::hypot3(r[0], r[1], r[2]);
+    static void normvec(vec3& R) {
+      real h = Math::hypot3(R[0], R[1], R[2]);
       // No checking for h = 0.  Result will be NaNs
-      r[0] /= h; r[1] /= h; r[2] /= h;
+      R[0] /= h; R[1] /= h; R[2] /= h;
     }
     static void Flip(ang& bet, ang& omg, ang& alp) {
       bet.reflect(false, true);
@@ -106,7 +106,7 @@ namespace GeographicLib {
     real _a, _b, _c;            // semi-axes
     real _e2, _k2, _kp2, _k, _kp;
     bool _oblate, _prolate, _biaxial;
-    void cart2toellipint(vec3 r, ang& bet, ang& omg, vec3 axes) const;
+    void cart2toellipint(vec3 R, ang& bet, ang& omg, vec3 axes) const;
     /**
      * @return \e k the oblateness parameter.
      **********************************************************************/
@@ -207,24 +207,24 @@ namespace GeographicLib {
     /**
      * Scale a position to ensure it lies on the ellipsoid
      *
-     * @param[inout] r the position.
+     * @param[inout] R the position.
      *
-     * The component of \e r are scaled so that it lies on the ellipsoid.  The
+     * The components of \e R are scaled so that it lies on the ellipsoid.  The
      * resulting position is not in general the closest point on the ellipsoid.
      * Use Cartesian3::carttocart2() for that.
      **********************************************************************/
-    void Norm(vec3& r) const;
+    void Norm(vec3& R) const;
     /**
      * Scale a position and direction to the ellipsoid
      *
-     * @param[inout] r the position.
-     * @param[inout] v the position.
+     * @param[inout] R the position.
+     * @param[inout] V the position.
      *
-     * The component of \e r are scaled so that it lies on the ellipsoid.  Then
-     * \e v is projected to be tangent to the surface and is normalized to a
+     * The components of \e R are scaled so that it lies on the ellipsoid.  Then
+     * \e V is projected to be tangent to the surface and is normalized to a
      * unit vector.
      **********************************************************************/
-    void Norm(vec3& r, vec3& v) const;
+    void Norm(vec3& R, vec3& V) const;
     /**
      * Set the sheet for coordinates.
      *
@@ -282,65 +282,65 @@ namespace GeographicLib {
     /**
      * Convert a Cartesian position to ellipsoidal coordinates.
      *
-     * @param[in] r the Cartesian position.
+     * @param[in] R the Cartesian position.
      * @param[out] bet the ellipsoidal latitude.
      * @param[out] omg the ellipsoidal longitude.
      *
-     * \note \e r must lie on the surface of the ellipsoid.  The "2" in "cart2"
+     * \note \e R must lie on the surface of the ellipsoid.  The "2" in "cart2"
      * is used to emphasize this.
      **********************************************************************/
-    void cart2toellip(vec3 r, Angle& bet, Angle& omg) const;
+    void cart2toellip(vec3 R, Angle& bet, Angle& omg) const;
     /**
      * Convert a Cartesian position and direction to ellipsoidal coordinates.
      *
-     * @param[in] r the Cartesian position.
-     * @param[in] v the Cartesian direction.
+     * @param[in] R the Cartesian position.
+     * @param[in] V the Cartesian direction.
      * @param[out] bet the ellipsoidal latitude.
      * @param[out] omg the ellipsoidal longitude.
      * @param[out] alp the azimuth.
      *
-     * \note \e r must lie on the surface of the ellipsoid and \e v must be
+     * \note \e R must lie on the surface of the ellipsoid and \e V must be
      *   tangent to the surface at that point.  The "2" in "cart2" is used to
      *   emphasize this.
      **********************************************************************/
-    void cart2toellip(vec3 r, vec3 v,
+    void cart2toellip(vec3 R, vec3 V,
                       Angle& bet, Angle& omg, Angle& alp) const;
     /**
      * Convert an ellipsoid position and Cartesian direction to a heading.
      *
      * @param[in] bet the ellipsoidal latitude.
      * @param[in] omg the ellipsoidal longitude.
-     * @param[in] v the Cartesian direction.
+     * @param[in] V the Cartesian direction.
      * @param[out] alp the azimuth.
      *
      * This is a variant of cart2toellip(vec3, vec3, Angle&, Angle&, Angle&)
      * where \e bet and \e omg are used to ensure that the correct sheet is
      * used in determining \e alp.
      *
-     * \note \e v must be tangent to the surface of the ellipsoid.  The "2" in
+     * \note \e V must be tangent to the surface of the ellipsoid.  The "2" in
      *   "cart2" is used to emphasize this.
      **********************************************************************/
     void cart2toellip(Angle bet, Angle omg,
-                      vec3 v, Angle& alp) const;
+                      vec3 V, Angle& alp) const;
     /**
      * Convert ellipsoidal coordinates to a Cartesian position.
      *
      * @param[in] bet the ellipsoidal latitude.
      * @param[in] omg the ellipsoidal longitude.
-     * @param[out] r the Cartesian position.
+     * @param[out] R the Cartesian position.
      **********************************************************************/
-    void elliptocart2(Angle bet, Angle omg, vec3& r) const;
+    void elliptocart2(Angle bet, Angle omg, vec3& R) const;
     /**
      * Convert coordinates and heading to a Cartesian position and direction.
      *
      * @param[in] bet the ellipsoidal latitude.
      * @param[in] omg the ellipsoidal longitude.
      * @param[in] alp the azimuth.
-     * @param[out] r the Cartesian position.
-     * @param[out] v the Cartesian direction.
+     * @param[out] R the Cartesian position.
+     * @param[out] V the Cartesian direction.
      **********************************************************************/
     void elliptocart2(Angle bet, Angle omg, Angle alp,
-                      vec3& r, vec3& v) const;
+                      vec3& R, vec3& V) const;
     ///@}
     /**
      * A global instantiation of Ellipsoid3 with the parameters for the

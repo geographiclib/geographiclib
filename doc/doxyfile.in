@@ -190,7 +190,8 @@ STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@/
 # using the -I flag.
 
 STRIP_FROM_INC_PATH    = @PROJECT_SOURCE_DIR@/include/ \
-                         @PROJECT_SOURCE_DIR@/examples/
+                         @PROJECT_SOURCE_DIR@/examples/ \
+                         @PROJECT_SOURCE_DIR@/experimental/
 
 # If the SHORT_NAMES tag is set to YES, doxygen will generate much shorter (but
 # less readable) file names. This can be useful is your file systems doesn't

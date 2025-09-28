@@ -368,7 +368,7 @@ Here are the steps to compile and install GeographicLib:
        Studio (long double is the same as double with that compiler).
     -# quad precision (113-bit precision).
     -# arbitrary precision.
-  - <code>USE_BOOST_FOR_EXAMPLES</code> (default: OFF).  If set to ON,
+  - <code>USE_BOOST</code> (default: OFF).  If set to ON,
     then the Boost library is searched for in order to build the
     NearestNeighbor example.
   - <code>APPLE_MULTIPLE_ARCHITECTURES</code> (default: OFF).  If set to
@@ -7774,6 +7774,7 @@ git repository for GeographicLib</a>.
  - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
    (released 2025-mm-dd)
    - Add Math::clamp.
+   - USE_BOOST_FOR_EXAMPLES -> USE_BOOST
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.5.2">Version 2.5.2</a>
    (released 2025-08-22)

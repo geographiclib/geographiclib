@@ -30,12 +30,12 @@ namespace experimental {
                                            bool extended, bool dense,
                                            bool normp, real eps)
     : TriaxialGeodesicODE(t, vec3{t.a(), 0, 0}, vec3{0, 0, 1},
-                  extended, dense, normp, eps)
+                          extended, dense, normp, eps)
   {}
 
   TriaxialGeodesicODE::TriaxialGeodesicODE(const Ellipsoid3& t,
-                                           Ellipsoid3::vec3 r1,
-                                           Ellipsoid3::vec3 v1,
+                                           Ellipsoid3::vec3 R1,
+                                           Ellipsoid3::vec3 V1,
                                            bool extended, bool dense,
                                            bool normp, real eps)
     : _t(t)
@@ -44,8 +44,8 @@ namespace experimental {
                           dense ? real(3)/4 : real(9)/10) : eps)
     , _axesn({t.a()/t.b(), real(1), t.c()/t.b()})
     , _axes2n({Math::sq(_axesn[0]), real(1), Math::sq(_axesn[2])})
-    , _r1(r1)
-    , _v1(v1)
+    , _r1(R1)
+    , _v1(V1)
     , _extended(extended)
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     , _dense(dense)
@@ -195,31 +195,31 @@ namespace experimental {
   }
 
   pair<Math::real, Math::real>
-  TriaxialGeodesicODE::Position(real s12, vec3& r2, vec3& v2) {
+  TriaxialGeodesicODE::Position(real s12, vec3& R2, vec3& V2) {
     real m12, M12, M21;
-    return Position(s12, r2, v2, m12, M12, M21);
+    return Position(s12, R2, V2, m12, M12, M21);
   }
 
   pair<Math::real, Math::real>
-  TriaxialGeodesicODE::Position(real s12, vec3& r2, vec3& v2,
-                        real& m12, real& M12, real& M21) {
-    static const auto
+  TriaxialGeodesicODE::Position(real s12, vec3& R2, vec3& V2,
+                                real& m12, real& M12, real& M21) {
+    const auto
       fun6 = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
         return _normp ? Accel6N(y, yp) : Accel6(y, yp);
       };
-    static const auto
+    const auto
       fun10 = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
         return _normp ? Accel10N(y, yp) : Accel10(y, yp);
       };
     s12 /= _b;
     if (s12 == 0) {
-      r2 = _r1; v2 = _v1;
+      R2 = _r1; V2 = _v1;
       if (_extended) {
         m12 = copysign(real(0), s12); M12 = M21 = 1;
       }
       return pair<real, real>(0, 0);
     } else if (!isfinite(s12)) {
-      r2 = v2 = {Math::NaN(), Math::NaN(), Math::NaN()};
+      R2 = V2 = {Math::NaN(), Math::NaN(), Math::NaN()};
       if (_extended) {
         m12 = M12 = M21 = Math::NaN();
       }
@@ -257,7 +257,7 @@ namespace experimental {
                  _dstep6.previous_time())) {
         s12 *= _dir;
         Reset();
-        return Position(s12, r2, v2, m12, M12, M21);
+        return Position(s12, R2, V2, m12, M12, M21);
       }
       while ((_extended ? _dstep10.current_time() : _dstep6.current_time())
              < s12) {
@@ -276,7 +276,7 @@ namespace experimental {
       if (s12 < _s) {
         s12 *= _dir;
         Reset();
-        return Position(s12, r2, v2, m12, M12, M21);
+        return Position(s12, R2, V2, m12, M12, M21);
       } else if (s12 > _s) {
         _nsteps += long(_extended ?
                         integrate_adaptive(_step10, fun10, _y10, _s, s12,
@@ -289,18 +289,18 @@ namespace experimental {
     real errr, errv;
     if (_extended) {
       vec10 t = _y10; Norm10(t);
-      r2 = {_b * t[0], _b * t[1], _b * t[2]};
-      v2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
+      R2 = {_b * t[0], _b * t[1], _b * t[2]};
+      V2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
       m12 = _dir * _b * t[6];
       M12 = t[8]; M21 = t[7];     // AG Eq 29: dm12/ds2 = M21
       for (int i = 0; i < 6; ++i)
         t[i] -= _y10[i];
-      errr = Math::hypot3(t[0], t[1], t[2]);
+      errr = _b * Math::hypot3(t[0], t[1], t[2]);
       errv = Math::hypot3(t[3+0], t[3+1], t[3+2]);
     } else {
       vec6 t = _y6; Norm6(t);
-      r2 = {_b * t[0], _b * t[1], _b * t[2]};
-      v2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
+      R2 = {_b * t[0], _b * t[1], _b * t[2]};
+      V2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
       for (int i = 0; i < 6; ++i)
         t[i] -= _y6[i];
       errr = _b * Math::hypot3(t[0], t[1], t[2]);
@@ -312,9 +312,9 @@ namespace experimental {
   pair<Math::real, Math::real>
   TriaxialGeodesicODE::Position(real s12,
                                 Angle& bet2, Angle& omg2, Angle& alp2) {
-    vec3 r2, v2;
-    auto err = Position(s12, r2, v2);
-    _t.cart2toellip(r2, v2, bet2, omg2, alp2);
+    vec3 R2, V2;
+    auto err = Position(s12, R2, V2);
+    _t.cart2toellip(R2, V2, bet2, omg2, alp2);
     return err;
   }
 
@@ -322,9 +322,9 @@ namespace experimental {
   TriaxialGeodesicODE::Position(real s12,
                                 Angle& bet2, Angle& omg2, Angle& alp2,
                                 real& m12, real& M12, real& M21) {
-    vec3 r2, v2;
-    auto err = Position(s12, r2, v2, m12, M12, M21);
-    _t.cart2toellip(r2, v2, bet2, omg2, alp2);
+    vec3 R2, V2;
+    auto err = Position(s12, R2, V2, m12, M12, M21);
+    _t.cart2toellip(R2, V2, bet2, omg2, alp2);
     return err;
   }
 
@@ -364,17 +364,17 @@ namespace experimental {
   }
 
   void TriaxialGeodesicODE::Position(const vector<real>& s12,
-                                     vector<vec3>& r2, vector<vec3>& v2) {
+                                     vector<vec3>& R2, vector<vec3>& V2) {
     vector<real> m12, M12, M21;
-    Position(s12, r2, v2, m12, M12, M21);
+    Position(s12, R2, V2, m12, M12, M21);
   }
 
   void TriaxialGeodesicODE::Position(const vector<real>& s12,
-                                     vector<vec3>& r2, vector<vec3>& v2,
+                                     vector<vec3>& R2, vector<vec3>& V2,
                                      vector<real>& m12,
                                      vector<real>& M12, vector<real>& M21) {
     size_t n = s12.size();
-    r2.resize(n); v2.resize(n);
+    R2.resize(n); V2.resize(n);
     if (_extended) {
       m12.resize(n); M12.resize(n); M21.resize(n);
     }
@@ -382,21 +382,21 @@ namespace experimental {
     for (size_t i = 0; i < n; ++i) {
       size_t k = idx[i];
       if (_extended)
-        (void) Position(s12[k], r2[k], v2[k], m12[k], M12[k], M21[k]);
+        (void) Position(s12[k], R2[k], V2[k], m12[k], M12[k], M21[k]);
       else
-        (void) Position(s12[k], r2[k], v2[k]);
+        (void) Position(s12[k], R2[k], V2[k]);
     }
   }
 
   void TriaxialGeodesicODE::Position(const vector<real>& s12,
                                      vector<Angle>& bet2, vector<Angle>& omg2,
                                      vector<Angle>& alp2) {
-    vector<vec3> r2, v2;
-    Position(s12, r2, v2);
+    vector<vec3> R2, V2;
+    Position(s12, R2, V2);
     size_t n = s12.size();
     bet2.resize(n); omg2.resize(n); alp2.resize(n);
     for (size_t i = 0; i < s12.size(); ++i)
-      _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
+      _t.cart2toellip(R2[i], V2[i], bet2[i], omg2[i], alp2[i]);
   }
 
   void TriaxialGeodesicODE::Position(const vector<real>& s12,
@@ -404,12 +404,12 @@ namespace experimental {
                                      vector<Angle>& alp2,
                                      vector<real>& m12,
                                      vector<real>& M12, vector<real>& M21) {
-    vector<vec3> r2, v2;
-    Position(s12, r2, v2, m12, M12, M21);
+    vector<vec3> R2, V2;
+    Position(s12, R2, V2, m12, M12, M21);
     size_t n = s12.size();
     bet2.resize(n); omg2.resize(n); alp2.resize(n);
     for (size_t i = 0; i < s12.size(); ++i)
-      _t.cart2toellip(r2[i], v2[i], bet2[i], omg2[i], alp2[i]);
+      _t.cart2toellip(R2[i], V2[i], bet2[i], omg2[i], alp2[i]);
   }
 
   void TriaxialGeodesicODE::Reset() { _dir = 0; }
@@ -419,6 +419,7 @@ namespace experimental {
     _v1 = v1;
     _t.Norm(_r1, _v1);
     _t.cart2toellip(_r1, _v1, _bet1, _omg1, _alp1);
+    _nsteps = 0; _intsteps = 0;
     Reset();
   }
 

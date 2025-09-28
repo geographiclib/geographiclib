@@ -106,12 +106,12 @@ set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable")
 set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 
-# (6) Try to link against boost when building the examples.  The
-# NearestNeighbor example optionally uses the Boost library.  Set to ON,
-# if you want to exercise this functionality.  Default is OFF, so that
-# cmake configuration isn't slowed down looking for Boost.
-option (USE_BOOST_FOR_EXAMPLES
-  "Look for Boost library when compiling examples" OFF)
+# (6) Look for Boost.  Boost isn't used by GeographicLib.  However some
+# of the programs in develop and experimental directories can use Boost.
+# Also the NearestNeighbor example optionally uses the Boost library.
+# Default is OFF, so that cmake configuration isn't slowed down looking
+# for Boost.
+option (USE_BOOST "Look for the Boost library (not required)" OFF)
 
 # (7) On Mac OS X, build multiple architectures?  Set to ON to build
 # i386 and x86_64.  Default is OFF, meaning build for default
@@ -320,6 +320,12 @@ if (CONVERT_WARNINGS_TO_ERRORS)
   endif ()
 endif ()
 
+if (USE_BOOST OR GEOGRAPHICLIB_PRECISION EQUAL 4)
+  # The earliest Boost version to include
+  # https://github.com/boostorg/multiprecision/pull/389
+  find_package (Boost 1.79 CONFIG)
+endif ()
+
 # Include directories are specified via target_include_directories in src.
 
 set (HIGHPREC_LIBRARIES)
@@ -334,13 +340,8 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    # The earliest Boost version to include
-    # https://github.com/boostorg/multiprecision/pull/389
-    find_package (Boost 1.79 CONFIG)
-    if (Boost_FOUND)
-      set (HIGHPREC_LIBRARIES quadmath)
-    endif ()
+  if (Boost_FOUND AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set (HIGHPREC_LIBRARIES quadmath)
   endif ()
   if (NOT HIGHPREC_LIBRARIES)
     message (WARNING "Cannot support quad precision, switching to double")
@@ -499,7 +500,7 @@ add_custom_target (exampleprograms
   COMMAND ${CMAKE_COMMAND}
   -G ${CMAKE_GENERATOR} ${PLATFORM_FLAG} ${CMAKE_GENERATOR_PLATFORM}
   -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
-  -D USE_BOOST_FOR_EXAMPLES=${USE_BOOST_FOR_EXAMPLES}
+  -D USE_BOOST=${USE_BOOST}
   -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}
   COMMAND ${CMAKE_COMMAND} --build exampleprograms --parallel 8)
 add_dependencies (exampleprograms ${PROJECT_LIBRARIES})

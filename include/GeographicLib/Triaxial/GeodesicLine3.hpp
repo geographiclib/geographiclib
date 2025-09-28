@@ -45,6 +45,11 @@ namespace GeographicLib {
    *
    * <a href="Geod3Solve.1.html">Geod3Solve</a> is a command-line utility
    * providing access to the functionality of Geodesic3 and GeodesicLine3.
+   *
+   * The class experimental::TriaxialGeodesicODE solves the direct geodesic
+   * problem by integrating the corresponing ordinary differential equations.
+   * This is \e not part of %GeographicLib itself because it used Boost for
+   * solving the ODEs and Boost is not a requirement for using %GeographicLib.
    **********************************************************************/
   class GEOGRAPHICLIB_EXPORT GeodesicLine3 {
   private:

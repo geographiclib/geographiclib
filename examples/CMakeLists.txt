@@ -114,10 +114,10 @@ include_directories (${GeographicLib_INCLUDE_DIRS})
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option (USE_BOOST_FOR_EXAMPLES
+option (USE_BOOST
   "Look for Boost library when compiling examples" ON)
 
-if (USE_BOOST_FOR_EXAMPLES)
+if (USE_BOOST)
   # The earliest Boost version to include
   # https://github.com/boostorg/multiprecision/pull/389
   find_package (Boost 1.79 CONFIG COMPONENTS serialization)
@@ -137,7 +137,7 @@ if (NOT GEOGRAPHICLIB_PRECISION OR GEOGRAPHICLIB_PRECISION EQUAL 2)
   # GEOGRAPHICLIB_PRECISION.  Allow GEOGRAPHICLIB_PRECISION to be unset
   # to accommodate lame FindGeographicLib.cmake.
   set (EXAMPLE_SOURCES ${EXAMPLES0})
-  if (USE_BOOST_FOR_EXAMPLES AND Boost_FOUND)
+  if (USE_BOOST AND Boost_FOUND)
     add_definitions (-DGEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION=1)
     include_directories ("${Boost_INCLUDE_DIRS}")
   endif ()
