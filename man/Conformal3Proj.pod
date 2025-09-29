@@ -79,11 +79,13 @@ I<W>).
 
 =item B<-p> I<prec>
 
-set the output precision to I<prec> (default 6).  I<prec> is the number
-of digits after the decimal point for geocentric and local cartesion
-coordinates and for the height (in meters).  For latitudes and
-longitudes (in degrees), the number of digits after the decimal point is
-I<prec> + 5.
+set the output precision to I<prec> (default 3).  For distances, I<prec>
+is the number of digits after the decimal point for ellipsoids which are
+approximately the same size as the Earth; for other ellipsoids the
+precision is adjusted to retain the same relative precision.  For
+latitudes and longitudes (in degrees), the number of digits after the
+decimal point is I<prec> + 5.  For the scale, the precision is I<prec> +
+7.
 
 =item B<--comment-delimiter> I<commentdelim>
 
@@ -130,12 +132,10 @@ file name of "-" stands for standard output.
 
 =head1 EXAMPLES
 
-   echo 33.3 44.4 6000 | CartConvert
-   => 3816209.60 3737108.55 3485109.57
-   echo 33.3 44.4 6000 | CartConvert -l 33 44 20
-   => 37288.97 33374.29 5783.64
-   echo 30000 30000 0 | CartConvert -r
-   => 6.483 45 -6335709.73
+   echo 33.3 44.4 | Conformal3Proj
+   -5077732.396 3922571.859 1.1970343759
+   echo -5077732.396 3922571.859 | Conformal3Proj -r
+   33.30000000 44.40000000 1.1970343759
 
 =head1 ERRORS
 

@@ -280,7 +280,7 @@ namespace GeographicLib {
     /**
      * Convert latitude and longitude to a point on the surface.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point.
      * @param[in] lon the longitude of the point.
      * @param[out] R the Cartesian position on the surface of the ellipsoid.
@@ -290,7 +290,7 @@ namespace GeographicLib {
     /**
      * Convert latitude and longitude in degrees to a point on the surface.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point (in degrees).
      * @param[in] lon the longitude of the point (in degrees).
      * @param[out] R the Cartesian position on the surface of the ellipsoid.
@@ -303,7 +303,7 @@ namespace GeographicLib {
      * Convert a point on the surface to latitude and longitude.
      *
      * @param[in] R the Cartesian position on the surface of the ellipsoid.
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point.
      * @param[out] lon the longitude of the point.
      * @exception GeographicErr if \e coordout is not recognized.
@@ -313,7 +313,7 @@ namespace GeographicLib {
      * Convert a point on the surface to latitude and longitude in degrees.
      *
      * @param[in] R the Cartesian position on the surface of the ellipsoid.
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point (in degrees).
      * @param[out] lon the longitude of the point (in degrees).
      * @exception GeographicErr if \e coordout is not recognized.
@@ -325,10 +325,10 @@ namespace GeographicLib {
     /**
      * Convert between latitudes and longitudes.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat1 the \e coordin latitude of the point.
      * @param[in] lon1 the \e coordin longitude of the point.
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat2 the \e coordout latitude of the point.
      * @param[out] lon2 the \e coordout longitude of the point.
      * @exception GeographicErr if \e coordin or \e coordout is not recognized.
@@ -338,10 +338,10 @@ namespace GeographicLib {
     /**
      * Convert between latitudes and longitudes in degrees.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat1 the \e coordin latitude of the point (in degrees).
      * @param[in] lon1 the \e coordin longitude of the point (in degrees).
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat2 the \e coordout latitude of the point (in degrees).
      * @param[out] lon2 the \e coordout longitude of the point (in degrees).
      * @exception GeographicErr if \e coordin or \e coordout is not recognized.
@@ -361,7 +361,7 @@ namespace GeographicLib {
      * Convert latitiude, longitude, and azimuth to Cartesian position and
      * direction.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point.
      * @param[in] lon the longitude of the point.
      * @param[in] azi the azimuth of the heading.
@@ -375,7 +375,7 @@ namespace GeographicLib {
      * Convert latitiude, longitude, and azimuth in degrees to Cartesian
      * position and direction.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point (in degrees).
      * @param[in] lon the longitude of the point (in degrees).
      * @param[in] azi the azimuth of the heading (in degrees).
@@ -393,7 +393,7 @@ namespace GeographicLib {
      *
      * @param[in] R the Cartesian position on the surface of the ellipsoid.
      * @param[in] V the Cartesian direction tangent to the ellipsoid.
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point.
      * @param[out] lon the longitude of the point.
      * @param[out] azi the azimuth of the heading.
@@ -407,7 +407,7 @@ namespace GeographicLib {
      *
      * @param[in] R the Cartesian position on the surface of the ellipsoid.
      * @param[in] V the Cartesian direction tangent to the ellipsoid.
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point (in degrees).
      * @param[out] lon the longitude of the point (in degrees).
      * @param[out] azi the azimuth of the heading (in degrees).
@@ -426,7 +426,7 @@ namespace GeographicLib {
     /**
      * Convert latitiude, longitude, and height to a Cartesian position.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point.
      * @param[in] lon the longitude of the point.
      * @param[in] h the height (in meters).
@@ -438,7 +438,7 @@ namespace GeographicLib {
      * Convert latitiude, longitude in degrees, and height to a Cartesian
      * position.
      *
-     * @param[in] coordin one of the coordinate types, coord.
+     * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point (in degrees).
      * @param[in] lon the longitude of the point (in degrees).
      * @param[in] h the height (in meters).
@@ -452,7 +452,7 @@ namespace GeographicLib {
      * Convert a Cartesian position to latitiude, longitude, and height.
      *
      * @param[in] R the Cartesian position of the point.
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point.
      * @param[out] lon the longitude of the point.
      * @param[out] h the height (in meters).
@@ -465,7 +465,7 @@ namespace GeographicLib {
      * height.
      *
      * @param[in] R the Cartesian position of the point.
-     * @param[in] coordout one of the coordinate types, coord.
+     * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point (in degrees).
      * @param[out] lon the longitude of the point (in degrees).
      * @param[out] h the height (in meters).

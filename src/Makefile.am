@@ -11,6 +11,7 @@ libGeographicLib_la_LDFLAGS = \
 		-version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 libGeographicLib_la_SOURCES = Accumulator.cpp \
 	AlbersEqualArea.cpp \
+	Angle.cpp \
 	AuxAngle.cpp \
 	AuxLatitude.cpp \
 	AzimuthalEquidistant.cpp \
@@ -49,18 +50,18 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	SphericalEngine.cpp \
 	TransverseMercator.cpp \
 	TransverseMercatorExact.cpp \
+	Trigfun.cpp \
 	UTMUPS.cpp \
 	Utility.cpp \
-	Angle.cpp \
-	Trigfun.cpp \
+	Cartesian3.cpp \
+	Conformal3.cpp \
 	Ellipsoid3.cpp \
 	Geodesic3.cpp \
 	GeodesicLine3.cpp \
-	Cartesian3.cpp \
-	Conformal3.cpp \
 	kissfft.hh \
 	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
+	../include/GeographicLib/Angle.hpp \
 	../include/GeographicLib/AuxAngle.hpp \
 	../include/GeographicLib/AuxLatitude.hpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -103,15 +104,14 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	../include/GeographicLib/SphericalHarmonic2.hpp \
 	../include/GeographicLib/TransverseMercator.hpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
+	../include/GeographicLib/Trigfun.hpp \
 	../include/GeographicLib/UTMUPS.hpp \
 	../include/GeographicLib/Utility.hpp \
-	../include/GeographicLib/Angle.hpp \
-	../include/GeographicLib/Trigfun.hpp \
+	../include/GeographicLib/Triaxial/Cartesian3.hpp \
+	../include/GeographicLib/Triaxial/Conformal3.hpp \
 	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
 	../include/GeographicLib/Triaxial/Geodesic3.hpp \
 	../include/GeographicLib/Triaxial/GeodesicLine3.hpp \
-	../include/GeographicLib/Triaxial/Cartesian3.hpp \
-	../include/GeographicLib/Triaxial/Conformal3.hpp \
 	../include/GeographicLib/Config.h
 
 ../include/GeographicLib/Config.h: ../include/GeographicLib/Config-ac.h

@@ -232,7 +232,7 @@ namespace GeographicLib {
      * @param[inout] omg the ellipsoidal longitude.
      * @param[inout] alp the heading.
      * @param[in] alt if true switch to the alternate sheet.
-     * @return whether the coordinated were changed.
+     * @return whether the coordinates were changed.
      *
      * If alt = false (the default), the conventional sheet is used switching
      * the values of \e bet, \e omg, and \e alp, so that \e bet &isin;

@@ -4826,8 +4826,16 @@ I have scaled the Jacobi's projection by a constant factor,
 \f]
 so that it reduces to the familiar formulas in the case of an oblate
 ellipsoid.  This mapping is an immediate consequence of the special
-"Liouville" form of the expression for \f$ds^2\f$ given in the
-\ref triaxial.
+form of the expression for \f$ds^2\f$,
+\f[
+\begin{align}
+\frac{ds^2}{k^2\cos^2\beta + k'^2\sin^2\omega} &=
+b^2\frac{1 + e^2 k'^2 \sin^2\omega}{k^2 + k'^2\sin^2\omega}
+ d\omega^2 \\
+&\qquad+b^2\frac{1 - e^2 k^2 \cos^2\beta}{k'^2 + k^2\cos^2\beta}
+ d\beta^2.
+\end{align}
+\f]
 
 \section jacobi-elliptic The projection in terms of elliptic integrals
 
@@ -5062,7 +5070,7 @@ plane onto the sphere.
 A similar construction is possible for a triaxial ellipsoid.  Map each
 octant of the ellipsoid onto a rectangle using the Jacobi projection.
 The size of this rectangle is \f$ x_0 \times y_0 \f$.  Find the values
-of \f$b_s\f$, \f$e^2 = 0\f$, \f$k_s^2\f$, and \f$k_s'^2 = 1 - k_s^2\f$
+of \f$b_s\f$, \f$e_s^2 = 0\f$, \f$k_s^2\f$, and \f$k_s'^2 = 1 - k_s^2\f$
 for a sphere such that
 \f[
 x_0 = b_s K(k_s'), \quad y_0 = b_s K(k_s).
@@ -7787,7 +7795,7 @@ git repository for GeographicLib</a>.
      - Triaxial::Cartesian3 performs conversions between different
        systems of triaxial coordinates.
      - Triaxial::Conformal3 implements Jacobi's conformal projection for
-       a triaxial ellipsoid.  This allow a triaxial ellipsoid to be
+       a triaxial ellipsoid.  This allows a triaxial ellipsoid to be
        conformally mapped to a sphere or to any other ellipsoid.
      - <a href="Geod3Solve.1.html"> Geod3Solve</a> is a command-line utility
        offering access to Triaxial::Geodesic3.
@@ -7802,6 +7810,8 @@ git repository for GeographicLib</a>.
        solution of the direct geodesic problem by integrating the
        ordinary differential equations for the geodesic.  Because this
        depends on Boost, this is not part of the GeographicLib library.
+     - experimental/Geod3ODE.cpp a utility for doing direct geodesic
+       calculations using experimental::TriaxialGeodesicODE.
      .
    - To support the triaxial routines, the following classes have been
      added:

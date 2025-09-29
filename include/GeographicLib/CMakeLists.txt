@@ -3,6 +3,7 @@
 set (HEADERS
   Accumulator.hpp
   AlbersEqualArea.hpp
+  Angle.hpp
   AuxAngle.hpp
   AuxLatitude.hpp
   AzimuthalEquidistant.hpp
@@ -46,18 +47,17 @@ set (HEADERS
   SphericalHarmonic2.hpp
   TransverseMercator.hpp
   TransverseMercatorExact.hpp
+  Trigfun.hpp
   UTMUPS.hpp
   Utility.hpp
-  Angle.hpp
-  Trigfun.hpp
-)
+  )
 set (TRIAXIALHEADERS
+  Triaxial/Cartesian3.hpp
+  Triaxial/Conformal3.hpp
   Triaxial/Ellipsoid3.hpp
   Triaxial/Geodesic3.hpp
   Triaxial/GeodesicLine3.hpp
-  Triaxial/Cartesian3.hpp
-  Triaxial/Conformal3.hpp
-)
+  )
 if (INCDIR)
   install (FILES ${HEADERS} DESTINATION ${INCDIR}/GeographicLib)
   install (FILES ${TRIAXIALHEADERS}

@@ -1,12 +1,13 @@
 /**
  * \file Geod3ODE.cpp
- * \brief Command line utility for computing geodesics on a triaxial ellipsoid
+ * \brief Command line utility for using an ODE solver for geodesics on a
+ * triaxial ellipsoid
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  *
- * See the <a href="GeodSolve.1.html">man page</a> for usage information.
+ * Use "Geod3ODE --help" for brief documentation.
  **********************************************************************/
 
 #include <iostream>
@@ -37,7 +38,58 @@ std::string ErrorString(real err, int prec) {
   return s.str();
 }
 
-int usage(int retval, bool /*brief*/) { return retval; }
+int usage(int retval, bool /*brief*/) {
+  (retval ? std::cerr : std:: cout ) << "Usage:\n"
+"\n"
+"  This implements some of the functionality of Geod3Solve(1) by integrating the\n"
+"  ordinary differential equations for the geodesic.  Only direct geodesic\n"
+"  calculations are supported.\n"
+"\n"
+"  The following options of Geod3Solve(1) are supported\n"
+"    -t a b c | -e b e2 k2 kp2 \n"
+"    -L bet1 omg1 alp1\n"
+"    -u\n"
+"    -d | -:\n"
+"    -w \n"
+"    -f\n"
+"    -p prec\n"
+"\n"
+"  The following options of Geod3Solve(1) are not supported\n"
+"    -i\n"
+"    -e2\n"
+"    -u\n"
+"\n"
+"  The following are new options\n"
+"\n"
+"    -b\n"
+"      bufferd mode (only useful with the -L option).  Causes all the s12 values\n"
+"      to be buffered and fed into the integrator at the end.  This sorts the\n"
+"      entries so that the integrator doesn't have to the continually restarted.\n"
+"\n"
+"    -x\n"
+"      extended mode.  Computes and prints the reduced length, m12, and the\n"
+"      geodesic scales, M12, M21.\n"
+"\n"
+"    --eps eps\n"
+"      sets the eps parameter in the constructor for TriaxialGeodesicODE.\n"
+"\n"
+"    --dense\n"
+"      use the dense solver allowing interpolated way points to tbe computed\n"
+"      inexpensively.\n"
+"\n"
+"    --normp\n"
+"      force the solution vector onto the ellipsoid when computing the\n"
+"      acceleration.\n"
+"\n"
+"    --errors\n"
+"      print error estimates, the distance from the ellipsoid (in meters) and\n"
+"      the deviation of the velocity from a unit tangential vector.\n"
+"\n"
+"    --steps\n"
+"      print the number of integration steps and the number of times the\n"
+"      acceleration was computed.\n";
+  return retval;
+}
 
 int main(int argc, const char* const argv[]) {
   try {

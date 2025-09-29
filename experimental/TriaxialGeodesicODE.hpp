@@ -96,6 +96,9 @@ namespace GeographicLib {
    *
    * The recommended way to solve the direct and indirect geodesic problems on
    * a triaxial ellipsoid is with the class Triaxial::Geodesic3.
+   *
+   * Geod3ODE.cpp is a utility which uses this class to solve direct geodesic
+   * problems.  Use `Geod3ODE --help` for brief documentation.
    **********************************************************************/
   class TriaxialGeodesicODE {
   public:
@@ -164,6 +167,10 @@ namespace GeographicLib {
      *
      * The values \e R1 and \e V1 are normalized to place \e R1 on the
      * ellipsoid and \e V1 tangent to the ellipsoid with unit speed.
+     *
+     * Internally, the integration scales the ellipsoid so that the median
+     * semiaxis \b = 1.  The \e eps parameter is a measure of the absolution
+     * error on this scaled ellipsoid.
      **********************************************************************/
     TriaxialGeodesicODE(const Triaxial::Ellipsoid3& t, vec3 R1, vec3 V1,
                         bool extended = false, bool dense = false,
@@ -217,7 +224,7 @@ namespace GeographicLib {
      * @param[out] R2 the position of point 2.
      * @param[out] V2 the velocity at point 2.
      * @return a pair of error estimates, the distance from the ellipsoid (in
-     *   meters) and the deviated of the velocity from a unit tangential
+     *   meters) and the deviation of the velocity from a unit tangential
      *   vector.
      *
      * The returned values \e R2 and \e V2 are normalized to place \e R2 on the
@@ -234,6 +241,9 @@ namespace GeographicLib {
      * @param[out] m12 the reduced length
      * @param[out] M12 the geodesic scale at point 2 relative to point 1.
      * @param[out] M21 the geodesic scale at point 1 relative to point 2.
+     * @return a pair of error estimates, the distance from the ellipsoid (in
+     *   meters) and the deviation of the velocity from a unit tangential
+     *   vector.
      *
      * The returned values \e R2 and \e V2 are normalized to place \e R2 on the
      * ellipsoid and \e V2 tangent to the ellipsoid with unit speed.
@@ -251,6 +261,9 @@ namespace GeographicLib {
      * @param[out] bet2 the latitude at point 2.
      * @param[out] omg2 the longitude at point 2.
      * @param[out] alp2 the azimuth at point 2.
+     * @return a pair of error estimates, the distance from the ellipsoid (in
+     *   meters) and the deviation of the velocity from a unit tangential
+     *   vector.
      **********************************************************************/
     std::pair<real, real> Position(real s12,
                                    Angle& bet2, Angle& omg2, Angle& alp2);
@@ -265,6 +278,9 @@ namespace GeographicLib {
      * @param[out] m12 the reduced length
      * @param[out] M12 the geodesic scale at point 2 relative to point 1.
      * @param[out] M21 the geodesic scale at point 1 relative to point 2.
+     * @return a pair of error estimates, the distance from the ellipsoid (in
+     *   meters) and the deviation of the velocity from a unit tangential
+     *   vector.
      *
      * If the object was constructed with \e extended = false, nans are
      * returned for the differential quantities.
