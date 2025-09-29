@@ -4,7 +4,59 @@ For more information, see
 
     https://geographiclib.sourceforge.io/
 
-The current version of the library is 2.5.2
+The current version of the library is 2.6.
+
+Changes between 2.6 (released 2025-09-30) and 2.5.2 versions:
+
+   * Support for triaxial ellipoids. This is all placed in the
+     GeographicLib::Triaxial namespace with the header files in the
+     GeographicLib/Triaxial directory. This provides
+     + Triaxial::Ellipsoid3 supports basic conversions of ellipsoidal
+       coordinates.
+     + Triaxial::GeodesicLine3 and Triaxial::Geodesic3 solve the direct
+       and inverse geodesic problems on a triaxial ellipsoid. This
+       implements Jacobi's solution for the direct problem. The inverse
+       problem extends the method for solving the inverse problem on a
+       biaxial ellipsoid.
+     + Triaxial::Cartesian3 performs conversions between different
+       systems of triaxial coordinates.
+     + Triaxial::Conformal3 implements Jacobi's conformal projection for
+       a triaxial ellipsoid. This allow a triaxial ellipsoid to be
+       conformally mapped to a sphere or to any other ellipsoid.
+     + Geod3Solve is a command-line utility offering access to
+       Triaxial::Geodesic3.
+     + Cart3Convert is a command-line utility offering access to
+       Triaxial::Cartesian3.
+     + Conformal3Proj is a command-line utiity offering access to
+       Triaxial::Conformal3.
+     + Constants::Triaxial_Earth_a, Constants::Triaxial_Earth_b,
+       Constants::Triaxial_Earth_c, and Constants::Triaxial_Earth_lon0
+       specify a simple triaxial model for the Earth.
+     + experimental::TriaxialGeodesicODE is provided to illustrate the
+       solution of the direct geodesic problem by integrating the
+       ordinary differential equations for the geodesic. Because this
+       depends on Boost, this is not part of the GeographicLib library.
+     + experimental/Geod3ODE.cpp a utility for doing direct geodesic
+       calculations using experimental::TriaxialGeodesicODE.
+
+   * To support the triaxial routines, the following classes have been
+     added:
+     + AngleT provides an accurate representation of angles of any
+       magnitude. This might replace AuxAngle at some point.
+     + Trigfun supports representing periodic functions as Fourier
+       series with automatic selection of the number of terms to use. This
+       offers a tiny subset of the functionality of the trig series in
+       Chebfun. This might replace DST at some point.
+
+   * C++17 is now required. Minimum version of Visual Studio supported
+     is Visual Studio 15 2017.
+
+   * Add Math::clamp.
+
+   * Because experimental::TriaxialGeodesicODE depends on Boost, the
+     CMake option USE_BOOST_FOR_EXAMPLES has been renamed
+     USE_BOOST. This will cause find_package(Boost) to be called, but
+     does not affect how the library or the tools are built.
 
 Changes between 2.5.2 (released 2025-08-22) and 2.5.1 versions:
 

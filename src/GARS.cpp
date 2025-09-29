@@ -18,7 +18,6 @@ namespace GeographicLib {
   const char* const GARS::letters_ = "ABCDEFGHJKLMNPQRSTUVWXYZ";
 
   void GARS::Forward(real lat, real lon, int prec, string& gars) {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (fabs(lat) > Math::qd)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-" + to_string(Math::qd)

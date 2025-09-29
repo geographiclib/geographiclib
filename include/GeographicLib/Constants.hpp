@@ -40,19 +40,11 @@
 // correspondences:
 //
 // _MSC_VER  Visual Studio
-//   1100     vc5
-//   1200     vc6
-//   1300     vc7
-//   1310     vc7.1 (2003)
-//   1400     vc8   (2005)
-//   1500     vc9   (2008)
-//   1600     vc10  (2010)
-//   1700     vc11  (2012)
-//   1800     vc12  (2013)
-//   1900     vc14  (2015) First version of VS to include enough C++11 support
-//   191[0-9] vc15  (2017)
-//   192[0-9] vc16  (2019)
-//   193[0-9] vc17  (2022)
+//   1900      vc14  (2015) First version of VS to include enough C++11 support
+//   191[0-6]  vc15  (2017) First version of VS to include enough C++17 support
+//   192[0-9]  vc16  (2019)
+//   1930-1944 vc17  (2022)
+//             vc18  (2026)
 
 #if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
   GEOGRAPHICLIB_SHARED_LIB
@@ -67,21 +59,6 @@
 #  define GEOGRAPHICLIB_EXPORT
 #endif
 
-// Use GEOGRAPHICLIB_DEPRECATED to mark functions, types or variables as
-// deprecated.  Code inspired by Apache Subversion's svn_types.h file (via
-// MPFR).
-#if defined(__GNUC__)
-#  if __GNUC__ > 4
-#    define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated(msg)))
-#  else
-#    define GEOGRAPHICLIB_DEPRECATED(msg) __attribute__((deprecated))
-#  endif
-#elif defined(_MSC_VER) && _MSC_VER >= 1300
-#  define GEOGRAPHICLIB_DEPRECATED(msg) __declspec(deprecated(msg))
-#else
-#  define GEOGRAPHICLIB_DEPRECATED(msg)
-#endif
-
 #include <stdexcept>
 #include <string>
 #include <GeographicLib/Math.hpp>
@@ -90,7 +67,7 @@
  * \brief Namespace for %GeographicLib
  *
  * All of %GeographicLib is defined within the GeographicLib namespace.  In
- * addition all the header files are included via %GeographicLib/Class.hpp.
+ * addition all the header files are included via GeographicLib/Class.hpp.
  * This minimizes the likelihood of conflicts with other packages.
  **********************************************************************/
 namespace GeographicLib {
@@ -204,6 +181,57 @@ namespace GeographicLib {
      **********************************************************************/
     template<typename T = real> static T UPS_k0()
     { return T(994) / 1000; }
+    ///@}
+
+    /** \name Triaxial ellipsoid parameters
+     *
+     * These parameters are close to the values given by Milan Bursa, Vladimira
+     * Fialova, "Parameters of the Earth's tri-axial level ellipsoid", Studia
+     * Geophysica et Geodaetica 37(1), 1-13 (1993).
+     * - longitude of major axis = &minus;14.93&deg; &plusmn; 0.05&deg;
+     * - \e a = 6378171.36 m &plusmn; 0.30 m
+     * - \e a / (\e a &minus; \e c) = 297.7738 &plusmn; 0.0003
+     * - \e a / (\e a &minus; \e b) = 91449 &plusmn; 60
+     * .
+     * which gives: \e a = 6378171.36 m, \e b = 6378101.61 m, \e c = 6356751.84
+     * m.  Here take the semiaxes to be whole numbers of meters, with (\e a +
+     * \e b)/2 = WGS84_a(), \e a &minus; \e b = 70 m, \e c = round(WGS84_a() *
+     * (1 - WGS84_f())).  This gives
+     * - \e a = 6378172 m
+     * - \e b = 6378102 m
+     * - \e c = 6356752 m
+     * - \e lon0 = &minus;14.93&deg;
+     **********************************************************************/
+    ///@{
+    /**
+     * @tparam T the type of the returned value.
+     * @return the major semiaxis of a triaxial approximation to the Earth, \e
+     *   a, in m (= 6378172).
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_a()
+    { return WGS84_a<T>() + 70/real(2); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the median semiaxis of a triaxial approximation to the Earth, \e
+     *   b, in m (= 6378102).
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_b()
+    { return WGS84_a<T>() - 70/real(2); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the minor semiaxis of a triaxial approximation to the Earth, \e
+     *   c, in m (= 6356752).
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_c()
+    { using std::round; return round(WGS84_a<T>() * (1 - WGS84_f())); }
+    /**
+     * @tparam T the type of the returned value.
+     * @return the longitude, with respect to Greenwich, of the major semiaxis
+     *   of of a triaxial approximation to the Earth, \e lon0, in degrees (=
+     *   &minus;14.93).
+     **********************************************************************/
+    template<typename T = real> static T Triaxial_Earth_lon0()
+    { return T(1493) / 100; }
     ///@}
 
     /** \name SI units

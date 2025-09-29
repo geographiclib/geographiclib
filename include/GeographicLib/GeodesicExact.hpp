@@ -74,6 +74,9 @@ namespace GeographicLib {
    * See \ref geodellip for the formulation.  See the documentation on the
    * Geodesic class for additional information on the geodesic problems.
    *
+   * \note Instead of using this class directly, it is recommended to use the
+   *   Geodesic class, specifying \e exact = true in the constructor.
+   *
    * Example of use:
    * \include example-GeodesicExact.cpp
    *

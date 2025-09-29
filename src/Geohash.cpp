@@ -18,7 +18,6 @@ namespace GeographicLib {
   const char* const Geohash::ucdigits_ = "0123456789BCDEFGHJKMNPQRSTUVWXYZ";
 
   void Geohash::Forward(real lat, real lon, int len, string& geohash) {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     static const real shift = ldexp(real(1), 45);
     static const real loneps = Math::hd / shift;
     static const real lateps = Math::qd / shift;

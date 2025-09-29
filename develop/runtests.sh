@@ -1,0 +1,297 @@
+#! /bin/sh
+SUF=$1
+shift
+FLAGS=$*
+TESTDIR=$HOME/git/triaxial/src
+make Geod3Test
+while read n l; do
+    develop/Geod3Test -e $l $FLAGS < $TESTDIR/test$n.txt > test$n.out$SUF &
+    sleep 1
+done <<EOF
+obl  1 3/4 3 0
+seta 1 1   2 1
+set  1 3/2 1 2
+pro  1 3   0 3
+spha 1 0 3 0
+sphb 1 0 2 1
+sphc 1 0 1 2
+sphd 1 0 0 3
+hu   1 7577279780/1130005142289 1942065235 6378137
+phu  1 30308952520/4489860107041 3178376 971037955
+oblx 1 150/197 49 1
+prox 1 150/53 1 49
+wgs84 1 124/18523 1 0
+EOF
+exit
+
+wgs84 e2 = 124/18523
+    -> f = 124 / (sqrt(real(340804677)) + 18523)
+         = 1/298.2572249059396272...
+
+wgs84 1 595514447126/88957371407509.362414969 1 0
+
+Problem case for phu:
+echo 38 83 -38 -98 | ./Geod3Solve -e  1 30308952520/4489860107041 3178376 971037955 -p 20 -i --debug
+3.1293641189285856421 -> 3.12936411894543332
+err = 2e-11
+
+set  err      bad-line inverse-problem                    alt
+phu  151757   357892   38   83 -38  -98 -> -38 82  38 -97 -38 82 142 97
+phu  105322   94146    51 -118  51 -119 -> -51 61 -51  62 -51 61 -51 62
+pro  29083732 18182    89    1 -90   89 -> -90  1  89  89 -90  1  89 89
+sphd 12622381 400668   41 -179 -42  104 -> -90  1  89  76 -90  1  89 76
+
+This is fixed now with --hybridalt.
+
+New problem case:
+
+echo -89.991193792345 0.149841611536 179.999982614218144949 -3.13617456669843866158 |
+    ./Geod3Solve $WGS84  -p 10
+89.999972874420124 3.871490350067362 179.994355777621166 double
+89.999998978116000 -0.000000000000028 179.850175774217501 mpfr
+
+testwgs84a.txt
+89.999998978116     0 179.850175774217528486
+
+Simpler case:
+echo -89.99119379 0 0.00001701 3.136174567039457 |
+    ./Geod3Solve $WGS84  -p 10
+89.999974331431957 -3.664060211355958 0.005835683217888 double
+89.999998999999772 0.149810776922738 0.149793768059446  long double
+89.999998999999988 0.149810810289633 0.149793800317347  quad
+89.999998999999988 0.149810810289633 0.149793800317347  mpfr
+
+echo -89.99119379 0 0.00001701 3.13617456 | ./Geod3Solve $WGS84  -p 10
+89.999705776074919 -5.873495353757872 0.000509114381075 double
+89.999998596669293 0.106758554270750 0.106741566607147  long double
+89.999998596669794 0.106758614692179 0.106741604719894  quad
+89.999998596669794 0.106758614692179 0.106741604719894  mpfr
+
+s=3.136174506;for d in ../BUILD ../BUILD4; do
+  make -C $d > /dev/null
+  echo -89.99119379 0 0.00001701 $s | $d/Geod3Solve $WGS84  -p 10
+done
+-89.665897394122766 -22.822133956468143 0.000000448348734
+89.999995502699376 0.033324465367030 0.033307455394745
+
+Corresponding biaxial case:
+echo -89.991223317891846397 .14984161153566253 179.9999826142150109 -20002951.0423183 |
+    GeodSolve -p 10
+89.999998981542007 -0.000000000939220 179.850175773281791 double
+89.999998981542 -0.000000000000033 179.850175774220967    mpfr
+
+GeodTest.dat
+89.999998981542 0 179.850175774221
+0.114 meters from pole
+
+These ellipsoids form a series with a/c = 2
+obl  1 3/4 3 0
+seta 1 1   2 1
+set  1 3/2 1 2
+pro  1 3   0 3
+
+These ellipsoids form a series with a/c = 1
+spha 1 0 3 0
+sphb 1 0 2 1
+sphc 1 0 1 2
+sphd 1 0 0 3
+
+WGS84
+A = 6378137;
+f = 1/298.257223563;
+B approx round(6378137*(1-1/298.257223563)) = 6356752
+
+Earth approximation Panou et al., Hu et al. a-b = 70 = hu
+-t A+35 A-35 B
+-t 6378172 6378102 6356752
+-e 6378102 0.00670552681260463 0.9967265474113045 0.0032734525886955056
+-e 6378102 0.006706 0.996727 0.003273
+-e 6378102 7577279780/1130005142289 1942065235 6378137
+
+Prolate "equivalent" = phu
+-t A B+35 B-35
+-t 6378137 6356787 6356717
+-e 6356787 0.006750533824532638 0.003262495093607705 0.9967375049063923
+-e 6356787 0.006751 0.003262 0.996738
+-e 6356787 30308952520/4489860107041 3178376 971037955
+
+p:[e2=(a^2-c^2)/b^2, k2=(b^2-c^2)/(a^2-c^2), kp2 = (a^2-b^2)/(a^2-c^2)];
+p,a=6378172,b=6378102,c=6356752;
+p,a=6378137,b=6356787,c=6356717;
+
+a^2/c^2=(1+e2*(1-k2))/(1-e2*k2);
+e2=(a^2-c^2)/(a^2*k2+c^2*(1-k2));
+
+obl  1 3/4 3 0
+pro  1 3   0 3
+spha 1 0 3 0
+sphb 1 0 2 1
+sphc 1 0 1 2
+sphd 1 0 0 3
+
+WGS84 1 595514447126/88957371407509.362414969 1 0
+WGS84 1 595514447126/88957371407509.362414969 1 0
+
+direct comparisons:
+
+outb = baseline            hybridalt
+testhu.outb 6.782325 1079
+testobl.outb 7.776014 3524
+testoblx.outb 6.114765 910
+testphu.outb 7.491690 41788
+testpro.outb 8.348299 2958
+testprox.outb 8.718750 28263
+testseta.outb 5.303099 896
+testset.outb 5.660871 2924
+testspha.outb 7.230974 2991
+testsphb.outb 4.972728 575
+testsphc.outb 5.046986 1419
+testsphd.outb 7.132038 3343
+testwgs84.outb 346710743.003688 585846147994897
+
+outc = switch solve2 order
+testhu.outc 6.825663 1595
+testobl.outc 7.807088 3528
+testoblx.outc 6.155997 918
+testphu.outc 7.529627 41788
+testpro.outc 8.393191 2963
+testprox.outc 8.747921 28263
+testseta.outc 5.305941 896
+testset.outc 5.675739 1517
+testspha.outc 7.247369 2992
+testsphb.outc 4.982759 780
+testsphc.outc 5.062428 1851
+testsphd.outc 7.158010 3351
+testwgs84.outc 12559947783.835535 17953999640092972
+
+biaxial solution for direct
+testobl.outd 7.896426 3520
+testpro.outd 8.462096 2958
+testspha.outd 7.345990 2992
+testsphd.outd 7.206284 3343
+testwgs84.outd 25990.371086 4115152238
+
+gsolve + hybridalt -- new baseline
+testhu.outf 6.815619 1364
+testobl.outf 7.778114 3524
+testoblx.outf 6.122106 563
+testphu.outf 7.490330 41788
+testpro.outf 8.365403 2958
+testprox.outf 8.724349 28263
+testseta.outf 5.295276 896
+testset.outf 5.658956 2924
+testspha.outf 7.225282 2992
+testsphb.outf 4.972187 699
+testsphc.outf 5.046515 988
+testsphd.outf 7.128320 3343
+testwgs84.outf 25990.273243 4115152240
+
+tht fic.Ex fixes result in minor changes for oblx prox set seta
+g is new baseline
+
+make -j10 > /dev/null && head -42748 ../testobl.txt | tail -1 | ./Geod3Test $OBL
+
+newt2d working for general case (not umbilical)
+h is new baseline
+
+improvements in newt2d (enforce montonicity of f and g)
+i is new baseline
+umbilical still needs testing
+
+umbilical all bisection
+head -3314 ../testset.txt | tail -1
+70 0 180 0 0 180 0.46138515584816834054 0.42147199387998978727 0.7978133840499095064 0.68720816474403102059
+echo 70 0 180 0.46138515584816834054 | ./Geod3Solve $SET
+
+convergence failure
+head -385 ../testprox.txt | tail -1
+echo 63 -173 -61.97921997838416712 -4.64409746197940890408 | ./Geod3Solve $PROX
+
+umblilical now working OK with newt2d
+j is new baseline
+
+meridional now using newt2d (renamed newt2)
+k is new baseline
+
+biaxial special fix
+This is accurate but sometimes newt2 takes many iterations to converge.
+
+To fix errors in testwgs84, restore oblpro logic removed between commits
+
+  2025-05-08 3ae2c97add02569df6fd64b7372c06dd75930af3
+  2025-05-09 3df35384b9f3a416cd31b34b9186be1c2ec10639
+
+l is new baseline
+
+Fix convergence issues with newt2 & testwgs84.
+
+m is new baseline
+
+mean ncoeffs
+r thresh = 9/8 13.1 261 XX
+s thresh = 7/8 13.2 261 XX
+p thresh = 1/4 17.9 261
+n thresh = 1/8 19.7 261
+o thresh = 1/16 22.0 261
+q thresh = -1/8 150.0 131073 XX
+
+Peculiarity with line 2276 testset.txt inverse problem for -90 180 -16 152
+compute with mpfr and -p 13 and -p 20 ->
+
+-90 180 -31.678276203968430803 -16 152 -34.632417851313538856 0.54646403823611170442 0.50489789511517110353 0.80569806066626949844 0.73963052819047320946
+-90 180 -31.6782762039684308026562168 -16 152 -34.6324178513135388559304218 0.546464038236111704419875801 0.50489789511517110353 0.80569806066626949844 0.73963052819047320946
+
+Geod3Test $SET gives
+double same for both
+5 4 7 0 117 5 4 0 113
+long double for both
+2 1 2 0 97 4 5 0 97
+quad
+1 1 1 0 1 1 1 1 1719815
+1 1 1 0 1 1 1 1 1
+mpfr
+1 1 1 0 1 1 1 1 2
+1 1 1 0 1 1 1 1 1
+
+The reverse direct problem
+-16 152 -34.632417851313538856 -0.54646403823611170442
+-16 152 -34.6324178513135388559304218 -0.546464038236111704419875801
+double
+-90.000000000000000 180.000000000000000 -31.678276203968121
+-90.000000000000000 180.000000000000000 -31.678276203968121
+long double
+-90.000000000000000000 180.000000000000000000 -31.678276203968430977
+-90.000000000000000000 180.000000000000000000 -31.678276203968430977
+quad
+-89.999999997721836852932 -179.999999999443832566959 -82.403869305235184494185
+-89.999999999998168040374 -179.999999999999136199715 -97.052934618980198366583
+mpfr
+-89.999999997721836852932 -179.999999999443832566957 -82.403869305288181140469
+-89.999999999998168040828 -179.999999999999136202544 -97.052854571677052532343
+quad-mpfr
+  0.000000000000000000000   -0.000000000000000000002   0.000000000052996646284
+  0.000000000000000000454    0.000000000000000002829  -0.000080047303145834240
+
+Large error=655 head -3280 ../testset.txt | tail -1 | ./Geod3Test $SET
+Large CNT=147 head -1848 ../testset.txt | tail -1 | ./Geod3Test $SET
+
+switch omg[12] in inverse calc
+
+Redo baseline (minor differences)
+                  direct          inverse         invdirect
+testhu.outm      5.86    666     2.68     84     5.65    233
+testobl.outm     3.31     27     1.38     12     3.23     24
+testoblx.outm    4.81    292     2.25     36     4.85    123
+testphu.outm     5.93    658     3.98   2084     7.01   2098
+testpro.outm     4.72     41     2.40     20     4.56     42
+testprox.outm    7.21    318     4.07    288     7.78   1157
+testseta.outm    4.45    123     2.39     82     5.03   1284
+testset.outm     5.11    130     2.82     88     5.95   2955
+testspha.outm    3.09     25     1.08     16     3.13     25
+testsphb.outm    4.50    137     2.52     90     5.16   1498
+testsphc.outm    4.57    134     2.63     88     5.37   1451
+testsphd.outm    2.76     18     1.08     12     2.84     22
+testwgs84.outm   4.50     32     2.05     20     4.30     31
+
+swapomg treatment reduces max inverse error for phu and prox
+but max invdirect error becomes unacceptable (= 387838 for prox)

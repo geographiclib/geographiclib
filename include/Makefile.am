@@ -5,6 +5,7 @@
 
 nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 	GeographicLib/AlbersEqualArea.hpp \
+	GeographicLib/Angle.hpp \
 	GeographicLib/AuxAngle.hpp \
 	GeographicLib/AuxLatitude.hpp \
 	GeographicLib/AzimuthalEquidistant.hpp \
@@ -48,8 +49,14 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 	GeographicLib/SphericalHarmonic2.hpp \
 	GeographicLib/TransverseMercator.hpp \
 	GeographicLib/TransverseMercatorExact.hpp \
+	GeographicLib/Trigfun.hpp \
 	GeographicLib/UTMUPS.hpp \
 	GeographicLib/Utility.hpp \
+	GeographicLib/Triaxial/Cartesian3.hpp \
+	GeographicLib/Triaxial/Conformal3.hpp \
+	GeographicLib/Triaxial/Ellipsoid3.hpp \
+	GeographicLib/Triaxial/Geodesic3.hpp \
+	GeographicLib/Triaxial/GeodesicLine3.hpp \
 	GeographicLib/Config.h
 
 geographiclib_data=$(datadir)/GeographicLib

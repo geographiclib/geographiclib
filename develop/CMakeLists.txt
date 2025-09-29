@@ -34,10 +34,12 @@ endif ()
 set (DEVELPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect
   ClosestApproach M12zero GeodShort NormalTest GeoidHeightTable promote
-  IntersectTest GeodConv)
+  IntersectTest GeodConv JacobiTest Geod3Test)
 
-if (Boost_FOUND AND NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
-  # Skip LevelEllipsoid for quad precision because of compiler errors
+if (Boost_FOUND)
+  include_directories ("${Boost_INCLUDE_DIRS}")
+  add_definitions(-DHAVE_BOOST=1)
+  # Potential problem with Boost and  quad precision because of compiler errors
   # with boost 1.69 and g++ 9.2.1 (Fedora 30).  Problem reported as
   # https://github.com/boostorg/odeint/issues/40.
   # This problem is resolved see https://github.com/boostorg/odeint/pull/63
@@ -45,7 +47,6 @@ if (Boost_FOUND AND NOT GEOGRAPHICLIB_PRECISION EQUAL 4)
   # HOWEVER, my patch given in https://github.com/boostorg/odeint/issues/75
   # fixes this problem too.
   set (DEVELPROGRAMS ${DEVELPROGRAMS} LevelEllipsoid)
-  include_directories ("${Boost_INCLUDE_DIRS}")
   if (APPLE)
     # Suppress warnings from Boost library
     # warnings with Mac OS X and boost 1.63
@@ -58,12 +59,16 @@ endif ()
 # Loop over all the tools, specifying the source and library.
 add_custom_target (develprograms)
 foreach (DEVELPROGRAM ${DEVELPROGRAMS})
-
-  add_executable (${DEVELPROGRAM} EXCLUDE_FROM_ALL ${DEVELPROGRAM}.cpp)
+  set (DEVELSOURCE ${DEVELPROGRAM}.cpp)
+  if (DEVELPROGRAM STREQUAL "Geod3Test")
+    set (DEVELSOURCE ${DEVELSOURCE}
+      ../experimental/TriaxialGeodesicODE.cpp
+      ../experimental/TriaxialGeodesicODE.hpp)
+  endif ()
+  add_executable (${DEVELPROGRAM} EXCLUDE_FROM_ALL ${DEVELSOURCE})
   add_dependencies (develprograms ${DEVELPROGRAM})
   target_link_libraries (${DEVELPROGRAM} ${PROJECT_LIBRARIES}
     ${HIGHPREC_LIBRARIES})
-
 endforeach ()
 
 add_executable (GeodExact EXCLUDE_FROM_ALL GeodExact.cpp

@@ -332,7 +332,8 @@ namespace GeographicLib {
       unsigned l = 0;
       for (real a = 1;
            l < num_ ||
-             GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");
+             GEOGRAPHICLIB_PANIC
+             ("Convergence failure in EllipticFunction::sncndn");
            ++l) {
         // This converges quadratically.  Max 5 trips
         m[l] = a;
@@ -393,7 +394,8 @@ namespace GeographicLib {
     a[0] = 1; b = sqrt(kp2); c[0] = sqrt(k2);
     int l = 1;
     for (; l < num_ ||
-           GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");) {
+           GEOGRAPHICLIB_PANIC
+           ("Convergence failure in EllipticFunction::am");) {
       a[l] = (a[l-1] + b) / 2;
       c[l] = (a[l-1] - b) / 2;
       b = sqrt(a[l-1] * b);
@@ -606,7 +608,7 @@ namespace GeographicLib {
 
   Math::real EllipticFunction::Einv(real x) const {
     static const real tolJAC =
-      sqrt(numeric_limits<real>::epsilon() * real(0.01));
+      sqrt(numeric_limits<real>::epsilon() / real(100));
     real n = floor(x / (2 * _eEc) + real(0.5));
     x -= 2 * _eEc * n;                      // x now in [-ec, ec)
     // Linear approximation
@@ -618,7 +620,7 @@ namespace GeographicLib {
     // https://doi.org/10.1016/j.amc.2011.12.021
     for (int i = 0;
          i < num_ ||
-           GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction");
+           GEOGRAPHICLIB_PANIC("Convergence failure in EllipticFunction::Einv");
          ++i) {
       real
         sn = sin(phi),

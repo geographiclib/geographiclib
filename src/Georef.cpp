@@ -20,7 +20,6 @@ namespace GeographicLib {
   const char* const Georef::degrees_ = "ABCDEFGHJKLMNPQ";
 
   void Georef::Forward(real lat, real lon, int prec, string& georef) {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (fabs(lat) > Math::qd)
       throw GeographicErr("Latitude " + Utility::str(lat)
                           + "d not in [-" + to_string(Math::qd)

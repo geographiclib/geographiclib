@@ -10,6 +10,11 @@
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
 
+#if defined(_MSC_VER)
+// Squelch warnings about unrepresentable characters
+#  pragma warning (disable: 4819)
+#endif
+
 namespace GeographicLib {
 
   using namespace std;

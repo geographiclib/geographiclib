@@ -6,6 +6,7 @@
 EXAMPLE_FILES = \
 	example-Accumulator.cpp \
 	example-AlbersEqualArea.cpp \
+	example-Angle.cpp \
 	example-AuxAngle.cpp \
 	example-AuxLatitude.cpp \
 	example-AzimuthalEquidistant.cpp \
@@ -51,8 +52,15 @@ EXAMPLE_FILES = \
 	example-SphericalHarmonic2.cpp \
 	example-TransverseMercator.cpp \
 	example-TransverseMercatorExact.cpp \
+	example-Trigfun.cpp \
+	example-TrigfunExt.cpp \
 	example-UTMUPS.cpp \
 	example-Utility.cpp \
+	example-Cartesian3.cpp \
+	example-Conformal3.cpp \
+	example-Ellipsoid3.cpp \
+	example-Geodesic3.cpp \
+	example-GeodesicLine3.cpp \
 	GeoidToGTX.cpp \
 	make-egmcof.cpp
 

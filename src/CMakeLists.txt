@@ -6,6 +6,7 @@ add_custom_target (libs ALL)
 set (SOURCES
   Accumulator.cpp
   AlbersEqualArea.cpp
+  Angle.cpp
   AuxAngle.cpp
   AuxLatitude.cpp
   AzimuthalEquidistant.cpp
@@ -44,8 +45,14 @@ set (SOURCES
   SphericalEngine.cpp
   TransverseMercator.cpp
   TransverseMercatorExact.cpp
+  Trigfun.cpp
   UTMUPS.cpp
   Utility.cpp
+  Cartesian3.cpp
+  Conformal3.cpp
+  Ellipsoid3.cpp
+  Geodesic3.cpp
+  GeodesicLine3.cpp
   )
 
 set (HEADERS
@@ -53,6 +60,7 @@ set (HEADERS
   ${PROJECT_BINARY_DIR}/include/GeographicLib/Config.h
   ../include/GeographicLib/Accumulator.hpp
   ../include/GeographicLib/AlbersEqualArea.hpp
+  ../include/GeographicLib/Angle.hpp
   ../include/GeographicLib/AzimuthalEquidistant.hpp
   ../include/GeographicLib/CassiniSoldner.hpp
   ../include/GeographicLib/CircularEngine.hpp
@@ -91,8 +99,14 @@ set (HEADERS
   ../include/GeographicLib/SphericalHarmonic2.hpp
   ../include/GeographicLib/TransverseMercator.hpp
   ../include/GeographicLib/TransverseMercatorExact.hpp
+  ../include/GeographicLib/Trigfun.hpp
   ../include/GeographicLib/UTMUPS.hpp
   ../include/GeographicLib/Utility.hpp
+  ../include/GeographicLib/Triaxial/Cartesian3.hpp
+  ../include/GeographicLib/Triaxial/Conformal3.hpp
+  ../include/GeographicLib/Triaxial/Ellipsoid3.hpp
+  ../include/GeographicLib/Triaxial/Geodesic3.hpp
+  ../include/GeographicLib/Triaxial/GeodesicLine3.hpp
   )
 
 # Define the library and specify whether it is shared or not.
@@ -101,12 +115,16 @@ if (GEOGRAPHICLIB_SHARED_LIB)
   add_library (${PROJECT_NAME}::${PROJECT_SHARED_LIBRARIES}
     ALIAS ${PROJECT_SHARED_LIBRARIES})
   add_dependencies (libs ${PROJECT_SHARED_LIBRARIES})
+  target_compile_features (${PROJECT_SHARED_LIBRARIES}
+    PUBLIC ${REQUIRED_COMPILER_FEATURES})
 endif ()
 if (GEOGRAPHICLIB_STATIC_LIB)
   add_library (${PROJECT_STATIC_LIBRARIES} STATIC ${SOURCES} ${HEADERS})
   add_library (${PROJECT_NAME}::${PROJECT_STATIC_LIBRARIES}
     ALIAS ${PROJECT_STATIC_LIBRARIES})
   add_dependencies (libs ${PROJECT_STATIC_LIBRARIES})
+  target_compile_features (${PROJECT_STATIC_LIBRARIES}
+    PUBLIC ${REQUIRED_COMPILER_FEATURES})
 endif ()
 
 add_library (${PROJECT_INTERFACE_LIBRARIES} INTERFACE)

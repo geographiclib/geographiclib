@@ -3,8 +3,8 @@ project (GeographicLib)
 
 # Version information
 set (PROJECT_VERSION_MAJOR 2)
-set (PROJECT_VERSION_MINOR 5)
-set (PROJECT_VERSION_PATCH 2)
+set (PROJECT_VERSION_MINOR 6)
+set (PROJECT_VERSION_PATCH 0)
 set (PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 if (PROJECT_VERSION_PATCH GREATER 0)
   set (PROJECT_VERSION "${PROJECT_VERSION}.${PROJECT_VERSION_PATCH}")
@@ -50,7 +50,7 @@ set (PACKAGE_NAME "${PROJECT_NAME}-${PROJECT_FULLVERSION}")
 # The library version tracks the numbering given by libtool in the
 # autoconf set up.
 set (LIBVERSION_API 26)
-set (LIBVERSION_BUILD 26.1.3)
+set (LIBVERSION_BUILD 26.2.0)
 string (TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWER)
 string (TOUPPER ${PROJECT_NAME} PROJECT_NAME_UPPER)
 
@@ -106,12 +106,12 @@ set (GEOGRAPHICLIB_PRECISION 2 CACHE STRING
   "Precision: 1 = float, 2 = double, 3 = extended, 4 = quadruple, 5 = variable")
 set_property (CACHE GEOGRAPHICLIB_PRECISION PROPERTY STRINGS 1 2 3 4 5)
 
-# (6) Try to link against boost when building the examples.  The
-# NearestNeighbor example optionally uses the Boost library.  Set to ON,
-# if you want to exercise this functionality.  Default is OFF, so that
-# cmake configuration isn't slowed down looking for Boost.
-option (USE_BOOST_FOR_EXAMPLES
-  "Look for Boost library when compiling examples" OFF)
+# (6) Look for Boost.  Boost isn't used by GeographicLib.  However some
+# of the programs in develop and experimental directories can use Boost.
+# Also the NearestNeighbor example optionally uses the Boost library.
+# Default is OFF, so that cmake configuration isn't slowed down looking
+# for Boost.
+option (USE_BOOST "Look for the Boost library (not required)" OFF)
 
 # (7) On Mac OS X, build multiple architectures?  Set to ON to build
 # i386 and x86_64.  Default is OFF, meaning build for default
@@ -264,14 +264,8 @@ endif ()
 include (TestBigEndian)
 test_big_endian (GEOGRAPHICLIB_WORDS_BIGENDIAN)
 
-# We require C++14
-set (CMAKE_CXX_STANDARD 14)
-set (CMAKE_CXX_STANDARD_REQUIRED ON)
-if (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  set (CMAKE_CXX_EXTENSIONS ON)  # Need gnu++11 for quadmath
-else ()
-  set (CMAKE_CXX_EXTENSIONS OFF) # Otherwise stick with the standard
-endif ()
+# We require C++17
+set (REQUIRED_COMPILER_FEATURES "cxx_std_17")
 
 # Make the compiler more picky.
 include (CheckCXXCompilerFlag)
@@ -317,6 +311,12 @@ if (CONVERT_WARNINGS_TO_ERRORS)
   endif ()
 endif ()
 
+if (USE_BOOST OR GEOGRAPHICLIB_PRECISION EQUAL 4)
+  # The earliest Boost version to include
+  # https://github.com/boostorg/multiprecision/pull/389
+  find_package (Boost 1.79 CONFIG)
+endif ()
+
 # Include directories are specified via target_include_directories in src.
 
 set (HIGHPREC_LIBRARIES)
@@ -331,13 +331,8 @@ elseif (GEOGRAPHICLIB_PRECISION EQUAL 3)
     set (GEOGRAPHICLIB_PRECISION 2)
   endif ()
 elseif (GEOGRAPHICLIB_PRECISION EQUAL 4)
-  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    # The earliest Boost version to include
-    # https://github.com/boostorg/multiprecision/pull/389
-    find_package (Boost 1.79 CONFIG)
-    if (Boost_FOUND)
-      set (HIGHPREC_LIBRARIES quadmath)
-    endif ()
+  if (Boost_FOUND AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    set (HIGHPREC_LIBRARIES quadmath)
   endif ()
   if (NOT HIGHPREC_LIBRARIES)
     message (WARNING "Cannot support quad precision, switching to double")
@@ -461,7 +456,7 @@ endif ()
 # The list of tools (to be installed into, e.g., /usr/local/bin)
 set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
   GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
-  TransverseMercatorProj)
+  TransverseMercatorProj Cart3Convert Conformal3Proj Geod3Solve)
 # The list of scripts (to be installed into, e.g., /usr/local/sbin)
 set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
   geographiclib-get-magnetic)
@@ -496,7 +491,7 @@ add_custom_target (exampleprograms
   COMMAND ${CMAKE_COMMAND}
   -G ${CMAKE_GENERATOR} ${PLATFORM_FLAG} ${CMAKE_GENERATOR_PLATFORM}
   -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
-  -D USE_BOOST_FOR_EXAMPLES=${USE_BOOST_FOR_EXAMPLES}
+  -D USE_BOOST=${USE_BOOST}
   -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}
   COMMAND ${CMAKE_COMMAND} --build exampleprograms --parallel 8)
 add_dependencies (exampleprograms ${PROJECT_LIBRARIES})

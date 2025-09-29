@@ -36,7 +36,7 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.5.2
+VERSION=2.6
 SUFFIX=
 DISTVERSION=$VERSION$SUFFIX
 BRANCH=main
@@ -95,23 +95,24 @@ rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
 
 unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
 
-# for ver in 10 11 12 14 15 16; do
-for ver in 14 15 16 17; do
+for ver in 15 16 17; do
     for arch in win32 x64; do
         pkg=vc$ver-$arch
         gen="Visual Studio $ver"
         installer=
+        boostdir=
         # N.B. update CPACK_NSIS_INSTALL_ROOT in CMakeLists.txt and
         # update documentation examples if VS version for binary
         # installer changes.
-        test "$ver" = 14 && installer=y
+        test "$ver" = 15 && installer=y
+        test "$ver" = 17 && test "$arch" = x64 && boostdir="-D USE_BOOST=ON -D Boost_DIR=c:/local/boost_1_89_0/lib64-msvc-14.3/cmake/Boost-1.89.0"
         (
             echo "#! /bin/sh -exv"
             echo echo ========== cmake $pkg ==========
             echo b=c:/scratch/geog-$pkg
             echo rm -rf \$b //datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION/\*
             echo 'unset GEOGRAPHICLIB_DATA'
-            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= -S . -B \$b
+            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= $boostdir -S . -B \$b
             echo cmake --build \$b --config Debug   --target ALL_BUILD
             echo cmake --build \$b --config Debug   --target testprograms
             echo cmake --build \$b --config Debug   --target RUN_TESTS
@@ -133,7 +134,7 @@ done
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 #! /bin/sh
 (
-    for d in build-*; do
+    for d in build-*[24]; do
         ./$d
     done
 ) >& build.log
@@ -193,7 +194,6 @@ cut -f3- -d/ $TEMP/files.x | sort > ../files.new
     done
 )
 rm -rf GeographicLib-$VERSION
-rm -f java/.gitignore
 for ((i=0; i<7; ++i)); do
     find * -type d -empty | xargs -r rmdir
 done
@@ -201,7 +201,7 @@ done
 echo ==============================================================
 echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD install to $TEMP/instc
 cd $TEMP/relc/GeographicLib-$VERSION
-cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
+cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D CMAKE_INSTALL_PREFIX=$TEMP/instc -S . -B BUILD
 (
     cd BUILD
     make package_source
@@ -322,7 +322,7 @@ echo ==============================================================
 echo CMake build of devel tree in $TEMP/gitb/geographiclib/BUILD
 
 cd $TEMP/gitb/geographiclib
-cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST_FOR_EXAMPLES=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD
+cmake -D BUILD_BOTH_LIBS=ON -D BUILD_DOCUMENTATION=ON -D USE_BOOST=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -S . -B BUILD
 (cd BUILD && make -j$NUMCPUS && make -j$NUMCPUS develprograms)
 
 cp $DEVELSOURCE/include/mpreal.h include/
@@ -330,7 +330,7 @@ for p in 1 3 4 5; do
     echo ==============================================================
     echo CMake build of devel tree at precision $p in $TEMP/gitb/geographiclib/BUILD-$p
     mkdir BUILD-$p
-    cmake -D USE_BOOST_FOR_EXAMPLES=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
+    cmake -D USE_BOOST=ON -D GEOGRAPHICLIB_PRECISION=$p -S . -B BUILD-$p
     (
         cd BUILD-$p
         make -j$NUMCPUS all testprograms
@@ -397,8 +397,10 @@ echo Verify library versions of cmake and autoconf builds are the same and other
 libversion=`find $TEMP/instc/lib -type f \
 -name 'libGeographicLib.so.*.*' -printf "%f" |
 sed 's/libGeographicLib\.so\.//'`
-test -f $TEMP/instb/lib/libGeographicLib.so.$libversion ||
-echo autoconf/cmake library so mismatch
+if test -f $TEMP/instb/lib/libGeographicLib.so.$libversion; then :; else
+    echo autoconf/cmake library version numbers MISMATCH
+    exit 1
+fi
 
 CONFIG_FILE=$TEMP/gitr/geographiclib/configure
 CONFIG_MAJOR=`grep ^GEOGRAPHICLIB_VERSION_MAJOR= $CONFIG_FILE | cut -f2 -d=`
@@ -408,8 +410,14 @@ CONFIG_VERSIONA=`grep ^PACKAGE_VERSION= $CONFIG_FILE | cut -f2 -d= |
 cut -f2 -d\'`
 CONFIG_VERSION=$CONFIG_MAJOR.$CONFIG_MINOR
 test "$CONFIG_PATCH" = 0 || CONFIG_VERSION=$CONFIG_VERSION.$CONFIG_PATCH
-test "$CONFIG_VERSION"  = "$VERSION" || echo autoconf version number mismatch
-test "$CONFIG_VERSIONA" = "$VERSION" || echo autoconf version string mismatch
+if test "$CONFIG_VERSION"  = "$VERSION"; then :; else
+    echo autoconf version number MISMATCH
+    exit 1
+fi
+if test "$CONFIG_VERSIONA" = "$VERSION"; then :; else
+    echo autoconf version string MISMATCH
+    exit 1
+fi
 
 cd $TEMP/relx/GeographicLib-$VERSION
 (

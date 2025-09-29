@@ -332,8 +332,7 @@ namespace GeographicLib {
     template<typename ExtT, typename IntT, bool bigendp>
       static void readarray(std::istream& str, IntT array[], size_t num) {
 #if GEOGRAPHICLIB_PRECISION < 4
-      // for C++17 use if constexpr
-      if (sizeof(IntT) == sizeof(ExtT) &&
+      if constexpr (sizeof(IntT) == sizeof(ExtT) &&
           std::numeric_limits<IntT>::is_integer ==
           std::numeric_limits<ExtT>::is_integer)
         {
@@ -341,8 +340,8 @@ namespace GeographicLib {
           str.read(reinterpret_cast<char*>(array), num * sizeof(ExtT));
           if (!str.good())
             throw GeographicErr("Failure reading data");
-          // for C++17 use if constexpr
-          if (bigendp != Math::bigendian) { // endian mismatch -> swap bytes
+          if constexpr (bigendp != Math::bigendian) {
+            // endian mismatch -> swap bytes
             for (size_t i = num; i--;)
               array[i] = Math::swab<IntT>(array[i]);
           }
@@ -364,9 +363,9 @@ namespace GeographicLib {
               ExtT x = bigendp == Math::bigendian ? buffer[j] :
                 Math::swab<ExtT>(buffer[j]);
 #if GEOGRAPHICLIB_PRECISION > 2
-              // for C++17 use if constexpr folding in test of
+              // typeid doesn't allow if constexpr here
               if (typeid(ExtT) == typeid(double) &&
-                    typeid(IntT) == typeid(Math::real)) {
+                  typeid(IntT) == typeid(Math::real)) {
                 // readarray is used to read in coefficient data rapidly.  Thus
                 // 8.3n is stored in its IEEE double representation.  This is
                 // fine is the working precision is double.  However, when
@@ -468,10 +467,10 @@ namespace GeographicLib {
       static void writearray(std::ostream& str, const IntT array[], size_t num)
     {
 #if GEOGRAPHICLIB_PRECISION < 4
-      if (sizeof(IntT) == sizeof(ExtT) &&
-          std::numeric_limits<IntT>::is_integer ==
-          std::numeric_limits<ExtT>::is_integer &&
-          bigendp == Math::bigendian)
+      if constexpr (sizeof(IntT) == sizeof(ExtT) &&
+                    std::numeric_limits<IntT>::is_integer ==
+                    std::numeric_limits<ExtT>::is_integer &&
+                    bigendp == Math::bigendian)
         {
           // Data is compatible (including endian-ness).
           str.write(reinterpret_cast<const char*>(array), num * sizeof(ExtT));

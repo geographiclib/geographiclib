@@ -107,7 +107,7 @@ Merge all changes to main
 test-distribution.sh: set SUFFIX= and BRANCH=main
 CMakeLists.txt set PROJECT_VERSION_SUFFIX suffix to ""
 Update NEWS
-Set date in NEWS and GeographicLib.dox.in
+Set date in NEWS and GeographicLib.dox.in (top, how to cite, change log)
 Commit to git
 run develop/test-distribution.sh
   check library so versions cmake vs configure
@@ -131,7 +131,7 @@ update binaries for cgi applications
   update VERSION in compile.sh and compile
 
 TEMP=/scratch/geographiclib-dist
-VERSION=2.5.2
+VERSION=2.6
 
 Local install
 sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install

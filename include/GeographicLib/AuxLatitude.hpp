@@ -386,7 +386,7 @@ namespace GeographicLib {
     { using std::hypot; return hypot(real(1), tphi); }
     // the function tphi / sqrt(1 + tphi^2), convert tan to sin
     static real sn(real tphi) {
-      using std::isinf; using std::copysign;
+      using std::isinf, std::copysign;
       return isinf(tphi) ? copysign(real(1), tphi) : tphi / sc(tphi);
     }
     // Populate [_c[Lmax * k], _c[Lmax * (k + 1)])

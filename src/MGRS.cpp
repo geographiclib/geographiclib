@@ -40,7 +40,6 @@ namespace GeographicLib {
 
   void MGRS::Forward(int zone, bool northp, real x, real y, real lat,
                      int prec, std::string& mgrs) {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     // The smallest angle s.t., 90 - angeps() < 90 (approx 50e-12 arcsec)
     // 7 = ceil(log_2(90))
     static const real angeps = ldexp(real(1), -(Math::digits() - 7));

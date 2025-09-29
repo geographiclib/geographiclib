@@ -128,7 +128,7 @@ dist(GeographicLib::Math::real a, GeographicLib::Math::real f,
      GeographicLib::Math::real lat0, GeographicLib::Math::real lon0,
      GeographicLib::Math::real lat1, GeographicLib::Math::real lon1) {
   using namespace GeographicLib;
-  using std::cos; using std::sin; using std::sqrt; using std::hypot;
+  using std::cos, std::sin, std::sqrt, std::hypot;
   typedef Math::real real;
   real
     phi = lat0 * Math::degree(),
@@ -263,7 +263,7 @@ int main(int argc, char* argv[]) {
     real maxerrx = 0, maxerry = 0, maxerr = 0, maxerrk = 0, maxerrr = 0;
     std::cout << std::fixed << std::setprecision(7);
     while (geo.Next(lata, lona) && proj.Next(xa, ya)) {
-      using std::abs; using std::hypot;
+      using std::abs, std::hypot;
       ++count;
       // Suppress bogus uninitialized warnings for lat and lon
       real lat = 0, lon = 0, x, y, xx, yy;

@@ -32,7 +32,6 @@ namespace GeographicLib {
   }
 
   void OSGB::GridReference(real x, real y, int prec, std::string& gridref) {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     CheckCoords(x, y);
     if (!(prec >= 0 && prec <= maxprec_))
       throw GeographicErr("OSGB precision " + Utility::str(prec)

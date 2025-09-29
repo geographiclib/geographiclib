@@ -195,7 +195,7 @@ file name of "-" stands for standard output.
 
 =head1 INPUT
 
-B<GeodSolve> measures all angles in degrees and all lengths (I<s12>) in
+B<GeodSolve> measures all angles in degrees, all lengths (I<s12>) in
 meters, and all areas (I<S12>) in meters^2.  On input angles (latitude,
 longitude, azimuth, arc length) can be as decimal degrees or degrees,
 minutes, seconds.  For example, C<40d30>, C<40d30'>, C<40:30>, C<40.5d>,

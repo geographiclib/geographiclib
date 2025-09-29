@@ -177,7 +177,6 @@ namespace GeographicLib {
                                    salp1, calp1, salp2, calp2,
                                    m12, M12, M21, S12);
     // Compute longitude difference (AngDiff does this carefully).
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     real lon12s, lon12 = Math::AngDiff(lon1, lon2, lon12s);
     // Make longitude difference positive.
     int lonsign = signbit(lon12) ? -1 : 1;
