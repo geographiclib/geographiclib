@@ -82,16 +82,20 @@ namespace GeographicLib {
    *   specific distances are then found by interpolation.  There is little
    *   penalty in requesting many waypoints.
    * * Because the ODE only "works" in one direction, the solver has to restart
-   *   if the direction is reversed.  To simplify usage, you can provide a
-   *   vector of distances to the solver and this is sorted appropriately
-   *   before calling the underlying Boost integrator.  This vector can include
-   *   negative as well as positive distances.
+   *   if the direction is reversed (but this is hidden from the user).  To
+   *   simplify usage, you can provide a vector of distances to the solver and
+   *   this is sorted appropriately before calling the underlying Boost
+   *   integrator.  This vector can include negative as well as positive
+   *   distances.
    * * This class can also, optionally, solve for the reduced length \e m12,
-   *   and the Geodesic scales \e M12 and \e M21.
+   *   and the geodesic scales \e M12 and \e M21.
    *
    * These routines are distributed as source code with %GeographicLib but,
    * because of the dependency on the Boost library, are not incorporated into
    * the library itself.
+   *
+   * The recommended way to solve the direct and indirect geodesic problems on
+   * a triaxial ellipsoid is with the class Triaxial::Geodesic3.
    **********************************************************************/
   class TriaxialGeodesicODE {
   public:

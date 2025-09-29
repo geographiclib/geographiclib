@@ -7773,8 +7773,59 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
    (released 2025-mm-dd)
+
+   - Support for triaxial ellipoids.  This is all placed in the
+     GeographicLib::Triaxial namespace with the header files in the
+     GeographicLib/Triaxial directory.  This provides
+     - Triaxial::Ellipsoid3 supports basic conversions of ellipsoidal
+       coordinates.
+     - Triaxial::GeodesicLine3 and Triaxial::Geodesic3 solve the direct
+       and inverse geodesic problems on a triaxial ellipsoid.  This
+       implements Jacobi's solution for the direct problem.  The inverse
+       problem extends the method for solving the inverse problem on a
+       biaxial ellipsoid.
+     - Triaxial::Cartesian3 performs conversions between different
+       systems of triaxial coordinates.
+     - Triaxial::Conformal3 implements Jacobi's conformal projection for
+       a triaxial ellipsoid.  This allow a triaxial ellipsoid to be
+       conformally mapped to a sphere or to any other ellipsoid.
+     - <a href="Geod3Solve.1.html"> Geod3Solve</a> is a command-line utility
+       offering access to Triaxial::Geodesic3.
+     - <a href="Cart3Convert.1.html"> Cart3Convert</a> is a
+       command-line utility offering access to Triaxial::Cartesian3.
+     - <a href="Conformal3Proj.1.html"> Conformal3Proj</a> is a
+       command-line utiity offering access to Triaxial::Conformal3.
+     - Constants::Triaxial_Earth_a, Constants::Triaxial_Earth_b,
+       Constants::Triaxial_Earth_c, and Constants::Triaxial_Earth_lon0
+       specify a simple triaxial model for the Earth.
+     - experimental::TriaxialGeodesicODE is provided to illustrate the
+       solution of the direct geodesic problem by integrating the
+       ordinary differential equations for the geodesic.  Because this
+       depends on Boost, this is not part of the GeographicLib library.
+     .
+     There's a lot of new code here.  While I have made every effort to
+     ensure that it's error free, it's likely that some bugs remain.
+     Please use caution with the results and report any problems (via
+     email or with a Github issue).  It's also possible that I'll find
+     it necessary to change the public interface; but I don't foresee
+     this in the short term.
+   - To support the triaxial routines, the following classes have been
+     added:
+     - AngleT provides an accurate representation of angles of any
+       magnitude.  This might replace AuxAngle at some point.
+     - Trigfun supports representing periodic functions as Fourier
+       series with automatic selection of the number of terms to use.
+       This offers a tiny subset of the functionality of the trig series
+       in <a href="https://www.chebfun.org"> Chebfun</a>.  This might
+       replace DST at some point.
+     .
+   - C++17 is now required.  Minimum version of Visual Studio supported
+     is Visual Studio 15 2017.
    - Add Math::clamp.
-   - USE_BOOST_FOR_EXAMPLES -> USE_BOOST
+   - Because experimental::TriaxialGeodesicODE depends on Boost, the
+     CMake option `USE_BOOST_FOR_EXAMPLES` has been renamed `USE_BOOST`.
+     This will cause `find_package(Boost)` to be called.  This does not
+     affect how the library or the tools are built.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.5.2">Version 2.5.2</a>
    (released 2025-08-22)
@@ -7792,7 +7843,7 @@ git repository for GeographicLib</a>.
      both the series and exact solutions.  (Or course, the series
      solution is inaccurate for ellipsoids this eccentric.)
    - Minor tweak to Math::atan2d to improve accuracy.
-   - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
+   - Allow GEOGRAPHICLIB_PRECISION > 5; this makes mpreal use a
      fixed precision.
    - Document that cmake option `-D BINDIR=OFF` removes `tools` from the
      default `all` target for `make`.

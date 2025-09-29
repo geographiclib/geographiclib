@@ -188,44 +188,47 @@ namespace GeographicLib {
      * These parameters are close to the values given by Milan Bursa, Vladimira
      * Fialova, "Parameters of the Earth's tri-axial level ellipsoid", Studia
      * Geophysica et Geodaetica 37(1), 1-13 (1993).
-     * - longitude of major axis = -14.93 +/- 0.05
-     * - a = 6378171.36 +/- 0.30
-     * - a/(a-c) = 297.7738 +/- 0.0003
-     * - a/(a-b) = 91449 +/- 60
+     * - longitude of major axis = &minus;14.93&deg; &plusmn; 0.05&deg;
+     * - \e a = 6378171.36 m &plusmn; 0.30 m
+     * - \e a / (\e a &minus; \e c) = 297.7738 &plusmn; 0.0003
+     * - \e a / (\e a &minus; \e b) = 91449 &plusmn; 60
      * .
-     * which gives: a = 6378171.36, b = 6378101.61, c = 6356751.84.  Here take
-     * the semiaxes to be whole numbers of meters, with (a + b)/2 = WGS84_a(),
-     * a - b = 70 m, c = round(WGS84_a() * (1 - WGS84_f())).  This gives
-     * - a = 6378172
-     * - b = 6378102
-     * - c = 6356752
+     * which gives: \e a = 6378171.36 m, \e b = 6378101.61 m, \e c = 6356751.84
+     * m.  Here take the semiaxes to be whole numbers of meters, with (\e a +
+     * \e b)/2 = WGS84_a(), \e a &minus; \e b = 70 m, \e c = round(WGS84_a() *
+     * (1 - WGS84_f())).  This gives
+     * - \e a = 6378172 m
+     * - \e b = 6378102 m
+     * - \e c = 6356752 m
+     * - \e lon0 = &minus;14.93&deg;
      **********************************************************************/
     ///@{
     /**
      * @tparam T the type of the returned value.
      * @return the major semiaxis of a triaxial approximation to the Earth, \e
-     *   a, in m.
+     *   a, in m (= 6378172).
      **********************************************************************/
     template<typename T = real> static T Triaxial_Earth_a()
     { return WGS84_a<T>() + 70/real(2); }
     /**
      * @tparam T the type of the returned value.
      * @return the median semiaxis of a triaxial approximation to the Earth, \e
-     *   b, in m.
+     *   b, in m (= 6378102).
      **********************************************************************/
     template<typename T = real> static T Triaxial_Earth_b()
     { return WGS84_a<T>() - 70/real(2); }
     /**
      * @tparam T the type of the returned value.
      * @return the minor semiaxis of a triaxial approximation to the Earth, \e
-     *   c, in m.
+     *   c, in m (= 6356752).
      **********************************************************************/
     template<typename T = real> static T Triaxial_Earth_c()
     { using std::round; return round(WGS84_a<T>() * (1 - WGS84_f())); }
     /**
      * @tparam T the type of the returned value.
      * @return the longitude, with respect to Greenwich, of the major semiaxis
-     *   of of a triaxial approximation to the Earth, \e lon0, in degrees.
+     *   of of a triaxial approximation to the Earth, \e lon0, in degrees (=
+     *   &minus;14.93).
      **********************************************************************/
     template<typename T = real> static T Triaxial_Earth_lon0()
     { return T(1493) / 100; }
