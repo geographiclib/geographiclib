@@ -76,8 +76,6 @@ namespace GeographicLib {
       bool _distp, _tx;
       EllipticFunction _ell;
       TrigfunExt _fun;
-      // real _tol;
-      int _countn, _countb;
       real _max;
       bool _umb, _meridr, _meridl, _biaxr, _biaxl;
       // The f functions

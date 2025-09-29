@@ -201,8 +201,10 @@ namespace GeographicLib {
       return lam.modang(_axes2[alt ? 2 : 0]/_axes2[1]);
     else if constexpr (n == 1)
       return lam.modang(_axes[alt ? 2 : 0]/_axes[1]);
-    else                        // n == 0
+    else {                      // n == 0
+      (void) alt;               // Visual Studio 15 complains about used alt
       return lam;
+    }
   }
 
   void Cartesian3::cardinaldir(vec3 R, ang merid, vec3& N, vec3& E,

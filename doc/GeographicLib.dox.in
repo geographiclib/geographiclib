@@ -7776,7 +7776,7 @@ git repository for GeographicLib</a>.
 
    - Support for triaxial ellipoids.  This is all placed in the
      GeographicLib::Triaxial namespace with the header files in the
-     GeographicLib/Triaxial directory.  This provides
+     `GeographicLib/Triaxial` directory.  This provides
      - Triaxial::Ellipsoid3 supports basic conversions of ellipsoidal
        coordinates.
      - Triaxial::GeodesicLine3 and Triaxial::Geodesic3 solve the direct
@@ -7803,12 +7803,6 @@ git repository for GeographicLib</a>.
        ordinary differential equations for the geodesic.  Because this
        depends on Boost, this is not part of the GeographicLib library.
      .
-     There's a lot of new code here.  While I have made every effort to
-     ensure that it's error free, it's likely that some bugs remain.
-     Please use caution with the results and report any problems (via
-     email or with a Github issue).  It's also possible that I'll find
-     it necessary to change the public interface; but I don't foresee
-     this in the short term.
    - To support the triaxial routines, the following classes have been
      added:
      - AngleT provides an accurate representation of angles of any
@@ -7824,7 +7818,7 @@ git repository for GeographicLib</a>.
    - Add Math::clamp.
    - Because experimental::TriaxialGeodesicODE depends on Boost, the
      CMake option `USE_BOOST_FOR_EXAMPLES` has been renamed `USE_BOOST`.
-     This will cause `find_package(Boost)` to be called.  This does not
+     This will cause `find_package(Boost)` to be called, but does not
      affect how the library or the tools are built.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.5.2">Version 2.5.2</a>

@@ -24,6 +24,7 @@ cmake_minimum_required (VERSION 3.17.0)
 set (EXAMPLES0
   example-Accumulator.cpp
   example-AlbersEqualArea.cpp
+  example-Angle.cpp
   example-AuxAngle.cpp
   example-AuxLatitude.cpp
   example-AzimuthalEquidistant.cpp
@@ -69,6 +70,8 @@ set (EXAMPLES0
   example-SphericalHarmonic2.cpp
   example-TransverseMercator.cpp
   example-TransverseMercatorExact.cpp
+  example-Trigfun.cpp
+  example-TrigfunExt.cpp
   example-UTMUPS.cpp
   example-Utility.cpp
   example-Cartesian3.cpp
@@ -76,9 +79,6 @@ set (EXAMPLES0
   example-Ellipsoid3.cpp
   example-Geodesic3.cpp
   example-GeodesicLine3.cpp
-  example-Angle.cpp
-  example-Trigfun.cpp
-  example-TrigfunExt.cpp
   )
 set (EXAMPLES1
   GeoidToGTX.cpp make-egmcof.cpp)

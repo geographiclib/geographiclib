@@ -6,7 +6,6 @@ add_definitions (${PROJECT_DEFINITIONS})
 add_custom_target (experimental)
 
 set (EXPTOOLS)
-find_package (Boost 1.79 CONFIG)
 if (Boost_FOUND)
   set (EXPTOOLS ${EXPTOOLS} Geod3ODE)
   include_directories ("${Boost_INCLUDE_DIRS}")

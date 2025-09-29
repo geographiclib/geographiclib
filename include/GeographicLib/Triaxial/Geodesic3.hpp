@@ -36,6 +36,26 @@ namespace GeographicLib {
    * inverse problem which closely parallels the solution for the biaxial
    * problem given by GeodesicExact.  For more details see \ref triaxial.
    *
+   * Data for testing the geodesic routines is availble at
+   * <a href="https://doi.org/10.5281/zenodo.12510796"> Test set of geodesics
+   * on a triaxial ellipsoid (2024)</a>
+   *
+   * \note There's a lot of new code here and testing is two orders of
+   * magnitude more difficult compared with the biaxial case (an extra
+   * parameter to fix the shape of the ellipsoid and geodesics now depend on
+   * the longitude of the two end points separately).  I've limited by testing
+   * to ellipsoids with \e a/\e c &le; 2.  I don't expect any problems if \e
+   * a/\e c &le; 10; but you might run into problems with more eccentric
+   * ellipsoids.  The code treats oblate and prolate (biaxial) ellipsoids
+   * correctly; but, again, there may be problems with triaxial ellipsoids
+   * which are \e extremely close to oblate or prolate i.e., with either \e k
+   * or \e k' very small.  (However the triaxial model of the Earth where the
+   * difference in the equatorial semiaxes is 70 m, \f$k' = 0.057\f$, is
+   * treated just fine.)  While I have made every effort to ensure that the
+   * code is error free, it's likely that some bugs remain.  Please use caution
+   * with the results and report any problems (via email or with a Github
+   * issue).
+   *
    * Example of use:
    * \include example-Geodesic3.cpp
    *

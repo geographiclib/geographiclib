@@ -4,6 +4,12 @@
 #include <array>
 #include <limits>
 #include <algorithm>
+
+#if defined(_MSC_VER)
+// Squelch warning 4127: conditional expression is constant
+#  pragma warning (disable: 4127)
+#endif
+
 #include <boost/numeric/odeint.hpp>
 
 #include <GeographicLib/Math.hpp>
@@ -65,7 +71,7 @@ inline real LineDistance::Displacement(const point& p) const {
 
 inline void LineSimplifier::Simplify(std::vector<point>& p, real thresh) {
   using std::isnan;
-  unsigned n = p.size();
+  unsigned n = unsigned(p.size());
   InternalSimplify(p, 0, n-1, thresh);
   unsigned i = 0, j = 0;
   while (i < n) {               // Squeeze out nans
@@ -153,6 +159,7 @@ public:
       if (!box(out)) break;
       ++i;
     }
+    (void) n;
   }
 };
 
