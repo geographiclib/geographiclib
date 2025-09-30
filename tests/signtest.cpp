@@ -21,7 +21,9 @@
 
 // On Centos 7, remquo(810.0, 90.0 &q) returns 90.0 with q=8.  Rather than
 // lousing up Math.cpp with this problem we just skip the failing tests.
-#if defined(__GNUG__) && __GNUG__ < 11
+//
+// With switch to C++17, we assume this workaround is not needed.
+#if 0
 #  define BUGGY_REMQUO 1
 #else
 #  define BUGGY_REMQUO 0
@@ -37,7 +39,9 @@
 // Broken on build-open machines, vc14 and vc15+win32
 // Fixed on build-open machines, vc15+x64 and vc16
 // Let's assume that it's OK for vc16 and later
-#if defined(_MSC_VER) && _MSC_VER < 1920
+//
+// With switch to C++17, we assume this workaround is not needed.
+#if 0
 #  define BUGGY_ROUNDING 1
 #else
 #  define BUGGY_ROUNDING 0
@@ -53,7 +57,6 @@ using namespace GeographicLib;
 typedef Math::real T;
 
 static int equiv(T x, T y) {
-  using std::isnan;             // Needed for Centos 7, ubuntu 14
 #if GEOGRAPHICLIB_PRECISION >= 5
   bool eq = isfinite(x) && isfinite(y) ?
     (fabs(x - y) <= numeric_limits<T>::epsilon() * fmax(fabs(x), fabs(y))) :
@@ -220,9 +223,7 @@ int main() {
   REMQUO_CHECK( check( Math::cosd(+T(810)), +0.0) );
   check( Math::cosd(+  inf ),  nan);
 
-#if !(defined(_MSC_VER) && _MSC_VER <= 1900)
   check( Math::tand(-  inf ),  nan);
-#endif
   REMQUO_CHECK( check( Math::tand(-T(810)), -ovf) );
   check( Math::tand(-T(720)), -0.0);
   check( Math::tand(-T(630)), +ovf);
@@ -243,9 +244,7 @@ int main() {
   check( Math::tand(+T(630)), -ovf);
   check( Math::tand(+T(720)), +0.0);
   REMQUO_CHECK( check( Math::tand(+T(810)), +ovf) );
-#if !(defined(_MSC_VER) && _MSC_VER <= 1900)
   check( Math::tand(+  inf ),  nan);
-#endif
 
   check( Math::atan2d(+T(0), -T(0)), +180 );
   check( Math::atan2d(-T(0), -T(0)), -180 );

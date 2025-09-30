@@ -24,6 +24,7 @@ cmake_minimum_required (VERSION 3.17.0)
 set (EXAMPLES0
   example-Accumulator.cpp
   example-AlbersEqualArea.cpp
+  example-Angle.cpp
   example-AuxAngle.cpp
   example-AuxLatitude.cpp
   example-AzimuthalEquidistant.cpp
@@ -69,8 +70,15 @@ set (EXAMPLES0
   example-SphericalHarmonic2.cpp
   example-TransverseMercator.cpp
   example-TransverseMercatorExact.cpp
+  example-Trigfun.cpp
+  example-TrigfunExt.cpp
   example-UTMUPS.cpp
   example-Utility.cpp
+  example-Cartesian3.cpp
+  example-Conformal3.cpp
+  example-Ellipsoid3.cpp
+  example-Geodesic3.cpp
+  example-GeodesicLine3.cpp
   )
 set (EXAMPLES1
   GeoidToGTX.cpp make-egmcof.cpp)
@@ -100,16 +108,16 @@ else ()
   set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
-find_package (GeographicLib 2.5.2 REQUIRED)
+find_package (GeographicLib 2.6 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
 
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option (USE_BOOST_FOR_EXAMPLES
+option (USE_BOOST
   "Look for Boost library when compiling examples" ON)
 
-if (USE_BOOST_FOR_EXAMPLES)
+if (USE_BOOST)
   # The earliest Boost version to include
   # https://github.com/boostorg/multiprecision/pull/389
   find_package (Boost 1.79 CONFIG COMPONENTS serialization)
@@ -129,7 +137,7 @@ if (NOT GEOGRAPHICLIB_PRECISION OR GEOGRAPHICLIB_PRECISION EQUAL 2)
   # GEOGRAPHICLIB_PRECISION.  Allow GEOGRAPHICLIB_PRECISION to be unset
   # to accommodate lame FindGeographicLib.cmake.
   set (EXAMPLE_SOURCES ${EXAMPLES0})
-  if (USE_BOOST_FOR_EXAMPLES AND Boost_FOUND)
+  if (USE_BOOST AND Boost_FOUND)
     add_definitions (-DGEOGRAPHICLIB_HAVE_BOOST_SERIALIZATION=1)
     include_directories ("${Boost_INCLUDE_DIRS}")
   endif ()

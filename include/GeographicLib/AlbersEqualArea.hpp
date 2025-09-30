@@ -74,7 +74,7 @@ namespace GeographicLib {
     // atan (sqrt(-e2) * x)/sqrt(-e2) if f < 0
     // x                              if f = 0
     real atanhee(real x) const {
-      using std::atan; using std::atanh;
+      using std::atan, std::atanh;
       return _f > 0 ? atanh(_e * x)/_e : (_f < 0 ? (atan(_e * x)/_e) : x);
     }
     // return atanh(sqrt(x))/sqrt(x) - 1, accurate for small x

@@ -20,7 +20,10 @@ bin_PROGRAMS = CartConvert \
 	MagneticField \
 	Planimeter \
 	RhumbSolve \
-	TransverseMercatorProj
+	TransverseMercatorProj \
+	Cart3Convert \
+	Conformal3Proj \
+	Geod3Solve
 
 CartConvert_SOURCES = CartConvert.cpp \
 	../man/CartConvert.usage \
@@ -154,6 +157,34 @@ TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/TransverseMercator.hpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
+	../include/GeographicLib/Utility.hpp
+Cart3Convert_SOURCES = Cart3Convert.cpp \
+	../man/Cart3Convert.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Cartesian3.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
+Conformal3Proj_SOURCES = Conformal3Proj.cpp \
+	../man/Conformal3Proj.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Conformal3.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
+Geod3Solve_SOURCES = Geod3Solve.cpp \
+	../man/Geod3Solve.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Geodesic3.hpp \
+	../include/GeographicLib/Triaxial/GeodesicLine3.hpp \
+	../include/GeographicLib/Math.hpp \
 	../include/GeographicLib/Utility.hpp
 
 sbin_SCRIPTS = geographiclib-get-geoids \

@@ -101,7 +101,8 @@ bin_PROGRAMS = CartConvert$(EXEEXT) ConicProj$(EXEEXT) \
 	GeoConvert$(EXEEXT) GeodSolve$(EXEEXT) GeodesicProj$(EXEEXT) \
 	GeoidEval$(EXEEXT) Gravity$(EXEEXT) IntersectTool$(EXEEXT) \
 	MagneticField$(EXEEXT) Planimeter$(EXEEXT) RhumbSolve$(EXEEXT) \
-	TransverseMercatorProj$(EXEEXT)
+	TransverseMercatorProj$(EXEEXT) Cart3Convert$(EXEEXT) \
+	Conformal3Proj$(EXEEXT) Geod3Solve$(EXEEXT)
 subdir = tools
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -117,14 +118,22 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(sbindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_CartConvert_OBJECTS = CartConvert.$(OBJEXT)
-CartConvert_OBJECTS = $(am_CartConvert_OBJECTS)
-CartConvert_LDADD = $(LDADD)
-CartConvert_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
+am_Cart3Convert_OBJECTS = Cart3Convert.$(OBJEXT)
+Cart3Convert_OBJECTS = $(am_Cart3Convert_OBJECTS)
+Cart3Convert_LDADD = $(LDADD)
+Cart3Convert_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
+am_CartConvert_OBJECTS = CartConvert.$(OBJEXT)
+CartConvert_OBJECTS = $(am_CartConvert_OBJECTS)
+CartConvert_LDADD = $(LDADD)
+CartConvert_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
+am_Conformal3Proj_OBJECTS = Conformal3Proj.$(OBJEXT)
+Conformal3Proj_OBJECTS = $(am_Conformal3Proj_OBJECTS)
+Conformal3Proj_LDADD = $(LDADD)
+Conformal3Proj_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_ConicProj_OBJECTS = ConicProj.$(OBJEXT)
 ConicProj_OBJECTS = $(am_ConicProj_OBJECTS)
 ConicProj_LDADD = $(LDADD)
@@ -133,6 +142,10 @@ am_GeoConvert_OBJECTS = GeoConvert.$(OBJEXT)
 GeoConvert_OBJECTS = $(am_GeoConvert_OBJECTS)
 GeoConvert_LDADD = $(LDADD)
 GeoConvert_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
+am_Geod3Solve_OBJECTS = Geod3Solve.$(OBJEXT)
+Geod3Solve_OBJECTS = $(am_Geod3Solve_OBJECTS)
+Geod3Solve_LDADD = $(LDADD)
+Geod3Solve_DEPENDENCIES = $(top_builddir)/src/libGeographicLib.la
 am_GeodSolve_OBJECTS = GeodSolve.$(OBJEXT)
 GeodSolve_OBJECTS = $(am_GeodSolve_OBJECTS)
 GeodSolve_LDADD = $(LDADD)
@@ -212,12 +225,14 @@ am__v_at_1 =
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include/GeographicLib
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
-am__depfiles_remade = ./$(DEPDIR)/CartConvert.Po \
+am__depfiles_remade = ./$(DEPDIR)/Cart3Convert.Po \
+	./$(DEPDIR)/CartConvert.Po ./$(DEPDIR)/Conformal3Proj.Po \
 	./$(DEPDIR)/ConicProj.Po ./$(DEPDIR)/GeoConvert.Po \
-	./$(DEPDIR)/GeodSolve.Po ./$(DEPDIR)/GeodesicProj.Po \
-	./$(DEPDIR)/GeoidEval.Po ./$(DEPDIR)/Gravity.Po \
-	./$(DEPDIR)/IntersectTool.Po ./$(DEPDIR)/MagneticField.Po \
-	./$(DEPDIR)/Planimeter.Po ./$(DEPDIR)/RhumbSolve.Po \
+	./$(DEPDIR)/Geod3Solve.Po ./$(DEPDIR)/GeodSolve.Po \
+	./$(DEPDIR)/GeodesicProj.Po ./$(DEPDIR)/GeoidEval.Po \
+	./$(DEPDIR)/Gravity.Po ./$(DEPDIR)/IntersectTool.Po \
+	./$(DEPDIR)/MagneticField.Po ./$(DEPDIR)/Planimeter.Po \
+	./$(DEPDIR)/RhumbSolve.Po \
 	./$(DEPDIR)/TransverseMercatorProj.Po
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -256,18 +271,22 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
-	$(GeoConvert_SOURCES) $(GeodSolve_SOURCES) \
-	$(GeodesicProj_SOURCES) $(GeoidEval_SOURCES) \
-	$(Gravity_SOURCES) $(IntersectTool_SOURCES) \
-	$(MagneticField_SOURCES) $(Planimeter_SOURCES) \
-	$(RhumbSolve_SOURCES) $(TransverseMercatorProj_SOURCES)
-DIST_SOURCES = $(CartConvert_SOURCES) $(ConicProj_SOURCES) \
-	$(GeoConvert_SOURCES) $(GeodSolve_SOURCES) \
-	$(GeodesicProj_SOURCES) $(GeoidEval_SOURCES) \
-	$(Gravity_SOURCES) $(IntersectTool_SOURCES) \
-	$(MagneticField_SOURCES) $(Planimeter_SOURCES) \
-	$(RhumbSolve_SOURCES) $(TransverseMercatorProj_SOURCES)
+SOURCES = $(Cart3Convert_SOURCES) $(CartConvert_SOURCES) \
+	$(Conformal3Proj_SOURCES) $(ConicProj_SOURCES) \
+	$(GeoConvert_SOURCES) $(Geod3Solve_SOURCES) \
+	$(GeodSolve_SOURCES) $(GeodesicProj_SOURCES) \
+	$(GeoidEval_SOURCES) $(Gravity_SOURCES) \
+	$(IntersectTool_SOURCES) $(MagneticField_SOURCES) \
+	$(Planimeter_SOURCES) $(RhumbSolve_SOURCES) \
+	$(TransverseMercatorProj_SOURCES)
+DIST_SOURCES = $(Cart3Convert_SOURCES) $(CartConvert_SOURCES) \
+	$(Conformal3Proj_SOURCES) $(ConicProj_SOURCES) \
+	$(GeoConvert_SOURCES) $(Geod3Solve_SOURCES) \
+	$(GeodSolve_SOURCES) $(GeodesicProj_SOURCES) \
+	$(GeoidEval_SOURCES) $(Gravity_SOURCES) \
+	$(IntersectTool_SOURCES) $(MagneticField_SOURCES) \
+	$(Planimeter_SOURCES) $(RhumbSolve_SOURCES) \
+	$(TransverseMercatorProj_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -330,7 +349,7 @@ GEOGRAPHICLIB_VERSION_MAJOR = @GEOGRAPHICLIB_VERSION_MAJOR@
 GEOGRAPHICLIB_VERSION_MINOR = @GEOGRAPHICLIB_VERSION_MINOR@
 GEOGRAPHICLIB_VERSION_PATCH = @GEOGRAPHICLIB_VERSION_PATCH@
 GREP = @GREP@
-HAVE_CXX11 = @HAVE_CXX11@
+HAVE_CXX17 = @HAVE_CXX17@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -587,6 +606,37 @@ TransverseMercatorProj_SOURCES = TransverseMercatorProj.cpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
 	../include/GeographicLib/Utility.hpp
 
+Cart3Convert_SOURCES = Cart3Convert.cpp \
+	../man/Cart3Convert.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Cartesian3.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
+
+Conformal3Proj_SOURCES = Conformal3Proj.cpp \
+	../man/Conformal3Proj.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Conformal3.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
+
+Geod3Solve_SOURCES = Geod3Solve.cpp \
+	../man/Geod3Solve.usage \
+	../include/GeographicLib/Config.h \
+	../include/GeographicLib/Constants.hpp \
+	../include/GeographicLib/DMS.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Geodesic3.hpp \
+	../include/GeographicLib/Triaxial/GeodesicLine3.hpp \
+	../include/GeographicLib/Math.hpp \
+	../include/GeographicLib/Utility.hpp
+
 sbin_SCRIPTS = geographiclib-get-geoids \
 	geographiclib-get-gravity \
 	geographiclib-get-magnetic
@@ -675,9 +725,17 @@ clean-binPROGRAMS:
 	$(am__rm_f) $(bin_PROGRAMS)
 	test -z "$(EXEEXT)" || $(am__rm_f) $(bin_PROGRAMS:$(EXEEXT)=)
 
+Cart3Convert$(EXEEXT): $(Cart3Convert_OBJECTS) $(Cart3Convert_DEPENDENCIES) $(EXTRA_Cart3Convert_DEPENDENCIES) 
+	@rm -f Cart3Convert$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(Cart3Convert_OBJECTS) $(Cart3Convert_LDADD) $(LIBS)
+
 CartConvert$(EXEEXT): $(CartConvert_OBJECTS) $(CartConvert_DEPENDENCIES) $(EXTRA_CartConvert_DEPENDENCIES) 
 	@rm -f CartConvert$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(CartConvert_OBJECTS) $(CartConvert_LDADD) $(LIBS)
+
+Conformal3Proj$(EXEEXT): $(Conformal3Proj_OBJECTS) $(Conformal3Proj_DEPENDENCIES) $(EXTRA_Conformal3Proj_DEPENDENCIES) 
+	@rm -f Conformal3Proj$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(Conformal3Proj_OBJECTS) $(Conformal3Proj_LDADD) $(LIBS)
 
 ConicProj$(EXEEXT): $(ConicProj_OBJECTS) $(ConicProj_DEPENDENCIES) $(EXTRA_ConicProj_DEPENDENCIES) 
 	@rm -f ConicProj$(EXEEXT)
@@ -686,6 +744,10 @@ ConicProj$(EXEEXT): $(ConicProj_OBJECTS) $(ConicProj_DEPENDENCIES) $(EXTRA_Conic
 GeoConvert$(EXEEXT): $(GeoConvert_OBJECTS) $(GeoConvert_DEPENDENCIES) $(EXTRA_GeoConvert_DEPENDENCIES) 
 	@rm -f GeoConvert$(EXEEXT)
 	$(AM_V_CXXLD)$(CXXLINK) $(GeoConvert_OBJECTS) $(GeoConvert_LDADD) $(LIBS)
+
+Geod3Solve$(EXEEXT): $(Geod3Solve_OBJECTS) $(Geod3Solve_DEPENDENCIES) $(EXTRA_Geod3Solve_DEPENDENCIES) 
+	@rm -f Geod3Solve$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(Geod3Solve_OBJECTS) $(Geod3Solve_LDADD) $(LIBS)
 
 GeodSolve$(EXEEXT): $(GeodSolve_OBJECTS) $(GeodSolve_DEPENDENCIES) $(EXTRA_GeodSolve_DEPENDENCIES) 
 	@rm -f GeodSolve$(EXEEXT)
@@ -764,9 +826,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Cart3Convert.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CartConvert.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Conformal3Proj.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ConicProj.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoConvert.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geod3Solve.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodSolve.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicProj.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoidEval.Po@am__quote@ # am--include-marker
@@ -937,9 +1002,12 @@ clean: clean-am
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
+	-rm -f ./$(DEPDIR)/Cart3Convert.Po
 	-rm -f ./$(DEPDIR)/CartConvert.Po
+	-rm -f ./$(DEPDIR)/Conformal3Proj.Po
 	-rm -f ./$(DEPDIR)/ConicProj.Po
 	-rm -f ./$(DEPDIR)/GeoConvert.Po
+	-rm -f ./$(DEPDIR)/Geod3Solve.Po
 	-rm -f ./$(DEPDIR)/GeodSolve.Po
 	-rm -f ./$(DEPDIR)/GeodesicProj.Po
 	-rm -f ./$(DEPDIR)/GeoidEval.Po
@@ -994,9 +1062,12 @@ install-ps-am:
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
+	-rm -f ./$(DEPDIR)/Cart3Convert.Po
 	-rm -f ./$(DEPDIR)/CartConvert.Po
+	-rm -f ./$(DEPDIR)/Conformal3Proj.Po
 	-rm -f ./$(DEPDIR)/ConicProj.Po
 	-rm -f ./$(DEPDIR)/GeoConvert.Po
+	-rm -f ./$(DEPDIR)/Geod3Solve.Po
 	-rm -f ./$(DEPDIR)/GeodSolve.Po
 	-rm -f ./$(DEPDIR)/GeodesicProj.Po
 	-rm -f ./$(DEPDIR)/GeoidEval.Po

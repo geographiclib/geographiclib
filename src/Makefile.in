@@ -139,7 +139,7 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libGeographicLib_la_LIBADD =
 am_libGeographicLib_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
-	AuxAngle.lo AuxLatitude.lo AzimuthalEquidistant.lo \
+	Angle.lo AuxAngle.lo AuxLatitude.lo AzimuthalEquidistant.lo \
 	CassiniSoldner.lo CircularEngine.lo DAuxLatitude.lo DMS.lo \
 	DST.lo Ellipsoid.lo EllipticFunction.lo GARS.lo GeoCoords.lo \
 	Geocentric.lo Geodesic.lo GeodesicExact.lo GeodesicLine.lo \
@@ -149,7 +149,9 @@ am_libGeographicLib_la_OBJECTS = Accumulator.lo AlbersEqualArea.lo \
 	MagneticCircle.lo MagneticModel.lo Math.lo NormalGravity.lo \
 	OSGB.lo PolarStereographic.lo PolygonArea.lo Rhumb.lo \
 	SphericalEngine.lo TransverseMercator.lo \
-	TransverseMercatorExact.lo UTMUPS.lo Utility.lo
+	TransverseMercatorExact.lo Trigfun.lo UTMUPS.lo Utility.lo \
+	Cartesian3.lo Conformal3.lo Ellipsoid3.lo Geodesic3.lo \
+	GeodesicLine3.lo
 libGeographicLib_la_OBJECTS = $(am_libGeographicLib_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -175,20 +177,22 @@ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include/GeographicLib
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__maybe_remake_depfiles = depfiles
 am__depfiles_remade = ./$(DEPDIR)/Accumulator.Plo \
-	./$(DEPDIR)/AlbersEqualArea.Plo ./$(DEPDIR)/AuxAngle.Plo \
-	./$(DEPDIR)/AuxLatitude.Plo \
+	./$(DEPDIR)/AlbersEqualArea.Plo ./$(DEPDIR)/Angle.Plo \
+	./$(DEPDIR)/AuxAngle.Plo ./$(DEPDIR)/AuxLatitude.Plo \
 	./$(DEPDIR)/AzimuthalEquidistant.Plo \
-	./$(DEPDIR)/CassiniSoldner.Plo ./$(DEPDIR)/CircularEngine.Plo \
+	./$(DEPDIR)/Cartesian3.Plo ./$(DEPDIR)/CassiniSoldner.Plo \
+	./$(DEPDIR)/CircularEngine.Plo ./$(DEPDIR)/Conformal3.Plo \
 	./$(DEPDIR)/DAuxLatitude.Plo ./$(DEPDIR)/DMS.Plo \
 	./$(DEPDIR)/DST.Plo ./$(DEPDIR)/Ellipsoid.Plo \
-	./$(DEPDIR)/EllipticFunction.Plo ./$(DEPDIR)/GARS.Plo \
-	./$(DEPDIR)/GeoCoords.Plo ./$(DEPDIR)/Geocentric.Plo \
-	./$(DEPDIR)/Geodesic.Plo ./$(DEPDIR)/GeodesicExact.Plo \
-	./$(DEPDIR)/GeodesicLine.Plo ./$(DEPDIR)/GeodesicLineExact.Plo \
-	./$(DEPDIR)/Geohash.Plo ./$(DEPDIR)/Geoid.Plo \
-	./$(DEPDIR)/Georef.Plo ./$(DEPDIR)/Gnomonic.Plo \
-	./$(DEPDIR)/GravityCircle.Plo ./$(DEPDIR)/GravityModel.Plo \
-	./$(DEPDIR)/Intersect.Plo \
+	./$(DEPDIR)/Ellipsoid3.Plo ./$(DEPDIR)/EllipticFunction.Plo \
+	./$(DEPDIR)/GARS.Plo ./$(DEPDIR)/GeoCoords.Plo \
+	./$(DEPDIR)/Geocentric.Plo ./$(DEPDIR)/Geodesic.Plo \
+	./$(DEPDIR)/Geodesic3.Plo ./$(DEPDIR)/GeodesicExact.Plo \
+	./$(DEPDIR)/GeodesicLine.Plo ./$(DEPDIR)/GeodesicLine3.Plo \
+	./$(DEPDIR)/GeodesicLineExact.Plo ./$(DEPDIR)/Geohash.Plo \
+	./$(DEPDIR)/Geoid.Plo ./$(DEPDIR)/Georef.Plo \
+	./$(DEPDIR)/Gnomonic.Plo ./$(DEPDIR)/GravityCircle.Plo \
+	./$(DEPDIR)/GravityModel.Plo ./$(DEPDIR)/Intersect.Plo \
 	./$(DEPDIR)/LambertConformalConic.Plo \
 	./$(DEPDIR)/LocalCartesian.Plo ./$(DEPDIR)/MGRS.Plo \
 	./$(DEPDIR)/MagneticCircle.Plo ./$(DEPDIR)/MagneticModel.Plo \
@@ -197,7 +201,8 @@ am__depfiles_remade = ./$(DEPDIR)/Accumulator.Plo \
 	./$(DEPDIR)/PolygonArea.Plo ./$(DEPDIR)/Rhumb.Plo \
 	./$(DEPDIR)/SphericalEngine.Plo \
 	./$(DEPDIR)/TransverseMercator.Plo \
-	./$(DEPDIR)/TransverseMercatorExact.Plo ./$(DEPDIR)/UTMUPS.Plo \
+	./$(DEPDIR)/TransverseMercatorExact.Plo \
+	./$(DEPDIR)/Trigfun.Plo ./$(DEPDIR)/UTMUPS.Plo \
 	./$(DEPDIR)/Utility.Plo
 am__mv = mv -f
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
@@ -300,7 +305,7 @@ GEOGRAPHICLIB_VERSION_MAJOR = @GEOGRAPHICLIB_VERSION_MAJOR@
 GEOGRAPHICLIB_VERSION_MINOR = @GEOGRAPHICLIB_VERSION_MINOR@
 GEOGRAPHICLIB_VERSION_PATCH = @GEOGRAPHICLIB_VERSION_PATCH@
 GREP = @GREP@
-HAVE_CXX11 = @HAVE_CXX11@
+HAVE_CXX17 = @HAVE_CXX17@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -414,6 +419,7 @@ libGeographicLib_la_LDFLAGS = \
 
 libGeographicLib_la_SOURCES = Accumulator.cpp \
 	AlbersEqualArea.cpp \
+	Angle.cpp \
 	AuxAngle.cpp \
 	AuxLatitude.cpp \
 	AzimuthalEquidistant.cpp \
@@ -452,11 +458,18 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	SphericalEngine.cpp \
 	TransverseMercator.cpp \
 	TransverseMercatorExact.cpp \
+	Trigfun.cpp \
 	UTMUPS.cpp \
 	Utility.cpp \
+	Cartesian3.cpp \
+	Conformal3.cpp \
+	Ellipsoid3.cpp \
+	Geodesic3.cpp \
+	GeodesicLine3.cpp \
 	kissfft.hh \
 	../include/GeographicLib/Accumulator.hpp \
 	../include/GeographicLib/AlbersEqualArea.hpp \
+	../include/GeographicLib/Angle.hpp \
 	../include/GeographicLib/AuxAngle.hpp \
 	../include/GeographicLib/AuxLatitude.hpp \
 	../include/GeographicLib/AzimuthalEquidistant.hpp \
@@ -499,8 +512,14 @@ libGeographicLib_la_SOURCES = Accumulator.cpp \
 	../include/GeographicLib/SphericalHarmonic2.hpp \
 	../include/GeographicLib/TransverseMercator.hpp \
 	../include/GeographicLib/TransverseMercatorExact.hpp \
+	../include/GeographicLib/Trigfun.hpp \
 	../include/GeographicLib/UTMUPS.hpp \
 	../include/GeographicLib/Utility.hpp \
+	../include/GeographicLib/Triaxial/Cartesian3.hpp \
+	../include/GeographicLib/Triaxial/Conformal3.hpp \
+	../include/GeographicLib/Triaxial/Ellipsoid3.hpp \
+	../include/GeographicLib/Triaxial/Geodesic3.hpp \
+	../include/GeographicLib/Triaxial/GeodesicLine3.hpp \
 	../include/GeographicLib/Config.h
 
 geographiclib_data = $(datadir)/GeographicLib
@@ -583,22 +602,28 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Accumulator.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AlbersEqualArea.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Angle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AuxAngle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AuxLatitude.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AzimuthalEquidistant.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Cartesian3.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CassiniSoldner.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CircularEngine.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Conformal3.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DAuxLatitude.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DMS.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DST.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Ellipsoid.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Ellipsoid3.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/EllipticFunction.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GARS.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeoCoords.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geocentric.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geodesic.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geodesic3.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicExact.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicLine.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicLine3.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/GeodesicLineExact.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geohash.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Geoid.Plo@am__quote@ # am--include-marker
@@ -621,6 +646,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SphericalEngine.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercator.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/TransverseMercatorExact.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Trigfun.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/UTMUPS.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Utility.Plo@am__quote@ # am--include-marker
 
@@ -786,22 +812,28 @@ clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
 distclean: distclean-am
 	-rm -f ./$(DEPDIR)/Accumulator.Plo
 	-rm -f ./$(DEPDIR)/AlbersEqualArea.Plo
+	-rm -f ./$(DEPDIR)/Angle.Plo
 	-rm -f ./$(DEPDIR)/AuxAngle.Plo
 	-rm -f ./$(DEPDIR)/AuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/AzimuthalEquidistant.Plo
+	-rm -f ./$(DEPDIR)/Cartesian3.Plo
 	-rm -f ./$(DEPDIR)/CassiniSoldner.Plo
 	-rm -f ./$(DEPDIR)/CircularEngine.Plo
+	-rm -f ./$(DEPDIR)/Conformal3.Plo
 	-rm -f ./$(DEPDIR)/DAuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/DMS.Plo
 	-rm -f ./$(DEPDIR)/DST.Plo
 	-rm -f ./$(DEPDIR)/Ellipsoid.Plo
+	-rm -f ./$(DEPDIR)/Ellipsoid3.Plo
 	-rm -f ./$(DEPDIR)/EllipticFunction.Plo
 	-rm -f ./$(DEPDIR)/GARS.Plo
 	-rm -f ./$(DEPDIR)/GeoCoords.Plo
 	-rm -f ./$(DEPDIR)/Geocentric.Plo
 	-rm -f ./$(DEPDIR)/Geodesic.Plo
+	-rm -f ./$(DEPDIR)/Geodesic3.Plo
 	-rm -f ./$(DEPDIR)/GeodesicExact.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLine.Plo
+	-rm -f ./$(DEPDIR)/GeodesicLine3.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLineExact.Plo
 	-rm -f ./$(DEPDIR)/Geohash.Plo
 	-rm -f ./$(DEPDIR)/Geoid.Plo
@@ -824,6 +856,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/SphericalEngine.Plo
 	-rm -f ./$(DEPDIR)/TransverseMercator.Plo
 	-rm -f ./$(DEPDIR)/TransverseMercatorExact.Plo
+	-rm -f ./$(DEPDIR)/Trigfun.Plo
 	-rm -f ./$(DEPDIR)/UTMUPS.Plo
 	-rm -f ./$(DEPDIR)/Utility.Plo
 	-rm -f Makefile
@@ -873,22 +906,28 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/Accumulator.Plo
 	-rm -f ./$(DEPDIR)/AlbersEqualArea.Plo
+	-rm -f ./$(DEPDIR)/Angle.Plo
 	-rm -f ./$(DEPDIR)/AuxAngle.Plo
 	-rm -f ./$(DEPDIR)/AuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/AzimuthalEquidistant.Plo
+	-rm -f ./$(DEPDIR)/Cartesian3.Plo
 	-rm -f ./$(DEPDIR)/CassiniSoldner.Plo
 	-rm -f ./$(DEPDIR)/CircularEngine.Plo
+	-rm -f ./$(DEPDIR)/Conformal3.Plo
 	-rm -f ./$(DEPDIR)/DAuxLatitude.Plo
 	-rm -f ./$(DEPDIR)/DMS.Plo
 	-rm -f ./$(DEPDIR)/DST.Plo
 	-rm -f ./$(DEPDIR)/Ellipsoid.Plo
+	-rm -f ./$(DEPDIR)/Ellipsoid3.Plo
 	-rm -f ./$(DEPDIR)/EllipticFunction.Plo
 	-rm -f ./$(DEPDIR)/GARS.Plo
 	-rm -f ./$(DEPDIR)/GeoCoords.Plo
 	-rm -f ./$(DEPDIR)/Geocentric.Plo
 	-rm -f ./$(DEPDIR)/Geodesic.Plo
+	-rm -f ./$(DEPDIR)/Geodesic3.Plo
 	-rm -f ./$(DEPDIR)/GeodesicExact.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLine.Plo
+	-rm -f ./$(DEPDIR)/GeodesicLine3.Plo
 	-rm -f ./$(DEPDIR)/GeodesicLineExact.Plo
 	-rm -f ./$(DEPDIR)/Geohash.Plo
 	-rm -f ./$(DEPDIR)/Geoid.Plo
@@ -911,6 +950,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/SphericalEngine.Plo
 	-rm -f ./$(DEPDIR)/TransverseMercator.Plo
 	-rm -f ./$(DEPDIR)/TransverseMercatorExact.Plo
+	-rm -f ./$(DEPDIR)/Trigfun.Plo
 	-rm -f ./$(DEPDIR)/UTMUPS.Plo
 	-rm -f ./$(DEPDIR)/Utility.Plo
 	-rm -f Makefile

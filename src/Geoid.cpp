@@ -304,7 +304,6 @@ namespace GeographicLib {
   }
 
   Math::real Geoid::height(real lat, real lon) const {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     lat = Math::LatFix(lat);
     if (isnan(lat) || isnan(lon)) {
       return Math::NaN();

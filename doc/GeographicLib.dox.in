@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2025-08-22
+\date 2025-09-30
 
 \section abstract Abstract
 
@@ -20,9 +20,10 @@ GeographicLib is a small C++ library for
 
 - geodesic and rhumb line calculations;
 - conversions between geographic, UTM, UPS, MGRS, geocentric, and local
-  cartesian coordinates;
+  Cartesian coordinates;
 - gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2025)
-  calculations.
+  calculations;
+- computations on a triaxial ellipsoid.
 
 The emphasis is on returning accurate results with errors close to
 round-off (about 5--15 nanometers).  Accurate algorithms for \ref
@@ -74,7 +75,7 @@ page](../../index.html).
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2022-05-06),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2025-09-30),
   https://geographiclib.sourceforge.io/C++/@PROJECT_VERSION@
 
 \section contents Contents
@@ -117,7 +118,7 @@ of geographic transformations.  It grew out of a desire to improve on
 the GEOTRANS
 package for transforming between geographic and MGRS coordinates.  At
 present, GeographicLib provides UTM, UPS, MGRS, geocentric, and local
-cartesian projections, gravity and geomagnetic models, and classes for
+Cartesian projections, gravity and geomagnetic models, and classes for
 geodesic calculations.
 
 The goals of GeographicLib are:
@@ -148,9 +149,9 @@ The goals of GeographicLib are:
 
 Various \ref utilities are provided with the library.  These illustrate
 the use of the library and are useful in their own right.  This library
-and the utilities have been tested with C++11 compliant versions of g++
+and the utilities have been tested with C++17 compliant versions of g++
 under Linux, with Apple LLVM 7.0.2 under Mac OS X, and with MS Visual
-Studio 14 (2015), 15 (2017), and 16 (2019) compiled for 32 bit and 64
+Studio 15 (2017), 16 (2019), and 17 (2022) compiled for 32 bit and 64
 bit on Windows.
 
 The section \ref geodesic documents the method of solving the geodesic
@@ -193,9 +194,9 @@ Back to \ref intro.  Forward to \ref start.  Up to \ref contents.
 </center>
 
 GeographicLib has been developed under Linux with the g++ compiler,
-under Mac OS X with Xcode, and under Windows with Visual Studio 2015 and
-later.  It should compile on any systems with a C++11 compliant
-compiler.  First download one of
+under Mac OS X with Xcode, and under Windows with Visual Studio.  It
+should compile on any systems with a C++17 compliant compiler.  First
+download one of
 - <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@.tar.gz">
 GeographicLib-@PROJECT_VERSION@.tar.gz</a> tar'ed sources
 - <a href="https://sourceforge.net/projects/geographiclib/files/distrib-C++/GeographicLib-@PROJECT_FULLVERSION@.zip">
@@ -228,7 +229,7 @@ make software maintenance simpler
   directory for compiling the code.  In the description here the
   directories are called BUILD and are located in the top-level of the
   source tree.  You might want to use a suffix to denote the type of
-  build, e.g., BUILD-vc14 for Visual Studio 14 (2015), or BUILD-shared
+  build, e.g., BUILD-vc14 for Visua Sltudio 14 (2015), or BUILD-shared
   for a build which creates a shared library.  The advantages of
   out-of-source builds are:
   - You don't mess up the source tree, so it's easy to "clean up".
@@ -283,10 +284,10 @@ Here are the steps to compile and install GeographicLib:
   and MacOSX systems, the command is \verbatim
   cmake .. \endverbatim
   For Windows, the command is typically something like \verbatim
-  cmake -G "Visual Studio 14" -A win32 \
+  cmake -G "Visual Studio 17" -A win32 \
     -D CMAKE_INSTALL_PREFIX="C:/Program Files (x86)/GeographicLib-@PROJECT_VERSION@" \
     ..
-  cmake -G "Visual Studio 14" -A x64 \
+  cmake -G "Visual Studio 17" -A x64 \
     -D CMAKE_INSTALL_PREFIX="C:/Program Files/GeographicLib-@PROJECT_VERSION@" \
     ..\endverbatim
   The definitions of CMAKE_INSTALL_PREFIX point to system directories.
@@ -368,7 +369,7 @@ Here are the steps to compile and install GeographicLib:
        Studio (long double is the same as double with that compiler).
     -# quad precision (113-bit precision).
     -# arbitrary precision.
-  - <code>USE_BOOST_FOR_EXAMPLES</code> (default: OFF).  If set to ON,
+  - <code>USE_BOOST</code> (default: OFF).  If set to ON,
     then the Boost library is searched for in order to build the
     NearestNeighbor example.
   - <code>APPLE_MULTIPLE_ARCHITECTURES</code> (default: OFF).  If set to
@@ -412,7 +413,7 @@ Here are the steps to compile and install GeographicLib:
 - CMake can create the build directory for
   you.  This allows you to configure and run the build on Windows with
   \verbatim
-  cmake -G "Visual Studio 14" -A x64 -S . -B BUILD
+  cmake -G "Visual Studio 17" -A x64 -S . -B BUILD
   cmake --build BUILD --config Release --target ALL_BUILD \endverbatim
   or on Linux with \verbatim
   cmake -S . -B BUILD
@@ -451,8 +452,8 @@ Binary installers are available for some platforms
 
 Use this method if you only need to use the GeographicLib utilities.
 The header files and static and shared versions of library are also
-provided; these can only be used by Visual Studio 14 2015 or later
-(2017, 2019, or 2022) (in either release or debug mode).  However, if
+provided; these can only be used by Visual Studio 15 2017 or later
+(2019 or 2022) (in either release or debug mode).  However, if
 you plan to use the library, it may be advisable to build it with the
 compiler you are using for your own code using \ref cmake.
 
@@ -477,7 +478,7 @@ will include
 <code>C:/Program FilesGeographicLib-@PROJECT_VERSION@/bin</code>
 where the utilities are installed.  The headers and library are
 installed in the `include/GeographicLib` and `lib` folders.  The libraries
-were built using using Visual Studio 14 2015 in release and debug modes.
+were built using using Visual Studio 15 2017 in release and debug modes.
 The utilities were linked against the release-mode shared library.
 
 \subsection binaryinstosx MacOSX
@@ -543,7 +544,7 @@ Release and Debug versions of the library and finally build PACKAGE in
 Release mode.  This will get the release and debug versions of the
 library included in the package.  For example, the 64-bit binary
 installer is created with \verbatim
-  cmake -G "Visual Studio 14" -A x64 \
+  cmake -G "Visual Studio 17" -A x64 \
     -D BUILD_BOTH_LIBS=ON \
     -D PACKAGE_DEBUG_LIBS=ON \
     ..
@@ -611,14 +612,14 @@ In order to use GeographicLib from C++ code, you will need to
   - configure your package, e.g., with \verbatim
     mkdir BUILD
     cd BUILD
-    cmake -G "Visual Studio 14" -A x64 \
+    cmake -G "Visual Studio 17" -A x64 \
       -D CMAKE_PREFIX_PATH="C:/Program Files" \
       -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
       .. \endverbatim
     Note that you almost always want to configure and build your code
     somewhere other than the source directory (in this case, we use the
     BUILD subdirectory).  Also, on Windows, make sure that the version
-    of Visual Studio (14 in the example above) architecture (x64 in the
+    of Visual Studio (17 in the example above) architecture (x64 in the
     example above) is compatible with that used to build GeographicLib.
     In this example, it's not necessary to specify
     <code>CMAKE_PREFIX_PATH</code>, because <code>C:/Program
@@ -634,7 +635,7 @@ In order to use GeographicLib from C++ code, you will need to
     CMake can create the build directory for
     you.  This allows you to configure and run the build on Windows with
     \verbatim
-    cmake -G "Visual Studio 14" -A x64 \
+    cmake -G "Visual Studio 17" -A x64 \
       -D CMAKE_PREFIX_PATH="C:/Program Files" \
       -D CMAKE_INSTALL_PREFIX="C:/Program Files/testgeog" \
       -S . -B BUILD
@@ -851,7 +852,7 @@ The utilities are
    TransverseMercator.  See \ref TransverseMercatorProj.cpp.
  - <a href="CartConvert.1.html">
    <b>CartConvert</b></a>: convert geodetic coordinates to geocentric or
-   local cartesian using Geocentric and
+   local Cartesian using Geocentric and
    LocalCartesian.  See \ref CartConvert.cpp.
  - <a href="GeodesicProj.1.html">
    <b>GeodesicProj</b></a>: perform projections based on geodesics
@@ -875,6 +876,17 @@ The utilities are
    and RhumbLine.  See \ref RhumbSolve.cpp.
  - <a href="IntersectTool.1.html"> <b>IntersectTool</b></a>: find
    intersections between two geodesics.  See \ref IntersectTool.cpp.
+ - <a href="Geod3Solve.1.html">
+   <b>Geod3Solve</b></a>: perform geodesic calculations on a triaxial
+   ellipsoid using Triaxial::Geodesic3 and Triaxial::GeodesicLine3.  See \ref
+   Geod3Solve.cpp.
+ - <a href="Cart3Convert.1.html">
+   <b>Cart3Convert</b></a>: convert between geocentric and various
+   triaxial coordinates systems using Triaxial::Cartesian3.  See \ref
+   Cart3Convert.cpp.
+ - <a href="Conformal3Proj.1.html">
+   <b>Conformal3Proj</b></a>: conformal projections for a triaxial
+   ellipsoid using Triaxial::Conformal3.  See \ref Conformal3Proj.cpp.
  .
 The documentation for these utilities is in the form of man pages.  This
 documentation can be accessed by clicking on the utility name in the
@@ -987,7 +999,7 @@ collection of points where the distance function obeys the triangle
 inequality.  The geodesic distance obeys this condition.
 
 Geocentric and LocalCartesian convert between
-geodetic and geocentric or a local cartesian system.  The constructor for
+geodetic and geocentric or a local Cartesian system.  The constructor for
 specifies the ellipsoid and the forward and reverse projections are
 implemented as const member functions.  Geocentric::WGS84 is a
 const static instantiation of Geocentric specific for the WGS84 ellipsoid.
@@ -1071,8 +1083,6 @@ format they can be easily plotted in MATLAB.
 A note about portability.  For the most part, the code uses standard C++
 and should be able to be deployed on any system with a modern C++
 compiler.  System dependencies come into
- - Math -- GeographicLib requires support of C++11 mathematical
-   functions.
  - use of long double -- the type is used only for testing.  On systems
    which lack this data type the cmake and autoconf configuration
    methods should detect its absence and omit the code that depends on
@@ -3764,7 +3774,7 @@ and are linearly related by
 - \f$ u + u' = K(e) ,\quad v + v' = K(ie') \f$
 - \f$ v = \sqrt{1-e^2} u ,\quad u = \sqrt{1+e'^2} v \f$.
 .
-The cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
+The Cartesian coordinates for the meridian \f$ (x, z) \f$ are given by
 \f[
 \begin{align}
   x &= a \cos\beta = a \cos\phi / \sqrt{1 - e^2 \sin^2\phi} \\
@@ -4303,7 +4313,29 @@ Jacobi employed the \e ellipsoidal latitude and longitude \f$(\beta,
            {\sqrt{a^2 - c^2}}.
 \end{align}
 \f]
-Grid lines of constant \f$\beta\f$ and \f$\omega\f$ are given in Fig. 1.
+We find it convenient to characterize the *shape* of the ellipsoid by
+the parameters,
+\f[
+\begin{align}
+e  &= \frac{\sqrt{a^2-c^2}}b,\\
+k  &= \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-c^2}},\\
+k' &= \frac{\sqrt{a^2-b^2}}{\sqrt{a^2-c^2}}.
+\end{align}
+\f]
+Here \f$e\f$ quantifies how much the ellipsoid departs from a sphere,
+while \f$k\f$ and \f$k'\f$ describes how close the ellipsoid is to an
+oblate (\f$k = 1\f$) or prolate (\f$k = 0\f$) ellipsoid; note that
+\f$k^2 + k'^2 = 1\f$.  The Cartesian coordinates can now be written as
+\f[
+\begin{align}
+  X &= a \cos\omega \sqrt{k^2\cos^2\beta + k'^2}, \\
+  Y &= b \cos\beta \sin\omega, \\
+  Z &= c \sin\beta \sqrt{k^2 + k'^2\sin^2\omega}.
+\end{align}
+\f]
+
+Grid lines of constant \f$\beta\f$ and
+\f$\omega\f$ are given in Fig. 1.
 
 <center>
 <img src="https://upload.wikimedia.org/wikipedia/commons/b/bd/Triaxial_ellipsoid_coordinate_system.svg"
@@ -4339,16 +4371,19 @@ The element of length on the ellipsoid in ellipsoidal coordinates is
 given by
 \f[
 \begin{align}
-\frac{ds^2}{(a^2-b^2)\sin^2\omega+(b^2-c^2)\cos^2\beta} &=
-\frac{b^2\sin^2\beta+c^2\cos^2\beta}
-     {a^2-b^2\sin^2\beta-c^2\cos^2\beta}
+\frac{ds^2/b^2}{k^2\cos^2\beta + k'^2\sin^2\omega} &=
+\frac{1 - e^2 k^2 \cos^2\beta}{k'^2 + k^2\cos^2\beta}
  d\beta^2 \\
 &\qquad+
-\frac{a^2\sin^2\omega+b^2\cos^2\omega}
-     {a^2\sin^2\omega+b^2\cos^2\omega-c^2}
+\frac{1 + e^2 k'^2 \sin^2\omega}{k^2 + k'^2\sin^2\omega}
  d\omega^2.
 \end{align}
 \f]
+This form for \f$ds\f$ &mdash; with a single mulitplying factor
+depending on \f$\beta\f$ and \f$\omega\f$ and the coefficient
+multiplying \f$d\beta^2\f$ (resp. \f$d\omega^2\f$) being a function of
+\f$\beta\f$ (resp. \f$\omega\f$) alone &mdash; means that a triaxial
+ellipsoid is a so-called "Liouville surface".
 
 The torus \f$(\omega, \beta) \in [-\pi,\pi] \times [-\pi,\pi]\f$ covers
 the ellipsoid twice.  In order to facilitate passing to the limit of an
@@ -4374,7 +4409,7 @@ sphere is a non-uniform limit, with the position of the umbilic points
 depending on the ratio \f$(a-b)/(b-c)\f$.
 
 Inter-conversions between the three different latitudes and longitudes
-and the cartesian coordinates are simple algebraic exercises.
+and the Cartesian coordinates are simple algebraic exercises.
 
 \section triaxial-jacobi Jacobi's solution
 
@@ -4402,23 +4437,24 @@ K&ouml;nigsberg, 28th Dec. '38.
 </blockquote>
 
 On the same day he wrote a similar letter to the editor of Compte Rendus
-and his result was published in J. Crelle in (1839) with a French
-translation (from German) appearing in J. Liouville in (1841).
+and his result was published in
+<a href="https://books.google.com/books?id=RbwGAAAAYAAJ&pg=PA309">
+J. Crelle in (1839)</a> with a French translation (from German)
+appearing in
+<a href="https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA267">
+J. Liouville in (1841)</a>.
 
-Here is the solution, exactly as given by Jacobi
-<a href="https://books.google.com/books?id=Rh8GAAAAYAAJ&pg=PA268"> here</a>
-(with minor changes in notation):
+Here is the solution, exactly as given by Jacobi (with minor changes in
+notation):
 \f[
 \begin{align}
-\delta &= \int \frac
-{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
-{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
- \sqrt{(b^2-c^2)\cos^2\beta - \gamma}}\\
-&\quad -
-\int \frac
-{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
-{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
- \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
+\delta &= \int
+\frac{\sqrt{1-e^2k^2\cos^2\beta}}
+{\sqrt{k'^2+k^2\cos^2\beta}\sqrt{k^2\cos^2\beta-\gamma}}\,d\beta\\
+&\quad {}-
+\int
+\frac{\sqrt{1+e^2k'^2\sin^2\omega}}
+{\sqrt{k^2+k'^2\sin^2\omega}\sqrt{k'^2\sin^2\omega+\gamma}}\,d\omega.
 \end{align}
 \f]
 As Jacobi notes &quot;a function of the angle \f$\beta\f$ equals a
@@ -4431,7 +4467,7 @@ However for geodesics that go through an umbilical point, we have \f$\gamma
 = 0\f$ and \f$\delta\f$ determines the direction at the umbilical point.
 Incidentally the constant \f$\gamma\f$ may be expressed as
 \f[
-\gamma = (b^2-c^2)\cos^2\beta\sin^2\alpha-(a^2-b^2)\sin^2\omega\cos^2\alpha
+\gamma = k^2\cos^2\beta\sin^2\alpha-k'^2\sin^2\omega\cos^2\alpha
 \f]
 where \f$\alpha\f$ is the angle the geodesic makes with lines of
 constant \f$\omega\f$. In the limit \f$b\rightarrow a\f$, this reduces
@@ -4443,29 +4479,12 @@ relation.  A nice derivation of Jacobi's result is given by Darboux
 distance along the geodesic, \f$s\f$, is also found using
 \f[
 \begin{align}
-\frac{ds}{(a^2-b^2)\sin^2\omega + (b^2-c^2)\cos^2\beta}
-&= \frac
-{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}\,d\beta}
-{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}
- \sqrt{(b^2-c^2)\cos^2\beta - \gamma}}\\
-&= \frac
-{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}\,d\omega}
-{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}
- \sqrt{(a^2-b^2)\sin^2\omega + \gamma}}
-\end{align}
-\f]
-An alternative expression for the distance is
-\f[
-\begin{align}
-ds
-&= \frac
-{\sqrt{b^2\sin^2\beta + c^2\cos^2\beta}
- \sqrt{(b^2-c^2)\cos^2\beta - \gamma}\,d\beta}
-{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}\\
-&\quad {}+ \frac
-{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega}
- \sqrt{(a^2-b^2)\sin^2\omega + \gamma}\,d\omega}
-{\sqrt{a^2\sin^2\omega + b^2\cos^2\omega - c^2}}
+\frac sb &= \int
+\frac{k\cos^2\beta \sqrt{1-e^2k^2\cos^2\beta}}
+{\sqrt{k'^2+k^2\cos^2\beta}\sqrt{k^2\cos^2\beta-\gamma}}\,d\beta\\
+&\quad {}+
+\frac{k'\sin^2\omega \sqrt{1+e^2k'^2\sin^2\omega}}
+{\sqrt{k^2+k'^2\sin^2\omega}\sqrt{k'^2\sin^2\omega+\gamma}}\,d\omega,
 \end{align}
 \f]
 
@@ -4752,12 +4771,10 @@ The shortest path found by this method is unique unless:
    shortest geodesic with azimuths \f$\pi - \alpha_1\f$ and
    \f$\pi - \alpha_2\f$.
 
-I have implemented this <a href="../../doc/triaxial.html"> solution to
-the inverse geodesic problem on a triaxial ellipsoid</a> in
-<a href="https://github.com/geographiclib/geographiclib-octave#readme">
-Octave/MATLAB</a>.  However, this is uses the method of Panou and
-Korakitis (2019) to solve the direct problem while searching for the
-inverse solution.
+The direct and inverse geodesic problems on a triaxial ellipsoid are
+solved using the classes Triaxial::Geodesic3 and
+Triaxial::GeodesicLine3.  The <a href="Geod3Solve.1.html">Geod3Solve</a>
+utility provides a command-line interface to these classes.
 
 \section triaxial-conformal Jacobi's conformal projection
 
@@ -4787,92 +4804,90 @@ errata</a>).
 
 \section jacobi-conformal Conformal projection
 
-It is convenient to rotate Jacobi's ellipsoidal coordinate system so
-that \f$(X,Y,Z)\f$ are respectively the middle, large, and small axes of
-the ellipsoid.  The longitude \f$\omega\f$ is shifted so that
-\f$(\beta=0,\omega=0)\f$ is the point \f$(b,0,0)\f$.  The coordinates
-are thus defined by
-\f[
-\begin{align}
-  X &= b \cos\beta \cos\omega, \\
-  Y &= a \sin\omega
-      \frac{\sqrt{a^2 - b^2\sin^2\beta - c^2\cos^2\beta}}
-           {\sqrt{a^2 - c^2}}, \\
-  Z &= c \sin\beta
-      \frac{\sqrt{a^2\cos^2\omega + b^2\sin^2\omega - c^2}}
-           {\sqrt{a^2 - c^2}}.
-\end{align}
-\f]
-After this change, the large principal ellipse is the equator,
-\f$\beta=0\f$, while the small principal ellipse is the prime meridian,
-\f$\omega=0\f$.  The four umbilic points, \f$\left|\omega\right| =
-\left|\beta\right| = \frac12\pi\f$, lie on middle principal ellipse in
-the plane \f$X=0\f$.
-
 Jacobi gives the following conformal mapping of the triaxial ellipsoid
 onto a plane
 \f[
 \begin{align}
-x &= \frac{\sqrt{a^2-c^2}}b  \int \frac
-{\sqrt{a^2 \cos^2\omega + b^2 \sin^2\omega}}
-{\sqrt{a^2 \cos^2\omega + b^2 \sin^2\omega - c^2}}\, d\omega, \\
-y &= \frac{\sqrt{a^2-c^2}}b \int \frac
-{\sqrt{b^2 \sin^2\beta + c^2 \cos^2\beta}}
-{\sqrt{a^2 - b^2 \sin^2\beta - c^2 \cos^2\beta}}\, d\beta.
+x(\omega) &= b  \int \frac
+{\sqrt{1 + e^2 k'^2 \sin^2\omega}}
+{\sqrt{k^2 + k'^2\sin^2\omega}}\, d\omega, \\
+y(\beta) &= b \int \frac
+{\sqrt{1 - e^2 k^2 \cos^2\beta}}
+{\sqrt{k'^2 + k^2 \cos^2\beta}}\, d\beta.
 \end{align}
 \f]
 The scale of the projection is
 \f[
-k = \frac{\sqrt{a^2-c^2}}
-{b\sqrt{a^2 \cos^2\omega + b^2 (\sin^2\omega-\sin^2\beta) - c^2 \cos^2\beta}}.
+m(\beta, \omega) = \frac1
+{\sqrt{k^2 \cos^2\beta + k'^2 \sin^2\omega}}.
 \f]
 I have scaled the Jacobi's projection by a constant factor,
 \f[
-\frac{\sqrt{a^2-c^2}}{2b},
+\frac{\sqrt{a^2-c^2}}2 = \frac{eb}2,
 \f]
-so that it reduces to the familiar formulas in the case of an oblate ellipsoid.
+so that it reduces to the familiar formulas in the case of an oblate
+ellipsoid.  This mapping is an immediate consequence of the special
+form of the expression for \f$ds^2\f$,
+\f[
+\begin{align}
+\frac{ds^2}{k^2\cos^2\beta + k'^2\sin^2\omega} &=
+b^2\frac{1 + e^2 k'^2 \sin^2\omega}{k^2 + k'^2\sin^2\omega}
+ d\omega^2 \\
+&\qquad+b^2\frac{1 - e^2 k^2 \cos^2\beta}{k'^2 + k^2\cos^2\beta}
+ d\beta^2.
+\end{align}
+\f]
 
 \section jacobi-elliptic The projection in terms of elliptic integrals
 
 The projection may be expressed in terms of elliptic integrals,
 \f[
 \begin{align}
-x&=(1+e_a^2)\,\Pi(\omega',-e_a^2, \cos\nu),\\
-y&=(1-e_c^2)\,\Pi(\beta' , e_c^2, \sin\nu),\\
-k&=\frac{\sqrt{e_a^2+e_c^2}}{b\sqrt{e_a^2\cos^2\omega+e_c^2\cos^2\beta}},
+x(\omega)&=\frac{a^2}b \Pi(\omega',-e^2k'^2, \cos\nu),\\
+y(\beta)&=\frac{c^2}b \Pi(\beta' , e^2k^2, \sin\nu),
 \end{align}
 \f]
 where
 \f[
 \begin{align}
-e_a &= \frac{\sqrt{a^2-b^2}}b, \qquad
-e_c = \frac{\sqrt{b^2-c^2}}b, \\
-\tan\omega' &= \frac ba \tan\omega = \frac 1{\sqrt{1+e_a^2}} \tan\omega, \\
-\tan\beta' &= \frac bc \tan\beta = \frac 1{\sqrt{1-e_c^2}} \tan\beta, \\
-\tan\nu &= \frac ac \frac{\sqrt{b^2-c^2}}{\sqrt{a^2-b^2}}
-=\frac{e_c}{e_a}\frac{\sqrt{1+e_a^2}}{\sqrt{1-e_c^2}},
+\tan\omega' &= \frac ba \tan(\omega - \pi/2), \\
+\tan\beta' &= \frac bc \tan\beta, \\
+\sin\nu &= k \sqrt{1 + e^2k'^2}, \\
+\cos\nu &= k' \sqrt{1 - e^2k^2},
 \end{align}
 \f]
 \f$\nu\f$ is the geographic latitude of the umbilic point at \f$\beta =
-\omega = \frac12\pi\f$ (the angle a normal at the umbilic point makes
-with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
-elliptic integral of the third kind, https://dlmf.nist.gov/19.2.E7.  This
-allows the projection to be numerically computed using
-EllipticFunction::Pi(real phi) const.
+\frac12\pi\f$, \f$\omega = 0\f$ (the angle a normal at the umbilic point
+makes with the equatorial plane), and \f$\Pi(\phi,\alpha^2,k)\f$ is the
+incomplete elliptic integral of the third kind,
+https://dlmf.nist.gov/19.2.E7.  This allows the projection to be
+numerically computed using EllipticFunction::Pi(real phi) const.  The
+origin of the projection is \f$\beta = 0\f$, \f$\omega = \frac12\pi\f$
+(where the scale\f$m = 1\f$); as a result, the projection simply reduces
+to the Mercator projection in both the oblate and prolate limits (see
+\ref jacobi-limiting).  The transformation involving tangents, that
+connects \f$\omega'\f$ to \f$\omega\f$ and \f$\beta'\f$ to \f$\beta\f$,
+should be understood to preserve the quadrant of the angles though
+multiple revolutions.  As a result, the projection can be "unrolled"
+arbitrarily far in \f$\omega\f$ and \f$\beta\f$.  However, in the oblate
+(resp. prolate) limit, we require \f$\beta \in
+[-\tfrac12\pi,\tfrac12\pi]\f$ (resp. \f$\omega \in [0,\pi]\f$).
 
 Nyrtsov, et al.,
- - M. V. Nyrtsov, M. E. Flies, M. M. Borisov, P. J. Stooke,
+ - M. V. Nyrtsov, M. E. Fleis, M. M. Borisov, P. J. Stooke,
    <a href="https://doi.org/10.1007/978-3-642-32618-9_17">
    Jacobi conformal projection of the triaxial ellipsoid: new projection
    for mapping of small celestial bodies,</a> in
    <i>Cartography from Pole to Pole</i>
    (Springer, 2014), pp. 235--246.
  .
-also expressed the projection in terms of elliptic integrals.
-However, their expressions don't allow the limits of ellipsoids of
-revolution to be readily recovered.  The relations
-https://dlmf.nist.gov/19.7.E5 can be used to put their results in the
-form given here.
+also expressed the projection in terms of elliptic integrals.  However
+the equations are more complex involving elliptic integrals of the first
+and third kinds.  More seriously, the origin of their elliptic integrals
+is taken to be the coordinates of the umbilical point.  As a result, one
+of the projection equations diverges in the biaxial limit.  The
+relations https://dlmf.nist.gov/19.7.E5 can be used to put their results
+in the simpler form given here.
 
 \section jacobi-properties Properties of the projection
 
@@ -4880,8 +4895,6 @@ form given here.
 alone, so that latitude-longitude grid maps to straight lines in the
 projection.  In this sense, the Jacobi projection is the natural
 generalization of the Mercator projection for the triaxial ellipsoid.
-(See below for the limit \f$a\rightarrow b\f$, which makes this
-connection explicit.)
 
 In the general case (all the axes are different), the scale diverges
 only at the umbilic points.  The behavior of these singularities is
@@ -4898,12 +4911,15 @@ then \f$ f(z;e)\rightarrow\log z\f$, and the two branch points merge
 yielding a stronger (logarithmic) singularity at \f$z = 0\f$,
 concentric circles of latitude, and radial lines of longitude.
 
-Again in the general case, the extents of \f$x\f$ and \f$y\f$ are
-finite,
+Again in the general case, each octant of the ellipsoid maps to a finite
+rectangle \f$ x_0 \times y_0\f$, where
+
 \f[
 \begin{align}
-x\bigl(\tfrac12\pi\bigr) &=(1+e_a^2)\,\Pi(-e_a^2, \cos\nu),\\
-y\bigl(\tfrac12\pi\bigr) &=(1-e_c^2)\,\Pi(e_c^2, \sin\nu),
+x_0 = \frac{x(\pi) - x(0)}2
+&=\frac{a^2}b \Pi(-e^2k'^2, \cos\nu),\\
+y_0 = \frac{y(\tfrac12\pi) - y(-\tfrac12\pi)}2
+&=\frac{c^2}b \Pi( e^2k^2 , \sin\nu),
 \end{align}
 \f]
 where \f$\Pi(\alpha^2,k)\f$ is the complete elliptic integral of the
@@ -4920,16 +4936,15 @@ c&=6356752\,\mathrm m,\\
 we have
 \f[
 \begin{align}
-x\bigl({\textstyle\frac12}\pi\bigr) &= 1.5720928 = \hphantom{0}90.07428^\circ,\\
-y\bigl({\textstyle\frac12}\pi\bigr) &= 4.2465810 = 243.31117^\circ.\\
+x_0 &= 1.5720928 \times b,\\
+y_0 &= 4.2465810 \times b.\\
 \end{align}
 \f]
 
 The projection may be inverted (to give \f$\omega\f$ in terms of \f$x\f$
-and \f$\beta\f$ in terms of \f$y\f$) by using Newton's method to find
-the root of, for example, \f$x(\omega) - x_0 = 0\f$.  The derivative of
-the elliptic integral is, of course, just given by its defining
-relation.
+and \f$\beta\f$ in terms of \f$y\f$) by using Newton's method to invert
+\f$x(\omega)\f$ and \f$y(\beta)\f$.  The derivative of the elliptic
+integral is, of course, just given by its defining relation.
 
 If rhumb lines are defined as curves with a constant bearing relative
 to the ellipsoid coordinates, then these are straight lines in the
@@ -4953,16 +4968,18 @@ is
 \f]
 Thus \f$\beta\f$ (resp. \f$\beta'\f$) is the parametric
 (resp. geographic) latitude and \f$\omega=\omega'\f$ is the longitude;
-the quantity \f$e_c\f$ is the eccentricity of the ellipsoid.
+the quantity \f$e\f$ is the eccentricity of the ellipsoid.
 Using https://dlmf.nist.gov/19.6.E12 and https://dlmf.nist.gov/19.2.E19
 the projection reduces to the normal Mercator projection for an oblate
 ellipsoid,
 \f[
 \begin{align}
-x &= \omega,\\
-y &= \sinh^{-1}\tan\beta'
-- e_c \tanh^{-1}(e_c\sin\beta'),\\
-k &= \frac1{b\cos\beta}.
+x(\omega) &= b\omega,\\
+y(\beta) &= b\bigl(\sinh^{-1}\tan\beta'
+- e \tanh^{-1}(e\sin\beta')\bigr),\\
+m(\beta, \omega) &= \frac1{\cos\beta}, \\
+x_0 &= \tfrac12\pi b, \\
+y_0 &\rightarrow \infty.
 \end{align}
 \f]
 
@@ -4970,47 +4987,52 @@ k &= \frac1{b\cos\beta}.
 is
 \f[
 \begin{align}
-  X &= b \cos\omega \cos\beta, \\
-  Y &= a \sin\omega, \\
-  Z &= b \cos\omega \sin\beta.
+  X &= a \cos\omega, \\
+  Y &= b \sin\omega \cos\beta, \\
+  Z &= b \sin\omega \sin\beta.
 \end{align}
 \f]
 Thus \f$\omega\f$ (resp. \f$\omega'\f$) now plays the role of the
-parametric (resp. geographic) latitude and while \f$\beta=\beta'\f$ is
-the longitude.  Using https://dlmf.nist.gov/19.6.E12
-https://dlmf.nist.gov/19.2.E19 and https://dlmf.nist.gov/19.2.E18 the
+parametric colatitude (resp. geographic latitude) and while
+\f$\beta=\beta'\f$ is the longitude.  Using
+https://dlmf.nist.gov/19.6.E12 and https://dlmf.nist.gov/19.2.E18 the
 projection reduces to similar expressions with the roles of \f$\beta\f$
 and \f$\omega\f$ switched,
 \f[
 \begin{align}
-x &= \sinh^{-1}\tan\omega'
-+ e_a
-  \tan^{-1}(e_a\sin\omega'),\\
-y &= \beta,\\
-k &= \frac1{b\cos\omega}.
+x(\omega) &= b\bigl(\sinh^{-1}\tan\omega'
++ e \tan^{-1}(e\sin\omega')\bigr),\\
+y(\beta) &= b\beta,\\
+m(\beta, \omega) &= \frac1{\cos\omega} \\
+x_0 &\rightarrow \infty, \\
+y_0 &= \tfrac12\pi b.
 \end{align}
 \f]
 
 <b>Sphere</b>, \f$a\rightarrow b\f$ and \f$c\rightarrow b\f$.  This is a
-non-uniform limit depending on the parameter \f$\nu\f$,
+non-uniform limit depending on the parameter \f$k\f$,
 \f[
 \begin{align}
-  X &= b \cos\omega \cos\beta, \\
-  Y &= b \sin\omega \sqrt{1 - \sin^2\nu\sin^2\beta}, \\
-  Z &= b \sin\beta \sqrt{1 - \cos^2\nu\sin^2\omega}.
+  X &= b \sin\omega \sqrt{1 - k^2\sin^2\beta}, \\
+  Y &= b \cos\omega \cos\beta, \\
+  Z &= b \sin\beta \sqrt{1 - k'^2\sin^2\omega}.
 \end{align}
 \f]
-Using https://dlmf.nist.gov/19.6.E13 the projection can be put in terms
-of the elliptic integral of the first kind, https://dlmf.nist.gov/19.2.E4
+Using https://dlmf.nist.gov/19.6.E13 the projection can be expressed as
 \f[
 \begin{align}
-x &= F(\omega, \cos\nu), \\
-y &= F(\beta, \sin\nu), \\
-k &= \frac1{b \sqrt{\cos^2\nu\cos^2\omega + \sin^2\nu\cos^2\beta}}.
+x(\omega) &= bF(\omega - \pi/2, k'), \\
+y(\beta) &= bF(\beta, k), \\
+m(\beta, \omega) &= \frac1{\sqrt{k'^2\cos^2\omega + k^2\cos^2\beta}}, \\
+x_0 &= bK(k'), \\
+y_0 &= bK(k),
 \end{align}
 \f]
+where \f$F(\phi,k)\f$ and \f$K(k)\f$ are incomplete and complete
+elliptic integral of the first kind, https://dlmf.nist.gov/19.2.E4 and
+https://dlmf.nist.gov/19.2.E8.
 Obtaining the limit of a sphere via an oblate (resp. prolate) ellipsoid
-corresponds to setting \f$\nu = \frac12\pi\f$ (resp. \f$\nu
+corresponds to setting \f$k = 1\f$ (resp. \f$k
 =0\f$).  In these limits, the elliptic integral reduces to elementary
 functions https://dlmf.nist.gov/19.6.E7 and https://dlmf.nist.gov/19.6.E8
 \f[
@@ -5019,7 +5041,7 @@ F(\phi, 0) &= \phi, \\
 F(\phi, 1) &= \mathop{\mathrm{gd}}\nolimits^{-1}\phi = \sinh^{-1}\tan\phi.
 \end{align}
 \f]
-The spherical limit gives the projection found by &Eacute;. Guyou in
+This spherical limit gives the projection found by &Eacute;. Guyou in
  - <a href="https://books.google.com/books?id=saBDAQAAIAAJ&pg=PA308">
    Sur un nouveau syst&egrave;me de projection de la sph&egrave;re</a>,
    Comptes Rendus 102(6), 308--310 (1886).
@@ -5031,12 +5053,10 @@ The spherical limit gives the projection found by &Eacute;. Guyou in
 who apparently derived it without realizing that it is just a special
 case of the projection Jacobi had given some 40 years earlier.  Guyou's
 name is usually associated with the particular choice,
-\f$\nu=\frac14\pi\f$, in which case the hemisphere
-\f$\left|\omega\right|\le\frac12\pi\f$ is mapped into a square.
-However, by varying \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be
-mapped into a rectangle with any aspect ratio, \f$K(\cos\nu) :
-K(\sin\nu)\f$, where \f$K(k)\f$ is the complete elliptic integral of
-the first find, https://dlmf.nist.gov/19.2.E8.
+\f$\nu=\frac14\pi\f$ or \f$k = k' = 1/\sqrt2\f$, in which case each
+octant of the ellipoid is mapped into a square.  However, by varying
+\f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be mapped into a rectangle
+with any aspect ratio, \f$K(k') : K(k)\f$.
 
 \section jacobi-sphere Conformal mapping of an ellipsoid to a sphere
 
@@ -5050,24 +5070,23 @@ plane onto the sphere.
 
 A similar construction is possible for a triaxial ellipsoid.  Map each
 octant of the ellipsoid onto a rectangle using the Jacobi projection.
-The aspect ratio of this rectangle is
+The size of this rectangle is \f$ x_0 \times y_0 \f$.  Find the values
+of \f$b_s\f$, \f$e_s^2 = 0\f$, \f$k_s^2\f$, and \f$k_s'^2 = 1 - k_s^2\f$
+for a sphere such that
 \f[
-(1+e_a^2)\,\Pi(-e_a^2, \cos\nu) :
-(1-e_c^2)\,\Pi( e_c^2, \sin\nu).
+x_0 = b_s K(k_s'), \quad y_0 = b_s K(k_s).
 \f]
-Find the value of \f$\nu'\f$ such that this ratio equals
-\f[
-K(\cos\nu') : K(\sin\nu').
-\f]
-Map the rectangle onto the equivalent octant of the sphere using Guyou's
-projection with parameter \f$\nu = \nu'\f$.  This reduces to the
-standard construction in the limit of an ellipsoid of revolution.
+Map the rectangle for the triaxial ellipsoid onto the equivalent octant
+of the sphere using Guyou's projection with parameter \f$k = k_s\f$.
+This reduces to the standard construction in terms of the conformal
+latitude in the limit of an ellipsoid of revolution.
 
 \section jacobi-implementation An implementation of the projection
 
-The experimental::JacobiConformal class provides an implementation of
-the Jacobi conformal projection is given here.  <b>NOTE:</b> This is
-just sample code.  It is not part of GeographicLib itself.
+The Triaxial::Conformal3 class provides an implementation of the Jacobi
+conformal projection is given here.  The
+<a href="Conformal3Proj.1.html">Conformal3Proj</a> utility provides a
+command-line interface to this projections.
 
 <center>
 Back to \ref triaxial.  Forward to \ref rhumb.  Up to \ref contents.
@@ -7542,11 +7561,9 @@ Here's what you should know:
      <code>GEOGRAPHICLIB_PRECISION</code> and
      <code>GeographicLib_HIGHPREC_LIBRARIES</code>, the libraries
      providing the support for high-precision arithmetic;
-   - support for the C++11 mathematical functions and the explicit cast
-     operator is required;
    - quad precision is only available on Linux;
-   - mpfr has been mostly tested on Linux (but it works on Windows with
-     Visual Studio 12 and MacOS too).
+   - MPFR has been mostly tested on Linux (but it works on Windows with
+     Visual Studio and MacOS too).
 
 The following steps needed to be taken
 
@@ -7761,8 +7778,58 @@ git repository for GeographicLib</a>.
      splits as necessary).
    - Improve documentation for Intersect class + tool to treat case of
      equally close intersectons.
-   - Add Math::clamp.
 \endif
+
+ - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
+   (released 2025-09-30)
+   - Support for triaxial ellipoids.  This is all placed in the
+     GeographicLib::Triaxial namespace with the header files in the
+     `GeographicLib/Triaxial` directory.  This provides
+     - Triaxial::Ellipsoid3 supports basic conversions of ellipsoidal
+       coordinates.
+     - Triaxial::GeodesicLine3 and Triaxial::Geodesic3 solve the direct
+       and inverse geodesic problems on a triaxial ellipsoid.  This
+       implements Jacobi's solution for the direct problem.  The inverse
+       problem extends the method for solving the inverse problem on a
+       biaxial ellipsoid.
+     - Triaxial::Cartesian3 performs conversions between different
+       systems of triaxial coordinates.
+     - Triaxial::Conformal3 implements Jacobi's conformal projection for
+       a triaxial ellipsoid.  This allows a triaxial ellipsoid to be
+       conformally mapped to a sphere or to any other ellipsoid.
+     - <a href="Geod3Solve.1.html"> Geod3Solve</a> is a command-line utility
+       offering access to Triaxial::Geodesic3.
+     - <a href="Cart3Convert.1.html"> Cart3Convert</a> is a
+       command-line utility offering access to Triaxial::Cartesian3.
+     - <a href="Conformal3Proj.1.html"> Conformal3Proj</a> is a
+       command-line utiity offering access to Triaxial::Conformal3.
+     - Constants::Triaxial_Earth_a, Constants::Triaxial_Earth_b,
+       Constants::Triaxial_Earth_c, and Constants::Triaxial_Earth_lon0
+       specify a simple triaxial model for the Earth.
+     - experimental::TriaxialGeodesicODE is provided to illustrate the
+       solution of the direct geodesic problem by integrating the
+       ordinary differential equations for the geodesic.  Because this
+       depends on Boost, this is not part of the GeographicLib library.
+     - experimental/Geod3ODE.cpp a utility for doing direct geodesic
+       calculations using experimental::TriaxialGeodesicODE.
+     .
+   - To support the triaxial routines, the following classes have been
+     added:
+     - AngleT provides an accurate representation of angles of any
+       magnitude.  This might replace AuxAngle at some point.
+     - Trigfun supports representing periodic functions as Fourier
+       series with automatic selection of the number of terms to use.
+       This offers a tiny subset of the functionality of the trig series
+       in <a href="https://www.chebfun.org"> Chebfun</a>.  This might
+       replace DST at some point.
+     .
+   - C++17 is now required.  Minimum version of Visual Studio supported
+     is Visual Studio 15 2017.
+   - Add Math::clamp.
+   - Because experimental::TriaxialGeodesicODE depends on Boost, the
+     CMake option `USE_BOOST_FOR_EXAMPLES` has been renamed `USE_BOOST`.
+     This will cause `find_package(Boost)` to be called, but does not
+     affect how the library or the tools are built.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.5.2">Version 2.5.2</a>
    (released 2025-08-22)
@@ -7780,7 +7847,7 @@ git repository for GeographicLib</a>.
      both the series and exact solutions.  (Or course, the series
      solution is inaccurate for ellipsoids this eccentric.)
    - Minor tweak to Math::atan2d to improve accuracy.
-   - Allow GEOGRAPHICLIB_PRECISION > 5 to allow use of mpreal with a
+   - Allow GEOGRAPHICLIB_PRECISION > 5; this makes mpreal use a
      fixed precision.
    - Document that cmake option `-D BINDIR=OFF` removes `tools` from the
      default `all` target for `make`.

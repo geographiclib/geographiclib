@@ -1,0 +1,202 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">
+<title>Geod3Solve(1)</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>Geod3Solve -- perform geodesic calculations on a triaxial ellipsoid</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<p><b>Geod3Solve</b> [ <b>-i</b> | <b>-L</b> <i>bet1</i> <i>omg1</i> <i>alp1</i> ] [ <b>-t</b> <i>a</i> <i>b</i> <i>c</i> | <b>-e</b> <i>b</i> <i>e2</i> <i>k2</i> <i>kp2</i> | <b>-e2</b> <i>b</i> <i>f</i> ] [ <b>-u</b> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-w</b> ] [ <b>-f</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>The shortest path between two points on a triaxial ellipsoid at (<i>bet1</i>, <i>omg1</i>) and (<i>bet2</i>, <i>omg2</i>) is called the geodesic. Its length is <i>s12</i> and the geodesic from point 1 to point 2 has forward azimuths <i>alp1</i> and <i>alp2</i> at the two end points. Here <i>bet</i> and <i>omg</i> denote the ellipsoidal latitude, <i>beta</i>, and longitude, <i>omega</i>; <i>alp</i> is an abbreviation of <i>alpha</i></p>
+
+<p><b>Geod3Solve</b> operates in one of three modes:</p>
+
+<ol>
+
+<li><p>By default, <b>Geod3Solve</b> accepts lines on the standard input containing <i>bet1</i> <i>omg1</i> <i>alp1</i> <i>s12</i> and prints <i>bet2</i> <i>omg2</i> <i>alp2</i> on standard output. This is the direct geodesic calculation.</p>
+
+</li>
+<li><p>With the <b>-i</b> option, <b>Geod3Solve</b> performs the inverse geodesic calculation. It reads lines containing <i>bet1</i> <i>omg1</i> <i>bet2</i> <i>omg2</i> and prints the corresponding values of <i>alp1</i> <i>alp2</i> <i>s12</i>.</p>
+
+</li>
+<li><p>Command line arguments <b>-L</b> <i>bet1</i> <i>omg1</i> <i>alp1</i> specify a geodesic line. <b>Geod3Solve</b> then accepts a sequence of <i>s12</i> values (one per line) on standard input and prints <i>bet2</i> <i>omg2</i> <i>alp2</i> for each. This generates a sequence of points on a single geodesic.</p>
+
+</li>
+</ol>
+
+<h1 id="OPTIONS">OPTIONS</h1>
+
+<dl>
+
+<dt id="i"><b>-i</b></dt>
+<dd>
+
+<p>perform an inverse geodesic calculation (see 2 above).</p>
+
+</dd>
+<dt id="L-bet1-omg1-alp1"><b>-L</b> <i>bet1</i> <i>omg1</i> <i>alp1</i></dt>
+<dd>
+
+<p>line mode (see 3 above); generate a sequence of points along the geodesic specified by <i>bet1</i> <i>omg1</i> <i>alp1</i>. The <b>-w</b> flag can be used to swap the default order of the 2 geographic coordinates, provided that it appears before <b>-L</b>.</p>
+
+</dd>
+<dt id="t-a-b-c"><b>-t</b> <i>a</i> <i>b</i> <i>c</i></dt>
+<dd>
+
+<p>specify the ellipsoid via its major semiaxis <i>a</i>, median semiaxis <i>b</i>, and minor semixis <i>c</i>. By default, we have <i>a</i> = 6378172 m, <i>b</i> = 6378102 m, <i>c</i> = 6356752 m, an approximate triaxial model of the earth. (With this model <i>omg</i> = 0deg, corresponds to <i>lon</i> = -14.93deg.</p>
+
+</dd>
+<dt id="e-b-e2-k2-kp2"><b>-e</b> <i>b</i> <i>e2</i> <i>k2</i> <i>kp2</i></dt>
+<dd>
+
+<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the sphape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
+
+</dd>
+<dt id="e2-b-f"><b>-e2</b> <i>b</i> <i>f</i></dt>
+<dd>
+
+<p>specify a biaxial ellipsoid via its equatorial radius <i>b</i> and flattening <i>f</i>. A simple fraction, is allowed for <i>f</i>. In this mode, latitudes are interpreted as geodetic latitudes on both input and output. If <i>f</i> is negative, <i>bet</i> and <i>omg</i> are swapped so that latitude and longitude have their conventional interpretations (e.g., longitude measures the angle about the axis of symmetry).</p>
+
+</dd>
+<dt id="u"><b>-u</b></dt>
+<dd>
+
+<p>unroll the latitude and longitude. Normally, on output latitudes and longitudes are reduced to lie in [-90deg,90deg] and [-180deg,180deg) respectively. However with this option, the retured longitude <i>bet2</i> and <i>omg2</i> are &quot;unrolled&quot; so that <i>bet2</i> - <i>bet1</i> and <i>omg2</i> - <i>omg1</i> indicates how often and in what sense the geodesic has encircled the ellipsoid.</p>
+
+</dd>
+<dt id="d"><b>-d</b></dt>
+<dd>
+
+<p>output angles as degrees, minutes, seconds instead of decimal degrees.</p>
+
+</dd>
+<dt id="pod"><b>-:</b></dt>
+<dd>
+
+<p>like <b>-d</b>, except use : as a separator instead of the d, &#39;, and &quot; delimiters.</p>
+
+</dd>
+<dt id="w"><b>-w</b></dt>
+<dd>
+
+<p>toggle the longitude first flag (it starts off); if the flag is on, then on input and output, longitude precedes latitude (except that, on input, this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
+
+</dd>
+<dt id="f"><b>-f</b></dt>
+<dd>
+
+<p>full output; each line of output consists of 7 quantities: <i>bet1</i> <i>omg1</i> <i>alp1</i> <i>bet2</i> <i>omg2</i> <i>alp2</i> <i>s12</i>.</p>
+
+</dd>
+<dt id="p-prec"><b>-p</b> <i>prec</i></dt>
+<dd>
+
+<p>set the output precision to <i>prec</i> (default 3). For distances, <i>prec</i> is the number of digits after the decimal point for ellipsoids which are approximately the same size as the Earth; for other ellipsoids the precision is adjusted to retain the same relative precision. For latitudes and longitudes (in degrees), the number of digits after the decimal point is <i>prec</i> + 5. For Cartesian directions, the precision is <i>prec</i> + 7.</p>
+
+</dd>
+<dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
+<dd>
+
+<p>set the comment delimiter to <i>commentdelim</i> (e.g., &quot;#&quot; or &quot;//&quot;). If set, the input lines will be scanned for this delimiter and, if found, the delimiter and the rest of the line will be removed prior to processing and subsequently appended to the output line (separated by a space).</p>
+
+</dd>
+<dt id="version"><b>--version</b></dt>
+<dd>
+
+<p>print version and exit.</p>
+
+</dd>
+<dt id="h"><b>-h</b></dt>
+<dd>
+
+<p>print usage and exit.</p>
+
+</dd>
+<dt id="help"><b>--help</b></dt>
+<dd>
+
+<p>print full documentation and exit.</p>
+
+</dd>
+<dt id="input-file-infile"><b>--input-file</b> <i>infile</i></dt>
+<dd>
+
+<p>read input from the file <i>infile</i> instead of from standard input; a file name of &quot;-&quot; stands for standard input.</p>
+
+</dd>
+<dt id="input-string-instring"><b>--input-string</b> <i>instring</i></dt>
+<dd>
+
+<p>read input from the string <i>instring</i> instead of from standard input. All occurrences of the line separator character (default is a semicolon) in <i>instring</i> are converted to newlines before the reading begins.</p>
+
+</dd>
+<dt id="line-separator-linesep"><b>--line-separator</b> <i>linesep</i></dt>
+<dd>
+
+<p>set the line separator character to <i>linesep</i>. By default this is a semicolon.</p>
+
+</dd>
+<dt id="output-file-outfile"><b>--output-file</b> <i>outfile</i></dt>
+<dd>
+
+<p>write output to the file <i>outfile</i> instead of to standard output; a file name of &quot;-&quot; stands for standard output.</p>
+
+</dd>
+</dl>
+
+<h1 id="INPUT">INPUT</h1>
+
+<p><b>Geod3Solve</b> measures all angles in degrees and all lengths (<i>s12</i>) in meters. On input angles (latitude, longitude, azimuth) can be as decimal degrees or degrees, minutes, seconds. For example, <code>40d30</code>, <code>40d30&#39;</code>, <code>40:30</code>, <code>40.5d</code>, and <code>40.5</code> are all equivalent. By default, latitude precedes longitude for each point (the <b>-w</b> flag switches this convention); however on input either may be given first by appending (or prepending) <i>N</i> or <i>S</i> to the latitude and <i>E</i> or <i>W</i> to the longitude. Azimuths are measured clockwise from north; however this may be overridden with <i>E</i> or <i>W</i>.</p>
+
+<p>For details on the allowed formats for angles, see the <code>GEOGRAPHIC COORDINATES</code> section of GeoConvert(1).</p>
+
+<h1 id="ERRORS">ERRORS</h1>
+
+<p>An illegal line of input will print an error message to standard output beginning with <code>ERROR:</code> and causes <b>Geod3Solve</b> to return an exit code of 1. However, an error does not cause <b>Geod3Solve</b> to terminate; following lines will be converted.</p>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<p>Route from JFK Airport to Singapore Changi Airport on a triaxial ellipsoid:</p>
+
+<pre><code>echo 40:38:23N 073:46:44W-19.43W X 01:21:33N 103:59:22E-19.43W |
+  tr X &#39;\n&#39; |
+  tools/Cart3Convert -G | tools/Cart3Convert -E -r | tr &#39;\n&#39; &#39; &#39; |
+  tools/Geod3Solve -i -: -p 0
+=&gt; 003:15:05.9 177:27:09.0 15339505</code></pre>
+
+<p>The steps here are shift for longitude of major axis (-19.43d), convert to geocentric for biaxial Earth, convert to ellipsoidal for triaxial Earth, compute geodesic distance.</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>Cart3Convert(1).</p>
+
+<p>The Wikipedia page, Geodesics on an ellipsoid, <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid</a>.</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p><b>Geod3Solve</b> was written by Charles Karney.</p>
+
+<h1 id="HISTORY">HISTORY</h1>
+
+<p><b>Geod3Solve</b> was added to GeographicLib, <a href="https://geographiclib.sourceforge.io">https://geographiclib.sourceforge.io</a>, in version 2.6.</p>
+
+
+</body>
+
+</html>
+
+

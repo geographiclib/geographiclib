@@ -107,7 +107,7 @@ namespace GeographicLib {
     }
     // Dexp(x,y) = exp((x+y)/2) * 2*sinh((x-y)/2)/(x-y)
     static real Dexp(real x, real y) {
-      using std::sinh; using std::exp;
+      using std::sinh, std::exp;
       real t = (x - y)/2;
       return (t != 0 ? sinh(t)/t : 1) * exp((x + y)/2);
     }
@@ -120,7 +120,7 @@ namespace GeographicLib {
     {
       // real t = (x - y)/2, c = sqrt((1 + cx) * (1 + cy));
       // return (t ? sinh(t)/t : real(1)) * (c + sx * sy / c) /2;
-      using std::sinh; using std::sqrt;
+      using std::sinh, std::sqrt;
       real t = (x - y)/2;
       return (t != 0 ? sinh(t)/t : 1) * sqrt((sx * sy + cx * cy + 1) /2);
     }

@@ -214,7 +214,7 @@ GEOGRAPHICLIB_VERSION_MAJOR = @GEOGRAPHICLIB_VERSION_MAJOR@
 GEOGRAPHICLIB_VERSION_MINOR = @GEOGRAPHICLIB_VERSION_MINOR@
 GEOGRAPHICLIB_VERSION_PATCH = @GEOGRAPHICLIB_VERSION_PATCH@
 GREP = @GREP@
-HAVE_CXX11 = @HAVE_CXX11@
+HAVE_CXX17 = @HAVE_CXX17@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
@@ -323,6 +323,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 	GeographicLib/AlbersEqualArea.hpp \
+	GeographicLib/Angle.hpp \
 	GeographicLib/AuxAngle.hpp \
 	GeographicLib/AuxLatitude.hpp \
 	GeographicLib/AzimuthalEquidistant.hpp \
@@ -366,8 +367,14 @@ nobase_include_HEADERS = GeographicLib/Accumulator.hpp \
 	GeographicLib/SphericalHarmonic2.hpp \
 	GeographicLib/TransverseMercator.hpp \
 	GeographicLib/TransverseMercatorExact.hpp \
+	GeographicLib/Trigfun.hpp \
 	GeographicLib/UTMUPS.hpp \
 	GeographicLib/Utility.hpp \
+	GeographicLib/Triaxial/Cartesian3.hpp \
+	GeographicLib/Triaxial/Conformal3.hpp \
+	GeographicLib/Triaxial/Ellipsoid3.hpp \
+	GeographicLib/Triaxial/Geodesic3.hpp \
+	GeographicLib/Triaxial/GeodesicLine3.hpp \
 	GeographicLib/Config.h
 
 geographiclib_data = $(datadir)/GeographicLib

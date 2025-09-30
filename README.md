@@ -6,7 +6,8 @@ GeographicLib is a small C++ library for
 * conversions between geographic, UTM, UPS, MGRS, geocentric, and local
   cartesian coordinates;
 * gravity (e.g., EGM2008) and geomagnetic field (e.g., WMM2020)
-  calculations.
+  calculations;
+* computations on a triaxial ellipsoid.
 
 It is licensed under the MIT License; see
 [LICENSE.txt](https://geographiclib.sourceforge.io/LICENSE.txt).

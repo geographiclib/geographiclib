@@ -1,0 +1,160 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><link href="http://search.cpan.org/s/style.css" rel="stylesheet" type="text/css">
+<title>Conformal3Proj(1)</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body>
+
+
+
+<h1 id="NAME">NAME</h1>
+
+<p>Conformal3Proj -- conformal projsections for a triaxial ellipsoid</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<p><b>Conformal3Proj</b> [ <b>-r</b> ] [ <b>-t</b> <i>a</i> <i>b</i> <i>c</i> | <b>-e</b> <i>b</i> <i>e2</i> <i>k2</i> <i>kp2</i> ] [ <b>-tx</b> <i>ax</i> <i>bx</i> <i>cx</i> | <b>-ex</b> <i>bx</i> <i>e2x</i> <i>k2x</i> <i>kp2x</i> ] [ <b>-d</b> | <b>-:</b> ] [ <b>-w</b> ] [ <b>-p</b> <i>prec</i> ] [ <b>--comment-delimiter</b> <i>commentdelim</i> ] [ <b>--version</b> | <b>-h</b> | <b>--help</b> ] [ <b>--input-file</b> <i>infile</i> | <b>--input-string</b> <i>instring</i> ] [ <b>--line-separator</b> <i>linesep</i> ] [ <b>--output-file</b> <i>outfile</i> ]</p>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>Project points using the Jacobi conformal projection. By default, the coordinates of points on a triaxial ellipsoid are read from standard input as ellipsoidal latitude and longitude and the projected points are written to standard output as easting and northing. The scale of the projection is appended to the output. Specifying <b>-r</b> causes the reverse projection to be performed.</p>
+
+<p>If either <b>-tx</b> or <b>-ex</b> is given, then this describes a target ellipsoid onto which the points are conformally mapped via the Jacobi projections to intermediate spheres. In this case, the meridian convergence and the scale are appended to the output.</p>
+
+<h1 id="OPTIONS">OPTIONS</h1>
+
+<dl>
+
+<dt id="r"><b>-r</b></dt>
+<dd>
+
+<p>perform the reverse projection.</p>
+
+</dd>
+<dt id="t-a-b-c"><b>-t</b> <i>a</i> <i>b</i> <i>c</i></dt>
+<dd>
+
+<p>specify the ellipsoid via its major semiaxis <i>a</i>, median semiaxis <i>b</i>, and minor semixis <i>c</i>. By default, we have <i>a</i> = 6378172 m, <i>b</i> = 6378102 m, <i>c</i> = 6356752 m, an approximate triaxial model of the earth. (With this model <i>omg</i> = 0deg, corresponds to <i>lon</i> = -14.93deg.</p>
+
+</dd>
+<dt id="e-b-e2-k2-kp2"><b>-e</b> <i>b</i> <i>e2</i> <i>k2</i> <i>kp2</i></dt>
+<dd>
+
+<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the sphape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
+
+</dd>
+<dt id="tx-ax-bx-cx"><b>-tx</b> <i>ax</i> <i>bx</i> <i>cx</i></dt>
+<dd>
+
+<p>specify the target ellipsoid via its semiaxes.</p>
+
+</dd>
+<dt id="ex-bx-e2x-k2x-kp2x"><b>-ex</b> <i>bx</i> <i>e2x</i> <i>k2x</i> <i>kp2x</i></dt>
+<dd>
+
+<p>specify the target ellipsoid via its median semiaxes and shape parameters.</p>
+
+</dd>
+<dt id="d"><b>-d</b></dt>
+<dd>
+
+<p>output angles as degrees, minutes, seconds instead of decimal degrees.</p>
+
+</dd>
+<dt id="pod"><b>-:</b></dt>
+<dd>
+
+<p>like <b>-d</b>, except use : as a separator instead of the d, &#39;, and &quot; delimiters.</p>
+
+</dd>
+<dt id="w"><b>-w</b></dt>
+<dd>
+
+<p>toggle the longitude first flag (it starts off); if the flag is on, then on input and output, longitude precedes latitude (except that, on input, this can be overridden by a hemisphere designator, <i>N</i>, <i>S</i>, <i>E</i>, <i>W</i>).</p>
+
+</dd>
+<dt id="p-prec"><b>-p</b> <i>prec</i></dt>
+<dd>
+
+<p>set the output precision to <i>prec</i> (default 3). For distances, <i>prec</i> is the number of digits after the decimal point for ellipsoids which are approximately the same size as the Earth; for other ellipsoids the precision is adjusted to retain the same relative precision. For latitudes and longitudes (in degrees), the number of digits after the decimal point is <i>prec</i> + 5. For the scale, the precision is <i>prec</i> + 7.</p>
+
+</dd>
+<dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
+<dd>
+
+<p>set the comment delimiter to <i>commentdelim</i> (e.g., &quot;#&quot; or &quot;//&quot;). If set, the input lines will be scanned for this delimiter and, if found, the delimiter and the rest of the line will be removed prior to processing and subsequently appended to the output line (separated by a space).</p>
+
+</dd>
+<dt id="version"><b>--version</b></dt>
+<dd>
+
+<p>print version and exit.</p>
+
+</dd>
+<dt id="h"><b>-h</b></dt>
+<dd>
+
+<p>print usage and exit.</p>
+
+</dd>
+<dt id="help"><b>--help</b></dt>
+<dd>
+
+<p>print full documentation and exit.</p>
+
+</dd>
+<dt id="input-file-infile"><b>--input-file</b> <i>infile</i></dt>
+<dd>
+
+<p>read input from the file <i>infile</i> instead of from standard input; a file name of &quot;-&quot; stands for standard input.</p>
+
+</dd>
+<dt id="input-string-instring"><b>--input-string</b> <i>instring</i></dt>
+<dd>
+
+<p>read input from the string <i>instring</i> instead of from standard input. All occurrences of the line separator character (default is a semicolon) in <i>instring</i> are converted to newlines before the reading begins.</p>
+
+</dd>
+<dt id="line-separator-linesep"><b>--line-separator</b> <i>linesep</i></dt>
+<dd>
+
+<p>set the line separator character to <i>linesep</i>. By default this is a semicolon.</p>
+
+</dd>
+<dt id="output-file-outfile"><b>--output-file</b> <i>outfile</i></dt>
+<dd>
+
+<p>write output to the file <i>outfile</i> instead of to standard output; a file name of &quot;-&quot; stands for standard output.</p>
+
+</dd>
+</dl>
+
+<h1 id="EXAMPLES">EXAMPLES</h1>
+
+<pre><code>echo 33.3 44.4 | Conformal3Proj
+-5077732.396 3922571.859 1.1970343759
+echo -5077732.396 3922571.859 | Conformal3Proj -r
+33.30000000 44.40000000 1.1970343759</code></pre>
+
+<h1 id="ERRORS">ERRORS</h1>
+
+<p>An illegal line of input will print an error message to standard output beginning with <code>ERROR:</code> and causes <b>Conformal3Proj</b> to return an exit code of 1. However, an error does not cause <b>Conformal3Proj</b> to terminate; following lines will be converted.</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p><b>Conformal3Proj</b> was written by Charles Karney.</p>
+
+<h1 id="HISTORY">HISTORY</h1>
+
+<p><b>Conformal3Proj</b> was added to GeographicLib, <a href="https://geographiclib.sourceforge.io">https://geographiclib.sourceforge.io</a>, in version 2.6.</p>
+
+
+</body>
+
+</html>
+
+

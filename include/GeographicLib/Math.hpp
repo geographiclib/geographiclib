@@ -139,30 +139,12 @@ namespace GeographicLib {
      * break most of the tests.  Also the normal definition of degree is baked
      * into some classes, e.g., UTMUPS, MGRS, Georef, Geohash, etc.
      **********************************************************************/
-#if __cplusplus >= 201703L
     static inline constexpr int qd = 90;      ///< degrees per quarter turn
     static inline constexpr int dm = 60;      ///< minutes per degree
     static inline constexpr int ms = 60;      ///< seconds per minute
     static inline constexpr int hd = 2 * qd;  ///< degrees per half turn
     static inline constexpr int td = 2 * hd;  ///< degrees per turn
     static inline constexpr int ds = dm * ms; ///< seconds per degree
-#elif GEOGRAPHICLIB_PRECISION < 4
-    static constexpr int qd = 90;      ///< degrees per quarter turn
-    static constexpr int dm = 60;      ///< minutes per degree
-    static constexpr int ms = 60;      ///< seconds per minute
-    static constexpr int hd = 2 * qd;  ///< degrees per half turn
-    static constexpr int td = 2 * hd;  ///< degrees per turn
-    static constexpr int ds = dm * ms; ///< seconds per degree
-#else
-    enum dms {
-      qd = 90,                  ///< degrees per quarter turn
-      dm = 60,                  ///< minutes per degree
-      ms = 60,                  ///< seconds per minute
-      hd = 2 * qd,              ///< degrees per half turn
-      td = 2 * hd,              ///< degrees per turn
-      ds = dm * ms              ///< seconds per degree
-    };
-#endif
 
     /**
      * @return the number of bits of precision in a real number.
@@ -235,7 +217,7 @@ namespace GeographicLib {
      * @param[in,out] y on output set to <i>y</i>/hypot(<i>x</i>, <i>y</i>).
      **********************************************************************/
     template<typename T> static void norm(T& x, T& y) {
-#if defined(_MSC_VER) && defined(_M_IX86)
+#if defined(_MSC_VER) && _MSC_VER < 1950 && defined(_M_IX86)
       // hypot for Visual Studio (A=win32) fails monotonicity, e.g., with
       //   x  = 0.6102683302836215
       //   y1 = 0.7906090004346522
@@ -246,6 +228,8 @@ namespace GeographicLib {
       //   https://developercommunity.visualstudio.com/t/1369259
       // See also:
       //   https://bugs.python.org/issue43088
+      // Bug still present in my version of vc17 (2022) updated on 2025-09-01.
+      // Let's hope it's fixed in vc18.
       using std::sqrt; T h = sqrt(x * x + y * y);
 #else
       using std::hypot; T h = hypot(x, y);
@@ -287,9 +271,13 @@ namespace GeographicLib {
       // This used to employ Math::fma; but that's too slow and it seemed not
       // to improve the accuracy noticeably.  This might change when there's
       // direct hardware support for fma.
-      T y = N < 0 ? 0 : *p++;
-      while (--N >= 0) y = y * x + *p++;
-      return y;
+      T z = N < 0 ? 0 : *p++;
+      while (--N >= 0) z = z * x + *p++;
+      // To compute z = p(x) and dz = (p(y)-p(x))/(y-x) at the same time
+      // See Kahan + Fateman Sec 2.3.  If y = x, dz = p'(x)
+      //      T z = N < 0 ? 0 : *p++, dz = 0;
+      //      while (--N >= 0) { dz = dz * y + p; z = z * x + *p++; }
+      return z;
     }
 
     /**
@@ -517,6 +505,21 @@ namespace GeographicLib {
      *   <i>z</i><sup>2</sup>).
      **********************************************************************/
     template<typename T> static T hypot3(T x, T y, T z);
+
+    /**
+     * Implement work-alike to C++17 clamp function
+     *
+     * @tparam T the type of the argument and the returned value.
+     * @param[in] x
+     * @param[in] a
+     * @param[in] b
+     * @return \e x if it lies in [<i>a</i>, <i>b</i>]; otherise return the
+     *   nearest boundary value.
+     *
+     * Requires \e a &le; \e b.  Unlike std::clamp, \e x can be a NaN (and
+     * this is then returned).
+     **********************************************************************/
+    template<typename T> static T clamp(T x, T a, T b);
 
     /**
      * The NaN (not a number)

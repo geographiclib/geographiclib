@@ -41,7 +41,6 @@ namespace GeographicLib {
       MGRS::maxutmNrow_ * MGRS::tile_ };
 
   int UTMUPS::StandardZone(real lat, real lon, int setzone) {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (!(setzone >= MINPSEUDOZONE && setzone <= MAXZONE))
       throw GeographicErr("Illegal zone requested " + Utility::str(setzone));
     if (setzone >= MINZONE || setzone == INVALID)
@@ -119,7 +118,6 @@ namespace GeographicLib {
   void UTMUPS::Reverse(int zone, bool northp, real x, real y,
                        real& lat, real& lon, real& gamma, real& k,
                        bool mgrslimits) {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     if (zone == INVALID || isnan(x) || isnan(y)) {
       lat = lon = gamma = k = Math::NaN();
       return;

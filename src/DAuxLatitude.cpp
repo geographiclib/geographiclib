@@ -130,14 +130,12 @@ namespace GeographicLib {
       (sn2 - sn1) / (y - x);
   }
   Math::real DAuxLatitude::Datan(real x, real y) {
-    using std::isinf;           // Needed for Centos 7, ubuntu 14
     real d = y - x, xy = x*y;
     return x == y ? 1 / (1 + xy) :
       (isinf(xy) && xy > 0 ? 0 :
        (2 * xy > -1 ? atan( d / (1 + xy) ) : atan(y) - atan(x)) / d);
   }
   Math::real DAuxLatitude::Dasinh(real x, real y) {
-    using std::isinf;           // Needed for Centos 7, ubuntu 14
     real d = y - x, xy = x*y, hx = base::sc(x), hy = base::sc(y);
     // KF formula for x*y < 0 is asinh(y*hx - x*hy) / (y - x)
     // but this has problem if x*y overflows to -inf
@@ -148,7 +146,6 @@ namespace GeographicLib {
         asinh(y) - asinh(x)) / d);
   }
   Math::real DAuxLatitude::Dh(real x, real y) {
-    using std::isnan; using std::isinf; // Needed for Centos 7, ubuntu 14
     if (isnan(x + y))
       return x + y;           // N.B. nan for inf-inf
     if (isinf(x))
@@ -184,7 +181,6 @@ namespace GeographicLib {
                                       const AuxAngle& phi2)
     const {
     // psi = asinh(tan(phi)) - e^2 * atanhee(tan(phi))
-    using std::isnan; using std::isinf; // Needed for Centos 7, ubuntu 14
     real tphi1 = phi1.tan(), tphi2 = phi2.tan();
     return isnan(tphi1) || isnan(tphi2) ? numeric_limits<real>::quiet_NaN() :
       (isinf(tphi1) || isinf(tphi2) ? numeric_limits<real>::infinity() :
@@ -196,7 +192,6 @@ namespace GeographicLib {
                                     const AuxAngle& zeta1,
                                     const AuxAngle& zeta2)
     const {
-    using std::isnan;           // Needed for Centos 7, ubuntu 14
     int k = base::ind(auxout, auxin);
     if (k < 0) return numeric_limits<real>::quiet_NaN();
     if (auxin == auxout) return 1;
@@ -225,7 +220,7 @@ namespace GeographicLib {
     // nonsense.
     //
     int k = K;
-    // suffices a b denote [1,1], [2,1] elements of matrix/vector
+    // suffixes a b denote [1,1], [2,1] elements of matrix/vector
     real D2 = Delta * Delta,
       czetap = czeta2 * czeta1 - szeta2 * szeta1,
       szetap = szeta2 * czeta1 + czeta2 * szeta1,

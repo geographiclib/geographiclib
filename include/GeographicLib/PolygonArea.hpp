@@ -296,8 +296,10 @@ namespace GeographicLib {
   /**
    * @relates PolygonAreaT
    *
-   * \deprecated Polygon areas using GeodesicExact.  Instead use PolygonArea
-   *   with a Geodesic object specified with \e exact = true.
+   * Polygon areas using GeodesicExact.
+   *
+   * \deprecated Instead of using PolygonAreaExact, use PolygonArea
+   *   with a Geodesic object constructed with \e exact = true.
    **********************************************************************/
   typedef PolygonAreaT<GeodesicExact> PolygonAreaExact;
 

@@ -45,7 +45,7 @@ HPPFILES = \
 	$(top_srcdir)/include/GeographicLib/TransverseMercatorExact.hpp \
 	$(top_srcdir)/include/GeographicLib/TransverseMercator.hpp \
 	$(top_srcdir)/include/GeographicLib/UTMUPS.hpp \
-	$(top_srcdir)/experimental/JacobiConformal.hpp
+	$(top_srcdir)/experimental/TriaxialGeodesicODE.hpp
 
 ALLSOURCES = \
 	$(top_srcdir)/src/AlbersEqualArea.cpp \
@@ -84,7 +84,8 @@ ALLSOURCES = \
 	$(top_srcdir)/tools/Gravity.cpp \
 	$(top_srcdir)/tools/Planimeter.cpp \
 	$(top_srcdir)/tools/TransverseMercatorProj.cpp \
-	$(top_srcdir)/experimental/JacobiConformal.cpp
+	$(top_srcdir)/experimental/Geod3ODE.cpp \
+	$(top_srcdir)/experimental/TriaxialGeodesicODE.cpp
 
 MANPAGES = \
 	../man/CartConvert.1.html \
@@ -98,7 +99,10 @@ MANPAGES = \
 	../man/MagneticField.1.html \
 	../man/Planimeter.1.html \
 	../man/RhumbSolve.1.html \
-	../man/TransverseMercatorProj.1.html
+	../man/TransverseMercatorProj.1.html \
+	../man/Geod3Solve.1.html \
+	../man/Cart3Convert.1.html \
+	../man/Conformal3Proj.1.html
 
 doc: html/index.html
 

@@ -146,8 +146,7 @@ namespace GeographicLib {
           _file.get(a);
           _file.get(b);
           unsigned r = ((unsigned char)(a) << 8) | (unsigned char)(b);
-          // for C++17 use if constexpr
-          if (pixel_size_ == 4) {
+          if constexpr (pixel_size_ == 4) {
             _file.get(a);
             _file.get(b);
             r = (r << 16) | ((unsigned char)(a) << 8) | (unsigned char)(b);

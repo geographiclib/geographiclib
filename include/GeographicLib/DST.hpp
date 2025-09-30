@@ -58,6 +58,10 @@ namespace GeographicLib {
    * \note The FFTW package https://www.fftw.org/ can also be used.  However
    * this is a more complicated dependency, its CMake support is broken, and it
    * doesn't work with mpreals (GEOGRAPHICLIB_PRECISION = 5).
+   *
+   * \deprecated The functionality offered by this class is also provided by
+   *   the more general class Trigfun.  It is recommended to use Trigfun for
+   *   new applications.
    **********************************************************************/
 
   class DST {
