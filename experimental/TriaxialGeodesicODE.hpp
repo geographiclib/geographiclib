@@ -103,7 +103,7 @@ namespace GeographicLib {
   class TriaxialGeodesicODE {
   public:
     /**
-     * A type to hold three-dimentional positions and velocities in Cartesian
+     * A type to hold three-dimensionalq positions and velocities in Cartesian
      * coordinates.
      **********************************************************************/
     using vec3 = Triaxial::Ellipsoid3::vec3;
@@ -158,7 +158,7 @@ namespace GeographicLib {
      * @param[in] extended (default false), if true solve for reduced length
      *   and geodesic scale.
      * @param[in] dense (default false), if true use a dense solver allowing
-     *   interpolated way points to tbe computed inexpensively.
+     *   interpolated way points to be computed inexpensively.
      * @param[in] normp (default false), if true force the solution vector onto
      *   the ellipsoid when computing the acceleration.
      * @param[in] eps (default 0), if positive the error threshold for the
@@ -182,7 +182,7 @@ namespace GeographicLib {
      * @param[in] extended (default false), if true solve for reduced length
      *   and geodesic scale.
      * @param[in] dense (default false), if true use a dense solver allowing
-     *   interpolated way points to tbe computed inexpensively.
+     *   interpolated way points to be computed inexpensively.
      * @param[in] normp (default false), if true force the solution vector onto
      *   the ellipsoid when computing the acceleration.
      * @param[in] eps (default 0), if positive the error threshold for the
@@ -206,7 +206,7 @@ namespace GeographicLib {
      * @param[in] extended (default false), if true solve for reduced length
      *   and geodesic scale.
      * @param[in] dense (default false), if true use a dense solver allowing
-     *   interpolated way points to tbe computed inexpensively.
+     *   interpolated way points to be computed inexpensively.
      * @param[in] normp (default false), if true force the solution vector onto
      *   the ellipsoid when computing the acceleration.
      * @param[in] eps (default 0), if positive the error threshold for the

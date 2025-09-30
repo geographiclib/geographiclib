@@ -47,7 +47,7 @@ namespace GeographicLib {
    * providing access to the functionality of Geodesic3 and GeodesicLine3.
    *
    * The class experimental::TriaxialGeodesicODE solves the direct geodesic
-   * problem by integrating the corresponing ordinary differential equations.
+   * problem by integrating the corresponding ordinary differential equations.
    * This is \e not part of %GeographicLib itself because it used Boost for
    * solving the ODEs and Boost is not a requirement for using %GeographicLib.
    **********************************************************************/

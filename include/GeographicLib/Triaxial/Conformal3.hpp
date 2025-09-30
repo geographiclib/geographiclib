@@ -36,7 +36,7 @@ namespace GeographicLib {
    *
    * The ellipsoid is oriented so that the major principal ellipse, \f$Z=0\f$,
    * is the equator, \f$\beta=0\f$, while the minor principal ellipse,
-   * \f$X=0\f$, is the meridian, \f$\omega\pm\pi/2\f$.  The four umbilic
+   * \f$X=0\f$, is the meridian, \f$\omega\pm\pi/2\f$.  The four umbilical
    * points, \f$\sin\omega = \cos\beta = 0\f$, lie on median principal ellipse
    * in the plane \f$Y=0\f$.
    *
@@ -113,7 +113,7 @@ namespace GeographicLib {
      **********************************************************************/
     Conformal3(const Ellipsoid3& t = Ellipsoid3{});
     /**
-     * Constructor for a trixial ellipsoid with semi-axes.
+     * Constructor for a triaxial ellipsoid with semi-axes.
      *
      * @param[in] a the largest semi-axis.
      * @param[in] b the middle semi-axis.

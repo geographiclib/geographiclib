@@ -235,10 +235,10 @@ Waypoints on the route at intervals of 2000km:
 
 GeoConvert(1), GeodSolve(1).
 
-An online version of this utility is availbable at
+An online version of this utility is available at
 L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 
-An online version of this utility is availbable at
+An online version of this utility is available at
 L<https://geographiclib.sourceforge.io/cgi-bin/RhumbSolve>.
 
 This solution for rhumb line is described in C. F. F. Karney,

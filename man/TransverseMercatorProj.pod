@@ -23,7 +23,7 @@ exact transverse Mercator projection is used.
 
 Geodetic coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude> and I<longitude> (decimal
-degrees or degrees, minutes, seconds); for detils on the allowed
+degrees or degrees, minutes, seconds); for details on the allowed
 formats for latitude and longitude, see the C<GEOGRAPHIC COORDINATES>
 section of GeoConvert(1).  For each set of geodetic coordinates, the
 corresponding projected easting, I<x>, and northing, I<y>, (meters) are

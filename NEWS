@@ -8,7 +8,7 @@ The current version of the library is 2.6.
 
 Changes between 2.6 (released 2025-09-30) and 2.5.2 versions:
 
-   * Support for triaxial ellipoids. This is all placed in the
+   * Support for triaxial ellipsoids. This is all placed in the
      GeographicLib::Triaxial namespace with the header files in the
      GeographicLib/Triaxial directory. This provides
      + Triaxial::Ellipsoid3 supports basic conversions of ellipsoidal
@@ -27,7 +27,7 @@ Changes between 2.6 (released 2025-09-30) and 2.5.2 versions:
        Triaxial::Geodesic3.
      + Cart3Convert is a command-line utility offering access to
        Triaxial::Cartesian3.
-     + Conformal3Proj is a command-line utiity offering access to
+     + Conformal3Proj is a command-line utility offering access to
        Triaxial::Conformal3.
      + Constants::Triaxial_Earth_a, Constants::Triaxial_Earth_b,
        Constants::Triaxial_Earth_c, and Constants::Triaxial_Earth_lon0
@@ -44,9 +44,9 @@ Changes between 2.6 (released 2025-09-30) and 2.5.2 versions:
      + AngleT provides an accurate representation of angles of any
        magnitude. This might replace AuxAngle at some point.
      + Trigfun supports representing periodic functions as Fourier
-       series with automatic selection of the number of terms to use. This
-       offers a tiny subset of the functionality of the trig series in
-       Chebfun. This might replace DST at some point.
+       series with automatic selection of the number of terms to
+       use. This offers a tiny subset of the functionality of the trig
+       series in Chebfun. This might replace DST at some point.
 
    * C++17 is now required. Minimum version of Visual Studio supported
      is Visual Studio 15 2017.

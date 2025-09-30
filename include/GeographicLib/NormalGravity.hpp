@@ -21,7 +21,7 @@ namespace GeographicLib {
    * "Normal" gravity refers to an idealization of the earth which is modeled
    * as an rotating ellipsoid.  The eccentricity of the ellipsoid, the rotation
    * speed, and the distribution of mass within the ellipsoid are such that the
-   * ellipsoid is a "level ellipoid", a surface of constant potential
+   * ellipsoid is a "level ellipsoid", a surface of constant potential
    * (gravitational plus centrifugal).  The acceleration due to gravity is
    * therefore perpendicular to the surface of the ellipsoid.
    *

@@ -36,7 +36,7 @@ namespace GeographicLib {
    * inverse problem which closely parallels the solution for the biaxial
    * problem given by GeodesicExact.  For more details see \ref triaxial.
    *
-   * Data for testing the geodesic routines is availble at
+   * Data for testing the geodesic routines is available at
    * <a href="https://doi.org/10.5281/zenodo.12510796"> Test set of geodesics
    * on a triaxial ellipsoid (2024)</a>.
    *
@@ -153,7 +153,7 @@ namespace GeographicLib {
      **********************************************************************/
     Geodesic3(const Ellipsoid3& t = Ellipsoid3{});
     /**
-     * Constructor for a trixial ellipsoid with semi-axes.
+     * Constructor for a triaxial ellipsoid with semi-axes.
      *
      * @param[in] a the largest semi-axis.
      * @param[in] b the middle semi-axis.

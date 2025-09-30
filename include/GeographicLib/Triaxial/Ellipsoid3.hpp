@@ -30,7 +30,7 @@ namespace GeographicLib {
   /**
    * \brief A triaxial ellipsoid.
    *
-   * The class holds the basic information about a triaxial ellipoid
+   * The class holds the basic information about a triaxial ellipsoid
    * given by
    * \f[ S(\mathbf R) =
    * \frac{X^2}{a^2} + \frac{Y^2}{b^2} + \frac{Z^2}{c^2} - 1 = 0, \f]
@@ -64,7 +64,7 @@ namespace GeographicLib {
    * \f]
    * Headings are given by the direction \f$ \alpha \f$ measured clockwise from
    * a line of constant \f$ \omega \f$.  Conversions between Cartesian and
-   * elliopsoidal coordinates is provided by cart2toellip() and elliptocart2().
+   * ellipsoidal coordinates is provided by cart2toellip() and elliptocart2().
    *
    * The ellipsoid coordinates "cover" the ellipsoid twice; the replacement
    * \f[
@@ -82,7 +82,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Ellipsoid3 {
   public:
     /**
-     * A type to hold three-dimentional positions and directions in Cartesian
+     * A type to hold three-dimensional positions and directions in Cartesian
      * coordinates.
      **********************************************************************/
     using vec3 = std::array<Math::real, 3>;
@@ -177,15 +177,15 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return \e a the major semiaxeis.
+     * @return \e a the major semiaxis.
      **********************************************************************/
     real a() const { return _a; }
     /**
-     * @return \e b the median semiaxeis.
+     * @return \e b the median semiaxis.
      **********************************************************************/
     real b() const { return _b; }
     /**
-     * @return \e c the minor semiaxeis.
+     * @return \e c the minor semiaxis.
      **********************************************************************/
     real c() const { return _c; }
     /**

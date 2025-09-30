@@ -1,6 +1,6 @@
 =head1 NAME
 
-Conformal3Proj -- conformal projsections for a triaxial ellipsoid
+Conformal3Proj -- conformal projections for a triaxial ellipsoid
 
 =head1 SYNOPSIS
 
@@ -45,7 +45,7 @@ and minor semixis I<c>.  By default, we have I<a> = 6378172 m, I<b> =
 
 =item B<-e> I<b> I<e2> I<k2> I<kp2>
 
-specify the ellipsoid via the median semiaxis, I<b> and the sphape
+specify the ellipsoid via the median semiaxis, I<b> and the shape
 parameters I<e2> = (I<a>^2 - I<c>^2)/I<b>^2, I<k2> = (I<b>^2 -
 I<c>^2)/(I<a>^2 - I<c>^2), and I<kp2> = (I<a>^2 - I<b>^2)/(I<a>^2 -
 I<c>^2).  Simple fractions are allowed for I<e2>, I<k2>, and I<kp2>.

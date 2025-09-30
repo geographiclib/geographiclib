@@ -375,7 +375,7 @@ Equally spaced waypoints on the route:
 
 GeoConvert(1).
 
-An online version of this utility is availbable at
+An online version of this utility is available at
 L<https://geographiclib.sourceforge.io/cgi-bin/GeodSolve>.
 
 The algorithms are described in C. F. F. Karney,

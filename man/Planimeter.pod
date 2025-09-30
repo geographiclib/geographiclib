@@ -232,7 +232,7 @@ in the area was
 
 GeoConvert(1), GeodSolve(1).
 
-An online version of this utility is availbable at
+An online version of this utility is available at
 L<https://geographiclib.sourceforge.io/cgi-bin/Planimeter>.
 
 The algorithm for the area of geodesic polygon is

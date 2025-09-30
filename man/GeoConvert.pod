@@ -405,7 +405,7 @@ L<https://en.wikipedia.org/wiki/WGS84>.
 
 =head1 SEE ALSO
 
-An online version of this utility is availbable at
+An online version of this utility is available at
 L<https://geographiclib.sourceforge.io/cgi-bin/GeoConvert>.
 
 The algorithms for the transverse Mercator projection are described in

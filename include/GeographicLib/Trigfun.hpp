@@ -34,12 +34,12 @@ namespace GeographicLib {
    *
    * - Only odd or even functions are allowed (i.e., only sine of only cosine
    *   terms in the Fourier series).
-   * - Can specify that the function has symmetry about the quarter-period
+   * - Can specify that the function has symmetry about the quarter period
    *   point so that the Fourier series only includes odd harmonics.
    * - The integral of a Trigfun is counted as a Trigfun even if it includes a
    *   secular term.
    * - The inverse function of the integral is also a Trigfun (only makes sense
-   *   if the orginal function is either strictly positive or strictly
+   *   if the original function is either strictly positive or strictly
    *   negative).
    *
    * Assuming the half period = \e h, the function f(x) is represented as
@@ -175,7 +175,7 @@ namespace GeographicLib {
      *   incremented by the number of bisection steps (which indicates how well
      *   Newton's method is working).
      * @param[in] tol the tolerance using in terminating the root finding.  \e
-     *   tol = 0 (the defaulat) mean to use the machine epsilon.
+     *   tol = 0 (the default) mean to use the machine epsilon.
      * @return the root \e x = \e f <sup>&minus;1</sup>(\e z).
      *
      * Newton's method is used to find the root.  At each step the bounds are
@@ -203,14 +203,14 @@ namespace GeographicLib {
      * @param[in] xscale a representative scale for \e x.
      * @param[in] zscale a representative scale for \e z.
      * @param[in] s &plusmn;1 depending on whether \e f is an increasing or
-     *   decressing function.
+     *   decreasing function.
      * @param[in] countn if not nullptr, a pointer to an integer that gets
      *   incremented by the number of iterations.
      * @param[in] countb if not nullptr, a pointer to an integer that gets
      *   incremented by the number of bisection steps (which indicates how well
      *   Newton's method is working).
      * @param[in] tol the tolerance using in terminating the root finding.  \e
-     *   tol = 0 (the defaulat) mean to use the machine epsilon.
+     *   tol = 0 (the default) mean to use the machine epsilon.
      * @return the root \e x = \e f <sup>&minus;1</sup>(\e z).
      *
      * This is a static function, so \e f(\e x) need not be a Trigfun.  \e ffp
@@ -222,7 +222,7 @@ namespace GeographicLib {
      * bounds are adjusted.  If any Newton step gives a result which lies
      * outside the bounds, a bisection step is taken instead.
      *
-     * \warning The rouine assumes that there's a unique root lying in the
+     * \warning The routine assumes that there's a unique root lying in the
      *   interval [\e xa, \e xb] and that \e x0 lies in the same interval.
      **********************************************************************/
     // root sig 4
@@ -245,12 +245,12 @@ namespace GeographicLib {
      * @param[in] nmax the maximum number of points in a quarter period
      *   (default 2^16 = 65536).
      * @param[in] tol the tolerance using in terminating the root finding.  \e
-     *   tol = 0 (the defaulat) mean to use the machine epsilon.
+     *   tol = 0 (the default) mean to use the machine epsilon.
      * @param[in] scale; if \e scale is negative (the default), \e tol sets the
-     *   error relative to the largest Fourier coeffient.  Otherwise, the error
+     *   error relative to the largest Fourier coefficient.  Otherwise, the error
      *   is relative to the maximum of the largest Fourier coefficient and \e
      *   scale.
-     * @return the Trigfun represention of \e f <sup>&minus;1</sup>(\e z).
+     * @return the Trigfun representation of \e f <sup>&minus;1</sup>(\e z).
      *
      * As with the normal constructor this routine successively doubles the
      * number of sample points, which are computed using Newton's method.  A
@@ -320,7 +320,7 @@ namespace GeographicLib {
      * @param[in] tol the tolerance, the default value 0 means use the machine
      *   epsilon.
      * @param[in] scale; if \e scale is negative (the default), \e tol sets the
-     *   error relative to the largest Fourier coeffient.  Otherwise, the error
+     *   error relative to the largest Fourier coefficient.  Otherwise, the error
      *   is relative to the maximum of the largest Fourier coefficient and \e
      *   scale.
      *
@@ -355,7 +355,7 @@ namespace GeographicLib {
      * @param[in] tol the tolerance, the default value 0 means use the machine
      *   epsilon.
      * @param[in] scale; if \e scale is negative (the default), \e tol sets the
-     *   error relative to the largest Fourier coeffient.  Otherwise, the error
+     *   error relative to the largest Fourier coefficient.  Otherwise, the error
      *   is relative to the maximum of the largest Fourier coefficient and \e
      *   scale.
      *
@@ -368,7 +368,7 @@ namespace GeographicLib {
      * of the function values at the new points is found by using the current
      * Fourier representation.
      *
-     * \warning \e f must be a periodic function and it amust be either even or
+     * \warning \e f must be a periodic function and it must be either even or
      *   odd.  With \e odd = true and \e sym = false, the secular term can be
      *   set with setsecular().
      **********************************************************************/
@@ -410,12 +410,12 @@ namespace GeographicLib {
      * @param[in] nmax the maximum number of points in a quarter period
      *   (default 2^16 = 65536).
      * @param[in] tol the tolerance using in terminating the root finding.  \e
-     *   tol = 0 (the defaulat) mean to use the machine epsilon.
+     *   tol = 0 (the default) mean to use the machine epsilon.
      * @param[in] scale; if \e scale is negative (the default), \e tol sets the
-     *   error relative to the largest Fourier coeffient.  Otherwise, the error
+     *   error relative to the largest Fourier coefficient.  Otherwise, the error
      *   is relative to the maximum of the largest Fourier coefficient and \e
      *   scale.
-     * @return the Trigfun represention of \e f <sup>&minus;1</sup>(\e z).
+     * @return the Trigfun representation of \e f <sup>&minus;1</sup>(\e z).
      *
      * As with the normal constructor this routine successively doubles the
      * number of sample points, which are computed using Newton's method.  A
@@ -441,7 +441,7 @@ namespace GeographicLib {
      **********************************************************************/
     bool Odd() const { return _odd; }
     /**
-     * @return whether the function is symmetric about the quarter peroid
+     * @return whether the function is symmetric about the quarter period
      *   point.  If it is it, then the Fourier series has only odd terms.
      **********************************************************************/
     bool Symmetric() const { return _sym; }
@@ -466,7 +466,7 @@ namespace GeographicLib {
      * @return the (approximate) half range of the function.
      *
      * For a Trigfun containing a secular contribution this is the value of the
-     * function tat the half perioid.  Otherwise Max() is returned.
+     * function at the half perioid.  Otherwise Max() is returned.
      **********************************************************************/
     real HalfRange() const {
       return _odd && !_sym ? _coeff[0] * Math::pi() : Max();
@@ -541,7 +541,7 @@ namespace GeographicLib {
      *   the Fourier series for \e fp.
      *
      * \warning \e fp must be an even periodic function.  In addition \e fp
-     *   must be non-negative for the inverse of \e f to be computed (in this
+     *   must be nonnegative for the inverse of \e f to be computed (in this
      *   case, \e f is a monotonically increasing function).  The inverse is
      *   undefined for \e sym = true.
      **********************************************************************/
@@ -558,17 +558,17 @@ namespace GeographicLib {
      * Evaluate the derivative for TrigfunExt.
      *
      * @param[in] x the function argument.
-     * @return the value of the derivate \e fp(\e x).  This uses the function
+     * @return the value of the derivative \e fp(\e x).  This uses the function
      *   object passed to the constructor.
      **********************************************************************/
     real deriv(real x) const { return _fp(x); }
     /**
      * Evaluate the inverse of \e f
      *
-     * @param[in] z the vaule of \e f(\e x)
+     * @param[in] z the value of \e f(\e x)
      * @return the value of \e x = \e f <sup>&minus;1</sup>(\e z).
      *
-     * This compute the inverse using Newton's method with the derivate
+     * This compute the inverse using Newton's method with the derivative
      * function \e fp supplied on construction.  Initially, the starting guess
      * is based on just the secular component of \e f(\e x).  However, if
      * ComputeInverse() is called, a rough Trigfun approximation to the inverse
@@ -583,7 +583,7 @@ namespace GeographicLib {
      * This is used to provide a better starting guess for Newton's method in
      * inv().  Because ComputeInverse() is fairly expensive, this only makes
      * sense if inv() will be called many times.  In order to limit the expense
-     * in computing this approximate inverse, the number of Fourier componensts
+     * in computing this approximate inverse, the number of Fourier components
      * in the Trigfun for the inverse is limited to 3/2 of the number of
      * components for \e f and the tolerance is set to the square root of the
      * machine epsilon.
@@ -596,7 +596,7 @@ namespace GeographicLib {
       }
     }
     /**
-     * @return whether the function is symmetric about the quarter peroid
+     * @return whether the function is symmetric about the quarter period
      *   point.  If it is it, then the Fourier series has only odd harmonics.
      **********************************************************************/
     bool Symmetric() const { return _sym; }

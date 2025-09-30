@@ -101,7 +101,7 @@ namespace GeographicLib {
      * In this class we bring together the UTM and UPS coordinates systems.
      * The UTM divides the earth between latitudes &minus;80&deg; and 84&deg;
      * into 60 zones numbered 1 thru 60.  Zone assign zone number 0 to the UPS
-     * regions, covering the two poles.  Within UTMUPS, non-negative zone
+     * regions, covering the two poles.  Within UTMUPS, nonnegative zone
      * numbers refer to one of the "physical" zones, 0 for UPS and [1, 60] for
      * UTM.  Negative "pseudo-zone" numbers are used to select one of the
      * physical zones.
@@ -169,7 +169,7 @@ namespace GeographicLib {
      * @param[in] lon longitude (degrees).
      * @param[in] setzone zone override (optional).  If omitted, use the
      *   standard rules for picking the zone.  If \e setzone is given then use
-     *   that zone if it is non-negative, otherwise apply the rules given in
+     *   that zone if it is nonnegative, otherwise apply the rules given in
      *   UTMUPS::zonespec.
      * @exception GeographicErr if \e setzone is outside the range
      *   [UTMUPS::MINPSEUDOZONE, UTMUPS::MAXZONE] = [&minus;4, 60].
@@ -198,7 +198,7 @@ namespace GeographicLib {
      *   range (see Reverse); in this case, these arguments are unchanged.
      *
      * If \e setzone is omitted, use the standard rules for picking the zone.
-     * If \e setzone is given then use that zone if it is non-negative,
+     * If \e setzone is given then use that zone if it is nonnegative,
      * otherwise apply the rules given in UTMUPS::zonespec.  The accuracy of
      * the conversion is about 5nm.
      *
@@ -253,7 +253,7 @@ namespace GeographicLib {
      *
      * These ranges are 100km larger than allowed for the conversions to MGRS.
      * (100km is the maximum extra padding consistent with eastings remaining
-     * non-negative.)  This allows generous overlaps between zones and UTM and
+     * nonnegative.)  This allows generous overlaps between zones and UTM and
      * UPS.  If \e mgrslimits = true, then all the ranges are shrunk by 100km
      * so that they agree with the stricter MGRS ranges.  No checks are
      * performed besides these (e.g., to limit the distance outside the

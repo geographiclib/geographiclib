@@ -50,7 +50,7 @@ namespace GeographicLib {
    *   [\cos\phi'' \cos\lambda'', \cos\phi'' \sin\lambda'', \sin\phi'']^T.
    *   \f]
    * .
-   * For each of thses 3 coordinates, the "north pole" is at \f$[0, 0, c]^T\f$
+   * For each of these 3 coordinates, the "north pole" is at \f$[0, 0, c]^T\f$
    * and the origin for longitudes is \f$[a, 0, 0]^T\f$.  We also define
    * alternate versions (named "geodetic*", etc., where the north pole is
    * placed at \f$[a, 0, 0]^T\f$ and the origin for longitude is \f$[0, 0,
@@ -62,7 +62,7 @@ namespace GeographicLib {
    * a heading by defined the angle the vector makes (measured clockwise) from
    * the coordinate-specific north.  This is defined as the direction of a line
    * of constant (coordinate-specific) longitude.  The resulting heading is
-   * denoted by \f$\alpha\f$ for ellopsoidal coordinates and by \f$\zeta\f$ for
+   * denoted by \f$\alpha\f$ for ellipsoidal coordinates and by \f$\zeta\f$ for
    * the other coordinates.  The unstarred coordinates all share the same
    * direction for north, and likewise for the starred coordinates.  Note that
    * the lines of constant longitude and latitude are only orthogonal (in
@@ -94,7 +94,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Cartesian3 {
   public:
     /**
-     * A type to hold three-dimentional positions and directions in Cartesian
+     * A type to hold three-dimensional positions and directions in Cartesian
      * coordinates.
      **********************************************************************/
     using vec3 = Ellipsoid3::vec3;
@@ -244,7 +244,7 @@ namespace GeographicLib {
      **********************************************************************/
     Cartesian3(const Ellipsoid3& t);
     /**
-     * Constructor for a trixial ellipsoid with semi-axes.
+     * Constructor for a triaxial ellipsoid with semi-axes.
      *
      * @param[in] a the largest semi-axis.
      * @param[in] b the middle semi-axis.
@@ -358,7 +358,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Convert latitiude, longitude, and azimuth to Cartesian position and
+     * Convert latitude, longitude, and azimuth to Cartesian position and
      * direction.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
@@ -372,7 +372,7 @@ namespace GeographicLib {
     void anytocart2(coord coordin, Angle lat, Angle lon, Angle azi,
                     vec3& R, vec3& V) const;
     /**
-     * Convert latitiude, longitude, and azimuth in degrees to Cartesian
+     * Convert latitude, longitude, and azimuth in degrees to Cartesian
      * position and direction.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
@@ -388,7 +388,7 @@ namespace GeographicLib {
       anytocart2(coordin, Angle(lat), Angle(lon), Angle(azi), R, V);
     }
     /**
-     * Convert position and direction on surface to latitiude, longitude, and
+     * Convert position and direction on surface to latitude, longitude, and
      * azimuth.
      *
      * @param[in] R the Cartesian position on the surface of the ellipsoid.
@@ -402,7 +402,7 @@ namespace GeographicLib {
     void cart2toany(vec3 R, vec3 V,
                     coord coordout, Angle& lat, Angle& lon, Angle& azi) const;
     /**
-     * Convert position and direction on surface to latitiude, longitude, and
+     * Convert position and direction on surface to latitude, longitude, and
      * azimuth in degrees.
      *
      * @param[in] R the Cartesian position on the surface of the ellipsoid.
@@ -424,7 +424,7 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Convert latitiude, longitude, and height to a Cartesian position.
+     * Convert latitude, longitude, and height to a Cartesian position.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point.
@@ -435,7 +435,7 @@ namespace GeographicLib {
      **********************************************************************/
     void anytocart(coord coordin, Angle lat, Angle lon, real h, vec3& R) const;
     /**
-     * Convert latitiude, longitude in degrees, and height to a Cartesian
+     * Convert latitude, longitude in degrees, and height to a Cartesian
      * position.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
@@ -449,7 +449,7 @@ namespace GeographicLib {
       anytocart(coordin, Angle(lat), Angle(lon), h, R);
     }
     /**
-     * Convert a Cartesian position to latitiude, longitude, and height.
+     * Convert a Cartesian position to latitude, longitude, and height.
      *
      * @param[in] R the Cartesian position of the point.
      * @param[in] coordout one of the coordinate types, Cartesian3::coord.
@@ -461,7 +461,7 @@ namespace GeographicLib {
     void carttoany(vec3 R,
                    coord coordout, Angle& lat, Angle& lon, real& h) const;
     /**
-     * Convert a Cartesian position to latitiude, longitude in degrees, and
+     * Convert a Cartesian position to latitude, longitude in degrees, and
      * height.
      *
      * @param[in] R the Cartesian position of the point.

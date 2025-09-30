@@ -1473,7 +1473,7 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(c);
     return sqrt((1 - eps * c2) / ((kapp + c2) * (c2 + mu)) );
   }
-  // This is non-negative
+  // This is nonnegative
   Math::real GeodesicLine3::hfun::gthtp(real c, real kap, real kapp,
                                         real eps, real mu) {
     real c2 = kap * Math::sq(c);
@@ -1486,7 +1486,7 @@ namespace GeographicLib {
     real c2 = kap * Math::sq(cn);
     return sqrt( (1 - eps * c2) / ((kapp + c2) * (kap + mu)) );
   }
-  // This is non-negative
+  // This is nonnegative
   Math::real GeodesicLine3::hfun::gup(real cn, real /* dn */,
                                       real kap, real kapp, real eps, real mu) {
     real c2 = kap * Math::sq(cn);

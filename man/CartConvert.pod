@@ -46,7 +46,7 @@ point on the ellipsoid.
 
 =item B<-l> I<lat0> I<lon0> I<h0>
 
-specifies conversions to and from a local cartesion coordinate systems
+specifies conversions to and from a local cartesian coordinate systems
 with origin I<lat0> I<lon0> I<h0>, instead of a geocentric coordinate
 system.  The B<-w> flag can be used to swap the default order of the 2
 geographic coordinates, provided that it appears before B<-l>.
@@ -69,7 +69,7 @@ I<W>).
 =item B<-p> I<prec>
 
 set the output precision to I<prec> (default 6).  I<prec> is the number
-of digits after the decimal point for geocentric and local cartesion
+of digits after the decimal point for geocentric and local cartesian
 coordinates and for the height (in meters).  For latitudes and
 longitudes (in degrees), the number of digits after the decimal point is
 I<prec> + 5.

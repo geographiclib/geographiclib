@@ -309,7 +309,7 @@ Convert a point in UTM zone 18n from MSL to HAE
 
 GeoConvert(1), Gravity(1), geographiclib-get-geoids(8).
 
-An online version of this utility is availbable at
+An online version of this utility is available at
 L<https://geographiclib.sourceforge.io/cgi-bin/GeoidEval>.
 
 =head1 AUTHOR

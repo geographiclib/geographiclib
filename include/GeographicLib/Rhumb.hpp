@@ -54,7 +54,7 @@ namespace GeographicLib {
    * east-going one is chosen.
    *
    * These routines also optionally calculate the area under the rhumb line, \e
-   * S12.  This is the area, measured counter-clockwise, of the rhumb line
+   * S12.  This is the area, measured counterclockwise, of the rhumb line
    * quadrilateral with corners (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>),
    * (0,<i>lon2</i>), and (<i>lat2</i>,<i>lon2</i>).
    *

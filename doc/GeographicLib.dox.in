@@ -229,7 +229,7 @@ make software maintenance simpler
   directory for compiling the code.  In the description here the
   directories are called BUILD and are located in the top-level of the
   source tree.  You might want to use a suffix to denote the type of
-  build, e.g., BUILD-vc14 for Visua Sltudio 14 (2015), or BUILD-shared
+  build, e.g., BUILD-vc14 for Visual Studio 14 (2015), or BUILD-shared
   for a build which creates a shared library.  The advantages of
   out-of-source builds are:
   - You don't mess up the source tree, so it's easy to "clean up".
@@ -4228,7 +4228,7 @@ Go to
     (2011)</a> (<a href="https://arxiv.org/abs/1112.3231">preprint</a>).
  -# There is nothing new in this section.  It is just an exercise in
     exploring Jacobi's solution.  My interest here is in generating long
-    geodesics with the correct long-time behavior.  Arnold gives a
+    geodesics with the correct longtime behavior.  Arnold gives a
     nice qualitative description of the solution in <i>Mathematical
     Methods of Classical Mechanics</i> (2nd edition, Springer, 1989),
     pp. 264--266.
@@ -5054,7 +5054,7 @@ who apparently derived it without realizing that it is just a special
 case of the projection Jacobi had given some 40 years earlier.  Guyou's
 name is usually associated with the particular choice,
 \f$\nu=\frac14\pi\f$ or \f$k = k' = 1/\sqrt2\f$, in which case each
-octant of the ellipoid is mapped into a square.  However, by varying
+octant of the ellipsoid is mapped into a square.  However, by varying
 \f$\nu\in[0,\frac12\pi]\f$ the hemisphere can be mapped into a rectangle
 with any aspect ratio, \f$K(k') : K(k)\f$.
 
@@ -7782,7 +7782,7 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
    (released 2025-09-30)
-   - Support for triaxial ellipoids.  This is all placed in the
+   - Support for triaxial ellipsoids.  This is all placed in the
      GeographicLib::Triaxial namespace with the header files in the
      `GeographicLib/Triaxial` directory.  This provides
      - Triaxial::Ellipsoid3 supports basic conversions of ellipsoidal
@@ -7802,7 +7802,7 @@ git repository for GeographicLib</a>.
      - <a href="Cart3Convert.1.html"> Cart3Convert</a> is a
        command-line utility offering access to Triaxial::Cartesian3.
      - <a href="Conformal3Proj.1.html"> Conformal3Proj</a> is a
-       command-line utiity offering access to Triaxial::Conformal3.
+       command-line utility offering access to Triaxial::Conformal3.
      - Constants::Triaxial_Earth_a, Constants::Triaxial_Earth_b,
        Constants::Triaxial_Earth_c, and Constants::Triaxial_Earth_lon0
        specify a simple triaxial model for the Earth.
@@ -8013,7 +8013,7 @@ git repository for GeographicLib</a>.
    - The <a href="Planimeter.1.html">Planimeter</a> utility used to
      accept polygon vertices as UTM/UPS or MGRS coordinates.  However,
      since these are converted to latitude and longitude using the WGS84
-     ellipoid, this convention is incompatible with the -e option to
+     ellipsoid, this convention is incompatible with the -e option to
      specify the ellipsoid.  So now, you have to provide the
      \--geoconvert-input option to allow vertices to be specified in
      this way.

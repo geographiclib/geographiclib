@@ -169,7 +169,7 @@ namespace GeographicLib {
     /**
      * Return the results so far.
      *
-     * @param[in] reverse if true then clockwise (instead of counter-clockwise)
+     * @param[in] reverse if true then clockwise (instead of counterclockwise)
      *   traversal counts as a positive area.
      * @param[in] sign if true then return a signed result for the area if
      *   the polygon is traversed in the "wrong" direction instead of returning
@@ -196,7 +196,7 @@ namespace GeographicLib {
      *
      * @param[in] lat the latitude of the test point (degrees).
      * @param[in] lon the longitude of the test point (degrees).
-     * @param[in] reverse if true then clockwise (instead of counter-clockwise)
+     * @param[in] reverse if true then clockwise (instead of counterclockwise)
      *   traversal counts as a positive area.
      * @param[in] sign if true then return a signed result for the area if
      *   the polygon is traversed in the "wrong" direction instead of returning
@@ -224,7 +224,7 @@ namespace GeographicLib {
      *
      * @param[in] azi azimuth at current point (degrees).
      * @param[in] s distance from current point to final test point (meters).
-     * @param[in] reverse if true then clockwise (instead of counter-clockwise)
+     * @param[in] reverse if true then clockwise (instead of counterclockwise)
      *   traversal counts as a positive area.
      * @param[in] sign if true then return a signed result for the area if
      *   the polygon is traversed in the "wrong" direction instead of returning

@@ -79,12 +79,12 @@ I<beta>, I<omega> for the confocal ellipsoid and I<H>.
 
 By default, coordinates are provided on standard input as a set of lines
 containing (blank separated) I<latitude> and I<longitude> (decimal
-degrees or degrees, minutes and seconds).  The interpretion of the
+degrees or degrees, minutes and seconds).  The interpretation of the
 coordinates is governed by the B<-E>, B<-G>, B<-P>, B<-C> B<-GX>,
 B<-PX>, and B<-CX> flags.  For each set of coordinates, the
 corresponding Cartesian coordinates I<X>, I<Y>, I<Z> (meters) are
 printed on standard output.  If I<-r> is provided, the reserve operation
-is undertaken reading I<X>, I<Y>, I<Z> (which asre assumed to denote a
+is undertaken reading I<X>, I<Y>, I<Z> (which are assumed to denote a
 point on the ellipsoid) on standard input and printing the I<latitude>
 and I<longitude>.
 
@@ -171,7 +171,7 @@ and minor semixis I<c>.  By default, we have I<a> = 6378172 m, I<b> =
 
 =item B<-e> I<b> I<e2> I<k2> I<kp2>
 
-specify the ellipsoid via the median semiaxis, I<b> and the sphape
+specify the ellipsoid via the median semiaxis, I<b> and the shape
 parameters I<e2> = (I<a>^2 - I<c>^2)/I<b>^2, I<k2> = (I<b>^2 -
 I<c>^2)/(I<a>^2 - I<c>^2), and I<kp2> = (I<a>^2 - I<b>^2)/(I<a>^2 -
 I<c>^2).  Simple fractions are allowed for I<e2>, I<k2>, and I<kp2>.
