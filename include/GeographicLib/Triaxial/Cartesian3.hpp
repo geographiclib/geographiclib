@@ -25,7 +25,7 @@ namespace GeographicLib {
   namespace Triaxial {
 
   /**
-   * \brief Transformations between Cartesian and triaxial coordinates
+   * \brief Transformations between cartesian and triaxial coordinates
    *
    * The Cartesian3 class supports transformations between cartesian
    * coordinates and various coordinates for a triaxial ellipsoid.  Besides
@@ -57,7 +57,7 @@ namespace GeographicLib {
    * -c]\f$.  This latter set of coordinates is appropriate for ellipsoids that
    * are nearly prolate.
    *
-   * Directions on the ellipsoid are easily specified in Cartesian coordinates
+   * Directions on the ellipsoid are easily specified in cartesian coordinates
    * as a vector tangent to the surface of the ellipsoid.  This is converted to
    * a heading by defined the angle the vector makes (measured clockwise) from
    * the coordinate-specific north.  This is defined as the direction of a line
@@ -82,7 +82,7 @@ namespace GeographicLib {
    *
    * \note In the function names "any" stands for any of the seven coordinate
    *   systems enumerated by Cartesian3::coord.  "cart2" refers to a point
-   *   given in Cartesian coordinates that lies on the ellipsoid.  On the other
+   *   given in cartesian coordinates that lies on the ellipsoid.  On the other
    *   hand, "cart" refers to an arbitrary point.
    *
    * Example of use:
@@ -94,7 +94,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Cartesian3 {
   public:
     /**
-     * A type to hold three-dimensional positions and directions in Cartesian
+     * A type to hold three-dimensional positions and directions in cartesian
      * coordinates.
      **********************************************************************/
     using vec3 = Ellipsoid3::vec3;
@@ -244,22 +244,22 @@ namespace GeographicLib {
      **********************************************************************/
     Cartesian3(const Ellipsoid3& t);
     /**
-     * Constructor for a triaxial ellipsoid with semi-axes.
+     * Constructor for a triaxial ellipsoid with semiaxes.
      *
-     * @param[in] a the largest semi-axis.
-     * @param[in] b the middle semi-axis.
-     * @param[in] c the smallest semi-axis.
+     * @param[in] a the largest semiaxis.
+     * @param[in] b the middle semiaxis.
+     * @param[in] c the smallest semiaxis.
      * @exception GeographicErr if the required ordering is semiaxes is
      *   violated.
      *
-     * The semi-axes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
+     * The semiaxes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
      * If \e a = \e c (a sphere), then the oblate limit is taken.
      **********************************************************************/
     Cartesian3(real a, real b, real c);
     /**
      * Alternate constructor for a triaxial ellipsoid.
      *
-     * @param[in] b the middle semi-axis.
+     * @param[in] b the middle semiaxis.
      * @param[in] e2 the eccentricity squared \f$e^2 = (a^2 - c^2)/b^2\f$.
      * @param[in] k2 the oblateness parameter squared \f$k^2 = (b^2 - c^2) /
      *  (a^2 - c^2)\f$.
@@ -283,7 +283,7 @@ namespace GeographicLib {
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point.
      * @param[in] lon the longitude of the point.
-     * @param[out] R the Cartesian position on the surface of the ellipsoid.
+     * @param[out] R the cartesian position on the surface of the ellipsoid.
      * @exception GeographicErr if \e coordin is not recognized.
      **********************************************************************/
     void anytocart2(coord coordin, Angle lat, Angle lon, vec3& R) const;
@@ -293,7 +293,7 @@ namespace GeographicLib {
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point (in degrees).
      * @param[in] lon the longitude of the point (in degrees).
-     * @param[out] R the Cartesian position on the surface of the ellipsoid.
+     * @param[out] R the cartesian position on the surface of the ellipsoid.
      * @exception GeographicErr if \e coordin is not recognized.
      **********************************************************************/
     void anytocart2(coord coordin, real lat, real lon, vec3& R) const {
@@ -302,7 +302,7 @@ namespace GeographicLib {
     /**
      * Convert a point on the surface to latitude and longitude.
      *
-     * @param[in] R the Cartesian position on the surface of the ellipsoid.
+     * @param[in] R the cartesian position on the surface of the ellipsoid.
      * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point.
      * @param[out] lon the longitude of the point.
@@ -312,7 +312,7 @@ namespace GeographicLib {
     /**
      * Convert a point on the surface to latitude and longitude in degrees.
      *
-     * @param[in] R the Cartesian position on the surface of the ellipsoid.
+     * @param[in] R the cartesian position on the surface of the ellipsoid.
      * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point (in degrees).
      * @param[out] lon the longitude of the point (in degrees).
@@ -358,29 +358,29 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Convert latitude, longitude, and azimuth to Cartesian position and
+     * Convert latitude, longitude, and azimuth to cartesian position and
      * direction.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point.
      * @param[in] lon the longitude of the point.
      * @param[in] azi the azimuth of the heading.
-     * @param[out] R the Cartesian position on the surface of the ellipsoid.
-     * @param[out] V the Cartesian direction tangent to the ellipsoid.
+     * @param[out] R the cartesian position on the surface of the ellipsoid.
+     * @param[out] V the cartesian direction tangent to the ellipsoid.
      * @exception GeographicErr if \e coordin is not recognized.
      **********************************************************************/
     void anytocart2(coord coordin, Angle lat, Angle lon, Angle azi,
                     vec3& R, vec3& V) const;
     /**
-     * Convert latitude, longitude, and azimuth in degrees to Cartesian
+     * Convert latitude, longitude, and azimuth in degrees to cartesian
      * position and direction.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point (in degrees).
      * @param[in] lon the longitude of the point (in degrees).
      * @param[in] azi the azimuth of the heading (in degrees).
-     * @param[out] R the Cartesian position on the surface of the ellipsoid.
-     * @param[out] V the Cartesian direction tangent to the ellipsoid.
+     * @param[out] R the cartesian position on the surface of the ellipsoid.
+     * @param[out] V the cartesian direction tangent to the ellipsoid.
      * @exception GeographicErr if \e coordin is not recognized.
      **********************************************************************/
     void anytocart2(coord coordin, real lat, real lon, real azi,
@@ -391,8 +391,8 @@ namespace GeographicLib {
      * Convert position and direction on surface to latitude, longitude, and
      * azimuth.
      *
-     * @param[in] R the Cartesian position on the surface of the ellipsoid.
-     * @param[in] V the Cartesian direction tangent to the ellipsoid.
+     * @param[in] R the cartesian position on the surface of the ellipsoid.
+     * @param[in] V the cartesian direction tangent to the ellipsoid.
      * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point.
      * @param[out] lon the longitude of the point.
@@ -405,8 +405,8 @@ namespace GeographicLib {
      * Convert position and direction on surface to latitude, longitude, and
      * azimuth in degrees.
      *
-     * @param[in] R the Cartesian position on the surface of the ellipsoid.
-     * @param[in] V the Cartesian direction tangent to the ellipsoid.
+     * @param[in] R the cartesian position on the surface of the ellipsoid.
+     * @param[in] V the cartesian direction tangent to the ellipsoid.
      * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point (in degrees).
      * @param[out] lon the longitude of the point (in degrees).
@@ -424,34 +424,34 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Convert latitude, longitude, and height to a Cartesian position.
+     * Convert latitude, longitude, and height to a cartesian position.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point.
      * @param[in] lon the longitude of the point.
      * @param[in] h the height (in meters).
-     * @param[out] R the Cartesian position of the point.
+     * @param[out] R the cartesian position of the point.
      * @exception GeographicErr if \e coordin is not recognized.
      **********************************************************************/
     void anytocart(coord coordin, Angle lat, Angle lon, real h, vec3& R) const;
     /**
-     * Convert latitude, longitude in degrees, and height to a Cartesian
+     * Convert latitude, longitude in degrees, and height to a cartesian
      * position.
      *
      * @param[in] coordin one of the coordinate types, Cartesian3::coord.
      * @param[in] lat the latitude of the point (in degrees).
      * @param[in] lon the longitude of the point (in degrees).
      * @param[in] h the height (in meters).
-     * @param[out] R the Cartesian position of the point.
+     * @param[out] R the cartesian position of the point.
      * @exception GeographicErr if \e coordin is not recognized.
      **********************************************************************/
     void anytocart(coord coordin, real lat, real lon, real h, vec3& R) const {
       anytocart(coordin, Angle(lat), Angle(lon), h, R);
     }
     /**
-     * Convert a Cartesian position to latitude, longitude, and height.
+     * Convert a cartesian position to latitude, longitude, and height.
      *
-     * @param[in] R the Cartesian position of the point.
+     * @param[in] R the cartesian position of the point.
      * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point.
      * @param[out] lon the longitude of the point.
@@ -461,10 +461,10 @@ namespace GeographicLib {
     void carttoany(vec3 R,
                    coord coordout, Angle& lat, Angle& lon, real& h) const;
     /**
-     * Convert a Cartesian position to latitude, longitude in degrees, and
+     * Convert a cartesian position to latitude, longitude in degrees, and
      * height.
      *
-     * @param[in] R the Cartesian position of the point.
+     * @param[in] R the cartesian position of the point.
      * @param[in] coordout one of the coordinate types, Cartesian3::coord.
      * @param[out] lat the latitude of the point (in degrees).
      * @param[out] lon the longitude of the point (in degrees).
@@ -482,18 +482,18 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Convert a point on the ellipsoid and a height to a Cartesian position.
+     * Convert a point on the ellipsoid and a height to a cartesian position.
      *
-     * @param[in] R2 the Cartesian position of the point on the ellipsoid.
+     * @param[in] R2 the cartesian position of the point on the ellipsoid.
      * @param[in] h the height above the ellipsoid (in meters).
-     * @param[out] R the Cartesian position of the point.
+     * @param[out] R the cartesian position of the point.
      **********************************************************************/
     void cart2tocart(vec3 R2, real h, vec3& R) const;
     /**
      * Find the closest point on the ellipsoid
      *
-     * @param[in] R the Cartesian position of the point.
-     * @param[out] R2 the Cartesian position of the closest point on the
+     * @param[in] R the cartesian position of the point.
+     * @param[out] R2 the cartesian position of the closest point on the
      *   ellipsoid.
      * @param[out] h the height above the ellipsoid (in meters).
      **********************************************************************/
@@ -508,7 +508,7 @@ namespace GeographicLib {
      *
      * @tparam G the type of the random generator.
      * @param[in] g the random generator.
-     * @param[out] R a Cartesian position uniformly sampled on the surface of
+     * @param[out] R a cartesian position uniformly sampled on the surface of
      *   the ellipsoid.
      *
      * See the example listed in the description of this class for an example
@@ -526,9 +526,9 @@ namespace GeographicLib {
      *
      * @tparam G the type of the random generator.
      * @param[in] g the random generator.
-     * @param[out] R a Cartesian position uniformly sampled on the surface of
+     * @param[out] R a cartesian position uniformly sampled on the surface of
      *   the ellipsoid.
-     * @param[out] V a Cartesian direction uniformly sampled tangent to the
+     * @param[out] V a cartesian direction uniformly sampled tangent to the
      *   ellipsoid.
      **********************************************************************/
     template <class G> void cart2rand(G& g, vec3& R, vec3& V) const;

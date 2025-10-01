@@ -43,7 +43,7 @@ namespace GeographicLib {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_b) && _b > 0))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     fill(_c, _c + Lmax * AUXNUMBER * AUXNUMBER,
          numeric_limits<real>::quiet_NaN());
   }
@@ -70,7 +70,7 @@ namespace GeographicLib {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_b) && _b > 0))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     fill(_c, _c + Lmax * AUXNUMBER * AUXNUMBER,
          numeric_limits<real>::quiet_NaN());
   }

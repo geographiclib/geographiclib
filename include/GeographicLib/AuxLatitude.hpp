@@ -181,10 +181,10 @@ namespace GeographicLib {
     AuxLatitude(real a, real f);
     /**
      * Construct and return an AuxLatitude object specified in terms of the
-     * semi-axes
+     * semiaxes
      *
      * @param[in] a equatorial radius.
-     * @param[in] b polar semi-axis.
+     * @param[in] b polar semiaxis.
      * @exception GeographicErr if \e a or \e b is not positive.
      *
      * This allows a new AuxAngle to be initialized as an angle in radians with
@@ -283,7 +283,7 @@ namespace GeographicLib {
      **********************************************************************/
     Math::real EquatorialRadius() const { return _a; }
     /**
-     * @return \e b the polar semi-axis of the ellipsoid (meters).
+     * @return \e b the polar semiaxis of the ellipsoid (meters).
      **********************************************************************/
     Math::real PolarSemiAxis() const { return _b; }
     /**

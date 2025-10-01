@@ -20,7 +20,7 @@ B<Cart3Convert> [ B<-E> | B<-G> | B<-P> | B<-C> | B<-GX> | B<-PX> | B<-CX> ]
 Convert coordinates for a triaxial ellipsoid to geocentric coordinates.
 Geocentric coordinates have the origin at the center of the earth, with
 the I<X>, I<Y>, and I<Z> axes aligned with the major, median, and minor
-semi-axes, I<a>, I<b>, and I<c>.  By default, the conversion is to
+semiaxes, I<a>, I<b>, and I<c>.  By default, the conversion is to
 geocentric coordinates.  Specifying B<-r> causes the reverse conversion
 to be performed.
 
@@ -82,7 +82,7 @@ containing (blank separated) I<latitude> and I<longitude> (decimal
 degrees or degrees, minutes and seconds).  The interpretation of the
 coordinates is governed by the B<-E>, B<-G>, B<-P>, B<-C> B<-GX>,
 B<-PX>, and B<-CX> flags.  For each set of coordinates, the
-corresponding Cartesian coordinates I<X>, I<Y>, I<Z> (meters) are
+corresponding cartesian coordinates I<X>, I<Y>, I<Z> (meters) are
 printed on standard output.  If I<-r> is provided, the reserve operation
 is undertaken reading I<X>, I<Y>, I<Z> (which are assumed to denote a
 point on the ellipsoid) on standard input and printing the I<latitude>
@@ -99,8 +99,8 @@ I<Vy>, I<Vz> where [I<vx>, I<vy>, I<vz>] is a unit vector lying in the
 surface of the ellipsoid.
 
 If the B<-R> flag is given, do not read any input; instead output random
-Cartesian points lying on the surface of the ellipsoid.  If the B<-r>
-flag is specified the Cartesian points are converted into one of the
+cartesian points lying on the surface of the ellipsoid.  If the B<-r>
+flag is specified the cartesian points are converted into one of the
 triaxial coordinate systems.
 
 =head1 OPTIONS
@@ -151,7 +151,7 @@ B<-3>.
 =item B<-R> I<nrand>
 
 output I<nrand> random points on the surface of the ellipsoid as
-Cartesian coordinates.  With B<-D> add also a random Cartesian direction
+cartesian coordinates.  With B<-D> add also a random cartesian direction
 tangent to the surface of the ellipsoid.  In this mode, nothing is read
 from standard input.  With the B<-r> option the random points are
 converted into one of the triaxial coordinate systems (and the direction
@@ -201,7 +201,7 @@ is the number of digits after the decimal point for ellipsoids which are
 approximately the same size as the Earth; for other ellipsoids the
 precision is adjusted to retain the same relative precision.  For
 latitudes and longitudes (in degrees), the number of digits after the
-decimal point is I<prec> + 5.  For Cartesian directions, the precision is
+decimal point is I<prec> + 5.  For cartesian directions, the precision is
 I<prec> + 7.
 
 =item B<--comment-delimiter> I<commentdelim>

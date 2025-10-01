@@ -83,7 +83,7 @@ namespace GeographicLib {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_b) && _b > 0))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
 
     // Required number of terms in DST for full accuracy for all precisions as
     // a function of n in [-0.99, 0.99].  Values determined by running

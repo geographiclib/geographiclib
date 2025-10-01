@@ -61,7 +61,7 @@ namespace GeographicLib {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_f) && _f < 1))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     if (!(isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (extendp)

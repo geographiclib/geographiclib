@@ -333,7 +333,7 @@ cat <<EOF
       and its flattening,
       <em>f</em>&nbsp;=
       (<em>a</em>&nbsp;&minus;&nbsp;<em>b</em>)/<em>a</em>,
-      where <em>b</em> is the polar semi-axis.  The default values for
+      where <em>b</em> is the polar semiaxis.  The default values for
       these parameters correspond to the WGS84 ellipsoid.  The method is
       accurate for &minus;99&nbsp;&le; <em>f</em>&nbsp;&le; 0.99
       (corresponding to 0.01&nbsp;&le; <em>b</em>/<em>a</em>&nbsp;&le;

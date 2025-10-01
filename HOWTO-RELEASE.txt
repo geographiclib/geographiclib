@@ -176,7 +176,6 @@ conda-forge...
   git pull
   edit README.md recipe/bld.bat recipe/build.sh recipe/meta.yaml
   reset build number in meta.yaml to 0
-  needs patch file to turn off tests in signtest.cpp
   conda remove -y -n build --all
   conda create -y -n build
   conda activate build

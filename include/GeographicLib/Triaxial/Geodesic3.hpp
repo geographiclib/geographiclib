@@ -153,22 +153,22 @@ namespace GeographicLib {
      **********************************************************************/
     Geodesic3(const Ellipsoid3& t = Ellipsoid3{});
     /**
-     * Constructor for a triaxial ellipsoid with semi-axes.
+     * Constructor for a triaxial ellipsoid with semiaxes.
      *
-     * @param[in] a the largest semi-axis.
-     * @param[in] b the middle semi-axis.
-     * @param[in] c the smallest semi-axis.
+     * @param[in] a the largest semiaxis.
+     * @param[in] b the middle semiaxis.
+     * @param[in] c the smallest semiaxis.
      * @exception GeographicErr if the required ordering is semiaxes is
      *   violated.
      *
-     * The semi-axes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
+     * The semiaxes must satisfy \e a &ge; \e b &ge; \e c &gt; 0.
      * If \e a = \e c (a sphere), then the oblate limit is taken.
      **********************************************************************/
     Geodesic3(real a, real b, real c);
     /**
      * Alternate constructor for a triaxial ellipsoid.
      *
-     * @param[in] b the middle semi-axis.
+     * @param[in] b the middle semiaxis.
      * @param[in] e2 the eccentricity squared \f$e^2 = (a^2 - c^2)/b^2\f$.
      * @param[in] k2 the oblateness parameter squared \f$k^2 = (b^2 - c^2) /
      *  (a^2 - c^2)\f$.

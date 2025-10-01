@@ -22,7 +22,7 @@ int main(int argc, const char* const argv[]) {
     }
     double n = GeographicLib::Utility::fract<double>(std::string(argv[1]));
     int auxin = GeographicLib::Utility::val<int>(std::string(argv[2]));
-    double a = 1+n, b = 1-n;    // Equatorial radius and polar semi-axis
+    double a = 1+n, b = 1-n;    // Equatorial radius and polar semiaxis
     latitude aux(latitude::axes(a, b));
     bool exact = true;          // Do the exact calculation
     std::cout << std::setprecision(9) << std::fixed;

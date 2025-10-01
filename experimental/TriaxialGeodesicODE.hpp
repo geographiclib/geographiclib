@@ -70,7 +70,7 @@ namespace GeographicLib {
    *
    * This determines the course of a geodesic by solving the equations of
    * motion for a particle sliding without friction on the surface of the
-   * ellipsoid.  The solution is carried out in Cartesian coordinates.  The
+   * ellipsoid.  The solution is carried out in cartesian coordinates.  The
    * same approach was used by
    * <a href="https://doi.org/10.1515/jogs-2019-0001"> Panou and Korakitis
    * (2019)</a>.  Significant differences are:
@@ -103,7 +103,7 @@ namespace GeographicLib {
   class TriaxialGeodesicODE {
   public:
     /**
-     * A type to hold three-dimensionalq positions and velocities in Cartesian
+     * A type to hold three-dimensional positions and velocities in cartesian
      * coordinates.
      **********************************************************************/
     using vec3 = Triaxial::Ellipsoid3::vec3;
