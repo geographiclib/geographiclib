@@ -94,7 +94,7 @@ that latitude and longitude have their conventional interpretations
 
 unroll the latitude and longitude.  Normally, on output latitudes and
 longitudes are reduced to lie in [-90deg,90deg] and [-180deg,180deg)
-respectively.  However with this option, the retured longitude
+respectively.  However with this option, the returned longitude
 I<bet2> and I<omg2> are "unrolled" so that I<bet2> - I<bet1> and
 I<omg2> - I<omg1> indicates how often and in what sense the geodesic
 has encircled the ellipsoid.
