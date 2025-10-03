@@ -11,6 +11,7 @@
 #include <GeographicLib/Angle.hpp>
 #include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 #include <GeographicLib/Triaxial/Geodesic3.hpp>
+#include <GeographicLib/Triaxial/Cartesian3.hpp>
 
 #if !defined(HAVE_BOOST)
 #  define HAVE_BOOST 0
@@ -281,87 +282,123 @@ int main(int argc, const char* const argv[]) {
   try {
     using real = Math::real;
     Utility::set_digits();
-    {
-      bool odep = false, reportp = false,
-        odetest = false, extended = false, dense = false, normp = false,
-        steps = false;
-      real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
-      for (int m = 1; m < argc; ++m) {
-        string arg(argv[m]);
-        if (arg == "-t") {
-          if (m + 3 >= argc) return usage(1, true);
-          try {
-            a = Utility::val<real>(string(argv[m + 1]));
-            b = Utility::val<real>(string(argv[m + 2]));
-            c = Utility::val<real>(string(argv[m + 2]));
-          }
-          catch (const exception& e) {
-            cerr << "Error decoding arguments of -e: " << e.what() << "\n";
-            return 1;
-          }
-          m += 2;
-        } else if (arg == "-e") {
-          if (m + 4 >= argc) return usage(1, true);
-          try {
-            b = Utility::val<real>(string(argv[m + 1]));
-            e2 = Utility::fract<real>(string(argv[m + 2]));
-            k2 = Utility::fract<real>(string(argv[m + 3]));
-            kp2 = Utility::fract<real>(string(argv[m + 4]));
-          }
-          catch (const exception& e) {
-            cerr << "Error decoding arguments of -e: " << e.what() << "\n";
-            return 1;
-          }
-          m += 4;
-        } else if (arg == "--ode")
-          odep = true;
-        else if (arg == "--report")
-          reportp = true;
-        else if (arg == "--odetest")
-          odetest = true;
-        else if (arg == "--steps")
-          steps = true;
-        else if (arg == "-x")
-          extended = true;
-        else if (arg == "--eps") {
-          if (m + 1 >= argc) return usage(1, true);
-          try {
-            using std::pow;
-            eps = pow(std::numeric_limits<real>::epsilon(),
-                      Utility::fract<real>(std::string(argv[m + 1])));
-          }
-          catch (const std::exception& e) {
-            std::cerr << "Error decoding argument of --eps: "
-                      << e.what() << "\n";
-            return 1;
-          }
-          m += 1;
-        } else if (arg == "--dense")
-          dense = true;
-        else if (arg == "--normp")
-          normp = true;
-        else
-          return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
-      }
-      // testobl.txt  -e 1 3/4 3 0
-      // testsetb.txt -e 1 1   2 1
-      // testset.txt  -e 1 3/2 1 2
-      // testpro.txt  -e 1 3   0 3
-      // testspha.txt -e 1 0   3 0
-      // testsphb.txt -e 1 0   2 1
-      // testsphc.txt -e 1 0   1 2
-      // testsphd.txt -e 1 0   0 3
-      // testhu.txt   -e 1 7577279780/1130005142289 1942065235 6378137
-      // equiv to     -t 6378172/6378102 1 6356752/6378102
-      Geodesic3 tg = e2 < 0 ? Geodesic3(a, b, c) :
-        Geodesic3(b, e2, k2, kp2);
-      // Triaxial tg(1, 1, 1/real(2));
-      // Triaxial tg(2, 1, 1);
-      real bet1, omg1, bet2, omg2;
-      real alp1, alp2, s12, m12, M12, M21;
+    bool odep = false, reportp = false,
+      odetest = false, extended = false, dense = false, normp = false,
+      steps = false,
+      inverse = false;          // just for timing
+    real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
+    int num = 0, numl = 1;
+    unsigned long long seed = 0;
+    for (int m = 1; m < argc; ++m) {
+      string arg(argv[m]);
+      if (arg == "-t") {
+        if (m + 3 >= argc) return usage(1, true);
+        try {
+          a = Utility::val<real>(string(argv[m + 1]));
+          b = Utility::val<real>(string(argv[m + 2]));
+          c = Utility::val<real>(string(argv[m + 2]));
+        }
+        catch (const exception& e) {
+          cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+          return 1;
+        }
+        m += 2;
+      } else if (arg == "-e") {
+        if (m + 4 >= argc) return usage(1, true);
+        try {
+          b = Utility::val<real>(string(argv[m + 1]));
+          e2 = Utility::fract<real>(string(argv[m + 2]));
+          k2 = Utility::fract<real>(string(argv[m + 3]));
+          kp2 = Utility::fract<real>(string(argv[m + 4]));
+        }
+        catch (const exception& e) {
+          cerr << "Error decoding arguments of -e: " << e.what() << "\n";
+          return 1;
+        }
+        m += 4;
+      } else if (arg == "--ode")
+        odep = true;
+      else if (arg == "--report")
+        reportp = true;
+      else if (arg == "--odetest")
+        odetest = true;
+      else if (arg == "--steps")
+        steps = true;
+      else if (arg == "-x")
+        extended = true;
+      else if (arg == "--eps") {
+        if (m + 1 >= argc) return usage(1, true);
+        try {
+          using std::pow;
+          eps = pow(std::numeric_limits<real>::epsilon(),
+                    Utility::fract<real>(std::string(argv[m + 1])));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding argument of --eps: "
+                    << e.what() << "\n";
+          return 1;
+        }
+        m += 1;
+      } else if (arg == "--dense")
+        dense = true;
+      else if (arg == "--normp")
+        normp = true;
+      else if (arg == "-i")
+        inverse = true;
+      else if (arg == "--num") {
+        if (m + 1 >= argc) return usage(1, true);
+        try {
+          num = Utility::val<int>(string(argv[m + 1]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding argument of --eps: "
+                    << e.what() << "\n";
+          return 1;
+        }
+        m += 1;
+      } else if (arg == "--numl") {
+        if (m + 1 >= argc) return usage(1, true);
+        try {
+          numl = Utility::val<int>(string(argv[m + 1]));
+        }
+        catch (const std::exception& e) {
+          std::cerr << "Error decoding argument of --eps: "
+                    << e.what() << "\n";
+          return 1;
+        }
+        m += 1;
+      } else if (arg == "--seed") {
+        if (++m == argc) return usage(1, true);
+        try {
+          seed = Utility::val<unsigned long long>(std::string(argv[m]));
+        }
+        catch (const std::exception&) {
+          std::cerr << "Precision " << argv[m] << " is not a number\n";
+          return 1;
+        }
+      } else
+        return usage(!(arg == "-h" || arg == "--help"), arg != "--help");
+    }
+    // testobl.txt  -e 1 3/4 3 0
+    // testsetb.txt -e 1 1   2 1
+    // testset.txt  -e 1 3/2 1 2
+    // testpro.txt  -e 1 3   0 3
+    // testspha.txt -e 1 0   3 0
+    // testsphb.txt -e 1 0   2 1
+    // testsphc.txt -e 1 0   1 2
+    // testsphd.txt -e 1 0   0 3
+    // testhu.txt   -e 1 7577279780/1130005142289 1942065235 6378137
+    // equiv to     -t 6378172/6378102 1 6356752/6378102
+    Geodesic3 tg = e2 < 0 ? Geodesic3(a, b, c) :
+      Geodesic3(b, e2, k2, kp2);
+    // Triaxial tg(1, 1, 1/real(2));
+    // Triaxial tg(2, 1, 1);
+    real bet1, omg1, bet2, omg2;
+    real alp1, alp2, s12, m12, M12, M21;
 #if HAVE_BOOST
-      TriaxialGeodesicODE l(tg.t(), extended, dense, normp, eps);
+    TriaxialGeodesicODE l(tg.t(), extended, dense, normp, eps);
 #endif
+    if (num <= 0) {
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
         if (odetest) {
@@ -375,15 +412,64 @@ int main(int argc, const char* const argv[]) {
           errreport(tg, bet1, omg1, alp1, bet2, omg2, alp2, s12,
                     m12, M12, M21);
       }
-      (void) odep;
-      (void) reportp;
-      (void) odetest;
-      (void) extended;
-      (void) dense;
-      (void) normp;
-      (void) eps;
-      return 0;
+    } else {
+      unsigned long long s1 = seed;
+      if (seed == 0)
+        s1 = std::random_device()();
+      std::seed_seq seq{s1};
+      std::mt19937 g(seq);
+      Cartesian3 tc(tg.t());
+      real sum = 0;
+      vector<real> s12v(odetest ? numl : 0);
+      vector<Ellipsoid3::vec3> R2v, V2v;
+      if (!inverse) {
+        real s0, bet1, omg1, alp1, bet2, omg2, alp2;
+        tg.Inverse(-90, 0, 90, 180, s0, alp1, alp2);
+        std::uniform_real_distribution<long double> uni(0, (long double)(s0));
+        for (int i = 0; i < num; ++i) {
+          Ellipsoid3::vec3 R1, V1;
+          tc.cart2rand(g, R1, V1);
+          if (!odetest) {
+            tc.cart2toany(R1, V1, Cartesian3::ELLIPSOIDAL, bet1, omg1, alp1);
+            GeodesicLine3 lx(tg, bet1, omg1, alp1);
+            for (int j = 0; j < numl; ++j) {
+              real s12 = real(uni(g));
+              if (numl == 1) s12 = fmax(s12, real(uni(g)));
+              lx.Position(s12, bet2, omg2, alp2);
+              sum += fabs(alp2);
+            }
+          } else {
+            l.Reset(R1, V1);
+            for (int j = 0; j < numl; ++j) {
+              s12v[j] = real(uni(g));
+              if (numl == 1) s12v[j] = fmax(s12v[j], real(uni(g)));
+            }
+            l.Position(s12v, R2v, V2v);
+            if (numl > 0) sum += fabs(R2v[0][0]);
+          }
+        }
+      } else {
+        for (int i = 0; i < num; ++i) {
+          real s12, bet1, omg1, alp1, bet2, omg2, alp2;
+          Ellipsoid3::vec3 R1, R2;
+          tc.cart2rand(g, R1);
+          tc.cart2toany(R1, Cartesian3::ELLIPSOIDAL, bet1, omg1);
+          tc.cart2rand(g, R2);
+          tc.cart2toany(R2, Cartesian3::ELLIPSOIDAL, bet2, omg2);
+          (void) tg.Inverse(bet1, omg1, bet2, omg2, s12, alp1, alp2);
+          sum += s12;
+        }
+      }
+      if (sum < 0) cout << sum << "\n";
     }
+    (void) odep;
+    (void) reportp;
+    (void) odetest;
+    (void) extended;
+    (void) dense;
+    (void) normp;
+    (void) eps;
+    return 0;
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";

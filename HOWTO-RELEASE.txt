@@ -2,7 +2,8 @@ Updating version
   CMakeLists.txt set PROJECT_VERSION_SUFFIX to "-alpha" + LIBVERSION_{API,BUILD}
   configure.ac AC_INIT + GEOGRAPHICLIB_VERSION_* + LT_{CURRENT,REVISION,AGE}
   develop/test-distribution VERSION, SUFFIX, BRANCH
-  doc/GeographicLib.dox.in set date to mm-dd start new change log entry
+  doc/GeographicLib.dox.in set date to mm-dd (two places near the start)
+    and start new change log entry
   examples/CMakeLists.txt in find_package (GeographicLib ...)
 
 CMake configuration

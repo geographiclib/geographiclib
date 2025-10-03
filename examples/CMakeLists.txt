@@ -108,7 +108,7 @@ else ()
   set (CMAKE_DEBUG_POSTFIX "" CACHE STRING "The suffix for debug objects")
 endif ()
 
-find_package (GeographicLib 2.6 REQUIRED)
+find_package (GeographicLib 2.7 REQUIRED)
 include_directories (${GeographicLib_INCLUDE_DIRS})
 
 set (CMAKE_CXX_STANDARD 17)
