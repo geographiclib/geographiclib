@@ -507,7 +507,7 @@ namespace GeographicLib {
      * Generate a random point on the ellipsoid.
      *
      * @tparam G the type of the random generator.
-     * @param[in] g the random generator.
+     * @param[inout] g the random generator.
      * @param[out] R a cartesian position uniformly sampled on the surface of
      *   the ellipsoid.
      *
@@ -525,7 +525,7 @@ namespace GeographicLib {
      * Generate a random point and direction on the ellipsoid.
      *
      * @tparam G the type of the random generator.
-     * @param[in] g the random generator.
+     * @param[inout] g the random generator.
      * @param[out] R a cartesian position uniformly sampled on the surface of
      *   the ellipsoid.
      * @param[out] V a cartesian direction uniformly sampled tangent to the
