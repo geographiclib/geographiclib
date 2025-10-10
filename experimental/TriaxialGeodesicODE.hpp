@@ -127,7 +127,8 @@ namespace GeographicLib {
     Angle _bet1, _omg1, _alp1;
     bool _extended, _dense, _normp;
     int _dir;
-    mutable long _nsteps, _intsteps;
+    long _nsteps;
+    mutable long _intsteps;     // This is advanced by AccelXX which is const
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     dstep6 _dstep6;
     dstep10 _dstep10;
@@ -248,7 +249,7 @@ namespace GeographicLib {
      * The returned values \e R2 and \e V2 are normalized to place \e R2 on the
      * ellipsoid and \e V2 tangent to the ellipsoid with unit speed.
      *
-     * If the object was constructed with \e extended = false, nans are
+     * If the object was constructed with \e extended = false, NaNs are
      * returned for the differential quantities.
      **********************************************************************/
     std::pair<real, real> Position(real s12, vec3& R2, vec3& V2,
@@ -282,7 +283,7 @@ namespace GeographicLib {
      *   meters) and the deviation of the velocity from a unit tangential
      *   vector.
      *
-     * If the object was constructed with \e extended = false, nans are
+     * If the object was constructed with \e extended = false, NaNs are
      * returned for the differential quantities.
      **********************************************************************/
     std::pair<real, real> Position(real s12,
@@ -296,10 +297,10 @@ namespace GeographicLib {
      * @param[out] R2 a vector of positions of points 2.
      * @param[out] V2 a vector of velocities at points 2.
      *
-     * Before starting the integration, \e s12 is sorted to separate the
-     * positive and negative values and place each in order of increasing
-     * magnitude.  The results are placed back in the correct positions in the
-     * output vectors.
+     * Before starting the integration, the positive and negative vaules in \e
+     * s12 separated and then sorted in order of increasing magnitude.  The
+     * results are placed back in the correct positions in the output vectors.
+     * \e s12 can include NaNs; this can be used to "punctuate" the results.
      *
      * The returned values \e R2 and \e V2 are normalized to place \e R2 on the
      * ellipsoid and \e V2 tangent to the ellipsoid with unit speed.
@@ -319,15 +320,15 @@ namespace GeographicLib {
      * @param[out] M21 a vector of the geodesic scales at point 1 relative to
      *   points 2.
      *
-     * Before starting the integration, \e s12 is sorted to separate the
-     * positive and negative values and place each in order of increasing
-     * magnitude.  The results are placed back in the correct positions in the
-     * output vectors.
+     * Before starting the integration, the positive and negative vaules in \e
+     * s12 separated and then sorted in order of increasing magnitude.  The
+     * results are placed back in the correct positions in the output vectors.
+     * \e s12 can include NaNs; this can be used to "punctuate" the results.
      *
      * The returned values \e R2 and \e V2 are normalized to place \e R2 on the
      * ellipsoid and \e V2 tangent to the ellipsoid with unit speed.
      *
-     * If the object was constructed with \e extended = false, nans are
+     * If the object was constructed with \e extended = false, NaNs are
      * returned for the differential quantities.
      **********************************************************************/
     void Position(const std::vector<real>& s12,
@@ -343,10 +344,10 @@ namespace GeographicLib {
      * @param[out] omg2 a vector of longitudes at points 2.
      * @param[out] alp2 a vector of azimuths at points 2.
      *
-     * Before starting the integration, \e s12 is sorted to separate the
-     * positive and negative values and place each in order of increasing
-     * magnitude.  The results are placed back in the correct positions in the
-     * output vectors.
+     * Before starting the integration, the positive and negative vaules in \e
+     * s12 separated and then sorted in order of increasing magnitude.  The
+     * results are placed back in the correct positions in the output vectors.
+     * \e s12 can include NaNs; this can be used to "punctuate" the results.
      **********************************************************************/
     void Position(const std::vector<real>& s12,
                   std::vector<Angle>& bet2, std::vector<Angle>& omg2,
@@ -365,10 +366,10 @@ namespace GeographicLib {
      * @param[out] M21 a vector of the geodesic scales at point 1 relative to
      *   points 2.
      *
-     * Before starting the integration, \e s12 is sorted to separate the
-     * positive and negative values and place each in order of increasing
-     * magnitude.  The results are placed back in the correct positions in the
-     * output vectors.
+     * Before starting the integration, the positive and negative vaules in \e
+     * s12 separated and then sorted in order of increasing magnitude.  The
+     * results are placed back in the correct positions in the output vectors.
+     * \e s12 can include NaNs; this can be used to "punctuate" the results.
      **********************************************************************/
     void Position(const std::vector<real>& s12,
                   std::vector<Angle>& bet2, std::vector<Angle>& omg2,

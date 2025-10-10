@@ -95,7 +95,8 @@ namespace GeographicLib {
     using ang = Angle;
     static void normvec(vec3& R) {
       real h = Math::hypot3(R[0], R[1], R[2]);
-      // No checking for h = 0.  Result will be NaNs
+      // No checking for h = 0.  Result will be NaNs (we rely on this in
+      // Cartesian3::cart2rand).
       R[0] /= h; R[1] /= h; R[2] /= h;
     }
     static void Flip(ang& bet, ang& omg, ang& alp) {
