@@ -955,4 +955,4 @@ set_tests_properties (Intersect2
 
 # Geod3Solve bugs
 # echo 0 20 0 -50 | tools/Geod3Solve -i -t 3 2 1
-# a1, a2, s12 = e-113.8013, -71.7194, 2.6650
+# a1, a2, s12 = -113.8013, -71.7194, 2.6650

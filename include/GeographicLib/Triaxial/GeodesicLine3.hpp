@@ -518,8 +518,7 @@ namespace GeographicLib {
      * @param[out] omg2 the ellipsoidal longitude of point 2.
      * @param[out] alp2 the forward azimuth of the geodesic at point 2.
      **********************************************************************/
-    void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2,
-                  int* countn = nullptr, int* countb = nullptr) const;
+    void Position(real s12, Angle& bet2, Angle& omg2, Angle& alp2) const;
     /**
      * Find point 2 a given distance from point 1 in degrees
      *
@@ -563,12 +562,6 @@ namespace GeographicLib {
      *   their conventional ranges.
      **********************************************************************/
     void pos1(real& bet1, real& omg1, real& alp1, bool unroll = true) const;
-    void ncoeffs(int& nfbet, int& nfomg, int& ngbet, int& ngomg) const {
-      nfbet = fbet().NCoeffs();
-      nfomg = fomg().NCoeffs();
-      ngbet = gbet().NCoeffs();
-      ngomg = gomg().NCoeffs();
-    }
   };
 
   } // namespace Triaxial

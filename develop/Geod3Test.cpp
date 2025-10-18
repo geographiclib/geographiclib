@@ -13,6 +13,8 @@
 #include <GeographicLib/Triaxial/Geodesic3.hpp>
 #include <GeographicLib/Triaxial/Cartesian3.hpp>
 
+#define DIAGS 0
+
 #if !defined(HAVE_BOOST)
 #  define HAVE_BOOST 0
 #endif
@@ -136,9 +138,16 @@ void errreport(const Geodesic3& tg,
   int invcountn = 0, invcountb = 0;
   if (invp) {
     real s12a;
+#if DIAG
     GeodesicLine3 l0 =
       tg.Inverse(bet1x, omg1x, bet2x, omg2x, s12a, alp1a, alp2a,
                  &invcountn, &invcountb);
+#else
+    GeodesicLine3 l0 =
+      tg.Inverse(bet1x, omg1x, bet2x, omg2x, s12a, alp1a, alp2a);
+    (void) invcountn;
+    (void) invcountb;
+#endif
     errs = fabs(s12 - s12a);
     // direct checks for inverse calculation using alp1a, alp2a, s12a
     tg.t().elliptocart2(bet1x, omg1x, alp1a, r1, v1);
@@ -151,6 +160,7 @@ void errreport(const Geodesic3& tg,
     if (invdirp) {
       GeodesicLine3 l1i(tg, bet1x, omg1x, alp1a);
       GeodesicLine3 l2i(tg, bet2x, omg2x, alp2a);
+#if DIAG
       if (0) {
         int nfbet, nfomg, ngbet, ngomg;
         l1i.ncoeffs(nfbet, nfomg, ngbet, ngomg);
@@ -160,6 +170,7 @@ void errreport(const Geodesic3& tg,
         cout <<  "L2COEFFS "
              << nfbet << " " << nfomg << " " << ngbet << " " << ngomg << "\n";
       }
+#endif
       l2i.Position(-s12a, bet1a, omg1a, alp1a);
       tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
       errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
@@ -186,8 +197,18 @@ void errreport(const Geodesic3& tg,
     l2.Position(-s12, bet1a, omg1a, alp1a);
     tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
     errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
+#if DIAG
     l1.Position(s12, bet2a, omg2a, alp2a, &countn, &countb);
     l1.ncoeffs(nfbet, nfomg, ngbet, ngomg);
+#else
+    l1.Position(s12, bet2a, omg2a, alp2a);
+    (void) nfbet;
+    (void) nfomg;
+    (void) ngbet;
+    (void) ngomg;
+    (void) countn;
+    (void) countb;
+#endif
     tg.t().elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
     errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
     real ds = real(10)/max(1,num);

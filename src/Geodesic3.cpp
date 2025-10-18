@@ -32,8 +32,7 @@ namespace GeographicLib {
 
   GeodesicLine3
   Geodesic3::Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
-                     real& s12, Angle& alp1, Angle& alp2,
-                     int* countn, int* countb) const {
+                     real& s12, Angle& alp1, Angle& alp2) const {
     using TL = GeodesicLine3;
     string msg;
     bet1.round();
@@ -495,7 +494,7 @@ namespace GeographicLib {
       }
     }
 
-    // int countn = 0, countb = 0;
+    int countn = 0, countb = 0;
     if (!done) {
       // Iterative search for the solution
       if constexpr (debug_)
@@ -508,7 +507,7 @@ namespace GeographicLib {
                       },
                       alpa, alpb,
                       fa, fb,
-                      countn, countb);
+                      &countn, &countb);
       if constexpr (debug_)
         cout << "ALP1 " << real(alp1) << "\n";
       lf = TL::fline(this->t(), gamma(bet1, omg1, alp1));
@@ -838,7 +837,7 @@ namespace GeographicLib {
         omgdiff = -2 * omg.c() * omg.s() * tg.kp2() * Math::sq(alp.c());
       maxdiff = fmax( fabs(alpdiff), fmax( fabs(betdiff), fabs(omgdiff) ) );
     }
-    if (fabs(gamma) <= 3 * maxdiff * numeric_limits<real>::epsilon()) {
+    if (fabs(gamma) <= 2 * maxdiff * numeric_limits<real>::epsilon()) {
       // Set gamma = 0 if a change of alp, bet, or omg by epsilon would include
       // gamma = 0.
       gamma = 0;
