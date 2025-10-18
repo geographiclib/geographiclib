@@ -69,11 +69,12 @@ namespace GeographicLib {
   }
 
   void GeodesicLine3::Position(real s12,
-                               Angle& bet2a, Angle& omg2a, Angle& alp2a) const {
+                               Angle& bet2a, Angle& omg2a, Angle& alp2a,
+                               int* countn, int* countb) const {
     // Compute points at distance s12
     real sig2 = _gic.sig1 + s12/_tg.b();
     ang &phi2a = bet2a, &tht2a = omg2a;
-    int *countn = nullptr, *countb = nullptr;
+    // int *countn = nullptr, *countb = nullptr;
     if (_f.gammax() > 0) {
       real u2, v2;
       if constexpr (false && biaxspecial(_tg, _g.gammax())) {

@@ -198,7 +198,8 @@ namespace GeographicLib {
      * @return a GeodesicLine3 object defining the geodesic.
      **********************************************************************/
     GeodesicLine3 Inverse(Angle bet1, Angle omg1, Angle bet2, Angle omg2,
-                          real& s12, Angle& alp1, Angle& alp2) const;
+                          real& s12, Angle& alp1, Angle& alp2,
+                          int* countn = nullptr, int* countb = nullptr) const;
     /**
      * Solve the inverse problem in degrees
      *

@@ -388,6 +388,8 @@ namespace GeographicLib {
       R2[2] = _axes[2] * R[2] *
         sqrt(1 - Math::sq(R2[0]/_axes[0]) + Math::sq(R2[1]/_axes[1]));
     }
+    // Easily shown that U.(R-R2)  = (p - c^2) * U.U
+    // => h = Uhat.(R-R2) = (p - c^2) * |U|
     h = (p - _axes2[2]) * Math::hypot3(R2[0] / _axes2[0],
                                        R2[1] / _axes2[1],
                                        R2[2] / _axes2[2]);

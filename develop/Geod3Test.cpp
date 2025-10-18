@@ -29,7 +29,9 @@
 using namespace std;
 using namespace GeographicLib;
 using namespace Triaxial;
+#if HAVE_BOOST
 using experimental::TriaxialGeodesicODE;
+#endif
 
 int usage(int retval, bool /*brief*/) {
   ( retval ? cerr : cout ) << "Bad input\n";
@@ -111,7 +113,7 @@ void errreport(const Geodesic3& tg,
   using real = Math::real;
   using ang = Angle;
   bool debug = false, invp = true, invdirp = true,
-    dirp = true, swapp = false;
+    dirp = true, swapp = false, dirdiag = false;
   // invp = false;
   // invdirp = false;
   // dirp = false;
@@ -131,10 +133,12 @@ void errreport(const Geodesic3& tg,
   Ellipsoid3::vec3 r1, v1, r2, v2;
   Ellipsoid3::vec3 r1a, v1a, r2a, v2a;
   ang bet1a, omg1a, bet2a, omg2a;
+  int invcountn = 0, invcountb = 0;
   if (invp) {
     real s12a;
     GeodesicLine3 l0 =
-      tg.Inverse(bet1x, omg1x, bet2x, omg2x, s12a, alp1a, alp2a);
+      tg.Inverse(bet1x, omg1x, bet2x, omg2x, s12a, alp1a, alp2a,
+                 &invcountn, &invcountb);
     errs = fabs(s12 - s12a);
     // direct checks for inverse calculation using alp1a, alp2a, s12a
     tg.t().elliptocart2(bet1x, omg1x, alp1a, r1, v1);
@@ -147,6 +151,15 @@ void errreport(const Geodesic3& tg,
     if (invdirp) {
       GeodesicLine3 l1i(tg, bet1x, omg1x, alp1a);
       GeodesicLine3 l2i(tg, bet2x, omg2x, alp2a);
+      if (0) {
+        int nfbet, nfomg, ngbet, ngomg;
+        l1i.ncoeffs(nfbet, nfomg, ngbet, ngomg);
+        cout <<  "LICOEFFS "
+             << nfbet << " " << nfomg << " " << ngbet << " " << ngomg << "\n";
+        l2i.ncoeffs(nfbet, nfomg, ngbet, ngomg);
+        cout <<  "L2COEFFS "
+             << nfbet << " " << nfomg << " " << ngbet << " " << ngomg << "\n";
+      }
       l2i.Position(-s12a, bet1a, omg1a, alp1a);
       tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
       errr1i = vecdiff(r1, r1a); errv1i = vecdiff(v1, v1a);
@@ -163,6 +176,7 @@ void errreport(const Geodesic3& tg,
       errr2i = vecdiff(r2, r2a); errv2i = vecdiff(v2, v2a);
     }
   }
+  int nfbet, nfomg, ngbet, ngomg, countn = 0, countb = 0;
   if (dirp) {
     // direct checks for test sets using alp1x, alp2x, s12
     tg.t().elliptocart2(bet1x, omg1x, alp1x, r1, v1);
@@ -172,12 +186,13 @@ void errreport(const Geodesic3& tg,
     l2.Position(-s12, bet1a, omg1a, alp1a);
     tg.t().elliptocart2(bet1a, omg1a, alp1a, r1a, v1a);
     errr1 = vecdiff(r1, r1a); errv1 = vecdiff(v1, v1a);
-    l1.Position(s12, bet2a, omg2a, alp2a);
+    l1.Position(s12, bet2a, omg2a, alp2a, &countn, &countb);
+    l1.ncoeffs(nfbet, nfomg, ngbet, ngomg);
     tg.t().elliptocart2(bet2a, omg2a, alp2a, r2a, v2a);
     errr2 = vecdiff(r2, r2a); errv2 = vecdiff(v2, v2a);
     real ds = real(10)/max(1,num);
     for (int i = 1; i < num; ++i) {
-      // Extra num - 1 calls
+      // Extra 2 x (num - 1) calls
       l1.Position(i*ds, bet2a, omg2a, alp2a);
       l2.Position(-i*ds, bet1a, omg1a, alp1a);
     }
@@ -188,6 +203,11 @@ void errreport(const Geodesic3& tg,
        << ceil(errr1i/eps) << " " << ceil(errv1i/eps) << " "
        << ceil(errr2/eps) << " " << ceil(errv2/eps) << " "
        << ceil(errr1/eps) << " " << ceil(errv1/eps) << endl;
+  if (dirdiag)
+    cout << "DIAG "
+         << nfbet << " " << nfomg << " " << ngbet << " " << ngomg << " "
+         << countn  << " " << countb << " "
+         << invcountn  << " " << invcountb << "\n";
 }
 
 #if HAVE_BOOST
@@ -406,6 +426,7 @@ int main(int argc, const char* const argv[]) {
           errODE(l, bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21,
                  steps);
 #endif
+          (void) steps;
         } else if (reportp)
           report(tg, int(bet1), int(omg1), int(bet2), int(omg2), odep);
         else
@@ -439,6 +460,7 @@ int main(int argc, const char* const argv[]) {
               sum += fabs(alp2);
             }
           } else {
+#if HAVE_BOOST
             l.Reset(R1, V1);
             for (int j = 0; j < numl; ++j) {
               s12v[j] = real(uni(g));
@@ -446,6 +468,7 @@ int main(int argc, const char* const argv[]) {
             }
             l.Position(s12v, R2v, V2v);
             if (numl > 0) sum += fabs(R2v[0][0]);
+#endif
           }
         }
       } else {

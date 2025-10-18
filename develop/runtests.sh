@@ -7,6 +7,10 @@ make Geod3Test
 while read n l; do
     develop/Geod3Test -e $l $FLAGS < $TESTDIR/test$n.txt > test$n.out$SUF &
     sleep 1
+done<<EOF
+set  1 3/2 1 2
+EOF
+exit
 done <<EOF
 obl  1 3/4 3 0
 seta 1 1   2 1
@@ -278,20 +282,121 @@ Large CNT=147 head -1848 ../testset.txt | tail -1 | ./Geod3Test $SET
 switch omg[12] in inverse calc
 
 Redo baseline (minor differences)
-                  direct          inverse         invdirect
-testhu.outm      5.86    666     2.68     84     5.65    233
-testobl.outm     3.31     27     1.38     12     3.23     24
-testoblx.outm    4.81    292     2.25     36     4.85    123
-testphu.outm     5.93    658     3.98   2084     7.01   2098
-testpro.outm     4.72     41     2.40     20     4.56     42
-testprox.outm    7.21    318     4.07    288     7.78   1157
-testseta.outm    4.45    123     2.39     82     5.03   1284
-testset.outm     5.11    130     2.82     88     5.95   2955
-testspha.outm    3.09     25     1.08     16     3.13     25
-testsphb.outm    4.50    137     2.52     90     5.16   1498
-testsphc.outm    4.57    134     2.63     88     5.37   1451
-testsphd.outm    2.76     18     1.08     12     2.84     22
-testwgs84.outm   4.50     32     2.05     20     4.30     31
+                direct R      V        inverse     invdirect R     V
+testhu.outa     5.9  666  8.0  1133    2.7   84    5.6  233   8.1   1656
+testobl.outa    3.3   27  5.3   246    1.4   12    3.2   25   5.1    243
+testoblx.outa   4.8  310  7.7  1031    2.3   36    4.8  123   7.7    784
+testphu.outa    5.9  672  9.0 27857    4.0 2084    7.0 2115   9.8   4479
+testpro.outa    4.7   41  5.0    47    2.4   20    4.6   42   4.9     59
+testprox.outa   7.2  318  9.9 19263    4.1  288    7.8 1157   8.9   1821
+testseta.outa   4.4  153  6.3  1275    2.4   82    5.0 2733   6.9   2197
+testset.outa    5.1  160  6.4  1492    2.8   88    6.0 8723   7.2   5132
+testspha.outa   3.1   25  3.6    27    1.1   16    3.1   29   3.7     61
+testsphb.outa   4.5  181  5.7   828    2.5   90    5.2 1498   6.4   1664
+testsphc.outa   4.6  134  5.7  1419    2.6   88    5.4 2293   6.6   2431
+testsphd.outa   2.8   20  3.2    20    1.1   12    2.8   23   3.3     54
+testwgs84.outa  4.5   32  5.1    32    2.0   20    4.3   31 126.8 210080
 
 swapomg treatment reduces max inverse error for phu and prox
 but max invdirect error becomes unacceptable (= 387838 for prox)
+
+MATLAB results for testset
+B     4.5   38  6.0    83   94.1 8424   111.8 8424 116.9   8428
+longdoube results for testset
+testset.outa    5.1  116  6.5  2490    2.8   86    5.9 4171 121.5 114274565
+fix outlier by increase gamma=0 capture multiplier from 2 to 3
+testset.outa3   5.1  116  6.6  2490    2.8   86    6.0 4171   7.4   2432
+
+ODE direct only
+                 direct R        V
+testhu.outb      52.4    995   53.1    991
+testobl.outb    121.0   2904  136.8   3731
+testoblx.outb   118.0   2648  134.0   4233
+testphu.outb     50.6    937   51.2    941
+testpro.outb    122.7   2112  133.8   4191
+testprox.outb   120.5   2794  129.8   3819
+testseta.outb   120.0   3131  135.2   3822
+testset.outb    121.1   3388  131.8   3692
+testspha.outb    52.0   1198   52.6   1200
+testsphb.outb    50.9    882   51.1    880
+testsphc.outb    50.8    815   51.0    815
+testsphd.outb    51.6    982   52.2    982
+testwgs84.outb  102.4   1165  102.4   1165
+
+testset.outb0   121.1   3388  131.8   3692
+testset.outb0s with steps
+  mean steps = 10.2 mean accel 513
+testset.outb01   87.4   1756   92.6   1817 --normp
+testset.outb1    35.9    936   39.3   1201 --dense
+testset.outb1s with steps
+  mean steps = 14.5 mean accel 1176
+testset.outb11   41.2    423   45.9    867 --dense --normp
+testset.outb11s with steps
+  mean steps = 14.4 mean accel = 1118
+
+ellipthresh = 1/8
+diagnostics      ncoeff       2dctn     2dcntb     invcntn   invcntb
+testhu.outd     20.18  99   4.91  25   0.30  22   8.12  19   1.26  11
+testobl.outd    14.50  63   4.14   5   0.00   0   6.61  22   0.48  14
+testoblx.outd   35.84 259   4.83  23   0.19  20   7.62  26   0.99  16
+testphu.outd    20.67 106   4.93  37   0.31  22   9.57  26   2.32  14
+testpro.outd    13.57  63   4.06   5   0.01   1   9.33  25   2.35  15
+testprox.outd   22.72 125   5.20  37   0.31  21   8.74  23   1.54  14
+testseta.outd   34.08 228   4.93  21   0.13  19   7.42  24   0.80  15
+testset.outd    29.84 180   5.09  22   0.16  19   7.62  25   0.83  17
+testspha.outd    3.51  63   1.94   2   0.00   0   6.85  18   0.60   9
+testsphb.outd   26.21 106   4.91  21   0.15  19   7.84  19   1.00  10
+testsphc.outd   26.26 106   4.91  21   0.15  19   8.09  20   1.10  12
+testsphd.outd    3.50  63   1.94   2   0.00   0  10.08  26   3.00  17
+testwgs84.outd   4.93  63   2.63   5   0.00   0  11.14  58   4.46  52
+
+skip gamma = 0
+testset.outc  29.84 180   5.09  22   0.16  19   7.62  25   0.83  17 all
+testset.outc  29.94 180   5.04  16   0.11   8   7.73  25   0.84  17 gamma = 0
+testset.outc  36.34 224   5.32  16   0.11   8   8.06  25   0.84  16 LD
+testset.outc  64.83 414   6.13  17   0.11   8   9.06  27   0.85  16 Quad
+testset.outc 148.73 971   7.31  18   0.11   8  10.50  32   0.85  18 MPFR
+
+d=[53,64,113,256];
+nc=[ 29.94, 36.34, 64.83,148.73];
+nd=[5.04,5.32,6.13,7.31];
+ni=[ 7.73, 8.06, 9.06,10.50];
+p=polyfit(log(d),log(nc),1)
+log(nc)=1.0175*log(d)-0.6392
+log2(nc)=1.0175*log2(d)-0.9222
+nd=1.4389*log(d)-0.6694
+  =0.9973*log2(d)-0.6694
+ni=1.7592*log(d)+0.7443
+  =1.2194*log2(d)+0.7443
+Increase nd by 1, d *= 2^(1/0.9973) = 2.0038
+Increase ni by 1, d *= 2^(1/1.2194) = 1.7655
+
+ellipthresh = 1/16 case e
+testhu.oute     22.62  99   4.81  25   0.27  22   8.06  19   1.22  11
+testobl.oute    15.41  75   4.14   5   0.00   0   6.68  22   0.51  14
+testoblx.oute   37.14 259   4.86  23   0.19  20   7.56  26   0.95  17
+testphu.oute    23.07 106   4.84  37   0.28  22   9.54  25   2.30  14
+testpro.oute    14.48  75   4.06   5   0.01   1   9.42  25   2.40  15
+testprox.oute   25.18 125   5.14  37   0.28  21   8.71  23   1.52  14
+testseta.oute   37.00 228   4.95  21   0.12  19   7.34  24   0.76  15
+testset.oute    33.49 180   5.08  22   0.14  19   7.56  25   0.79  17
+testspha.oute    5.07  75   1.94   2   0.00   0   6.95  18   0.64   9
+testsphb.oute   30.59 106   4.90  21   0.14  19   7.76  20   0.96  10
+testsphc.oute   30.61 106   4.90  21   0.14  19   8.01  20   1.06  12
+testsphd.oute    5.06  74   1.94   2   0.00   0  10.19  26   3.05  17
+testwgs84.oute   5.68  75   2.63   5   0.00   0  11.19  58   4.48  52
+
+ellipthresh = 1/4 case f
+testhu.outf     18.45  99   4.99  25   0.32  22   8.18  19   1.29  11
+testobl.outf    14.03  37   4.14   5   0.00   0   6.55  19   0.46  10
+testoblx.outf   35.10 259   4.78  23   0.19  20   7.70  26   1.03  16
+testphu.outf    18.96 106   5.01  37   0.32  22   9.61  26   2.34  14
+testpro.outf    12.99  37   4.06   5   0.01   1   9.26  25   2.32  15
+testprox.outf   20.83 125   5.27  37   0.34  21   8.79  23   1.56  14
+testseta.outf   32.06 228   4.92  21   0.15  19   7.53  24   0.85  15
+testset.outf    27.02 180   5.11  22   0.18  19   7.72  26   0.87  17
+testspha.outf    2.32  37   1.94   2   0.00   0   6.75  18   0.56   9
+testsphb.outf   22.25 106   4.93  21   0.16  19   7.96  19   1.06  10
+testsphc.outf   22.28 106   4.93  21   0.16  19   8.20  20   1.15  12
+testsphd.outf    2.31  37   1.94   2   0.00   0   9.97  26   2.95  17
+testwgs84.outf   4.24  37   2.63   5   0.00   0  11.08  59   4.43  52

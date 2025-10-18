@@ -952,3 +952,7 @@ add_test (NAME Intersect2 COMMAND IntersectTool
   -p 0 --input-string "50N 4W 147.7W 0 180 0" -c -R 2.6e7)
 set_tests_properties (Intersect2
   PROPERTIES PASS_REGULAR_EXPRESSION "^-494582 14052230 0 14546812[\r\n]19529110 -5932344 0 25461454[\r\n]nan nan 0 nan[\r\n]")
+
+# Geod3Solve bugs
+# echo 0 20 0 -50 | tools/Geod3Solve -i -t 3 2 1
+# a1, a2, s12 = e-113.8013, -71.7194, 2.6650
