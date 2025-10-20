@@ -82,7 +82,7 @@ void report(const Geodesic3& tg, int bet1, int omg1, int bet2, int omg2,
     Ellipsoid3::vec3 r2, v2;
     // ang bet1a, omg1a;
     // l.pos1(bet1a, omg1a, alp1);
-    TriaxialGeodesicODE direct(tg.t(), ang(bet1), ang(omg1), alp1);
+    TriaxialGeodesicODE direct(tg.t(), ang(bet1), ang(omg1), alp1, true, true);
     direct.Position(s12, r2, v2, m12, M12, M21);
     // t.cart2toellip(bet2x, omg2x, v2, alp2);
 #endif

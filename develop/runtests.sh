@@ -2,7 +2,7 @@
 SUF=$1
 shift
 FLAGS=$*
-TESTDIR=$HOME/git/triaxial/src
+TESTDIR=$HOME/geographiclib/scratch/triaxial
 make Geod3Test
 while read n l; do
     develop/Geod3Test -e $l $FLAGS < $TESTDIR/test$n.txt > test$n.out$SUF &
@@ -25,6 +25,7 @@ phu  1 30308952520/4489860107041 3178376 971037955
 oblx 1 150/197 49 1
 prox 1 150/53 1 49
 wgs84 1 124/18523 1 0
+t321 1 2 3 5
 EOF
 exit
 
@@ -296,6 +297,7 @@ testsphb.outa   4.5  181  5.7   828    2.5   90    5.2 1498   6.4   1664
 testsphc.outa   4.6  134  5.7  1419    2.6   88    5.4 2293   6.6   2431
 testsphd.outa   2.8   20  3.2    20    1.1   12    2.8   23   3.3     54
 testwgs84.outa  4.5   32  5.1    32    2.0   20    4.3   31 126.8 210080
+testt321.outa   5.2  142  7.4   526    2.8  100    6.2 3985  11.6 2529124
 
 swapomg treatment reduces max inverse error for phu and prox
 but max invdirect error becomes unacceptable (= 387838 for prox)
