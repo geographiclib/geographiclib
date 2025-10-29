@@ -868,7 +868,7 @@ namespace GeographicLib {
         omgdiff = -2 * omg.c() * omg.s() * tg.kp2() * Math::sq(alp.c());
       maxdiff = fmax( fabs(alpdiff), fmax( fabs(betdiff), fabs(omgdiff) ) );
     }
-    if (fabs(gamma) <= 2 * maxdiff * numeric_limits<real>::epsilon()) {
+    if (fabs(gamma) <= 3 * maxdiff * numeric_limits<real>::epsilon()) {
       // Set gamma = 0 if a change of alp, bet, or omg by epsilon would include
       // gamma = 0.
       gamma = 0;

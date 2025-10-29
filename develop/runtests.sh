@@ -8,10 +8,6 @@ while read n l; do
     develop/Geod3Test -e $l $FLAGS < $TESTDIR/test$n.txt > test$n.out$SUF &
     sleep 1
 done<<EOF
-set  1 3/2 1 2
-EOF
-exit
-done <<EOF
 obl  1 3/4 3 0
 seta 1 1   2 1
 set  1 3/2 1 2
@@ -26,6 +22,8 @@ oblx 1 150/197 49 1
 prox 1 150/53 1 49
 wgs84 1 124/18523 1 0
 t321 1 2 3 5
+orig 1 3801/10000 3600 201
+bill 1 10101/10000 9900 201
 EOF
 exit
 
@@ -284,20 +282,22 @@ switch omg[12] in inverse calc
 
 Redo baseline (minor differences)
                 direct R      V        inverse     invdirect R     V
+testbill.outa   4.6  309 15.9  3311    2.0   40    4.6  137  13.1   1941
 testhu.outa     5.9  666  8.0  1133    2.7   84    5.6  233   8.1   1656
 testobl.outa    3.3   27  5.3   246    1.4   12    3.2   25   5.1    243
 testoblx.outa   4.8  310  7.7  1031    2.3   36    4.8  123   7.7    784
+testorig.outa   4.9  212  6.6   618    2.4   39    5.1  221   6.9   1238
 testphu.outa    5.9  672  9.0 27857    4.0 2084    7.0 2115   9.8   4479
 testpro.outa    4.7   41  5.0    47    2.4   20    4.6   42   4.9     59
 testprox.outa   7.2  318  9.9 19263    4.1  288    7.8 1157   8.9   1821
-testseta.outa   4.4  153  6.3  1275    2.4   82    5.0 2733   6.9   2197
 testset.outa    5.1  160  6.4  1492    2.8   88    6.0 8723   7.2   5132
+testseta.outa   4.4  153  6.3  1275    2.4   82    5.0 2733   6.9   2197
 testspha.outa   3.1   25  3.6    27    1.1   16    3.1   29   3.7     61
 testsphb.outa   4.5  181  5.7   828    2.5   90    5.2 1498   6.4   1664
 testsphc.outa   4.6  134  5.7  1419    2.6   88    5.4 2293   6.6   2431
 testsphd.outa   2.8   20  3.2    20    1.1   12    2.8   23   3.3     54
+testt321.outa   5.2  142  7.4   526    2.8  100    6.2 3985   8.2   1920
 testwgs84.outa  4.5   32  5.1    32    2.0   20    4.3   31 126.8 210080
-testt321.outa   5.2  142  7.4   526    2.8  100    6.2 3985  11.6 2529124
 
 swapomg treatment reduces max inverse error for phu and prox
 but max invdirect error becomes unacceptable (= 387838 for prox)

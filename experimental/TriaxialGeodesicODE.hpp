@@ -298,7 +298,7 @@ namespace GeographicLib {
      * @param[out] V2 a vector of velocities at points 2.
      *
      * Before starting the integration, the positive and negative vaules in \e
-     * s12 separated and then sorted in order of increasing magnitude.  The
+     * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.
      *
@@ -321,7 +321,7 @@ namespace GeographicLib {
      *   points 2.
      *
      * Before starting the integration, the positive and negative vaules in \e
-     * s12 separated and then sorted in order of increasing magnitude.  The
+     * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.
      *
@@ -345,7 +345,7 @@ namespace GeographicLib {
      * @param[out] alp2 a vector of azimuths at points 2.
      *
      * Before starting the integration, the positive and negative vaules in \e
-     * s12 separated and then sorted in order of increasing magnitude.  The
+     * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.
      **********************************************************************/
@@ -367,7 +367,7 @@ namespace GeographicLib {
      *   points 2.
      *
      * Before starting the integration, the positive and negative vaules in \e
-     * s12 separated and then sorted in order of increasing magnitude.  The
+     * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.
      **********************************************************************/
