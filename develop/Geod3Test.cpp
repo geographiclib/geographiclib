@@ -9,11 +9,13 @@
 #include <GeographicLib/Math.hpp>
 #include <GeographicLib/Utility.hpp>
 #include <GeographicLib/Angle.hpp>
+#include <GeographicLib/EllipticFunction.hpp>
 #include <GeographicLib/Triaxial/Ellipsoid3.hpp>
 #include <GeographicLib/Triaxial/Geodesic3.hpp>
 #include <GeographicLib/Triaxial/Cartesian3.hpp>
 
 #define DIAGS 0
+#define ODEMOD 1
 
 #if !defined(HAVE_BOOST)
 #  define HAVE_BOOST 0
@@ -319,6 +321,59 @@ void angletest() {
   }
 }
 
+#if HAVE_BOOST
+void msols(TriaxialGeodesicODE& l, Math::real s,
+           Math::real& m12, Math::real& M12,
+           Math::real& m12p, Math::real& M12p) {
+  Ellipsoid3::vec3 R, V;
+#if ODEMOD
+  // Return real M12p
+  l.Position(s, R, V, m12, M12, m12p, M12p);
+#else
+  // Compute M12p, ill-conditioned when m12 is small
+  Math::real M21;
+  l.Position(s, R, V, m12, M12, M21);
+  m12p = M21; M12p = - (1 - M12 * M21) / m12;
+#endif
+}
+
+void redlenreport(TriaxialGeodesicODE& l) {
+  using real = Math::real;
+  const Ellipsoid3& t = l.t();
+  real a = t.a(), b = t.b(), c = t.c(), m12, M12, m12p, M12p;
+  cout << fixed << setprecision(12);
+  // Minor ellipse
+  real s = 4 * EllipticFunction::RG(Math::sq(b), Math::sq(c));
+  l.Reset({0, b, 0}, {0, 0, 1});
+  msols(l, s, m12, M12, m12p, M12p);
+  cout << M12 << " " << m12 << " " << M12p << " " << m12p << "\n";
+  l.Reset({0, 0, c}, {0, 1, 0});
+  msols(l, s, m12, M12, m12p, M12p);
+  cout << M12 << " " << m12 << " " << M12p << " " << m12p << "\n";
+  // Median ellipse
+  s = 4 * EllipticFunction::RG(Math::sq(a), Math::sq(c));
+  l.Reset({a, 0, 0}, {0, 0, 1});
+  msols(l, s, m12, M12, m12p, M12p);
+  cout << M12 << " " << m12 << " " << M12p << " " << m12p << "\n";
+  l.Reset({0, 0, c}, {1, 0, 0});
+  msols(l, s, m12, M12, m12p, M12p);
+  cout << M12 << " " << m12 << " " << M12p << " " << m12p << "\n";
+  Ellipsoid3::vec3 R0, V0;
+  l.t().elliptocart2(Angle(90),Angle(0),Angle(0), R0, V0);
+  l.Reset(R0, V0);
+  msols(l, s, m12, M12, m12p, M12p);
+  cout << M12 << " " << m12 << " " << M12p << " " << m12p << "\n";
+  // Major ellipse
+  s = 4 * EllipticFunction::RG(Math::sq(a), Math::sq(b));
+  l.Reset({a, 0, 0}, {0, 1, 0});
+  msols(l, s, m12, M12, m12p, M12p);
+  cout << M12 << " " << m12 << " " << M12p << " " << m12p << "\n";
+  l.Reset({0, b, 0}, {1, 0, 0});
+  msols(l, s, m12, M12, m12p, M12p);
+  cout << M12 << " " << m12 << " " << M12p << " " << m12p << "\n";
+}
+#endif
+
 int main(int argc, const char* const argv[]) {
   try {
     using real = Math::real;
@@ -326,7 +381,8 @@ int main(int argc, const char* const argv[]) {
     bool odep = false, reportp = false,
       odetest = false, extended = false, dense = false, normp = false,
       steps = false,
-      inverse = false;          // just for timing
+      inverse = false,          // just for timing
+      redlen = false;
     real a = 1, b = 1, c = 1, e2 = -1, k2 = -1, kp2 = -1, eps = 0;
     int num = 0, numl = 1;
     unsigned long long seed = 0;
@@ -337,13 +393,14 @@ int main(int argc, const char* const argv[]) {
         try {
           a = Utility::val<real>(string(argv[m + 1]));
           b = Utility::val<real>(string(argv[m + 2]));
-          c = Utility::val<real>(string(argv[m + 2]));
+          c = Utility::val<real>(string(argv[m + 3]));
+          e2 = -1;
         }
         catch (const exception& e) {
           cerr << "Error decoding arguments of -e: " << e.what() << "\n";
           return 1;
         }
-        m += 2;
+        m += 3;
       } else if (arg == "-e") {
         if (m + 4 >= argc) return usage(1, true);
         try {
@@ -351,6 +408,7 @@ int main(int argc, const char* const argv[]) {
           e2 = Utility::fract<real>(string(argv[m + 2]));
           k2 = Utility::fract<real>(string(argv[m + 3]));
           kp2 = Utility::fract<real>(string(argv[m + 4]));
+          a = -1;
         }
         catch (const exception& e) {
           cerr << "Error decoding arguments of -e: " << e.what() << "\n";
@@ -367,6 +425,8 @@ int main(int argc, const char* const argv[]) {
         steps = true;
       else if (arg == "-x")
         extended = true;
+      else if (arg == "--redlen")
+        redlen = extended = true;
       else if (arg == "--eps") {
         if (m + 1 >= argc) return usage(1, true);
         try {
@@ -440,6 +500,12 @@ int main(int argc, const char* const argv[]) {
     TriaxialGeodesicODE l(tg.t(), extended, dense, normp, eps);
 #endif
     if (num <= 0) {
+      if (redlen) {
+#if HAVE_BOOST
+        redlenreport(l);
+#endif
+        return 0;
+      }
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
         if (odetest) {
