@@ -254,9 +254,6 @@ namespace GeographicLib {
      **********************************************************************/
     std::pair<real, real> Position(real s12, vec3& R2, vec3& V2,
                                    real& m12, real& M12, real& M21);
-    std::pair<real, real> Position(real s12, vec3& R2, vec3& V2,
-                                   real& m12, real& M12,
-                                   real& m12p, real& M21p);
     /**
      * Find the ellipsoidal coordinates a given distance from the starting
      * point.
@@ -435,15 +432,6 @@ namespace GeographicLib {
     void Position1(Angle& bet1, Angle& omg1, Angle& alp1) const {
       bet1 = _bet1; omg1 = _omg1; alp1 = _alp1;
     }
-    /**
-     * Return the Gaussian curvature at a point.
-     *
-     * @param[in] R the position.
-     * @return the Gaussian curvature.
-     *
-     * It is assumed that \e R lies on the ellipsoid.
-     **********************************************************************/
-    real GaussianCurvature(vec3 R) const;
     /**
      * @return the Ellipsoid3 object used in the constructor.
      **********************************************************************/

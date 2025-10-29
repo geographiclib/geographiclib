@@ -169,14 +169,6 @@ namespace experimental {
     ++_intsteps;
   }
 
-  Math::real TriaxialGeodesicODE::GaussianCurvature(vec3 R) const {
-    vec3 up = { R[0] / Math::sq(_t.a()),
-      R[1] / Math::sq(_t.b()),
-      R[2] / Math::sq(_t.c()) };
-    real u2 = Math::sq(up[0]) + Math::sq(up[1]) + Math::sq(up[2]);
-    return 1 / Math::sq(_t.a()*_t.b()*_t.c() * u2);
-  }
-
   void TriaxialGeodesicODE::Accel10N(const vec10& y, vec10& yp) const {
     real ra = Math::hypot3(y[0] / _axesn[0], y[1], y[2] / _axesn[2]);
     // merge correction to r with computation of U and put U in yp[3,4,5]
@@ -301,117 +293,6 @@ namespace experimental {
       V2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
       m12 = _dir * _b * t[6];
       M12 = t[8]; M21 = t[7];     // AG Eq 29: dm12/ds2 = M21
-      for (int i = 0; i < 6; ++i)
-        t[i] -= _y10[i];
-      errr = _b * Math::hypot3(t[0], t[1], t[2]);
-      errv = Math::hypot3(t[3+0], t[3+1], t[3+2]);
-    } else {
-      vec6 t = _y6; Norm6(t);
-      R2 = {_b * t[0], _b * t[1], _b * t[2]};
-      V2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
-      for (int i = 0; i < 6; ++i)
-        t[i] -= _y6[i];
-      errr = _b * Math::hypot3(t[0], t[1], t[2]);
-      errv = Math::hypot3(t[3+0], t[3+1], t[3+2]);
-    }
-    return pair<real, real>(errr, errv);
-  }
-
-  pair<Math::real, Math::real>
-  TriaxialGeodesicODE::Position(real s12, vec3& R2, vec3& V2,
-                                real& m12, real& M12, real& m12p, real& M12p) {
-    const auto
-      fun6 = [this](const vec6& y, vec6& yp, real /*t*/) -> void {
-        return _normp ? Accel6N(y, yp) : Accel6(y, yp);
-      };
-    const auto
-      fun10 = [this](const vec10& y, vec10& yp, real /*t*/) -> void {
-        return _normp ? Accel10N(y, yp) : Accel10(y, yp);
-      };
-    s12 /= _b;
-    if (s12 == 0) {
-      R2 = _r1; V2 = _v1;
-      if (_extended) {
-        m12 = copysign(real(0), s12); M12p = -m12; M12 = m12p = 1;
-      }
-      return pair<real, real>(0, 0);
-    } else if (!isfinite(s12)) {
-      R2 = V2 = {Math::NaN(), Math::NaN(), Math::NaN()};
-      if (_extended) {
-        m12 = M12 = m12p = M12p = Math::NaN();
-      }
-      return pair<real, real>(Math::NaN(), Math::NaN());
-    }
-    if (_dir == 0) {
-      _dir = signbit(s12) ? -1 : 1;
-      if (_extended)
-        _y10 = {_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
-          _dir * _v1[0], _dir * _v1[1], _dir * _v1[2],
-          0, 1, 1, 0};
-      else
-        _y6 = vec6{_r1[0] / _b, _r1[1] / _b, _r1[2] / _b,
-          _dir * _v1[0], _dir * _v1[1], _dir * _v1[2]};
-      _s = 0;
-      if (_dense) {
-#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-        if (_extended) {
-          // x0, t0, dt0
-          _dstep10.initialize(_y10, _s, 1/real(4));
-          (void) _dstep10.do_step(fun10);
-        } else {
-          _dstep6.initialize(_y6, _s, 1/real(4));
-          (void) _dstep6.do_step(fun6);
-        }
-        ++_nsteps;
-#endif
-      }
-    }
-    s12 *= _dir;
-    if (_dense) {
-#if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
-      if (s12 < (_extended ?
-                 _dstep10.previous_time() :
-                 _dstep6.previous_time())) {
-        s12 *= _dir;
-        Reset();
-        return Position(s12, R2, V2, m12, M12, m12p, M12p);
-      }
-      while ((_extended ? _dstep10.current_time() : _dstep6.current_time())
-             < s12) {
-        if (_extended)
-          (void) _dstep10.do_step(fun10);
-        else
-          (void) _dstep6.do_step(fun6);
-        ++_nsteps;
-      }
-      if (_extended)
-        _dstep10.calc_state(s12, _y10);
-      else
-        _dstep6.calc_state(s12, _y6);
-#endif
-    } else {
-      if (s12 < _s) {
-        s12 *= _dir;
-        Reset();
-        return Position(s12, R2, V2, m12, M12, m12p, M12p);
-      } else if (s12 > _s) {
-        _nsteps += long(_extended ?
-                        integrate_adaptive(_step10, fun10, _y10, _s, s12,
-                                           fmax(s12 - _s, 1/real(4))) :
-                        integrate_adaptive(_step6, fun6, _y6, _s, s12,
-                                           fmax(s12 - _s, 1/real(4))));
-        _s = s12;
-      }
-    }
-    real errr, errv;
-    if (_extended) {
-      vec10 t = _y10; Norm10(t);
-      R2 = {_b * t[0], _b * t[1], _b * t[2]};
-      V2 = {_dir * t[3], _dir * t[4], _dir * t[5]};
-      m12 = _dir * _b * t[6];
-      M12 = t[8];
-      m12p = t[7];
-      M12p = _dir * t[9] / _b;
       for (int i = 0; i < 6; ++i)
         t[i] -= _y10[i];
       errr = _b * Math::hypot3(t[0], t[1], t[2]);

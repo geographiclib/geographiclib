@@ -15,7 +15,7 @@
 #include <GeographicLib/Triaxial/Cartesian3.hpp>
 
 #define DIAGS 0
-#define ODEMOD 1
+#define ODEMOD 0
 
 #if !defined(HAVE_BOOST)
 #  define HAVE_BOOST 0
