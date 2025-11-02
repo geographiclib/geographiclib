@@ -965,3 +965,10 @@ add_test (NAME Geod3Solve2 COMMAND Geod3Solve
 set_tests_properties (Geod3Solve2
   PROPERTIES PASS_REGULAR_EXPRESSION
   "^156\\.55140 4\\.73972 3\\.2689702[\r\n]")
+
+# Cart3Convert bug found on 2025-11-01; fixed 2025-11-01
+add_test (NAME Cart3Convert1 COMMAND Cart3Convert
+  -t 3 2 1 -G -3 -p 0 -r --input-string "1 1 0")
+set_tests_properties (Cart3Convert1
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^61\\.07208 69\\.44395 -0\\.7359801[\r\n]")
