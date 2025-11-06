@@ -12,7 +12,7 @@ namespace GeographicLib {
 \mainpage GeographicLib library
 \author Charles F. F. Karney (karney@alum.mit.edu)
 \version @PROJECT_VERSION@
-\date 2025-mm-dd
+\date 2025-11-06
 
 \section abstract Abstract
 
@@ -75,7 +75,7 @@ page](../../index.html).
 
 When citing GeographicLib, use (adjust the version number and date as
 appropriate)
-- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2025-mm-dd),
+- C. F. F. Karney, GeographicLib, Version @PROJECT_VERSION@ (2025-11-06),
   https://geographiclib.sourceforge.io/C++/@PROJECT_VERSION@
 
 \section contents Contents
@@ -7787,13 +7787,13 @@ git repository for GeographicLib</a>.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.7">Version 2.7</a>
-   (released 2025-mm-dd)
+   (released 2025-11-06)
    - Fix two bugs in classes for triaxial ellipsoids:
      - Triaxial::Geodesic3::Inverse sometimes threw an exception when
        both endpoints were on the major principal ellipse for very
        eccentric ellipsoids \e a > 2 \e c.
      - Triaxial::Cartesian3::carttocart2 sometimes returned the wrong
-       result in the interior of the ellipsoid with $\e Z = 0$.
+       result in the interior of the ellipsoid with \e Z = 0.
    - Cite the paper covering some of the triaxial classes
      <a href="https://arxiv.org/abs/2511.01621"> Jacobi's solution for
      geodesics on a triaxial ellipsoid</a>.
