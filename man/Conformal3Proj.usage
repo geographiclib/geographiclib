@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Conformal3Proj --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.6/Conformal3Proj.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.7/Conformal3Proj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -45,7 +45,7 @@ int usage(int retval, bool brief) {
 "           -14.93deg.\n"
 "\n"
 "       -e b e2 k2 kp2\n"
-"           specify the ellipsoid via the median semiaxis, b and the sphape\n"
+"           specify the ellipsoid via the median semiaxis, b and the shape\n"
 "           parameters e2 = (a^2 - c^2)/b^2, k2 = (b^2 - c^2)/(a^2 - c^2), and\n"
 "           kp2 = (a^2 - b^2)/(a^2 - c^2).  Simple fractions are allowed for\n"
 "           e2, k2, and kp2.  Internally, the supplied values of k2 and kp2 are\n"
@@ -122,6 +122,15 @@ int usage(int retval, bool brief) {
 "       beginning with \"ERROR:\" and causes Conformal3Proj to return an exit\n"
 "       code of 1.  However, an error does not cause Conformal3Proj to\n"
 "       terminate; following lines will be converted.\n"
+"\n"
+"SEE ALSO\n"
+"       Ellipsoidal coordinates are documented in Section 2 of C. F. F. Karney,\n"
+"       Jacobi's solution for geodesics on a triaxial ellipsoid, Technical\n"
+"       Report, SRI International, Nov. 2025,\n"
+"       <https://arxiv.org/abs/2511.nnnnn>.\n"
+"\n"
+"       The Wikipedia page, Geodesics on an ellipsoid,\n"
+"       <https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.\n"
 "\n"
 "AUTHOR\n"
 "       Conformal3Proj was written by Charles Karney.\n"

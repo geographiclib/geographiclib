@@ -29,7 +29,7 @@ namespace GeographicLib {
     _f = geometricp ? f_J2 : J2ToFlattening(_a, _gGM, _omega, f_J2);
     _b = _a * (1 - _f);
     if (!(isfinite(_b) && _b > 0))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     _jJ2 = geometricp ? FlatteningToJ2(_a, _gGM, _omega, f_J2) : f_J2;
     _e2 = _f * (2 - _f);
     _ep2 = _e2 / (1 - _e2);

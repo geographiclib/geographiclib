@@ -952,3 +952,23 @@ add_test (NAME Intersect2 COMMAND IntersectTool
   -p 0 --input-string "50N 4W 147.7W 0 180 0" -c -R 2.6e7)
 set_tests_properties (Intersect2
   PROPERTIES PASS_REGULAR_EXPRESSION "^-494582 14052230 0 14546812[\r\n]19529110 -5932344 0 25461454[\r\n]nan nan 0 nan[\r\n]")
+
+# Geod3Solve bug found 2025-10-18; fixed 2025-10-19.
+add_test (NAME Geod3Solve1 COMMAND Geod3Solve
+  -p 0 -i -t 1.5 1 0.5 --input-string "0 20 0 -50")
+set_tests_properties (Geod3Solve1
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^-113\\.80132 -71\\.71938 1\\.3325034[\r\n]")
+# This is a bug in the Octave implementation.
+add_test (NAME Geod3Solve2 COMMAND Geod3Solve
+  -p 0 -i -t 1.5 1 0.5 --input-string "0 20 0 -175")
+set_tests_properties (Geod3Solve2
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^156\\.55140 4\\.73972 3\\.2689702[\r\n]")
+
+# Cart3Convert bug found on 2025-11-01; fixed 2025-11-01
+add_test (NAME Cart3Convert1 COMMAND Cart3Convert
+  -t 3 2 1 -G -3 -p 0 -r --input-string "1 1 0")
+set_tests_properties (Cart3Convert1
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "^61\\.07208 69\\.44395 -0\\.7359801[\r\n]")

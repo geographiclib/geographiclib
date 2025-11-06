@@ -27,7 +27,7 @@ namespace GeographicLib {
    * incomplete elliptic integrals.  The Geodesic class expands these integrals
    * in a series in the flattening \e f and this provides an accurate solution
    * for \e f &isin; [-0.01, 0.01].  The GeodesicExact class computes the
-   * ellitpic integrals directly and so provides a solution which is valid for
+   * elliptic integrals directly and so provides a solution which is valid for
    * all \e f.  However, in practice, its use should be limited to about
    * <i>b</i>/\e a &isin; [0.01, 100] or \e f &isin; [&minus;99, 0.99].
    *

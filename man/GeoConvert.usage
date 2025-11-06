@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoConvert --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.6/GeoConvert.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.7/GeoConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -339,7 +339,7 @@ int usage(int retval, bool brief) {
 "           World Geodetic System 1984, <https://en.wikipedia.org/wiki/WGS84>.\n"
 "\n"
 "SEE ALSO\n"
-"       An online version of this utility is availbable at\n"
+"       An online version of this utility is available at\n"
 "       <https://geographiclib.sourceforge.io/cgi-bin/GeoConvert>.\n"
 "\n"
 "       The algorithms for the transverse Mercator projection are described in\n"

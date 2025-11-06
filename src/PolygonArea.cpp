@@ -200,7 +200,7 @@ namespace GeographicLib {
     Remainder(area);
     if (crossings & 1) area += (area < 0 ? 1 : -1) * _area0/2;
     // area is with the clockwise sense.  If !reverse convert to
-    // counter-clockwise convention.
+    // counterclockwise convention.
     if (!reverse) area *= -1;
     // If sign put area in (-_area0/2, _area0/2], else put area in [0, _area0)
     if (sign) {

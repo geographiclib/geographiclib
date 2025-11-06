@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    TransverseMercatorProj --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.6/TransverseMercatorProj.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.7/TransverseMercatorProj.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -28,7 +28,7 @@ int usage(int retval, bool brief) {
 "\n"
 "       Geodetic coordinates are provided on standard input as a set of lines\n"
 "       containing (blank separated) latitude and longitude (decimal degrees or\n"
-"       degrees, minutes, seconds); for detils on the allowed formats for\n"
+"       degrees, minutes, seconds); for details on the allowed formats for\n"
 "       latitude and longitude, see the \"GEOGRAPHIC COORDINATES\" section of\n"
 "       GeoConvert(1).  For each set of geodetic coordinates, the corresponding\n"
 "       projected easting, x, and northing, y, (meters) are printed on standard\n"

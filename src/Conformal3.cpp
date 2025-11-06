@@ -256,7 +256,7 @@ namespace GeographicLib {
       // y = y0 - (c^2/b) * (c/b*db) / ((1-e2*k2)*kp*sqrt(1-e2*k2))
       //   = y0 - (c^2/b) * (c/b*db) / (c^2/b^2*kp*c/b)
       //   = y0 - b * db / kp
-      // for trixial -> plane
+      // for triaxial -> plane
       // mtp = 1/sqrt(k2*db^2 + kp2*do^2)
       // on equivalent sphere
       // x = x0 - b * do / k = x0 - bs * dos / ks
@@ -296,7 +296,7 @@ namespace GeographicLib {
         real e = sqrt(e2()), sg = sinh(e * atan(e));
         m = (a()/b()) / (hypot(sg, real(1)) + sg);
       } else {
-        // trixial umbilical
+        // triaxial umbilical
         m =  sqrt(_s.k2() * _s.kp2()/(k2() * kp2())) * (b()/_s.b());
       }
     }

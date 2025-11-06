@@ -67,7 +67,7 @@ namespace GeographicLib {
     if (!(_f > 0))
       throw GeographicErr("Flattening is not positive");
     if (!(_f < 1))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     if (!(isfinite(_k0) && _k0 > 0))
       throw GeographicErr("Scale is not positive");
   }

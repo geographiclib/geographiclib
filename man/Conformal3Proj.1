@@ -58,13 +58,13 @@
 .\" ========================================================================
 .\"
 .IX Title "CONFORMAL3PROJ 1"
-.TH CONFORMAL3PROJ 1 2025-09-30 "GeographicLib 2.6" "GeographicLib Utilities"
+.TH CONFORMAL3PROJ 1 2025-11-05 "GeographicLib 2.7" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH NAME
-Conformal3Proj \-\- conformal projsections for a triaxial ellipsoid
+Conformal3Proj \-\- conformal projections for a triaxial ellipsoid
 .SH SYNOPSIS
 .IX Header "SYNOPSIS"
 \&\fBConformal3Proj\fR [ \fB\-r\fR ]
@@ -102,7 +102,7 @@ and minor semixis \fIc\fR.  By default, we have \fIa\fR = 6378172 m, \fIb\fR =
 (With this model \fIomg\fR = 0deg, corresponds to \fIlon\fR = \-14.93deg.
 .IP "\fB\-e\fR \fIb\fR \fIe2\fR \fIk2\fR \fIkp2\fR" 4
 .IX Item "-e b e2 k2 kp2"
-specify the ellipsoid via the median semiaxis, \fIb\fR and the sphape
+specify the ellipsoid via the median semiaxis, \fIb\fR and the shape
 parameters \fIe2\fR = (\fIa\fR^2 \- \fIc\fR^2)/\fIb\fR^2, \fIk2\fR = (\fIb\fR^2 \-
 \&\fIc\fR^2)/(\fIa\fR^2 \- \fIc\fR^2), and \fIkp2\fR = (\fIa\fR^2 \- \fIb\fR^2)/(\fIa\fR^2 \-
 \&\fIc\fR^2).  Simple fractions are allowed for \fIe2\fR, \fIk2\fR, and \fIkp2\fR.
@@ -184,6 +184,15 @@ An illegal line of input will print an error message to standard output
 beginning with \f(CW\*(C`ERROR:\*(C'\fR and causes \fBConformal3Proj\fR to return an exit
 code of 1.  However, an error does not cause \fBConformal3Proj\fR to
 terminate; following lines will be converted.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"
+Ellipsoidal coordinates are documented in Section 2 of C. F. F. Karney,
+\&\fIJacobi\*(Aqs solution for geodesics on a triaxial ellipsoid\fR,
+Technical Report, SRI International, Nov. 2025,
+<https://arxiv.org/abs/2511.nnnnn>.
+.PP
+The Wikipedia page, Geodesics on an ellipsoid,
+<https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.
 .SH AUTHOR
 .IX Header "AUTHOR"
 \&\fBConformal3Proj\fR was written by Charles Karney.

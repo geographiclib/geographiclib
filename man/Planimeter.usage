@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    Planimeter --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.6/Planimeter.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.7/Planimeter.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -205,7 +205,7 @@ int usage(int retval, bool brief) {
 "SEE ALSO\n"
 "       GeoConvert(1), GeodSolve(1).\n"
 "\n"
-"       An online version of this utility is availbable at\n"
+"       An online version of this utility is available at\n"
 "       <https://geographiclib.sourceforge.io/cgi-bin/Planimeter>.\n"
 "\n"
 "       The algorithm for the area of geodesic polygon is given in Section 6 of\n"

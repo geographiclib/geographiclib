@@ -46,7 +46,7 @@ namespace GeographicLib {
    * aligned with the cardinal directions is projected to a rectangle with
    * dimensions \e k (in the E-W direction) and 1/\e k (in the N-S direction).
    * The E-W sides of the rectangle are oriented &gamma; degrees
-   * counter-clockwise from the \e x axis.  There is no provision in this class
+   * counterclockwise from the \e x axis.  There is no provision in this class
    * for specifying a false easting or false northing or a different latitude
    * of origin.
    *

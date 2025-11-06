@@ -408,7 +408,7 @@ namespace GeographicLib {
      * @param[in] strb the second string
      * @param[out] lat the latitude
      * @param[out] lon the longitude
-     * @param[in] longfirst (defaultfirst) whether the longitude is given
+     * @param[in] longfirst (default false) whether the longitude is given
      *   first.
      *
      * In the absence of hemisphere indicators (N/S for latitude and E/W for

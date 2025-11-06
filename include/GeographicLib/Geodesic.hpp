@@ -85,7 +85,7 @@ namespace GeographicLib {
    *   the scale of the Cassini-Soldner projection.
    * - <i>area</i>.  The area between the geodesic from point 1 to point 2 and
    *   the equation is represented by \e S12; it is the area, measured
-   *   counter-clockwise, of the geodesic quadrilateral with corners
+   *   counterclockwise, of the geodesic quadrilateral with corners
    *   (<i>lat1</i>,<i>lon1</i>), (0,<i>lon1</i>), (0,<i>lon2</i>), and
    *   (<i>lat2</i>,<i>lon2</i>).  It can be used to compute the area of any
    *   geodesic polygon.

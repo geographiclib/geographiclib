@@ -58,7 +58,7 @@
 .\" ========================================================================
 .\"
 .IX Title "CARTCONVERT 1"
-.TH CARTCONVERT 1 2025-09-30 "GeographicLib 2.6" "GeographicLib Utilities"
+.TH CARTCONVERT 1 2025-11-05 "GeographicLib 2.7" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -104,7 +104,7 @@ returned, i.e., (\fIlatitude\fR, \fIlongitude\fR) corresponds to the closest
 point on the ellipsoid.
 .IP "\fB\-l\fR \fIlat0\fR \fIlon0\fR \fIh0\fR" 4
 .IX Item "-l lat0 lon0 h0"
-specifies conversions to and from a local cartesion coordinate systems
+specifies conversions to and from a local cartesian coordinate systems
 with origin \fIlat0\fR \fIlon0\fR \fIh0\fR, instead of a geocentric coordinate
 system.  The \fB\-w\fR flag can be used to swap the default order of the 2
 geographic coordinates, provided that it appears before \fB\-l\fR.
@@ -124,7 +124,7 @@ this can be overridden by a hemisphere designator, \fIN\fR, \fIS\fR, \fIE\fR,
 .IP "\fB\-p\fR \fIprec\fR" 4
 .IX Item "-p prec"
 set the output precision to \fIprec\fR (default 6).  \fIprec\fR is the number
-of digits after the decimal point for geocentric and local cartesion
+of digits after the decimal point for geocentric and local cartesian
 coordinates and for the height (in meters).  For latitudes and
 longitudes (in degrees), the number of digits after the decimal point is
 \&\fIprec\fR + 5.

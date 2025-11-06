@@ -31,7 +31,7 @@ namespace GeographicLib {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_f) && _f < 1))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     if (!(isfinite(k0) && k0 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(fabs(stdlat) <= Math::qd))
@@ -61,7 +61,7 @@ namespace GeographicLib {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_f) && _f < 1))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (!(fabs(stdlat1) <= Math::qd))
@@ -99,7 +99,7 @@ namespace GeographicLib {
     if (!(isfinite(_a) && _a > 0))
       throw GeographicErr("Equatorial radius is not positive");
     if (!(isfinite(_f) && _f < 1))
-      throw GeographicErr("Polar semi-axis is not positive");
+      throw GeographicErr("Polar semiaxis is not positive");
     if (!(isfinite(k1) && k1 > 0))
       throw GeographicErr("Scale is not positive");
     if (signbit(coslat1))

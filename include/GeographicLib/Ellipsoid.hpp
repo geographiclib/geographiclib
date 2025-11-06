@@ -65,7 +65,7 @@ namespace GeographicLib {
     Math::real EquatorialRadius() const { return _a; }
 
     /**
-     * @return \e b the polar semi-axis (meters).
+     * @return \e b the polar semiaxis (meters).
      **********************************************************************/
     Math::real PolarRadius() const { return _b; }
 
@@ -161,7 +161,7 @@ namespace GeographicLib {
      * - \e R = \e a cos &beta;
      * - \e Z = \e b sin &beta;
      * .
-     * where \e a and \e b are the equatorial radius and the polar semi-axis.
+     * where \e a and \e b are the equatorial radius and the polar semiaxis.
      * For a sphere &beta; = &phi;.
      *
      * &phi; must lie in the range [&minus;90&deg;, 90&deg;]; the

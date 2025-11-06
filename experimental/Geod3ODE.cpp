@@ -74,7 +74,7 @@ int usage(int retval, bool /*brief*/) {
 "      sets the eps parameter in the constructor for TriaxialGeodesicODE.\n"
 "\n"
 "    --dense\n"
-"      use the dense solver allowing interpolated way points to tbe computed\n"
+"      use the dense solver allowing interpolated way points to be computed\n"
 "      inexpensively.\n"
 "\n"
 "    --normp\n"

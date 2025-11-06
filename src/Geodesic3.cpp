@@ -375,6 +375,37 @@ namespace GeographicLib {
         (void) lf.ArcPos0(fic, ang::cardinal(-2), bet2a, omg2a, alp2);
         omg2a -= omg2;
         (E > 0 ? fb : fa) = omg2a.radians0();
+        // Fix for
+        //
+        //   echo 0 20 0 -50 | Geod3Solve -i -t 1.5 1 0.5
+        //
+        // With an ellipsoid this eccentric (a > 2*c?), the E and W conjugate
+        // points from a given point on the equator can be less than 180deg
+        // apart.  So the assumption that relevant angle differences always lie
+        // in [-180,180], and so can be computed with radians0(), fails.
+        //
+        // In this case the E/W conjugate points are at omega = 104.3 and
+        // -40.6.  So that fa, the differenc in omega, should be -205.7d =
+        // 104.3-360-(-50).  This is reduced to [-180,180] by radians0() and
+        // becomes +154.3d.  Fix by checking signs on fa and fb.
+        //
+        // findroot which calls HybridA also reduces the differences in omega
+        // to [-180,180].  But the first iteration in HybridA uses the
+        // bisecting alpha which will result (??? TO CHECK) is a omega
+        // difference "in range".
+        //
+        // If this turns out to be false, we'll need to rethink.  Perhaps use
+        // omg1 + 180 instead of omg2 as the base value.  This would
+        // necessitate a change in the signature for findroot.  So hold off on
+        // this for now.
+        //
+        // The Octave routine triaxial.distance also failed for equatorial
+        // geodesics with this ellipsoid.  But here the problem was accepting
+        // the equatorial geodesic becase m12 >= 0.  In fact there may be two
+        // intervening conjugate points with an ellipsoid this eccentric.
+        // Failure case is t.distance([0,20],[0,-175]).
+        if (fa > 0) fa -= 2*Math::pi();
+        if (fb < 0) fb += 2*Math::pi();
         if constexpr (debug_) msg = "A.b.2 general bet1/2 = 0 non-equatorial";
         done = false;           // A marker
       }
@@ -837,7 +868,7 @@ namespace GeographicLib {
         omgdiff = -2 * omg.c() * omg.s() * tg.kp2() * Math::sq(alp.c());
       maxdiff = fmax( fabs(alpdiff), fmax( fabs(betdiff), fabs(omgdiff) ) );
     }
-    if (fabs(gamma) <= 2 * maxdiff * numeric_limits<real>::epsilon()) {
+    if (fabs(gamma) <= 3 * maxdiff * numeric_limits<real>::epsilon()) {
       // Set gamma = 0 if a change of alp, bet, or omg by epsilon would include
       // gamma = 0.
       gamma = 0;

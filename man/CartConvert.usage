@@ -9,7 +9,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    CartConvert --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.6/CartConvert.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.7/CartConvert.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "       cartesian\n"
@@ -47,7 +47,7 @@ int usage(int retval, bool brief) {
 "           ellipsoid.\n"
 "\n"
 "       -l lat0 lon0 h0\n"
-"           specifies conversions to and from a local cartesion coordinate\n"
+"           specifies conversions to and from a local cartesian coordinate\n"
 "           systems with origin lat0 lon0 h0, instead of a geocentric\n"
 "           coordinate system.  The -w flag can be used to swap the default\n"
 "           order of the 2 geographic coordinates, provided that it appears\n"
@@ -68,7 +68,7 @@ int usage(int retval, bool brief) {
 "       -p prec\n"
 "           set the output precision to prec (default 6).  prec is the number\n"
 "           of digits after the decimal point for geocentric and local\n"
-"           cartesion coordinates and for the height (in meters).  For\n"
+"           cartesian coordinates and for the height (in meters).  For\n"
 "           latitudes and longitudes (in degrees), the number of digits after\n"
 "           the decimal point is prec + 5.\n"
 "\n"

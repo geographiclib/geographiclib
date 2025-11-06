@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeoidEval --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.6/GeoidEval.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.7/GeoidEval.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -255,7 +255,7 @@ int usage(int retval, bool brief) {
 "SEE ALSO\n"
 "       GeoConvert(1), Gravity(1), geographiclib-get-geoids(8).\n"
 "\n"
-"       An online version of this utility is availbable at\n"
+"       An online version of this utility is available at\n"
 "       <https://geographiclib.sourceforge.io/cgi-bin/GeoidEval>.\n"
 "\n"
 "AUTHOR\n"

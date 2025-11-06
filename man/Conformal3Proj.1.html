@@ -13,7 +13,7 @@
 
 <h1 id="NAME">NAME</h1>
 
-<p>Conformal3Proj -- conformal projsections for a triaxial ellipsoid</p>
+<p>Conformal3Proj -- conformal projections for a triaxial ellipsoid</p>
 
 <h1 id="SYNOPSIS">SYNOPSIS</h1>
 
@@ -44,7 +44,7 @@
 <dt id="e-b-e2-k2-kp2"><b>-e</b> <i>b</i> <i>e2</i> <i>k2</i> <i>kp2</i></dt>
 <dd>
 
-<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the sphape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
+<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the shape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
 
 </dd>
 <dt id="tx-ax-bx-cx"><b>-tx</b> <i>ax</i> <i>bx</i> <i>cx</i></dt>
@@ -143,6 +143,12 @@ echo -5077732.396 3922571.859 | Conformal3Proj -r
 <h1 id="ERRORS">ERRORS</h1>
 
 <p>An illegal line of input will print an error message to standard output beginning with <code>ERROR:</code> and causes <b>Conformal3Proj</b> to return an exit code of 1. However, an error does not cause <b>Conformal3Proj</b> to terminate; following lines will be converted.</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>Ellipsoidal coordinates are documented in Section 2 of C. F. F. Karney, <i>Jacobi&#39;s solution for geodesics on a triaxial ellipsoid</i>, Technical Report, SRI International, Nov. 2025, <a href="https://arxiv.org/abs/2511.nnnnn">https://arxiv.org/abs/2511.nnnnn</a>.</p>
+
+<p>The Wikipedia page, Geodesics on an ellipsoid, <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid</a>.</p>
 
 <h1 id="AUTHOR">AUTHOR</h1>
 

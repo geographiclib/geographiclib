@@ -118,9 +118,9 @@ namespace GeographicLib {
      * @param[in] path (optional) directory for data file.
      * @param[in] earth (optional) Geocentric object for converting
      *   coordinates; default Geocentric::WGS84().
-     * @param[in] Nmax (optional) if non-negative, truncate the degree of the
+     * @param[in] Nmax (optional) if nonnegative, truncate the degree of the
      *   model this value.
-     * @param[in] Mmax (optional) if non-negative, truncate the order of the
+     * @param[in] Mmax (optional) if nonnegative, truncate the order of the
      *   model this value.
      * @exception GeographicErr if the data file cannot be found, is
      *   unreadable, or is corrupt, or if \e Mmax > \e Nmax.

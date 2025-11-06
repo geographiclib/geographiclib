@@ -10,7 +10,7 @@ int usage(int retval, bool brief) {
 "For full documentation type:\n"
 "    GeodSolve --help\n"
 "or visit:\n"
-"    https://geographiclib.sourceforge.io/C++/2.6/GeodSolve.1.html\n";
+"    https://geographiclib.sourceforge.io/C++/2.7/GeodSolve.1.html\n";
   else
     ( retval ? std::cerr : std::cout ) << "Man page:\n"
 "\n"
@@ -312,13 +312,16 @@ int usage(int retval, bool brief) {
 "SEE ALSO\n"
 "       GeoConvert(1).\n"
 "\n"
-"       An online version of this utility is availbable at\n"
+"       An online version of this utility is available at\n"
 "       <https://geographiclib.sourceforge.io/cgi-bin/GeodSolve>.\n"
 "\n"
 "       The algorithms are described in C. F. F. Karney, Algorithms for\n"
 "       geodesics, J. Geodesy 87, 43-55 (2013); DOI:\n"
-"       <https://doi.org/10.1007/s00190-012-0578-z>; addenda:\n"
-"       <https://geographiclib.sourceforge.io/geod-addenda.html>.\n"
+"       <https://doi.org/10.1007/s00190-012-0578-z>.\n"
+"\n"
+"       The exact routines are covered in C. F. F. Karney, Geodesics on an\n"
+"       arbitrary ellipsoid of revolution, J. Geodesy 98, 4:1-14 (2024); DOI:\n"
+"       <https://doi.org/10.1007/s00190-023-01813-2>.\n"
 "\n"
 "       The Wikipedia page, Geodesics on an ellipsoid,\n"
 "       <https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.\n"

@@ -71,7 +71,7 @@ namespace GeographicLib {
       if (_lL == 0)          // Hasn't converged -- just use the values we have
         _lL = int(_pP.size());
     } else {
-      // Use series expansions in n for Fourier coeffients of the integral
+      // Use series expansions in n for Fourier coefficients of the integral
       // See "Series expansions for computing rhumb areas"
       // https://doi.org/10.5281/zenodo.7685484
 #if GEOGRAPHICLIB_RHUMBAREA_ORDER == 4

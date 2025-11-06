@@ -63,7 +63,7 @@
 <dt id="e-b-e2-k2-kp2"><b>-e</b> <i>b</i> <i>e2</i> <i>k2</i> <i>kp2</i></dt>
 <dd>
 
-<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the sphape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
+<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the shape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
 
 </dd>
 <dt id="e2-b-f"><b>-e2</b> <i>b</i> <i>f</i></dt>
@@ -75,7 +75,7 @@
 <dt id="u"><b>-u</b></dt>
 <dd>
 
-<p>unroll the latitude and longitude. Normally, on output latitudes and longitudes are reduced to lie in [-90deg,90deg] and [-180deg,180deg) respectively. However with this option, the retured longitude <i>bet2</i> and <i>omg2</i> are &quot;unrolled&quot; so that <i>bet2</i> - <i>bet1</i> and <i>omg2</i> - <i>omg1</i> indicates how often and in what sense the geodesic has encircled the ellipsoid.</p>
+<p>unroll the latitude and longitude. Normally, on output latitudes and longitudes are reduced to lie in [-90deg,90deg] and [-180deg,180deg) respectively. However with this option, the returned longitude <i>bet2</i> and <i>omg2</i> are &quot;unrolled&quot; so that <i>bet2</i> - <i>bet1</i> and <i>omg2</i> - <i>omg1</i> indicates how often and in what sense the geodesic has encircled the ellipsoid.</p>
 
 </dd>
 <dt id="d"><b>-d</b></dt>
@@ -105,7 +105,7 @@
 <dt id="p-prec"><b>-p</b> <i>prec</i></dt>
 <dd>
 
-<p>set the output precision to <i>prec</i> (default 3). For distances, <i>prec</i> is the number of digits after the decimal point for ellipsoids which are approximately the same size as the Earth; for other ellipsoids the precision is adjusted to retain the same relative precision. For latitudes and longitudes (in degrees), the number of digits after the decimal point is <i>prec</i> + 5. For Cartesian directions, the precision is <i>prec</i> + 7.</p>
+<p>set the output precision to <i>prec</i> (default 3). For distances, <i>prec</i> is the number of digits after the decimal point for ellipsoids which are approximately the same size as the Earth; for other ellipsoids the precision is adjusted to retain the same relative precision. For latitudes and longitudes (in degrees), the number of digits after the decimal point is <i>prec</i> + 5. For cartesian directions, the precision is <i>prec</i> + 7.</p>
 
 </dd>
 <dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
@@ -183,6 +183,8 @@
 <h1 id="SEE-ALSO">SEE ALSO</h1>
 
 <p>Cart3Convert(1).</p>
+
+<p>The algorithms are described in C. F. F. Karney, <i>Jacobi&#39;s solution for geodesics on a triaxial ellipsoid</i>, Technical Report, SRI International, Nov. 2025, <a href="https://arxiv.org/abs/2511.01621">https://arxiv.org/abs/2511.01621</a>.</p>
 
 <p>The Wikipedia page, Geodesics on an ellipsoid, <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid</a>.</p>
 

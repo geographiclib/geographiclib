@@ -58,7 +58,7 @@
 .\" ========================================================================
 .\"
 .IX Title "GEOD3SOLVE 1"
-.TH GEOD3SOLVE 1 2025-09-30 "GeographicLib 2.6" "GeographicLib Utilities"
+.TH GEOD3SOLVE 1 2025-11-05 "GeographicLib 2.7" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -120,7 +120,7 @@ and minor semixis \fIc\fR.  By default, we have \fIa\fR = 6378172 m, \fIb\fR =
 (With this model \fIomg\fR = 0deg, corresponds to \fIlon\fR = \-14.93deg.
 .IP "\fB\-e\fR \fIb\fR \fIe2\fR \fIk2\fR \fIkp2\fR" 4
 .IX Item "-e b e2 k2 kp2"
-specify the ellipsoid via the median semiaxis, \fIb\fR and the sphape
+specify the ellipsoid via the median semiaxis, \fIb\fR and the shape
 parameters \fIe2\fR = (\fIa\fR^2 \- \fIc\fR^2)/\fIb\fR^2, \fIk2\fR = (\fIb\fR^2 \-
 \&\fIc\fR^2)/(\fIa\fR^2 \- \fIc\fR^2), and \fIkp2\fR = (\fIa\fR^2 \- \fIb\fR^2)/(\fIa\fR^2 \-
 \&\fIc\fR^2).  Simple fractions are allowed for \fIe2\fR, \fIk2\fR, and \fIkp2\fR.
@@ -138,7 +138,7 @@ that latitude and longitude have their conventional interpretations
 .IX Item "-u"
 unroll the latitude and longitude.  Normally, on output latitudes and
 longitudes are reduced to lie in [\-90deg,90deg] and [\-180deg,180deg)
-respectively.  However with this option, the retured longitude
+respectively.  However with this option, the returned longitude
 \&\fIbet2\fR and \fIomg2\fR are "unrolled" so that \fIbet2\fR \- \fIbet1\fR and
 \&\fIomg2\fR \- \fIomg1\fR indicates how often and in what sense the geodesic
 has encircled the ellipsoid.
@@ -166,7 +166,7 @@ is the number of digits after the decimal point for ellipsoids which are
 approximately the same size as the Earth; for other ellipsoids the
 precision is adjusted to retain the same relative precision.  For
 latitudes and longitudes (in degrees), the number of digits after the
-decimal point is \fIprec\fR + 5.  For Cartesian directions, the precision is
+decimal point is \fIprec\fR + 5.  For cartesian directions, the precision is
 \&\fIprec\fR + 7.
 .IP "\fB\-\-comment\-delimiter\fR \fIcommentdelim\fR" 4
 .IX Item "--comment-delimiter commentdelim"
@@ -241,6 +241,11 @@ Earth, compute geodesic distance.
 .SH "SEE ALSO"
 .IX Header "SEE ALSO"
 \&\fBCart3Convert\fR\|(1).
+.PP
+The algorithms are described in C. F. F. Karney,
+\&\fIJacobi\*(Aqs solution for geodesics on a triaxial ellipsoid\fR,
+Technical Report, SRI International, Nov. 2025,
+<https://arxiv.org/abs/2511.01621>.
 .PP
 The Wikipedia page, Geodesics on an ellipsoid,
 <https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.

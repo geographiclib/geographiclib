@@ -21,7 +21,7 @@ namespace GeographicLib {
    * "Normal" gravity refers to an idealization of the earth which is modeled
    * as an rotating ellipsoid.  The eccentricity of the ellipsoid, the rotation
    * speed, and the distribution of mass within the ellipsoid are such that the
-   * ellipsoid is a "level ellipoid", a surface of constant potential
+   * ellipsoid is a "level ellipsoid", a surface of constant potential
    * (gravitational plus centrifugal).  The acceleration due to gravity is
    * therefore perpendicular to the surface of the ellipsoid.
    *
@@ -30,7 +30,7 @@ namespace GeographicLib {
    * the mass is assumed to be to concentrated on a "focal disc" of radius,
    * (<i>a</i><sup>2</sup> &minus; <i>b</i><sup>2</sup>)<sup>1/2</sup>, where
    * \e a is the equatorial radius of the ellipsoid and \e b is its polar
-   * semi-axis.  In the case of an oblate ellipsoid, the mass is concentrated
+   * semiaxis.  In the case of an oblate ellipsoid, the mass is concentrated
    * on a "focal rod" of length 2(<i>b</i><sup>2</sup> &minus;
    * <i>a</i><sup>2</sup>)<sup>1/2</sup>.  As a result the potential is well
    * defined everywhere.
@@ -129,7 +129,7 @@ namespace GeographicLib {
      * The shape of the ellipsoid can be given in one of two ways:
      * - geometrically (\e geomtricp = true), the ellipsoid is defined by the
      *   flattening \e f = (\e a &minus; \e b) / \e a, where \e a and \e b are
-     *   the equatorial radius and the polar semi-axis.  The parameters should
+     *   the equatorial radius and the polar semiaxis.  The parameters should
      *   obey \e a &gt; 0, \e f &lt; 1.  There are no restrictions on \e GM or
      *   \e omega, in particular, \e GM need not be positive.
      * - physically (\e geometricp = false), the ellipsoid is defined by the

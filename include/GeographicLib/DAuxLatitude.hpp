@@ -43,8 +43,8 @@ namespace GeographicLib {
      *   auxiliary latitude \e zeta.
      * @param[in] auxout an AuxLatitude::aux indicating the type of
      *   auxiliary latitude \e eta.
-     * @param[in] zeta1 the first of the input auxiliary latitudeas.
-     * @param[in] zeta2 the second of the input auxiliary latitude.
+     * @param[in] zeta1 the first of the input auxiliary latitudes.
+     * @param[in] zeta2 the second of the input auxiliary latitudes.
      * @return the divided difference (\e eta2 - \e eta1) / (\e zeta2 - \e
      *   zeta1).
      *

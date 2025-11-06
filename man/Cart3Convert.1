@@ -58,7 +58,7 @@
 .\" ========================================================================
 .\"
 .IX Title "CART3CONVERT 1"
-.TH CART3CONVERT 1 2025-09-30 "GeographicLib 2.6" "GeographicLib Utilities"
+.TH CART3CONVERT 1 2025-11-05 "GeographicLib 2.7" "GeographicLib Utilities"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -82,7 +82,7 @@ Cart3Convert \-\- convert geocentric coordinates for a triaxial ellipsoid
 Convert coordinates for a triaxial ellipsoid to geocentric coordinates.
 Geocentric coordinates have the origin at the center of the earth, with
 the \fIX\fR, \fIY\fR, and \fIZ\fR axes aligned with the major, median, and minor
-semi\-axes, \fIa\fR, \fIb\fR, and \fIc\fR.  By default, the conversion is to
+semiaxes, \fIa\fR, \fIb\fR, and \fIc\fR.  By default, the conversion is to
 geocentric coordinates.  Specifying \fB\-r\fR causes the reverse conversion
 to be performed.
 .PP
@@ -123,12 +123,12 @@ and \fIh\fR.  Alternatively, the confocal ellipsoid of minor radius \fIc\fR +
 .PP
 By default, coordinates are provided on standard input as a set of lines
 containing (blank separated) \fIlatitude\fR and \fIlongitude\fR (decimal
-degrees or degrees, minutes and seconds).  The interpretion of the
+degrees or degrees, minutes and seconds).  The interpretation of the
 coordinates is governed by the \fB\-E\fR, \fB\-G\fR, \fB\-P\fR, \fB\-C\fR \fB\-GX\fR,
 \&\fB\-PX\fR, and \fB\-CX\fR flags.  For each set of coordinates, the
-corresponding Cartesian coordinates \fIX\fR, \fIY\fR, \fIZ\fR (meters) are
+corresponding cartesian coordinates \fIX\fR, \fIY\fR, \fIZ\fR (meters) are
 printed on standard output.  If \fI\-r\fR is provided, the reserve operation
-is undertaken reading \fIX\fR, \fIY\fR, \fIZ\fR (which asre assumed to denote a
+is undertaken reading \fIX\fR, \fIY\fR, \fIZ\fR (which are assumed to denote a
 point on the ellipsoid) on standard input and printing the \fIlatitude\fR
 and \fIlongitude\fR.
 .PP
@@ -143,8 +143,8 @@ heading (direction) is included in the computation converting \fIbeta\fR
 surface of the ellipsoid.
 .PP
 If the \fB\-R\fR flag is given, do not read any input; instead output random
-Cartesian points lying on the surface of the ellipsoid.  If the \fB\-r\fR
-flag is specified the Cartesian points are converted into one of the
+cartesian points lying on the surface of the ellipsoid.  If the \fB\-r\fR
+flag is specified the cartesian points are converted into one of the
 triaxial coordinate systems.
 .SH OPTIONS
 .IX Header "OPTIONS"
@@ -185,7 +185,7 @@ tangent to the surface of the ellipsoid.  This cannot be combined with
 .IP "\fB\-R\fR \fInrand\fR" 4
 .IX Item "-R nrand"
 output \fInrand\fR random points on the surface of the ellipsoid as
-Cartesian coordinates.  With \fB\-D\fR add also a random Cartesian direction
+cartesian coordinates.  With \fB\-D\fR add also a random cartesian direction
 tangent to the surface of the ellipsoid.  In this mode, nothing is read
 from standard input.  With the \fB\-r\fR option the random points are
 converted into one of the triaxial coordinate systems (and the direction
@@ -202,7 +202,7 @@ and minor semixis \fIc\fR.  By default, we have \fIa\fR = 6378172 m, \fIb\fR =
 (With this model \fIomg\fR = 0deg, corresponds to \fIlon\fR = \-14.93deg.
 .IP "\fB\-e\fR \fIb\fR \fIe2\fR \fIk2\fR \fIkp2\fR" 4
 .IX Item "-e b e2 k2 kp2"
-specify the ellipsoid via the median semiaxis, \fIb\fR and the sphape
+specify the ellipsoid via the median semiaxis, \fIb\fR and the shape
 parameters \fIe2\fR = (\fIa\fR^2 \- \fIc\fR^2)/\fIb\fR^2, \fIk2\fR = (\fIb\fR^2 \-
 \&\fIc\fR^2)/(\fIa\fR^2 \- \fIc\fR^2), and \fIkp2\fR = (\fIa\fR^2 \- \fIb\fR^2)/(\fIa\fR^2 \-
 \&\fIc\fR^2).  Simple fractions are allowed for \fIe2\fR, \fIk2\fR, and \fIkp2\fR.
@@ -228,7 +228,7 @@ is the number of digits after the decimal point for ellipsoids which are
 approximately the same size as the Earth; for other ellipsoids the
 precision is adjusted to retain the same relative precision.  For
 latitudes and longitudes (in degrees), the number of digits after the
-decimal point is \fIprec\fR + 5.  For Cartesian directions, the precision is
+decimal point is \fIprec\fR + 5.  For cartesian directions, the precision is
 \&\fIprec\fR + 7.
 .IP "\fB\-\-comment\-delimiter\fR \fIcommentdelim\fR" 4
 .IX Item "--comment-delimiter commentdelim"
@@ -280,6 +280,18 @@ terminate; following lines will be converted.
 .SH AUTHOR
 .IX Header "AUTHOR"
 \&\fBCart3Convert\fR was written by Charles Karney.
+.SH "SEE ALSO"
+.IX Header "SEE ALSO"
+\&\fBGeod3Solve\fR\|(1).
+.PP
+The algorithms are described in Appendices A and B of
+C. F. F. Karney,
+\&\fIJacobi\*(Aqs solution for geodesics on a triaxial ellipsoid\fR,
+Technical Report, SRI International, Nov. 2025,
+<https://arxiv.org/abs/2511.01621>.
+.PP
+The Wikipedia page, Geodesics on an ellipsoid,
+<https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.
 .SH HISTORY
 .IX Header "HISTORY"
 \&\fBCart3Convert\fR was added to GeographicLib,

@@ -30,7 +30,7 @@ namespace GeographicLib {
   /**
    * \brief A triaxial ellipsoid.
    *
-   * The class holds the basic information about a triaxial ellipoid
+   * The class holds the basic information about a triaxial ellipsoid
    * given by
    * \f[ S(\mathbf R) =
    * \frac{X^2}{a^2} + \frac{Y^2}{b^2} + \frac{Z^2}{c^2} - 1 = 0, \f]
@@ -52,9 +52,16 @@ namespace GeographicLib {
    * [a,b,c] = b \bigl[ \sqrt{1 + e^2k'^2}, 1, \sqrt{1 - e^2k^2} \bigr].
    * \f]
    *
-   * Positions on the ellipsoid are given in term so the ellipsoidal latitude
-   * \f$\beta\f$ and the ellipsoidal longitude \f$\omega\f$ which are defined
-   * by
+   * Positions on the ellipsoid are given in term so the ellipsoidal
+   * coordinates given in Section 2 of
+   * - C. F. F. Karney,<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">
+   *   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
+   *   Technical Report, SRI International, Nov. 2025.<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+   * .
+   * Ellipsoidal latitude * \f$\beta\f$ and the ellipsoidal longitude
+   * \f$\omega\f$ which are defined * by
    * \f[
    * \mathbf R = \begin{bmatrix}
    * a \cos\omega \sqrt{k^2\cos^2\beta + k'^2} \\
@@ -63,8 +70,8 @@ namespace GeographicLib {
    * \end{bmatrix}.
    * \f]
    * Headings are given by the direction \f$ \alpha \f$ measured clockwise from
-   * a line of constant \f$ \omega \f$.  Conversions between Cartesian and
-   * elliopsoidal coordinates is provided by cart2toellip() and elliptocart2().
+   * a line of constant \f$ \omega \f$.  Conversions between cartesian and
+   * ellipsoidal coordinates is provided by cart2toellip() and elliptocart2().
    *
    * The ellipsoid coordinates "cover" the ellipsoid twice; the replacement
    * \f[
@@ -82,7 +89,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT Ellipsoid3 {
   public:
     /**
-     * A type to hold three-dimentional positions and directions in Cartesian
+     * A type to hold three-dimensional positions and directions in cartesian
      * coordinates.
      **********************************************************************/
     using vec3 = std::array<Math::real, 3>;
@@ -95,7 +102,8 @@ namespace GeographicLib {
     using ang = Angle;
     static void normvec(vec3& R) {
       real h = Math::hypot3(R[0], R[1], R[2]);
-      // No checking for h = 0.  Result will be NaNs
+      // No checking for h = 0.  Result will be NaNs (we rely on this in
+      // Cartesian3::cart2rand).
       R[0] /= h; R[1] /= h; R[2] /= h;
     }
     static void Flip(ang& bet, ang& omg, ang& alp) {
@@ -103,7 +111,7 @@ namespace GeographicLib {
       omg.reflect(true);
       alp.reflect(true, true);
     }
-    real _a, _b, _c;            // semi-axes
+    real _a, _b, _c;            // semiaxes
     real _e2, _k2, _kp2, _k, _kp;
     bool _oblate, _prolate, _biaxial;
     void cart2toellipint(vec3 R, ang& bet, ang& omg, vec3 axes) const;
@@ -152,7 +160,7 @@ namespace GeographicLib {
     /**
      * An ellipsoid specified by its median semiaxis and shape.
      *
-     * @param[in] b the middle semi-axis.
+     * @param[in] b the middle semiaxis.
      * @param[in] e2 the eccentricity squared \f$e^2 = (a^2 - c^2)/b^2\f$.
      * @param[in] k2 the oblateness parameter squared \f$k^2 = (b^2 - c^2) /
      *  (a^2 - c^2)\f$.
@@ -177,15 +185,15 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * @return \e a the major semiaxeis.
+     * @return \e a the major semiaxis.
      **********************************************************************/
     real a() const { return _a; }
     /**
-     * @return \e b the median semiaxeis.
+     * @return \e b the median semiaxis.
      **********************************************************************/
     real b() const { return _b; }
     /**
-     * @return \e c the minor semiaxeis.
+     * @return \e c the minor semiaxis.
      **********************************************************************/
     real c() const { return _c; }
     /**
@@ -280,9 +288,9 @@ namespace GeographicLib {
      **********************************************************************/
     ///@{
     /**
-     * Convert a Cartesian position to ellipsoidal coordinates.
+     * Convert a cartesian position to ellipsoidal coordinates.
      *
-     * @param[in] R the Cartesian position.
+     * @param[in] R the cartesian position.
      * @param[out] bet the ellipsoidal latitude.
      * @param[out] omg the ellipsoidal longitude.
      *
@@ -291,10 +299,10 @@ namespace GeographicLib {
      **********************************************************************/
     void cart2toellip(vec3 R, Angle& bet, Angle& omg) const;
     /**
-     * Convert a Cartesian position and direction to ellipsoidal coordinates.
+     * Convert a cartesian position and direction to ellipsoidal coordinates.
      *
-     * @param[in] R the Cartesian position.
-     * @param[in] V the Cartesian direction.
+     * @param[in] R the cartesian position.
+     * @param[in] V the cartesian direction.
      * @param[out] bet the ellipsoidal latitude.
      * @param[out] omg the ellipsoidal longitude.
      * @param[out] alp the azimuth.
@@ -306,11 +314,11 @@ namespace GeographicLib {
     void cart2toellip(vec3 R, vec3 V,
                       Angle& bet, Angle& omg, Angle& alp) const;
     /**
-     * Convert an ellipsoid position and Cartesian direction to a heading.
+     * Convert an ellipsoid position and cartesian direction to a heading.
      *
      * @param[in] bet the ellipsoidal latitude.
      * @param[in] omg the ellipsoidal longitude.
-     * @param[in] V the Cartesian direction.
+     * @param[in] V the cartesian direction.
      * @param[out] alp the azimuth.
      *
      * This is a variant of cart2toellip(vec3, vec3, Angle&, Angle&, Angle&)
@@ -323,21 +331,21 @@ namespace GeographicLib {
     void cart2toellip(Angle bet, Angle omg,
                       vec3 V, Angle& alp) const;
     /**
-     * Convert ellipsoidal coordinates to a Cartesian position.
+     * Convert ellipsoidal coordinates to a cartesian position.
      *
      * @param[in] bet the ellipsoidal latitude.
      * @param[in] omg the ellipsoidal longitude.
-     * @param[out] R the Cartesian position.
+     * @param[out] R the cartesian position.
      **********************************************************************/
     void elliptocart2(Angle bet, Angle omg, vec3& R) const;
     /**
-     * Convert coordinates and heading to a Cartesian position and direction.
+     * Convert coordinates and heading to a cartesian position and direction.
      *
      * @param[in] bet the ellipsoidal latitude.
      * @param[in] omg the ellipsoidal longitude.
      * @param[in] alp the azimuth.
-     * @param[out] R the Cartesian position.
-     * @param[out] V the Cartesian direction.
+     * @param[out] R the cartesian position.
+     * @param[out] V the cartesian direction.
      **********************************************************************/
     void elliptocart2(Angle bet, Angle omg, Angle alp,
                       vec3& R, vec3& V) const;

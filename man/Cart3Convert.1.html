@@ -21,7 +21,7 @@
 
 <h1 id="DESCRIPTION">DESCRIPTION</h1>
 
-<p>Convert coordinates for a triaxial ellipsoid to geocentric coordinates. Geocentric coordinates have the origin at the center of the earth, with the <i>X</i>, <i>Y</i>, and <i>Z</i> axes aligned with the major, median, and minor semi-axes, <i>a</i>, <i>b</i>, and <i>c</i>. By default, the conversion is to geocentric coordinates. Specifying <b>-r</b> causes the reverse conversion to be performed.</p>
+<p>Convert coordinates for a triaxial ellipsoid to geocentric coordinates. Geocentric coordinates have the origin at the center of the earth, with the <i>X</i>, <i>Y</i>, and <i>Z</i> axes aligned with the major, median, and minor semiaxes, <i>a</i>, <i>b</i>, and <i>c</i>. By default, the conversion is to geocentric coordinates. Specifying <b>-r</b> causes the reverse conversion to be performed.</p>
 
 <p>Seven latitude/longitude/heading coordinate systems are supported</p>
 
@@ -54,13 +54,13 @@
 
 <p>Points away from the surface of the ellipsoid can be described by the orthogonal height <i>h</i> above from the ellipsoid and the position is given by <i>phi</i>, <i>lambda</i> (giving the closest point on the ellipsoid), and <i>h</i>. Alternatively, the confocal ellipsoid of minor radius <i>c</i> + <i>H</i> point can be found and the position of the point is then given by <i>beta</i>, <i>omega</i> for the confocal ellipsoid and <i>H</i>.</p>
 
-<p>By default, coordinates are provided on standard input as a set of lines containing (blank separated) <i>latitude</i> and <i>longitude</i> (decimal degrees or degrees, minutes and seconds). The interpretion of the coordinates is governed by the <b>-E</b>, <b>-G</b>, <b>-P</b>, <b>-C</b> <b>-GX</b>, <b>-PX</b>, and <b>-CX</b> flags. For each set of coordinates, the corresponding Cartesian coordinates <i>X</i>, <i>Y</i>, <i>Z</i> (meters) are printed on standard output. If <i>-r</i> is provided, the reserve operation is undertaken reading <i>X</i>, <i>Y</i>, <i>Z</i> (which asre assumed to denote a point on the ellipsoid) on standard input and printing the <i>latitude</i> and <i>longitude</i>.</p>
+<p>By default, coordinates are provided on standard input as a set of lines containing (blank separated) <i>latitude</i> and <i>longitude</i> (decimal degrees or degrees, minutes and seconds). The interpretation of the coordinates is governed by the <b>-E</b>, <b>-G</b>, <b>-P</b>, <b>-C</b> <b>-GX</b>, <b>-PX</b>, and <b>-CX</b> flags. For each set of coordinates, the corresponding cartesian coordinates <i>X</i>, <i>Y</i>, <i>Z</i> (meters) are printed on standard output. If <i>-r</i> is provided, the reserve operation is undertaken reading <i>X</i>, <i>Y</i>, <i>Z</i> (which are assumed to denote a point on the ellipsoid) on standard input and printing the <i>latitude</i> and <i>longitude</i>.</p>
 
 <p>If the <b>-3</b> flag is given (this cannot be combined with <b>-D</b>), an arbitrary point in three-dimensional space is specified either with <i>beta</i> <i>omega</i> <i>H</i> or with <i>phi</i> <i>lambda</i> <i>h</i>.</p>
 
 <p>If the <b>-D</b> flag is given (this cannot be combined with <b>-3</b>), the heading (direction) is included in the computation converting <i>beta</i> <i>omega</i> <i>alpha</i> or <i>phi</i> <i>lambda</i> <i>zeta</i> to <i>X</i>, <i>Y</i>, <i>Z</i> <i>Vx</i>, <i>Vy</i>, <i>Vz</i> where [<i>vx</i>, <i>vy</i>, <i>vz</i>] is a unit vector lying in the surface of the ellipsoid.</p>
 
-<p>If the <b>-R</b> flag is given, do not read any input; instead output random Cartesian points lying on the surface of the ellipsoid. If the <b>-r</b> flag is specified the Cartesian points are converted into one of the triaxial coordinate systems.</p>
+<p>If the <b>-R</b> flag is given, do not read any input; instead output random cartesian points lying on the surface of the ellipsoid. If the <b>-r</b> flag is specified the cartesian points are converted into one of the triaxial coordinate systems.</p>
 
 <h1 id="OPTIONS">OPTIONS</h1>
 
@@ -111,7 +111,7 @@
 <dt id="R-nrand"><b>-R</b> <i>nrand</i></dt>
 <dd>
 
-<p>output <i>nrand</i> random points on the surface of the ellipsoid as Cartesian coordinates. With <b>-D</b> add also a random Cartesian direction tangent to the surface of the ellipsoid. In this mode, nothing is read from standard input. With the <b>-r</b> option the random points are converted into one of the triaxial coordinate systems (and the direction is converted to a heading if <b>-D</b> is given).</p>
+<p>output <i>nrand</i> random points on the surface of the ellipsoid as cartesian coordinates. With <b>-D</b> add also a random cartesian direction tangent to the surface of the ellipsoid. In this mode, nothing is read from standard input. With the <b>-r</b> option the random points are converted into one of the triaxial coordinate systems (and the direction is converted to a heading if <b>-D</b> is given).</p>
 
 </dd>
 <dt id="seed-s"><b>--seed</b> <i>s</i></dt>
@@ -129,7 +129,7 @@
 <dt id="e-b-e2-k2-kp2"><b>-e</b> <i>b</i> <i>e2</i> <i>k2</i> <i>kp2</i></dt>
 <dd>
 
-<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the sphape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
+<p>specify the ellipsoid via the median semiaxis, <i>b</i> and the shape parameters <i>e2</i> = (<i>a</i>^2 - <i>c</i>^2)/<i>b</i>^2, <i>k2</i> = (<i>b</i>^2 - <i>c</i>^2)/(<i>a</i>^2 - <i>c</i>^2), and <i>kp2</i> = (<i>a</i>^2 - <i>b</i>^2)/(<i>a</i>^2 - <i>c</i>^2). Simple fractions are allowed for <i>e2</i>, <i>k2</i>, and <i>kp2</i>. Internally, the supplied values of <i>k2</i> and <i>kp2</i> are normalized so that <i>k2</i> + <i>kp2</i> = 1.</p>
 
 </dd>
 <dt id="d"><b>-d</b></dt>
@@ -153,7 +153,7 @@
 <dt id="p-prec"><b>-p</b> <i>prec</i></dt>
 <dd>
 
-<p>set the output precision to <i>prec</i> (default 3). For distances, <i>prec</i> is the number of digits after the decimal point for ellipsoids which are approximately the same size as the Earth; for other ellipsoids the precision is adjusted to retain the same relative precision. For latitudes and longitudes (in degrees), the number of digits after the decimal point is <i>prec</i> + 5. For Cartesian directions, the precision is <i>prec</i> + 7.</p>
+<p>set the output precision to <i>prec</i> (default 3). For distances, <i>prec</i> is the number of digits after the decimal point for ellipsoids which are approximately the same size as the Earth; for other ellipsoids the precision is adjusted to retain the same relative precision. For latitudes and longitudes (in degrees), the number of digits after the decimal point is <i>prec</i> + 5. For cartesian directions, the precision is <i>prec</i> + 7.</p>
 
 </dd>
 <dt id="comment-delimiter-commentdelim"><b>--comment-delimiter</b> <i>commentdelim</i></dt>
@@ -220,6 +220,14 @@ echo 58.69140 75.11263 2.5860649 | Cart3Convert -t 3 2 1 -3 -p 0
 <h1 id="AUTHOR">AUTHOR</h1>
 
 <p><b>Cart3Convert</b> was written by Charles Karney.</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>Geod3Solve(1).</p>
+
+<p>The algorithms are described in Appendices A and B of C. F. F. Karney, <i>Jacobi&#39;s solution for geodesics on a triaxial ellipsoid</i>, Technical Report, SRI International, Nov. 2025, <a href="https://arxiv.org/abs/2511.01621">https://arxiv.org/abs/2511.01621</a>.</p>
+
+<p>The Wikipedia page, Geodesics on an ellipsoid, <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid">https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid</a>.</p>
 
 <h1 id="HISTORY">HISTORY</h1>
 
