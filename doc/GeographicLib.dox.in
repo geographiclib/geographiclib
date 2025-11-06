@@ -3176,7 +3176,7 @@ Go to
  - \ref meridian
  - \ref geodshort
  .
-For some background information on geodesics on triaxial ellipsoids, see
+Geodesics on triaxial ellipsoids are covered in
 \ref triaxial.
 
 References:
@@ -4204,8 +4204,14 @@ ellipsoid (with 3 unequal axes) can be reduced to quadrature.  Despite
 this, the detailed behavior of the geodesics is not very well known.  In
 this section, I briefly give Jacobi's solution and illustrate the
 behavior of the geodesics and outline an algorithm for the solution of
-the inverse problem.
-
+the inverse problem.  Most of the material on this page is now covered
+in more detail in
+ - C. F. F. Karney,
+   <a href="https://arxiv.org/abs/2511.01621">
+   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
+   Technical Report, SRI International, Nov. 2025.<br>
+   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+ .
 See also
  - The wikipedia page,
    <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
@@ -7782,6 +7788,16 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.7">Version 2.7</a>
    (released 2025-mm-dd)
+   - Fix two bugs in classes for triaxial ellipsoids:
+     - Triaxial::Geodesic3::Inverse sometimes threw an exception when
+       both endpoints were on the major principal ellipse for very
+       eccentric ellipsoids \e a > 2 \e c.
+     - Triaxial::Cartesian3::carttocart2 sometimes returned the wrong
+       result in the interior of the ellipsoid with $\e Z = 0$.
+   - Cite the paper covering some of the triaxial classes
+     <a href="https://arxiv.org/abs/2511.01621"> Jacobi's solution for
+     geodesics on a triaxial ellipsoid</a>.
+   - Minor documenation fixes.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
    (released 2025-09-30)

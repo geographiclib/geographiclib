@@ -28,9 +28,16 @@ namespace GeographicLib {
    * \brief Transformations between cartesian and triaxial coordinates
    *
    * The Cartesian3 class supports transformations between cartesian
-   * coordinates and various coordinates for a triaxial ellipsoid.  Besides
-   * ellipsoidal coordinates defined in Ellipsoid3, the following coordinates
-   * are supported:
+   * coordinates and various coordinates for a triaxial ellipsoid.  This is
+   * covered in Appendices A and B of
+   * - C. F. F. Karney,<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">
+   *   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
+   *   Technical Report, SRI International, Nov. 2025.<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+   *
+   * Besides ellipsoidal coordinates defined in Ellipsoid3, the following
+   * coordinates are supported:
    * * geodetic coordinates \f$(\phi, \lambda)\f$ defined by
    *   \f[
    *   \hat{\mathbf U} =

@@ -144,6 +144,16 @@ beginning with C<ERROR:> and causes B<Conformal3Proj> to return an exit
 code of 1.  However, an error does not cause B<Conformal3Proj> to
 terminate; following lines will be converted.
 
+=head1 SEE ALSO
+
+Ellipsoidal coordinates are documented in Section 2 of C. F. F. Karney,
+I<Jacobi's solution for geodesics on a triaxial ellipsoid>,
+Technical Report, SRI International, Nov. 2025,
+L<https://arxiv.org/abs/2511.nnnnn>.
+
+The Wikipedia page, Geodesics on an ellipsoid,
+L<https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.
+
 =head1 AUTHOR
 
 B<Conformal3Proj> was written by Charles Karney.

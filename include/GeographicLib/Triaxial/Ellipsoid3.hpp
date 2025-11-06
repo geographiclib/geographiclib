@@ -52,9 +52,16 @@ namespace GeographicLib {
    * [a,b,c] = b \bigl[ \sqrt{1 + e^2k'^2}, 1, \sqrt{1 - e^2k^2} \bigr].
    * \f]
    *
-   * Positions on the ellipsoid are given in term so the ellipsoidal latitude
-   * \f$\beta\f$ and the ellipsoidal longitude \f$\omega\f$ which are defined
-   * by
+   * Positions on the ellipsoid are given in term so the ellipsoidal
+   * coordinates given in Section 2 of
+   * - C. F. F. Karney,<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">
+   *   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
+   *   Technical Report, SRI International, Nov. 2025.<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+   * .
+   * Ellipsoidal latitude * \f$\beta\f$ and the ellipsoidal longitude
+   * \f$\omega\f$ which are defined * by
    * \f[
    * \mathbf R = \begin{bmatrix}
    * a \cos\omega \sqrt{k^2\cos^2\beta + k'^2} \\

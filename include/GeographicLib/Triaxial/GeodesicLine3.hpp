@@ -145,12 +145,12 @@ namespace GeographicLib {
       //
       // Handing of f funtions needs to be handled specially for
       // _merid[lr]
-      //   leading order behavior is seperated out
+      //   leading order behavior is separated out
       //   N.B. inverse of f is discontinuous for mu == 0
       //   functions which need special treatment
       //     operator(), deriv, inv, Slope, Max
       // _umb
-      //   leading order behavior is seperated out
+      //   leading order behavior is separated out
       // otherwise everything is handled by generic routines
       //
       // Handling of g function is always generic

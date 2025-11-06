@@ -380,8 +380,12 @@ L<https://geographiclib.sourceforge.io/cgi-bin/GeodSolve>.
 
 The algorithms are described in C. F. F. Karney,
 I<Algorithms for geodesics>, J. Geodesy 87, 43-55 (2013); DOI:
-L<https://doi.org/10.1007/s00190-012-0578-z>;
-addenda: L<https://geographiclib.sourceforge.io/geod-addenda.html>.
+L<https://doi.org/10.1007/s00190-012-0578-z>.
+
+The exact routines are covered in C. F. F. Karney,
+I<Geodesics on an arbitrary ellipsoid of revolution>,
+J. Geodesy 98, 4:1-14 (2024); DOI:
+L<https://doi.org/10.1007/s00190-023-01813-2>.
 
 The Wikipedia page, Geodesics on an ellipsoid,
 L<https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.

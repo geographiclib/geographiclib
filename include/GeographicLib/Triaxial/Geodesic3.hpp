@@ -34,7 +34,13 @@ namespace GeographicLib {
    * geodesic problem via the GeodesicLine3 class which contains the meat of
    * Jacobi's direct solution.  In addition it provides a solution to the
    * inverse problem which closely parallels the solution for the biaxial
-   * problem given by GeodesicExact.  For more details see \ref triaxial.
+   * problem given by GeodesicExact.  For more details see \ref triaxial
+   * and
+   * - C. F. F. Karney,<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">
+   *   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
+   *   Technical Report, SRI International, Nov. 2025.<br>
+   *   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
    *
    * Data for testing the geodesic routines is available at
    * <a href="https://doi.org/10.5281/zenodo.12510796"> Test set of geodesics
