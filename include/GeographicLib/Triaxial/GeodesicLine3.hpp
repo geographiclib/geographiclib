@@ -208,9 +208,8 @@ namespace GeographicLib {
       class fics {
         // bundle of data setting the initial conditions for a geodesic
       public:
-        //        bool transpolar;
         // alp1 is angle measured from line of const rotating coording
-        ang tht1, phi1, alp1, // rotating, librating starting point
+        ang tht1, phi1, alp1,   // rotating, librating starting point
           psi1,                 // phi1 transformed to rotating angle psi
         // Angles about which quantities oscillate
         // circumpolar:
@@ -222,8 +221,6 @@ namespace GeographicLib {
         //   !umbalt: alp0 = cardinal(odd)
         //   umbalt: alp0 = cardinal(even)
           tht0, phi0, alp0;
-        // Angle versions of u0, v0, delta, defer for now
-        // ang u0a, v0a, deltaa;
         real u0, v0, delta;     // starting point geodesic
         int Nx, Ex;             // Northgoing / eastgoing relative to tht
         fics() {}

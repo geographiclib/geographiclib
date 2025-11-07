@@ -7797,7 +7797,7 @@ git repository for GeographicLib</a>.
    - Cite the paper covering some of the triaxial classes
      <a href="https://arxiv.org/abs/2511.01621"> Jacobi's solution for
      geodesics on a triaxial ellipsoid</a>.
-   - Minor documenation fixes.
+   - Minor documentation fixes.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
    (released 2025-09-30)

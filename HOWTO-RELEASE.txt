@@ -108,7 +108,8 @@ Merge all changes to main
 test-distribution.sh: set SUFFIX= and BRANCH=main
 CMakeLists.txt set PROJECT_VERSION_SUFFIX suffix to ""
 Update NEWS
-Set date in NEWS and GeographicLib.dox.in (top, how to cite, change log)
+Set date GeographicLib.dox.in (top, how to cite, change log)
+Set date and "current version" in NEWS
 Commit to git
 run develop/test-distribution.sh
   check library so versions cmake vs configure
@@ -221,6 +222,6 @@ vcpkg...
   ./vcpkg x-add-version geographiclib
   # ./vcpkg x-add-version --all
 
-  commit again
-  commit message = [geographiclib] Update to version $VERSION
+  git add versions
+  git commit -m "[geographiclib] Update to version $VERSION"
   git push --set-upstream cffk geographiclib/$VERSION

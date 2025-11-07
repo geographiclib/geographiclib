@@ -4,7 +4,7 @@ For more information, see
 
     https://geographiclib.sourceforge.io/C++/doc/
 
-The current version of the library is 2.6.
+The current version of the library is 2.7.
 
 Changes between 2.7 (released 2025-11-06) and 2.6 versions:
 
@@ -18,7 +18,7 @@ Changes between 2.7 (released 2025-11-06) and 2.6 versions:
    * Cite the paper covering some of the triaxial classes Jacobi's
      solution for geodesics on a triaxial ellipsoid.
 
-   * Minor documenation fixes.
+   * Minor documentation fixes.
 
 Changes between 2.6 (released 2025-09-30) and 2.5.2 versions:
 
