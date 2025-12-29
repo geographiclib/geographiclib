@@ -224,12 +224,13 @@ namespace GeographicLib {
       //   y2 = y1 + 1e-16
       // the test
       //   hypot(x, y2) >= hypot(x, y1)
-      // fails.  Reported 2021-03-14:
+      // fails.  Test cases are GeodSolve9[23].  Reported 2021-03-14:
       //   https://developercommunity.visualstudio.com/t/1369259
+      // MS incorrectly claimed to have fixed this.  Reported again 2025-12-02:
+      //   https://developercommunity.visualstudio.com/t/11009459
       // See also:
       //   https://bugs.python.org/issue43088
-      // Bug still present in my version of vc17 (2022) updated on 2025-09-01.
-      // Let's hope it's fixed in vc18.
+      // Bug still present in version of vc18 (2026).
       using std::sqrt; T h = sqrt(x * x + y * y);
 #else
       using std::hypot; T h = hypot(x, y);

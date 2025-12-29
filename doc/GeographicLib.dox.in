@@ -7809,10 +7809,7 @@ git repository for GeographicLib</a>.
    - `make exampleprograms` not applies the current configuration to the
      build.
    - Visual Studio 18 (2026) is now supported (this requires cmake
-     version 4.2.0 or later).  Note that the tests `GeodSolve92` and
-     `GeodSolve93` fail for win32 builds with this version of Visual
-     Studio.  This is a bug in Visual Studio, see
-     https://developercommunity.visualstudio.com/t/11009459
+     version 4.2.0 or later).
    - <b>WARNING:</b> SourceForge will, at some point, stop supporting
      the infrastructure that enables the online versions of
      <a href="https://geographiclib.sourceforge.io/cgi-bin/GeoConvert">

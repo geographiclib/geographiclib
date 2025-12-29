@@ -526,7 +526,7 @@ set_tests_properties (GeodSolve90 PROPERTIES WILL_FAIL ON)
 # Check fix for inaccurate hypot with python 3.[89].  Problem reported
 # by agdhruv https://github.com/geopy/geopy/issues/466 ; see
 # https://bugs.python.org/issue43088
-# Update 2025-12-02: Visual Studio 2026 win32 exhibits the same bug, see
+# Update 2025-12-02: Visual Studio win32 exhibits the same bug, see
 # https://developercommunity.visualstudio.com/t/11009459
 add_test (NAME GeodSolve92 COMMAND GeodSolve
   -i --input-string "37.757540000000006 -122.47018 37.75754 -122.470177")
