@@ -42,7 +42,7 @@ DISTVERSION=$VERSION$SUFFIX
 BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 DEVELSOURCE=$HOME/geographiclib
-WINDOWSBUILD=/var/tmp
+WINDOWSBUILD=$HOME/Dropbox/windows
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
 mkdir -p $WEBDIST/htdocs/C++
@@ -83,7 +83,7 @@ echo Unpack devel cmake distribution in $TEMP/relx and list in $TEMP/files.x
 
 echo ==============================================================
 echo Make a release for Windows testing in $WINDOWSBUILD/GeographicLib-$VERSION
-rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
+rm -rf $WINDOWSBUILD/GeographicLib-$VERSION/*
 
 unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
 
@@ -102,9 +102,9 @@ for ver in 15 16 17 18; do
         (
             echo "#! /bin/sh -exv"
             echo echo ========== cmake $pkg ==========
-            echo h=//datalake-pr-smb/vt-open/ckarney
+            echo h=c:/Users/E27157/Dropbox/windows
             echo b=c:/scratch/geog-$pkg
-            echo i=\$h/pkg-$pkg/GeographicLib-$VERSION
+            echo i=c:/scratch/pkg-$pkg/GeographicLib-$VERSION
             echo unset GEOGRAPHICLIB_DATA
             echo rm -rf \$b \$i/\*
             echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=\$i -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= $boostdir -S . -B \$b
@@ -128,15 +128,27 @@ for ver in 15 16 17 18; do
 done
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 #! /bin/sh
-(
-    for d in build-*[24]; do
-        if ./$d; then
-          echo STATUS: SUCCESS $d
-        else
-          echo STATUS: FAIL $d
-        fi
-    done
-) >& build.log
+if test `hostname` = karney-loaner; then
+    (
+        for d in build-vc1[5-9]-*[24]; do
+            if ./$d; then
+                echo STATUS: SUCCESS $d
+            else
+                echo STATUS: FAIL $d
+            fi
+        done
+    ) >& build.log
+else
+    (
+        for d in build-vc1[6-9]-*[24]; do
+            if ./$d; then
+                echo STATUS: SUCCESS $d
+            else
+                echo STATUS: FAIL $d
+            fi
+        done
+    ) >& build-alt.log
+fi
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
 
