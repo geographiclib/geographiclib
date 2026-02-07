@@ -1,15 +1,15 @@
 # Compile test programs
 set (TESTPROGRAMS geodtest signtest polygontest intersecttest)
 
-add_custom_target (testprograms)
-add_dependencies (testprograms tools)
+add_custom_target (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET})
+add_dependencies (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET} ${GEOGRAPHICLIB_TOOLS_TARGET})
 
 if (GEOGRAPHICLIB_PRECISION GREATER 1)
 
   foreach (TESTPROGRAM ${TESTPROGRAMS})
 
     add_executable (${TESTPROGRAM} EXCLUDE_FROM_ALL ${TESTPROGRAM}.cpp)
-    add_dependencies (testprograms ${TESTPROGRAM})
+    add_dependencies (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET} ${TESTPROGRAM})
     target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES}
       ${HIGHPREC_LIBRARIES})
 
@@ -18,7 +18,9 @@ if (GEOGRAPHICLIB_PRECISION GREATER 1)
   endforeach ()
 
   # Put all the tests into a folder in the IDE
-  set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
+  set_property (
+    TARGET ${GEOGRAPHICLIB_TESTPROGRAMS_TARGET} ${TESTPROGRAMS}
+    PROPERTY FOLDER tests)
 
 endif ()
 

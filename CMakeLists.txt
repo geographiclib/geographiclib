@@ -63,6 +63,27 @@ else ()
   set (RELEASE OFF)
 endif ()
 
+if (CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+  set (GEOGRAPHICLIB_PROJECT_IS_TOPLEVEL ON)
+else ()
+  set (GEOGRAPHICLIB_PROJECT_IS_TOPLEVEL OFF)
+endif ()
+
+option (GEOGRAPHICLIB_BUILD_STANDALONE
+  "Build CLI tools, docs, tests, examples, and packaging targets"
+  ${GEOGRAPHICLIB_PROJECT_IS_TOPLEVEL})
+
+if (GEOGRAPHICLIB_PROJECT_IS_TOPLEVEL)
+  set (_TARGET_PREFIX "")
+else ()
+  set (_TARGET_PREFIX "${PROJECT_NAME_LOWER}-")
+endif ()
+
+set (GEOGRAPHICLIB_LIBS_TARGET "${_TARGET_PREFIX}libs")
+set (GEOGRAPHICLIB_TOOLS_TARGET "${_TARGET_PREFIX}tools")
+set (GEOGRAPHICLIB_SCRIPTS_TARGET "${_TARGET_PREFIX}scripts")
+set (GEOGRAPHICLIB_TESTPROGRAMS_TARGET "${_TARGET_PREFIX}testprograms")
+
 # User-settable variables
 
 # (1) Where to look for data files.  Various classes look in the geoids,
@@ -89,7 +110,8 @@ option (BUILD_SHARED_LIBS "Build as a shared library" ON)
 option (BUILD_BOTH_LIBS "Build both shared and static libraries" OFF)
 
 # (3) What sort of build?
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+if (GEOGRAPHICLIB_PROJECT_IS_TOPLEVEL AND
+    NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   # Set a default build type for single-configuration cmake generators
   # if no build type is set.
   set (CMAKE_BUILD_TYPE "Release")
@@ -119,10 +141,10 @@ option (USE_BOOST "Look for the Boost library (not required)" OFF)
 option (APPLE_MULTIPLE_ARCHITECTURES
   "Build multiple architectures for Apple systems" OFF)
 
-# (8) Convert warnings into errors?  Default is OFF if RELEASE, else ON.
-if (RELEASE)
+# (8) Convert warnings into errors?  Default is OFF if RELEASE or when
+# used as a subproject, else ON.
+if (RELEASE OR NOT GEOGRAPHICLIB_BUILD_STANDALONE)
   option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
-  # BUILD_MANPAGES is ignored in RELEASE mode
   option (BUILD_MANPAGES "Convert pod files to manpages" OFF)
 else ()
   option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)
@@ -444,47 +466,57 @@ if (WIN32)
 endif ()
 
 # The list of tools (to be installed into, e.g., /usr/local/bin)
-set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
-  GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
-  TransverseMercatorProj Cart3Convert Conformal3Proj Geod3Solve)
-# The list of scripts (to be installed into, e.g., /usr/local/sbin)
-set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
-  geographiclib-get-magnetic)
+if (GEOGRAPHICLIB_BUILD_STANDALONE)
+  set (TOOLS CartConvert ConicProj GeodesicProj GeoConvert GeodSolve
+    GeoidEval Gravity IntersectTool MagneticField Planimeter RhumbSolve
+    TransverseMercatorProj Cart3Convert Conformal3Proj Geod3Solve)
+  # The list of scripts (to be installed into, e.g., /usr/local/sbin)
+  set (SCRIPTS geographiclib-get-geoids geographiclib-get-gravity
+    geographiclib-get-magnetic)
+else ()
+  set (TOOLS)
+  set (SCRIPTS)
+endif ()
 
 set_property (GLOBAL PROPERTY USE_FOLDERS ON)
 
 # The list of subdirectories to process
 add_subdirectory (src)
 add_subdirectory (include/GeographicLib)
-add_subdirectory (tools)
-add_subdirectory (man)
-add_subdirectory (doc)
-if (EXAMPLEDIR)
-  set (CALLED_FROM_TOPLEVEL ON)
-  add_subdirectory (examples)   # This just installs the examples
+if (GEOGRAPHICLIB_BUILD_STANDALONE)
+  add_subdirectory (tools)
+  add_subdirectory (man)
+  add_subdirectory (doc)
+  if (EXAMPLEDIR)
+    set (CALLED_FROM_TOPLEVEL ON)
+    add_subdirectory (examples)   # This just installs the examples
+  endif ()
+  enable_testing ()
+  add_subdirectory (tests)
+  add_subdirectory (experimental)
+  if (NOT RELEASE)
+    add_subdirectory (develop)
+  endif ()
 endif ()
 add_subdirectory (cmake)
-enable_testing ()
-add_subdirectory (tests)
-add_subdirectory (experimental)
-if (NOT RELEASE)
-  add_subdirectory (develop)
-endif ()
 
 # make exampleprograms does a fresh cmake configuration and so uses
 # find_package to find the just-built version of GeographicLib (via the
 # GeographicLib_DIR option to cmake).
-if (CMAKE_GENERATOR_PLATFORM)
-  set (PLATFORM_FLAG "-A")
+if (GEOGRAPHICLIB_BUILD_STANDALONE)
+  set (PLATFORM_FLAG "")
+  if (CMAKE_GENERATOR_PLATFORM)
+    set (PLATFORM_FLAG "-A")
+  endif ()
+  add_custom_target (exampleprograms
+    COMMAND ${CMAKE_COMMAND}
+    -G ${CMAKE_GENERATOR} ${PLATFORM_FLAG} ${CMAKE_GENERATOR_PLATFORM}
+    -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
+    -D USE_BOOST=${USE_BOOST}
+    -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}
+    COMMAND ${CMAKE_COMMAND} --build exampleprograms --config $<CONFIG> -j)
+  add_dependencies (exampleprograms ${PROJECT_LIBRARIES})
 endif ()
-add_custom_target (exampleprograms
-  COMMAND ${CMAKE_COMMAND}
-  -G ${CMAKE_GENERATOR} ${PLATFORM_FLAG} ${CMAKE_GENERATOR_PLATFORM}
-  -B exampleprograms -S ${PROJECT_SOURCE_DIR}/examples
-  -D USE_BOOST=${USE_BOOST}
-  -D ${PROJECT_NAME}_DIR=${PROJECT_BINARY_DIR}
-  COMMAND ${CMAKE_COMMAND} --build exampleprograms --config $<CONFIG> -j)
-add_dependencies (exampleprograms ${PROJECT_LIBRARIES})
 
 # Packaging support; we deal with
 # (1) a source distribution: cmake make a tar.gz file and the zip file
@@ -493,93 +525,95 @@ add_dependencies (exampleprograms ${PROJECT_LIBRARIES})
 # (2) a binary distribution: code is included for Linux, Apple, and
 # Windows, but only the Windows distribution has been exercised.
 
-# Need to ensure that system dlls get included in a binary distribution
-if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
-  # Visual Studio Express does include redistributable components so
-  # squelch the warning.
-  set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
-endif ()
-set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
-include (InstallRequiredSystemLibraries)
-
-# The configuration of CPack is via variables that need to be set before
-# the include (CPack).
-set (CPACK_PACKAGE_CONTACT karney@alum.mit.edu)
-set (CPACK_PACKAGE_VENDOR "GeographicLib")
-set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
-  "GeographicLib library, utilities, and documentation")
-# The list of files to be excluded from the source distribution.
-set (CPACK_SOURCE_IGNORE_FILES
-  "#"
-  "~\$"
-  "/\\\\.git"
-  "${PROJECT_SOURCE_DIR}/BUILD"
-  "${PROJECT_SOURCE_DIR}/man/(.*\\\\.pod|makeusage\\\\.sh|dummy\\\\..*)\$"
-  "${PROJECT_SOURCE_DIR}/cmake/maintainer-.*\\\\.cmake\$"
-  "${PROJECT_SOURCE_DIR}/(develop|cgi-bin|.*\\\\.cache)/"
-  "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer)/"
-  "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
-  "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
-  "${PROJECT_SOURCE_DIR}/autogen\\\\.sh\$"
-  "${PROJECT_SOURCE_DIR}/include/mpreal\\\\.h\$"
-  "${PROJECT_SOURCE_DIR}/maxima/auxvals40\\\\.mac\$"
-  "${PROJECT_SOURCE_DIR}/(makefile-admin|HOWTO-RELEASE.txt)\$")
-set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
-
-set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
-set (CPACK_SOURCE_PACKAGE_FILE_NAME "${PACKAGE_DIR}")
-set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PACKAGE_DIR}")
-
-if (WIN32)
-  # The Windows binary packager is NSIS.  Set the necessary variables
-  # for this.
-  set (CPACK_NSIS_CONTACT "karney@alum.mit.edu")
-  set (CPACK_NSIS_URL_INFO_ABOUT "https://geographiclib.sourceforge.io")
-  set (CPACK_NSIS_HELP_LINK "mailto:karney@alum.mit.edu")
-  # No provision for accommodating different compiler versions.  However
-  # the Visual Studio 14 2015 build works also with Visual Studio 15
-  # 2017, Visual Studio 16 2019, and Visual Studio 17 2022.
-  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files")
-    set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win64")
-    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
-    set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
-  else ()
-    set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files (x86)")
-    set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win32")
-    set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} win32 ${PROJECT_VERSION}")
-    set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
-      "${PROJECT_NAME}-win32-${PROJECT_VERSION}")
+if (GEOGRAPHICLIB_BUILD_STANDALONE)
+  # Need to ensure that system dlls get included in a binary distribution
+  if (NOT DEFINED CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS)
+    # Visual Studio Express does include redistributable components so
+    # squelch the warning.
+    set (CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_NO_WARNINGS ON)
   endif ()
-  set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
-  set (CPACK_NSIS_MENU_LINKS
-    "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/index.html"
-    "Library documentation"
-    "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/utilities.html"
-    "Utilities documentation"
-    "https://geographiclib.sourceforge.io" "GeographicLib home page"
-    "https://sourceforge.net/projects/geographiclib/" "Main project page")
-  set (CPACK_NSIS_MODIFY_PATH ON)
-elseif (APPLE)
-  # Not tested
-  set (CPACK_GENERATOR Bundle)
-  set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
-else ()
-  # Not tested
-  set (CPACK_GENERATOR TGZ)
-endif ()
+  set (CMAKE_INSTALL_DEBUG_LIBRARIES ON)
+  include (InstallRequiredSystemLibraries)
 
-include (CPack)
+  # The configuration of CPack is via variables that need to be set before
+  # the include (CPack).
+  set (CPACK_PACKAGE_CONTACT karney@alum.mit.edu)
+  set (CPACK_PACKAGE_VENDOR "GeographicLib")
+  set (CPACK_PACKAGE_DESCRIPTION_SUMMARY
+    "GeographicLib library, utilities, and documentation")
+  # The list of files to be excluded from the source distribution.
+  set (CPACK_SOURCE_IGNORE_FILES
+    "#"
+    "~\$"
+    "/\\\\.git"
+    "${PROJECT_SOURCE_DIR}/BUILD"
+    "${PROJECT_SOURCE_DIR}/man/(.*\\\\.pod|makeusage\\\\.sh|dummy\\\\..*)\$"
+    "${PROJECT_SOURCE_DIR}/cmake/maintainer-.*\\\\.cmake\$"
+    "${PROJECT_SOURCE_DIR}/(develop|cgi-bin|.*\\\\.cache)/"
+    "${PROJECT_SOURCE_DIR}/(data-distrib|data-installer)/"
+    "${PROJECT_SOURCE_DIR}/(archive|scratch|mpfr_mpir_x86_x64_msvc2010)/"
+    "${PROJECT_SOURCE_DIR}/.*\\\\.(zip|tar\\\\.gz|bak|lsp)\$"
+    "${PROJECT_SOURCE_DIR}/autogen\\\\.sh\$"
+    "${PROJECT_SOURCE_DIR}/include/mpreal\\\\.h\$"
+    "${PROJECT_SOURCE_DIR}/maxima/auxvals40\\\\.mac\$"
+    "${PROJECT_SOURCE_DIR}/(makefile-admin|HOWTO-RELEASE.txt)\$")
+  set (CPACK_SOURCE_GENERATOR "TGZ;ZIP")
 
-# If MAINTAINER, then prepare the source distribution for RELEASE mode.
-# "make dist" does the following:
-#   "make package_source" to call the CPack source generator
-#   remove stray files which aren't in git
-#   runs autogen.sh in the package source directory
-#   creates the processing man documentation and installs it too
-#   creates a file VERSION to signal that this is a RELEASE source
-#   create .tar.gz and .zip archives of the results
-if (MAINTAINER)
-  include (cmake/maintainer-top.cmake)
+  set (CPACK_RESOURCE_FILE_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE.txt)
+  set (CPACK_SOURCE_PACKAGE_FILE_NAME "${PACKAGE_DIR}")
+  set (CPACK_PACKAGE_INSTALL_DIRECTORY "${PACKAGE_DIR}")
+
+  if (WIN32)
+    # The Windows binary packager is NSIS.  Set the necessary variables
+    # for this.
+    set (CPACK_NSIS_CONTACT "karney@alum.mit.edu")
+    set (CPACK_NSIS_URL_INFO_ABOUT "https://geographiclib.sourceforge.io")
+    set (CPACK_NSIS_HELP_LINK "mailto:karney@alum.mit.edu")
+    # No provision for accommodating different compiler versions.  However
+    # the Visual Studio 14 2015 build works also with Visual Studio 15
+    # 2017, Visual Studio 16 2019, and Visual Studio 17 2022.
+    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+      set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files")
+      set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win64")
+      set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} x64 ${PROJECT_VERSION}")
+      set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
+        "${PROJECT_NAME}-x64-${PROJECT_VERSION}")
+    else ()
+      set (CPACK_NSIS_INSTALL_ROOT "C:\\\\Program Files (x86)")
+      set (CPACK_PACKAGE_FILE_NAME "${PACKAGE_NAME}-win32")
+      set (CPACK_NSIS_PACKAGE_NAME "${PROJECT_NAME} win32 ${PROJECT_VERSION}")
+      set (CPACK_PACKAGE_INSTALL_REGISTRY_KEY
+        "${PROJECT_NAME}-win32-${PROJECT_VERSION}")
+    endif ()
+    set (CPACK_NSIS_DISPLAY_NAME ${CPACK_NSIS_PACKAGE_NAME})
+    set (CPACK_NSIS_MENU_LINKS
+      "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/index.html"
+      "Library documentation"
+      "https://geographiclib.sourceforge.io/C++/${PROJECT_VERSION}/utilities.html"
+      "Utilities documentation"
+      "https://geographiclib.sourceforge.io" "GeographicLib home page"
+      "https://sourceforge.net/projects/geographiclib/" "Main project page")
+    set (CPACK_NSIS_MODIFY_PATH ON)
+  elseif (APPLE)
+    # Not tested
+    set (CPACK_GENERATOR Bundle)
+    set (CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_INSTALL_DIRECTORY}-darwin")
+  else ()
+    # Not tested
+    set (CPACK_GENERATOR TGZ)
+  endif ()
+
+  include (CPack)
+
+  # If MAINTAINER, then prepare the source distribution for RELEASE mode.
+  # "make dist" does the following:
+  #   "make package_source" to call the CPack source generator
+  #   remove stray files which aren't in git
+  #   runs autogen.sh in the package source directory
+  #   creates the processing man documentation and installs it too
+  #   creates a file VERSION to signal that this is a RELEASE source
+  #   create .tar.gz and .zip archives of the results
+  if (MAINTAINER)
+    include (cmake/maintainer-top.cmake)
+  endif ()
 endif ()
