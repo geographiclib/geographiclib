@@ -145,6 +145,7 @@ option (APPLE_MULTIPLE_ARCHITECTURES
 # used as a subproject, else ON.
 if (RELEASE OR NOT GEOGRAPHICLIB_BUILD_STANDALONE)
   option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" OFF)
+  # BUILD_MANPAGES is ignored in RELEASE mode
   option (BUILD_MANPAGES "Convert pod files to manpages" OFF)
 else ()
   option (CONVERT_WARNINGS_TO_ERRORS "Convert warnings into errors?" ON)

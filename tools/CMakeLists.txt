@@ -55,7 +55,8 @@ if (BINDIR)
 endif ()
 
 # Put all the tools into a folder in the IDE
-set_property (TARGET ${GEOGRAPHICLIB_TOOLS_TARGET} ${TOOLS} PROPERTY FOLDER tools)
+set_property (TARGET ${GEOGRAPHICLIB_TOOLS_TARGET} ${TOOLS}
+  PROPERTY FOLDER tools)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the

@@ -42,7 +42,8 @@ DISTVERSION=$VERSION$SUFFIX
 BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
 DEVELSOURCE=$HOME/geographiclib
-WINDOWSBUILD=$HOME/Dropbox/windows
+WINDOWSBUILD=/var/tmp
+WINDOWSBUILDA=$HOME/Dropbox/windows
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
 mkdir -p $WEBDIST/htdocs/C++
@@ -204,10 +205,15 @@ cut -f3- -d/ $TEMP/files.x | sort > ../files.new
         find -type d -empty | xargs -r rmdir
     done
 )
-rm -rf GeographicLib-$VERSION
-for ((i=0; i<7; ++i)); do
-    find * -type d -empty | xargs -r rmdir
-done
+git add -A
+git commit -m "Version $VERSION ($DATE)"
+git tag -m "Version $VERSION ($DATE)" r$VERSION
+git init --bare -b release $TEMP/geographiclib.git
+cd /scratch/geographiclib-dist/gitr/geographiclib/
+git remote add local file://$TEMP/geographiclib.git
+git push --set-upstream local release
+git push --set-upstream local --tags
+git branch --set-upstream-to=origin/release
 
 echo ==============================================================
 echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD install to $TEMP/instc
@@ -479,9 +485,6 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
 # Check .gitignore files!
-git add -A
-git commit -m "Version $VERSION ($DATE)"
-git tag -m "Version $VERSION ($DATE)" r$VERSION
 git push
 git push --tags
 

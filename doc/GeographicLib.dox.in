@@ -605,6 +605,8 @@ In order to use GeographicLib from C++ code, you will need to
   in your code.
 - Build your code with cmake.  In brief, the necessary steps are:
   - include in your CMakeLists.txt files \verbatim
+    cmake_minimum_required (VERSION 3.17.0)
+    project (testproject)
     find_package (GeographicLib REQUIRED)
     include_directories (${GeographicLib_INCLUDE_DIRS})
     add_executable (program source1.cpp source2.cpp)
@@ -784,9 +786,15 @@ endif ()
 add_executable (${PROJECT_NAME} example-Geodesic-small.cpp)
 target_link_libraries (${PROJECT_NAME} GeographicLib::GeographicLib)
 \endverbatim
-In this case, the library needs to be specified as
-<code>GeographicLib::GeographicLib</code> instead of
-<code>${GeographicLib_LIBRARIES}</code>
+Use `GIT_TAG release` to get the latest release.  In this case, the
+library needs to be specified as `GeographicLib::GeographicLib` instead
+of `${GeographicLib_LIBRARIES}`.  By default, only the library will be
+built and the `make` target is changed from `libs` to
+`geographiclib-libs` to prevent conflicts with the names of `make`
+targets.  If you want GeographicLib's utility tools to be built also,
+include \verbatim
+set (GEOGRAPHICLIB_BUILD_STANDALONE ON)\endverbatim
+before the `FetchContent_MakeAvailable` command.
 
 The next steps are:
  - Learn about and run the \ref utilities.
@@ -4220,7 +4228,7 @@ in more detail in
 See also
  - The wikipedia page,
    <a href="https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid#Geodesics_on_a_triaxial_ellipsoid">
-   Geodesics on  a triaxial ellipsoid</a>.
+   Geodesics on a triaxial ellipsoid</a>.
 
 Go to
  - \ref triaxial-coords
@@ -7793,21 +7801,26 @@ git repository for GeographicLib</a>.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.8">Version 2.8</a>
    (released 202y-mm-dd)
-   - Fix Cart3Convert to allow latitude = nan for geodetic coordinates.
-   - Minor improvements to Trixial::Conformal3
+   - Fix <a href="Cart3Convert.1.html">Cart3Convert</a> to allow
+     latitude = nan for geodetic coordinates.
+   - Minor improvements to Triaxial::Conformal3
      - Added const versions of Triaxial::Conformal3::t() and
        Triaxial::Conformal3::s().  The non-const versions are retained
        in order not to force a change in the major version of the
        library.  They will be removed in due course.
-     - Trixial::Conformal3::Piinv now treats biaxial ellipsoids as a
+     - Triaxial::Conformal3::Piinv now treats biaxial ellipsoids as a
        special case.  In particular, it calls Math::tauf when
        appropriate.  This is substantially more accurate close to a
        pole.  The solution for the triaxial case also gives improved
        accuracy.
-     - Trixial::Conformal3::Finv now merely calls EllipticFunction::am.
+     - Triaxial::Conformal3::Finv now merely calls EllipticFunction::am.
    - Minor improvement to EllipticFunction::am functions.
    - `make exampleprograms` not applies the current configuration to the
      build.
+   - When %GeographicLib is incorporated into a CMake project via
+     `FetchContent`, only the C++ library is built (and not the utility
+     tools), unless `GEOGRAPHICLIB_BUILD_STANDALONE` is set.  (Thanks to
+     Holden Ramsey.)
    - Visual Studio 18 (2026) is now supported (this requires cmake
      version 4.2.0 or later).
    - <b>WARNING:</b> SourceForge will, at some point, stop supporting
@@ -7958,8 +7971,8 @@ git repository for GeographicLib</a>.
        testprograms test</code>.
      - added a target <code>libs</code> to build only the static and/or
        shared libraries.
-     - document the use of CMake's FetchContent as an alternative to
-       find_package.
+     - document the use of CMake's `FetchContent` as an alternative to
+       `find_package`.
      - stop requiring that `CMAKE_CROSSCOMPILING` match with
        `find_package(GeographicLib)`.
    - Internal code changes
