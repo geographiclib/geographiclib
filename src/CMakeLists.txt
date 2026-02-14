@@ -1,6 +1,6 @@
 # Build the library...
 
-add_custom_target (libs ALL)
+add_custom_target (${GEOGRAPHICLIB_LIBS_TARGET} ALL)
 
 # Include all the .cpp files in the library.
 set (SOURCES
@@ -114,7 +114,7 @@ if (GEOGRAPHICLIB_SHARED_LIB)
   add_library (${PROJECT_SHARED_LIBRARIES} SHARED ${SOURCES} ${HEADERS})
   add_library (${PROJECT_NAME}::${PROJECT_SHARED_LIBRARIES}
     ALIAS ${PROJECT_SHARED_LIBRARIES})
-  add_dependencies (libs ${PROJECT_SHARED_LIBRARIES})
+  add_dependencies (${GEOGRAPHICLIB_LIBS_TARGET} ${PROJECT_SHARED_LIBRARIES})
   target_compile_features (${PROJECT_SHARED_LIBRARIES}
     PUBLIC ${REQUIRED_COMPILER_FEATURES})
 endif ()
@@ -122,7 +122,7 @@ if (GEOGRAPHICLIB_STATIC_LIB)
   add_library (${PROJECT_STATIC_LIBRARIES} STATIC ${SOURCES} ${HEADERS})
   add_library (${PROJECT_NAME}::${PROJECT_STATIC_LIBRARIES}
     ALIAS ${PROJECT_STATIC_LIBRARIES})
-  add_dependencies (libs ${PROJECT_STATIC_LIBRARIES})
+  add_dependencies (${GEOGRAPHICLIB_LIBS_TARGET} ${PROJECT_STATIC_LIBRARIES})
   target_compile_features (${PROJECT_STATIC_LIBRARIES}
     PUBLIC ${REQUIRED_COMPILER_FEATURES})
 endif ()

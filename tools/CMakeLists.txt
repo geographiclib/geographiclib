@@ -13,9 +13,9 @@ add_definitions (${PROJECT_DEFINITIONS})
 
 # Loop over all the tools, specifying the source and library.
 if (BINDIR)
-  add_custom_target (tools ALL)
+  add_custom_target (${GEOGRAPHICLIB_TOOLS_TARGET} ALL)
 else ()
-  add_custom_target (tools)
+  add_custom_target (${GEOGRAPHICLIB_TOOLS_TARGET})
 endif ()
 
 foreach (TOOL ${TOOLS})
@@ -28,7 +28,7 @@ foreach (TOOL ${TOOLS})
   if (NOT RELEASE)
     add_dependencies (${TOOL} usage)
   endif ()
-  add_dependencies (tools ${TOOL})
+  add_dependencies (${GEOGRAPHICLIB_TOOLS_TARGET} ${TOOL})
 
   set_source_files_properties (${TOOL}.cpp PROPERTIES
     OBJECT_DEPENDS ${MANDIR}/${TOOL}.usage)
@@ -55,7 +55,7 @@ if (BINDIR)
 endif ()
 
 # Put all the tools into a folder in the IDE
-set_property (TARGET tools ${TOOLS} PROPERTY FOLDER tools)
+set_property (TARGET ${GEOGRAPHICLIB_TOOLS_TARGET} ${TOOLS} PROPERTY FOLDER tools)
 
 # Create the scripts for downloading the data files on non-Windows
 # systems.  This needs to substitute ${GEOGRAPHICLIB_DATA} as the
@@ -73,5 +73,5 @@ if (NOT CMAKE_HOST_WIN32)
         DESTINATION ${SBINDIR})
     endif ()
   endforeach ()
-  add_custom_target (scripts ALL DEPENDS ${SCRIPTS})
+  add_custom_target (${GEOGRAPHICLIB_SCRIPTS_TARGET} ALL DEPENDS ${SCRIPTS})
 endif ()
