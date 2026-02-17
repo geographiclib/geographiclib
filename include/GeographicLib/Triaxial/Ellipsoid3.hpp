@@ -54,10 +54,11 @@ namespace GeographicLib {
    * Positions on the ellipsoid are given in term so the ellipsoidal
    * coordinates given in Section 2 of
    * - C. F. F. Karney,<br>
-   *   <a href="https://arxiv.org/abs/2511.01621">
+   *   <a href="https://doi.org/10.1007/s00190-026-02030-3">
    *   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
-   *   Technical Report, SRI International, Nov. 2025.<br>
-   *   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+   *   J. Geodesy 100(2), 17:1--23 (2026).<br>
+   *   DOI: <a href="https://doi.org/10.1007/s00190-026-02030-3">
+   *   10.1007/s00190-026-02030-3</a>
    * .
    * Ellipsoidal latitude * \f$\beta\f$ and the ellipsoidal longitude
    * \f$\omega\f$ which are defined * by

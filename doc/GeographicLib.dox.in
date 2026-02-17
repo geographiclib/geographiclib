@@ -4219,11 +4219,12 @@ this section, I briefly give Jacobi's solution and illustrate the
 behavior of the geodesics and outline an algorithm for the solution of
 the inverse problem.  Most of the material on this page is now covered
 in more detail in
- - C. F. F. Karney,
-   <a href="https://arxiv.org/abs/2511.01621">
+ - C. F. F. Karney,<br>
+   <a href="https://doi.org/10.1007/s00190-026-02030-3">
    Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
-   Technical Report, SRI International, Nov. 2025.<br>
-   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+   J. Geodesy 100(2), 17:1--23 (2026);<br>
+   DOI: <a href="https://doi.org/10.1007/s00190-026-02030-3">
+   10.1007/s00190-026-02030-3</a>.
  .
 See also
  - The wikipedia page,
@@ -7847,8 +7848,8 @@ git repository for GeographicLib</a>.
      - Triaxial::Cartesian3::carttocart2 sometimes returned the wrong
        result in the interior of the ellipsoid with \e Z = 0.
    - Cite the paper covering some of the triaxial classes
-     <a href="https://arxiv.org/abs/2511.01621"> Jacobi's solution for
-     geodesics on a triaxial ellipsoid</a>.
+     <a href="https://doi.org/10.1007/s00190-026-02030-3"> Jacobi's
+     solution for geodesics on a triaxial ellipsoid</a>.
    - Minor documentation fixes.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.6">Version 2.6</a>
