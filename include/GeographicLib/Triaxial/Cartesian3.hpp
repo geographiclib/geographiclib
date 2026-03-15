@@ -115,7 +115,7 @@ namespace GeographicLib {
     using random_prec = Math::real;
 #endif
     using ang = Angle;
-    static constexpr int maxit_ = 20;
+    static constexpr int maxit_ = 30;
     static constexpr bool throw_ = true; // exception on convergence failure
     const Ellipsoid3 _t;
     const vec3 _axes, _axes2, _linecc2;

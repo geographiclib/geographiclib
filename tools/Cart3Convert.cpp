@@ -30,7 +30,7 @@
 //   -P parametric
 //   -C geocentric
 //   -3 include height (only for -E and -G)
-//   -D include direction (only for -E without -3)
+//   -D include direction
 
 // Can't specify -3 and -D together
 // Height for -G has its usual definition
