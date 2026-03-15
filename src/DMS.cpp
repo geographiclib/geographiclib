@@ -2,7 +2,7 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2022) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2008-2026) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
@@ -143,13 +143,10 @@ namespace GeographicLib {
     replace(dmsa, "\xb4",         '\''); // 0xb4 bare acute accent
     replace(dmsa, "\xa0",         '\0'); // 0xa0 bare non-breaking space
     replace(dmsa, "''",           '"' ); // '' -> "
+    dmsa = Utility::trim(dmsa);
     string::size_type
       beg = 0,
       end = unsigned(dmsa.size());
-    while (beg < end && isspace(dmsa[beg]))
-      ++beg;
-    while (beg < end && isspace(dmsa[end - 1]))
-      --end;
     // The trimmed string in [beg, end)
     real v = -0.0;              // So "-0" returns -0.0
     int i = 0;
@@ -170,10 +167,12 @@ namespace GeographicLib {
       if (ind1 == NONE)
         ind1 = ind2;
       else if (!(ind2 == NONE || ind1 == ind2))
+        // Example 3N+3E
         throw GeographicErr("Incompatible hemisphere specifier in " +
                             dmsa.substr(beg, pb - beg));
     }
     if (i == 0)
+      // Example ""
       throw GeographicErr("Empty or incomplete DMS string " +
                           dmsa.substr(beg, end - beg));
     ind = ind1;
@@ -199,10 +198,12 @@ namespace GeographicLib {
         if (k >= 0) {
           if (ind1 != NONE) {
             if (toupper(dmsa[beg - 1]) == toupper(dmsa[end - 1]))
+              // Example N3N
               errormsg = "Repeated hemisphere indicators "
                 + Utility::str(dmsa[beg - 1])
                 + " in " + dmsa.substr(beg - 1, end - beg + 1);
             else
+              // Example N3E
               errormsg = "Contradictory hemisphere indicators "
                 + Utility::str(dmsa[beg - 1]) + " and "
                 + Utility::str(dmsa[end - 1]) + " in "
@@ -221,7 +222,8 @@ namespace GeographicLib {
         }
       }
       if (end == beg) {
-        errormsg = "Empty or incomplete DMS string " + dmsa;
+        // Example +
+        errormsg = "Empty or incomplete DMS substring " + dmsa;
         break;
       }
       real ipieces[maxcomponents] = {0, 0, 0};
@@ -244,6 +246,7 @@ namespace GeographicLib {
           }
         } else if (x == '.') {
           if (pointseen) {
+            // Example 3.0.
             errormsg = "Multiple decimal points in "
               + dmsa.substr(beg, end - beg);
             break;
@@ -253,6 +256,7 @@ namespace GeographicLib {
         } else if ((k = Utility::lookup(dmsindicators_, x)) >= 0) {
           if (k >= maxcomponents) {
             if (p == end) {
+              // Example 3:0:
               errormsg = "Illegal for : to appear at the end of " +
                 dmsa.substr(beg, end - beg);
               break;
@@ -260,16 +264,19 @@ namespace GeographicLib {
             k = npiece;
           }
           if (unsigned(k) == npiece - 1) {
+            // Example 3d0d
             errormsg = "Repeated " + string(components_[k]) +
               " component in " + dmsa.substr(beg, end - beg);
             break;
           } else if (unsigned(k) < npiece) {
+            // Example 3'0d
             errormsg = string(components_[k]) + " component follows "
               + string(components_[npiece - 1]) + " component in "
               + dmsa.substr(beg, end - beg);
             break;
           }
           if (ncurrent == 0) {
+            // Example 3::0
             errormsg = "Missing numbers in " + string(components_[k]) +
               " component of " + dmsa.substr(beg, end - beg);
             break;
@@ -285,6 +292,7 @@ namespace GeographicLib {
           if (p < end) {
             npiece = k + 1;
             if (npiece >= maxcomponents) {
+              // Example 3:0:3:2
               errormsg = "More than 3 DMS components in "
                 + dmsa.substr(beg, end - beg);
               break;
@@ -293,10 +301,12 @@ namespace GeographicLib {
             ncurrent = digcount = intcount = 0;
           }
         } else if (Utility::lookup(signs_, x) >= 0) {
+          // CAN'T HAPPEN?
           errormsg = "Internal sign in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
         } else {
+          // Example 3x
           errormsg = "Illegal character " + Utility::str(x) + " in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
@@ -305,12 +315,8 @@ namespace GeographicLib {
       if (!errormsg.empty())
         break;
       if (Utility::lookup(dmsindicators_, dmsa[p - 1]) < 0) {
-        if (npiece >= maxcomponents) {
-          errormsg = "Extra text following seconds in DMS string "
-            + dmsa.substr(beg, end - beg);
-          break;
-        }
         if (ncurrent == 0) {
+          // Example 30:.
           errormsg = "Missing numbers in trailing component of "
             + dmsa.substr(beg, end - beg);
           break;
@@ -325,17 +331,20 @@ namespace GeographicLib {
         fpieces[npiece] = icurrent + fcurrent;
       }
       if (pointseen && digcount == 0) {
+        // Example 3.0:3
         errormsg = "Decimal point in non-terminal component of "
           + dmsa.substr(beg, end - beg);
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
       if (ipieces[1] >= Math::dm || fpieces[1] > Math::dm ) {
+        // Example 3:60
         errormsg = "Minutes " + Utility::str(fpieces[1])
           + " not in range [0, " + to_string(Math::dm) + ")";
         break;
       }
       if (ipieces[2] >= Math::ms || fpieces[2] > Math::ms) {
+        // Example 3:3:60
         errormsg = "Seconds " + Utility::str(fpieces[2])
           + " not in range [0, " + to_string(Math::ms) + ")";
         break;
