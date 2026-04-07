@@ -36,6 +36,7 @@
 #endif
 
 #include <cmath>
+#include <complex>
 #include <algorithm>
 #include <limits>
 
@@ -114,6 +115,11 @@ namespace GeographicLib {
 #else
     typedef double real;
 #endif
+
+    /**
+     * The complex type based on real.
+     **********************************************************************/
+    typedef std::complex<real> cmplx;
 
     /**
      * The constants defining the standard (Babylonian) meanings of degrees,

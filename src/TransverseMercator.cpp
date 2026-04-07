@@ -34,7 +34,6 @@
  * (The series accurate to 12th order is given in \ref tmseries.)
  **********************************************************************/
 
-#include <complex>
 #include <GeographicLib/TransverseMercator.hpp>
 
 namespace GeographicLib {
@@ -488,9 +487,9 @@ namespace GeographicLib {
     real
       c0 = cos(2 * xip), ch0 = cosh(2 * etap),
       s0 = sin(2 * xip), sh0 = sinh(2 * etap);
-    complex<real> a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta')
+    cmplx a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta')
     int n = maxpow_;
-    complex<real>
+    cmplx
       y0(n & 1 ?       _alp[n] : 0), y1, // default initializer is 0+i0
       z0(n & 1 ? 2*n * _alp[n] : 0), z1;
     if (n & 1) --n;
@@ -504,8 +503,8 @@ namespace GeographicLib {
     }
     a /= real(2);               // cos(2*zeta')
     z1 = real(1) - z1 + a * z0;
-    a = complex<real>(s0 * ch0, c0 * sh0); // sin(2*zeta')
-    y1 = complex<real>(xip, etap) + a * y0;
+    a = cmplx(s0 * ch0, c0 * sh0); // sin(2*zeta')
+    y1 = cmplx(xip, etap) + a * y0;
     // Fold in change in convergence and scale for Gauss-Schreiber TM to
     // Gauss-Krueger TM.
     gamma -= Math::atan2d(z1.imag(), z1.real());
@@ -543,9 +542,9 @@ namespace GeographicLib {
     real
       c0 = cos(2 * xi), ch0 = cosh(2 * eta),
       s0 = sin(2 * xi), sh0 = sinh(2 * eta);
-    complex<real> a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta)
+    cmplx a(2 * c0 * ch0, -2 * s0 * sh0); // 2 * cos(2*zeta)
     int n = maxpow_;
-    complex<real>
+    cmplx
       y0(n & 1 ?       -_bet[n] : 0), y1, // default initializer is 0+i0
       z0(n & 1 ? -2*n * _bet[n] : 0), z1;
     if (n & 1) --n;
@@ -559,8 +558,8 @@ namespace GeographicLib {
     }
     a /= real(2);               // cos(2*zeta)
     z1 = real(1) - z1 + a * z0;
-    a = complex<real>(s0 * ch0, c0 * sh0); // sin(2*zeta)
-    y1 = complex<real>(xi, eta) + a * y0;
+    a = cmplx(s0 * ch0, c0 * sh0); // sin(2*zeta)
+    y1 = cmplx(xi, eta) + a * y0;
     // Convergence and scale for Gauss-Schreiber TM to Gauss-Krueger TM.
     gamma = Math::atan2d(z1.imag(), z1.real());
     k = _b1 / abs(z1);

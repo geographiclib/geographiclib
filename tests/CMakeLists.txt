@@ -1,5 +1,5 @@
 # Compile test programs
-set (TESTPROGRAMS geodtest signtest polygontest intersecttest)
+set (TESTPROGRAMS geodtest signtest polygontest intersecttest elliptictest)
 
 add_custom_target (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET})
 add_dependencies (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET}

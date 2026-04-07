@@ -55,7 +55,8 @@ namespace GeographicLib {
    *   Elliptic Integrals and Elliptic Functions</a>, Numericshe Mathematik 7,
    *   78--90 (1965).
    * .
-   * The notation follows https://dlmf.nist.gov/19 and https://dlmf.nist.gov/22
+   * The notation follows https://dlmf.nist.gov/19 and
+   * https://dlmf.nist.gov/22.
    *
    * Example of use:
    * \include example-EllipticFunction.cpp
@@ -63,10 +64,17 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT EllipticFunction {
   private:
     typedef Math::real real;
+    typedef Math::cmplx cmplx;
 
     enum { num_ = 25 }; // Max depth required for sncndn; probably 5 is enough.
     real _k2, _kp2, _alpha2, _alphap2, _eps;
     real _kKc, _eEc, _dDc, _pPic, _gGc, _hHc;
+    template<typename T> static T RFt(T x, T y, T z);
+    template<typename T> static T RFt(T x, T y);
+    template<typename T> static T RGt(T x, T y, T z);
+    template<typename T> static T RGt(T x, T y);
+    template<typename T> static T RJt(T x, T y, T z, T p);
+    template<typename T> static T RDt(T x, T y, T z);
   public:
     /** \name Constructor
      **********************************************************************/
@@ -625,11 +633,27 @@ namespace GeographicLib {
      * \f[ R_F(x, y, z) = \frac12
      *       \int_0^\infty\frac1{\sqrt{(t + x) (t + y) (t + z)}}\, dt, \f]
      * where at most one of arguments, \e x, \e y, \e z, can be zero and those
-     * arguments that are nonzero must be positive.  If one of the arguments is
-     * zero, it is more efficient to call the two-argument version of this
-     * function with the non-zero arguments.
+     * arguments that are nonzero must be positive.
      **********************************************************************/
-    static real RF(real x, real y, real z);
+    static Math::real RF(real x, real y, real z) {
+      return RFt(x, y, z);
+    }
+
+    /**
+     * Symmetric integral of the first kind <i>R</i><sub><i>F</i></sub>.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @return <i>R</i><sub><i>F</i></sub>(\e x, \e y, \e z).
+     *
+     * This is a complex version of the previous function.  At most one of
+     * arguments, \e x, \e y, \e z, can be zero and those arguments that are
+     * nonzero must have complex phases less in magnitude than &pi;
+     **********************************************************************/
+    static std::complex<Math::real> RF(cmplx x, cmplx y, cmplx z) {
+      return RFt(x, y, z);
+    }
 
     /**
      * Complete symmetric integral of the first kind,
@@ -641,7 +665,24 @@ namespace GeographicLib {
      *
      * The arguments \e x and \e y must be positive.
      **********************************************************************/
-    static real RF(real x, real y);
+    static Math::real RF(real x, real y) {
+      return RFt(x, y);
+    }
+
+    /**
+     * Complete symmetric integral of the first kind,
+     * <i>R</i><sub><i>F</i></sub> with one argument zero.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @return <i>R</i><sub><i>F</i></sub>(\e x, \e y, 0).
+     *
+     * This is a complex version of the previous function.  \e x and \e y must
+     * be nonzero and must have complex phases less in magnitude than &pi;
+     **********************************************************************/
+    static std::complex<Math::real> RF(cmplx x, cmplx y) {
+      return RFt(x, y);
+    }
 
     /**
      * Degenerate symmetric integral of the first kind
@@ -657,7 +698,22 @@ namespace GeographicLib {
      *       \int_0^\infty\frac1{\sqrt{t + x}(t + y)}\,dt, \f]
      * where \e x &ge; 0 and \e y > 0.
      **********************************************************************/
-    static real RC(real x, real y);
+    static Math::real RC(real x, real y);
+
+    /**
+     * Degenerate symmetric integral of the first kind
+     * <i>R</i><sub><i>C</i></sub>.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @return <i>R</i><sub><i>C</i></sub>(\e x, \e y) =
+     *   <i>R</i><sub><i>F</i></sub>(\e x, \e y, \e y).
+     *
+     * This is a complex version of the previous function.  \e y must be
+     * nonzero and \e x (if nonzero) and \e y must have complex phase less in
+     * magnitude than &pi;
+     **********************************************************************/
+    static Math::cmplx RC(cmplx x, cmplx y);
 
     /**
      * Symmetric integral of the second kind <i>R</i><sub><i>G</i></sub>.
@@ -675,11 +731,27 @@ namespace GeographicLib {
      *        \biggr)t\,dt, \f]
      * where at most one of arguments, \e x, \e y, \e z, can be zero and those
      * arguments that are nonzero must be positive.  See also
-     * https://dlmf.nist.gov/19.23.E6_5.  If one of the arguments is zero, it
-     * is more efficient to call the two-argument version of this function with
-     * the non-zero arguments.
+     * https://dlmf.nist.gov/19.23.E6_5.
      **********************************************************************/
-    static real RG(real x, real y, real z);
+    static Math::real RG(real x, real y, real z) {
+      return RGt(x, y, z);
+    }
+
+    /**
+     * Symmetric integral of the second kind <i>R</i><sub><i>G</i></sub>.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @return <i>R</i><sub><i>G</i></sub>(\e x, \e y, \e z).
+     *
+     * This is a complex version of the previous function.  At most one of
+     * arguments, \e x, \e y, \e z, can be zero and those arguments that are
+     * nonzero must have complex phases less in magnitude than &pi;
+     **********************************************************************/
+    static Math::cmplx RG(cmplx x, cmplx y, cmplx z) {
+      return RGt(x, y, z);
+    }
 
     /**
      * Complete symmetric integral of the second kind,
@@ -691,7 +763,24 @@ namespace GeographicLib {
      *
      * The arguments \e x and \e y must be positive.
      **********************************************************************/
-    static real RG(real x, real y);
+    static Math::real RG(real x, real y) {
+      return RGt(x, y);
+    }
+
+    /**
+     * Complete symmetric integral of the second kind,
+     * <i>R</i><sub><i>G</i></sub> with one argument zero.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @return <i>R</i><sub><i>G</i></sub>(\e x, \e y, 0).
+     *
+     * This is a complex version of the previous function.  \e x and \e y must
+     * be nonzero and have complex phases less in magnitude than &pi;
+     **********************************************************************/
+    static Math::cmplx RG(cmplx x, cmplx y) {
+      return RGt(x, y);
+    }
 
     /**
      * Symmetric integral of the third kind <i>R</i><sub><i>J</i></sub>.
@@ -706,10 +795,34 @@ namespace GeographicLib {
      * \f[ R_J(x, y, z, p) = \frac32
      *       \int_0^\infty
      *       [(t + x) (t + y) (t + z)]^{-1/2} (t + p)^{-1}\, dt, \f]
-     * where \e p > 0, and \e x, \e y, \e z are nonnegative with at most one of
-     * them being 0.
+     * where \e p is nonzero, and \e x, \e y, \e z are nonnegative with at most
+     * one of them being 0.
      **********************************************************************/
-    static real RJ(real x, real y, real z, real p);
+    static Math::real RJ(real x, real y, real z, real p) {
+      return RJt(x, y, z, p);
+    }
+
+    /**
+     * Symmetric integral of the third kind <i>R</i><sub><i>J</i></sub>.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @param[in] p
+     * @return <i>R</i><sub><i>J</i></sub>(\e x, \e y, \e z, \e p).
+     *
+     * This is a complex version of the previous function.  If all of the
+     * arguments are real, then the restrictions on their value is given in the
+     * previous function.  Otherwise (if at least one of the arguments is
+     * complex): \e p must be nonzero with a complex phase less in magnitude
+     * that &pi; and EITHER \e x, \e y, \e z are real, nonnegative with at most
+     * one of them being zero OR two of the them are nonzero and a complex
+     * conjugate pair with complex phases less in magnitude that &pi; and the
+     * third is real and nonnegative.
+     **********************************************************************/
+    static Math::cmplx RJ(cmplx x, cmplx y, cmplx z, cmplx p) {
+      return RJt(x, y, z, p);
+    }
 
     /**
      * Degenerate symmetric integral of the third kind
@@ -727,7 +840,27 @@ namespace GeographicLib {
      * where \e x, \e y, \e z are positive except that at most one of \e x and
      * \e y can be 0.
      **********************************************************************/
-    static real RD(real x, real y, real z);
+    static Math::real RD(real x, real y, real z) {
+      return RDt(x, y, z);
+    }
+
+    /**
+     * Degenerate symmetric integral of the third kind
+     * <i>R</i><sub><i>D</i></sub>.
+     *
+     * @param[in] x
+     * @param[in] y
+     * @param[in] z
+     * @return <i>R</i><sub><i>D</i></sub>(\e x, \e y, \e z) =
+     *   <i>R</i><sub><i>J</i></sub>(\e x, \e y, \e z, \e z).
+     *
+     * This is a complex version of the previous function.  \e x, \e y, \e z
+     * are nonzero and have complex phases less in magnitude than &pi; except
+     * that at most one of \e x and \e y can be 0.
+     **********************************************************************/
+    static Math::cmplx RD(cmplx x, cmplx y, cmplx z) {
+      return RDt(x, y, z);
+    }
     ///@}
 
   };

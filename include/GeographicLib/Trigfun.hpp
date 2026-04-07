@@ -70,6 +70,7 @@ namespace GeographicLib {
     friend class Triaxial::Conformal3;    // For access to root sig 2
     /// \endcond
     using real = Math::real;
+    using cmplx = Math::cmplx;
     static constexpr bool debug_ = false;
     static constexpr bool throw_ = true; // exception on convergence failure
     static constexpr int maxit_ = 300;

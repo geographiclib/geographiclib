@@ -67,6 +67,7 @@ namespace GeographicLib {
   class DST {
   private:
     typedef Math::real real;
+    typedef Math::cmplx cmplx;
     int _nN;
     typedef kissfft<real> fft_t;
     std::shared_ptr<fft_t> _fft;

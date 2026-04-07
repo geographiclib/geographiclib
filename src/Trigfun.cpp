@@ -126,12 +126,12 @@ namespace GeographicLib {
     //    cout << "FFT size " << M/2 << "\n";
     fft_t fft(M/2, false);
     // Leave an extra slot
-    vector<complex<real>> cF(M/2 + 1);
+    vector<cmplx> cF(M/2 + 1);
     fft.transform_real(H.data(), cF.data());
     cF[M/2] = cF[0].imag(); cF[0] = cF[0].real();
     if (centerp) {
       for (int i = 1; i <= M/2; ++i)
-        cF[i] *= exp(complex<real>(0, i * (-Math::pi() / M)));
+        cF[i] *= exp(cmplx(0, i * (-Math::pi() / M)));
     }
     if (!sym) {
       H.resize(n+1);
