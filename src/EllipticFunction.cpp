@@ -25,11 +25,17 @@ namespace GeographicLib {
   template<typename T>
   T EllipticFunction::RFt(T x, T y, T z) {
     if (x == real(0))
-      return RFt(y, z);
+      return RF(y, z);
     else if (y == real(0))
-      return RFt(z, x);
+      return RF(z, x);
     else if (z == real(0))
-      return RFt(x, y);
+      return RF(x, y);
+    else if (y == z)
+      return RC(x, y);
+    else if (z == x)
+      return RC(y, z);
+    else if (x == y)
+      return RC(z, x);
     // Carlson, eqs 2.2 - 2.7
     static const real tolRF =
       pow(3 * numeric_limits<real>::epsilon() * real(0.01), 1/real(8));
@@ -40,9 +46,9 @@ namespace GeographicLib {
       y0 = y,
       z0 = z;
     real
-      Q = fmax(fmax(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRF,
+      Q = fmax(fmax(Abs(A0-x), Abs(A0-y)), Abs(A0-z)) / tolRF,
       mul = 1;
-    while (Q >= mul * abs(An)) {
+    while (Q >= mul * Abs(An)) {
       // Max 6 trips
       T lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
       An = (An + lam) / real(4);
@@ -68,6 +74,12 @@ namespace GeographicLib {
             real(240240)) /
       (real(240240) * sqrt(An));
   }
+  Math::real EllipticFunction::RF(real x, real y, real z) {
+    return RFt(x, y, z);
+  }
+  Math::cmplx EllipticFunction::RF(cmplx x, cmplx y, cmplx z) {
+    return RFt(x, y, z);
+  }
 
   template<typename T>
   T EllipticFunction::RFt(T x, T y) {
@@ -75,8 +87,8 @@ namespace GeographicLib {
     static const real tolRG0 =
       real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     T xn = sqrt(x), yn = sqrt(y);
-    if (abs(xn) < abs(yn)) swap(xn, yn);
-    while (abs(xn-yn) > tolRG0 * abs(xn)) {
+    if (Abs(xn) < Abs(yn)) swap(xn, yn);
+    while (Abs(xn-yn) > tolRG0 * Abs(xn)) {
       // Max 4 trips
       T t = (xn + yn) / real(2);
       yn = sqrt(xn * yn);
@@ -84,44 +96,60 @@ namespace GeographicLib {
     }
     return Math::pi() / (xn + yn);
   }
-
-  Math::real EllipticFunction::RC(real x, real y) {
-    // Defined only for y != 0 and x >= 0.
-    return ( !(x >= y) ?        // x < y  and catch nans
-             // https://dlmf.nist.gov/19.2.E18
-             atan(sqrt((y - x) / x)) / sqrt(y - x) :
-             ( x == y ? 1 / sqrt(y) :
-               asinh( y > 0 ?
-                      // https://dlmf.nist.gov/19.2.E19
-                      // atanh(sqrt((x - y) / x))
-                      sqrt((x - y) / y) :
-                      // https://dlmf.nist.gov/19.2.E20
-                      // atanh(sqrt(x / (x - y)))
-                      sqrt(-x / y) ) / sqrt(x - y) ) );
+  Math::real EllipticFunction::RF(real x, real y) {
+    return RFt(x, y);
+  }
+  Math::cmplx EllipticFunction::RF(cmplx x, cmplx y) {
+    return RFt(x, y);
   }
 
-  Math::cmplx EllipticFunction::RC(cmplx x, cmplx y) {
-    static const real tolRC =
-      pow(3 * numeric_limits<real>::epsilon() * real(0.01), 1/real(8));
-    if (y.imag() == 0 && signbit(y.real()))
-      return sqrt(x / (x - y)) * RC(x - y, -y);
-    cmplx x0 = x, y0 = y, A0 = (x + real(2) * y) / real(3), An = A0;
-    real Q = abs(A0 - x) / tolRC,
-      mul = 1;
-    while (Q >= mul * abs(An)) {
-      cmplx lam = real(2) * sqrt(x0) * sqrt(y0) + y0;
-      An = (An + lam) / real(4);
-      x0 = (x0 + lam) / real(4);
-      y0 = (y0 + lam) / real(4);
-      mul *= 4;
+  template<typename T>
+  T EllipticFunction::RCt(T x, T y) {
+    if constexpr (is_same_v<T, Math::real>) {
+      // Defined only for y != 0 and x >= 0.
+      return ( !(x >= y) ?        // x < y  and catch nans
+               // https://dlmf.nist.gov/19.2.E18
+               atan(sqrt((y - x) / x)) / sqrt(y - x) :
+               ( x == y ? 1 / sqrt(y) :
+                 asinh( y > 0 ?
+                        // https://dlmf.nist.gov/19.2.E19
+                        // atanh(sqrt((x - y) / x))
+                        sqrt((x - y) / y) :
+                        // https://dlmf.nist.gov/19.2.E20
+                        // atanh(sqrt(x / (x - y)))
+                        sqrt(-x / y) ) / sqrt(x - y) ) );
+    } else {
+      static const real tolRC =
+        pow(3 * numeric_limits<real>::epsilon() * real(0.01), 1/real(8));
+      if (y.imag() == 0 && signbit(y.real()))
+        // Carlson, eq 2.14
+        return sqrt(x / (x - y)) * RC(x - y, -y);
+      // Carlson, eqs 2.9 - 2.13
+      cmplx x0 = x, y0 = y, A0 = (x + real(2) * y) / real(3), An = A0;
+      real Q = abs(A0 - x) / tolRC,
+        mul = 1;
+      while (Q >= mul * abs(An)) {
+        cmplx lam = real(2) * sqrt(x0) * sqrt(y0) + y0;
+        An = (An + lam) / real(4);
+        x0 = (x0 + lam) / real(4);
+        y0 = (y0 + lam) / real(4);
+        mul *= 4;
+      }
+      cmplx s = (y - A0) / (mul * An);
+      // series is
+      // 1 + 3/10*s^2 + 1/7*s^3 + 3/8*s^4 + 9/22*s^5 + 159/208*s^6 + 9/8*s^7
+      // Write in Horner form
+      return (s*s*(s*(s*(s*(s*(real(90090)*s + real(61215)) + real(32760)) +
+                         real(30030)) + real(11440)) + real(24024)) +
+              real(80080)) / (real(80080) * sqrt(An));
     }
-    cmplx s = (y - A0) / (mul * An);
-    // series is
-    // 1 + 3/10*s^2 + 1/7*s^3 + 3/8*s^4 + 9/22*s^5 + 159/208*s^6 + 9/8*s^7
-    // Write in Horner form
-    return (s*s*(s*(s*(s*(s*(real(90090)*s + real(61215)) + real(32760)) +
-                       real(30030)) + real(11440)) + real(24024)) +
-            real(80080)) / (real(80080) * sqrt(An));
+  }
+
+  Math::real EllipticFunction::RC(real x, real y) {
+    return RCt(x, y);
+  }
+  Math::cmplx EllipticFunction::RC(cmplx x, cmplx y) {
+    return RCt(x, y);
   }
 
   template<typename T>
@@ -133,21 +161,34 @@ namespace GeographicLib {
               (z * RF(x, y, z) - (x-z) * (y-z) * RD(x, y, z) / real(3)
                + sqrt(x * y / z)) / real(2) )));
   }
+  Math::real EllipticFunction::RG(real x, real y, real z) {
+    return RGt(x, y, z);
+  }
+  Math::cmplx EllipticFunction::RG(cmplx x, cmplx y, cmplx z) {
+    return RGt(x, y, z);
+  }
 
   template<typename T>
   T EllipticFunction::RGt(T x, T y) {
+    if (x == real(0))
+      // Carlson, top of p. 21
+      return sqrt(y) / real(2);
+    else if (y == real(0))
+      return sqrt(x) / real(2);
     // Carlson, eqs 2.36 - 2.39
     static const real tolRG0 =
       real(2.7) * sqrt((numeric_limits<real>::epsilon() * real(0.01)));
     T
       x0 = sqrt(x),
-      y0 = sqrt(y),
+      y0 = sqrt(y);
+    if (Abs(x) < Abs(y)) swap(x0, y0);
+    T
       xn = x0,
       yn = y0,
       s = real(0);
     real
       mul = real(0.25);
-    while (abs(xn-yn) > tolRG0 * abs(xn)) {
+    while (Abs(xn-yn) > tolRG0 * Abs(xn)) {
       // Max 4 trips
       T t = (xn + yn) / real(2);
       yn = sqrt(xn * yn);
@@ -159,9 +200,21 @@ namespace GeographicLib {
     return (Math::sq( (x0 + y0) / real(2) ) - s) *
       Math::pi() / (real(2) * (xn + yn));
   }
+  Math::real EllipticFunction::RG(real x, real y) {
+    return RGt(x, y);
+  }
+  Math::cmplx EllipticFunction::RG(cmplx x, cmplx y) {
+    return RGt(x, y);
+  }
 
   template<typename T>
   T EllipticFunction::RJt(T x, T y, T z, T p) {
+    if (x == p)
+      return RD(y, z, p);
+    else if (y == p)
+      return RD(z, x, p);
+    else if (z == p)
+      return RD(x, y, p);
     // Carlson, eqs 2.17 - 2.25
     static const real
       tolRD = pow(real(0.2) * (numeric_limits<real>::epsilon() * real(0.01)),
@@ -169,7 +222,7 @@ namespace GeographicLib {
     if constexpr (is_same_v<T, Math::cmplx>) {
       if (p.imag() == 0 && signbit(p.real()) &&
           (x.imag() == 0 && y.imag() == 0 && z.imag() == 0)) {
-        return RJt(x.real(), y.real(), z.real(), p.real());
+        return RJ(x.real(), y.real(), z.real(), p.real());
       }
     }
     if constexpr (is_same_v<T, Math::real>) {
@@ -182,6 +235,8 @@ namespace GeographicLib {
                   + 3* sqrt( x*y*z / (x*z + p*q) ) * RC(x*z + p*q, p*q)) /
             (y + q);
         } else
+          // rotate the positions of the symmetric args so that eventually y
+          // lies between x and z.
           return RJ(y, z, x, p);
       }
     }
@@ -195,11 +250,11 @@ namespace GeographicLib {
       p0 = p,
       s = real(0);
     real
-      Q = fmax(fmax(abs(A0-x), abs(A0-y)),
-               fmax(abs(A0-z), abs(A0-p))) / tolRD,
+      Q = fmax(fmax(Abs(A0-x), Abs(A0-y)),
+               fmax(Abs(A0-z), Abs(A0-p))) / tolRD,
       mul = 1,
       mul3 = 1;
-    while (Q >= mul * abs(An)) {
+    while (Q >= mul * Abs(An)) {
       // Max 7 trips
       T
         lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0),
@@ -238,9 +293,22 @@ namespace GeographicLib {
             real(4084080)) /
       ((4084080 * mul) * An * sqrt(An)) + real(6) * s;
   }
+  Math::real EllipticFunction::RJ(real x, real y, real z, real p) {
+    return RJt(x, y, z, p);
+  }
+  Math::cmplx EllipticFunction::RJ(cmplx x, cmplx y, cmplx z, cmplx p) {
+    return RJt(x, y, z, p);
+  }
 
   template<typename T>
   T EllipticFunction::RDt(T x, T y, T z) {
+    if (x == real(0))
+      // Carlson eqs. 2.40 - 2.41
+      return y == z ? (3 * Math::pi() / 4) / (sqrt(y) * y) :
+        real(3) / (z * (y - z)) * (real(2) * RG(y, z) - z * RF(y, z));
+    else if (y == real(0))
+      // Put 0 in x position
+      return RD(y, x, z);
     // Carlson, eqs 2.28 - 2.34
     static const real
       tolRD = pow(real(0.2) * (numeric_limits<real>::epsilon() * real(0.01)),
@@ -253,9 +321,9 @@ namespace GeographicLib {
       z0 = z,
       s = real(0);
     real
-      Q = fmax(fmax(abs(A0-x), abs(A0-y)), abs(A0-z)) / tolRD,
+      Q = fmax(fmax(Abs(A0-x), Abs(A0-y)), Abs(A0-z)) / tolRD,
       mul = 1;
-    while (Q >= mul * abs(An)) {
+    while (Q >= mul * Abs(An)) {
       // Max 7 trips
       T lam = sqrt(x0)*sqrt(y0) + sqrt(y0)*sqrt(z0) + sqrt(z0)*sqrt(x0);
       s += real(1) / (mul * sqrt(z0) * (z0 + lam));
@@ -287,6 +355,12 @@ namespace GeographicLib {
             E2 * ((real(417690) - real(255255) * E2) * E2 - real(875160)) +
             real(4084080)) /
       ((4084080 * mul) * An * sqrt(An)) + real(3) * s;
+  }
+  Math::real EllipticFunction::RD(real x, real y, real z) {
+    return RDt(x, y, z);
+  }
+  Math::cmplx EllipticFunction::RD(cmplx x, cmplx y, cmplx z) {
+    return RDt(x, y, z);
   }
 
   void EllipticFunction::Reset(real k2, real alpha2,
@@ -527,27 +601,38 @@ namespace GeographicLib {
     return copysign(fi, sn);
   }
 
-  Math::real EllipticFunction::E(real sn, real cn, real dn) const {
-    real
+  template<typename T>
+  T EllipticFunction::Et(T sn, T cn, T dn) const {
+    bool negs = signbit(Re(sn)), negc = signbit(Re(cn));
+    T
       cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      ei = cn2 != 0 ?
-      fabs(sn) * ( _k2 <= 0 ?
-                   // Carlson, eq. 4.6 and
-                   // https://dlmf.nist.gov/19.25.E9
-                   RF(cn2, dn2, 1) - _k2 * sn2 * RD(cn2, dn2, 1) / 3 :
-                   ( _kp2 >= 0 ?
-                     // https://dlmf.nist.gov/19.25.E10
-                     _kp2 * RF(cn2, dn2, 1) +
-                     _k2 * _kp2 * sn2 * RD(cn2, 1, dn2) / 3 +
-                     _k2 * fabs(cn) / dn :
-                     // https://dlmf.nist.gov/19.25.E11
-                     - _kp2 * sn2 * RD(dn2, 1, cn2) / 3 +
-                     dn / fabs(cn) ) ) :
+      cna = negc ? -cn : cn,
+      sna = negs ? -sn : sn,
+      ei = cn2 != real(0) ?
+      sna * ( _k2 <= 0 ?
+              // Carlson, eq. 4.6 and
+              // https://dlmf.nist.gov/19.25.E9
+              RF(cn2, dn2, T(1)) -
+              _k2 * sn2 * RD(cn2, dn2, T(1)) / real(3) :
+              ( _kp2 >= 0 ?
+                // https://dlmf.nist.gov/19.25.E10
+                _kp2 * RF(cn2, dn2, T(1)) +
+                _k2 * _kp2 * sn2 * RD(cn2, T(1), dn2) / real(3) +
+                _k2 * cna / dn :
+                // https://dlmf.nist.gov/19.25.E11
+                - _kp2 * sn2 * RD(dn2, T(1), cn2) / real(3) +
+                dn / cna ) ) :
       E();
     // Enforce usual trig-like symmetries
-    if (signbit(cn))
-      ei = 2 * E() - ei;
-    return copysign(ei, sn);
+    if (negc) ei = 2 * E() - ei;
+    if (negs) ei = -ei;
+    return ei;
+  }
+  Math::real EllipticFunction::E(real sn, real cn, real dn) const {
+    return Et(sn, cn, dn);
+  }
+  Math::cmplx EllipticFunction::E(cmplx sn, cmplx cn, cmplx dn) const {
+    return Et(sn, cn, dn);
   }
 
   Math::real EllipticFunction::D(real sn, real cn, real dn) const {
@@ -652,17 +737,31 @@ namespace GeographicLib {
       (deltaF(sn, cn, dn) + phi) * K() / (Math::pi()/2);
   }
 
-  Math::real EllipticFunction::E(real phi) const {
+  template<typename T>
+  T EllipticFunction::Et(T phi) const {
     if (_k2 == 0)
       return phi;
     // else if (_kp2 == 0)
     // Despite DLMF Eq 19.6.9 this is probably wrong, since
     // sqrt(1 - k^2*sin(phi)^2) -> abs(cos(phi)) in the limit k -> 1.
     //      return sin(phi);
-    real sn = sin(phi), cn = cos(phi), dn = Delta(sn, cn);
-    return fabs(phi) < Math::pi() ? E(sn, cn, dn) :
-      (deltaE(sn, cn, dn) + phi) * E() / (Math::pi()/2);
+    T sn = sin(phi), cn = cos(phi), Ev = E(sn, cn, Delta(sn, cn));
+    real n;
+    if constexpr (is_same_v<T, Math::real>)
+      n = rint( (phi - atan2(sn, cn)) / (2 * Math::pi()) );
+    else {
+      real phir = phi.real();
+      n = rint( (phir - atan2(sin(phir), cos(phir))) / (2 * Math::pi()) );
+    }
+    return n == 0 ? Ev : Ev + 4 * n * E();
   }
+  Math::real EllipticFunction::E(real phi) const {
+    return Et(phi);
+  }
+  Math::cmplx EllipticFunction::E(cmplx phi) const {
+    return Et(phi);
+  }
+
 
   Math::real EllipticFunction::Ed(real ang) const {
     // ang - Math::AngNormalize(ang) is (nearly) an exact multiple of 360
@@ -733,13 +832,16 @@ namespace GeographicLib {
 
   /// \cond SKIP
   // Instantiate
-#define GEOGRAPHICLIB_ELLIPTIC_INSTANTIATE(T)                        \
-  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RFt(T, T, T);    \
-  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RFt(T, T);       \
-  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RGt(T, T, T);    \
-  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RGt(T, T);       \
-  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RJt(T, T, T, T); \
-  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RDt(T, T, T);
+#define GEOGRAPHICLIB_ELLIPTIC_INSTANTIATE(T)                           \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RFt(T, T, T);       \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RFt(T, T);          \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RCt(T, T);          \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RGt(T, T, T);       \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RGt(T, T);          \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RJt(T, T, T, T);    \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::RDt(T, T, T);       \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Et(T) const;        \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Et(T, T, T) const;
 
   GEOGRAPHICLIB_ELLIPTIC_INSTANTIATE(Math::real)
   GEOGRAPHICLIB_ELLIPTIC_INSTANTIATE(Math::cmplx)

@@ -53,7 +53,7 @@ namespace GeographicLib {
     if (centerp) {
       real d = -Math::pi()/(4*_nN);
       for (int i = 0, j = 1; i < _nN; ++i, j+=2)
-        ctemp[j] *= exp(cmplx(0, j*d));
+        ctemp[j] *= polar(real(1), j*d);
     }
     for (int i = 0, j = 1; i < _nN; ++i, j+=2) {
       F[i] = -ctemp[j].imag() / (2*_nN);

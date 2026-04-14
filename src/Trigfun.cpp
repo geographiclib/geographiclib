@@ -131,7 +131,7 @@ namespace GeographicLib {
     cF[M/2] = cF[0].imag(); cF[0] = cF[0].real();
     if (centerp) {
       for (int i = 1; i <= M/2; ++i)
-        cF[i] *= exp(cmplx(0, i * (-Math::pi() / M)));
+        cF[i] *= polar(real(1), i * (-Math::pi() / M));
     }
     if (!sym) {
       H.resize(n+1);

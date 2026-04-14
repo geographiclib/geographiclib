@@ -7775,6 +7775,13 @@ of the
 git repository for GeographicLib</a>.
 
 \if SKIP
+ - NEXT non backward compatible update
+   - Remove non-const Triaxial::Conformal3::t() and
+     Triaxial::Conformal3::s().
+   - Use template functions for EllipticFunction::RF and friends.
+   - InverseFlattening()
+   - PolygonAresExact.
+   .
  - TODO: Planned updates
    - Change templating in PolygonArea so that the AddPoint and AddEdge
      methods are templated instead of the class itself.  This would
@@ -7815,7 +7822,33 @@ git repository for GeographicLib</a>.
        pole.  The solution for the triaxial case also gives improved
        accuracy.
      - Triaxial::Conformal3::Finv now merely calls EllipticFunction::am.
-   - Minor improvement to EllipticFunction::am functions.
+   - Changes to EllipticFunction:
+     - Minor improvement to EllipticFunction::am functions.
+     - EllipticFunction::RF(\e x, \e y, \e z) with one argument zero now
+       call the two-argument version.  This is the existing behavior for
+       EllipticFunction::RG(\e x, \e y, \e z).
+     - EllipticFunction::RF(\e x, \e y, \e z) with two arguments the
+       same now calls EllipticFunction::RC.
+     - EllipticFunction::RJ(\e x, \e y, \e z, \e p) with on \e x, \e y,
+       \e z equal to \e p the same now calls RD.
+     - EllipticFunction::RJ(\e x, \e y, \e z, \e p) with \e x, \e y, \e
+       z real and \e p negative is now treated via Carlson eq. 2.26.
+       (Previously it returned NaN.)
+     - EllipticFunction::RG(\e x, \e y, \e z) with more than two of \e
+       x, \e y, \e z zero is now treated via Carlson top of p. 21.
+       (Previously it returned NaN.)
+     - The cases of EllipticFunction::RD(\e x, \e y, \e z) with \e x or
+       \e y zero is now treated specially via Carlson eqs. 2.40 - 2.41.
+       (These already returned the correct results.)
+     - Complex versions of EllipticFunction::RF, EllipticFunction::RC,
+       EllipticFunction::RG, EllipticFunction::RJ, and
+       EllipticFunction::RD.  Of these, only EllipticFunction::RC needed
+       a freah implementation.
+     - Complex versions of EllipticFunction::E(phi),
+       EllipticFunction::E(sn, cn, dn), EllipticFunction::Delta(sn, cn).
+       The modulus squared <i>k</i><sup>2</sup> and parameter
+       &alpha;<sup>2</sup> used in the constructor for EllipticFunction
+       are restricted to being real.
    - `make exampleprograms` not applies the current configuration to the
      build.
    - When %GeographicLib is incorporated into a CMake project via
