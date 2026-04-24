@@ -34,7 +34,7 @@ endif ()
 set (DEVELPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect
   ClosestApproach M12zero GeodShort NormalTest GeoidHeightTable promote
-  IntersectTest GeodConv JacobiTest Geod3Test)
+  IntersectTest GeodConv JacobiTest Geod3Test TM3)
 
 if (Boost_FOUND)
   include_directories ("${Boost_INCLUDE_DIRS}")

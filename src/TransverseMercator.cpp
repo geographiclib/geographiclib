@@ -45,7 +45,7 @@ namespace GeographicLib {
     : _a(a)
     , _f(f)
     , _k0(k0)
-    , _exact(exact)
+    , _exact(f > 0 && exact)
     , _e2(_f * (2 - _f))
     , _es((_f < 0 ? -1 : 1) * sqrt(fabs(_e2)))
     , _e2m(1 - _e2)

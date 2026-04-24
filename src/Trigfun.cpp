@@ -382,10 +382,9 @@ namespace GeographicLib {
       //   20 60 -90 180 127.4974 24.6254 2.4377
       // Need to figure out why.  (Probably fixed by now.)
       ++k;
-      pair<real, real> val = ffp(x);
-      real v = val.first - z,
-        vp = val.second,
-        dx = - v/vp;
+      auto [v, vp] = ffp(x);
+      v -= z;
+      real dx = - v/vp;
       if constexpr (debug_)
         cout << "XX " << k << " " << xa-p << " " << x-p << " " << xb-p << " "
              << dx << " " << x + dx-p << " " << v << " " << vp << endl;

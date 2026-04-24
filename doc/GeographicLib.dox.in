@@ -7840,6 +7840,8 @@ git repository for GeographicLib</a>.
      - The cases of EllipticFunction::RD(\e x, \e y, \e z) with \e x or
        \e y zero is now treated specially via Carlson eqs. 2.40 - 2.41.
        (These already returned the correct results.)
+     - Add Piinv(real phi).  This is modeled after the implementation of
+       a private function in Trixial::Conformal3.
      - Complex versions of EllipticFunction::RF, EllipticFunction::RC,
        EllipticFunction::RG, EllipticFunction::RJ, and
        EllipticFunction::RD.  Of these, only EllipticFunction::RC needed
@@ -7849,6 +7851,12 @@ git repository for GeographicLib</a>.
        The modulus squared <i>k</i><sup>2</sup> and parameter
        &alpha;<sup>2</sup> used in the constructor for EllipticFunction
        are restricted to being real.
+   - Constructing TransverseMercator with \e exact = true and \e f \le 0
+     switches to \e exact = false.  (The exact treatment only works for
+     \e f > 0.)
+   - Fix the example in the man page for <a href="Geod3Solve.1.html">
+     Geod3Solve</a>.  (The longitude of the major axis was wrong and the
+     conversion from bisxial to triaxial coordinates was skipped.)
    - `make exampleprograms` not applies the current configuration to the
      build.
    - When %GeographicLib is incorporated into a CMake project via

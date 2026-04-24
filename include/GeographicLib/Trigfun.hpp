@@ -68,6 +68,7 @@ namespace GeographicLib {
     friend class TrigfunExt;              // For access to root sig 2
     friend class Triaxial::GeodesicLine3; // For access to root sig 2
     friend class Triaxial::Conformal3;    // For access to root sig 2
+    friend class EllipticFunction;        // For access to root sig 2
     /// \endcond
     using real = Math::real;
     using cmplx = Math::cmplx;

@@ -363,6 +363,16 @@ namespace GeographicLib {
     Math::real Pi(real phi) const;
 
     /**
+     * The inverse of the incomplete integral of the third kind.
+     *
+     * @param[in] x
+     * @return &phi; = <i>Pi</i><sup>&minus;1</sup>(\e x, &alpha;<sup>2</sup>,
+     *   \e k); i.e., the solution of such that \e Pi(&phi;,
+     *   &alpha;<sup>2</sup>, \e k) = \e x.
+     **********************************************************************/
+    Math::real Piinv(real x) const;
+
+    /**
      * Jahnke's incomplete elliptic integral.
      *
      * @param[in] phi

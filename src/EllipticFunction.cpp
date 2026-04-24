@@ -8,6 +8,7 @@
  **********************************************************************/
 
 #include <GeographicLib/EllipticFunction.hpp>
+#include <GeographicLib/Trigfun.hpp>
 #include <type_traits>
 
 namespace GeographicLib {
@@ -762,7 +763,6 @@ namespace GeographicLib {
     return Et(phi);
   }
 
-
   Math::real EllipticFunction::Ed(real ang) const {
     // ang - Math::AngNormalize(ang) is (nearly) an exact multiple of 360
     real n = rint((ang - Math::AngNormalize(ang))/Math::td);
@@ -798,13 +798,14 @@ namespace GeographicLib {
   Math::real EllipticFunction::Einv(real x) const {
     static const real tolJAC =
       sqrt(numeric_limits<real>::epsilon() / real(100));
-    real n = floor(x / (2 * _eEc) + real(0.5));
-    x -= 2 * _eEc * n;                      // x now in [-ec, ec)
+    if (k2() == 0 || x == 0) return x; // Preserve sign of 0
+    real y = remainder(x, 2 * E()), n = rint((x - y) / (2 * E()));
+    // Now x = 2 * n * E() + y
     // Linear approximation
-    real phi = Math::pi() * x / (2 * _eEc); // phi in [-pi/2, pi/2)
+    real phi = Math::pi() * y / (2 * E()); // phi in [-pi/2, pi/2)
     // First order correction
     phi -= _eps * sin(2 * phi) / 2;
-    // For kp2 close to zero use asin(x/_eEc) or
+    // For kp2 close to zero use asin(y/E()) or
     // J. P. Boyd, Applied Math. and Computation 218, 7005-7013 (2012)
     // https://doi.org/10.1016/j.amc.2011.12.021
     for (int i = 0;
@@ -815,12 +816,83 @@ namespace GeographicLib {
         sn = sin(phi),
         cn = cos(phi),
         dn = Delta(sn, cn),
-        err = (E(sn, cn, dn) - x)/dn;
+        err = (E(sn, cn, dn) - y)/dn;
       phi -= err;
       if (!(fabs(err) > tolJAC))
         break;
     }
     return n * Math::pi() + phi;
+  }
+
+  Math::real EllipticFunction::Piinv(real x) const {
+    // exp(big) is close to max()
+    static const real big = log(numeric_limits<real>::max()) - 1;
+    // Use Math::tauf for ell.k2() == 1?
+    static const bool usetauf = true;
+    real y, n;
+    if (kp2() == 0) {
+      // for k^2 = 1, Pi() == inf
+      if constexpr (usetauf) {
+        // See tests Conformal3Proj[12] for the improvement this gives.
+        //
+        // y = Pi(phi; alpha2,1) = asinh(taup(tan(phi), alpha))/alphap2
+        // inverse of Pi = Piinv, inverse of taup is tau
+        // phi = Piinv(y; alpha2,1)
+        // tan(phi) = tau(sinh(alphap2 * y), alpha)
+        // This method preserves precision for x large, phi close to pi/2
+        real es = copysign(sqrt(fabs(alpha2())), alpha2()),
+          t = Math::tauf(sinh(alphap2() * x), es);
+        return atan(t);
+      } else {
+        // if we don't want to rely on Math::tau, we can use the general method
+        // for inverting Pi.
+        y = x; n = 0;
+      }
+    } else if ((k2() == 0 && alpha2() == 0) ||
+               x == 0)          // Preserve the sign of +/-0
+      return x;
+    else {
+      y = remainder(x, 2 * Pi());
+      n = 2 * rint((x - y) / (2 * Pi()));
+    }
+    // Now x = n * Pi() + y where y in [-Pi(), Pi()].  Pi() is the quarter
+    // period for the elliptic integral which corresponds to pi/2 in angle
+    // space.
+    if (y == 0)
+      return  n * Math::pi() / 2;
+    else if (fabs(y) == Pi())
+      return (copysign(real(1), y) + n) * Math::pi() / 2;
+    else {
+      // solve Pi(phi) = y for phi
+      // Pi'(phi) = 1/(sqrt(1 - k2() * Math::sq(sin(phi)))
+      //               * (1 - alpha2 * Math::sq(sin(phi))))
+      // For k2 in [0,1]
+      //    1 - k2() * Math::sq(sin(phi))
+      //    = kp2() + k2() * Math::sq(cos(phi))
+      // For alpha2 > 0
+      //    1 - alpha2 * Math::sq(sin(phi))
+      //    alphap2 + alpha2 * Math::sq(sin(phi))
+      //
+      // To preserve relative precision in sin(phi) and cos(phi) we let phi =
+      // atan(exp(q)) and solved for q in [-inf, inf].
+      // d/dq Pi(atan(exp(q))) = tan(phi)*cos(phi)^2 * Pi'
+      auto Pif = [this]
+        (real q) -> pair<real, real>
+        {
+          real t = exp(q), sc = hypot(real(1), t), s = t/sc, c = 1/sc,
+          d = Delta(s, c),
+          f = Pi(s, c, d),
+          fp = t*c*c / (d * (alpha2() >= 0 ?
+                             alphap2() + alpha2() * s*s :
+                             1 - alpha2() * c*c));
+          return pair<real, real>(f, fp);
+        };
+      real z = Trigfun::root(Trigfun::PIINV,
+                             Pif, fabs(y), 0,
+                             -big, big,
+                             1,1,1);
+      return n * Math::pi() + atan(copysign(exp(z), y));
+    }
   }
 
   Math::real EllipticFunction::deltaEinv(real stau, real ctau) const {

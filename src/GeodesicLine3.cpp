@@ -429,8 +429,7 @@ namespace GeographicLib {
         }
       } else {
         // xn = xset.bisect(); yn = yset.bisect();
-        p = zsetsbisect(xset, yset, f0, g0, false);
-        xn = p.first; yn = p.second;
+        tie(xn, yn) = zsetsbisect(xset, yset, f0, g0, false);
         ++cntb;
         if (x == xn && y == yn) {
           if constexpr (debug)
