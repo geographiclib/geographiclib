@@ -22,11 +22,12 @@ T lam(T phi) { return asinh(tan(phi)); }
 class TM3 {
   typedef Math::real real;
   typedef Math::cmplx cmplx;
-  real _a, _f, _e2, _e12;
+  real _a, _f, _e2, _e12, _k0;
   cmplx _e;
   EllipticFunction _ell;
+  bool _debug;
 public:
-  TM3(real a, real f);
+  TM3(real a, real f, real k0 = 1, bool debug = false);
   template <typename T>
   static T gd(T x) { return atan(sinh(x)); }
   template <typename T>
@@ -34,7 +35,6 @@ public:
   template <typename T>
   static T scaletan(T phi, real fm1) { return atan(fm1 * tan(phi)); }
   template <typename T>
-
   cmplx phitopsi(T phi) {
     return lam(phi) - _e * atanh(_e * sin(phi));
   }
@@ -53,6 +53,9 @@ public:
     return atan(Math::tauf(sinh(psi),
                            (signbit(_f) ? -1 : 1) * abs(_e)));
   }
+  real psitotau(real psi) {
+    return Math::tauf(sinh(psi), (signbit(_f) ? -1 : 1) * abs(_e));
+  }
   // TM paper's complex chi
   cmplx CHI(real phi, real lambda)
   { return cmplx(phitopsi(phi), lambda); }
@@ -62,61 +65,41 @@ public:
   cmplx2 BETATOMU(cmplx BETA);
   // tau = tan(psi), taup = tan(chi)
   cmplx2 BETATOTAU(cmplx BETA);
+  cmplx2 TAUTOBETA(cmplx TAU);
   cmplx2 TAUTOPSI(cmplx TAU);
+  cmplx2 PSITOTAU(cmplx PSI);
   cmplx2 PSITOGEOD(cmplx PSI);
   cmplx2 GEODTOPSI(cmplx GEOD);
   cmplx2 MUTOTM(cmplx MU);
+  cmplx2 TMTOMU(cmplx TM);
   // ZETAP acts like chi
   // ZETA acts like mu
   // ZETA(ZETAP) gives conversion from chi to mu
   // ZETA = betatomu(phitobeta(chitophi(ZETAP)))
   // let PHI = chitophi(ZETAP), ZETAP = phitochi(PHI)
   // ZETA
-  // Solve z = f(x)
-  static cmplx
-  root(const function<cmplx2(cmplx)>& ffp, // f(x), f'(x)
-       cmplx z,
-       const function<real(real)>& finvr, // f^-1(x) for real x
-       real tol2 = 0);
 
-  static bool newtonSolve(const function<cmplx(cmplx)>& f,
-                          const function<cmplx(cmplx)>& fp,
-                          cmplx w,
-                          cmplx& z,
-                          real tol,
-                          int maxIter = 50);
-  static cmplx invertRecursive(const function<cmplx(cmplx)>& f,
-                               const function<cmplx(cmplx)>& fp,
-                               const function<real(real)>& gr,
-                               cmplx w,
-                               cmplx z0, // carry the current best guess
-                               real tol,
-                               int depth = 0,
-                               int maxDepth = 20);
-  static cmplx invert(const function<cmplx(cmplx)>& f,
-                      const function<cmplx(cmplx)>& fp,
-                      const function<real(real)>& gr,
-                      cmplx w,
-                      real tol);
-  static cmplx invertAdaptive(const function<cmplx(cmplx)>& f,
-                              const function<cmplx(cmplx)>& fp,
-                              const function<real(real)>& gr,
-                              cmplx w_target,
-                              real tol);
-  static cmplx invertRobust(const function<cmplx(cmplx)>& f,
-                            const function<cmplx(cmplx)>& fp,
-                            const function<real(real)>& gr,
-                            cmplx w,
-                            real tol);
+  // find z = finv(w)
+  // ffp(z) returns a pair f(z) and f'(z)
+  // z0 = initial guess (typically f(z0) = w0 = real(w))
+  // return pair of finv(w) and finv'(w)
+  pair<cmplx, cmplx>
+  invertRobust(const function<pair<cmplx, cmplx>(cmplx)>& ffp,
+               cmplx w, cmplx z0, int& cnt,
+               real wscale = 1, real zscale = 1, real tol = 0) const;
+  void Forward(real lon0, real lat, real lon,
+          real& x, real& y, real& gamma, real& k);
 };
 
-TM3::TM3(real a, real f)
+TM3::TM3(real a, real f, real k0, bool debug)
   : _a(a)
   , _f(f)
   , _e2(_f * (2 - _f))
   , _e12(_e2 / (1 - _e2))
+  , _k0(k0)
   , _e(sqrt(cmplx(_e2)))
   , _ell(-_e12)
+  , _debug(debug)
 {}
 
 cmplx2 TM3::BETATOMU(cmplx BETA) {
@@ -127,12 +110,25 @@ cmplx2 TM3::BETATOTAU(cmplx BETA) {
   return cmplx2(tan(BETA)/(1 - _f),
                 real(1) / (Math::sq(cos(BETA)) * (1 - _f)));
 }
+cmplx2 TM3::TAUTOBETA(cmplx TAU) {
+  cmplx TBETA = TAU*(1 - _f);
+  return cmplx2(atan(TBETA),
+                (1 - _f) / (real(1) + Math::sq(TBETA)));;
+}
 cmplx2 TM3::TAUTOPSI(cmplx TAU) {
   cmplx TAU2 = Math::sq(TAU), SECPHI = sqrt(real(1) + TAU2);
   return cmplx2(asinh(TAU) - _e * atanh(_e * TAU / SECPHI),
                 (1 - _e2) * SECPHI / (real(1) + (1 - _e2) * TAU2));
 }
-
+cmplx2 TM3::PSITOTAU(cmplx PSI) {
+  int cnt;
+  auto res = invertRobust([this]
+                          (cmplx TAU) -> cmplx2
+                          {return TAUTOPSI(TAU);},
+                          PSI, cmplx(psitotau(PSI.real())), cnt);
+  if (_debug) cerr << "CNT " << cnt << "\n";
+  return res;
+}
 cmplx2 TM3::PSITOGEOD(cmplx PSI) {
   real phi = psitophi(PSI.real());
   return cmplx2(cmplx(phi, PSI.imag()),
@@ -145,215 +141,88 @@ cmplx2 TM3::GEODTOPSI(cmplx GEOD) {
 }
 
 cmplx2 TM3::MUTOTM(cmplx MU) {
-  real A = (1 - _f) * _a * _ell.E() / (Math::pi() / 2);
+  real A = _k0 * (1 - _f) * _a * _ell.E() / (Math::pi() / 2);
   return cmplx2(MU * A, cmplx(A));
 }
 
-cmplx
-TM3::root(const function<cmplx2(cmplx)>& ffp,
-          cmplx z,
-          const function<real(real)>& finvr, // f^-1(z) for real z
-          real tol2) {
-  static const int maxit = 20;
-  if (tol2 <= 0)
-    tol2 = numeric_limits<real>::epsilon();
-  cmplx x = cmplx(finvr(z.real()));
-  int i = 0;
-  for (; i < maxit; ++i) {
-    auto [v, vp] = ffp(x);
-    v -= z;
-    cmplx dx = - v/vp;
-    x += dx;
-    if (!(norm(dx) > tol2))
-      break;
-  }
-  return x;
+cmplx2 TM3::TMTOMU(cmplx TM) {
+  real Ainv = (Math::pi() / 2) / (_k0 * (1 - _f) * _a * _ell.E());
+  return cmplx2(TM * Ainv, cmplx(Ainv));
 }
 
-bool TM3::newtonSolve(const function<cmplx(cmplx)>& f,
-                      const function<cmplx(cmplx)>& fp,
-                      cmplx w,
-                      cmplx& z,
-                      real tol,
-                      int maxIter) {
-  for (int i = 0; i < maxIter; ++i) {
-    cmplx F = f(z) - w;
-    if (abs(F) < tol)
-      return true;
-
-    cmplx dF = fp(z);
-    if (abs(dF) < 1e-14)
-      return false;
-
-    cmplx dz = F / dF;
-    z -= dz;
-
-    if (abs(dz) < tol)
-      return true;
-  }
-  return false;
-}
-cmplx TM3::invertRecursive(const function<cmplx(cmplx)>& f,
-                           const function<cmplx(cmplx)>& fp,
-                           const function<real(real)>& gr,
-                           cmplx w,
-                           cmplx z0,
-                           real tol,
-                           int depth,
-                           int maxDepth) {
-  if (depth > maxDepth)
-    throw runtime_error("Max recursion depth exceeded");
+pair<cmplx, cmplx>
+TM3::invertRobust(const function<pair<cmplx, cmplx>(cmplx)>& ffp,
+                  cmplx w, cmplx z0, int& cnt,
+                  real wscale, real zscale, real tol) const {
+  if (tol <= 0)
+    tol = numeric_limits<real>::epsilon();
+  real tol2 = sqrt(tol) / 100 * zscale;
+  tol *= wscale;
 
   cmplx z = z0;
 
-  // Try Newton directly
-  if (newtonSolve(f, fp, w, z, tol))
-    return z;
+  const int maxIter = 500;
+  cnt = 0;
 
-  // If imaginary part is tiny, we are stuck
-  if (abs(w.imag()) < tol)
-    throw runtime_error("Newton failed near real axis");
-
-  // First midpoint
-  cmplx w_mid(w.real(), w.imag() / 2);
-
-  // Recurse toward midpoint using current guess
-  cmplx z_mid = invertRecursive(f, fp, gr,
-                                w_mid, z0, tol, depth + 1, maxDepth);
-
-  // Try again from midpoint solution
-  cmplx z_try = z_mid;
-  if (newtonSolve(f, fp, w, z_try, tol))
-    return z_try;
-
-  // Second midpoint (closer to w), using improved guess
-  cmplx w_mid2 = (w_mid + w) / real(2);
-
-  cmplx z_mid2 = invertRecursive(f, fp, gr,
-                                 w_mid2, z_mid, tol, depth + 1, maxDepth);
-
-  z_try = z_mid2;
-  if (newtonSolve(f, fp, w, z_try, tol))
-    return z_try;
-
-  throw runtime_error("Failed to converge");
-}
-
-cmplx TM3::invert(const function<cmplx(cmplx)>& f,
-                  const function<cmplx(cmplx)>& fp,
-                  const function<real(real)>& gr,
-                  cmplx w,
-                  real tol) {
-  // Initial guess ONLY once
-  cmplx z0(gr(w.real()), 0.0);
-
-  return invertRecursive(f, fp, gr, w, z0, tol, 0, 20);
-}
-
-// Adaptive continuation solver
-
-cmplx TM3::invertAdaptive(const function<cmplx(cmplx)>& f,
-                     const function<cmplx(cmplx)>& fp,
-                     const function<real(real)>& gr,
-                     cmplx w_target,
-                     real tol) {
-  // Initial anchor on real axis
-  cmplx w0(w_target.real(), 0.0);
-  cmplx z = cmplx(gr(w0.real()), 0.0);
-
-  cmplx direction = w_target - w0;
-
-  real t = 0;
-  real dt = 1/real(10);
-
-  const real dt_min = real(1e-6);
-  const real dt_max = 1/real(2);
-
-  while (t < 1) {
-    dt = fmin(dt, 1 - t);
-
-    // Predictor step
-    cmplx w_dot = direction;
-    cmplx dzdt = w_dot / fp(z);   // dz/dt
-
-    cmplx z_pred = z + dt * dzdt;
-    cmplx w_next = w0 + (t + dt) * direction;
-
-    cmplx z_corr = z_pred;
-
-    // Corrector (Newton)
-    bool ok = newtonSolve(f, fp, w_next, z_corr, tol);
-
-    if (ok) {
-      // Accept step
-      z = z_corr;
-      t += dt;
-
-      // Adapt step size based on correction size
-      real correction = abs(z_corr - z_pred);
-
-      if (correction < tol / 10)
-        dt = fmin(dt * 2, dt_max);
-      else if (correction > 10 * tol)
-        dt = fmax(dt / 2, dt_min);
-    } else {
-      // Reject step → shrink
-      dt /= 2;
-      if (dt < dt_min)
-        throw runtime_error("Step size underflow");
-    }
-  }
-
-  return z;
-}
-
-cmplx TM3::invertRobust(const function<cmplx(cmplx)>& f,
-                        const function<cmplx(cmplx)>& fp,
-                        const function<real(real)>& gr,
-                        cmplx w,
-                        real tol) {
-  // Initial guess from real axis
-  cmplx z(gr(w.real()));
-
-  const int maxIter = 100;
+  auto [f, fp] = ffp(z); f -= w; ++cnt;
+  if (_debug) cerr << "A " << fp << "\n";
 
   for (int iter = 0; iter < maxIter; ++iter) {
-    cmplx F = f(z) - w;
-    real err = abs(F);
+    real err = abs(f);
 
-    if (err < tol)
-      return z;
-
-    cmplx dF = fp(z);
-    if (abs(dF) < 1e-14)
-      throw runtime_error("Derivative too small");
-
-    // Full Newton step
-    cmplx step = -F / dF;
+    if (!(err > tol))
+      break;
 
     // Line search (adaptive damping)
-    real lambda = 1;
-    cmplx z_trial;
-    real err_trial;
+    //    real lambda = iter < 2 ? 1/real(10) :
+    //      iter < 4 ? 1/real(4) :
+    //      iter < 8 ? 1/real(2) : 1;
+
+    // Full Newton step
+    cmplx dz = -f / fp;
+    real lambda = fmin(real(1), zscale / (22 * abs(dz)));
+    if (_debug) cerr << "B " << dz << " " << lambda << "\n";
+    if (lambda == 1 && !(abs(dz) > tol2)) {
+      z += dz;
+      tie(f, fp) = ffp(z); f -= w; ++cnt;
+      if (_debug) cerr << "C " << fp << "\n";
+      break;
+    }
+
+    cmplx znew;
 
     for (int ls = 0; ls < 10; ++ls) {
-      z_trial = z + lambda * step;
-      err_trial = abs(f(z_trial) - w);
+      znew = z + lambda * dz;
+      tie(f, fp) = ffp(znew); f -= w; ++cnt;
+      if (_debug) cerr << "D " << lambda << " " << znew << " " << fp << "\n";
+      real errnew = abs(f);
 
       // Accept if improvement
-      if (err_trial < err)
+      if (!(errnew >= err))
         break;
 
       lambda /= 2;
     }
 
-    if (lambda < 1e-6)
-      throw runtime_error("Line search failed");
-
-    z = z_trial;
+    z = znew;
   }
 
-  throw runtime_error("Max iterations exceeded");
+  return pair<cmplx, cmplx>(z, real(1)/fp);
+}
+
+void TM3::Forward(real lon0, real lat, real lon,
+                  real& x, real& y, real& gamma, real& k) {
+ cmplx SCALE = real(1), DIFF;
+  cmplx GEOD = cmplx(lat, lon - lon0) * Math::degree();
+  cmplx PSI; tie(PSI, DIFF) = GEODTOPSI(GEOD); SCALE *= DIFF;
+  cmplx TAU; tie(TAU, DIFF) = PSITOTAU(PSI); SCALE *= DIFF;
+  if (_debug) cerr << "PSI/TAU " << PSI << " " << TAU << "\n";
+  cmplx BETA; tie(BETA, DIFF) = TAUTOBETA(TAU); SCALE *= DIFF;
+  cmplx MU; tie(MU, DIFF) = BETATOMU(BETA); SCALE *= DIFF;
+  cmplx TM; tie(TM, DIFF) = MUTOTM(MU); SCALE *= DIFF;
+  SCALE = conj(SCALE);
+  x = TM.imag(); y = TM.real();
+  gamma = arg(SCALE) / Math::degree(); k = abs(SCALE);
 }
 
 int main() {
@@ -445,35 +314,87 @@ f = 1/5, e = 3/5, (1-e)*pi/2 = 36
   Utility::set_digits();
   real a = 6.4e6, f = 1/real(50), deg = Math::degree();
   a = real(6400000); f = 1/real(5);
+  real e2 = 1/real(100);
+  f = e2 / (1+sqrt(1-e2));
   f = 1/real(5);
-  TM3 qq(a, f);
-  TransverseMercator tm(a, f, 1, f != 0);
-  Geodesic geod(a, f, true);
-  AuxLatitude aux(a, f);
-  real betar, betai;
+  // f = -1/real(4);
+  TM3 qq(a, f, 1);
+  TransverseMercator tm(a, f, 1, true);
   cout << setprecision(13);
-  while (cin >> betar >> betai) {
-    cmplx SCALE = real(1), DIFF,
-      BETA = cmplx(betar, betai) * deg;
-    cout << "BETA " << BETA / deg << "\n";
-    cmplx TAU; tie(TAU, DIFF) = qq.BETATOTAU(BETA); SCALE /= DIFF;
-    cout << "TAU " << TAU << " " << DIFF << "\n";
-    cout << "PHI " << atan(TAU) / deg << "\n";
-    cmplx PSI; tie(PSI,DIFF) = qq.TAUTOPSI(TAU); SCALE /= DIFF;
-    cout << "PSI " << PSI << " " << DIFF << "\n";
-    cmplx GEOD; tie(GEOD, DIFF) = qq.PSITOGEOD(PSI); SCALE /= DIFF;
-    cout << "GEOD " << GEOD /deg << " " << DIFF << "\n";
-    cmplx MU; tie(MU, DIFF) = qq.BETATOMU(BETA); SCALE *= DIFF;
-    cout << "MU " << MU /deg << " " << DIFF << "\n";
-    cmplx TM; tie(TM, DIFF) = qq.MUTOTM(MU); SCALE *= DIFF;
-    SCALE = conj(SCALE);
-    GEOD /= deg;
-    cout << TM.imag() << " " << TM.real() << " "
-         << arg(SCALE) / deg << " " << abs(SCALE) << "\n";
-    real x, y, gamma, k;
-    tm.Forward(0, GEOD.real(), GEOD.imag(), x, y, gamma, k);
-    cout << x << " " << y << " "
-         << gamma << " " << k << "\n";
+  if (1) {
+    for (int lat = 0; lat <= 80; lat += 10) {
+      for (int lon = 0; lon <= 90; ++lon) {
+        real x, y, gamma, k;
+        qq.Forward(0, lat, lon, x, y, gamma, k);
+        cout << lat << " " << lon << " "
+             << x << " " << y << " " << gamma << " " << k << "\n";
+      }
+      cout << "nan nan nan nan nan nan\n";
+    }
+    for (int lon = 0; lon <= 90; lon += 10) {
+      for (int lat = 0; lat <= 80; ++lat) {
+        real x, y, gamma, k;
+        qq.Forward(0, lat, lon, x, y, gamma, k);
+        cout << lat << " " << lon << " "
+             << x << " " << y << " " << gamma << " " << k << "\n";
+      }
+      cout << "nan nan nan nan nan nan\n";
+    }
+    for (int lat = 1; lat <= 9; ++lat) {
+      for (int lon = 80; lon <= 90; ++lon) {
+        real x, y, gamma, k;
+        qq.Forward(0, lat, lon, x, y, gamma, k);
+        cout << lat << " " << lon << " "
+             << x << " " << y << " " << gamma << " " << k << "\n";
+      }
+      cout << "nan nan nan nan nan nan\n";
+    }
+    for (int lon = 81; lon <= 89; ++lon) {
+      for (int lat = 0; lat <= 10; ++lat) {
+        real x, y, gamma, k;
+        qq.Forward(0, lat, lon, x, y, gamma, k);
+        cout << lat << " " << lon << " "
+             << x << " " << y << " " << gamma << " " << k << "\n";
+      }
+      cout << "nan nan nan nan nan nan\n";
+    }
+    return 0;
+  }
+  if (1) {
+    real lat, lon;
+    while (cin >> lat >> lon) {
+      real x, y, gamma, k;
+      qq.Forward(0, lat, lon, x, y, gamma, k);
+      cout << x << " " << y << " " << gamma << " " << k << "\n";
+      tm.Forward(0, lat, lon, x, y, gamma, k);
+      cout << x << " " << y << " " << gamma << " " << k << "\n";
+
+    }
+  } else {
+    real betar, betai;
+    while (cin >> betar >> betai) {
+      cmplx SCALE = real(1), DIFF,
+        BETA = cmplx(betar, betai) * deg;
+      cout << "BETA " << BETA / deg << "\n";
+      cmplx TAU; tie(TAU, DIFF) = qq.BETATOTAU(BETA); SCALE /= DIFF;
+      cout << "TAU " << TAU << " " << DIFF << "\n";
+      cout << "PHI " << atan(TAU) / deg << "\n";
+      cmplx PSI; tie(PSI,DIFF) = qq.TAUTOPSI(TAU); SCALE /= DIFF;
+      cout << "PSI " << PSI << " " << DIFF << "\n";
+      cmplx GEOD; tie(GEOD, DIFF) = qq.PSITOGEOD(PSI); SCALE /= DIFF;
+      cout << "GEOD " << GEOD /deg << " " << DIFF << "\n";
+      cmplx MU; tie(MU, DIFF) = qq.BETATOMU(BETA); SCALE *= DIFF;
+      cout << "MU " << MU /deg << " " << DIFF << "\n";
+      cmplx TM; tie(TM, DIFF) = qq.MUTOTM(MU); SCALE *= DIFF;
+      SCALE = conj(SCALE);
+      GEOD /= deg;
+      cout << TM.imag() << " " << TM.real() << " "
+           << arg(SCALE) / deg << " " << abs(SCALE) << "\n";
+      real x, y, gamma, k;
+      tm.Forward(0, GEOD.real(), GEOD.imag(), x, y, gamma, k);
+      cout << x << " " << y << " "
+           << gamma << " " << k << "\n";
+    }
   }
 }
 /*

@@ -143,7 +143,7 @@ Brew...
 
   brew update + brew upgrade
   cd /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula
-  git checkout master; git pull
+  git checkout main; git pull
   # seems like brew does and automatic update (within 3-4 hours)
   # tagged and pushed 16:47;  brew update commits at 19:29 and 20:15
   == SKIP ==
