@@ -812,6 +812,16 @@ add_test (NAME TransverseMercatorProj7 COMMAND TransverseMercatorProj
 set_tests_properties (TransverseMercatorProj6 TransverseMercatorProj7
   PROPERTIES PASS_REGULAR_EXPRESSION
   "19\\.80370996793 30\\.24919702282 11\\.214378172893 1\\.137025775759")
+# Test fix to bug in setting e2m for prolate ellipsoids in Math::tauf
+# Found 2026-04-26 fixed 2026-04-27.  This also tests f <= 0 fallback
+# for exact in TransverseMercator constructor to series.
+add_test (NAME TransverseMercatorProj8 COMMAND TransverseMercatorProj
+  -e 6.4e6 -1/25 --input-string "0 300e3" -r -p 0)
+add_test (NAME TransverseMercatorProj9 COMMAND TransverseMercatorProj
+  -e 6.4e6 -1/25 --input-string "0 300e3" -r -p 0 -s)
+set_tests_properties (TransverseMercatorProj8 TransverseMercatorProj9
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "2\\.48430 0\\.00000 0\\.000000 0\\.999600")
 
 # Paths between equator and pole
 add_test (NAME RhumbSolve0 COMMAND RhumbSolve

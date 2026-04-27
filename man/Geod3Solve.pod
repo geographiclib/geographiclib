@@ -202,9 +202,8 @@ Route from JFK Airport to Singapore Changi Airport on a triaxial
 ellipsoid:
 
   echo 40:38:23N 073:46:44W-14.93W X 01:21:33N 103:59:22E-14.93W |
-    tr X '\n' | sed 's/$/ 0/' | CartConvert |
-    Cart3Convert -E -r -3 | cut -f1,2 -d' ' | tr '\n' ' ' |
-    Geod3Solve -i -: -p 10
+    tr X '\n' | sed 's/$/ 0/' | CartConvert | Cart3Convert -E -r |
+    tr '\n' ' ' | Geod3Solve -i -: -p 0
   => 003:12:53.3 177:29:00.3 15347609
 
 The steps here are shift for longitude of major axis (-14.93d), convert

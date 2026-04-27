@@ -253,7 +253,7 @@ namespace GeographicLib {
     // min iterations = 1, max iterations = 2; mean = 1.95
     static const T tol = sqrt(numeric_limits<T>::epsilon()) / 10;
     static const T taumax = 2 / sqrt(numeric_limits<T>::epsilon());
-    T e2m = 1 - sq(es),
+    T e2m = 1 - copysign(sq(es), es),
       // To lowest order in e^2, taup = (1 - e^2) * tau = _e2m * tau; so use
       // tau = taup/e2m as a starting guess. Only 1 iteration is needed for
       // |lat| < 3.35 deg, otherwise 2 iterations are needed.  If, instead, tau
@@ -267,7 +267,8 @@ namespace GeographicLib {
       // the mean number of iterations slightly from 1.963 to 1.954.
       tau = fabs(taup) > 70 ? taup * exp(eatanhe(T(1), es)) : taup/e2m,
       stol = tol * fmax(T(1), fabs(taup));
-    if (!(fabs(tau) < taumax)) return tau; // handles +/-inf and nan
+    if (tau == 0 || !(fabs(tau) < taumax))
+      return tau; // handles +/-inf and nan
     for (int i = 0;
          i < numit ||
            GEOGRAPHICLIB_PANIC("Convergence failure in Math::tauf");

@@ -7811,6 +7811,8 @@ git repository for GeographicLib</a>.
    (released 202y-mm-dd)
    - Fix <a href="Cart3Convert.1.html">Cart3Convert</a> to allow
      latitude = nan for geodetic coordinates.
+   - Fix bug in Math::tauf for prolate ellipsoids.  Also Math::tauf now
+     preserves the sign of 0.
    - Minor improvements to Triaxial::Conformal3
      - Added const versions of Triaxial::Conformal3::t() and
        Triaxial::Conformal3::s().  The non-const versions are retained
@@ -7851,7 +7853,7 @@ git repository for GeographicLib</a>.
        The modulus squared <i>k</i><sup>2</sup> and parameter
        &alpha;<sup>2</sup> used in the constructor for EllipticFunction
        are restricted to being real.
-   - Constructing TransverseMercator with \e exact = true and \e f \le 0
+   - Constructing TransverseMercator with \e exact = true and \e f &le; 0
      switches to \e exact = false.  (The exact treatment only works for
      \e f > 0.)
    - Fix the example in the man page for <a href="Geod3Solve.1.html">
