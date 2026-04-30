@@ -108,7 +108,7 @@ namespace GeographicLib {
           fp = t*c*c / (d * (ell.alpha2() >= 0 ?
                              ell.alphap2() + ell.alpha2() * s*s :
                              1 - ell.alpha2() * c*c));
-          return pair<real, real>(f, fp);
+          return {f, fp};
         };
       real z = Trigfun::root(Trigfun::PIINV,
                              Pif, fabs(y), 0,
@@ -200,7 +200,7 @@ namespace GeographicLib {
             real f = nx * elly.K() - ny * ellx.K(),
             fp = (nx * (elly.E() - kp2 * elly.K()) +
                   ny * (ellx.E() - k2  * ellx.K())) / (2 * k2 * kp2);
-            return pair<real, real>(f, k2*fp);
+            return {f, k2*fp};
           };
         logk2 = Trigfun::root(Trigfun::KINV, ksolve, 0, logk2,
                               logk2min, -log(real(2)),

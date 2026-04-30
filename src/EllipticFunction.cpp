@@ -885,7 +885,7 @@ namespace GeographicLib {
           fp = t*c*c / (d * (alpha2() >= 0 ?
                              alphap2() + alpha2() * s*s :
                              1 - alpha2() * c*c));
-          return pair<real, real>(f, fp);
+          return {f, fp};
         };
       real z = Trigfun::root(Trigfun::PIINV,
                              Pif, fabs(y), 0,

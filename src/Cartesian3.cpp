@@ -44,7 +44,7 @@ namespace GeographicLib {
       fv = fv + ga; fcorr = fcorr + gb;
       fp = fp - n * g / (p + _l[k]);
     }
-    return pair<real, real>(fv + fcorr, fp);
+    return {fv + fcorr, fp};
   }
 
   Math::real Cartesian3::cartsolve(const function<pair<real, real>(real)>& f,
@@ -64,8 +64,7 @@ namespace GeographicLib {
            (throw_ && (throw GeographicLib::GeographicErr
                        ("Convergence failure Cartesian3::cartsolve"), false));
          ++i) {
-      pair<real, real> fx = f(p);
-      real fv = fx.first, fp = fx.second;
+      auto [fv, fp] = f(p);
       // We're done if f(p) <= 0 on initial guess; this can happens when z = 0.
       // However, since Newton converges from below, any negative f(p)
       // indicates convergence.
@@ -129,14 +128,14 @@ namespace GeographicLib {
       q = qmin;
     do {                       // Executed once (provides the ability to break)
       const funp<1> f(R2, _linecc2);
-      pair<real, real> fx = f(q);
-      if (!( fx.first > tol2 ))
+      auto [fv, fp] = f(q);
+      if (!( fv > tol2 ))
         break;                  // negative means converged
       q = fmax(qmin, fmin(qmax, cubic(R2)));
-      fx = f(q);
-      if (!( fabs(fx.first) > tol2 ))
+      tie(fv, fp) = f(q);
+      if (!( fabs(fv) > tol2 ))
         break;                  // test abs(fv) here
-      q = fmax(qmin, q - fx.first/fx.second);
+      q = fmax(qmin, q - fv/fp);
       q = cartsolve(f, q, Math::sq(b()));
     } while (false);
     vec3 axes = {sqrt(_linecc2[0] + q), sqrt(_linecc2[1] + q), sqrt(q)};

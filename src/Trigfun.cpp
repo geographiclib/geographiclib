@@ -336,7 +336,7 @@ namespace GeographicLib {
     if (dx == 0) return x0;
     auto ffp = [this, &fp]
       (real x) -> pair<real, real>
-      { return pair<real, real>(this->operator()(x), fp(x)); };
+      { return {this->operator()(x), fp(x)}; };
     return root(indicator,ffp, z, x0, x00 - dx, x00 + dx, _h, fabs(hr),
                 s > 0 ? 1 : -1, countn, countb, tol);
   }
@@ -361,17 +361,17 @@ namespace GeographicLib {
     real p = Math::pi()/2 * 0;
     if constexpr (debug_) {
       cout << "SCALE " << xscale << " " << zscale << "\n";
-      pair<real, real> vala = ffp(xa);
-      pair<real, real> val0 = ffp(x0);
-      pair<real, real> valb = ffp(xb);
+      auto [valav, valap] = ffp(xa);
+      auto [val0v, val0p] = ffp(x0);
+      auto [valbv, valbp] = ffp(xb);
       cout << "DAT " << s << " " << x0-xa << " " << xb-x0 << " " << z << "\n";
       cout << "DAT "
-           << xa << " " << vala.first - z << " " << vala.second << "\n";
+           << xa << " " << valav - z << " " << valap << "\n";
       cout << "DAT "
-           << x0 << " " << val0.first - z << " " << val0.second << "\n";
+           << x0 << " " << val0v - z << " " << val0p << "\n";
       cout << "DAT "
-           << xb << " " << valb.first - z << " " << valb.second << "\n";
-      if ((vala.first - z) * (valb.first - z) > 0)
+           << xb << " " << valbv - z << " " << valbp << "\n";
+      if ((valav - z) * (valbv - z) > 0)
         cout << "DATBAD\n";
     }
     for (; k < maxit_ ||

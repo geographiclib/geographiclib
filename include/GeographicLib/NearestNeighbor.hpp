@@ -172,7 +172,7 @@ namespace GeographicLib {
       // the pair contains distance+id
       std::vector<item> ids(pts.size());
       for (int k = int(ids.size()); k--;)
-        ids[k] = std::make_pair(dist_t(0), k);
+        ids[k] = {dist_t(0), k};
       int cost = 0;
       std::vector<Node> tree;
       init(pts, dist, bucket, tree, ids, cost,
@@ -266,11 +266,10 @@ namespace GeographicLib {
         // +1 if on boundary or inside
         // second is node index
         std::priority_queue<item> todo;
-        todo.push(std::make_pair(dist_t(1), int(_tree.size()) - 1));
+        todo.push({dist_t(1), int(_tree.size()) - 1});
         int c = 0;
         while (!todo.empty()) {
-          int n = todo.top().second;
-          dist_t d = -todo.top().first;
+          auto [d, n] = todo.top(); d = -d;
           todo.pop();
           dist_t tau1 = tau - tol;
           // compare tau and d again since tau may have become smaller.
@@ -286,7 +285,7 @@ namespace GeographicLib {
 
             if (dst > mindist && dst <= tau) {
               if (int(results.size()) == k) results.pop();
-              results.push(std::make_pair(dst, index));
+              results.push({dst, index});
               if (int(results.size()) == k) {
                 if (exhaustive)
                   tau = results.top().first;
@@ -311,13 +310,13 @@ namespace GeographicLib {
               if (dst < current.data.lower[l]) {
                 d = current.data.lower[l] - dst;
                 if (tau1 >= d)
-                  todo.push(std::make_pair(-d, current.data.child[l]));
+                  todo.push({-d, current.data.child[l]});
               } else if (dst > current.data.upper[l]) {
                 d = dst - current.data.upper[l];
                 if (tau1 >= d)
-                  todo.push(std::make_pair(-d, current.data.child[l]));
+                  todo.push({-d, current.data.child[l]});
               } else
-                todo.push(std::make_pair(dist_t(1), current.data.child[l]));
+                todo.push({dist_t(1), current.data.child[l]});
             }
           }
         }

@@ -305,7 +305,7 @@ int main(int argc, const char* const argv[]) {
           l.Reset(bet1, omg1, alp1);
         }
         if (!buffered) {
-          auto errs = l.Position(s12, bet2, omg2, alp2, m12, M12, M21);
+          auto [errd, errv] = l.Position(s12, bet2, omg2, alp2, m12, M12, M21);
           if (full)
             *output << ang::LatLonString(bet1, omg1, angprec, dms, dmssep,
                                          longfirst) << " "
@@ -322,8 +322,8 @@ int main(int argc, const char* const argv[]) {
           if (steps)
             *output << " " << l.NSteps() << " " << l.IntSteps();
           if (errors)
-            *output << " " << ErrorString(errs.first, 2)
-                    << " " << ErrorString(errs.second, 2);
+            *output << " " << ErrorString(errd, 2)
+                    << " " << ErrorString(errv, 2);
           *output << eol;
         }
       }

@@ -210,11 +210,10 @@ int main(int argc, const char* const argv[]) {
         std::pair<real, real> p0(x0, y0);
         if (maxdist < 0) {
           int segmode = 0, c;
-          auto p = mode == CLOSE || mode == OFFSET ?
+          std::tie(x, y)  = mode == CLOSE || mode == OFFSET ?
             intersect.Closest(lineX, lineY, p0, &c) :
             mode == NEXT ? intersect.Next(lineX, lineY, &c) :
             intersect.Segment(lineX, lineY, segmode, &c);
-          x = p.first; y = p.second;
           *output << Utility::str(x, prec) << " "
                   << Utility::str(y, prec) << " " << c;
           if (mode == SEGMENT)
@@ -236,7 +235,7 @@ int main(int argc, const char* const argv[]) {
           auto v = intersect.All(lineX, lineY, maxdist, c, p0);
           unsigned n = unsigned(v.size());
           for (unsigned i = 0; i < n; ++i) {
-            x = v[i].first; y = v[i].second;
+            std::tie(x, y) = v[i];
             *output << Utility::str(x, prec) << " " << Utility::str(y, prec)
                     << " " << c[i] << " "
                     << Utility::str(Intersect::Dist(v[i], p0), prec)

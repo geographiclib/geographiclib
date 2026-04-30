@@ -16,15 +16,15 @@ int main() {
     GeodesicLine lineX(geod, 0, 0, 45, Intersect::LineCaps);
     GeodesicLine lineY(geod, 45, 10, 135, Intersect::LineCaps);
     // Find displacement to closest intersection
-    Intersect::Point point = intersect.Closest(lineX, lineY);
+    auto [pointx, pointy] = intersect.Closest(lineX, lineY);
     // Check position at intersection
     double latx, lonx, laty, lony;
-    lineX.Position(point.first, latx, lonx);
-    lineY.Position(point.second, laty, lony);
+    lineX.Position(pointx, latx, lonx);
+    lineY.Position(pointy, laty, lony);
     cout << "X intersection displacement + position "
-         << point.first << " " << latx << " " << lonx << "\n";
+         << pointx << " " << latx << " " << lonx << "\n";
     cout << "Y intersection displacement + position "
-         << point.second << " " << laty << " " << lony << "\n";
+         << pointy << " " << laty << " " << lony << "\n";
   }
   catch (const exception& e) {
     cerr << "Caught exception: " << e.what() << "\n";

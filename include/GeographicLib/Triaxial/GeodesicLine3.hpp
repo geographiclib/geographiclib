@@ -444,7 +444,7 @@ namespace GeographicLib {
       } else {
         if (z == y/2) z = -y/2;
       }
-      return std::pair<real, real>(z, rint((x - z) / y));
+      return {z, rint((x - z) / y)};
     }
     // remainder with x in
     //    [-pi/2, pi/2) if alt = false (default)

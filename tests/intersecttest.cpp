@@ -27,17 +27,17 @@ static int checkEquals(T x, T y, T d) {
   return 1;
 }
 
-#define equatorialseg(lonx1, lonx2, lony1, lony2, px, py) do { \
-    auto p1 = inter.Segment(0, lonx1, 0, lonx2,                \
-                            0, lony1, 0, lony2, segmode),      \
-      p2 = inter.Segment(0, lony1, 0, lony2,                   \
-                         0, lonx1, 0, lonx2, segmode);         \
-    int i = checkEquals(p1.first, px, eps) +                   \
-      checkEquals(p1.second, py, eps) +                        \
-      checkEquals(p2.first, py, eps) +                         \
-      checkEquals(p2.second, px, eps);                         \
-    if (i) cout << "ERROR at line " << __LINE__ << "\n";       \
-    n += i;                                                    \
+#define equatorialseg(lonx1, lonx2, lony1, lony2, px, py) do {    \
+    auto [p1x, p1y] = inter.Segment(0, lonx1, 0, lonx2,           \
+                                    0, lony1, 0, lony2, segmode); \
+    auto [p2x, p2y] = inter.Segment(0, lony1, 0, lony2,           \
+                                    0, lonx1, 0, lonx2, segmode); \
+    int i = checkEquals(p1x, px, eps) +                           \
+      checkEquals(p1y, py, eps) +                                 \
+      checkEquals(p2x, py, eps) +                                 \
+      checkEquals(p2y, px, eps);                                  \
+    if (i) cout << "ERROR at line " << __LINE__ << "\n";          \
+    n += i;                                                       \
   } while (false)
 
 int checkcoincident1() {

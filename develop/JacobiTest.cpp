@@ -32,10 +32,10 @@ int main() {
           real f = nx * ell.K() - ny * ellp.K(),
           fp = (nx * (ell .E() - kp2 * ell .K()) +
                 ny * (ellp.E() - k2  * ellp.K())) / (2 * k2 * kp2);
-          return pair<real, real>(f, fp);
+          return {f, fp};
         };
-      auto x = ksolve(kp2);
-      cout << "KK " << x.first << " " << x.second << "\n";
+      auto [xv, xp] = ksolve(kp2);
+      cout << "KK " << xv << " " << xp << "\n";
       return 0;
     }
     real a = Constants::Triaxial_Earth_a(),
