@@ -283,7 +283,7 @@ cmplx2 GeographicLib::experimental::TM3::CHITOPHI(cmplx CHI) const {
             return {f, fp};
           };
         real ya = 0, yb = acosh(1/_e.real()), y0 = (ya + yb)/2,
-          v = Trigfun::root(Trigfun::OTHER,
+          v = Trigfun::root(Trigfun::MERCATOR3,
                             ffp, real(0),
                             y0, ya, yb, 1, 1, -1);
         cmplx PHI{Math::pi()/2, v};
