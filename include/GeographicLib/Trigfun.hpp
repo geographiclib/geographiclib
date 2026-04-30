@@ -26,6 +26,9 @@ namespace GeographicLib {
   class GeodesicLine3;
   class Conformal3;
   }
+  namespace experimental {
+  class TM3;
+  }
   /**
    * \brief Representing a function by a Fourier series
    *
@@ -66,9 +69,10 @@ namespace GeographicLib {
   private:
     /// \cond SKIP
     friend class TrigfunExt;              // For access to root sig 2
-    friend class Triaxial::GeodesicLine3; // For access to root sig 2
+    friend class Triaxial::GeodesicLine3; // For access to root sig 4
     friend class Triaxial::Conformal3;    // For access to root sig 2
-    friend class EllipticFunction;        // For access to root sig 2
+    friend class EllipticFunction;        // For access to root sig 4
+    friend class experimental::TM3;       // For access to root sig 4
     /// \endcond
     using real = Math::real;
     using cmplx = Math::cmplx;
