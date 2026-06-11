@@ -183,7 +183,7 @@ namespace GeographicLib {
      *   - * the <a href="https://grid.nga.mil">GRiD</a> symbol for degrees
      * - minutes:
      *   - ' apostrophe
-     *   - ` grave accent
+     *   - grave accent
      *   - U+2032 prime (&prime;)
      *   - U+2035 back prime
      *   - U+00b4 acute accent (&acute;)

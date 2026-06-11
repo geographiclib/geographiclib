@@ -68,7 +68,7 @@ namespace GeographicLib {
 
   template<typename T> T Math::AngNormalize(T x) {
     T y = remainder(x, T(td));
-#if GEOGRAPHICLIB_PRECISION == 4
+#if GEOGRAPHICLIB_PRECISION == 4 && BOOST_VERSION < 109000
     // boost-quadmath doesn't set the sign of 0 correctly, see
     // https://github.com/boostorg/multiprecision/issues/426
     // Fixed by https://github.com/boostorg/multiprecision/pull/428

@@ -239,7 +239,7 @@ class kissfft
             // post processing for all the other k = 1, 2, ..., N-1
             const scalar_t pi =      acos( (scalar_t) -1);
             const scalar_t half_phi_inc = ( _inverse ? pi : -pi ) / N;
-            const cpx_t twiddle_mul = std::polar( (scalar_t) 1, half_phi_inc );
+            const cpx_t twiddle_mul = polar( (scalar_t) 1, half_phi_inc );
             for ( std::size_t k = 1; 2*k < N; ++k )
             {
                 const cpx_t w = (scalar_t)0.5 * cpx_t(
