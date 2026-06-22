@@ -402,10 +402,8 @@ namespace GeographicLib {
     // Pi(alpha2, 1) = inf
     // H(1, k) = K(k)
     // G(alpha2, 1) = H(alpha2, 1) = RC(1, alphap2)
+    _kKc = K_static(_k2, _kp2);
     if (_k2 != 0) {
-      // Complete elliptic integral K(k), Carlson eq. 4.1
-      // https://dlmf.nist.gov/19.25.E1
-      _kKc = _kp2 != 0 ? RF(_kp2, 1) : Math::infinity();
       // Complete elliptic integral E(k), Carlson eq. 4.2
       // https://dlmf.nist.gov/19.25.E1
       _eEc = _kp2 != 0 ? 2 * RG(_kp2, 1) : 1;
@@ -413,7 +411,7 @@ namespace GeographicLib {
       // https://dlmf.nist.gov/19.25.E1
       _dDc = _kp2 != 0 ? RD(0, _kp2, 1) / 3 : Math::infinity();
     } else {
-      _kKc = _eEc = Math::pi()/2; _dDc = _kKc/2;
+      _eEc = _kKc; _dDc = _kKc/2;
     }
     if (_alpha2 != 0) {
       // https://dlmf.nist.gov/19.25.E2
@@ -449,6 +447,11 @@ namespace GeographicLib {
         (_kp2 == 0 ? 1 : _kp2 * RD(0, 1, _kp2) / 3);
     }
   }
+  Math::real EllipticFunction::K_static(real k2, real kp2) {
+    // Complete elliptic integral K(k), Carlson eq. 4.1
+    // https://dlmf.nist.gov/19.25.E1
+    return k2 == 0 ? Math::pi()/2 : kp2 == 0 ? Math::infinity() : RF(kp2, 1);
+  }
 
   /*
    * Implementation of methods given in
@@ -457,6 +460,71 @@ namespace GeographicLib {
    *   Numerical Calculation of Elliptic Integrals and Elliptic Functions
    *   Numericshe Mathematik 7, 78-90 (1965)
    */
+
+  void EllipticFunction::sncndn_static(real x, real& sn, real& cn, real& dn,
+                                       real k2, real kp2) {
+    // Bulirsch's sncndn routine, p 89.
+    static const real tolJAC =
+      sqrt(numeric_limits<real>::epsilon() * real(0.01));
+    if (kp2 != 0) {
+      real mc = kp2, d = 0;
+      if (signbit(kp2)) {
+        // This implements DLMF Eqs 22.17.2 - 22.17.4.  We *do* need this to
+        // treat complex arguments with k2 < 0, kp2 > 1 since k2 and kp2 get
+        // interchanged for the imaginary.  Then k2 > 1, kp2 < 0, and, e.g.,
+        // sn(z, k) = sn(z*k,1/k)/k, etc.
+        d = k2;
+        mc /= -d;
+        d = sqrt(d);
+        x *= d;
+      }
+      real c = 0;           // To suppress warning about uninitialized variable
+      real m[num_], n[num_];
+      unsigned l = 0;
+      for (real a = 1;
+           l < num_ ||
+             GEOGRAPHICLIB_PANIC
+             ("Convergence failure in EllipticFunction::sncndn");
+           ++l) {
+        // This converges quadratically.  Max 5 trips
+        m[l] = a;
+        n[l] = mc = sqrt(mc);
+        c = (a + mc) / 2;
+        if (!(fabs(a - mc) > tolJAC * a)) {
+          ++l;
+          break;
+        }
+        mc *= a;
+        a = c;
+      }
+      x *= c;
+      sn = sin(x);
+      cn = cos(x);
+      dn = 1;
+      if (sn != 0) {
+        real a = cn / sn;
+        c *= a;
+        while (l--) {
+          real b = m[l];
+          a *= c;
+          c *= dn;
+          dn = (n[l] + a) / (b + a);
+          a = c / b;
+        }
+        a = 1 / sqrt(c*c + 1);
+        sn = signbit(sn) ? -a : a;
+        cn = c * sn;
+        if (signbit(kp2)) {
+          // See DLMF Eqs 22.17.2 - 22.17.4
+          swap(cn, dn);
+          sn /= d;
+        }
+      }
+    } else {
+      sn = tanh(x);
+      dn = cn = 1 / cosh(x);
+    }
+  }
 
   void EllipticFunction::sncndn(real x, real& sn, real& cn, real& dn) const {
     // Bulirsch's sncndn routine, p 89.
@@ -468,7 +536,7 @@ namespace GeographicLib {
         // This implements DLMF Eqs 22.17.2 - 22.17.4.  But this only
         // accomodates kp2 < 0 or k2 > 1 and these are outside the advertized
         // ranges for the contructor for this class.
-        d = 1 - mc;
+        d = _k2;
         mc /= -d;
         d = sqrt(d);
         x *= d;
@@ -524,6 +592,7 @@ namespace GeographicLib {
   Math::real EllipticFunction::am(real x, real& sn, real& cn, real& dn) const {
     static const real tolJAC =
       pow(numeric_limits<real>::epsilon(), real(0.75));
+    static const bool useSala = false;
     // Special cases of k2 = 0 and 1.
     if (_k2 == 0) {
       sn = sin(x); cn = cos(x); dn = 1;
@@ -545,41 +614,51 @@ namespace GeographicLib {
       sn = copysign(real(1), y); cn = 0; dn = sqrt(_kp2);
       phi = copysign(Math::pi()/2, y);
     } else {
-      // This implements DLMF Sec 22.20(ii).
-      // See also Sala (1989), https://doi.org/10.1137/0520100, Sec 5.
-      real k2 = _k2, kp2 = _kp2;
-      if (_k2 < 0) {
-        // Sala Eq. 5.8
-        k2 = -_k2 / _kp2; kp2 = 1 / _kp2;
-        y *= sqrt(_kp2);
+      if constexpr (useSala) {
+        // This implements DLMF Sec 22.20(ii).
+        // See also Sala (1989), https://doi.org/10.1137/0520100, Sec 5.
+        //
+        // But this method does extra calls to sin and asin and I'm doubtful
+        // about its speed and accuracy.  So prefer Bulirsch's vgsncndn (the else
+        // clause).
+        real k2 = _k2, kp2 = _kp2;
+        if (_k2 < 0) {
+          // Sala Eq. 5.8
+          k2 = -_k2 / _kp2; kp2 = 1 / _kp2;
+          y *= sqrt(_kp2);
+        }
+        real a[num_], b, c[num_];
+        a[0] = 1; b = sqrt(kp2); c[0] = sqrt(k2);
+        int l = 1;
+        for (; l < num_ ||
+               GEOGRAPHICLIB_PANIC
+               ("Convergence failure in EllipticFunction::am");) {
+          a[l] = (a[l-1] + b) / 2;
+          c[l] = (a[l-1] - b) / 2;
+          b = sqrt(a[l-1] * b);
+          if (!(c[l] > tolJAC * a[l])) break;
+          ++l;
+        }
+        // Now a[l] = pi/(2*K)
+        // Need to initialize phi1 to stop Visual Studio complaining
+        phi = a[l] * y * real(1 << l);
+        real phi1 = 0;
+        for (; l > 0; --l) {
+          phi1 = phi;
+          phi = (phi + asin(c[l] * sin(phi) / a[l])) / 2;
+        }
+        if (_k2 < 0)
+          // For k2 < 0, see Sala Eq. 5.8
+          phi = phi1 - phi;
+        sn = sin(phi); cn = cos(phi);
+        // Since abs(phi) <= pi/2, cn cannot be negative
+        if (signbit(cn)) cn = 0;
+        dn = Delta(sn, cn);
+      } else {
+        sncndn(y, sn, cn, dn);
+        if (signbit(cn)) cn = 0;
+        phi = atan2(sn, cn);
       }
-      real a[num_], b, c[num_];
-      a[0] = 1; b = sqrt(kp2); c[0] = sqrt(k2);
-      int l = 1;
-      for (; l < num_ ||
-             GEOGRAPHICLIB_PANIC
-             ("Convergence failure in EllipticFunction::am");) {
-        a[l] = (a[l-1] + b) / 2;
-        c[l] = (a[l-1] - b) / 2;
-        b = sqrt(a[l-1] * b);
-        if (!(c[l] > tolJAC * a[l])) break;
-        ++l;
-      }
-      // Now a[l] = pi/(2*K)
-      // Need to initialize phi1 to stop Visual Studio complaining
-      phi = a[l] * y * real(1 << l);
-      real phi1 = 0;
-      for (; l > 0; --l) {
-        phi1 = phi;
-        phi = (phi + asin(c[l] * sin(phi) / a[l])) / 2;
-      }
-      if (_k2 < 0)
-        // For k2 < 0, see Sala Eq. 5.8
-        phi = phi1 - phi;
-      sn = sin(phi); cn = cos(phi);
-      // Since abs(phi) <= pi/2, cn cannot be negative
-      if (signbit(cn)) cn = 0;
-      dn = Delta(sn, cn);
     }
     if (n % 2 != 0) {
       cn = -cn; sn = -sn;
@@ -591,22 +670,137 @@ namespace GeographicLib {
     return am(x, sn, cn, dn);
   }
 
-  Math::real EllipticFunction::F(real sn, real cn, real dn) const {
+#if GEOGRAPHICLIB_COMPLEX_JACOBI_AM
+  Math::cmplx EllipticFunction::am(cmplx z, cmplx& sn, cmplx& cn, cmplx& dn)
+    const {
+    // From Lee (1976), modulus for u is k, v is k'
+    // Also https://www.peliti.org/Notes/elliptic.pdf
+    // sn(u+i*v) = (sn(u)*dn(v) + i*cn(u)*dn(u)*sn(v)*cn(v))/
+    //             (1 - dn(u)^2*sn(v)^2)
+    // cn(u+i*v) = (cn(u)*cn(v) - i*sn(u)*dn(u)*sn(v)*dn(v)/
+    //             (1 - dn(u)^2*sn(v)^2)
+    // dn(u+i*v) = (dn(u)*cn(v)*dn(v) - i*k2*sn(u)*cn(u)*sn(v))/
+    //             (1 - dn(u)^2*sn(v)^2)
+    // Denominator = cn(v)^2 + k2*sn(u)^2*sn(v)^2
+    // From Sala (1995)
+    // u
+    // am(u+i*v) = atan(sn(u)*dn(v)/(cn(u)*cn(v))) +
+    //             i*atanh(dn(u)*sn(v))
+    // Do argument reduction
+
+    if (!signbit(_k2)) {
+      real x = z.real(), y = z.imag(),
+        m = _k2, mp = _kp2,
+        K = K_static(m, mp), Kp = K_static(mp, m),
+        u = remainder(x, 2 * K), v = remainder(y, 2 * Kp);
+      long s = long(rint((x - u) / (2 * K))),
+        t = long(rint((y - v) / (2 * Kp)));
+      // Now x = 2*s * K  + u where u in [-K , K ].
+      //     y = 2*t * Kp + v where v in [-Kp, Kp]
+      real snu, cnu, dnu, snv, cnv, dnv;
+      sncndn_static(u, snu, cnu, dnu, m, mp); if (signbit(cnu)) cnu = 0;
+      sncndn_static(v, snv, cnv, dnv, mp, m); if (signbit(cnv)) cnv = 0;
+      if (s % 2 != 0) {
+        cnu = -cnu; snu = -snu;
+      }
+      if (t % 2 != 0) {
+        cnv = -cnv; snv = -snv;
+      }
+      // Lee: 1-dnu^2*snv^2 = cnv^2 + k2*snu^2*snv^2 = dnv^2 - k2*cnu^2*snv^2
+      real den = Math::sq(cnv) + m * Math::sq(snu*snv); // N.B. m >= 0
+      if (s % 2 != 0) {
+        cnu = -cnu; snu = -snu;
+      }
+      sn = cmplx(snu*dnv, cnu*dnu*snv*cnv);
+      cn = cmplx(cnu*cnv, -snu*dnu*snv*dnv);
+      dn = cmplx(dnu*cnv*dnv, -_k2*snu*snu*snv);
+      sn /= den; cn /= den; dn /= den;
+      // Sala Eq. 4.13
+      return {atan2(snu*dnv, cnu*cnv) + s * Math::pi(), atanh(dnu*snv)};
+    } else {
+      real m = -_k2/_kp2, mp = 1/_kp2,
+        K  = K_static(m, mp), Kp = K_static(mp, m);
+      z = z/sqrt(mp);
+      real x = z.real(), y = z.imag();
+      // Sala Sec 4.1 am(z, -m/m') = pi/2 - am(K - z/k', m)
+      // sn(z, -m/m') = cn(K - z/k', m)
+      // cn(K + z, m) = -k' * sd(z, m)
+      // cn(K - z/k', m) = k' * sd(z/k', m)
+      //    sn(z, -m/m') = k' * sd(z/k', m) (DLMF 22.17.6)
+      // cn(z, -m/m') = sn(K - z/k, m)
+      // sn(K + z, m) = cd(z, m)
+      // sn(K - z/k, m) = cd(z/k, m)
+      //    cn(z, -m/m') = cd(z/k, m) (DLMF 22.17.7)
+      // sn^2 + cn^2 = m' * sd^2 + cd^2 = 1 (DLMF 22.6.4)
+      // d(am(z, -m/m'))/dz = dn(z, -m/m') = 1/k'*dn(K - z/k', m)
+      // dn(K + z, m) = k'*nd(z)
+      // dn(K -z/k', m) = -k'nd(z/k')
+      //    dn(z, -m/m') = nd(z/k')  (DLMF 22.17.8)
+      // -m/m'*sn^2 + dn^2 = m * sd^2 + nd^2 = 1 (DLMF 22.6.4)
+      // DLMF 22.27.5 - 22.17.8
+        // -m/(1-m)  = _k2 => m = -k2/kp2; mp=1/kp2
+      real
+        u = remainder(x, 2 * K), v = remainder(y, 2 * Kp);
+      long s = long(rint((x - u) / (2 * K))),
+        t = long(rint((y - v) / (2 * Kp)));
+      // Now x = 2*s * K  + u where u in [-K , K ].
+      //     y = 2*t * Kp + v where v in [-Kp, Kp]
+      real snu, cnu, dnu, snv, cnv, dnv;
+      sncndn_static(u, snu, cnu, dnu, m, mp); if (signbit(cnu)) cnu = 0;
+      sncndn_static(v, snv, cnv, dnv, mp, m); if (signbit(cnv)) cnv = 0;
+      if (s % 2 != 0) {
+        cnu = -cnu; snu = -snu;
+      }
+      if (t % 2 != 0) {
+        cnv = -cnv; snv = -snv;
+      }
+      // Need sd, cd, nd from Lee p 113
+      // k'*sd = sqrt(mp)*{snu*dnu*cnv, cnu*snv*dnv} / den
+      // cd = {cnu*dnu*dnv, -mp*snu*snv*cnv} / den
+      // nd = {dnu*cnv*dnv, m*snu*cnu*snv} / den
+      // den = dnu^2 + dnv^2 - 1
+      // phi = {atan2(sqrt(mp)*snu*snv, snu*dnv), xxx}
+      // Lee: dnu^2 + dnv^2 - 1
+      //    = m*cnu^2 + mp*cnv^2 = cnu^2*dnv^2+mp*snu^2*cnv^2
+      real den = m * Math::sq(cnu) + mp * Math::sq(cnv);
+      sn = cmplx(snu*dnu*cnv, cnu*snv*dnv); sn *= sqrt(mp);
+      cn = cmplx(cnu*dnu*dnv, -mp*snu*snv*cnv);
+      dn = cmplx(dnu*cnv*dnv, m*snu*cnu*snv);
+      sn /= den; cn /= den; dn /= den;
+      cmplx phi = atan(sn/cn) + s * Math::pi();
+      return phi;
+    }
+  }
+  Math::cmplx EllipticFunction::am(cmplx x) const {
+    cmplx sn, cn, dn;
+    return am(x, sn, cn, dn);
+  }
+#endif
+
+  template<typename T>
+  T EllipticFunction::Ft(T sn, T cn, T dn) const {
     // Carlson, eq. 4.5 and
     // https://dlmf.nist.gov/19.25.E5
-    real cn2 = cn*cn, dn2 = dn*dn,
-      fi = cn2 != 0 ? fabs(sn) * RF(cn2, dn2, 1) : K();
+    bool negs = signbit(Re(sn)), negc = signbit(Re(cn));
+    T cn2 = cn*cn, dn2 = dn*dn,
+      sna = negs ? -sn : sn,
+      fi = cn2 != real(0) ? sna * RF(cn2, dn2, T(1)) : K();
     // Enforce usual trig-like symmetries
-    if (signbit(cn))
-      fi = 2 * K() - fi;
-    return copysign(fi, sn);
+    if (negc) fi = 2 * K() - fi;
+    if (negs) fi = -fi;
+    return fi;
+  }
+  Math::real EllipticFunction::F(real sn, real cn, real dn) const {
+    return Ft(sn, cn, dn);
+  }
+  Math::cmplx EllipticFunction::F(cmplx sn, cmplx cn, cmplx dn) const {
+    return Ft(sn, cn, dn);
   }
 
   template<typename T>
   T EllipticFunction::Et(T sn, T cn, T dn) const {
     bool negs = signbit(Re(sn)), negc = signbit(Re(cn));
-    T
-      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+    T cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
       cna = negc ? -cn : cn,
       sna = negs ? -sn : sn,
       ei = cn2 != real(0) ?
@@ -648,21 +842,29 @@ namespace GeographicLib {
     return copysign(di, sn);
   }
 
-  Math::real EllipticFunction::Pi(real sn, real cn, real dn) const {
+  template<typename T>
+  T EllipticFunction::Pit(T sn, T cn, T dn) const {
     // Carlson, eq. 4.7 and
     // https://dlmf.nist.gov/19.25.E14
-    real
-      cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
-      pii = cn2 != 0 ?
-      fabs(sn) * (RF(cn2, dn2, 1) +
-                  (_alpha2 * sn2 == 0 ? 0 :
-                   _alpha2 * sn2 *
-                   RJ(cn2, dn2, 1, cn2 + _alphap2 * sn2) / 3)) :
+    bool negs = signbit(Re(sn)), negc = signbit(Re(cn));
+    T cn2 = cn*cn, dn2 = dn*dn, sn2 = sn*sn,
+      sna = negs ? -sn : sn,
+      pii = cn2 != real(0) ?
+      sna * (RF(cn2, dn2, T(1)) +
+             (_alpha2 * sn2 == real(0) ? T(0) :
+              _alpha2 * sn2 *
+              RJ(cn2, dn2, real(1), cn2 + _alphap2 * sn2) / real(3))) :
       Pi();
     // Enforce usual trig-like symmetries
-    if (signbit(cn))
-      pii = 2 * Pi() - pii;
-    return copysign(pii, sn);
+    if (negc) pii = 2 * Pi() - pii;
+    if (negs) pii = -pii;
+    return pii;
+  }
+  Math::real EllipticFunction::Pi(real sn, real cn, real dn) const {
+    return Pit(sn, cn, dn);
+  }
+  Math::cmplx EllipticFunction::Pi(cmplx sn, cmplx cn, cmplx dn) const {
+    return Pit(sn, cn, dn);
   }
 
   Math::real EllipticFunction::G(real sn, real cn, real dn) const {
@@ -728,14 +930,29 @@ namespace GeographicLib {
     return H(sn, cn, dn) * (Math::pi()/2) / H() - atan2(sn, cn);
   }
 
-  Math::real EllipticFunction::F(real phi) const {
+  template<typename T>
+  T EllipticFunction::Ft(T phi) const {
     if (_k2 == 0)
       return phi;
-    else if (_kp2 == 0)
+    else if (_kp2 == 0 && Im(phi) == 0 &&
+             fabs(Re(phi)) <= Math::pi()/2 && !signbit(cos(Re(phi))))
+      // Use this only for phi real and |phi| < pi/2
       return asinh(tan(phi));
-    real sn = sin(phi), cn = cos(phi), dn = Delta(sn, cn);
-    return fabs(phi) < Math::pi() ? F(sn, cn, dn) :
-      (deltaF(sn, cn, dn) + phi) * K() / (Math::pi()/2);
+    T sn = sin(phi), cn = cos(phi), Fv = Ft(sn, cn, Delta(sn, cn));
+    real n;
+    if constexpr (is_same_v<T, Math::real>)
+      n = rint( (phi - atan2(sn, cn)) / (2 * Math::pi()) );
+    else {
+      real phir = phi.real();
+      n = rint( (phir - atan2(sin(phir), cos(phir))) / (2 * Math::pi()) );
+    }
+    return n == 0 ? Fv : Fv + 4 * n * K();
+  }
+  Math::real EllipticFunction::F(real phi) const {
+    return Ft(phi);
+  }
+  Math::cmplx EllipticFunction::F(cmplx phi) const {
+    return Ft(phi);
   }
 
   template<typename T>
@@ -746,7 +963,7 @@ namespace GeographicLib {
     // Despite DLMF Eq 19.6.9 this is probably wrong, since
     // sqrt(1 - k^2*sin(phi)^2) -> abs(cos(phi)) in the limit k -> 1.
     //      return sin(phi);
-    T sn = sin(phi), cn = cos(phi), Ev = E(sn, cn, Delta(sn, cn));
+    T sn = sin(phi), cn = cos(phi), Ev = Et(sn, cn, Delta(sn, cn));
     real n;
     if constexpr (is_same_v<T, Math::real>)
       n = rint( (phi - atan2(sn, cn)) / (2 * Math::pi()) );
@@ -771,10 +988,23 @@ namespace GeographicLib {
     return E(sn, cn, Delta(sn, cn)) + 4 * E() * n;
   }
 
+  template<typename T>
+  T EllipticFunction::Pit(T phi) const {
+    T sn = sin(phi), cn = cos(phi), Piv = Pit(sn, cn, Delta(sn, cn));
+    real n;
+    if constexpr (is_same_v<T, Math::real>)
+      n = rint( (phi - atan2(sn, cn)) / (2 * Math::pi()) );
+    else {
+      real phir = phi.real();
+      n = rint( (phir - atan2(sin(phir), cos(phir))) / (2 * Math::pi()) );
+    }
+    return n == 0 ? Piv : Piv + 4 * n * Pi();
+  }
   Math::real EllipticFunction::Pi(real phi) const {
-    real sn = sin(phi), cn = cos(phi), dn = Delta(sn, cn);
-    return fabs(phi) < Math::pi() ? Pi(sn, cn, dn) :
-      (deltaPi(sn, cn, dn) + phi) * Pi() / (Math::pi()/2);
+    return Pit(phi);
+  }
+  Math::cmplx EllipticFunction::Pi(cmplx phi) const {
+    return Pit(phi);
   }
 
   Math::real EllipticFunction::D(real phi) const {
@@ -912,8 +1142,12 @@ namespace GeographicLib {
   template T GEOGRAPHICLIB_EXPORT EllipticFunction::RGt(T, T);          \
   template T GEOGRAPHICLIB_EXPORT EllipticFunction::RJt(T, T, T, T);    \
   template T GEOGRAPHICLIB_EXPORT EllipticFunction::RDt(T, T, T);       \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Ft(T) const;        \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Ft(T, T, T) const;  \
   template T GEOGRAPHICLIB_EXPORT EllipticFunction::Et(T) const;        \
-  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Et(T, T, T) const;
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Et(T, T, T) const;  \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Pit(T) const;       \
+  template T GEOGRAPHICLIB_EXPORT EllipticFunction::Pit(T, T, T) const;
 
   GEOGRAPHICLIB_ELLIPTIC_INSTANTIATE(Math::real)
   GEOGRAPHICLIB_ELLIPTIC_INSTANTIATE(Math::cmplx)

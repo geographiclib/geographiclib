@@ -10,6 +10,10 @@
 #if !defined(GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP)
 #define GEOGRAPHICLIB_ELLIPTICFUNCTION_HPP 1
 
+#if defined(GEOGRAPHICLIB_COMPLEX_JACOBI_AM)
+#define GEOGRAPHICLIB_COMPLEX_JACOBI_AM 0
+#endif
+
 #include <GeographicLib/Constants.hpp>
 
 namespace GeographicLib {
@@ -78,16 +82,21 @@ namespace GeographicLib {
     template<typename T> static T RDt(T x, T y, T z);
     template<typename T> T Et(T phi) const;
     template<typename T> T Et(T sn, T cn, T dn) const;
+    template<typename T> T Ft(T phi) const;
+    template<typename T> T Ft(T sn, T cn, T dn) const;
+    template<typename T> T Pit(T phi) const;
+    template<typename T> T Pit(T sn, T cn, T dn) const;
+    static real K_static(real k2, real kp2);
+    static void sncndn_static(real x, real& sn, real& cn, real& dn,
+                              real k2, real kp2);
     // Alternatively use std::real and std::imag (works with real and complex
     // numbers)
     static inline real Re(cmplx z) { return z.real(); }
-    // static inline real Im(cmplx z) { return z.imag(); }
+    static inline real Im(cmplx z) { return z.imag(); }
     static inline real Abs(cmplx z) { using std::abs; return abs(z); }
-    // static inline bool Cmplx(cmplx) { return true; }
     static inline real Re(real z) { return z; }
-    // static inline real Im(real) { return 0; }
+    static inline real Im(real) { return 0; }
     static inline real Abs(real z) { using std::fabs; return fabs(z); }
-    // static inline bool Cmplx(real) { return false; }
   public:
     /** \name Constructor
      **********************************************************************/
@@ -303,6 +312,16 @@ namespace GeographicLib {
     Math::real F(real phi) const;
 
     /**
+     * The incomplete integral of the first kind.
+     *
+     * @param[in] phi
+     * @return \e F(&phi;, \e k).
+     *
+     * This is a complex version of the previous function.
+     **********************************************************************/
+    Math::cmplx F(cmplx phi) const;
+
+    /**
      * The incomplete integral of the second kind.
      *
      * @param[in] phi
@@ -319,11 +338,6 @@ namespace GeographicLib {
      *
      * @param[in] phi
      * @return \e E(&phi;, \e k).
-     *
-     * \e E(&phi;, \e k) is defined in https://dlmf.nist.gov/19.2.E5
-     * \f[
-     *   E(\phi, k) = \int_0^\phi \sqrt{1-k^2\sin^2\theta}\,d\theta.
-     * \f]
      *
      * This is a complex version of the previous function.
      **********************************************************************/
@@ -361,6 +375,15 @@ namespace GeographicLib {
      * \f]
      **********************************************************************/
     Math::real Pi(real phi) const;
+    /**
+     * The incomplete integral of the third kind.
+     *
+     * @param[in] phi
+     * @return &Pi;(&phi;, &alpha;<sup>2</sup>, \e k).
+     *
+     * This is a complex version of the previous function.
+     **********************************************************************/
+    Math::cmplx Pi(cmplx phi) const;
 
     /**
      * The inverse of the incomplete integral of the third kind.
@@ -456,6 +479,19 @@ namespace GeographicLib {
      * @return \e F(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real F(real sn, real cn, real dn) const;
+    /**
+     * The incomplete integral of the first kind in terms of Jacobi elliptic
+     * functions.
+     *
+     * @param[in] sn = sin&phi;.
+     * @param[in] cn = cos&phi;.
+     * @param[in] dn = sqrt(1 &minus; <i>k</i><sup>2</sup>
+     *   sin<sup>2</sup>&phi;).
+     * @return \e F(&phi;, \e k) as though &phi; &isin; (&minus;&pi;, &pi;].
+     *
+     * This is a complex version of the previous function.
+     **********************************************************************/
+    Math::cmplx F(cmplx sn, cmplx cn, cmplx dn) const;
 
     /**
      * The incomplete integral of the second kind in terms of Jacobi elliptic
@@ -494,6 +530,7 @@ namespace GeographicLib {
      *   (&minus;&pi;, &pi;].
      **********************************************************************/
     Math::real Pi(real sn, real cn, real dn) const;
+    Math::cmplx Pi(cmplx sn, cmplx cn, cmplx dn) const;
 
     /**
      * Jahnke's incomplete elliptic integral in terms of Jacobi elliptic
@@ -630,6 +667,9 @@ namespace GeographicLib {
      * @return the value of am(\e x, \e k)
      **********************************************************************/
     Math::real am(real x) const;
+#if GEOGRAPHICLIB_COMPLEX_JACOBI_AM
+    Math::cmplx am(cmplx x) const;
+#endif
 
     /**
      * The Jacobi amplitude function and associated elliptic functions.
@@ -641,6 +681,9 @@ namespace GeographicLib {
      * @return the value of am(\e x, \e k)
      **********************************************************************/
     Math::real am(real x, real& sn, real& cn, real& dn) const;
+#if GEOGRAPHICLIB_COMPLEX_JACOBI_AM
+    Math::cmplx am(cmplx z, cmplx& sn, cmplx& cn, cmplx& dn) const;
+#endif
 
     /**
      * The Jacobi elliptic functions.
