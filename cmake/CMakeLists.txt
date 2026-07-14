@@ -74,12 +74,6 @@ if (CMAKEDIR)
     NAMESPACE ${PROJECT_NAME}::
     FILE ${PROJECT_NAME_LOWER}-targets.cmake
     DESTINATION "${CMAKEDIR}")
-
-  if (MSVC AND PACKAGE_DEBUG_LIBS)
-    install (FILES
-      "${CMAKE_CURRENT_BINARY_DIR}/CMakeFiles/Export/${CMAKEDIR}/${PROJECT_NAME_LOWER}-targets-debug.cmake"
-      DESTINATION "${CMAKEDIR}" CONFIGURATIONS Release)
-  endif ()
 endif ()
 
 # Support for pkgconfig/geographiclib.pc

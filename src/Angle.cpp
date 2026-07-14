@@ -17,7 +17,6 @@
 
 #include <GeographicLib/Angle.hpp>
 #include <GeographicLib/DMS.hpp>
-#include <iostream>
 
 namespace GeographicLib {
 

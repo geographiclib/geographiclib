@@ -37,10 +37,11 @@ namespace GeographicLib {
    * problem given by GeodesicExact.  For more details see \ref triaxial
    * and
    * - C. F. F. Karney,<br>
-   *   <a href="https://arxiv.org/abs/2511.01621">
+   *   <a href="https://doi.org/10.1007/s00190-026-02030-3">
    *   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
-   *   Technical Report, SRI International, Nov. 2025.<br>
-   *   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+   *   J. Geodesy 100(2), 17:1--23 (2026).<br>
+   *   DOI: <a href="https://doi.org/10.1007/s00190-026-02030-3">
+   *   10.1007/s00190-026-02030-3</a>
    *
    * Data for testing the geodesic routines is available at
    * <a href="https://doi.org/10.5281/zenodo.12510796"> Test set of geodesics

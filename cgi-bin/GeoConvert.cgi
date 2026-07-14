@@ -204,7 +204,7 @@ cat <<EOF
       <b>Notes:</b>
       <ul>
         <li>
-          The letter in following the zone number in the UTM position is
+          The letter following the zone number in the UTM position is
           a hemisphere designator (n or s) and <em>not</em> the MGRS
           latitude band letter.  "north" or "south" can also be used,
           e.g., 25north.

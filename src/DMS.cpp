@@ -2,18 +2,13 @@
  * \file DMS.cpp
  * \brief Implementation for GeographicLib::DMS class
  *
- * Copyright (c) Charles Karney (2008-2022) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2008-2026) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
 #include <GeographicLib/DMS.hpp>
 #include <GeographicLib/Utility.hpp>
-
-#if defined(_MSC_VER)
-// Squelch warnings about unrepresentable characters
-#  pragma warning (disable: 4819)
-#endif
 
 namespace GeographicLib {
 
@@ -40,65 +35,63 @@ namespace GeographicLib {
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     // Here's a table of the allowed characters
 
-    // S unicode   dec  UTF-8      description
+    // unicode   dec  UTF-8      description
 
     // DEGREE
-    // d U+0064    100  64         d
-    // D U+0044     68  44         D
-    // ° U+00b0    176  c2 b0      degree symbol
-    // º U+00ba    186  c2 ba      alt symbol
-    // ⁰ U+2070   8304  e2 81 b0   sup zero
-    // ˚ U+02da    730  cb 9a      ring above
-    // ∘ U+2218   8728  e2 88 98   compose function
-    // * U+002a     42  2a         GRiD symbol for degrees
+    // U+0064    100  64         d
+    // U+0044     68  44         D
+    // U+00b0    176  c2 b0      degree symbol
+    // U+00ba    186  c2 ba      alt symbol
+    // U+2070   8304  e2 81 b0   sup zero
+    // U+02da    730  cb 9a      ring above
+    // U+2218   8728  e2 88 98   compose function
+    // U+002a     42  2a         *, GRiD symbol for degrees
 
     // MINUTES
-    // ' U+0027     39  27         apostrophe
-    // ` U+0060     96  60         grave accent
-    // ′ U+2032   8242  e2 80 b2   prime
-    // ‵ U+2035   8245  e2 80 b5   back prime
-    // ´ U+00b4    180  c2 b4      acute accent
-    // ‘ U+2018   8216  e2 80 98   left single quote (also ext ASCII 0x91)
-    // ’ U+2019   8217  e2 80 99   right single quote (also ext ASCII 0x92)
-    // ‛ U+201b   8219  e2 80 9b   reversed-9 single quote
-    // ʹ U+02b9    697  ca b9      modifier letter prime
-    // ˊ U+02ca    714  cb 8a      modifier letter acute accent
-    // ˋ U+02cb    715  cb 8b      modifier letter grave accent
+    // U+0027     39  27         ', apostrophe
+    // U+0060     96  60         `, grave accent
+    // U+2032   8242  e2 80 b2   prime
+    // U+2035   8245  e2 80 b5   back prime
+    // U+00b4    180  c2 b4      acute accent
+    // U+2018   8216  e2 80 98   left single quote (also ext ASCII 0x91)
+    // U+2019   8217  e2 80 99   right single quote (also ext ASCII 0x92)
+    // U+201b   8219  e2 80 9b   reversed-9 single quote
+    // U+02b9    697  ca b9      modifier letter prime
+    // U+02ca    714  cb 8a      modifier letter acute accent
+    // U+02cb    715  cb 8b      modifier letter grave accent
 
     // SECONDS
-    // " U+0022     34  22         quotation mark
-    // ″ U+2033   8243  e2 80 b3   double prime
-    // ‶ U+2036   8246  e2 80 b6   reversed double prime
-    // ˝ U+02dd    733  cb 9d      double acute accent
-    // “ U+201c   8220  e2 80 9c   left double quote (also ext ASCII 0x93)
-    // ” U+201d   8221  e2 80 9d   right double quote (also ext ASCII 0x94)
-    // ‟ U+201f   8223  e2 80 9f   reversed-9 double quote
-    // ʺ U+02ba    698  ca ba      modifier letter double prime
+    // U+0022     34  22         ", quotation mark
+    // U+2033   8243  e2 80 b3   double prime
+    // U+2036   8246  e2 80 b6   reversed double prime
+    // U+02dd    733  cb 9d      double acute accent
+    // U+201c   8220  e2 80 9c   left double quote (also ext ASCII 0x93)
+    // U+201d   8221  e2 80 9d   right double quote (also ext ASCII 0x94)
+    // U+201f   8223  e2 80 9f   reversed-9 double quote
+    // U+02ba    698  ca ba      modifier letter double prime
 
     // PLUS
-    // + U+002b     43  2b         plus sign
-    // ➕ U+2795  10133  e2 9e 95   heavy plus
-    //   U+2064   8292  e2 81 a4   invisible plus |⁤|
+    // U+002b     43  2b         +, plus sign
+    // U+2795  10133  e2 9e 95   heavy plus
+    // U+2064   8292  e2 81 a4   invisible plus
 
     // MINUS
-    // - U+002d     45  2d         hyphen
-    // ‐ U+2010   8208  e2 80 90   dash
-    // ‑ U+2011   8209  e2 80 91   non-breaking hyphen
-    // – U+2013   8211  e2 80 93   en dash (also ext ASCII 0x96)
-    // — U+2014   8212  e2 80 94   em dash (also ext ASCII 0x97)
-    // − U+2212   8722  e2 88 92   minus sign
-    // ➖ U+2796  10134  e2 9e 96   heavy minus
+    // U+002d     45  2d         -, hyphen
+    // U+2010   8208  e2 80 90   dash
+    // U+2011   8209  e2 80 91   non-breaking hyphen
+    // U+2013   8211  e2 80 93   en dash (also ext ASCII 0x96)
+    // U+2014   8212  e2 80 94   em dash (also ext ASCII 0x97)
+    // U+2212   8722  e2 88 92   minus sign
+    // U+2796  10134  e2 9e 96   heavy minus
 
     // IGNORED
-    //   U+00a0    160  c2 a0      non-breaking space
-    //   U+2007   8199  e2 80 87   figure space | |
-    //   U+2009   8201  e2 80 89   thin space   | |
-    //   U+200a   8202  e2 80 8a   hair space   | |
-    //   U+200b   8203  e2 80 8b   invisible space |​|
-    //   U+202f   8239  e2 80 af   narrow space | |
-    //   U+2063   8291  e2 81 a3   invisible separator |⁣|
-    // « U+00ab    171  c2 ab      left guillemot (for cgi-bin)
-    // » U+00bb    187  c2 bb      right guillemot (for cgi-bin)
+    // U+00a0    160  c2 a0      non-breaking space
+    // U+2007   8199  e2 80 87   figure space
+    // U+2009   8201  e2 80 89   thin space
+    // U+200a   8202  e2 80 8a   hair space
+    // U+200b   8203  e2 80 8b   invisible space
+    // U+202f   8239  e2 80 af   narrow space
+    // U+2063   8291  e2 81 a3   invisible separator
 
     string dmsa = dms;
     replace(dmsa, "\xc2\xb0",     'd' ); // U+00b0 degree symbol
@@ -148,22 +141,12 @@ namespace GeographicLib {
     replace(dmsa, "*",            'd' ); // GRiD symbol for degree
     replace(dmsa, "`",            '\''); // grave accent
     replace(dmsa, "\xb4",         '\''); // 0xb4 bare acute accent
-    // Don't implement these alternatives; they are only relevant for cgi-bin
-    // replace(dmsa, "\x91",      '\''); // 0x91 ext ASCII left single quote
-    // replace(dmsa, "\x92",      '\''); // 0x92 ext ASCII right single quote
-    // replace(dmsa, "\x93",      '"' ); // 0x93 ext ASCII left double quote
-    // replace(dmsa, "\x94",      '"' ); // 0x94 ext ASCII right double quote
-    // replace(dmsa, "\x96",      '-' ); // 0x96 ext ASCII en dash
-    // replace(dmsa, "\x97",      '-' ); // 0x97 ext ASCII em dash
     replace(dmsa, "\xa0",         '\0'); // 0xa0 bare non-breaking space
     replace(dmsa, "''",           '"' ); // '' -> "
+    dmsa = Utility::trim(dmsa);
     string::size_type
       beg = 0,
       end = unsigned(dmsa.size());
-    while (beg < end && isspace(dmsa[beg]))
-      ++beg;
-    while (beg < end && isspace(dmsa[end - 1]))
-      --end;
     // The trimmed string in [beg, end)
     real v = -0.0;              // So "-0" returns -0.0
     int i = 0;
@@ -184,10 +167,12 @@ namespace GeographicLib {
       if (ind1 == NONE)
         ind1 = ind2;
       else if (!(ind2 == NONE || ind1 == ind2))
+        // Example 3N+3E
         throw GeographicErr("Incompatible hemisphere specifier in " +
                             dmsa.substr(beg, pb - beg));
     }
     if (i == 0)
+      // Example ""
       throw GeographicErr("Empty or incomplete DMS string " +
                           dmsa.substr(beg, end - beg));
     ind = ind1;
@@ -213,10 +198,12 @@ namespace GeographicLib {
         if (k >= 0) {
           if (ind1 != NONE) {
             if (toupper(dmsa[beg - 1]) == toupper(dmsa[end - 1]))
+              // Example N3N
               errormsg = "Repeated hemisphere indicators "
                 + Utility::str(dmsa[beg - 1])
                 + " in " + dmsa.substr(beg - 1, end - beg + 1);
             else
+              // Example N3E
               errormsg = "Contradictory hemisphere indicators "
                 + Utility::str(dmsa[beg - 1]) + " and "
                 + Utility::str(dmsa[end - 1]) + " in "
@@ -235,7 +222,8 @@ namespace GeographicLib {
         }
       }
       if (end == beg) {
-        errormsg = "Empty or incomplete DMS string " + dmsa;
+        // Example +
+        errormsg = "Empty or incomplete DMS substring " + dmsa;
         break;
       }
       real ipieces[maxcomponents] = {0, 0, 0};
@@ -258,6 +246,7 @@ namespace GeographicLib {
           }
         } else if (x == '.') {
           if (pointseen) {
+            // Example 3.0.
             errormsg = "Multiple decimal points in "
               + dmsa.substr(beg, end - beg);
             break;
@@ -267,6 +256,7 @@ namespace GeographicLib {
         } else if ((k = Utility::lookup(dmsindicators_, x)) >= 0) {
           if (k >= maxcomponents) {
             if (p == end) {
+              // Example 3:0:
               errormsg = "Illegal for : to appear at the end of " +
                 dmsa.substr(beg, end - beg);
               break;
@@ -274,16 +264,19 @@ namespace GeographicLib {
             k = npiece;
           }
           if (unsigned(k) == npiece - 1) {
+            // Example 3d0d
             errormsg = "Repeated " + string(components_[k]) +
               " component in " + dmsa.substr(beg, end - beg);
             break;
           } else if (unsigned(k) < npiece) {
+            // Example 3'0d
             errormsg = string(components_[k]) + " component follows "
               + string(components_[npiece - 1]) + " component in "
               + dmsa.substr(beg, end - beg);
             break;
           }
           if (ncurrent == 0) {
+            // Example 3::0
             errormsg = "Missing numbers in " + string(components_[k]) +
               " component of " + dmsa.substr(beg, end - beg);
             break;
@@ -299,6 +292,7 @@ namespace GeographicLib {
           if (p < end) {
             npiece = k + 1;
             if (npiece >= maxcomponents) {
+              // Example 3:0:3:2
               errormsg = "More than 3 DMS components in "
                 + dmsa.substr(beg, end - beg);
               break;
@@ -307,10 +301,12 @@ namespace GeographicLib {
             ncurrent = digcount = intcount = 0;
           }
         } else if (Utility::lookup(signs_, x) >= 0) {
+          // CAN'T HAPPEN?
           errormsg = "Internal sign in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
         } else {
+          // Example 3x
           errormsg = "Illegal character " + Utility::str(x) + " in DMS string "
             + dmsa.substr(beg, end - beg);
           break;
@@ -319,12 +315,8 @@ namespace GeographicLib {
       if (!errormsg.empty())
         break;
       if (Utility::lookup(dmsindicators_, dmsa[p - 1]) < 0) {
-        if (npiece >= maxcomponents) {
-          errormsg = "Extra text following seconds in DMS string "
-            + dmsa.substr(beg, end - beg);
-          break;
-        }
         if (ncurrent == 0) {
+          // Example 30:.
           errormsg = "Missing numbers in trailing component of "
             + dmsa.substr(beg, end - beg);
           break;
@@ -339,17 +331,20 @@ namespace GeographicLib {
         fpieces[npiece] = icurrent + fcurrent;
       }
       if (pointseen && digcount == 0) {
+        // Example 3.0:3
         errormsg = "Decimal point in non-terminal component of "
           + dmsa.substr(beg, end - beg);
         break;
       }
       // Note that we accept 59.999999... even though it rounds to 60.
       if (ipieces[1] >= Math::dm || fpieces[1] > Math::dm ) {
+        // Example 3:60
         errormsg = "Minutes " + Utility::str(fpieces[1])
           + " not in range [0, " + to_string(Math::dm) + ")";
         break;
       }
       if (ipieces[2] >= Math::ms || fpieces[2] > Math::ms) {
+        // Example 3:3:60
         errormsg = "Seconds " + Utility::str(fpieces[2])
           + " not in range [0, " + to_string(Math::ms) + ")";
         break;

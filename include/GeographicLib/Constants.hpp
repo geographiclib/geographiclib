@@ -39,12 +39,12 @@
 // For reference, here is a table of Visual Studio and _MSC_VER
 // correspondences:
 //
-// _MSC_VER  Visual Studio
-//   1900      vc14  (2015) First version of VS to include enough C++11 support
-//   191[0-6]  vc15  (2017) First version of VS to include enough C++17 support
-//   192[0-9]  vc16  (2019)
-//   1930-1944 vc17  (2022)
-//             vc18  (2026)
+// _MSC_VER   Visual Studio Visual C++
+//   1900      vc14  (2015)   14.0     Supports C++11
+//   191[0-6]  vc15  (2017)   14.1     Supports C++17
+//   192[0-9]  vc16  (2019)   14.2
+//   1930-1944 vc17  (2022)   14.3
+//   1950      vc18  (2026)   14.4
 
 #if defined(_MSC_VER) && defined(GEOGRAPHICLIB_SHARED_LIB) && \
   GEOGRAPHICLIB_SHARED_LIB

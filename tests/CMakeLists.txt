@@ -1,15 +1,16 @@
 # Compile test programs
-set (TESTPROGRAMS geodtest signtest polygontest intersecttest)
+set (TESTPROGRAMS geodtest signtest polygontest intersecttest elliptictest)
 
-add_custom_target (testprograms)
-add_dependencies (testprograms tools)
+add_custom_target (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET})
+add_dependencies (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET}
+  ${GEOGRAPHICLIB_TOOLS_TARGET})
 
 if (GEOGRAPHICLIB_PRECISION GREATER 1)
 
   foreach (TESTPROGRAM ${TESTPROGRAMS})
 
     add_executable (${TESTPROGRAM} EXCLUDE_FROM_ALL ${TESTPROGRAM}.cpp)
-    add_dependencies (testprograms ${TESTPROGRAM})
+    add_dependencies (${GEOGRAPHICLIB_TESTPROGRAMS_TARGET} ${TESTPROGRAM})
     target_link_libraries (${TESTPROGRAM} ${PROJECT_LIBRARIES}
       ${HIGHPREC_LIBRARIES})
 
@@ -18,11 +19,11 @@ if (GEOGRAPHICLIB_PRECISION GREATER 1)
   endforeach ()
 
   # Put all the tests into a folder in the IDE
-  set_property (TARGET testprograms ${TESTPROGRAMS} PROPERTY FOLDER tests)
+  set_property (
+    TARGET ${GEOGRAPHICLIB_TESTPROGRAMS_TARGET} ${TESTPROGRAMS}
+    PROPERTY FOLDER tests)
 
 endif ()
-
-# add_custom_target (test DEPENDS tools testprograms tools)
 
 # Here are the tests for GeographicLib
 if (DEFINED ENV{GEOGRAPHICLIB_DATA})
@@ -89,18 +90,16 @@ add_test (NAME GeoConvert12 COMMAND GeoConvert --input-string "5d60. 10")
 add_test (NAME GeoConvert13 COMMAND GeoConvert --input-string "5d60.0 10")
 
 # Check DMS::Encode does round ties to even.  Fixed 2015-06-11.
-if (NOT WIN32)
-  # DMS::Encode now uses standard library to format the number and
-  # sometimes this doesn't get the round to even rule right.
-  add_test (NAME GeoConvert14 COMMAND GeoConvert
-    -: -p -4 --input-string "5.25 5.75")
-  set_tests_properties (GeoConvert14
-    PROPERTIES PASS_REGULAR_EXPRESSION "05.2N 005.8E")
-  add_test (NAME GeoConvert15 COMMAND GeoConvert
-    -: -p -1 --input-string "5.03125 5.09375")
-  set_tests_properties (GeoConvert15
-    PROPERTIES PASS_REGULAR_EXPRESSION "05:01:52N 005:05:38E")
-endif ()
+# DMS::Encode now uses standard library to format the number and
+# sometimes this doesn't get the round to even rule right.
+add_test (NAME GeoConvert14 COMMAND GeoConvert
+  -: -p -4 --input-string "5.25 5.75")
+set_tests_properties (GeoConvert14
+  PROPERTIES PASS_REGULAR_EXPRESSION "05.2N 005.8E")
+add_test (NAME GeoConvert15 COMMAND GeoConvert
+  -: -p -1 --input-string "5.03125 5.09375")
+set_tests_properties (GeoConvert15
+  PROPERTIES PASS_REGULAR_EXPRESSION "05:01:52N 005:05:38E")
 
 # Check MGRS::Forward improved rounding fix, 2015-07-22
 add_test (NAME GeoConvert16 COMMAND GeoConvert
@@ -132,18 +131,16 @@ set_tests_properties (GeoConvert21
   PROPERTIES PASS_REGULAR_EXPRESSION "^BKH41[\r\n]")
 
 # Check DMS::Encode round ties to even for whole degrees.  Fixed 2022-05-13.
-if (NOT WIN32)
-  # DMS::Encode now uses standard library to format the number and
-  # sometimes this doesn't get the round to even rule right.
-  add_test (NAME GeoConvert22 COMMAND GeoConvert
-    -p -5 --input-string "5.5 6.5")
-  set_tests_properties (GeoConvert22
-    PROPERTIES PASS_REGULAR_EXPRESSION "6 6")
-  add_test (NAME GeoConvert23 COMMAND GeoConvert
-    -p -5 -d --input-string "5.5 6.5")
-  set_tests_properties (GeoConvert23
-    PROPERTIES PASS_REGULAR_EXPRESSION "06N 006E")
-endif ()
+# DMS::Encode now uses standard library to format the number and
+# sometimes this doesn't get the round to even rule right.
+add_test (NAME GeoConvert22 COMMAND GeoConvert
+  -p -5 --input-string "5.5 6.5")
+set_tests_properties (GeoConvert22
+  PROPERTIES PASS_REGULAR_EXPRESSION "6 6")
+add_test (NAME GeoConvert23 COMMAND GeoConvert
+  -p -5 -d --input-string "5.5 6.5")
+set_tests_properties (GeoConvert23
+  PROPERTIES PASS_REGULAR_EXPRESSION "06N 006E")
 
 add_test (NAME GeodSolve0 COMMAND GeodSolve
   -i -p 0 --input-string "40.6 -73.8 49d01'N 2d33'E")
@@ -529,9 +526,12 @@ set_tests_properties (GeodSolve88 GeodSolve89 PROPERTIES PASS_REGULAR_EXPRESSION
   "0\\.0* nan 90\\.0*")
 set_tests_properties (GeodSolve90 PROPERTIES WILL_FAIL ON)
 
-# Check fix for inaccurate hypot with python 3.[89].  Problem reported
+# Check fix inaccurate hypot with python 3.[89].  Problem reported
 # by agdhruv https://github.com/geopy/geopy/issues/466 ; see
 # https://bugs.python.org/issue43088
+# Update 2025-12-02: Visual Studio win32 exhibits the same bug, see
+# https://developercommunity.visualstudio.com/t/11009459
+# Bandaid applied in Math::norm.
 add_test (NAME GeodSolve92 COMMAND GeodSolve
   -i --input-string "37.757540000000006 -122.47018 37.75754 -122.470177")
 add_test (NAME GeodSolve93 COMMAND GeodSolve
@@ -812,6 +812,16 @@ add_test (NAME TransverseMercatorProj7 COMMAND TransverseMercatorProj
 set_tests_properties (TransverseMercatorProj6 TransverseMercatorProj7
   PROPERTIES PASS_REGULAR_EXPRESSION
   "19\\.80370996793 30\\.24919702282 11\\.214378172893 1\\.137025775759")
+# Test fix to bug in setting e2m for prolate ellipsoids in Math::tauf
+# Found 2026-04-26 fixed 2026-04-27.  This also tests f <= 0 fallback
+# for exact in TransverseMercator constructor to series.
+add_test (NAME TransverseMercatorProj8 COMMAND TransverseMercatorProj
+  -e 6.4e6 -1/25 --input-string "0 300e3" -r -p 0)
+add_test (NAME TransverseMercatorProj9 COMMAND TransverseMercatorProj
+  -e 6.4e6 -1/25 --input-string "0 300e3" -r -p 0 -s)
+set_tests_properties (TransverseMercatorProj8 TransverseMercatorProj9
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  "2\\.48430 0\\.00000 0\\.000000 0\\.999600")
 
 # Paths between equator and pole
 add_test (NAME RhumbSolve0 COMMAND RhumbSolve
@@ -972,3 +982,23 @@ add_test (NAME Cart3Convert1 COMMAND Cart3Convert
 set_tests_properties (Cart3Convert1
   PROPERTIES PASS_REGULAR_EXPRESSION
   "^61\\.07208 69\\.44395 -0\\.7359801[\r\n]")
+# Cart3Convert didn't allow latitude = nan for geodetic coordinates;
+# bug found on 2025-11-14
+add_test (NAME Cart3Convert2 COMMAND Cart3Convert -G --input-string "nan 0")
+set_tests_properties (Cart3Convert2
+  PROPERTIES PASS_REGULAR_EXPRESSION "^nan nan nan[\r\n]")
+
+# Conformal3Proj fix to improve accuracy near poles for oblate/prolate
+# ellipsoids
+add_test (NAME Conformal3Proj1 COMMAND Conformal3Proj
+  -t 1 1 0.5 -r -p 7 --input-string "0 28")
+set_tests_properties (Conformal3Proj1
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  # Old result: 89.999999999924 90.000000000000 755314164294.58...
+  "^89\\.999999999949 90\\.000000000000 1131114599029\\.7[34]")
+add_test (NAME Conformal3Proj2 COMMAND Conformal3Proj
+  -t 2 1 1 -r -p 7 --input-string "-30 0")
+set_tests_properties (Conformal3Proj2
+  PROPERTIES PASS_REGULAR_EXPRESSION
+  # Old result: 0.000000000000 0.000000000074 776933063319.40...
+  "^0\\.000000000000 0\\.000000000033 1742253725806\\.90")

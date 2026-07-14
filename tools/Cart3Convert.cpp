@@ -30,7 +30,7 @@
 //   -P parametric
 //   -C geocentric
 //   -3 include height (only for -E and -G)
-//   -D include direction (only for -E without -3)
+//   -D include direction
 
 // Can't specify -3 and -D together
 // Height for -G has its usual definition
@@ -244,7 +244,7 @@ int main(int argc, const char* const argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    using std::round, std::log10, std::ceil, std::signbit;
+    using std::round, std::log10, std::signbit, std::isnan;
     int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
       angprec = prec + 5, vecprec = prec + 7;
     if (randompts) {
@@ -318,7 +318,8 @@ int main(int argc, const char* const argv[]) {
           if (!(str >> sbet >> somg))
             throw GeographicErr("Incomplete input: " + s);
           ang::DecodeLatLon(sbet, somg, bet, omg, longfirst);
-          if (mode != coord::ELLIPSOIDAL && (bet.n() != 0 || signbit(bet.c())))
+          if (!( mode == coord::ELLIPSOIDAL || isnan(bet.n()) ||
+                 (bet.n() == 0 && !signbit(bet.c())) ))
             throw GeographicErr("Latitude outside range [-90,90]: " + s);
           if (threed) {
             if (!(str >> sh))

@@ -265,11 +265,12 @@ int main(int argc, const char* const argv[]) {
     }
     std::ostream* output = !ofile.empty() ? &outfile : &std::cout;
 
-    using std::round, std::log10;
-    int disprec = int(round(log10(6400000/b)));
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
+    using std::round, std::log10;
+    int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
+      angprec = prec + 5, scalprec = prec + 7;
     std::string s, eol, sbet1, somg1, salp1, sbet2, somg2, salp2, ss12, strc;
     std::istringstream str;
     int retval = 0;
@@ -304,25 +305,25 @@ int main(int argc, const char* const argv[]) {
           l.Reset(bet1, omg1, alp1);
         }
         if (!buffered) {
-          auto errs = l.Position(s12, bet2, omg2, alp2, m12, M12, M21);
+          auto [errd, errv] = l.Position(s12, bet2, omg2, alp2, m12, M12, M21);
           if (full)
-            *output << ang::LatLonString(bet1, omg1, prec, dms, dmssep,
+            *output << ang::LatLonString(bet1, omg1, angprec, dms, dmssep,
                                          longfirst) << " "
-                    << ang::AzimuthString(alp1, prec, dms, dmssep) << " ";
-          *output << ang::LatLonString(bet2, omg2, prec, dms, dmssep,
+                    << ang::AzimuthString(alp1, angprec, dms, dmssep) << " ";
+          *output << ang::LatLonString(bet2, omg2, angprec, dms, dmssep,
                                        longfirst) << " "
-                  << ang::AzimuthString(alp2, prec, dms, dmssep);
+                  << ang::AzimuthString(alp2, angprec, dms, dmssep);
           if (full)
-            *output << " " << Utility::str(s12, prec + disprec);
+            *output << " " << Utility::str(s12, disprec);
           if (extended)
-            *output << " " << Utility::str(m12, prec + disprec)
-                    << " " << Utility::str(M12, prec+7)
-                    << " " << Utility::str(M21, prec+7);
+            *output << " " << Utility::str(m12, disprec)
+                    << " " << Utility::str(M12, scalprec)
+                    << " " << Utility::str(M21, scalprec);
           if (steps)
             *output << " " << l.NSteps() << " " << l.IntSteps();
           if (errors)
-            *output << " " << ErrorString(errs.first, 2)
-                    << " " << ErrorString(errs.second, 2);
+            *output << " " << ErrorString(errd, 2)
+                    << " " << ErrorString(errv, 2);
           *output << eol;
         }
       }

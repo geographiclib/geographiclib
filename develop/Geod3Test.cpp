@@ -164,7 +164,8 @@ void errreport(const Geodesic3& tg,
       GeodesicLine3 l2i(tg, bet2x, omg2x, alp2a);
 #if DIAG
       if (0) {
-        int nfbet, nfomg, ngbet, ngomg;
+        // Visual Studio wants these initialized
+        int nfbet = 0, nfomg = 0, ngbet = 0, ngomg = 0;
         l1i.ncoeffs(nfbet, nfomg, ngbet, ngomg);
         cout <<  "LICOEFFS "
              << nfbet << " " << nfomg << " " << ngbet << " " << ngomg << "\n";
@@ -189,7 +190,8 @@ void errreport(const Geodesic3& tg,
       errr2i = vecdiff(r2, r2a); errv2i = vecdiff(v2, v2a);
     }
   }
-  int nfbet, nfomg, ngbet, ngomg, countn = 0, countb = 0;
+  // Visual Studio wants these initialized
+  int nfbet = 0, nfomg = 0, ngbet = 0, ngomg = 0, countn = 0, countb = 0;
   if (dirp) {
     // direct checks for test sets using alp1x, alp2x, s12
     tg.t().elliptocart2(bet1x, omg1x, alp1x, r1, v1);
@@ -494,8 +496,6 @@ int main(int argc, const char* const argv[]) {
       Geodesic3(b, e2, k2, kp2);
     // Triaxial tg(1, 1, 1/real(2));
     // Triaxial tg(2, 1, 1);
-    real bet1, omg1, bet2, omg2;
-    real alp1, alp2, s12, m12, M12, M21;
 #if HAVE_BOOST
     TriaxialGeodesicODE l(tg.t(), extended, dense, normp, eps);
 #endif
@@ -506,6 +506,7 @@ int main(int argc, const char* const argv[]) {
 #endif
         return 0;
       }
+      real bet1, omg1, alp1, bet2, omg2, alp2, s12, m12, M12, M21;
       while (cin >> bet1 >> omg1 >> alp1 >> bet2 >> omg2 >> alp2 >> s12
              >> m12 >> M12 >> M21) {
         if (odetest) {

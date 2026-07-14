@@ -34,7 +34,7 @@ endif ()
 set (DEVELPROGRAMS
   ProjTest TMTest GeodTest ConicTest NaNTester HarmTest EllipticTest intersect
   ClosestApproach M12zero GeodShort NormalTest GeoidHeightTable promote
-  IntersectTest GeodConv JacobiTest Geod3Test)
+  IntersectTest GeodConv JacobiTest Geod3Test TM3)
 
 if (Boost_FOUND)
   include_directories ("${Boost_INCLUDE_DIRS}")
@@ -54,13 +54,15 @@ if (Boost_FOUND)
     set (CMAKE_CXX_FLAGS
       "${CMAKE_CXX_FLAGS} -Wno-unused-parameter -Wno-unused-variable -Wno-unused-local-typedef")
   endif ()
+else ()
+  add_definitions(-DHAVE_BOOST=0)
 endif ()
 
 # Loop over all the tools, specifying the source and library.
 add_custom_target (develprograms)
 foreach (DEVELPROGRAM ${DEVELPROGRAMS})
   set (DEVELSOURCE ${DEVELPROGRAM}.cpp)
-  if (DEVELPROGRAM STREQUAL "Geod3Test")
+  if (DEVELPROGRAM STREQUAL "Geod3Test" AND Boost_FOUND)
     set (DEVELSOURCE ${DEVELSOURCE}
       ../experimental/TriaxialGeodesicODE.cpp
       ../experimental/TriaxialGeodesicODE.hpp)

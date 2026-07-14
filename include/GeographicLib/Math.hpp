@@ -36,14 +36,13 @@
 #endif
 
 #include <cmath>
+#include <complex>
 #include <algorithm>
 #include <limits>
 
 #if GEOGRAPHICLIB_PRECISION == 4
-#  include <memory>
 #  include <boost/version.hpp>
 #  include <boost/multiprecision/float128.hpp>
-#  include <boost/math/special_functions.hpp>
 #elif GEOGRAPHICLIB_PRECISION >= 5
 #  if GEOGRAPHICLIB_PRECISION > 5
 #    define MPREAL_FIXED_PRECISION GEOGRAPHICLIB_PRECISION
@@ -114,6 +113,11 @@ namespace GeographicLib {
 #else
     typedef double real;
 #endif
+
+    /**
+     * The complex type based on real.
+     **********************************************************************/
+    typedef std::complex<real> cmplx;
 
     /**
      * The constants defining the standard (Babylonian) meanings of degrees,
@@ -217,19 +221,20 @@ namespace GeographicLib {
      * @param[in,out] y on output set to <i>y</i>/hypot(<i>x</i>, <i>y</i>).
      **********************************************************************/
     template<typename T> static void norm(T& x, T& y) {
-#if defined(_MSC_VER) && _MSC_VER < 1950 && defined(_M_IX86)
+#if defined(_MSC_VER) && defined(_M_IX86)
       // hypot for Visual Studio (A=win32) fails monotonicity, e.g., with
       //   x  = 0.6102683302836215
       //   y1 = 0.7906090004346522
       //   y2 = y1 + 1e-16
       // the test
       //   hypot(x, y2) >= hypot(x, y1)
-      // fails.  Reported 2021-03-14:
+      // fails.  Test cases are GeodSolve9[23].  Reported 2021-03-14:
       //   https://developercommunity.visualstudio.com/t/1369259
+      // MS incorrectly claimed to have fixed this.  Reported again 2025-12-02:
+      //   https://developercommunity.visualstudio.com/t/11009459
       // See also:
       //   https://bugs.python.org/issue43088
-      // Bug still present in my version of vc17 (2022) updated on 2025-09-01.
-      // Let's hope it's fixed in vc18.
+      // Bug still present in version of vc18 (2026).
       using std::sqrt; T h = sqrt(x * x + y * y);
 #else
       using std::hypot; T h = hypot(x, y);

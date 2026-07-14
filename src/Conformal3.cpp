@@ -2,13 +2,11 @@
  * \file Conformal3.cpp
  * \brief Implementation for GeographicLib::Triaxial::Conformal3 class
  *
- * Copyright (c) Charles Karney (2014-2025) <karney@alum.mit.edu> and licensed
+ * Copyright (c) Charles Karney (2014-2026) <karney@alum.mit.edu> and licensed
  * under the MIT/X11 License.  For more information, see
  * https://geographiclib.sourceforge.io/
  **********************************************************************/
 
-#include <iostream>
-#include <iomanip>
 #include <GeographicLib/Triaxial/Conformal3.hpp>
 #include <GeographicLib/Trigfun.hpp>
 
@@ -50,13 +48,34 @@ namespace GeographicLib {
     return p;
   }
   Angle Conformal3::Piinv(const EllipticFunction& ell, real x) {
+    // exp(big) is close to max()
+    static const real big = log(numeric_limits<real>::max()) - 1;
+    // Use Math::tauf for ell.k2() == 1?
+    static const bool usetauf = true;
     real y, n;
     if (ell.kp2() == 0) {
-      // ell.Pi() == inf
-      y = x; n = 0;
-    } else {
+      // for k^2 = 1, ell.Pi() == inf
+      if constexpr (usetauf) {
+        // See tests Conformal3Proj[12] for the improvement this gives.
+        //
+        // y = Pi(phi; alpha2,1) = asinh(taup(tan(phi), alpha))/alphap2
+        // inverse of Pi = Piinv, inverse of taup is tau
+        // phi = Piinv(y; alpha2,1)
+        // tan(phi) = tau(sinh(alphap2 * y), alpha)
+        // This method preserves precision for x large, phi close to pi/2
+        real es = copysign(sqrt(fabs(ell.alpha2())), ell.alpha2()),
+          t = Math::tauf(sinh(ell.alphap2() * x), es);
+        return ang(t, 1);
+      } else {
+        // if we don't want to rely on Math::tau, we can use the general method
+        // for inverting Pi.
+        y = x; n = 0;
+      }
+    } else if (ell.k2() == 0 && ell.alpha2() == 0)
+      return ang::radians(x);
+    else {
       y = remainder(x, 2 * ell.Pi());
-      n = 2 * round((x - y) / (2 * ell.Pi()));
+      n = 2 * rint((x - y) / (2 * ell.Pi()));
     }
     // Now x = n * Pi() + y where y in [-Pi(), Pi()].  Pi() is the quarter
     // period for the elliptic integral which corresponds to pi/2 in angle
@@ -75,26 +94,30 @@ namespace GeographicLib {
       // For alpha2 > 0
       //    1 - alpha2 * Math::sq(sin(phi))
       //    alphap2 + alpha2 * Math::sq(sin(phi))
+      //
+      // To preserve relative precision in sin(phi) and cos(phi) we let phi =
+      // atan(exp(q)) and solved for q in [-inf, inf].
+      // d/dq Pi(atan(exp(q))) = tan(phi)*cos(phi)^2 * Pi'
       int countn = 0, countb = 0;
       auto Pif = [&ell]
-        (real phi) -> pair<real, real>
+        (real q) -> pair<real, real>
         {
-          real s = sin(phi), c = cos(phi),
-          f = ell.Pi(s, c, ell.Delta(s, c)),
-          fp = 1 / (sqrt(ell.kp2() + ell.k2() * c*c) *
-                    (ell.alpha2() >= 0 ?
-                     ell.alphap2() + ell.alpha2() * s*s :
-                     1 - ell.alpha2() * c*c));
-          return pair<real, real>(f, fp);
+          real t = exp(q), sc = hypot(real(1), t), s = t/sc, c = 1/sc,
+          d = ell.Delta(s, c),
+          f = ell.Pi(s, c, d),
+          fp = t*c*c / (d * (ell.alpha2() >= 0 ?
+                             ell.alphap2() + ell.alpha2() * s*s :
+                             1 - ell.alpha2() * c*c));
+          return {f, fp};
         };
       real z = Trigfun::root(Trigfun::PIINV,
-                             Pif, fabs(y), fabs(y) * Math::pi()/(2*ell.Pi()),
-                             0, Math::pi()/2,
+                             Pif, fabs(y), 0,
+                             -big, big,
                              1,1,1,
                              &countn, &countb);
       (void) countn; (void) countb;
       // cout << "CNT " << countn << " " << countb << "\n";
-      return ang::radians(copysign(z, y)) + ang::cardinal(n);
+      return ang(copysign(exp(z), y), 1) + ang::cardinal(n);
     }
   }
   Math::real Conformal3::F(const EllipticFunction& ell, ang phi) {
@@ -105,45 +128,9 @@ namespace GeographicLib {
     return p;
   }
   Angle Conformal3::Finv(const EllipticFunction& ell, real x) {
-    real y, n;
-    if (ell.kp2() == 0) {
-      // ell.K() == inf
-      y = x; n = 0;
-    } else {
-      y = remainder(x, 2 * ell.K());
-      n = 2 * round((x - y) / (2 * ell.K()));
-    }
-    // Now x = n * K() + y where y in [-K(), K()].  K() is the quarter
-    // period for the elliptic integral which corresponds to pi/2 in angle
-    // space.
-    if (y == 0)
-      return ang::cardinal( n == 0 ? y : n ); // Preserve the sign of +/-0
-    else if (fabs(y) == ell.K())                // inf == inf is true
-      return ang::cardinal(copysign(real(1), y) + n);
-    else {
-      // solve F(phi) = y for phi
-      // F'(phi) = 1/sqrt(1 - ell.k2() * Math::sq(sin(phi)))
-      // For k2 in [0,1]
-      //    1 - ell.k2() * Math::sq(sin(phi))
-      //    = ell.kp2() + ell.k2() * Math::sq(cos(phi))
-      int countn = 0, countb = 0;
-      auto Ff = [&ell]
-        (real phi) -> pair<real, real>
-        {
-          real s = sin(phi), c = cos(phi),
-          f = ell.F(s, c, ell.Delta(s, c)),
-          fp = 1 / sqrt(ell.kp2() + ell.k2() * c*c);
-          return pair<real, real>(f, fp);
-        };
-      real z = Trigfun::root(Trigfun::FINV,
-                             Ff, fabs(y), fabs(y) * Math::pi()/(2*ell.K()),
-                             0, Math::pi()/2,
-                             1,1,1,
-                             &countn, &countb);
-      (void) countn; (void) countb;
-      // cout << "CNT " << countn << " " << countb << "\n";
-      return ang::radians(copysign(z, y)) + ang::cardinal(n);
-    }
+    real sn, cn, dn, phi = ell.am(x, sn, cn, dn),
+      m = rint( (phi - atan2(sn, cn)) / (2 * Math::pi()) );
+    return ang(sn, cn, m, true);
   }
 
   Math::real Conformal3::x(Angle omg) const {
@@ -188,10 +175,6 @@ namespace GeographicLib {
     // b*K(kp2) = x
     // b*K(k2)  = y
     // x*K(k2) - y*K(kp2) = 0
-
-    static const real
-      N = (log(real(4)) - log(Math::pi())) / (Math::pi()/2 - log(real(4))),
-      B = exp(N * Math::pi()/2) - pow(real(4), N);
     real k2 = 1/real(2);
     bool swapxy = x < y;
     int countn = 0, countb = 0;
@@ -202,11 +185,8 @@ namespace GeographicLib {
       if (nx == ny) break;      // k2 = 1/2
       if (ny == 0) { k2 = 0; break; }
       // Find initial guess assume K(k2) = pi/2, so K(kp2) = nx/ny * pi/2.
-      // Invert using approximate k(K) given in
-      // https://arxiv.org/abs/2505.17159v4
+      // Invert using K(kp2) = 1/2*log(16/kp) A+S 17.3.26
       real KK = nx/ny * Math::pi()/2;
-      k2 = 16/pow(exp(N*KK) - B, 2/N);
-      // Alternatively using KK = 1/2*log(16/kp) A+S 17.3.26
       k2 = fmin(1/real(2), 16*exp(-2*KK)); // Make sure guess is sane
       static const real logk2min = 2*log(numeric_limits<real>::epsilon());
       // Solve for log(k2) to preserve relative accuracy for tiny k2.
@@ -220,7 +200,7 @@ namespace GeographicLib {
             real f = nx * elly.K() - ny * ellx.K(),
             fp = (nx * (elly.E() - kp2 * elly.K()) +
                   ny * (ellx.E() - k2  * ellx.K())) / (2 * k2 * kp2);
-            return pair<real, real>(f, k2*fp);
+            return {f, k2*fp};
           };
         logk2 = Trigfun::root(Trigfun::KINV, ksolve, 0, logk2,
                               logk2min, -log(real(2)),

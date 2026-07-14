@@ -31,10 +31,11 @@ namespace GeographicLib {
    * coordinates and various coordinates for a triaxial ellipsoid.  This is
    * covered in Appendices A and B of
    * - C. F. F. Karney,<br>
-   *   <a href="https://arxiv.org/abs/2511.01621">
+   *   <a href="https://doi.org/10.1007/s00190-026-02030-3">
    *   Jacobi's solution for geodesics on a triaxial ellipsoid</a>,<br>
-   *   Technical Report, SRI International, Nov. 2025.<br>
-   *   <a href="https://arxiv.org/abs/2511.01621">arxiv:2511.01621</a>
+   *   J. Geodesy 100(2), 17:1--23 (2026).<br>
+   *   DOI: <a href="https://doi.org/10.1007/s00190-026-02030-3">
+   *   10.1007/s00190-026-02030-3</a>
    *
    * Besides ellipsoidal coordinates defined in Ellipsoid3, the following
    * coordinates are supported:
@@ -114,7 +115,7 @@ namespace GeographicLib {
     using random_prec = Math::real;
 #endif
     using ang = Angle;
-    static constexpr int maxit_ = 20;
+    static constexpr int maxit_ = 30;
     static constexpr bool throw_ = true; // exception on convergence failure
     const Ellipsoid3 _t;
     const vec3 _axes, _axes2, _linecc2;

@@ -94,6 +94,7 @@ namespace GeographicLib {
   class GEOGRAPHICLIB_EXPORT TransverseMercator {
   private:
     typedef Math::real real;
+    typedef Math::cmplx cmplx;
     static const int maxpow_ = GEOGRAPHICLIB_TRANSVERSEMERCATOR_ORDER;
     static const int numit_ = 5;
     real _a, _f, _k0;

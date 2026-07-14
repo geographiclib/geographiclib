@@ -48,12 +48,12 @@ namespace GeographicLib {
       for (int i = 0; i < 2*_nN; ++i)
         data[2*_nN+i] = -data[i]; // [2*N, 4*N-1]
     }
-    vector<complex<real>> ctemp(2*_nN);
+    vector<cmplx> ctemp(2*_nN);
     _fft->transform_real(data, ctemp.data());
     if (centerp) {
       real d = -Math::pi()/(4*_nN);
       for (int i = 0, j = 1; i < _nN; ++i, j+=2)
-        ctemp[j] *= exp(complex<real>(0, j*d));
+        ctemp[j] *= polar(real(1), j*d);
     }
     for (int i = 0, j = 1; i < _nN; ++i, j+=2) {
       F[i] = -ctemp[j].imag() / (2*_nN);

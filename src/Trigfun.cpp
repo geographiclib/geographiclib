@@ -126,12 +126,12 @@ namespace GeographicLib {
     //    cout << "FFT size " << M/2 << "\n";
     fft_t fft(M/2, false);
     // Leave an extra slot
-    vector<complex<real>> cF(M/2 + 1);
+    vector<cmplx> cF(M/2 + 1);
     fft.transform_real(H.data(), cF.data());
     cF[M/2] = cF[0].imag(); cF[0] = cF[0].real();
     if (centerp) {
       for (int i = 1; i <= M/2; ++i)
-        cF[i] *= exp(complex<real>(0, i * (-Math::pi() / M)));
+        cF[i] *= polar(real(1), i * (-Math::pi() / M));
     }
     if (!sym) {
       H.resize(n+1);
@@ -336,7 +336,7 @@ namespace GeographicLib {
     if (dx == 0) return x0;
     auto ffp = [this, &fp]
       (real x) -> pair<real, real>
-      { return pair<real, real>(this->operator()(x), fp(x)); };
+      { return {this->operator()(x), fp(x)}; };
     return root(indicator,ffp, z, x0, x00 - dx, x00 + dx, _h, fabs(hr),
                 s > 0 ? 1 : -1, countn, countb, tol);
   }
@@ -361,17 +361,17 @@ namespace GeographicLib {
     real p = Math::pi()/2 * 0;
     if constexpr (debug_) {
       cout << "SCALE " << xscale << " " << zscale << "\n";
-      pair<real, real> vala = ffp(xa);
-      pair<real, real> val0 = ffp(x0);
-      pair<real, real> valb = ffp(xb);
+      auto [valav, valap] = ffp(xa);
+      auto [val0v, val0p] = ffp(x0);
+      auto [valbv, valbp] = ffp(xb);
       cout << "DAT " << s << " " << x0-xa << " " << xb-x0 << " " << z << "\n";
       cout << "DAT "
-           << xa << " " << vala.first - z << " " << vala.second << "\n";
+           << xa << " " << valav - z << " " << valap << "\n";
       cout << "DAT "
-           << x0 << " " << val0.first - z << " " << val0.second << "\n";
+           << x0 << " " << val0v - z << " " << val0p << "\n";
       cout << "DAT "
-           << xb << " " << valb.first - z << " " << valb.second << "\n";
-      if ((vala.first - z) * (valb.first - z) > 0)
+           << xb << " " << valbv - z << " " << valbp << "\n";
+      if ((valav - z) * (valbv - z) > 0)
         cout << "DATBAD\n";
     }
     for (; k < maxit_ ||
@@ -382,10 +382,9 @@ namespace GeographicLib {
       //   20 60 -90 180 127.4974 24.6254 2.4377
       // Need to figure out why.  (Probably fixed by now.)
       ++k;
-      pair<real, real> val = ffp(x);
-      real v = val.first - z,
-        vp = val.second,
-        dx = - v/vp;
+      auto [v, vp] = ffp(x);
+      v -= z;
+      real dx = - v/vp;
       if constexpr (debug_)
         cout << "XX " << k << " " << xa-p << " " << x-p << " " << xb-p << " "
              << dx << " " << x + dx-p << " " << v << " " << vp << endl;

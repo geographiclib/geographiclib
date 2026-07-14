@@ -217,13 +217,13 @@ namespace experimental {
       if (_extended) {
         m12 = copysign(real(0), s12); M12 = M21 = 1;
       }
-      return pair<real, real>(0, 0);
+      return {0, 0};
     } else if (!isfinite(s12)) {
       R2 = V2 = {Math::NaN(), Math::NaN(), Math::NaN()};
       if (_extended) {
         m12 = M12 = M21 = Math::NaN();
       }
-      return pair<real, real>(Math::NaN(), Math::NaN());
+      return {Math::NaN(), Math::NaN()};
     }
     if (_dir == 0) {
       _dir = signbit(s12) ? -1 : 1;
@@ -306,7 +306,7 @@ namespace experimental {
       errr = _b * Math::hypot3(t[0], t[1], t[2]);
       errv = Math::hypot3(t[3+0], t[3+1], t[3+2]);
     }
-    return pair<real, real>(errr, errv);
+    return {errr, errv};
   }
 
   pair<Math::real, Math::real>
@@ -431,15 +431,14 @@ namespace experimental {
 
   pair<Math::real, Math::real> TriaxialGeodesicODE::CurrentDistance() const {
     if (_dir == 0)
-      return pair<real, real>(0, 0);
+      return {0, 0};
 #if GEOGRAPHICLIB_BOOST_ODE_DENSE_OUT
     else if (_dense) {
-      return pair<real, real>(_dir * _dstep10.previous_time(),
-                              _dir * _dstep10.current_time());
+      return {_dir * _dstep10.previous_time(), _dir * _dstep10.current_time()};
     }
 #endif
     else
-      return pair<real, real>(_dir * _s, _dir * _s);
+      return {_dir * _s, _dir * _s};
   }
 
 } // namespace experimental

@@ -488,7 +488,9 @@ namespace GeographicLib {
     // check, e.g., on verifying quadrants in atan2.  In addition, this
     // enforces some symmetries in the results returned.
 
-    real sbet1, cbet1, sbet2, cbet2, s12x, m12x = Math::NaN();
+    real sbet1 = Math::NaN(), cbet1 = Math::NaN(),
+      sbet2 = Math::NaN(), cbet2 = Math::NaN(),
+      s12x = Math::NaN(), m12x = Math::NaN();
     // Initialize for the meridian.  No longitude calculation is done in this
     // case to let the parameter default to 0.
     EllipticFunction E(-_ep2);

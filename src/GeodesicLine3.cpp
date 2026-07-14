@@ -93,7 +93,7 @@ namespace GeographicLib {
       alp2a = ang(_fic.Ex * hypot(_f.kx() * _f.gm().nu, _f.kxp() * tht2a.c()),
                   _fic.phi0.c() * _f.kx() * _f.gm().nup * psi2.c());
     } else if (_f.gammax() == 0) {
-      pair<real, real> sig2n = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
+      auto [sigf, sigi] = remx(sig2, 2*_g.s0);  // reduce to [-s0, s0)
       real u2, v2;
       ang psi2;
       if (_f.kxp2() == 0) {
@@ -103,7 +103,7 @@ namespace GeographicLib {
         // meridr
         //  fpsi = 0
         //  gpsi = int(sqrt(1-eps*cos(psi)^2), psi)
-        solve2(_fic.delta, sig2n.first,
+        solve2(_fic.delta, sigf,
                fpsi(), ftht(), gpsi(), gtht(), u2, v2,
                countn, countb);
         phi2a = ang::radians(u2);
@@ -113,29 +113,29 @@ namespace GeographicLib {
         if (signbit(phi2a.c())) // Not triggered with doubles and quads
           phi2a = ang(copysign(real(1), phi2a.s()),
                       numeric_limits<real>::epsilon()/(1<<11), 0, true);
-        psi2 = phi2a + ang::cardinal(2 * sig2n.second);
-        int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
+        psi2 = phi2a + ang::cardinal(2 * sigi);
+        int parity = fmod(sigi, real(2)) != 0 ? -1 : 1;
         int Ny = _fic.Nx * parity;
         phi2a = phi2a.reflect(signbit(_fic.phi0.c() * Ny),
                               signbit(_fic.phi0.c())).rebase(_fic.phi0);
-        tht2a = ang::radians(- _fic.delta) + ang::cardinal(2 * sig2n.second);
+        tht2a = ang::radians(- _fic.delta) + ang::cardinal(2 * sigi);
         alp2a = ang(_fic.Ex * real(0), _fic.Nx * parity, 0, true);
       } else {
-        if (sig2n.first - _g.s0 >= -5 * numeric_limits<real>::epsilon()) {
-          sig2n.first = -_g.s0;
-          ++sig2n.second;
+        if (sigf - _g.s0 >= -5 * numeric_limits<real>::epsilon()) {
+          sigf = -_g.s0;
+          ++sigi;
         }
-        real deltax = bigclamp(_fic.delta + sig2n.second * _f.deltashift(), 1);
-        solve2u(deltax, sig2n.first, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
+        real deltax = bigclamp(_fic.delta + sigi * _f.deltashift(), 1);
+        solve2u(deltax, sigf, fpsi(), ftht(), gpsi(), gtht(), u2, v2,
                 countn, countb);
         // phi2 = fpsi().rev(u2); tht2 = ftht().rev(v2);
         phi2a = anglam(u2, _f.kxp());
-        psi2 = phi2a + ang::cardinal(2 * sig2n.second);
+        psi2 = phi2a + ang::cardinal(2 * sigi);
         tht2a = anglam(v2, _f.kx());
-        int parity = fmod(sig2n.second, real(2)) != 0 ? -1 : 1;
+        int parity = fmod(sigi, real(2)) != 0 ? -1 : 1;
         // if_tg.t().kp2 == 0 then meridional oblate
         int Ny = _fic.Nx * parity;
-        tht2a += ang::cardinal(2 * sig2n.second);
+        tht2a += ang::cardinal(2 * sigi);
         tht2a = tht2a + _fic.tht0;
         phi2a = phi2a.reflect(signbit(_fic.phi0.c() * Ny),
                               signbit(_fic.phi0.c())).rebase(_fic.phi0);
@@ -327,8 +327,7 @@ namespace GeographicLib {
       yset(zvals(ya, fy(ya), gy(ya)),
            zvals(yb, fy(yb), gy(yb)));
     // x = xset.bisect(), y = yset.bisect();
-    auto p = zsetsbisect(xset, yset, f0, g0, false);
-    x = p.first; y = p.second;
+    tie(x, y) = zsetsbisect(xset, yset, f0, g0, false);
     if constexpr (check) {
       // A necessary condition for a root is
       //   f01 <= 0 <= f10
@@ -429,8 +428,7 @@ namespace GeographicLib {
         }
       } else {
         // xn = xset.bisect(); yn = yset.bisect();
-        p = zsetsbisect(xset, yset, f0, g0, false);
-        xn = p.first; yn = p.second;
+        tie(xn, yn) = zsetsbisect(xset, yset, f0, g0, false);
         ++cntb;
         if (x == xn && y == yn) {
           if constexpr (debug)
@@ -678,7 +676,7 @@ namespace GeographicLib {
   GeodesicLine3::zsetsbisect(const zset& xset, const zset& yset,
                              real f0, real g0, bool secant) {
     if constexpr (true)
-      return pair<real, real>(xset.bisect(), yset.bisect());
+      return {xset.bisect(), yset.bisect()};
     else if (secant && xset.num() <= 2 && yset.num() <= 2) {
       // Use secant solution
       real
@@ -700,7 +698,7 @@ namespace GeographicLib {
       if (y <= 0 || y >= 1) y = 1/real(2);
       x = xset.min().z + x * dx;
       y = yset.min().z + y * dy;
-      return pair<real, real>(x, y);
+      return {x, y};
     } else {
       // A necessary condition for a root is
       //   f01 <= 0 <= f10
@@ -730,7 +728,7 @@ namespace GeographicLib {
       if (cnt == 0)
         throw GeographicLib::GeographicErr
           ("No legal box GeodesicLine3::zsetsbisect");
-      return pair<real, real>(x, y);
+      return {x, y};
     }
   }
 
@@ -887,19 +885,19 @@ namespace GeographicLib {
       if (psip) {
         phi2a = fic.phi1 + tau12.flipsign(fic.Nx);
         // remainder with result in [-pi/2, pi/2)
-        pair<real, real> phi2n =
+        auto [phi2f, phi2i] =
           // remx(fic.Nx * (phi2a - fic.phi0).radians(), Math::pi());
           remx((phi2a - fic.phi0).flipsign(fic.Nx));
-        u2 = fpsi().fwd(phi2n.first);
-        int parity = fmod(phi2n.second, real(2)) != 0 ? -1 : 1;
+        u2 = fpsi().fwd(phi2f);
+        int parity = fmod(phi2i, real(2)) != 0 ? -1 : 1;
         if (kxp() == 0) {
           // v2 is independent on u2
           v2 = 0;
           tht2a = ang::radians(-fic.Ex * fic.delta) +
-            ang::cardinal(2*fic.Ex*phi2n.second);
+            ang::cardinal(2*fic.Ex*phi2i);
           alp2a = fic.alp1.nearest(2U) + ang::cardinal(parity < 0 ? 2 : 0);
         } else {
-          real deltax = bigclamp(fic.delta + phi2n.second * _deltashift, 2);
+          real deltax = bigclamp(fic.delta + phi2i * _deltashift, 2);
           v2 = ftht().inv(fpsi()(u2) - deltax);
           tht2a = ang::radians(parity * ftht().rev(v2))
             .rebase(fic.tht0);
@@ -911,16 +909,16 @@ namespace GeographicLib {
           // Move forward from umbilical point
           phi2a += ang::eps().flipsign(fic.Nx);
         }
-        ii = int(phi2n.second);
+        ii = int(phi2i);
       } else {
         tht2a = fic.tht1 + tau12;
         // remainder with result in [-pi/2, pi/2)
-        pair<real, real> tht2n =
+        auto [tht2f, tht2i] =
           // remx(fic.Ex * (tht2a - fic.tht0).radians(), Math::pi());
           remx(tht2a - fic.tht0);
-        v2 = ftht().fwd(tht2n.first);
+        v2 = ftht().fwd(tht2f);
         u2 = 0;
-        int parity = fmod(tht2n.second, real(2)) != 0 ? -1 : 1;
+        int parity = fmod(tht2i, real(2)) != 0 ? -1 : 1;
         if (kxp() == 0) {
           if (fic.phi1.c() != 0 && tau12 == tau12.nearest(2U)) {
             // STILL TO DO...
@@ -949,10 +947,9 @@ namespace GeographicLib {
                                     [this, npi] (real tpsi) -> pair<real, real>
                                     {
                                       real psi = atan(tpsi);
-                                      return pair<real, real>
-                                        (tpsi - fpsi().df(npi + psi),
-                                         1 - fpsi().dfp(psi) /
-                                         (1 + Math::sq(tpsi)));
+                                      return {tpsi - fpsi().df(npi + psi),
+                                        1 - fpsi().dfp(psi) /
+                                        (1 + Math::sq(tpsi))};
                                     },
                                     c, fic.psi1.t(), -l, l);
             v2 = atan(tpsi2);
@@ -960,7 +957,7 @@ namespace GeographicLib {
               .flipsign(parity*fic.Nx).rebase(fic.phi0);
             alp2a = ang::cardinal(fic.Nx * parity == 1 ? 0 : 2);
           } else {
-            u2 = v2 == 0 ? 0 : copysign(Math::pi()/2, tht2n.first);
+            u2 = v2 == 0 ? 0 : copysign(Math::pi()/2, tht2f);
             phi2a = ang::cardinal(fabs(v2) == 0
                                   ? 0 : copysign(real(1), v2 * fic.Nx))
               .rebase(fic.phi0);
@@ -970,7 +967,7 @@ namespace GeographicLib {
               ang::radians(v2).flipsign(parity * phi2a.s());
           }
         } else {
-          real deltax = bigclamp(fic.delta + tht2n.second * _deltashift, 2);
+          real deltax = bigclamp(fic.delta + tht2i * _deltashift, 2);
           u2 = fpsi().inv(ftht()(v2) + deltax);
           real phi2 = fic.Nx * parity * fpsi().rev(u2);
           phi2a = ang::radians(phi2);
@@ -978,7 +975,7 @@ namespace GeographicLib {
                       kx() * fic.Nx * parity / mcosh(u2, kxp()));
           tht2a += ang::eps();
         }
-        ii = int(tht2n.second);
+        ii = int(tht2i);
         // Move forward from umbilical point
       }
       ret.phiw2 = u2;
@@ -1386,7 +1383,7 @@ namespace GeographicLib {
         return Trigfun::root(Trigfun::FFUNROOT,
                              [this]
                              (real u) -> pair<real, real>
-                             { return pair<real, real>((*this)(u), deriv(u)); },
+                             { return {(*this)(u), deriv(u)}; },
                              z,
                              u0, ua, ub,
                              HalfPeriod(), HalfPeriod()/Slope(), 1,
@@ -1400,7 +1397,7 @@ namespace GeographicLib {
         return Trigfun::root(Trigfun::FFUNROOT,
                              [this]
                              (real u) -> pair<real, real>
-                             { return pair<real, real>((*this)(u), deriv(u)); },
+                             { return {(*this)(u), deriv(u)}; },
                              z,
                              u0, ua, ub,
                              Math::pi()/2, Math::pi()/2, 1,
@@ -1421,7 +1418,7 @@ namespace GeographicLib {
       return Trigfun::root(Trigfun::GFUNROOT,
                            [this]
                            (real u) -> pair<real, real>
-                           { return pair<real, real>((*this)(u), deriv(u)); },
+                           { return {(*this)(u), deriv(u)}; },
                            z,
                            u0, ua, ub,
                            Math::pi()/2, Math::pi()/2, 1, countn, countb, tol);

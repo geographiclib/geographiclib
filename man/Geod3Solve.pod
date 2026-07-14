@@ -201,15 +201,17 @@ following lines will be converted.
 Route from JFK Airport to Singapore Changi Airport on a triaxial
 ellipsoid:
 
-  echo 40:38:23N 073:46:44W-19.43W X 01:21:33N 103:59:22E-19.43W |
-    tr X '\n' |
-    tools/Cart3Convert -G | tools/Cart3Convert -E -r | tr '\n' ' ' |
-    tools/Geod3Solve -i -: -p 0
-  => 003:15:05.9 177:27:09.0 15339505
+  echo 40:38:23N 073:46:44W-14.93W X 01:21:33N 103:59:22E-14.93W |
+    tr X '\n' | sed 's/$/ 0/' | CartConvert | Cart3Convert -E -r |
+    tr '\n' ' ' | Geod3Solve -i -: -p 0
+  => 003:12:53.3 177:29:00.3 15347609
 
-The steps here are shift for longitude of major axis (-19.43d), convert
-to geocentric for biaxial Earth, convert to ellipsoidal for triaxial
-Earth, compute geodesic distance.
+The steps here are shift for longitude of major axis (-14.93d), convert
+to geocentric for the biaxial Earth, convert to ellipsoidal for triaxial
+Earth, compute geodesic distance.  Note that the resulting directions
+are relative to the triaxial coordinates; additional calls to
+Cart3Convert could be made to convert these to directions on the biaxial
+Earth.
 
 =head1 SEE ALSO
 
@@ -217,8 +219,8 @@ Cart3Convert(1).
 
 The algorithms are described in C. F. F. Karney,
 I<Jacobi's solution for geodesics on a triaxial ellipsoid>,
-Technical Report, SRI International, Nov. 2025,
-L<https://arxiv.org/abs/2511.01621>.
+J. Geodesy 100, 17:1-23 (2026); DOI:
+L<https://doi.org/10.1007/s00190-026-02030-3>.
 
 The Wikipedia page, Geodesics on an ellipsoid,
 L<https://en.wikipedia.org/wiki/Geodesics_on_an_ellipsoid>.

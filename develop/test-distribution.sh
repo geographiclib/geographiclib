@@ -36,21 +36,14 @@ umask 0022
 
 START=`date +%s`
 DATE=`date +%F`
-VERSION=2.7
-SUFFIX=
+VERSION=2.8
+SUFFIX=-alpha
 DISTVERSION=$VERSION$SUFFIX
-BRANCH=main
+BRANCH=devel
 TEMP=/home/scratch/geographiclib-dist
-if test `hostname` = petrel; then
-    DEVELSOURCE=$HOME/geographiclib
-    WINDEVELSOURCE=//datalake-pr-smb/vt-open/ckarney/geographiclib
-    WINDOWSBUILD=/var/tmp
-else
-    DEVELSOURCE=/u/geographiclib
-    WINDEVELSOURCE=//datalake-pr-smb/vt-open/ckarney/geographiclib
-    WINDOWSBUILD=/u/temp
-fi
-WINDOWSBUILDWIN=//datalake-pr-smb/vt-open/ckarney/temp
+DEVELSOURCE=$HOME/geographiclib
+WINDOWSBUILD=/var/tmp
+WINDOWSBUILDA=$HOME/Dropbox/windows
 GITSOURCE=file://$DEVELSOURCE
 WEBDIST=/home/ckarney/web/geographiclib-web
 mkdir -p $WEBDIST/htdocs/C++
@@ -91,11 +84,11 @@ echo Unpack devel cmake distribution in $TEMP/relx and list in $TEMP/files.x
 
 echo ==============================================================
 echo Make a release for Windows testing in $WINDOWSBUILD/GeographicLib-$VERSION
-rm -rf $WINDOWSBUILD/GeographicLib-$VERSION
+rm -rf $WINDOWSBUILD/GeographicLib-$VERSION/*
 
 unzip -qq -d $WINDOWSBUILD BUILD/distrib/GeographicLib-$DISTVERSION.zip
 
-for ver in 15 16 17; do
+for ver in 15 16 17 18; do
     for arch in win32 x64; do
         pkg=vc$ver-$arch
         gen="Visual Studio $ver"
@@ -106,13 +99,16 @@ for ver in 15 16 17; do
         # installer changes.
         test "$ver" = 15 && installer=y
         test "$ver" = 17 && test "$arch" = x64 && boostdir="-D USE_BOOST=ON -D Boost_DIR=c:/local/boost_1_89_0/lib64-msvc-14.3/cmake/Boost-1.89.0"
+        # Tests GeodSolve9[23] fail with VS 18 win32
         (
             echo "#! /bin/sh -exv"
             echo echo ========== cmake $pkg ==========
+            echo h=c:/Users/E27157/Dropbox/windows
             echo b=c:/scratch/geog-$pkg
-            echo rm -rf \$b //datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION/\*
-            echo 'unset GEOGRAPHICLIB_DATA'
-            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=//datalake-pr-smb/vt-open/ckarney/pkg-$pkg/GeographicLib-$VERSION -D PACKAGE_DEBUG_LIBS=ON -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= $boostdir -S . -B \$b
+            echo i=c:/scratch/pkg-$pkg/GeographicLib-$VERSION
+            echo unset GEOGRAPHICLIB_DATA
+            echo rm -rf \$b \$i/\*
+            echo cmake -G \"$gen\" -A $arch -D BUILD_BOTH_LIBS=ON -D CMAKE_INSTALL_PREFIX=\$i -D CONVERT_WARNINGS_TO_ERRORS=ON -D EXAMPLEDIR= $boostdir -S . -B \$b
             echo cmake --build \$b --config Debug   --target ALL_BUILD
             echo cmake --build \$b --config Debug   --target testprograms
             echo cmake --build \$b --config Debug   --target RUN_TESTS
@@ -125,19 +121,35 @@ for ver in 15 16 17; do
             echo cmake --build \$b --config Release --target INSTALL
             echo cmake --build \$b --config Release --target PACKAGE
             test "$installer" &&
-                echo cp \$b/GeographicLib-$DISTVERSION-*.exe $WINDEVELSOURCE/ ||
-                    true
+              echo cp \$b/GeographicLib-$DISTVERSION-*.exe \$h/geographiclib/ ||
+                true
         ) > $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
         chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/build-$pkg
     done
 done
 cat > $WINDOWSBUILD/GeographicLib-$VERSION/test-all <<'EOF'
 #! /bin/sh
-(
-    for d in build-*[24]; do
-        ./$d
-    done
-) >& build.log
+if test `hostname` = karney-loaner; then
+    (
+        for d in build-vc1[5-9]-*[24]; do
+            if ./$d; then
+                echo STATUS: SUCCESS $d
+            else
+                echo STATUS: FAIL $d
+            fi
+        done
+    ) >& build.log
+else
+    (
+        for d in build-vc1[6-9]-*[24]; do
+            if ./$d; then
+                echo STATUS: SUCCESS $d
+            else
+                echo STATUS: FAIL $d
+            fi
+        done
+    ) >& build-alt.log
+fi
 EOF
 chmod +x $WINDOWSBUILD/GeographicLib-$VERSION/test-all
 
@@ -193,10 +205,15 @@ cut -f3- -d/ $TEMP/files.x | sort > ../files.new
         find -type d -empty | xargs -r rmdir
     done
 )
-rm -rf GeographicLib-$VERSION
-for ((i=0; i<7; ++i)); do
-    find * -type d -empty | xargs -r rmdir
-done
+git add -A
+git commit -m "Version $VERSION ($DATE)"
+git tag -m "Version $VERSION ($DATE)" r$VERSION
+git init --bare -b release $TEMP/geographiclib.git
+cd /scratch/geographiclib-dist/gitr/geographiclib/
+git remote add local file://$TEMP/geographiclib.git
+git push --set-upstream local release
+git push --set-upstream local --tags
+git branch --set-upstream-to=origin/release
 
 echo ==============================================================
 echo CMake build in $TEMP/relc/GeographicLib-$VERSION/BUILD install to $TEMP/instc
@@ -468,9 +485,6 @@ sudo make -C $TEMP/relc/GeographicLib-$VERSION/BUILD-system install
 # commit and tag release branch
 cd $TEMP/gitr/geographiclib
 # Check .gitignore files!
-git add -A
-git commit -m "Version $VERSION ($DATE)"
-git tag -m "Version $VERSION ($DATE)" r$VERSION
 git push
 git push --tags
 

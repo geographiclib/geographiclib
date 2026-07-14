@@ -238,7 +238,7 @@ int main(int argc, const char* const argv[]) {
     // Max precision = 10: 0.1 nm in distance, 10^-15 deg (= 0.11 nm),
     // 10^-11 sec (= 0.3 nm).
     prec = std::min(10 + Math::extra_digits(), std::max(0, prec));
-    using std::round, std::log10, std::ceil;
+    using std::round, std::log10;
     int disprec = std::max(0, prec + int(round(log10(6400000/b)))),
       angprec = prec + 5;
     std::string s, eol, sbet1, somg1, salp1, sbet2, somg2, salp2, ss12, strc;
