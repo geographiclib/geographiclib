@@ -192,7 +192,7 @@ Changes between 2.3 (released 2023-07-25) and 2.2 versions:
        AlbersEqualArea and TransverseMercator. (As of version 2.2,
        Ellipsoid uses the AuxLatitude class for this functionality.)
      + Small change in EllipticFunction to speed up the default
-       contructor.
+       constructor.
      + Remove workaround for boost 1.76 with enums (not needed for boost
        1.78).
      + Remove unused header from NearestNeighbor.
@@ -231,7 +231,7 @@ Changes between 2.2 (released 2023-03-07) and 2.1.2 versions:
 
    * Add AuxAngle and AuxLatitude classes to perform accurate
      conversions between auxiliary latitudes.  The Ellipsoid class has
-     been mostly reimplimented in terms of the AuxLatitude class.  The
+     been mostly reimplemented in terms of the AuxLatitude class.  The
      DAuxLatitude class computes the divides differences of auxiliary
      latitude. and implements additional divided difference formulas
      needed by Rhumb.
@@ -247,7 +247,7 @@ Changes between 2.1.2 (released 2022-12-13) and 2.1.1 versions:
    * Add definite integral overload for DST::integral.  This is used in
      GeodesicExact.
 
-   * Add example code examples/AuxLatitude.[hc]pp implementating the
+   * Add example code examples/AuxLatitude.[hc]pp implementing the
      AuxAngle and AuxLatitude classes.  These classes implement the
      methods documented in the paper "On auxiliary latitudes",
      https://arxiv.org/abs/2212.05818.  They are *not* part of
@@ -433,7 +433,7 @@ Changes between 1.51 (released 2020-11-22) and 1.50.1 versions:
    * Fix bug in cgi-bin argument processing which causes "+" to be
      misinterpreted.
 
-   * Required minium version of CMake is now 3.7.0 (released
+   * Required minimum version of CMake is now 3.7.0 (released
      2016-11-11).  This is to work around a bug in find_package for
      cmake 3.4 and 3.5.
 
@@ -534,7 +534,7 @@ Changes between 1.50 (released 2019-09-24) and 1.49 versions:
         default.
       + Add support for Intel compiler (for C++, C, Fortran).  This
         entails supplying the -fp-model precise flag to prevent the
-        compiler from incorrectly simplying (a + b) + c and 0.0 + x.
+        compiler from incorrectly simplifying (a + b) + c and 0.0 + x.
 
   * Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This is
     now the default magnetic model for MagneticField (replacing wmm2015
@@ -983,7 +983,7 @@ Changes between 1.43 (released 2015-05-23) and 1.42 versions:
       longitude.
     + To support these changes DMS::DecodeLatLon no longer reduces the
       longitude to the range [-180deg, 180deg) and Math::AngRound now
-      coverts -0 to +0.
+      converts -0 to +0.
 
   * Add Math::polyval (also to C, Java, JavaScript, Fortran, python
     versions of the library; this is a built-in function for
@@ -1658,7 +1658,7 @@ Changes between 1.17 (released 2012-01-21) and 1.16 versions:
 
   * Add simple examples of usage for each class.
 
-  * Add internal documenation to the cmake configuration files.
+  * Add internal documentation to the cmake configuration files.
 
 Changes between 1.16 (released 2011-12-07) and 1.15 versions:
 

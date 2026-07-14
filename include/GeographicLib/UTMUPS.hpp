@@ -121,7 +121,7 @@ namespace GeographicLib {
        **********************************************************************/
       MATCH = -3,
       /**
-       * Apply the standard rules for UTM zone assigment extending the UTM zone
+       * Apply the standard rules for UTM zone assignment extending the UTM zone
        * to each pole to give a zone number in [1, 60].  For example, use UTM
        * zone 38 for longitude in [42&deg;, 48&deg;).  The rules include the
        * Norway and Svalbard exceptions.

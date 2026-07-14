@@ -165,15 +165,15 @@ namespace GeographicLib {
     // The basic algorithm
     XPoint Basic(const GeodesicLine& lineX, const GeodesicLine& lineY,
                  const XPoint& p0) const;
-    // The closest intersecton
+    // The closest intersection
     XPoint ClosestInt(const GeodesicLine& lineX, const GeodesicLine& lineY,
                   const XPoint& p0) const;
-    // The next intersecton
+    // The next intersection
     XPoint NextInt(const GeodesicLine& lineX, const GeodesicLine& lineY) const;
-    // Segment intersecton
+    // Segment intersection
     XPoint SegmentInt(const GeodesicLine& lineX, const GeodesicLine& lineY,
                       int& segmode) const;
-    // All intersectons
+    // All intersections
     std::vector<XPoint>
     AllInt0(const GeodesicLine& lineX, const GeodesicLine& lineY,
            Math::real maxdist, const XPoint& p0) const;

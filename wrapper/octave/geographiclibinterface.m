@@ -8,7 +8,7 @@ function geographiclibinterface(incdir, libdir)
 % With one argument the library is looked for in INSTALLDIR/lib and the
 % include files in INSTALLDIR/include.
 %
-% With no arguments, INSTALLDIR is taked to be '/usr/local', on Unix and
+% With no arguments, INSTALLDIR is taken to be '/usr/local', on Unix and
 % Linux systems, and 'C:/Program Files/GeographicLib', on Windows systems
 %
 % With two arguments, the library is looked for in LIBDIR and the include

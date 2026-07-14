@@ -283,7 +283,7 @@ namespace GeographicLib {
      * Test for a zero angle.
      *
      * @param[in] mult multiplier of machine epsilon used in test (default 0).
-     * @return true if this AngleT is withing \e mult &epsilon; of zero.
+     * @return true if this AngleT is within \e mult &epsilon; of zero.
      **********************************************************************/
     bool zerop(T mult = 0) const;
     /**

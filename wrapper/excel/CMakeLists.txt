@@ -28,7 +28,7 @@ target_link_libraries (${PROJECT_NAME} ${GeographicLib_LIBRARIES})
 if (WIN32)
   if (CMAKE_SIZEOF_VOID_P EQUAL 4)
     set (INSTALL_MSG
-      "copy DLLs fron ${CMAKE_CFG_INTDIR} to C:\\Program Files (x86)\\Microsoft Office\\root\\Office16")
+      "copy DLLs from ${CMAKE_CFG_INTDIR} to C:\\Program Files (x86)\\Microsoft Office\\root\\Office16")
   else ()
     set (INSTALL_MSG "copy DLLs from ${CMAKE_CFG_INTDIR} to C:\\Program Files\\Microsoft Office\\root\\Office16")
   endif ()

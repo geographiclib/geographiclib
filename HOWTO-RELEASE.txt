@@ -64,7 +64,7 @@ maintainer
   distrib-man create extra versions of man pages
   distrib-all distrib-man + run autogen for autoconf builds
   dist Package release into a tar.gz + zip files
-  stage-doc copy documenation to staging area
+  stage-doc copy documentation to staging area
   stage-dist copy source distribution to data-distrib
   deploy-doc deploy documentation from staging area to sourceforge
   deploy-dist deploy source distributions from data-distrib to staging
@@ -121,7 +121,7 @@ In build directory:
   make stage-{doc,dist}
   make deploy-{doc,dist}
 switch C++/doc link to latest version
-checkin and tag release branch & push
+check in and tag release branch & push
 tag main branch
 
 update binaries for cgi applications

@@ -1,6 +1,6 @@
 /**
  * \file TriaxialGeodesicODE.cpp
- * \brief Implementation for GeographicLib::experiemental::TriaxialGeodesicODE
+ * \brief Implementation for GeographicLib::experimental::TriaxialGeodesicODE
  *   class
  *
  * Copyright (c) Charles Karney (2024-2025) <karney@alum.mit.edu> and licensed

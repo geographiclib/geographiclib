@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
   // adding zeros in the binary fraction.
   //
   // N.B. printing with precision 14 = digis10 - 1 allows short numbers to be
-  // represended with trailing zeros.  This isn't necessarily the case with
+  // represented with trailing zeros.  This isn't necessarily the case with
   // precision = digits10, e.g., 8.3 becomes 8.300000000000001e+00
   //
   // This prescription doesn't exactly implement the method proposed.  If the

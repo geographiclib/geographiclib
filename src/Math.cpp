@@ -263,7 +263,7 @@ namespace GeographicLib {
       // For large tau, taup = exp(-es*atanh(es)) * tau.  Use this as for the
       // initial guess for |taup| > 70 (approx |phi| > 89deg).  Then for
       // sufficiently large tau (such that sqrt(1+tau^2) = |tau|), we can exit
-      // with the intial guess and avoid overflow problems.  This also reduces
+      // with the initial guess and avoid overflow problems.  This also reduces
       // the mean number of iterations slightly from 1.963 to 1.954.
       tau = fabs(taup) > 70 ? taup * exp(eatanhe(T(1), es)) : taup/e2m,
       stol = tol * fmax(T(1), fabs(taup));

@@ -85,7 +85,7 @@ namespace GeographicLib {
 
   Math::real Cartesian3::cubic(vec3 R2) const {
     // Solve sum(R2[i]/(z + lineq2[i]), i,0,2) - 1 = 0 with lineq2[2] = 0.
-    // This has three real roots with just one satisifying q >= 0.
+    // This has three real roots with just one satisfying q >= 0.
     // Express as a cubic equation z^3 + a*z^2 + b*z + c = 0.
     real c = - _linecc2[0]*_linecc2[1] * R2[2],
       b = _linecc2[0]*_linecc2[1]

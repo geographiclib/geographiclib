@@ -298,7 +298,7 @@ namespace GeographicLib {
      * @param[out] R2 a vector of positions of points 2.
      * @param[out] V2 a vector of velocities at points 2.
      *
-     * Before starting the integration, the positive and negative vaules in \e
+     * Before starting the integration, the positive and negative values in \e
      * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.
@@ -321,7 +321,7 @@ namespace GeographicLib {
      * @param[out] M21 a vector of the geodesic scales at point 1 relative to
      *   points 2.
      *
-     * Before starting the integration, the positive and negative vaules in \e
+     * Before starting the integration, the positive and negative values in \e
      * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.
@@ -345,7 +345,7 @@ namespace GeographicLib {
      * @param[out] omg2 a vector of longitudes at points 2.
      * @param[out] alp2 a vector of azimuths at points 2.
      *
-     * Before starting the integration, the positive and negative vaules in \e
+     * Before starting the integration, the positive and negative values in \e
      * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.
@@ -367,7 +367,7 @@ namespace GeographicLib {
      * @param[out] M21 a vector of the geodesic scales at point 1 relative to
      *   points 2.
      *
-     * Before starting the integration, the positive and negative vaules in \e
+     * Before starting the integration, the positive and negative values in \e
      * s12 are separated and then sorted in order of increasing magnitude.  The
      * results are placed back in the correct positions in the output vectors.
      * \e s12 can include NaNs; this can be used to "punctuate" the results.

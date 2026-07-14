@@ -65,7 +65,7 @@ namespace GeographicLib {
       // Case 1: _s is not equal to round(s+t+u) -- off by 1 ulp
       // [12, -1] - 8 -> [4, 0, -1] -> [4, -1] = 3 should be [3, 0] = 3
       //
-      // Case 2: _s+_t is not as close to s+t+u as it shold be
+      // Case 2: _s+_t is not as close to s+t+u as it should be
       // [64, 5] + 4 -> [64, 8, 1] -> [64,  8] = 72 (off by 1)
       //                    should be [80, -7] = 73 (exact)
       //

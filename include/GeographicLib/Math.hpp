@@ -518,7 +518,7 @@ namespace GeographicLib {
      * @param[in] x
      * @param[in] a
      * @param[in] b
-     * @return \e x if it lies in [<i>a</i>, <i>b</i>]; otherise return the
+     * @return \e x if it lies in [<i>a</i>, <i>b</i>]; otherwise return the
      *   nearest boundary value.
      *
      * Requires \e a &le; \e b.  Unlike std::clamp, \e x can be a NaN (and
