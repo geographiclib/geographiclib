@@ -40,7 +40,7 @@ namespace GeographicLib {
   Math::real DMS::Decode(const std::string& dms, flag& ind) {
     // Here's a table of the allowed characters
 
-    // S unicode   dec  UTF-8      descripton
+    // S unicode   dec  UTF-8      description
 
     // DEGREE
     // d U+0064    100  64         d

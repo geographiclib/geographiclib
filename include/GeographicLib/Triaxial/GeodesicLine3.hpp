@@ -61,7 +61,7 @@ namespace GeographicLib {
     static constexpr int maxit_ = 300;
 
     class hfun {
-      // This combines ffun abd gfun in order to minimize the duplication of
+      // This combines ffun and gfun in order to minimize the duplication of
       // code.
       // Establish consistent notation for coordinates:
       // theta = rotating coord, omega-90 or beta for circum- or transpolar
@@ -143,7 +143,7 @@ namespace GeographicLib {
       //  f = (u + df)/sqrt(kap*kapp) or (u + dfv)/sqrt(kap*kapp)
       //  g = g0 or g0v
       //
-      // Handing of f funtions needs to be handled specially for
+      // Handing of f functions needs to be handled specially for
       // _merid[lr]
       //   leading order behavior is separated out
       //   N.B. inverse of f is discontinuous for mu == 0
@@ -208,7 +208,7 @@ namespace GeographicLib {
       class fics {
         // bundle of data setting the initial conditions for a geodesic
       public:
-        // alp1 is angle measured from line of const rotating coording
+        // alp1 is angle measured from line of const rotating according
         ang tht1, phi1, alp1,   // rotating, librating starting point
           psi1,                 // phi1 transformed to rotating angle psi
         // Angles about which quantities oscillate

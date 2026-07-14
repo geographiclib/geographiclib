@@ -2745,7 +2745,7 @@ Go to
 
 \section magneticinst Installing the magnetic field models
 
-These magnetic models are available for download from this directoy
+These magnetic models are available for download from this directory
 https://sourceforge.net/projects/geographiclib/files/magnetic-distrib
 <center>
 <table>
@@ -4166,7 +4166,7 @@ condition, \e N is large, should be taken to mean that \f$ N \gg 2^D
   nodes to be processed are put on a priority queue with the nodes most
   likely to contain close points processed first.  Frequently, this allows
   nodes lower down on the priority queue to be skipped.
-- This technique also allows non-exhaustive searchs to be performed (to
+- This technique also allows non-exhaustive searches to be performed (to
   answer questions such as "are there any points within 1km of the query
   point?").
 - When building the tree, the first vantage point is (arbitrarily)
@@ -4391,7 +4391,7 @@ given by
  d\omega^2.
 \end{align}
 \f]
-This form for \f$ds\f$ &mdash; with a single mulitplying factor
+This form for \f$ds\f$ &mdash; with a single multiplying factor
 depending on \f$\beta\f$ and \f$\omega\f$ and the coefficient
 multiplying \f$d\beta^2\f$ (resp. \f$d\omega^2\f$) being a function of
 \f$\beta\f$ (resp. \f$\omega\f$) alone &mdash; means that a triaxial
@@ -7781,7 +7781,7 @@ git repository for GeographicLib</a>.
      Geodesic::Line points to GeodesicLine.
    - Check Geocentric::Reverse for accuracy for extreme ellipsoids, \e e
      &gt; 1/sqrt(2).
-   - Check Visual Studo "code analysis" results (from Analize VS
+   - Check Visual Studo "code analysis" results (from Analyze VS
      menu).  Probably an awful lot of false positives.
    - Add Math routine for Clenshaw summation; and maybe AuxiliaryLatitude
      class for conversions via the series?
@@ -7789,7 +7789,7 @@ git repository for GeographicLib</a>.
      allowing larger buckets on construction or by just do additional
      splits as necessary).
    - Improve documentation for Intersect class + tool to treat case of
-     equally close intersectons.
+     equally close intersections.
 \endif
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.7">Version 2.7</a>
@@ -7901,7 +7901,7 @@ git repository for GeographicLib</a>.
      integration with Qt projects).
    - With GEOGRAPHICLIB_PRECISION > 2, Utility::readarray interprets
      doubles in external file as approximations to an exact decimal
-     number.  See the documentaion of this routine for details.
+     number.  See the documentation of this routine for details.
 
  - <a href="https://geographiclib.sourceforge.io/C++/2.4">Version 2.4</a>
    (released 2024-07-14)
@@ -7970,7 +7970,7 @@ git repository for GeographicLib</a>.
        AlbersEqualArea and TransverseMercator. (As of version 2.2,
        Ellipsoid uses the AuxLatitude class for this functionality.)
      - Small change in EllipticFunction to speed up the default
-       contructor.
+       constructor.
      - Remove workaround for boost 1.76 with enums (not needed for boost
        1.78).
      - Remove unused header from NearestNeighbor.
@@ -8009,7 +8009,7 @@ git repository for GeographicLib</a>.
      removed.
    - Add AuxAngle and AuxLatitude classes to perform accurate
      conversions between auxiliary latitudes.  The Ellipsoid class has
-     been mostly reimplimented in terms of the AuxLatitude class.  The
+     been mostly reimplemented in terms of the AuxLatitude class.  The
      DAuxLatitude class computes the divides differences of auxiliary
      latitude. and implements additional divided difference formulas
      needed by Rhumb.
@@ -8023,7 +8023,7 @@ git repository for GeographicLib</a>.
    - Add definite integral overload for DST::integral.  This is used in
      GeodesicExact.
    - Add example code <code>examples/AuxLatitude.[hc]pp</code>
-     implementating the AuxAngle and AuxLatitude classes.  These classes
+     implementing the AuxAngle and AuxLatitude classes.  These classes
      implement the methods documented in the paper
      <a href="https://doi.org/10.1080/00396265.2023.2217604">On auxiliary
      latitudes</a>.  They are <b>not</b> part of GeographicLib.  See
@@ -8187,7 +8187,7 @@ git repository for GeographicLib</a>.
      packages; see DMS::Decode.
    - Fix bug in cgi-bin argument processing which causes "+" to be
      misinterpreted.
-   - Required minium version of CMake is now 3.7.0 (released
+   - Required minimum version of CMake is now 3.7.0 (released
      2016-11-11).  This is to work around a bug in find_package for
      cmake 3.4 and 3.5.
    .
@@ -8284,7 +8284,7 @@ git repository for GeographicLib</a>.
        default.
      - Add support for Intel compiler (for C++, C, Fortran).  This
        entails supplying the <code>-fp-model precise</code> flag to
-       prevent the compiler from incorrectly simplying <code>(a + b) +
+       prevent the compiler from incorrectly simplifying <code>(a + b) +
        c</code> and <code>0.0 + x</code>.
    - Add version 2 of the World Magnetic Model 2015, wmm2015v2.  This
      is now the default magnetic model for
@@ -8702,7 +8702,7 @@ git repository for GeographicLib</a>.
        GeodSolve</a> now offers an option to unroll the longitude.
      - To support these changes DMS::DecodeLatLon no longer reduces the
        longitude to the range [&minus;180&deg;, 180&deg;) and
-       Math::AngRound now coverts &minus;0 to +0.
+       Math::AngRound now converts &minus;0 to +0.
    - Add Math::polyval (also to C, Java, JavaScript, Fortran, Python
      versions of the library; this is a built-in function for
      MATLAB/Octave).  This evaluates a polynomial using Horner's method.

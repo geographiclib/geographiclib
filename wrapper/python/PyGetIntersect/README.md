@@ -6,7 +6,7 @@ More info on ctypes in python here: <https://docs.python.org/3/extending/extendi
 # prerequisites
 sudo apt install libgeographiclib-dev python3-dev
 
-# bulding lib under Ubuntu
+# building lib under Ubuntu
 g++ -fPIC -O2 -pipe -shared -o intersect_dso.so PyGetIntersect.cpp -lGeographicLib -Wl,-rpath=/usr/lib/x86_64-linux-gnu
 ```
 

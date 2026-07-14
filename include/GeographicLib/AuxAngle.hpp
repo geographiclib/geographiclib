@@ -146,7 +146,7 @@ namespace GeographicLib {
      **********************************************************************/
     AuxAngle& operator+=(const AuxAngle& p);
     /**
-     * Construct and return an AuxAngle specied as an angle in degrees.
+     * Construct and return an AuxAngle specified as an angle in degrees.
      *
      * @param[in] d the angle measured in degrees.
      * @return the corresponding AuxAngle.
@@ -158,7 +158,7 @@ namespace GeographicLib {
      **********************************************************************/
     static AuxAngle degrees(real d);
     /**
-     * Construct and return an AuxAngle specied as an angle in radians.
+     * Construct and return an AuxAngle specified as an angle in radians.
      *
      * @param[in] r the angle measured in radians.
      * @return the corresponding AuxAngle.
@@ -170,7 +170,7 @@ namespace GeographicLib {
      **********************************************************************/
     static AuxAngle radians(real r);
     /**
-     * Construct and return an AuxAngle specied by the lambertian of the angle.
+     * Construct and return an AuxAngle specified by the lambertian of the angle.
      *
      * @param[in] psi the lambertian of the angle.
      * @return the corresponding AuxAngle.
@@ -184,7 +184,7 @@ namespace GeographicLib {
      **********************************************************************/
     static AuxAngle lam(real psi);
     /**
-     * Construct and return an AuxAngle specied by the lambertian of the angle
+     * Construct and return an AuxAngle specified by the lambertian of the angle
      * in degrees.
      *
      * @param[in] psid the lambertian of the angle in degrees.

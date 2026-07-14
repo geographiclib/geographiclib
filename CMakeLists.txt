@@ -429,7 +429,7 @@ endif ()
 # file and there's no simple equivalent for MacOSX.  MAINTAINER mode
 # also supported (a) running autogen.sh to configure the autoconf
 # builds, and (b) running git ls-files to run some sanity checks.
-# MAINTAINTER mode is not set in RELEASE mode.
+# MAINTAINER mode is not set in RELEASE mode.
 if (NOT RELEASE AND BUILD_MANPAGES AND NOT WIN32 AND NOT APPLE)
   find_program (POD2MAN pod2man)
   find_program (POD2HTML pod2html)
@@ -445,7 +445,7 @@ endif ()
 # Set output directories for Windows so that executables and dlls are
 # put in the same place
 if (WIN32)
-  # static libaries
+  # static libraries
   set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
   # shared libraries
   set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")

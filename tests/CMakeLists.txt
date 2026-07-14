@@ -673,7 +673,7 @@ set_tests_properties (Planimeter17 PROPERTIES PASS_REGULAR_EXPRESSION
 set_tests_properties (Planimeter18 PROPERTIES PASS_REGULAR_EXPRESSION
   " 510047167161763\\.[01]")    # 510065621724088.5093-18454562325.45119
 
-# Some tests to add code coverage: degerate polygons
+# Some tests to add code coverage: degenerate polygons
 add_test (NAME Planimeter19 COMMAND Planimeter --input-string "1 1")
 set_tests_properties (Planimeter19 PROPERTIES PASS_REGULAR_EXPRESSION
   "1 0\\.0* 0\\.0")

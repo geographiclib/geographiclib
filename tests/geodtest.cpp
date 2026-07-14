@@ -206,7 +206,7 @@ int main() {
   i = testarcdirect<Geodesic>(); n += i;
   if (i) cout << "testarcdirect<Geodesic> failure\n";
 
-  // Allow 2x error with GeodesicExact calcuations (for WGS84)
+  // Allow 2x error with GeodesicExact calculations (for WGS84)
   i = testinverse<GeodesicExact>(2); n += i;
   if (i) cout << "testinverse<GeodesicExact> failure\n";
 

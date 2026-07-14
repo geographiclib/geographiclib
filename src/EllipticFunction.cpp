@@ -320,8 +320,8 @@ namespace GeographicLib {
       real mc = _kp2, d = 0;
       if (signbit(_kp2)) {
         // This implements DLMF Eqs 22.17.2 - 22.17.4.  But this only
-        // accomodates kp2 < 0 or k2 > 1 and these are outside the advertized
-        // ranges for the contructor for this class.
+        // accommodates kp2 < 0 or k2 > 1 and these are outside the advertised
+        // ranges for the constructor for this class.
         d = 1 - mc;
         mc /= -d;
         d = sqrt(d);

@@ -113,9 +113,9 @@ namespace GeographicLib {
      * Refine the Fourier series by doubling the number of points sampled
      *
      * @param[in] f the function used for evaluation.
-     * @param[inout] F on input the first \e N coefficents of the Fourier
+     * @param[inout] F on input the first \e N coefficients of the Fourier
      *   series; on output the refined transform based on 2\e N points, i.e.,
-     *   the first 2\e N coefficents.
+     *   the first 2\e N coefficients.
      *
      * The evaluates \f$ f(\sigma) \f$ at additional points \f$ \sigma = (j +
      * \frac12) \pi / (2 N) \f$ for integer \f$ j \in [0, N) \f$, computes the

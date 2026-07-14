@@ -10,7 +10,7 @@ using namespace GeographicLib;
 
 int main() {
   try {
-    int N = 3, N1 = 2;                  // The maxium degrees
+    int N = 3, N1 = 2;                  // The maximum degrees
     double ca[] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1}; // cosine coefficients
     vector<double> C(ca, ca + (N + 1) * (N + 2) / 2);
     double sa[] = {6, 5, 4, 3, 2, 1}; // sine coefficients

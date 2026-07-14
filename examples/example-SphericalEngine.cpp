@@ -11,7 +11,7 @@ using namespace GeographicLib;
 int main() {
   // See also example-SphericHarmonic.cpp
   try {
-    int N = 3;                  // The maxium degree
+    int N = 3;                  // The maximum degree
     double ca[] = {10, 9, 8, 7, 6, 5, 4, 3, 2, 1}; // cosine coefficients
     vector<double> C(ca, ca + (N + 1) * (N + 2) / 2);
     double sa[] = {6, 5, 4, 3, 2, 1}; // sine coefficients

@@ -230,7 +230,7 @@ env GeographicLib_DIR=$TEMP/instc cmake -S $TEMP/instc/share/doc/GeographicLib-d
 )
 
 echo ==============================================================
-echo List installed files fron cmake build in $TEMP/instc to $TEMP/files.c
+echo List installed files from cmake build in $TEMP/instc to $TEMP/files.c
 (
     cd $TEMP/instc
     find . -type f | sort -u > ../files.c
@@ -312,7 +312,7 @@ cd $TEMP/rely
 find . -type f | sort -u > ../files.y
 
 echo ==============================================================
-echo List installed files fron autoconf build in $TEMP/instb to $TEMP/files.b
+echo List installed files from autoconf build in $TEMP/instb to $TEMP/files.b
 
 mv $TEMP/instb/share/doc/{geographiclib,GeographicLib}
 cd $TEMP/instb

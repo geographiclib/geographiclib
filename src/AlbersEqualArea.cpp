@@ -225,7 +225,7 @@ namespace GeographicLib {
         // Now
         // qZ-q0 = (1+e2*sphi0)*(1-sphi0)/(1-e2*sphi0^2) +
         //         (1-e2)*atanhee((1-sphi0)/(1-e2*sphi0))
-        // In limit sphi0 -> 1, qZ-q0 -> 2*(1-sphi0)/(1-e2), so wrte
+        // In limit sphi0 -> 1, qZ-q0 -> 2*(1-sphi0)/(1-e2), so write
         // qZ-q0 = 2*(1-sphi0)/(1-e2) + A + B
         // A = (1-sphi0)*( (1+e2*sphi0)/(1-e2*sphi0^2) - (1+e2)/(1-e2) )
         //   = -e2 *(1-sphi0)^2 * (2+(1+e2)*sphi0) / ((1-e2)*(1-e2*sphi0^2))

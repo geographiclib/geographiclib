@@ -314,7 +314,7 @@ namespace GeographicLib {
     // }
     //
     // A couple of changes have been made: (1) the decrease in N for float and
-    // n > 0.97 has been removed; (2) entrys of n=+/-1 have been included
+    // n > 0.97 has been removed; (2) entries of n=+/-1 have been included
     // (incrementing the previous code value by 1).
 #if GEOGRAPHICLIB_PRECISION == 1
     static const unsigned char narr[2*ndiv+1] = {

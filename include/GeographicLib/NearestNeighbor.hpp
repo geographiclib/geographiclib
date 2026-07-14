@@ -210,7 +210,7 @@ namespace GeographicLib {
      * The simplest invocation is with just the 4 non-optional arguments.  This
      * returns the closest distance and the index to the closest point in
      * <i>ind</i><sub>0</sub>.  If there are several points equally close, then
-     * <i>ind</i><sub>0</sub> gives the index of an arbirary one of them.  If
+     * <i>ind</i><sub>0</sub> gives the index of an arbitrary one of them.  If
      * there's no closest point (because the set of points is empty), then \e
      * ind is empty and &minus;1 is returned.
      *
@@ -356,7 +356,7 @@ namespace GeographicLib {
      *   object can't be allocated.
      *
      * The counters tracking the statistics of searches are not saved; however
-     * the initializtion cost is saved.  The format of the binary saves is \e
+     * the initialization cost is saved.  The format of the binary saves is \e
      * not portable.
      *
      * \note <a href="https://www.boost.org/libs/serialization/doc">

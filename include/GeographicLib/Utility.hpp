@@ -327,7 +327,7 @@ namespace GeographicLib {
      * For GEOGRAPHIC_PRECISION == 2, the data is read faithfully.  For
      * GEOGRAPHICLIB_PRECISION > 2, external data of type double is interpreted
      * as an approximation of an exact decimal value; this exact number is
-     * convered to a real number at the higher precision.
+     * converted to a real number at the higher precision.
      **********************************************************************/
     template<typename ExtT, typename IntT, bool bigendp>
       static void readarray(std::istream& str, IntT array[], size_t num) {
@@ -391,7 +391,7 @@ namespace GeographicLib {
                 // is obtained by adding zeros in the binary fraction.
                 //
                 // N.B. printing with precision 14 = digis10 - 1 allows short
-                // numbers to be represended with trailing zeros.  This isn't
+                // numbers to be represented with trailing zeros.  This isn't
                 // necessarily the case with precision = digits10, e.g., 8.3
                 // becomes 8.300000000000001.
                 //

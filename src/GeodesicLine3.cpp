@@ -604,7 +604,7 @@ namespace GeographicLib {
           // f <= 0 at NW corner f >= 0 at SE corner
           // g <= 0 at SW corner g >= 0 at NE corner
           //
-          // If theses requirements fail, use bounds updated with just the
+          // If these requirements fail, use bounds updated with just the
           // center point i == xind && j == yind.
           if (f <= 0) {
             if (g <= 0 && xa[0] < x) xa[0] = x;
@@ -754,7 +754,7 @@ namespace GeographicLib {
       if (gammax() > 0) {
         real spsi = phi2.s(),
           // In evaluating equivalent expressions, choose the one with minimum
-          // cancelation.  Need the 0 + x to convert -0 to +0.  (Note sqrt(-0) =
+          // cancellation.  Need the 0 + x to convert -0 to +0.  (Note sqrt(-0) =
           // -0 and fmax(+0, -0) may be -0.)
           cpsi = nu() < nup() ?
           (phi2.c() - nu()) * (phi2.c() + nu()) :
@@ -1408,7 +1408,7 @@ namespace GeographicLib {
       } else
         return Math::NaN();
     } else {
-      // This function isn't neeed.  General inversion mechanisms in Trigfun
+      // This function isn't needed.  General inversion mechanisms in Trigfun
       // suffice.  NO, the trigfun for _umb is not invertible.
       if (!(isfinite(z) && _umb))
         return Math::NaN();       // Deals with +/-inf and nan

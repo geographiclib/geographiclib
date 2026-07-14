@@ -22,7 +22,7 @@ There are 4 sections in this file
 Edit the section at the end, to modify what is done.  As distributed
 this code computes the 8th order series.  This takes about 10 secs.  If
 you want to compute accurate geodesics using geodesic.mac, then you need
-alse to uncomment the last line of this file so that the series get
+also to uncomment the last line of this file so that the series get
 saved as geodNN.lsp.
 
 To run the code, start Maxima and enter
