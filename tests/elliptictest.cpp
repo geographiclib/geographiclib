@@ -166,6 +166,29 @@ int dotests() {
 
 int main() {
   Utility::set_digits();
+  {
+    EllipticFunction ell(0.5);
+#if GEOGRAPHICLIB_COMPLEX_JACOBI_AM
+    Math::real K = ell.K(), d = K/45;
+    for (int ii = -45; ii <= 90; ++ii) {
+      for (int ir = -45; ir <= 45; ++ir) {
+        Math::cmplx phi = {ir*d, ii*d}, z = ell.am(phi);
+        cout << " " << z.real() << " " << z.imag();
+      }
+      cout << "\n";
+    }
+    return 0;
+#endif
+    for (int i = -730; i <= 730; i+= 10) {
+    // { int i = 90;
+      Math::real phi = i * Math::degree(),
+        u = ell.F(phi),
+        sn, cn, dn,
+        phia = ell.am(u, sn, cn, dn);
+      cout << i << " " << phia-phi << "\n";
+    }
+    return 0;
+  }
   int n = dotests();
   if (n) {
     cout << n << " failure" << (n > 1 ? "s" : "") << "\n";

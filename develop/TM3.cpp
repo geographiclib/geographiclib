@@ -93,6 +93,7 @@ namespace GeographicLib {
     cmplx2 CHITOPSI(cmplx CHI, int& n) const;
     cmplx2 PHITOCHI(cmplx PHI) const;
     cmplx2 CHITOPHI(cmplx CHI) const;
+    cmplx2 PHITOW(cmplx PHI) const;
     cmplx2 GEODTOCHI(cmplx GEOD) const {
       int n;
       auto [PSI, DPSI] = GEODTOPSI(GEOD, n);
@@ -246,52 +247,76 @@ cmplx2 GeographicLib::experimental::TM3::CHITOPHI(cmplx CHI) const {
   // PHI (1.570796326795,0.9346431892297) (4.183726301833e-07,-2.293173405618e-17)
   // CHIX (1.57079632674,14.39793040367) (2390213.718239,0.0001310117855943)
   // _f < 0: singular points
-  // A: (phi,lam) = (90, ?)
+  // A: (phi,lam) = (psitophi(abs(e) * pi/2), 90, )
+  //    PSI = (abs(e) * pi/2, pi/2)
+  //    CHI = (pi/2, -log(tanh(abs(e) * pi/4)))
+  //    PHI = (0, inf)
+  // B: [phi,lam] = 0, 90, PSI = [0,pi/2]
+  //    CHI = (0,inf)
+  //    PHI = (0, y)
+  //    where f(y) = asin(tanh(y)) + abs(e)*atanh(abs(e)*sinh(y)) = pi/2
+  //          f'(y) = sech(y) + abs(e)^2 * cosh(y)/(1-abs(e)^2*sinh(y)^2)
+  //                = sech(y) * (1 + abs(e)^2)/(1 - abs(e)^2*sinh(y)^2)
+
   static const real maxv = -log(numeric_limits<real>::epsilon());
+  /*
+  cout << "YYY " << CHI << " "
+       << gd(Math::pi()/2*(real(1)-_e)*cmplx(real(0), real(1))) << " "
+       << abs(CHI-gd(Math::pi()/2*(real(1)-_e)*cmplx(real(0), real(1))))
+       << "\n";
+  */
+
   if (1) {
+    if (_f == 0) return {CHI, real(1)};
     int cnt;
     cmplx PHI0 = chitophi(fmin(Math::pi()/2-1/real(100),
                                fmax(1/real(100),CHI.real())));
-    if (_f > 0 &&
-        abs(CHI-cmplx{real(0),atanh(sin( (1-_e.real()) * Math::pi()/2 ))}) <
-        10 * numeric_limits<real>::epsilon()) {
-      if (_debug)
-        cerr << "CHIQ " << abs(CHI-cmplx{real(0),atanh(sin( (1-_e.real()) * Math::pi()/2 ))}) << "\n";
+    cmplx CHIX = gd(Math::pi()/2*(real(1)-_e)*cmplx(real(0), real(1)));
+    if (abs(CHI - CHIX) < 10 * numeric_limits<real>::epsilon()) {
       cmplx PHI{Math::pi()/2 * 0, maxv/4};
-      auto [ignore, DCHIB] = PHITOCHI(PHI);
-      int n;
-      auto [PSI, DPSI] = PHITOPSI(PHI, n);
-      auto [CHIC, DCHIC] = PSITOCHI(PSI);
-      if (_debug) {
-        cerr << "PHIX " << PHI << " " << real(1)/DCHIB << " " << PSI << " " << DPSI << " " << CHIC << " " << DCHIC << " " << real(1)/(DPSI*DCHIC) << "\n";
-        cerr << "PHIY " << PHI0 << " " << PHI << " "
-             << chitophi(CHI.real()) << "\n";
-      }
       PHI0 = PHI;
-      //      return {PHI, real(1)/DCHIB};
-    }
-    if (CHI.imag() > maxv) {
-      if (_f > 0) {
-        auto ffp = [e2 = _e2]
-          (real y) -> pair<real, real>
-          {
-            real e = sqrt(e2),
-            sy = sinh(y), cy = cosh(y),
-            sy2 = sinh(y/2), cy2 = cosh(y/2),
-            f = log(cy2/sy2) - e*atanh(e*cy),
-            fp = -1/(2*cy2*sy2) - (e2*sy)/(1 - Math::sq(e*cy));
-            return {f, fp};
-          };
-        real ya = 0, yb = acosh(1/_e.real()), y0 = (ya + yb)/2,
-          v = Trigfun::root(Trigfun::MERCATOR3,
-                            ffp, real(0),
-                            y0, ya, yb, 1, 1, -1);
-        cmplx PHI{Math::pi()/2, v};
-        auto [CHIB, DCHIB] = PHITOCHI(PHI);
-        if (_debug) cerr << "VV " << PHI << " " << CHIB << " " << DCHIB << "\n";
-        return {PHI, real(1)/DCHIB};
+    } else {
+      if (_f > 0 &&
+          abs(CHI-cmplx(real(0),atanh(sin( (1-_e.real()) * Math::pi()/2 )))) <
+          10 * numeric_limits<real>::epsilon()) {
+        if (_debug)
+          cerr << "CHIQ " << abs(CHI-cmplx(real(0),atanh(sin( (1-_e.real()) * Math::pi()/2 )))) << "\n";
+        cmplx PHI{Math::pi()/2 * 0, maxv/4};
+        auto [ignore, DCHIB] = PHITOCHI(PHI);
+        int n;
+        auto [PSI, DPSI] = PHITOPSI(PHI, n);
+        auto [CHIC, DCHIC] = PSITOCHI(PSI);
+        if (_debug) {
+          cerr << "PHIX " << PHI << " " << real(1)/DCHIB << " " << PSI << " " << DPSI << " " << CHIC << " " << DCHIC << " " << real(1)/(DPSI*DCHIC) << "\n";
+          cerr << "PHIY " << PHI0 << " " << PHI << " "
+               << chitophi(CHI.real()) << "\n";
+        }
+        PHI0 = PHI;
+        //      return {PHI, real(1)/DCHIB};
       }
-      CHI = cmplx{CHI.real(), copysign(real(maxv), CHI.imag())};
+      if (CHI.imag() > maxv) {
+        if (_f > 0) {
+          auto ffp = [e2 = _e2]
+            (real y) -> pair<real, real>
+            {
+              real e = sqrt(e2),
+              sy = sinh(y), cy = cosh(y),
+              sy2 = sinh(y/2), cy2 = cosh(y/2),
+              f = log(cy2/sy2) - e*atanh(e*cy),
+              fp = -1/(2*cy2*sy2) - (e2*sy)/(1 - Math::sq(e*cy));
+              return {f, fp};
+            };
+          real ya = 0, yb = acosh(1/_e.real()), y0 = (ya + yb)/2,
+            v = Trigfun::root(Trigfun::MERCATOR3,
+                              ffp, real(0),
+                              y0, ya, yb, 1, 1, -1);
+          cmplx PHI{Math::pi()/2, v};
+          auto [CHIB, DCHIB] = PHITOCHI(PHI);
+          if (_debug) cerr << "VV " << PHI << " " << CHIB << " " << DCHIB << "\n";
+          return {PHI, real(1)/DCHIB};
+        }
+        CHI = cmplx(CHI.real(), copysign(real(maxv), CHI.imag()));
+      }
     }
     auto res = invertRobust([this]
                             (cmplx PHI) -> cmplx2
@@ -307,6 +332,9 @@ cmplx2 GeographicLib::experimental::TM3::CHITOPHI(cmplx CHI) const {
     auto [PHI, DPHI] = TAUTOPHI(TAU);
     return { PHI + n * Math::pi(), DPHI*DTAU*DPSI };
   }
+}
+cmplx2 GeographicLib::experimental::TM3::PHITOW(cmplx PHI) const {
+  return {PHI, real(0)};
 }
 
 pair<cmplx, cmplx>
@@ -373,7 +401,7 @@ GeographicLib::experimental::TM3::invertRobust(const function<pair<cmplx, cmplx>
 void GeographicLib::experimental::TM3::Forward(real lon0, real lat, real lon,
                   real& x, real& y, real& gamma, real& k) const {
   cmplx SCALE = real(1), DIFF;
-  cmplx GEOD = cmplx{ lat, lon - lon0 } * Math::degree();
+  cmplx GEOD = cmplx( lat, lon - lon0 ) * Math::degree();
   if (0) {
     int n;
     cmplx PSI; tie(PSI, DIFF) = GEODTOPSI(GEOD, n); SCALE *= DIFF;
@@ -509,11 +537,11 @@ f = 1/5, e = 3/5, (1-e)*pi/2 = 36
   real e2 = 1/real(100);
   f = 0;
   f = 1/real(300);
-  f = 1/real(5);
   f = -1/real(4);
+  f = 1/real(5);
   // f = e2 / (1+sqrt(1-e2));
   e2 = f*(2-f);
-  experimental::TM3 qq(a, f, 1, true && false);
+  experimental::TM3 qq(a, f, 1, true);
   cout << setprecision(13);
   cerr << setprecision(13);
   if (0) {
@@ -524,10 +552,10 @@ f = 1/5, e = 3/5, (1-e)*pi/2 = 36
     cout << e2 << " " << abs(sqrt(cmplx(e2))) << "\n";
     return 0;
   }
-  TransverseMercator tm(a, f, 1, true);
-  if (1) {
+  TransverseMercator tm(a, f, 1, true && false);
+  if (0) {
     real xlim = 5, ylim = Math::pi()/2;
-    int xnum = 40, ynum = 10, ndiv = 50;
+    int xnum = 40, ynum = 10, ndiv = 10;
     for (int ix = 0; ix <= xnum; ++ix) {
       real x = ix * xlim/xnum;
       for (int iy = 0; iy <= ynum*ndiv; ++iy) {
@@ -593,7 +621,10 @@ f = 1/5, e = 3/5, (1-e)*pi/2 = 36
     return 0;
   }
   if (1) {
-    cout << "flat " << f << " " << sqrt(cmplx(f*(2-f))) << "\n";
+    cout << setprecision(19);
+    cout << "flat " << f << " " << sqrt(cmplx(f*(2-f))) << " "
+         << qq.psitophi(sqrt(abs(f*(2-f))) * Math::pi()/2)/Math::degree()
+         << "\n";
     real lat, lon;
     while (cin >> lat >> lon) {
       real x, y, gamma, k;
@@ -641,7 +672,7 @@ singularity at BETA = atan((1-f)*%i) = (0, atanh(1-f))
   PSI = asinh(TAU) - _e * atanh(_e * TAU / SECPHI)  = %pi/2*(1-e)*%i
   for e real => phi = 0, lambda = (1-e)*%pi/2
   for e imag => lambda = %pi/2, psi = %pi*abs(e)/2, phi = ...
-abs(e) = 3/4, phi = 42.68333708561 deg
+abs(e) = 3/4, phi = 42.68333708561267059 deg
 
 dPSI/dTAU = 0 (prop to sec(PHI) = sech(inf) = 0)
 dMU/dBETA = sqrt(1 - k2 * sin(BETA)^2) = 0
