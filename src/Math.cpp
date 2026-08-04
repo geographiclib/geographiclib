@@ -71,7 +71,9 @@ namespace GeographicLib {
 #if GEOGRAPHICLIB_PRECISION == 4 && BOOST_VERSION < 109000
     // boost-quadmath doesn't set the sign of 0 correctly, see
     // https://github.com/boostorg/multiprecision/issues/426
-    // Fixed by https://github.com/boostorg/multiprecision/pull/428
+    // Fixed by
+    //   Ensure remainder has correct sign when the result is zero
+    //   https://github.com/boostorg/multiprecision/pull/428
     if (y == 0) y = copysign(y, x);
 #endif
     return fabs(y) == T(hd) ? copysign(T(hd), x) : y;
@@ -284,10 +286,11 @@ namespace GeographicLib {
   }
 
   template<typename T> T Math::hypot3(T x, T y, T z) {
-#if GEOGRAPHICLIB_PRECISION == 4
+#if GEOGRAPHICLIB_PRECISION == 4 && BOOST_VERSION < 109100
     // Boost implementation is given by
+    //   Add three arg hypot to special functions
     //   https://github.com/boostorg/math/pull/1318
-    // might make its way into 1.90 or later
+    // which will be included in 1.91
     return hypot(hypot(x, y), z);
 #else
     return hypot(x, y, z);

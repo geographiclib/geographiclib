@@ -326,6 +326,7 @@ endif ()
 
 if (USE_BOOST OR GEOGRAPHICLIB_PRECISION EQUAL 4)
   # The earliest Boost version to include
+  # setting precision to 0 on ostream with fixed flag produces wrong result
   # https://github.com/boostorg/multiprecision/pull/389
   find_package (Boost 1.79 CONFIG)
 endif ()
