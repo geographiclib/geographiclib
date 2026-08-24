@@ -498,7 +498,7 @@ namespace GeographicLib {
     lon = Math::AngDiff(lon0, lon);
     lat *= _sign;
     real sphi, cphi;
-    Math::sincosd(Math::LatFix(lat) * _sign, sphi, cphi);
+    Math::sincosd(Math::LatFix(lat), sphi, cphi);
     cphi = fmax(epsx_, cphi);
     real
       lam = lon * Math::degree(),

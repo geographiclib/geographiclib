@@ -768,6 +768,15 @@ add_test (NAME ConicProj9 COMMAND ConicProj
   -a -10 40 -e 6.4e6 -0.5 -p 0 --input-string "85 10")
 set_tests_properties (ConicProj9 PROPERTIES TIMEOUT 3
   PASS_REGULAR_EXPRESSION "^609861 7566522 ")
+# Check fix for AlbersEqualArea::Forward bug found 2026-08-24 Issue #55
+add_test (NAME ConicProj10 COMMAND ConicProj
+  -a 30 20 -p 0 --input-string "10 0")
+set_tests_properties (ConicProj10 PROPERTIES PASS_REGULAR_EXPRESSION
+  "^-?0 -1660231 ")
+add_test (NAME ConicProj11 COMMAND ConicProj
+  -a -30 -20 -p 0 --input-string "-10 0")
+set_tests_properties (ConicProj11 PROPERTIES PASS_REGULAR_EXPRESSION
+  "^-?0 1660231 ")
 
 add_test (NAME CartConvert0 COMMAND CartConvert
   -e 6.4e6 1/100 -r --input-string "10e3 0 1e3")

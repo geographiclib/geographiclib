@@ -7813,6 +7813,7 @@ git repository for GeographicLib</a>.
      latitude = nan for geodetic coordinates.
    - Fix bug in Math::tauf for prolate ellipsoids.  Also Math::tauf now
      preserves the sign of 0.
+   - Fix sign bug in AlbersEqualArea::Forward (found by @mapprehension).
    - Move the Newton solver Trigfun::root to public interface.
    - Minor improvements to Triaxial::Conformal3
      - Added const versions of Triaxial::Conformal3::t() and
